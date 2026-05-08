@@ -53,6 +53,14 @@ class AnalysisState(TypedDict, total=False):
     sector: str
     prices: pd.DataFrame  # ts, open, high, low, close, volume
     fundamentals: pd.DataFrame  # fiscal_period, period_type, metric, value
+    # Resolved instrument frame — populated by the agent runner before
+    # .invoke(). The persona prompt template's first line is rendered from
+    # this. Positive framing kills the "every unknown ticker is an ETF"
+    # hallucination that pure absence-of-fundamentals used to trigger.
+    # Shape:
+    #   {ticker, type ('stock'|'etf'|'adr'|...), company_name, sector,
+    #    industry, marketcap_size, short_description, next_earnings_date}
+    instrument: dict[str, Any]
     # Unusual Whales structured snapshot — populated by the agent runner
     # before .invoke(). Keys are stable so personas can pull their lens slice
     # in extra_context() without repeating SQL. Empty dict if UW key not set

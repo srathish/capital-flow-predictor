@@ -121,9 +121,30 @@ class BasePersona(ABC):
 
     def _build_user_prompt(self, state: AnalysisState) -> str:
         ticker = state.get("ticker", "?")
-        sector = state.get("sector", "")
+        instrument = state.get("instrument") or {}
+        # Fall back to top-level sector for old tests / direct callers that
+        # don't populate instrument.
+        sector = instrument.get("sector") or state.get("sector") or "Unknown"
+        inst_type = (instrument.get("type") or "stock").lower()
+        company_name = instrument.get("company_name") or ticker
+        industry = instrument.get("industry")
+        descr = instrument.get("short_description")
+        next_earnings = instrument.get("next_earnings_date")
+        marketcap_size = instrument.get("marketcap_size")
+
         fundamentals = state.get("fundamentals")
         analyst_signals = state.get("analyst_signals", []) or []
+
+        # --- instrument frame (positive framing — never let the LLM guess) ---
+        type_label = "sector ETF (basket of stocks)" if inst_type == "etf" else "publicly traded common stock (operating company)"
+        industry_part = f", industry: {industry}" if industry else ""
+        size_part = f", marketcap-size: {marketcap_size}" if marketcap_size else ""
+        earnings_part = f", next earnings: {next_earnings}" if next_earnings else ""
+        descr_part = f"\nBusiness description: {descr}" if descr else ""
+        instrument_block = (
+            f"Instrument: {company_name} ({ticker}) — {type_label}, "
+            f"sector: {sector}{industry_part}{size_part}{earnings_part}.{descr_part}"
+        )
 
         # --- fundamentals snapshot ---
         has_fundamentals = fundamentals is not None and not fundamentals.empty
@@ -146,14 +167,13 @@ class BasePersona(ABC):
                 f"- Debt/Equity: {_fmt(de)}, P/E: {_fmt(pe)}, P/B: {_fmt(pb)}"
             )
         else:
+            # No negative framing here — the instrument block above already
+            # established that this is a real operating company. Just say
+            # "fundamentals not yet ingested" and move on.
             fund_lines = (
-                f"- Fundamentals data is not yet ingested for {ticker} (the data pipeline "
-                "hasn't pulled this name's financials yet — this is a data-availability "
-                "limitation, NOT a signal that the company is unusual).\n"
-                f"- {ticker} IS a publicly traded operating company. Do NOT assume it is "
-                "an ETF, fund, or basket — that would be incorrect. Reason from price "
-                "action and analyst signals; explicitly note that fundamental review is "
-                "deferred."
+                f"- Fundamentals not yet ingested for {ticker}. "
+                f"Reason from price action, analyst signals, and {company_name}'s "
+                f"business description above."
             )
 
         # --- analyst signals ---
@@ -170,19 +190,24 @@ class BasePersona(ABC):
         extra_block = f"\n\nAdditional context:\n{extras}" if extras else ""
 
         return (
-            f"Analyze {ticker} (sector: {sector or 'unspecified'}).\n\n"
+            f"{instrument_block}\n\n"
             f"Latest annual fundamentals:\n{fund_lines}\n\n"
             f"Quantitative analyst signals:\n{analyst_lines}"
             f"{extra_block}\n\n"
             "Provide your verdict in the structured output format.\n\n"
             "Quality bar — non-negotiable:\n"
+            f"- You are analyzing a single security. Reason about {company_name} "
+            "as the entity in the Instrument line above — its business model, "
+            "industry dynamics, balance sheet, management, customers. "
+            "Never describe a stock as a 'fund' or 'basket', and never describe "
+            "an ETF as a single business with management.\n"
             "- thesis: 2-3 complete sentences explaining your specific reasoning "
             "from your investing framework. NOT a one-word label or category. "
             "Cite at least one concrete fact (a number, a competitive position, "
             "or a macro condition).\n"
             "- key_evidence: 3-5 bullets. Each must reference a SPECIFIC data "
             "point from above (revenue growth %, ROE %, FCF, P/E, RSI, "
-            "trend, vol). Avoid vague platitudes.\n"
+            "trend, flow alert, insider activity, etc.). Avoid vague platitudes.\n"
             "- concerns: 1-3 specific risks that would invalidate this call. "
             "Tie each to your framework, not generic 'market volatility'."
         )

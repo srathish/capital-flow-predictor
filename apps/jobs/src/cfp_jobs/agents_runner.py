@@ -165,7 +165,7 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
         cur.execute(
             """
             SELECT created_at, option_type, expiry, strike, total_premium,
-                   ask_side_prem, bid_side_prem, alert_rule
+                   ask_side_prem, bid_side_prem, alert_rule, option_chain
             FROM uw_flow_alerts
             WHERE ticker = %s AND created_at > NOW() - INTERVAL '5 days'
             ORDER BY total_premium DESC NULLS LAST
@@ -183,9 +183,57 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
                 "ask_prem": float(row[5]) if row[5] is not None else None,
                 "bid_prem": float(row[6]) if row[6] is not None else None,
                 "alert": row[7],
+                "option_chain": row[8],
             }
             for row in cur.fetchall()
         ]
+
+        # ---- OI stickiness — did flow alerts get absorbed into open interest?
+        # Joins each 5d alert to the next-day OI change for the same option_symbol.
+        # sticky_premium = $ premium where OI grew the next day in the same direction.
+        # transient_premium = $ premium where OI was flat or shrank.
+        cur.execute(
+            """
+            WITH alerts AS (
+                SELECT option_chain,
+                       option_type,
+                       SUM(total_premium) AS premium,
+                       MIN(created_at)::date AS alert_date
+                FROM uw_flow_alerts
+                WHERE ticker = %s AND created_at > NOW() - INTERVAL '5 days'
+                GROUP BY option_chain, option_type
+            ),
+            joined AS (
+                SELECT a.option_chain,
+                       a.option_type,
+                       a.premium,
+                       COALESCE(o.oi_diff_plain, 0) AS oi_delta,
+                       COALESCE(o.days_of_oi_increases, 0) AS days_up
+                FROM alerts a
+                LEFT JOIN uw_oi_change o
+                  ON o.option_symbol = a.option_chain
+                 AND o.curr_date >= a.alert_date
+                 AND o.curr_date <= a.alert_date + INTERVAL '2 days'
+            )
+            SELECT
+              COALESCE(SUM(CASE WHEN oi_delta > 0 THEN premium ELSE 0 END), 0) AS sticky_prem,
+              COALESCE(SUM(CASE WHEN oi_delta <= 0 THEN premium ELSE 0 END), 0) AS transient_prem,
+              COUNT(*) FILTER (WHERE oi_delta > 0) AS sticky_chains,
+              COUNT(*) AS total_chains
+            FROM joined
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone() or (0, 0, 0, 0)
+        sticky = float(r[0] or 0)
+        transient = float(r[1] or 0)
+        total_p = sticky + transient
+        out["options_flow"]["sticky_premium_5d"] = sticky
+        out["options_flow"]["transient_premium_5d"] = transient
+        out["options_flow"]["sticky_pct"] = (sticky / total_p) if total_p > 0 else 0.5
+        out["options_flow"]["sticky_chain_ratio"] = (
+            float(r[2]) / float(r[3]) if r[3] else 0.5
+        )
 
         # ---- dark pool ----
         cur.execute(
@@ -315,6 +363,135 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
     return out
 
 
+def _resolve_instrument(database_url: str, ticker: str, sector_hint: str) -> dict:
+    """Resolve a structured instrument frame for the persona prompts.
+
+    Priority order:
+      1. UW /stock/{ticker}/info (primary — covers exotic names like miners,
+         quantum, AI infra; gives sector + issue_type + company name + tags
+         + next_earnings_date in one call)
+      2. FMP /profile (fallback for the rare ticker UW doesn't know)
+      3. Local universe heuristic (PREDICTION_TARGETS = ETFs)
+      4. Safe default: {type: "stock", sector: "Unknown"}
+
+    Returns a dict the persona prompt template can render directly. Never
+    falls back to an ETF symbol in the sector slot — that was the root
+    cause of the "every unknown ticker is described as an ETF" bug.
+    """
+    from cfp_shared.universe import PREDICTION_TARGETS
+
+    from cfp_jobs.settings import settings
+
+    ticker = ticker.upper()
+    out: dict = {
+        "ticker": ticker,
+        "type": "stock",
+        "company_name": ticker,
+        "sector": sector_hint or "Unknown",
+        "industry": None,
+        "marketcap_size": None,
+        "short_description": None,
+        "next_earnings_date": None,
+    }
+
+    # Hardcoded check — anything in our predictor universe is a sector ETF.
+    if ticker in PREDICTION_TARGETS:
+        out["type"] = "etf"
+
+    # Try UW info first.
+    uw_key = (settings.unusual_whales_api_key or "").strip()
+    info: dict | None = None
+    if uw_key:
+        try:
+            with connect(database_url) as conn, conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT issue_type, sector, full_name, short_name, marketcap_size,
+                           short_description, next_earnings_date, uw_tags, last_fetched
+                    FROM uw_stock_info
+                    WHERE ticker = %s
+                    """,
+                    (ticker,),
+                )
+                row = cur.fetchone()
+            from datetime import timedelta
+
+            stale = row is None or row[8] < datetime.now(UTC) - timedelta(days=7)
+            if stale:
+                # Lazy refresh — single endpoint, cheap.
+                from cfp_jobs.ingestion.unusualwhales import UwClient, _upsert_stock_info
+
+                with UwClient(uw_key) as uw, connect(database_url) as conn:
+                    fresh = uw.info(ticker)
+                    if fresh:
+                        _upsert_stock_info(conn, ticker, fresh)
+                        conn.commit()
+                with connect(database_url) as conn, conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT issue_type, sector, full_name, short_name, marketcap_size,
+                               short_description, next_earnings_date, uw_tags, last_fetched
+                        FROM uw_stock_info
+                        WHERE ticker = %s
+                        """,
+                        (ticker,),
+                    )
+                    row = cur.fetchone()
+
+            if row:
+                issue_type, sector, full_name, short_name, mc_size, descr, nedate, tags, _ = row
+                info = {
+                    "issue_type": issue_type,
+                    "sector": sector,
+                    "full_name": full_name,
+                    "short_name": short_name,
+                    "marketcap_size": mc_size,
+                    "short_description": descr,
+                    "next_earnings_date": nedate,
+                    "uw_tags": list(tags) if tags else [],
+                }
+        except Exception as e:
+            log.warning("UW info lookup failed for %s: %s", ticker, e)
+
+    if info:
+        # UW issue_type drives the type frame. "Common Stock" -> stock,
+        # "ETF" -> etf, anything else (ADR, REIT, etc.) -> stock for prompt
+        # purposes (the personas can reason about REITs/ADRs as businesses).
+        it = (info.get("issue_type") or "").lower()
+        if "etf" in it or "fund" in it:
+            out["type"] = "etf"
+        else:
+            out["type"] = "stock"
+        out["company_name"] = info.get("full_name") or info.get("short_name") or ticker
+        if info.get("sector"):
+            out["sector"] = info["sector"]
+        out["marketcap_size"] = info.get("marketcap_size")
+        out["short_description"] = info.get("short_description")
+        out["next_earnings_date"] = info.get("next_earnings_date")
+        # uw_tags becomes industry hint when present.
+        tags = info.get("uw_tags") or []
+        if tags:
+            out["industry"] = ", ".join(tags[:3])
+
+    # FMP profile fallback for industry (UW often doesn't fill it).
+    if out["industry"] is None:
+        fmp_key = (settings.fmp_api_key or "").strip()
+        if fmp_key:
+            try:
+                from cfp_jobs.ingestion.fmp import FmpClient
+
+                with FmpClient(fmp_key) as client:
+                    rows = client.profile(ticker)
+                if rows:
+                    out["industry"] = rows[0].get("industry") or None
+                    if out["sector"] == "Unknown":
+                        out["sector"] = (rows[0].get("sector") or "Unknown").strip()
+            except Exception as e:
+                log.warning("FMP profile fallback failed for %s: %s", ticker, e)
+
+    return out
+
+
 def _ensure_fundamentals_and_sector(
     database_url: str, ticker: str, sector: str
 ) -> tuple[pd.DataFrame, str]:
@@ -387,6 +564,10 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     """
     prices = _ensure_prices(database_url, ticker)
     fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
+    instrument = _resolve_instrument(database_url, ticker, sector)
+    # If UW gave us a real sector, use it (overrides FMP's, e.g. for ADRs).
+    if instrument.get("sector") and instrument["sector"] != "Unknown":
+        sector = instrument["sector"]
     flow_context = _build_flow_context(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
@@ -395,6 +576,7 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
         "sector": sector,
         "prices": prices,
         "fundamentals": fundamentals,
+        "instrument": instrument,
         "flow_context": flow_context,
         "analyst_signals": [],
         "persona_signals": [],
@@ -475,6 +657,9 @@ def run_analysts_streaming(
     """
     prices = _ensure_prices(database_url, ticker)
     fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
+    instrument = _resolve_instrument(database_url, ticker, sector)
+    if instrument.get("sector") and instrument["sector"] != "Unknown":
+        sector = instrument["sector"]
     flow_context = _build_flow_context(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
@@ -483,6 +668,7 @@ def run_analysts_streaming(
         "sector": sector,
         "prices": prices,
         "fundamentals": fundamentals,
+        "instrument": instrument,
         "flow_context": flow_context,
         "analyst_signals": [],
         "persona_signals": [],

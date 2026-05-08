@@ -103,6 +103,30 @@ class UwClient:
             params["ticker"] = ticker
         return self._get("/congress/recent-trades", params=params) or []
 
+    def info(self, ticker: str) -> dict | None:
+        """Stock info (sector, industry, name, type, marketcap, next earnings).
+
+        Returns the unwrapped object directly (UW wraps it in {"data": {...}})."""
+        body = self._get(f"/stock/{ticker}/info")
+        # Some _get callers unwrap "data"; this endpoint returns the dict already.
+        if isinstance(body, list):
+            return body[0] if body else None
+        return body if isinstance(body, dict) else None
+
+    def oi_change(self, ticker: str, limit: int = 100) -> list[dict]:
+        """Daily OI delta per option strike — joins to flow alerts via option_symbol."""
+        return self._get(f"/stock/{ticker}/oi-change", params={"limit": limit}) or []
+
+    def news_headlines(self, ticker: str, limit: int = 50) -> list[dict]:
+        """News with sentiment tagging. NOTE: endpoint is /news/headlines?ticker=X
+        — /stock/{T}/news 404s."""
+        return self._get("/news/headlines", params={"ticker": ticker, "limit": limit}) or []
+
+    def earnings(self, ticker: str) -> list[dict]:
+        """Earnings calendar + historical reactions. Endpoint is /earnings/{T}
+        (no /stock/ prefix)."""
+        return self._get(f"/earnings/{ticker}") or []
+
     def close(self) -> None:
         self._client.close()
 
@@ -474,6 +498,230 @@ def _upsert_insider(conn: psycopg.Connection, ticker: str, rows: Iterable[dict])
     return n
 
 
+def _upsert_stock_info(conn: psycopg.Connection, ticker: str, info: dict | None) -> int:
+    if not info:
+        return 0
+    sql = """
+        INSERT INTO uw_stock_info (
+            ticker, full_name, short_name, issue_type, sector, short_description,
+            marketcap_size, beta, marketcap, outstanding, avg30_volume,
+            next_earnings_date, announce_time, uw_tags,
+            has_options, has_dividend, has_earnings_history, last_fetched
+        ) VALUES (
+            %(ticker)s, %(full_name)s, %(short_name)s, %(issue_type)s, %(sector)s, %(short_description)s,
+            %(marketcap_size)s, %(beta)s, %(marketcap)s, %(outstanding)s, %(avg30_volume)s,
+            %(next_earnings_date)s, %(announce_time)s, %(uw_tags)s,
+            %(has_options)s, %(has_dividend)s, %(has_earnings_history)s, NOW()
+        ) ON CONFLICT (ticker) DO UPDATE SET
+            full_name = EXCLUDED.full_name,
+            short_name = EXCLUDED.short_name,
+            issue_type = EXCLUDED.issue_type,
+            sector = EXCLUDED.sector,
+            short_description = EXCLUDED.short_description,
+            marketcap_size = EXCLUDED.marketcap_size,
+            beta = EXCLUDED.beta,
+            marketcap = EXCLUDED.marketcap,
+            outstanding = EXCLUDED.outstanding,
+            avg30_volume = EXCLUDED.avg30_volume,
+            next_earnings_date = EXCLUDED.next_earnings_date,
+            announce_time = EXCLUDED.announce_time,
+            uw_tags = EXCLUDED.uw_tags,
+            has_options = EXCLUDED.has_options,
+            has_dividend = EXCLUDED.has_dividend,
+            has_earnings_history = EXCLUDED.has_earnings_history,
+            last_fetched = NOW()
+    """
+    tags = info.get("uw_tags") or []
+    with conn.cursor() as cur:
+        cur.execute(
+            sql,
+            {
+                "ticker": ticker,
+                "full_name": info.get("full_name"),
+                "short_name": info.get("short_name"),
+                "issue_type": info.get("issue_type"),
+                "sector": info.get("sector"),
+                "short_description": info.get("short_description"),
+                "marketcap_size": info.get("marketcap_size"),
+                "beta": _to_float(info.get("beta")),
+                "marketcap": _to_float(info.get("marketcap")),
+                "outstanding": _to_int(info.get("outstanding")),
+                "avg30_volume": _to_float(info.get("avg30_volume")),
+                "next_earnings_date": _to_date(info.get("next_earnings_date")),
+                "announce_time": info.get("announce_time"),
+                "uw_tags": list(tags) if isinstance(tags, list) else [],
+                "has_options": bool(info.get("has_options")),
+                "has_dividend": bool(info.get("has_dividend")),
+                "has_earnings_history": bool(info.get("has_earnings_history")),
+            },
+        )
+    return 1
+
+
+def _upsert_oi_change(conn: psycopg.Connection, ticker: str, rows: Iterable[dict]) -> int:
+    sql = """
+        INSERT INTO uw_oi_change (
+            curr_date, ticker, option_symbol, last_date, volume, trades,
+            avg_price, last_fill, last_ask, last_bid,
+            curr_oi, last_oi, oi_diff_plain, oi_change_ratio,
+            prev_ask_volume, prev_bid_volume, prev_mid_volume,
+            prev_multi_leg_volume, prev_neutral_volume, prev_stock_multi_leg_volume,
+            prev_total_premium, days_of_oi_increases, days_of_vol_greater_than_oi,
+            percentage_of_total, rnk
+        ) VALUES (
+            %(curr_date)s, %(ticker)s, %(option_symbol)s, %(last_date)s, %(volume)s, %(trades)s,
+            %(avg_price)s, %(last_fill)s, %(last_ask)s, %(last_bid)s,
+            %(curr_oi)s, %(last_oi)s, %(oi_diff_plain)s, %(oi_change_ratio)s,
+            %(prev_ask_volume)s, %(prev_bid_volume)s, %(prev_mid_volume)s,
+            %(prev_multi_leg_volume)s, %(prev_neutral_volume)s, %(prev_stock_multi_leg_volume)s,
+            %(prev_total_premium)s, %(days_of_oi_increases)s, %(days_of_vol_greater_than_oi)s,
+            %(percentage_of_total)s, %(rnk)s
+        ) ON CONFLICT (curr_date, ticker, option_symbol) DO UPDATE SET
+            curr_oi = EXCLUDED.curr_oi,
+            last_oi = EXCLUDED.last_oi,
+            oi_diff_plain = EXCLUDED.oi_diff_plain,
+            oi_change_ratio = EXCLUDED.oi_change_ratio,
+            volume = EXCLUDED.volume,
+            trades = EXCLUDED.trades,
+            avg_price = EXCLUDED.avg_price,
+            prev_total_premium = EXCLUDED.prev_total_premium,
+            days_of_oi_increases = EXCLUDED.days_of_oi_increases,
+            days_of_vol_greater_than_oi = EXCLUDED.days_of_vol_greater_than_oi,
+            rnk = EXCLUDED.rnk
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            cd = _to_date(r.get("curr_date"))
+            opt = r.get("option_symbol")
+            if not cd or not opt:
+                continue
+            cur.execute(
+                sql,
+                {
+                    "curr_date": cd,
+                    "ticker": ticker,
+                    "option_symbol": opt,
+                    "last_date": _to_date(r.get("last_date")),
+                    "volume": _to_int(r.get("volume")),
+                    "trades": _to_int(r.get("trades")),
+                    "avg_price": _to_float(r.get("avg_price")),
+                    "last_fill": _to_float(r.get("last_fill")),
+                    "last_ask": _to_float(r.get("last_ask")),
+                    "last_bid": _to_float(r.get("last_bid")),
+                    "curr_oi": _to_int(r.get("curr_oi")),
+                    "last_oi": _to_int(r.get("last_oi")),
+                    "oi_diff_plain": _to_int(r.get("oi_diff_plain")),
+                    "oi_change_ratio": _to_float(r.get("oi_change")),
+                    "prev_ask_volume": _to_int(r.get("prev_ask_volume")),
+                    "prev_bid_volume": _to_int(r.get("prev_bid_volume")),
+                    "prev_mid_volume": _to_int(r.get("prev_mid_volume")),
+                    "prev_multi_leg_volume": _to_int(r.get("prev_multi_leg_volume")),
+                    "prev_neutral_volume": _to_int(r.get("prev_neutral_volume")),
+                    "prev_stock_multi_leg_volume": _to_int(r.get("prev_stock_multi_leg_volume")),
+                    "prev_total_premium": _to_float(r.get("prev_total_premium")),
+                    "days_of_oi_increases": _to_int(r.get("days_of_oi_increases")),
+                    "days_of_vol_greater_than_oi": _to_int(r.get("days_of_vol_greater_than_oi")),
+                    "percentage_of_total": _to_float(r.get("percentage_of_total")),
+                    "rnk": _to_int(r.get("rnk")),
+                },
+            )
+            n += 1
+    return n
+
+
+def _upsert_news(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
+    """News headlines are global (one row per article, multi-ticker via array)."""
+    sql = """
+        INSERT INTO uw_news (created_at, source, headline, is_major, sentiment, tickers, tags)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (created_at, md5(headline)) DO NOTHING
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            ts = _to_ts(r.get("created_at"))
+            headline = r.get("headline")
+            if not ts or not headline:
+                continue
+            tickers = r.get("tickers") or []
+            tags = r.get("tags") or []
+            cur.execute(
+                sql,
+                (
+                    ts,
+                    r.get("source"),
+                    headline,
+                    bool(r.get("is_major")),
+                    r.get("sentiment"),
+                    list(tickers) if isinstance(tickers, list) else [],
+                    list(tags) if isinstance(tags, list) else [],
+                ),
+            )
+            n += cur.rowcount
+    return n
+
+
+def _upsert_earnings(conn: psycopg.Connection, ticker: str, rows: Iterable[dict]) -> int:
+    sql = """
+        INSERT INTO uw_earnings (
+            ticker, report_date, report_time, ending_fiscal_quarter,
+            expected_move, expected_move_perc, street_mean_est, actual_eps,
+            post_earnings_move_1d, post_earnings_move_3d, post_earnings_move_1w, post_earnings_move_2w,
+            pre_earnings_move_1d, pre_earnings_move_3d, pre_earnings_move_1w, pre_earnings_move_2w,
+            short_straddle_1d, short_straddle_1w, long_straddle_1d, long_straddle_1w, source
+        ) VALUES (
+            %(ticker)s, %(report_date)s, %(report_time)s, %(ending_fiscal_quarter)s,
+            %(expected_move)s, %(expected_move_perc)s, %(street_mean_est)s, %(actual_eps)s,
+            %(p1d)s, %(p3d)s, %(p1w)s, %(p2w)s,
+            %(r1d)s, %(r3d)s, %(r1w)s, %(r2w)s,
+            %(ss1d)s, %(ss1w)s, %(ls1d)s, %(ls1w)s, %(source)s
+        ) ON CONFLICT (ticker, report_date) DO UPDATE SET
+            actual_eps = EXCLUDED.actual_eps,
+            post_earnings_move_1d = EXCLUDED.post_earnings_move_1d,
+            post_earnings_move_3d = EXCLUDED.post_earnings_move_3d,
+            post_earnings_move_1w = EXCLUDED.post_earnings_move_1w,
+            post_earnings_move_2w = EXCLUDED.post_earnings_move_2w,
+            expected_move = EXCLUDED.expected_move,
+            expected_move_perc = EXCLUDED.expected_move_perc,
+            street_mean_est = EXCLUDED.street_mean_est
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            rd = _to_date(r.get("report_date"))
+            if not rd:
+                continue
+            cur.execute(
+                sql,
+                {
+                    "ticker": ticker,
+                    "report_date": rd,
+                    "report_time": r.get("report_time"),
+                    "ending_fiscal_quarter": _to_date(r.get("ending_fiscal_quarter")),
+                    "expected_move": _to_float(r.get("expected_move")),
+                    "expected_move_perc": _to_float(r.get("expected_move_perc")),
+                    "street_mean_est": _to_float(r.get("street_mean_est")),
+                    "actual_eps": _to_float(r.get("actual_eps")),
+                    "p1d": _to_float(r.get("post_earnings_move_1d")),
+                    "p3d": _to_float(r.get("post_earnings_move_3d")),
+                    "p1w": _to_float(r.get("post_earnings_move_1w")),
+                    "p2w": _to_float(r.get("post_earnings_move_2w")),
+                    "r1d": _to_float(r.get("pre_earnings_move_1d")),
+                    "r3d": _to_float(r.get("pre_earnings_move_3d")),
+                    "r1w": _to_float(r.get("pre_earnings_move_1w")),
+                    "r2w": _to_float(r.get("pre_earnings_move_2w")),
+                    "ss1d": _to_float(r.get("short_straddle_1d")),
+                    "ss1w": _to_float(r.get("short_straddle_1w")),
+                    "ls1d": _to_float(r.get("long_straddle_1d")),
+                    "ls1w": _to_float(r.get("long_straddle_1w")),
+                    "source": r.get("source"),
+                },
+            )
+            n += 1
+    return n
+
+
 def _upsert_congress(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
     sql = """
         INSERT INTO uw_congress_trades (
@@ -523,6 +771,13 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
     ticker = ticker.upper()
     counts: dict[str, int] = {}
     with UwClient(api_key) as uw, connect(database_url) as conn:
+        # Stock info first — the instrument frame is the most load-bearing
+        # piece of data the personas read.
+        try:
+            counts["stock_info"] = _upsert_stock_info(conn, ticker, uw.info(ticker))
+        except Exception as e:
+            log.warning("stock_info failed for %s: %s", ticker, e)
+            counts["stock_info"] = 0
         try:
             counts["flow_alerts"] = _upsert_flow_alerts(conn, ticker, uw.flow_alerts(ticker))
         except Exception as e:
@@ -553,6 +808,21 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
         except Exception as e:
             log.warning("insider failed for %s: %s", ticker, e)
             counts["insider"] = 0
+        try:
+            counts["oi_change"] = _upsert_oi_change(conn, ticker, uw.oi_change(ticker))
+        except Exception as e:
+            log.warning("oi_change failed for %s: %s", ticker, e)
+            counts["oi_change"] = 0
+        try:
+            counts["news"] = _upsert_news(conn, uw.news_headlines(ticker))
+        except Exception as e:
+            log.warning("news failed for %s: %s", ticker, e)
+            counts["news"] = 0
+        try:
+            counts["earnings"] = _upsert_earnings(conn, ticker, uw.earnings(ticker))
+        except Exception as e:
+            log.warning("earnings failed for %s: %s", ticker, e)
+            counts["earnings"] = 0
         conn.commit()
     return {"ticker": ticker, **counts}
 
