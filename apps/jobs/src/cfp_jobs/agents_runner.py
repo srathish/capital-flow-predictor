@@ -81,6 +81,240 @@ def _ensure_prices(database_url: str, ticker: str) -> pd.DataFrame:
     return prices
 
 
+def _build_flow_context(database_url: str, ticker: str, sector: str) -> dict:
+    """Pull a structured Unusual Whales snapshot for the agents.
+
+    The flow analyst node + select personas (Burry, Druckenmiller, Taleb, Buffett's
+    insider lens) read this dict in their `extra_context()` hook. Shape is stable;
+    missing UW data => empty sub-dicts so callers can defensively .get().
+
+    Lazy ingestion: if the UW key is set and we haven't seen this ticker recently,
+    we hit UW first to refresh — same UX as `_ensure_prices`. Skipped silently
+    when the key is absent (so dev runs without a UW subscription still work).
+    """
+    from cfp_jobs.settings import settings
+
+    uw_key = (settings.unusual_whales_api_key or "").strip()
+    if not uw_key:
+        return {}
+
+    # Lazy refresh — only if there's no flow_alerts row for this ticker in the
+    # last 24h. Avoids re-hitting UW on every chat refresh.
+    try:
+        with connect(database_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT MAX(created_at) FROM uw_flow_alerts WHERE ticker = %s",
+                (ticker,),
+            )
+            row = cur.fetchone()
+        latest = row[0] if row else None
+        from datetime import timedelta
+
+        if latest is None or latest < datetime.now(UTC) - timedelta(hours=24):
+            log.info("agents: UW data for %s is stale or missing; refreshing", ticker)
+            from cfp_jobs.ingestion import unusualwhales as uw_ingest
+
+            try:
+                uw_ingest.ingest_ticker(database_url, uw_key, ticker)
+            except Exception as e:
+                log.warning("UW lazy refresh failed for %s: %s", ticker, e)
+    except Exception as e:
+        log.warning("UW staleness check failed for %s: %s", ticker, e)
+
+    # --- read aggregates back ---
+    return _load_flow_context(database_url, ticker, sector)
+
+
+def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
+    """SQL aggregations over the UW tables. Cheap and re-runnable."""
+    out: dict = {}
+
+    with connect(database_url) as conn, conn.cursor() as cur:
+        # ---- options_flow ----
+        cur.execute(
+            """
+            SELECT
+              COUNT(*),
+              COALESCE(SUM(CASE WHEN option_type='call' THEN ask_side_prem - bid_side_prem ELSE 0 END), 0),
+              COALESCE(SUM(CASE WHEN option_type='put'  THEN ask_side_prem - bid_side_prem ELSE 0 END), 0),
+              COALESCE(SUM(CASE WHEN option_type='call' AND expiry > CURRENT_DATE + INTERVAL '90 days'
+                                THEN total_premium ELSE 0 END), 0),
+              COALESCE(SUM(CASE WHEN option_type='put'  AND expiry > CURRENT_DATE + INTERVAL '90 days'
+                                THEN total_premium ELSE 0 END), 0),
+              COALESCE(AVG(CASE WHEN option_type='call' AND total_premium > 0
+                                THEN ask_side_prem / total_premium END), 0.5),
+              COALESCE(AVG(CASE WHEN option_type='put'  AND total_premium > 0
+                                THEN ask_side_prem / total_premium END), 0.5)
+            FROM uw_flow_alerts
+            WHERE ticker = %s AND created_at > NOW() - INTERVAL '5 days'
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone() or (0, 0, 0, 0, 0, 0.5, 0.5)
+        out["options_flow"] = {
+            "alert_count_5d": int(r[0] or 0),
+            "net_call_premium_5d": float(r[1] or 0),
+            "net_put_premium_5d": float(r[2] or 0),
+            "leap_call_premium_5d": float(r[3] or 0),
+            "leap_put_premium_5d": float(r[4] or 0),
+            "call_at_ask_pct": float(r[5] or 0.5),
+            "put_at_ask_pct": float(r[6] or 0.5),
+        }
+
+        # ---- top trades (cite-able) ----
+        cur.execute(
+            """
+            SELECT created_at, option_type, expiry, strike, total_premium,
+                   ask_side_prem, bid_side_prem, alert_rule
+            FROM uw_flow_alerts
+            WHERE ticker = %s AND created_at > NOW() - INTERVAL '5 days'
+            ORDER BY total_premium DESC NULLS LAST
+            LIMIT 5
+            """,
+            (ticker,),
+        )
+        out["options_flow"]["top_trades"] = [
+            {
+                "ts": (row[0].isoformat() if row[0] else None),
+                "type": row[1],
+                "expiry": (row[2].isoformat() if row[2] else None),
+                "strike": float(row[3]) if row[3] is not None else None,
+                "total_premium": float(row[4]) if row[4] is not None else None,
+                "ask_prem": float(row[5]) if row[5] is not None else None,
+                "bid_prem": float(row[6]) if row[6] is not None else None,
+                "alert": row[7],
+            }
+            for row in cur.fetchall()
+        ]
+
+        # ---- dark pool ----
+        cur.execute(
+            """
+            SELECT
+              COUNT(*),
+              COALESCE(SUM(premium), 0),
+              COALESCE(AVG(CASE WHEN nbbo_ask > 0 AND nbbo_bid > 0
+                                THEN CASE WHEN price > (nbbo_ask + nbbo_bid)/2 THEN 1.0 ELSE 0.0 END END), 0.5)
+            FROM uw_dark_pool_prints
+            WHERE ticker = %s AND executed_at > NOW() - INTERVAL '5 days' AND NOT canceled
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone() or (0, 0, 0.5)
+        out["dark_pool"] = {
+            "prints_5d": int(r[0] or 0),
+            "premium_5d": float(r[1] or 0),
+            "above_vwap_pct": float(r[2] or 0.5),
+        }
+
+        # ---- positioning ----
+        cur.execute(
+            """
+            SELECT short_shares_available, fee_rate, rebate_rate
+            FROM uw_short_data WHERE ticker = %s
+            ORDER BY ts DESC LIMIT 1
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone()
+        positioning: dict = {}
+        if r:
+            positioning.update({
+                "short_shares_available": int(r[0]) if r[0] is not None else None,
+                "fee_rate": float(r[1]) if r[1] is not None else None,
+                "rebate_rate": float(r[2]) if r[2] is not None else None,
+            })
+
+        cur.execute(
+            """
+            SELECT date, call_delta, put_delta, call_gamma, put_gamma
+            FROM uw_greek_exposure WHERE ticker = %s
+            ORDER BY date DESC LIMIT 1
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone()
+        if r:
+            call_g = float(r[3]) if r[3] is not None else 0.0
+            put_g = float(r[4]) if r[4] is not None else 0.0
+            positioning.update({
+                "as_of_date": r[0].isoformat() if r[0] else None,
+                "call_delta": float(r[1]) if r[1] is not None else None,
+                "put_delta": float(r[2]) if r[2] is not None else None,
+                "call_gamma": call_g,
+                "put_gamma": put_g,
+                "gex_total": call_g + put_g,
+            })
+        out["positioning"] = positioning
+
+        # ---- smart_money: insider txns 30d ----
+        cur.execute(
+            """
+            SELECT
+              COUNT(*) FILTER (WHERE transaction_code = 'P'),
+              COUNT(*) FILTER (WHERE transaction_code = 'S'),
+              COALESCE(SUM(CASE WHEN transaction_code = 'P' THEN amount * COALESCE(price, 0) END), 0),
+              COALESCE(SUM(CASE WHEN transaction_code = 'S' THEN amount * COALESCE(price, 0) END), 0)
+            FROM uw_insider_transactions
+            WHERE ticker = %s AND transaction_date > CURRENT_DATE - 30
+            """,
+            (ticker,),
+        )
+        r = cur.fetchone() or (0, 0, 0, 0)
+        # SUM(amount * price): amount is signed (negative = sell), so the buy side
+        # gives positive $ and the sell side gives negative $. Net = sum of both.
+        buy_dollars = float(r[2] or 0)
+        sell_dollars = float(r[3] or 0)
+        out["smart_money"] = {
+            "insider_buys_30d": int(r[0] or 0),
+            "insider_sells_30d": int(r[1] or 0),
+            "insider_net_amount_30d": buy_dollars + sell_dollars,
+        }
+
+        # ---- congress trades on this ticker, 30d ----
+        cur.execute(
+            """
+            SELECT name, member_type, txn_type, amounts, transaction_date
+            FROM uw_congress_trades
+            WHERE ticker = %s AND transaction_date > CURRENT_DATE - 60
+            ORDER BY transaction_date DESC
+            LIMIT 5
+            """,
+            (ticker,),
+        )
+        out["smart_money"]["congress_trades"] = [
+            {
+                "name": row[0],
+                "chamber": row[1],
+                "type": row[2],
+                "amount_band": row[3],
+                "date": row[4].isoformat() if row[4] else None,
+            }
+            for row in cur.fetchall()
+        ]
+
+        # ---- etf_context — ETF flow for the sector this ticker rolls up to ----
+        if sector:
+            cur.execute(
+                """
+                SELECT
+                  COALESCE(SUM(change_prem), 0),
+                  COUNT(*)
+                FROM uw_etf_flow
+                WHERE ticker = %s AND date > CURRENT_DATE - 5
+                """,
+                (sector,),
+            )
+            r = cur.fetchone() or (0, 0)
+            out["etf_context"] = {
+                "sector_etf": sector,
+                "in_flow_5d": float(r[0] or 0),
+                "n_days": int(r[1] or 0),
+            }
+
+    return out
+
+
 def _ensure_fundamentals_and_sector(
     database_url: str, ticker: str, sector: str
 ) -> tuple[pd.DataFrame, str]:
@@ -153,6 +387,7 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     """
     prices = _ensure_prices(database_url, ticker)
     fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
+    flow_context = _build_flow_context(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state = {
@@ -160,6 +395,7 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
         "sector": sector,
         "prices": prices,
         "fundamentals": fundamentals,
+        "flow_context": flow_context,
         "analyst_signals": [],
         "persona_signals": [],
     }
@@ -213,10 +449,10 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     }
 
 
-# Total agents in the full ensemble: 4 analysts + 13 personas + 3 synthesis.
+# Total agents in the full ensemble: 5 analysts + 13 personas + 3 synthesis.
 # Used by callers (the API) to compute is_complete during a streaming run.
-EXPECTED_AGENT_COUNT_FULL = 4 + 13 + 3
-EXPECTED_AGENT_COUNT_ANALYSTS_ONLY = 4
+EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 3
+EXPECTED_AGENT_COUNT_ANALYSTS_ONLY = 5
 
 
 def run_analysts_streaming(
@@ -239,6 +475,7 @@ def run_analysts_streaming(
     """
     prices = _ensure_prices(database_url, ticker)
     fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
+    flow_context = _build_flow_context(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state: dict = {
@@ -246,6 +483,7 @@ def run_analysts_streaming(
         "sector": sector,
         "prices": prices,
         "fundamentals": fundamentals,
+        "flow_context": flow_context,
         "analyst_signals": [],
         "persona_signals": [],
     }

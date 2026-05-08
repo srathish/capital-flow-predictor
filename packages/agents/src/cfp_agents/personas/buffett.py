@@ -31,4 +31,21 @@ class BuffettPersona(BasePersona):
     system_prompt = SYSTEM_PROMPT
 
     def extra_context(self, state: AnalysisState) -> str:
-        return ""
+        # Buffett famously says insider purchases are one of the few signals
+        # that reliably indicate conviction. Surface insider P (purchase) and
+        # S (sale) counts + net dollars over 30d. Skip everything else — Buffett
+        # explicitly disregards options flow, momentum, and dealer positioning.
+        ctx = state.get("flow_context") or {}
+        smart = (ctx.get("smart_money") or {}) if ctx else {}
+        buys = int(smart.get("insider_buys_30d", 0) or 0)
+        sells = int(smart.get("insider_sells_30d", 0) or 0)
+        net = float(smart.get("insider_net_amount_30d", 0) or 0)
+        if buys == 0 and sells == 0:
+            return ""
+        return (
+            "Insider activity 30d (Buffett: 'There is only one reason insiders buy — "
+            "they think the stock will go up'):\n"
+            f"- Purchases (Form 4 code P): {buys}\n"
+            f"- Sales (Form 4 code S): {sells}\n"
+            f"- Net dollar flow: ${net / 1e6:+.2f}M"
+        )

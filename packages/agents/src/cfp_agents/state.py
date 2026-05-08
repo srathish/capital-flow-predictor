@@ -53,6 +53,11 @@ class AnalysisState(TypedDict, total=False):
     sector: str
     prices: pd.DataFrame  # ts, open, high, low, close, volume
     fundamentals: pd.DataFrame  # fiscal_period, period_type, metric, value
+    # Unusual Whales structured snapshot — populated by the agent runner
+    # before .invoke(). Keys are stable so personas can pull their lens slice
+    # in extra_context() without repeating SQL. Empty dict if UW key not set
+    # or if the ticker has no UW rows yet.
+    flow_context: dict[str, Any]
 
     # Outputs from analyst nodes (lists merged by LangGraph via the reducer)
     analyst_signals: Annotated[list[AgentSignal], operator.add]

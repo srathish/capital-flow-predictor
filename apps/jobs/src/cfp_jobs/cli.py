@@ -325,6 +325,54 @@ def fundamentals(
     )
 
 
+@app.command("flow")
+def flow_cmd(
+    ticker: str = typer.Argument(..., help="Stock ticker, e.g. NVDA"),
+) -> None:
+    """Pull all per-ticker Unusual Whales data: flow alerts, dark pool, net premium,
+    short interest, greek exposure, insider transactions.
+
+    Run this before an agent ensemble if you want fresh flow context. Costs ~6
+    UW calls per ticker (well under the 80K/day quota)."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    out = ingestion.unusualwhales.ingest_ticker(
+        settings.database_url, settings.unusual_whales_api_key, ticker
+    )
+    console.print(out)
+
+
+@app.command("flow-etfs")
+def flow_etfs_cmd(
+    etfs: str = typer.Option("", help="Comma-separated ETF tickers; default = PREDICTION_TARGETS"),
+) -> None:
+    """Refresh ETF in/out flow (creation/redemption) for all sector ETFs.
+    Powers the sector-rotation narrative."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    etf_list = [e.strip().upper() for e in etfs.split(",") if e.strip()] if etfs else list(PREDICTION_TARGETS)
+    out = ingestion.unusualwhales.ingest_etfs(
+        settings.database_url, settings.unusual_whales_api_key, etf_list
+    )
+    console.print(f"[green]etf_flow:[/green] {out}")
+
+
+@app.command("flow-congress")
+def flow_congress_cmd(
+    limit: int = typer.Option(500, help="Max recent trades to ingest"),
+) -> None:
+    """Pull recent congressional trades."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    n = ingestion.unusualwhales.ingest_congress(
+        settings.database_url, settings.unusual_whales_api_key, limit=limit
+    )
+    console.print(f"[green]congress_trades:[/green] {n} new rows")
+
+
 @app.command()
 def status() -> None:
     """Report row counts and freshness per data table."""

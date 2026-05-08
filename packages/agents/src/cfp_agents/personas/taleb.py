@@ -38,11 +38,40 @@ class TalebPersona(BasePersona):
     system_prompt = SYSTEM_PROMPT
 
     def extra_context(self, state: AnalysisState) -> str:
-        # Surface realized vol and 52w-high distance — Taleb cares about regime / fragility signals
+        # Taleb reads vol regime + tail strikes. Volume z-score (regime) plus
+        # IV snapshot from recent UW flow (tail-strike pricing) plus dealer
+        # gamma exposure (a flat dealer book = forced selling on a shock).
+        out: list[str] = []
+
         analyst_signals = state.get("analyst_signals", []) or []
         tech = next((s for s in analyst_signals if s.agent == "technicals"), None)
-        if tech is None:
-            return ""
-        payload = tech.payload or {}
-        vol_z = payload.get("volume_z")
-        return f"Volume z-score (20d) on most recent bar: {vol_z if vol_z is None else f'{vol_z:+.2f}'}"
+        if tech:
+            vol_z = (tech.payload or {}).get("volume_z")
+            out.append(
+                f"Volume z-score (20d) on most recent bar: "
+                f"{vol_z if vol_z is None else f'{vol_z:+.2f}'}"
+            )
+
+        ctx = state.get("flow_context") or {}
+        if ctx:
+            opt = ctx.get("options_flow") or {}
+            pos = ctx.get("positioning") or {}
+            tail_lines: list[str] = []
+
+            top = opt.get("top_trades") or []
+            otm_puts = [t for t in top if t.get("type") == "put"]
+            if otm_puts:
+                strikes = ", ".join(
+                    f"${t['strike']:.0f}" for t in otm_puts[:3] if t.get("strike") is not None
+                )
+                tail_lines.append(f"Recent large put strikes: {strikes}")
+
+            gex = pos.get("gex_total")
+            if gex is not None:
+                regime = "positive (mean-reverting / stable dealer)" if gex > 0 else "negative (trending / pro-cyclical hedging)"
+                tail_lines.append(f"Aggregate dealer GEX: {gex:+.2e} → {regime}")
+
+            if tail_lines:
+                out.append("Tail / dealer regime (Taleb lens):\n- " + "\n- ".join(tail_lines))
+
+        return "\n\n".join(out)

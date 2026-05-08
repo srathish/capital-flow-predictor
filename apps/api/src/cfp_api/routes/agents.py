@@ -36,9 +36,9 @@ _running_tasks: set[asyncio.Task] = set()
 
 
 # Static classification — keeps the API stable as the ensemble evolves.
-ANALYST_NAMES = {"technicals", "fundamentals", "sentiment", "news"}
+ANALYST_NAMES = {"technicals", "fundamentals", "sentiment", "news", "flow"}
 SYNTH_NAMES = {"trader", "risk_manager", "portfolio_manager"}
-EXPECTED_TOTAL = 4 + 13 + 3  # analysts + personas + synthesis
+EXPECTED_TOTAL = 5 + 13 + 3  # analysts + personas + synthesis
 
 
 def _classify(agent_name: str) -> str:

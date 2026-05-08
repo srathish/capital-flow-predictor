@@ -12,6 +12,7 @@ from __future__ import annotations
 from langgraph.graph import END, START, StateGraph
 
 from cfp_agents.analysts import (
+    FlowAnalyst,
     FundamentalsAnalyst,
     NewsAnalyst,
     SentimentAnalyst,
@@ -35,6 +36,7 @@ def build_analyst_graph() -> object:
         FundamentalsAnalyst(),
         SentimentAnalyst(),
         NewsAnalyst(),
+        FlowAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)
@@ -52,6 +54,7 @@ def build_persona_graph() -> object:
         FundamentalsAnalyst(),
         SentimentAnalyst(),
         NewsAnalyst(),
+        FlowAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)
@@ -83,6 +86,7 @@ def build_full_graph() -> object:
         FundamentalsAnalyst(),
         SentimentAnalyst(),
         NewsAnalyst(),
+        FlowAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)

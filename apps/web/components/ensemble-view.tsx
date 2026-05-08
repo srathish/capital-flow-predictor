@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SignalBadge } from "@/components/ui/badge";
 
-const ANALYSTS = ["technicals", "fundamentals", "sentiment", "news"] as const;
+const ANALYSTS = ["technicals", "fundamentals", "sentiment", "news", "flow"] as const;
 const PERSONAS = [
   "buffett",
   "munger",
@@ -34,6 +34,7 @@ const PRETTY_NAMES: Record<string, string> = {
   fundamentals: "Fundamentals",
   sentiment: "Sentiment",
   news: "News",
+  flow: "Options Flow",
   buffett: "Warren Buffett",
   munger: "Charlie Munger",
   burry: "Michael Burry",
@@ -107,7 +108,7 @@ export function EnsembleView({ ticker }: { ticker: string }) {
   }, [isLiveActive, live.data, latest.data]);
 
   const completedCount = isLiveActive ? live.data?.completed ?? 0 : data?.signals.length ?? 0;
-  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 20 : 20;
+  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 21 : 21;
   const isComplete = isLiveActive ? live.data?.is_complete ?? false : true;
 
   const isLoading = isLiveActive ? live.isLoading : latest.isLoading;
