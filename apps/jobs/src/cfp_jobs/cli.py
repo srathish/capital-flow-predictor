@@ -325,6 +325,29 @@ def fundamentals(
     )
 
 
+@app.command("eval-agents")
+def eval_agents_cmd(
+    lookback: int = typer.Option(90, help="Days back to walk in agent_signals"),
+) -> None:
+    """Compute forward returns for old agent_signals rows -> agent_eval table.
+
+    Run daily. Idempotent — re-running fills in newer horizons as more
+    trading days accrue. After 60-90 days you'll have enough per-persona,
+    per-regime data to rank personas and feed weights to the synthesizer.
+    """
+    from cfp_jobs import eval_agents as eval_mod
+
+    out = eval_mod.evaluate(settings.database_url, lookback_days=lookback)
+    table = Table(title="Agent eval forward-return computation")
+    table.add_column("metric")
+    table.add_column("value", justify="right")
+    table.add_row("rows evaluated", f"{out['n_rows_evaluated']:,}")
+    table.add_row("rows skipped (no horizons elapsed)", f"{out['n_skipped']:,}")
+    for h, n in out["per_horizon"].items():
+        table.add_row(f"hits filled at {h}d", f"{n:,}")
+    console.print(table)
+
+
 @app.command("flow")
 def flow_cmd(
     ticker: str = typer.Argument(..., help="Stock ticker, e.g. NVDA"),
