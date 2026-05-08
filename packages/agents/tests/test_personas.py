@@ -108,6 +108,45 @@ def test_unknown_provider_raises() -> None:
         LlmClient(provider="bogus")
 
 
+# ---------- Conviction enforcement (Phase C) ----------
+
+
+def test_hedged_persona_output_without_justification_is_rejected() -> None:
+    """Lazy 0.5 hedged answers must do real work — bare middle-band confidence
+    with no hedge_justification fails schema validation."""
+    import pytest
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError, match="hedge_justification"):
+        PersonaOutput(
+            signal="neutral",
+            confidence=0.50,
+            thesis="Mixed signals, hard to call.",
+        )
+
+
+def test_hedged_persona_output_with_justification_is_accepted() -> None:
+    """If you DO articulate the flip conditions, the hedged answer is fine."""
+    out = PersonaOutput(
+        signal="neutral",
+        confidence=0.50,
+        thesis="Two signals contradict.",
+        hedge_justification=(
+            "Bull would need: insider buying to accelerate above $20M net 30d. "
+            "Bear would need: vol z-score to collapse below -1, signaling exhaustion."
+        ),
+    )
+    assert out.confidence == 0.50
+
+
+def test_conviction_outside_band_does_not_require_justification() -> None:
+    """Clear-side calls (confidence < 0.40 or > 0.60) need no justification."""
+    out = PersonaOutput(
+        signal="bullish", confidence=0.75, thesis="Clear bull case."
+    )
+    assert out.hedge_justification == ""
+
+
 # ---------- Mocked LLM round-trip ----------
 
 
@@ -150,7 +189,7 @@ def test_persona_maps_llm_output_to_agent_signal() -> None:
 
 def test_persona_handles_llm_exception() -> None:
     llm = _mock_llm_returning(
-        PersonaOutput(signal="bullish", confidence=0.5, thesis="x")  # not used
+        PersonaOutput(signal="bullish", confidence=0.7, thesis="x")  # not used
     )
     persona = BurryPersona(llm=llm)
     with patch.object(llm, "invoke_persona", side_effect=RuntimeError("network down")):
@@ -196,7 +235,7 @@ def test_each_persona_has_nontrivial_system_prompt() -> None:
 def test_full_graph_runs_analysts_and_personas() -> None:
     """All 4 analysts run, then all 6 personas run; both lists land in state."""
     canned = PersonaOutput(
-        signal="bullish", confidence=0.6, thesis="Mocked persona response."
+        signal="bullish", confidence=0.7, thesis="Mocked persona response."
     )
     # Patch the BasePersona's analyze method to skip the LLM entirely
     from cfp_agents.personas.base import BasePersona

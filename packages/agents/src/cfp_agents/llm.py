@@ -16,7 +16,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Literal, TypeVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 if TYPE_CHECKING:
     pass
@@ -48,6 +48,38 @@ class PersonaOutput(BaseModel):
         default_factory=list,
         description="0-3 bullet points of what could be wrong with the call.",
     )
+    hedge_justification: str = Field(
+        default="",
+        description=(
+            "REQUIRED if confidence is between 0.40 and 0.60 (the hedged "
+            "middle). Must explicitly name which specific evidence on the "
+            "bull side AND which specific evidence on the bear side would "
+            "need to flip to push you off neutral. Vague 'mixed signals' "
+            "or 'I want more data' is NOT acceptable. If you're picking "
+            "a clear side (confidence outside 0.40-0.60), leave this empty."
+        ),
+    )
+
+    @model_validator(mode="after")
+    def _enforce_hedge_justification(self) -> PersonaOutput:
+        """Force conviction: lazy 0.5-confidence answers must do extra work.
+
+        RLHF-trained models default to balanced/hedged responses. This
+        validator imposes a real cost on the hedge: if you sit in
+        [0.40, 0.60], you must articulate the specific evidence on both
+        sides that would flip you. Most of the time the model finds it
+        easier to just pick a side, which is the desired behavior."""
+        if 0.40 <= self.confidence <= 0.60:
+            text = (self.hedge_justification or "").strip()
+            if len(text) < 30:
+                raise ValueError(
+                    "Confidence in [0.40, 0.60] requires a non-trivial "
+                    "hedge_justification (>=30 chars) that names the "
+                    "specific evidence on the bull side AND bear side "
+                    "that would flip you. Either write it, or pick a "
+                    "side and adjust confidence outside the hedge band."
+                )
+        return self
 
 
 class LlmClient:

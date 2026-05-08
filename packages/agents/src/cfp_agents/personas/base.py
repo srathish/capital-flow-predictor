@@ -326,5 +326,12 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
             "point from above (revenue growth %, ROE %, FCF, P/E, RSI, "
             "trend, flow alert, insider activity, etc.). Avoid vague platitudes.\n"
             "- concerns: 1-3 specific risks that would invalidate this call. "
-            "Tie each to your framework, not generic 'market volatility'."
+            "Tie each to your framework, not generic 'market volatility'.\n"
+            "- CONVICTION RULE: confidence in [0.40, 0.60] is the hedged middle. "
+            "If you land there, you MUST fill `hedge_justification` (>=30 chars) "
+            "with the specific evidence on BOTH sides that would flip you. "
+            "Vague 'mixed signals' or 'I want more data' will fail validation. "
+            "Most of the time, picking a side and adjusting confidence outside "
+            "[0.40, 0.60] is the right answer. The schema will REJECT a hedged "
+            "answer that doesn't articulate the flip conditions."
         )
