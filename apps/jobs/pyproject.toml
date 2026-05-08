@@ -1,0 +1,49 @@
+[project]
+name = "cfp-jobs"
+version = "0.1.0"
+description = "Capital Flow Predictor ingestion, training, and inference jobs"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "cfp-shared",
+    "cfp-features",
+    "cfp-models",
+    "cfp-agents",
+    "yfinance>=0.2.40",
+    "fredapi>=0.5",
+    "pandas>=2.2",
+    "psycopg[binary]>=3.2",
+    "pydantic-settings>=2.6",
+    "python-dotenv>=1.0",
+    "typer>=0.12",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-mock>=3.14",
+    "ruff>=0.7",
+]
+
+[project.scripts]
+cfp-jobs = "cfp_jobs.cli:app"
+
+[tool.uv.sources]
+cfp-shared = { workspace = true }
+cfp-features = { workspace = true }
+cfp-models = { workspace = true }
+cfp-agents = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cfp_jobs"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning",
+]

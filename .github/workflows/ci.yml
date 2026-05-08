@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: timescale/timescaledb:latest-pg16
+        env:
+          POSTGRES_USER: cfp
+          POSTGRES_PASSWORD: cfp
+          POSTGRES_DB: cfp
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cfp -d cfp"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://cfp:cfp@localhost:5432/cfp
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install 3.11
+      - name: Sync workspace (all packages, dev extras)
+        run: uv sync --all-packages --all-extras
+      - name: Lint
+        run: uv run ruff check .
+      - name: Test (api)
+        working-directory: apps/api
+        run: uv run pytest -q
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run typecheck

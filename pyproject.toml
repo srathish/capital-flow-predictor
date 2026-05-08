@@ -1,0 +1,24 @@
+[project]
+name = "capital-flow-predictor"
+version = "0.1.0"
+description = "Capital Flow Predictor — sector rotation prediction with causal interpretability"
+requires-python = ">=3.11,<3.13"
+
+[tool.uv.workspace]
+members = [
+    "apps/api",
+    "apps/jobs",
+    "packages/shared",
+    "packages/features",
+    "packages/models",
+    "packages/agents",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "node_modules"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]

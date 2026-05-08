@@ -1,0 +1,12 @@
+# Railway deployment config — Phase 0 ships only the API service.
+# Web (Phase 10) and jobs (Phase 1+) get their own services later.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/api/Dockerfile"
+
+[deploy]
+startCommand = "uvicorn cfp_api.main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
