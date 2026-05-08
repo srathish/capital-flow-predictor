@@ -15,11 +15,12 @@ from abc import ABC
 from datetime import UTC, datetime
 from typing import ClassVar
 
+from cfp_shared import EvidenceBundle, Instrument
+
 from cfp_agents.bundle_compute import compute_fundamentals_ctx, compute_price_context
 from cfp_agents.llm import LlmClient, PersonaOutput
 from cfp_agents.personas.examples import EXAMPLES
 from cfp_agents.state import AgentSignal, AnalysisState
-from cfp_shared import EvidenceBundle, Instrument
 
 
 def _fmt(value: float | None, *, pct: bool = False, currency: bool = False) -> str:

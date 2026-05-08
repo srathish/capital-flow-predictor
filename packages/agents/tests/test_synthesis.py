@@ -235,8 +235,8 @@ def test_all_13_personas_register_distinct_names() -> None:
     personas = all_personas()
     names = [p.name for p in personas]
     expected = {
-        "buffett", "munger", "burry", "druckenmiller", "cathie_wood", "taleb",
-        "damodaran", "graham", "ackman", "lynch", "fisher", "pabrai", "jhunjhunwala",
+        "buffett", "burry", "druckenmiller", "taleb", "soros", "simons",
+        "klarman", "greenblatt", "minervini", "cathie_wood", "damodaran", "lynch", "ackman",
     }
     assert set(names) == expected
     assert len(names) == 13

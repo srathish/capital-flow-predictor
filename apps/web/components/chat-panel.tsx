@@ -8,18 +8,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const PERSONA_OPTIONS: { value: string; label: string }[] = [
   { value: "ensemble", label: "Ensemble synthesis" },
   { value: "buffett", label: "Warren Buffett" },
-  { value: "munger", label: "Charlie Munger" },
   { value: "burry", label: "Michael Burry" },
   { value: "druckenmiller", label: "Stanley Druckenmiller" },
-  { value: "cathie_wood", label: "Cathie Wood" },
   { value: "taleb", label: "Nassim Taleb" },
+  { value: "soros", label: "George Soros" },
+  { value: "simons", label: "Jim Simons (quant)" },
+  { value: "klarman", label: "Seth Klarman" },
+  { value: "greenblatt", label: "Joel Greenblatt" },
+  { value: "minervini", label: "Mark Minervini" },
+  { value: "cathie_wood", label: "Cathie Wood" },
   { value: "damodaran", label: "Aswath Damodaran" },
-  { value: "graham", label: "Benjamin Graham" },
-  { value: "ackman", label: "Bill Ackman" },
   { value: "lynch", label: "Peter Lynch" },
-  { value: "fisher", label: "Phil Fisher" },
-  { value: "pabrai", label: "Mohnish Pabrai" },
-  { value: "jhunjhunwala", label: "Rakesh Jhunjhunwala" },
+  { value: "ackman", label: "Bill Ackman" },
 ];
 
 type Props = {

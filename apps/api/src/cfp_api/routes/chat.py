@@ -130,7 +130,7 @@ Answer the user's follow-up questions about this analysis. Rules:
 - Stay grounded in what the agents actually said — do not invent new analysis they didn't surface.
 - If the user asks about something the agents didn't cover, say so explicitly: "the ensemble didn't analyze that — but based on what they did say, ...".
 - Be concise. Default to 2-4 sentences unless the user asks for depth.
-- When discussing disagreement between agents, name both sides ("Wood and Druckenmiller see growth, while Burry and Graham flag valuation").
+- When discussing disagreement between agents, name both sides ("Wood and Druckenmiller see growth, while Burry and Klarman flag valuation").
 """
 
 
@@ -193,18 +193,18 @@ async def ensemble_chat(ticker: str, body: ChatRequest):
 
 PERSONA_NAMES = {
     "buffett",
-    "munger",
     "burry",
     "druckenmiller",
-    "cathie_wood",
     "taleb",
+    "soros",
+    "simons",
+    "klarman",
+    "greenblatt",
+    "minervini",
+    "cathie_wood",
     "damodaran",
-    "graham",
-    "ackman",
     "lynch",
-    "fisher",
-    "pabrai",
-    "jhunjhunwala",
+    "ackman",
 }
 
 
@@ -217,29 +217,29 @@ def _persona_system_prompt(name: str) -> str:
         CathieWoodPersona,
         DamodaranPersona,
         DruckenmillerPersona,
-        FisherPersona,
-        GrahamPersona,
-        JhunjhunwalaPersona,
+        GreenblattPersona,
+        KlarmanPersona,
         LynchPersona,
-        MungerPersona,
-        PabraiPersona,
+        MinerviniPersona,
+        SimonsPersona,
+        SorosPersona,
         TalebPersona,
     )
 
     registry = {
         "buffett": BuffettPersona,
-        "munger": MungerPersona,
         "burry": BurryPersona,
         "druckenmiller": DruckenmillerPersona,
-        "cathie_wood": CathieWoodPersona,
         "taleb": TalebPersona,
+        "soros": SorosPersona,
+        "simons": SimonsPersona,
+        "klarman": KlarmanPersona,
+        "greenblatt": GreenblattPersona,
+        "minervini": MinerviniPersona,
+        "cathie_wood": CathieWoodPersona,
         "damodaran": DamodaranPersona,
-        "graham": GrahamPersona,
-        "ackman": AckmanPersona,
         "lynch": LynchPersona,
-        "fisher": FisherPersona,
-        "pabrai": PabraiPersona,
-        "jhunjhunwala": JhunjhunwalaPersona,
+        "ackman": AckmanPersona,
     }
     cls = registry.get(name)
     if cls is None:

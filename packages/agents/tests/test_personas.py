@@ -169,8 +169,8 @@ def test_all_personas_distinct_names() -> None:
     names = [p.name for p in personas]
     assert len(set(names)) == len(names)
     assert set(names) == {
-        "buffett", "munger", "burry", "druckenmiller", "cathie_wood", "taleb",
-        "damodaran", "graham", "ackman", "lynch", "fisher", "pabrai", "jhunjhunwala",
+        "buffett", "burry", "druckenmiller", "taleb", "soros", "simons",
+        "klarman", "greenblatt", "minervini", "cathie_wood", "damodaran", "lynch", "ackman",
     }
 
 
@@ -219,6 +219,6 @@ def test_full_graph_runs_analysts_and_personas() -> None:
     persona_names = {s.agent for s in result["persona_signals"]}
     assert analyst_names == {"technicals", "fundamentals", "sentiment", "news", "flow"}
     assert persona_names == {
-        "buffett", "munger", "burry", "druckenmiller", "cathie_wood", "taleb",
-        "damodaran", "graham", "ackman", "lynch", "fisher", "pabrai", "jhunjhunwala",
+        "buffett", "burry", "druckenmiller", "taleb", "soros", "simons",
+        "klarman", "greenblatt", "minervini", "cathie_wood", "damodaran", "lynch", "ackman",
     }
