@@ -12,7 +12,13 @@ dependencies = [
     "asyncpg>=0.30",
     "greenlet>=3.0",
     "httpx>=0.27",
+    # Workspace deps so the API can run agent ensembles synchronously on demand.
+    # Pulls LangGraph + openai/anthropic + xgboost (~300MB to image size).
+    "cfp-jobs",
 ]
+
+[tool.uv.sources]
+cfp-jobs = { workspace = true }
 
 [project.optional-dependencies]
 dev = [

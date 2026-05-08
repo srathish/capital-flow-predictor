@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from cfp_api import __version__
 from cfp_api.db import check_db_connection, close_pool, init_pool
-from cfp_api.routes import agents, rankings, sectors, watchlist
+from cfp_api.routes import agents, chat, rankings, sectors, watchlist
 from cfp_api.settings import settings
 
 
@@ -33,6 +33,7 @@ app.add_middleware(
 app.include_router(rankings.router)
 app.include_router(watchlist.router)
 app.include_router(agents.router)
+app.include_router(chat.router)
 app.include_router(sectors.router)
 
 

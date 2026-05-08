@@ -1,7 +1,19 @@
 -- Capital Flow Predictor — initial schema (DESIGN.md §5.3)
 -- Idempotent: safe to re-run.
+--
+-- TimescaleDB is preferred (gives us hypertables for time-series compression
+-- and retention policies), but the schema also works on vanilla Postgres at
+-- our scale (~50k rows/table). The DO blocks below make TimescaleDB optional
+-- so the same migrations run on local Docker (TimescaleDB) and on Railway's
+-- managed Postgres (vanilla).
 
-CREATE EXTENSION IF NOT EXISTS timescaledb;
+DO $$
+BEGIN
+    CREATE EXTENSION IF NOT EXISTS timescaledb;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'TimescaleDB extension not available; using vanilla Postgres tables.';
+END $$;
 
 -- Raw OHLCV
 CREATE TABLE IF NOT EXISTS prices_daily (
@@ -15,7 +27,8 @@ CREATE TABLE IF NOT EXISTS prices_daily (
     source      TEXT NOT NULL,
     PRIMARY KEY (ts, symbol, source)
 );
-SELECT create_hypertable('prices_daily', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN PERFORM create_hypertable('prices_daily', 'ts', if_not_exists => TRUE);
+EXCEPTION WHEN undefined_function THEN NULL; END $$;
 
 -- Macro series (FRED, etc.)
 CREATE TABLE IF NOT EXISTS macro_daily (
@@ -24,7 +37,8 @@ CREATE TABLE IF NOT EXISTS macro_daily (
     value       DOUBLE PRECISION,
     PRIMARY KEY (ts, series_id)
 );
-SELECT create_hypertable('macro_daily', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN PERFORM create_hypertable('macro_daily', 'ts', if_not_exists => TRUE);
+EXCEPTION WHEN undefined_function THEN NULL; END $$;
 
 -- ETF flows (weekly cadence — not a hypertable)
 CREATE TABLE IF NOT EXISTS etf_flows_weekly (
@@ -45,7 +59,8 @@ CREATE TABLE IF NOT EXISTS gex_daily (
     put_wall    DOUBLE PRECISION,
     PRIMARY KEY (ts, symbol)
 );
-SELECT create_hypertable('gex_daily', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN PERFORM create_hypertable('gex_daily', 'ts', if_not_exists => TRUE);
+EXCEPTION WHEN undefined_function THEN NULL; END $$;
 
 -- Computed features (point-in-time)
 CREATE TABLE IF NOT EXISTS features_daily (
@@ -55,7 +70,8 @@ CREATE TABLE IF NOT EXISTS features_daily (
     payload     JSONB NOT NULL,
     PRIMARY KEY (ts, symbol, feature_set)
 );
-SELECT create_hypertable('features_daily', 'ts', if_not_exists => TRUE);
+DO $$ BEGIN PERFORM create_hypertable('features_daily', 'ts', if_not_exists => TRUE);
+EXCEPTION WHEN undefined_function THEN NULL; END $$;
 
 -- Predictions
 CREATE TABLE IF NOT EXISTS predictions (
@@ -70,4 +86,5 @@ CREATE TABLE IF NOT EXISTS predictions (
     explanation JSONB,
     PRIMARY KEY (run_ts, target_ts, symbol, horizon_d, model)
 );
-SELECT create_hypertable('predictions', 'run_ts', if_not_exists => TRUE);
+DO $$ BEGIN PERFORM create_hypertable('predictions', 'run_ts', if_not_exists => TRUE);
+EXCEPTION WHEN undefined_function THEN NULL; END $$;

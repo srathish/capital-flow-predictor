@@ -160,3 +160,62 @@ class LlmClient:
             output_format=PersonaOutput,
             max_tokens=max_tokens,
         )
+
+    # ------- async streaming chat (used by the API's /chat/* endpoints) -------
+
+    async def stream_chat(
+        self,
+        *,
+        system_prompt: str,
+        messages: list[dict],
+        max_tokens: int = 2000,
+    ):
+        """Yield text tokens from the LLM as they arrive.
+
+        ``messages`` is a list of ``{"role": "user"|"assistant", "content": "..."}``
+        dicts forming the chat history. The system prompt is prepended automatically.
+        """
+        if not self._api_key:
+            raise RuntimeError(f"LLM provider {self.provider!r} unavailable (missing API key)")
+
+        if self.provider == "moonshot":
+            from openai import AsyncOpenAI
+
+            client = AsyncOpenAI(api_key=self._api_key, base_url=self.base_url)
+            full_messages: list[dict] = [
+                {"role": "system", "content": system_prompt},
+                *messages,
+            ]
+            stream = await client.chat.completions.create(
+                model=self.model,
+                max_tokens=max_tokens,
+                messages=full_messages,  # type: ignore[arg-type]
+                stream=True,
+            )
+            async for chunk in stream:
+                content = chunk.choices[0].delta.content
+                if content:
+                    yield content
+            return
+
+        if self.provider == "anthropic":
+            import anthropic
+
+            client = anthropic.AsyncAnthropic(api_key=self._api_key)
+            async with client.messages.stream(
+                model=self.model,
+                max_tokens=max_tokens,
+                system=[
+                    {
+                        "type": "text",
+                        "text": system_prompt,
+                        "cache_control": {"type": "ephemeral"},
+                    }
+                ],
+                messages=messages,  # type: ignore[arg-type]
+            ) as stream:
+                async for text in stream.text_stream:
+                    yield text
+            return
+
+        raise ValueError(f"Unknown provider: {self.provider!r}")

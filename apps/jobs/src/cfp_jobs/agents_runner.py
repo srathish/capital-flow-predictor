@@ -168,6 +168,83 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     }
 
 
+# Total agents in the full ensemble: 4 analysts + 13 personas + 3 synthesis.
+# Used by callers (the API) to compute is_complete during a streaming run.
+EXPECTED_AGENT_COUNT_FULL = 4 + 13 + 3
+EXPECTED_AGENT_COUNT_ANALYSTS_ONLY = 4
+
+
+def run_analysts_streaming(
+    database_url: str,
+    ticker: str,
+    sector: str = "",
+    *,
+    run_ts: datetime,
+    include_personas: bool = True,
+) -> dict:
+    """Run the ensemble and write each signal to the DB as it lands.
+
+    Designed to drive a live UI: the frontend polls GET /v1/agents/{ticker}
+    with ?run_ts=<this run_ts> every ~1.5s and watches the agent_signals
+    rows accrue from 0 to 20.
+
+    All signals share the supplied ``run_ts`` so a poll can fetch them in
+    one query. The PM signal is written last (synthesis stage runs sequentially
+    after all parallel nodes), so its presence == "run is complete".
+    """
+    prices = _ensure_prices(database_url, ticker)
+    with connect(database_url) as conn:
+        fundamentals = _load_fundamentals(conn, ticker)
+
+    graph = build_full_graph() if include_personas else build_analyst_graph()
+    state: dict = {
+        "ticker": ticker,
+        "sector": sector,
+        "prices": prices,
+        "fundamentals": fundamentals,
+        "analyst_signals": [],
+        "persona_signals": [],
+    }
+
+    n_persisted = 0
+    # graph.stream() yields one chunk per node completion. Each chunk is
+    # {node_name: state_delta} where state_delta is the fields that node added.
+    for chunk in graph.stream(state):
+        for _node_name, delta in chunk.items():
+            if not isinstance(delta, dict):
+                continue
+
+            new_signals: list[AgentSignal] = []
+            new_signals.extend(delta.get("analyst_signals", []) or [])
+            new_signals.extend(delta.get("persona_signals", []) or [])
+            for key in ("trader_decision", "risk_assessment", "portfolio_decision"):
+                v = delta.get(key)
+                if isinstance(v, AgentSignal):
+                    new_signals.append(v)
+
+            if not new_signals:
+                continue
+
+            try:
+                with connect(database_url) as conn:
+                    upsert_agent_signals(conn, run_ts, ticker, new_signals)
+                    conn.commit()
+                n_persisted += len(new_signals)
+                log.info(
+                    "streaming run %s/%s: +%d signals (total %d)",
+                    ticker, run_ts.isoformat(), len(new_signals), n_persisted,
+                )
+            except Exception as e:
+                log.warning("streaming write failed for %s: %s", ticker, e)
+
+    return {
+        "ticker": ticker,
+        "run_ts": run_ts.isoformat(),
+        "n_signals": n_persisted,
+        "complete": True,
+    }
+
+
 def latest_signals(database_url: str, ticker: str) -> pd.DataFrame:
     """Return the most-recent signals for `ticker` across all agents."""
     sql = """

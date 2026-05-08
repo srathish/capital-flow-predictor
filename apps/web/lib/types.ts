@@ -69,6 +69,35 @@ export type AgentsTimelineResponse = {
   entries: AgentsTimelineEntry[];
 };
 
+// /v1/agents/{ticker}/run
+export type RunResponse = {
+  ticker: string;
+  run_ts: string;
+  status: "started" | "in_progress" | "complete";
+  expected_total: number;
+};
+
+// /v1/agents/{ticker}/runs/{run_ts}
+export type RunStatusResponse = {
+  ticker: string;
+  run_ts: string;
+  expected_total: number;
+  completed: number;
+  is_complete: boolean;
+  signals: AgentSignalEntry[];
+};
+
+// Chat (SSE)
+export type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export type ChatStreamEvent =
+  | { type: "token"; content: string }
+  | { type: "done" }
+  | { type: "error"; message: string };
+
 // /v1/sectors
 export type SectorEntry = {
   symbol: string;

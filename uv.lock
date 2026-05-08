@@ -191,6 +191,7 @@ version = "0.1.0"
 source = { editable = "apps/api" }
 dependencies = [
     { name = "asyncpg" },
+    { name = "cfp-jobs" },
     { name = "fastapi" },
     { name = "greenlet" },
     { name = "httpx" },
@@ -210,6 +211,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "asyncpg", specifier = ">=0.30" },
+    { name = "cfp-jobs", editable = "apps/jobs" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "greenlet", specifier = ">=3.0" },
     { name = "httpx", specifier = ">=0.27" },

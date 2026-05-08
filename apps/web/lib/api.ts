@@ -1,7 +1,12 @@
+import { parseSseStream } from "./sse";
 import type {
   AgentsForTickerResponse,
   AgentsTimelineResponse,
+  ChatMessage,
+  ChatStreamEvent,
   RankingsResponse,
+  RunResponse,
+  RunStatusResponse,
   SectorsResponse,
   WatchlistResponse,
   WatchlistSector,
@@ -71,4 +76,69 @@ export const api = {
     const qs = sp.toString();
     return getJson<SectorsResponse>(`/v1/sectors${qs ? `?${qs}` : ""}`);
   },
+  agentsAtRun(ticker: string, runTs: string): Promise<AgentsForTickerResponse> {
+    return getJson<AgentsForTickerResponse>(
+      `/v1/agents/${encodeURIComponent(ticker)}?run_ts=${encodeURIComponent(runTs)}`
+    );
+  },
+  runEnsemble(ticker: string, sector?: string): Promise<RunResponse> {
+    const qs = sector ? `?sector=${encodeURIComponent(sector)}` : "";
+    return fetch(`${baseUrl()}/v1/agents/${encodeURIComponent(ticker)}/run${qs}`, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+    }).then(async (res) => {
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        throw new ApiError(res.status, `${res.status} ${res.statusText}: ${body.slice(0, 200)}`);
+      }
+      return (await res.json()) as RunResponse;
+    });
+  },
+  getRunStatus(ticker: string, runTs: string): Promise<RunStatusResponse> {
+    return getJson<RunStatusResponse>(
+      `/v1/agents/${encodeURIComponent(ticker)}/runs/${encodeURIComponent(runTs)}`
+    );
+  },
+  chatEnsemble(
+    ticker: string,
+    messages: ChatMessage[],
+    runTs?: string,
+    signal?: AbortSignal
+  ): AsyncGenerator<ChatStreamEvent> {
+    return streamChat(
+      `/v1/agents/${encodeURIComponent(ticker)}/chat/ensemble`,
+      messages,
+      runTs,
+      signal
+    );
+  },
+  chatPersona(
+    ticker: string,
+    persona: string,
+    messages: ChatMessage[],
+    runTs?: string,
+    signal?: AbortSignal
+  ): AsyncGenerator<ChatStreamEvent> {
+    return streamChat(
+      `/v1/agents/${encodeURIComponent(ticker)}/chat/persona/${encodeURIComponent(persona)}`,
+      messages,
+      runTs,
+      signal
+    );
+  },
 };
+
+async function* streamChat(
+  path: string,
+  messages: ChatMessage[],
+  runTs: string | undefined,
+  signal: AbortSignal | undefined
+): AsyncGenerator<ChatStreamEvent> {
+  const res = await fetch(`${baseUrl()}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+    body: JSON.stringify({ messages, ...(runTs ? { run_ts: runTs } : {}) }),
+    signal,
+  });
+  yield* parseSseStream(res);
+}
