@@ -11,26 +11,15 @@ persona list.
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from datetime import UTC, datetime
 from typing import ClassVar
 
-import pandas as pd
-
+from cfp_agents.bundle_compute import compute_fundamentals_ctx, compute_price_context
 from cfp_agents.llm import LlmClient, PersonaOutput
 from cfp_agents.personas.examples import EXAMPLES
 from cfp_agents.state import AgentSignal, AnalysisState
-
-
-def _latest_metric(fundamentals: pd.DataFrame, metric: str) -> float | None:
-    if fundamentals is None or fundamentals.empty:
-        return None
-    sel = fundamentals[
-        (fundamentals["metric"] == metric) & (fundamentals["period_type"] == "A")
-    ]
-    if sel.empty:
-        return None
-    sel = sel.sort_values("fiscal_period")
-    return float(sel.iloc[-1]["value"])
+from cfp_shared import EvidenceBundle, Instrument
 
 
 def _fmt(value: float | None, *, pct: bool = False, currency: bool = False) -> str:
@@ -47,7 +36,98 @@ def _fmt(value: float | None, *, pct: bool = False, currency: bool = False) -> s
     return f"{value:.2f}"
 
 
-class BasePersona(ABC):
+def _render_flow_block(bundle) -> str:
+    """Render UW flow / dark pool / positioning / smart money / catalysts as
+    raw bullet-point evidence. Personas read this and apply their own lens —
+    no analyst conclusions are passed through."""
+    opt = bundle.options_flow
+    dp = bundle.dark_pool
+    pos = bundle.positioning
+    smart = bundle.smart_money
+    cat = bundle.catalysts
+
+    sections: list[str] = []
+
+    # Options flow
+    if opt.alert_count_5d > 0:
+        opt_lines = [
+            f"- {opt.alert_count_5d} alerts in 5d",
+            f"- Net call premium 5d: {_fmt(opt.net_call_premium_5d, currency=True)}, "
+            f"net put: {_fmt(opt.net_put_premium_5d, currency=True)}",
+            f"- LEAP (>90 DTE) call premium 5d: {_fmt(opt.leap_call_premium_5d, currency=True)}, "
+            f"LEAP put: {_fmt(opt.leap_put_premium_5d, currency=True)}",
+            f"- At-ask fraction: calls {opt.call_at_ask_pct * 100:.0f}%, puts {opt.put_at_ask_pct * 100:.0f}%",
+            f"- Sticky vs transient: {opt.sticky_pct * 100:.0f}% absorbed into OI next day",
+        ]
+        if opt.top_trades:
+            opt_lines.append("- Top trades:")
+            for t in opt.top_trades[:5]:
+                strike_s = f"${t.strike:.0f}" if t.strike is not None else "?"
+                exp_s = t.expiry.isoformat() if t.expiry else "?"
+                prem_s = _fmt(t.total_premium, currency=True)
+                ask_s = _fmt(t.ask_prem, currency=True)
+                opt_lines.append(
+                    f"    {t.type or '?'} {strike_s} exp {exp_s} — total {prem_s}, "
+                    f"at-ask {ask_s} ({t.alert or '?'})"
+                )
+        sections.append("Options flow (5d):\n" + "\n".join(opt_lines))
+
+    # Dark pool
+    if dp.prints_5d > 0:
+        sections.append(
+            "Dark pool (5d):\n"
+            f"- {dp.prints_5d} prints, {_fmt(dp.premium_5d, currency=True)} total\n"
+            f"- {dp.above_vwap_pct * 100:.0f}% of $ traded above NBBO midpoint"
+        )
+
+    # Positioning (short + dealer GEX)
+    pos_lines: list[str] = []
+    if pos.fee_rate is not None:
+        pos_lines.append(f"- Borrow fee rate: {pos.fee_rate:.2f}%")
+    if pos.short_shares_available is not None:
+        pos_lines.append(f"- Short shares available: {pos.short_shares_available:,}")
+    if pos.gex_total is not None:
+        regime = "positive (mean-reverting / supportive)" if pos.gex_total > 0 else "negative (trending / pro-cyclical)"
+        pos_lines.append(f"- Aggregate dealer GEX: {pos.gex_total:+.2e} -> {regime}")
+    if pos_lines:
+        sections.append("Positioning:\n" + "\n".join(pos_lines))
+
+    # Smart money
+    sm_lines: list[str] = []
+    if smart.insider_buys_30d > 0 or smart.insider_sells_30d > 0:
+        sm_lines.append(
+            f"- Insider 30d: {smart.insider_buys_30d} buys / {smart.insider_sells_30d} sells, "
+            f"net {_fmt(smart.insider_net_amount_30d, currency=True)}"
+        )
+    if smart.congress_trades:
+        sm_lines.append(f"- {len(smart.congress_trades)} recent congressional trades")
+        for ct in smart.congress_trades[:3]:
+            sm_lines.append(
+                f"    {ct.name or '?'} ({ct.chamber or '?'}): {ct.type or '?'} {ct.amount_band or '?'} on {ct.transaction_date or '?'}"
+            )
+    if sm_lines:
+        sections.append("Smart money:\n" + "\n".join(sm_lines))
+
+    # Catalysts
+    cat_lines: list[str] = []
+    if cat.next_earnings_date:
+        proximity_note = " (within 7 days — pre-earnings hedging confounds flow signal)" if cat.earnings_proximity else ""
+        cat_lines.append(f"- Next earnings: {cat.next_earnings_date.isoformat()}{proximity_note}")
+    if cat.news_5d:
+        cat_lines.append(f"- {len(cat.news_5d)} news headlines 5d:")
+        for h in cat.news_5d[:5]:
+            sent = f"[{h.sentiment}]" if h.sentiment else ""
+            major = "*MAJOR*" if h.is_major else ""
+            cat_lines.append(f'    {h.ts.date()} {sent}{major} {h.source or "?"}: "{h.headline[:120]}"')
+    if cat_lines:
+        sections.append("Catalysts:\n" + "\n".join(cat_lines))
+
+    if not sections:
+        return "Flow / positioning / catalysts: no Unusual Whales data available for this ticker yet."
+    return "\n\n".join(sections)
+
+
+class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses override SYSTEM_PROMPT.
     """Common LLM-persona plumbing.
 
     Subclasses set ``name`` (e.g. ``"buffett"``) and ``system_prompt``.
@@ -63,9 +143,21 @@ class BasePersona(ABC):
         signal = self.analyze(state)
         return {"persona_signals": [signal]}
 
-    @abstractmethod
+    def lens(self, state: AnalysisState) -> str:
+        """Persona-specific lens — pick the 8-12 most relevant fields from
+        state["evidence"] (the canonical EvidenceBundle) and render them as
+        a context block.
+
+        Default implementation returns an empty string; subclasses override
+        to surface fields that match their investing framework. Personas
+        DO NOT see analyst conclusions — they see raw bundle fields, which
+        forces them to disagree rather than anchor on upstream analyst votes.
+        """
+        return ""
+
+    # Legacy alias kept for any callers that haven't migrated. Prefer lens().
     def extra_context(self, state: AnalysisState) -> str:
-        """Hook for persona-specific data the user prompt should surface."""
+        return self.lens(state)
 
     def analyze(self, state: AnalysisState) -> AgentSignal:
         ticker = state.get("ticker", "?")
@@ -120,80 +212,104 @@ class BasePersona(ABC):
         )
 
     def _build_user_prompt(self, state: AnalysisState) -> str:
+        """Render the user prompt from raw EvidenceBundle fields ONLY.
+
+        Personas do NOT see analyst conclusions (no 'technicals: bullish' line).
+        That was creating groupthink — every persona anchored to the technicals
+        analyst's verdict. Now each persona reads raw price + flow + insider
+        evidence and applies their own lens, which forces real disagreement.
+        """
         ticker = state.get("ticker", "?")
-        instrument = state.get("instrument") or {}
-        # Fall back to top-level sector for old tests / direct callers that
-        # don't populate instrument.
-        sector = instrument.get("sector") or state.get("sector") or "Unknown"
-        inst_type = (instrument.get("type") or "stock").lower()
-        company_name = instrument.get("company_name") or ticker
-        industry = instrument.get("industry")
-        descr = instrument.get("short_description")
-        next_earnings = instrument.get("next_earnings_date")
-        marketcap_size = instrument.get("marketcap_size")
+        bundle = state.get("evidence")
 
-        fundamentals = state.get("fundamentals")
-        analyst_signals = state.get("analyst_signals", []) or []
+        if bundle is None:
+            # Tests / direct callers without a bundle — synthesize a minimal
+            # one from state["prices"] + state["fundamentals"] so the prompt
+            # still renders. Lens calls that depend on flow / smart_money /
+            # catalysts will see empty defaults.
+            sector = state.get("sector") or "Unknown"
+            bundle = EvidenceBundle(
+                run_ts=datetime.now(UTC),
+                instrument=Instrument(
+                    ticker=ticker,
+                    type="stock",
+                    company_name=ticker,
+                    sector=sector,
+                ),
+                price_context=compute_price_context(state.get("prices")),
+                fundamentals=compute_fundamentals_ctx(state.get("fundamentals")),
+            )
 
-        # --- instrument frame (positive framing — never let the LLM guess) ---
-        type_label = "sector ETF (basket of stocks)" if inst_type == "etf" else "publicly traded common stock (operating company)"
-        industry_part = f", industry: {industry}" if industry else ""
-        size_part = f", marketcap-size: {marketcap_size}" if marketcap_size else ""
-        earnings_part = f", next earnings: {next_earnings}" if next_earnings else ""
-        descr_part = f"\nBusiness description: {descr}" if descr else ""
+        inst = bundle.instrument
+        pc = bundle.price_context
+        fc = bundle.fundamentals
+
+        company_name = inst.company_name or ticker
+        type_label = (
+            "sector ETF (basket of stocks)"
+            if (inst.type or "stock").lower() == "etf"
+            else "publicly traded common stock (operating company)"
+        )
+        industry_part = f", industry: {inst.industry}" if inst.industry else ""
+        size_part = f", marketcap-size: {inst.marketcap_size}" if inst.marketcap_size else ""
+        earnings_part = (
+            f", next earnings: {inst.next_earnings_date.isoformat()}"
+            if inst.next_earnings_date
+            else ""
+        )
+        descr_part = f"\nBusiness description: {inst.short_description}" if inst.short_description else ""
         instrument_block = (
-            f"Instrument: {company_name} ({ticker}) — {type_label}, "
-            f"sector: {sector}{industry_part}{size_part}{earnings_part}.{descr_part}"
+            f"Instrument: {company_name} ({inst.ticker}) — {type_label}, "
+            f"sector: {inst.sector}{industry_part}{size_part}{earnings_part}.{descr_part}"
         )
 
-        # --- fundamentals snapshot ---
-        has_fundamentals = fundamentals is not None and not fundamentals.empty
-        rev = _latest_metric(fundamentals, "revenue") if has_fundamentals else None
-        roe = _latest_metric(fundamentals, "roe") if has_fundamentals else None
-        fcf = _latest_metric(fundamentals, "free_cash_flow") if has_fundamentals else None
-        de = _latest_metric(fundamentals, "debt_to_equity") if has_fundamentals else None
-        pe = _latest_metric(fundamentals, "pe_ratio") if has_fundamentals else None
-        pb = _latest_metric(fundamentals, "price_to_book") if has_fundamentals else None
-        gm = _latest_metric(fundamentals, "gross_margin") if has_fundamentals else None
-        nm = _latest_metric(fundamentals, "net_margin") if has_fundamentals else None
-        mc = _latest_metric(fundamentals, "market_cap") if has_fundamentals else None
-
-        if has_fundamentals:
-            fund_lines = (
-                f"- Revenue (latest annual): {_fmt(rev, currency=True)}\n"
-                f"- Market cap: {_fmt(mc, currency=True)}\n"
-                f"- ROE: {_fmt(roe, pct=True)}, ROA n/a — gross margin {_fmt(gm, pct=True)}, net margin {_fmt(nm, pct=True)}\n"
-                f"- Free cash flow: {_fmt(fcf, currency=True)}\n"
-                f"- Debt/Equity: {_fmt(de)}, P/E: {_fmt(pe)}, P/B: {_fmt(pb)}"
+        # --- raw price context (what the tape looks like) ---
+        if pc.bars_count > 0:
+            ma50_s = f"{pc.ma50_dist * 100:+.1f}%" if pc.ma50_dist is not None else "—"
+            ma200_s = f"{pc.ma200_dist * 100:+.1f}%" if pc.ma200_dist is not None else "—"
+            rsi_s = f"{pc.rsi_14:.0f}" if pc.rsi_14 is not None else "—"
+            r5_s = f"{pc.return_5d * 100:+.1f}%" if pc.return_5d is not None else "—"
+            r20_s = f"{pc.return_20d * 100:+.1f}%" if pc.return_20d is not None else "—"
+            rv_s = f"{pc.realized_vol_20d * 100:.1f}%" if pc.realized_vol_20d is not None else "—"
+            volz_s = f"{pc.volume_z_20d:+.1f}" if pc.volume_z_20d is not None else "—"
+            price_block = (
+                f"Price tape ({pc.bars_count} bars, last close ${pc.last_close:.2f}):\n"
+                f"- 5d return: {r5_s}, 20d return: {r20_s}\n"
+                f"- distance from MA50: {ma50_s}, MA200: {ma200_s}\n"
+                f"- RSI(14): {rsi_s}, realized vol (20d, ann.): {rv_s}, vol z-score: {volz_s}"
             )
         else:
-            # No negative framing here — the instrument block above already
-            # established that this is a real operating company. Just say
-            # "fundamentals not yet ingested" and move on.
-            fund_lines = (
-                f"- Fundamentals not yet ingested for {ticker}. "
-                f"Reason from price action, analyst signals, and {company_name}'s "
-                f"business description above."
-            )
+            price_block = "Price tape: no bars available."
 
-        # --- analyst signals ---
-        if analyst_signals:
-            analyst_lines = "\n".join(
-                f"- {s.agent}: {s.signal} (conf {s.confidence:.2f}) — {s.rationale}"
-                for s in analyst_signals
+        # --- raw fundamentals ---
+        if fc.has_data:
+            fund_block = (
+                "Fundamentals (latest annual):\n"
+                f"- Revenue: {_fmt(fc.revenue, currency=True)}, Market cap: {_fmt(fc.market_cap, currency=True)}\n"
+                f"- ROE: {_fmt(fc.roe, pct=True)}, ROIC: {_fmt(fc.roic, pct=True)}\n"
+                f"- Gross margin: {_fmt(fc.gross_margin, pct=True)}, Net margin: {_fmt(fc.net_margin, pct=True)}\n"
+                f"- Free cash flow: {_fmt(fc.free_cash_flow, currency=True)}\n"
+                f"- Debt/Equity: {_fmt(fc.debt_to_equity)}, P/E: {_fmt(fc.pe_ratio)}, P/B: {_fmt(fc.price_to_book)}"
             )
         else:
-            analyst_lines = "- (no analyst signals available)"
+            fund_block = (
+                f"Fundamentals: not yet ingested for {ticker}. Reason from price tape, "
+                f"flow data below, and {company_name}'s business description."
+            )
 
-        # --- persona-specific extras (technicals, macro, vol, etc.) ---
-        extras = self.extra_context(state).strip()
-        extra_block = f"\n\nAdditional context:\n{extras}" if extras else ""
+        # --- raw flow / dark pool / positioning / smart money / catalysts ---
+        flow_block = _render_flow_block(bundle)
+
+        # --- persona-specific lens (selects 8-12 bundle fields most relevant) ---
+        lens_text = self.lens(state).strip()
+        lens_block = f"\n\n{self.name}-specific lens:\n{lens_text}" if lens_text else ""
 
         return (
             f"{instrument_block}\n\n"
-            f"Latest annual fundamentals:\n{fund_lines}\n\n"
-            f"Quantitative analyst signals:\n{analyst_lines}"
-            f"{extra_block}\n\n"
+            f"{price_block}\n\n"
+            f"{fund_block}\n\n"
+            f"{flow_block}"
+            f"{lens_block}\n\n"
             "Provide your verdict in the structured output format.\n\n"
             "Quality bar — non-negotiable:\n"
             f"- You are analyzing a single security. Reason about {company_name} "

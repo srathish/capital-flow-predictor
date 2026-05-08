@@ -138,7 +138,7 @@ def test_persona_maps_llm_output_to_agent_signal() -> None:
     _args, kwargs = m.call_args
     assert "Warren Buffett" in kwargs["system_prompt"]
     assert "NVDA" in kwargs["user_prompt"]
-    assert "Latest annual fundamentals" in kwargs["user_prompt"]
+    assert "Fundamentals (latest annual)" in kwargs["user_prompt"]
 
     assert sig.agent == "buffett"
     assert sig.signal == "bullish"
@@ -217,7 +217,7 @@ def test_full_graph_runs_analysts_and_personas() -> None:
 
     analyst_names = {s.agent for s in result["analyst_signals"]}
     persona_names = {s.agent for s in result["persona_signals"]}
-    assert analyst_names == {"technicals", "fundamentals", "sentiment", "news"}
+    assert analyst_names == {"technicals", "fundamentals", "sentiment", "news", "flow"}
     assert persona_names == {
         "buffett", "munger", "burry", "druckenmiller", "cathie_wood", "taleb",
         "damodaran", "graham", "ackman", "lynch", "fisher", "pabrai", "jhunjhunwala",

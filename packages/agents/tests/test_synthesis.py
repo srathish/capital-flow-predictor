@@ -304,8 +304,8 @@ def test_full_graph_runs_through_synthesis_layer() -> None:
         graph = build_full_graph()
         result = graph.invoke(state)
 
-    # 4 analysts run on real data
-    assert len(result["analyst_signals"]) == 4
+    # 5 analysts run on real data (technicals, fundamentals, sentiment, news, flow)
+    assert len(result["analyst_signals"]) == 5
     # 13 personas run via mock
     assert len(result["persona_signals"]) == 13
     # Synthesis stage outputs land in their dedicated state keys

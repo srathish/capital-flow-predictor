@@ -145,7 +145,7 @@ def test_news_stub_returns_neutral() -> None:
 
 # ---------- Graph wiring ----------
 
-def test_graph_runs_all_four_analysts_in_parallel() -> None:
+def test_graph_runs_all_analysts_in_parallel() -> None:
     graph = build_analyst_graph()
     state = {
         "ticker": "FOO",
@@ -162,9 +162,12 @@ def test_graph_runs_all_four_analysts_in_parallel() -> None:
     result = graph.invoke(state)
     signals = result["analyst_signals"]
     agents = {s.agent for s in signals}
-    assert agents == {"technicals", "fundamentals", "sentiment", "news"}
-    # The two real analysts should have non-zero confidence; stubs should be 0
+    # 5 analysts: technicals + fundamentals + sentiment (stub) + news + flow
+    assert agents == {"technicals", "fundamentals", "sentiment", "news", "flow"}
     by_agent = {s.agent: s for s in signals}
+    # Technicals has real bullish data, sentiment is a stub, news/flow have
+    # no bundle attached so they emit "no data" stubs at confidence 0.
     assert by_agent["technicals"].confidence > 0
     assert by_agent["sentiment"].confidence == 0.0
     assert by_agent["news"].confidence == 0.0
+    assert by_agent["flow"].confidence == 0.0

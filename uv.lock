@@ -161,6 +161,7 @@ version = "0.1.0"
 source = { editable = "packages/agents" }
 dependencies = [
     { name = "anthropic" },
+    { name = "cfp-shared" },
     { name = "langgraph" },
     { name = "numpy" },
     { name = "openai" },
@@ -176,6 +177,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.40" },
+    { name = "cfp-shared", editable = "packages/shared" },
     { name = "langgraph", specifier = ">=0.2" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "openai", specifier = ">=1.40" },

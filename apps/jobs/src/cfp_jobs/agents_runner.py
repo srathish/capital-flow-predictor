@@ -1,17 +1,34 @@
 """Run the agent ensemble for a ticker: DB load -> graph invoke -> persist signals.
 
 Phase 4b: just the analyst layer. Researcher/Trader/Risk/PM nodes land in 4c-4e.
+Phase A (EvidenceBundle): build_evidence_bundle assembles a typed canonical
+bundle once per run, threaded through AnalysisState["evidence"]. All agents
+read the same bundle; personas no longer have extra_context() hooks.
 """
 
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pandas as pd
 import psycopg
+from cfp_agents.bundle_compute import compute_fundamentals_ctx, compute_price_context
 from cfp_agents.graph import build_analyst_graph, build_full_graph
 from cfp_agents.state import AgentSignal
+from cfp_shared import (
+    CatalystCtx,
+    CongressTrade,
+    DarkPoolCtx,
+    EtfContextCtx,
+    EvidenceBundle,
+    Instrument,
+    NewsHeadline,
+    OptionsFlowCtx,
+    PositioningCtx,
+    SmartMoneyCtx,
+    TopTrade,
+)
 from psycopg.types.json import Jsonb
 
 from cfp_jobs.db import connect, to_psycopg_url
@@ -70,7 +87,6 @@ def _ensure_prices(database_url: str, ticker: str) -> pd.DataFrame:
         return prices
 
     log.info("agents: no prices for %s in DB; pulling 1y via yfinance", ticker)
-    from datetime import timedelta
 
     from cfp_jobs.ingestion import prices as prices_ingest
 
@@ -336,7 +352,7 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
                 "chamber": row[1],
                 "type": row[2],
                 "amount_band": row[3],
-                "date": row[4].isoformat() if row[4] else None,
+                "transaction_date": row[4].isoformat() if row[4] else None,
             }
             for row in cur.fetchall()
         ]
@@ -538,6 +554,198 @@ def _ensure_fundamentals_and_sector(
     return fundamentals, sector
 
 
+# ============================================================================
+# EvidenceBundle assembly (Phase A)
+# ============================================================================
+#
+# All agents read the same bundle. Personas no longer have extra_context()
+# hooks; they have a lens() method that picks fields from the same bundle.
+# Built once per (ticker, run_ts), persisted to run_evidence for replay.
+
+
+def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) -> CatalystCtx:
+    """Pull last 5d UW news headlines for `ticker` plus earnings proximity from
+    the resolved instrument.next_earnings_date."""
+    headlines: list[NewsHeadline] = []
+    sentiment_score: float | None = None
+    try:
+        with connect(database_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT created_at, source, headline, sentiment, is_major
+                FROM uw_news
+                WHERE %s = ANY(tickers) AND created_at > NOW() - INTERVAL '5 days'
+                ORDER BY is_major DESC, created_at DESC
+                LIMIT 8
+                """,
+                (ticker,),
+            )
+            for row in cur.fetchall():
+                headlines.append(
+                    NewsHeadline(
+                        ts=row[0],
+                        source=row[1],
+                        headline=row[2],
+                        sentiment=row[3],
+                        is_major=bool(row[4]),
+                    )
+                )
+            # Sentiment score = (positive - negative) / total over the same window.
+            cur.execute(
+                """
+                SELECT
+                  COUNT(*) FILTER (WHERE sentiment = 'positive'),
+                  COUNT(*) FILTER (WHERE sentiment = 'negative'),
+                  COUNT(*) FILTER (WHERE sentiment IN ('positive', 'negative', 'neutral'))
+                FROM uw_news
+                WHERE %s = ANY(tickers) AND created_at > NOW() - INTERVAL '5 days'
+                """,
+                (ticker,),
+            )
+            r = cur.fetchone() or (0, 0, 0)
+            pos, neg, total = int(r[0] or 0), int(r[1] or 0), int(r[2] or 0)
+            if total > 0:
+                sentiment_score = (pos - neg) / total
+    except Exception as e:
+        log.warning("catalyst news pull failed for %s: %s", ticker, e)
+
+    next_earn = instrument.next_earnings_date
+    days_to = None
+    proximity = False
+    if next_earn:
+        from datetime import date as _date
+
+        delta = (next_earn - _date.today()).days
+        days_to = int(delta)
+        proximity = 0 <= delta <= 7
+
+    return CatalystCtx(
+        next_earnings_date=next_earn,
+        days_to_earnings=days_to,
+        earnings_proximity=proximity,
+        news_5d=headlines,
+        sentiment_score_5d=sentiment_score,
+    )
+
+
+def build_evidence_bundle(
+    database_url: str, ticker: str, sector: str, run_ts: datetime
+) -> tuple[EvidenceBundle, pd.DataFrame, pd.DataFrame]:
+    """Assemble the canonical EvidenceBundle for one (ticker, run_ts).
+
+    Returns the bundle plus the raw prices / fundamentals DataFrames so the
+    runner can keep them in AnalysisState for callers that still want them
+    (the synthesizer layer prints raw analyst signals too).
+
+    Lazy fetches: prices via yfinance, fundamentals via FMP, UW data via the
+    UW client. All gated by the corresponding API key being set.
+    """
+    ticker = ticker.upper()
+
+    prices = _ensure_prices(database_url, ticker)
+    fundamentals_df, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
+
+    # Resolve instrument frame (UW /info primary, FMP /profile fallback).
+    inst_dict = _resolve_instrument(database_url, ticker, sector)
+    if inst_dict.get("sector") and inst_dict["sector"] != "Unknown":
+        sector = inst_dict["sector"]
+
+    # Coerce next_earnings_date to date (might already be).
+    nedate = inst_dict.get("next_earnings_date")
+    if isinstance(nedate, datetime):
+        nedate = nedate.date()
+    instrument = Instrument(
+        ticker=inst_dict.get("ticker") or ticker,
+        type=inst_dict.get("type") or "stock",
+        company_name=inst_dict.get("company_name") or ticker,
+        sector=inst_dict.get("sector") or "Unknown",
+        industry=inst_dict.get("industry"),
+        marketcap_size=inst_dict.get("marketcap_size"),
+        short_description=inst_dict.get("short_description"),
+        next_earnings_date=nedate,
+    )
+
+    # Lazy-refresh UW data + read the structured snapshot back.
+    flow_dict = _build_flow_context(database_url, ticker, sector)
+
+    options_flow = OptionsFlowCtx(
+        **{
+            **(flow_dict.get("options_flow") or {}),
+            # top_trades dicts → TopTrade models
+            "top_trades": [
+                TopTrade(**t) for t in (flow_dict.get("options_flow") or {}).get("top_trades", [])
+            ],
+        }
+    ) if flow_dict.get("options_flow") else OptionsFlowCtx()
+
+    dark_pool = DarkPoolCtx(**(flow_dict.get("dark_pool") or {}))
+    positioning = PositioningCtx(**(flow_dict.get("positioning") or {}))
+    smart_money_dict = flow_dict.get("smart_money") or {}
+    smart_money = SmartMoneyCtx(
+        insider_buys_30d=int(smart_money_dict.get("insider_buys_30d", 0)),
+        insider_sells_30d=int(smart_money_dict.get("insider_sells_30d", 0)),
+        insider_net_amount_30d=float(smart_money_dict.get("insider_net_amount_30d", 0.0)),
+        congress_trades=[CongressTrade(**ct) for ct in smart_money_dict.get("congress_trades", [])],
+    )
+    etf_context = EtfContextCtx(**(flow_dict.get("etf_context") or {}))
+
+    catalysts = _build_catalyst_ctx(database_url, ticker, instrument)
+
+    bundle = EvidenceBundle(
+        run_ts=run_ts,
+        instrument=instrument,
+        price_context=compute_price_context(prices),
+        fundamentals=compute_fundamentals_ctx(fundamentals_df),
+        options_flow=options_flow,
+        dark_pool=dark_pool,
+        positioning=positioning,
+        smart_money=smart_money,
+        catalysts=catalysts,
+        etf_context=etf_context,
+    )
+
+    return bundle, prices, fundamentals_df
+
+
+def persist_evidence(database_url: str, bundle: EvidenceBundle) -> None:
+    """Save the bundle JSON + denormalized columns for fast filtering."""
+    sql = """
+        INSERT INTO run_evidence (
+            run_ts, ticker, schema_version, bundle,
+            instrument_type, sector, next_earnings_date, earnings_proximity
+        ) VALUES (
+            %(run_ts)s, %(ticker)s, %(schema_version)s, %(bundle)s,
+            %(instrument_type)s, %(sector)s, %(next_earnings_date)s, %(earnings_proximity)s
+        ) ON CONFLICT (run_ts, ticker) DO UPDATE SET
+            bundle = EXCLUDED.bundle,
+            schema_version = EXCLUDED.schema_version,
+            instrument_type = EXCLUDED.instrument_type,
+            sector = EXCLUDED.sector,
+            next_earnings_date = EXCLUDED.next_earnings_date,
+            earnings_proximity = EXCLUDED.earnings_proximity
+    """
+    payload = bundle.model_dump(mode="json")
+    try:
+        with connect(database_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                sql,
+                {
+                    "run_ts": bundle.run_ts,
+                    "ticker": bundle.instrument.ticker,
+                    "schema_version": bundle.schema_version,
+                    "bundle": Jsonb(payload),
+                    "instrument_type": bundle.instrument.type,
+                    "sector": bundle.instrument.sector,
+                    "next_earnings_date": bundle.instrument.next_earnings_date,
+                    "earnings_proximity": bundle.catalysts.earnings_proximity,
+                },
+            )
+            conn.commit()
+    except Exception as e:
+        # Migration 0006 may not be applied yet; don't fail the run.
+        log.warning("persist_evidence skipped (run still proceeds): %s", e)
+
+
 def upsert_agent_signals(conn: psycopg.Connection, run_ts: datetime, ticker: str, signals: list[AgentSignal]) -> int:
     if not signals:
         return 0
@@ -562,22 +770,17 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
 
     Side effect: writes to agent_signals table.
     """
-    prices = _ensure_prices(database_url, ticker)
-    fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
-    instrument = _resolve_instrument(database_url, ticker, sector)
-    # If UW gave us a real sector, use it (overrides FMP's, e.g. for ADRs).
-    if instrument.get("sector") and instrument["sector"] != "Unknown":
-        sector = instrument["sector"]
-    flow_context = _build_flow_context(database_url, ticker, sector)
+    run_ts = datetime.now(UTC)
+    bundle, prices, fundamentals = build_evidence_bundle(database_url, ticker, sector, run_ts)
+    persist_evidence(database_url, bundle)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state = {
         "ticker": ticker,
-        "sector": sector,
+        "sector": bundle.instrument.sector,
         "prices": prices,
         "fundamentals": fundamentals,
-        "instrument": instrument,
-        "flow_context": flow_context,
+        "evidence": bundle,
         "analyst_signals": [],
         "persona_signals": [],
     }
@@ -594,7 +797,6 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
 
     all_signals = analyst_sigs + persona_sigs + synth_sigs
 
-    run_ts = datetime.now(UTC)
     with connect(database_url) as conn:
         n = upsert_agent_signals(conn, run_ts, ticker, all_signals)
         conn.commit()
@@ -655,21 +857,16 @@ def run_analysts_streaming(
     one query. The PM signal is written last (synthesis stage runs sequentially
     after all parallel nodes), so its presence == "run is complete".
     """
-    prices = _ensure_prices(database_url, ticker)
-    fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
-    instrument = _resolve_instrument(database_url, ticker, sector)
-    if instrument.get("sector") and instrument["sector"] != "Unknown":
-        sector = instrument["sector"]
-    flow_context = _build_flow_context(database_url, ticker, sector)
+    bundle, prices, fundamentals = build_evidence_bundle(database_url, ticker, sector, run_ts)
+    persist_evidence(database_url, bundle)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state: dict = {
         "ticker": ticker,
-        "sector": sector,
+        "sector": bundle.instrument.sector,
         "prices": prices,
         "fundamentals": fundamentals,
-        "instrument": instrument,
-        "flow_context": flow_context,
+        "evidence": bundle,
         "analyst_signals": [],
         "persona_signals": [],
     }

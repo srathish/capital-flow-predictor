@@ -30,36 +30,34 @@ class BurryPersona(BasePersona):
     name = "burry"
     system_prompt = SYSTEM_PROMPT
 
-    def extra_context(self, state: AnalysisState) -> str:
+    def lens(self, state: AnalysisState) -> str:
         # Burry hunts for froth (unusual call buying at high IV) and shorts
         # heavily-owned, expensively-borrowed names. Surface insider sells +
         # short fee + LEAP call premium as the things that flag mania.
-        ctx = state.get("flow_context") or {}
-        if not ctx:
+        bundle = state.get("evidence")
+        if bundle is None:
             return ""
-        opt = ctx.get("options_flow") or {}
-        pos = ctx.get("positioning") or {}
-        smart = ctx.get("smart_money") or {}
+        opt = bundle.options_flow
+        pos = bundle.positioning
+        smart = bundle.smart_money
 
-        leap_calls = float(opt.get("leap_call_premium_5d", 0) or 0)
-        net_calls = float(opt.get("net_call_premium_5d", 0) or 0)
-        net_puts = float(opt.get("net_put_premium_5d", 0) or 0)
-        fee = pos.get("fee_rate")
-        sells = int(smart.get("insider_sells_30d", 0) or 0)
-        buys = int(smart.get("insider_buys_30d", 0) or 0)
-        net_amt = float(smart.get("insider_net_amount_30d", 0) or 0)
-
-        lines = ["Flow tape (Burry lens — froth & short setup):"]
-        if leap_calls > 5e6:
-            lines.append(f"- LEAP call buying ${leap_calls / 1e6:.0f}M (>90 DTE) — froth flag if IV is rich")
-        if net_calls > 0 or net_puts > 0:
+        lines = ["Burry lens — froth & short setup:"]
+        if opt.leap_call_premium_5d > 5e6:
             lines.append(
-                f"- Net option premium 5d: calls ${net_calls / 1e6:+.0f}M vs puts ${net_puts / 1e6:+.0f}M"
+                f"- LEAP call buying ${opt.leap_call_premium_5d / 1e6:.0f}M (>90 DTE) — "
+                f"froth flag if IV is rich (sticky pct {opt.sticky_pct * 100:.0f}%)"
             )
-        if fee is not None:
-            lines.append(f"- Borrow fee rate: {fee:.2f}%" + (" (squeezable)" if fee > 5 else ""))
-        if sells > 0 or buys > 0:
+        if opt.net_call_premium_5d > 0 or opt.net_put_premium_5d > 0:
             lines.append(
-                f"- Insider 30d: {buys} buys / {sells} sells, net ${net_amt / 1e6:+.1f}M"
+                f"- Net option premium 5d: calls ${opt.net_call_premium_5d / 1e6:+.0f}M vs "
+                f"puts ${opt.net_put_premium_5d / 1e6:+.0f}M"
+            )
+        if pos.fee_rate is not None:
+            squeeze = " (squeezable)" if pos.fee_rate > 5 else ""
+            lines.append(f"- Borrow fee rate: {pos.fee_rate:.2f}%{squeeze}")
+        if smart.insider_sells_30d > 0 or smart.insider_buys_30d > 0:
+            lines.append(
+                f"- Insider 30d: {smart.insider_buys_30d} buys / "
+                f"{smart.insider_sells_30d} sells, net ${smart.insider_net_amount_30d / 1e6:+.1f}M"
             )
         return "\n".join(lines) if len(lines) > 1 else ""

@@ -1,18 +1,25 @@
 """Flow analyst — Unusual Whales options + dark pool + insider rollup.
 
-Reads the structured snapshot the agent runner placed at state["flow_context"]
-and produces a tri-state signal with a payload personas can cite.
+Reads the canonical EvidenceBundle at state["evidence"] and produces a
+tri-state signal with a payload personas can cite. Same data every persona
+sees in their lens, just scored into a single tri-state output here.
 
 Heuristics (rule-based, transparent — no LLM call):
-  + Net call premium > net put premium, with ≥ 60% lifted at ask  -> bullish lean
-  + LEAP (>90 DTE) call premium z-score > 1.5-sigma above 30d trend     -> strong bullish
-  + Aggressive insider buys (transaction_code = P) in last 30d     -> mild bullish
-  - Net put premium dominates + IV expanding                       -> bearish lean
-  - LEAP put premium z-score elevated                              -> strong bearish
-  - High short fee rate (> 5%) + heavy call sweeps                 -> squeeze setup
-                                                                     (treated as
-                                                                     bullish but
-                                                                     flagged)
+  + Net call premium > net put premium, with >=60% lifted at ask    -> bullish lean
+  + LEAP (>90 DTE) call premium dominant + sticky in OI             -> strong bullish
+  + Aggressive insider buys (transaction_code = P) in last 30d      -> mild bullish
+  - Net put premium dominates                                       -> bearish lean
+  - LEAP put premium dominant + sticky in OI                        -> strong bearish
+  - High short fee rate (> 5%) + heavy call sweeps                  -> squeeze setup
+                                                                      (bullish, flagged)
+
+Stickiness penalty: transient premium (flow that vanished from OI next day)
+gets discounted vs sticky premium (absorbed into OI). A $20M call sweep that
+got closed the next day is worth less than one that added $20M to OI.
+
+Earnings-proximity dampening: if the next earnings is within 7 days, LEAP
+weight is halved. Pre-earnings option buying is often event hedging, not
+thesis positioning.
 
 Confidence reflects (a) magnitude of premium imbalance and (b) corroboration
 across two-or-more sub-signals.
@@ -20,16 +27,8 @@ across two-or-more sub-signals.
 
 from __future__ import annotations
 
-from typing import Any
-
 from cfp_agents.base import BaseAnalyst, clamp, score_to_signal
 from cfp_agents.state import AgentSignal, AnalysisState
-
-
-def _g(d: dict[str, Any] | None, key: str, default: Any = None) -> Any:
-    if not isinstance(d, dict):
-        return default
-    return d.get(key, default) if d.get(key) is not None else default
 
 
 class FlowAnalyst(BaseAnalyst):
@@ -37,9 +36,25 @@ class FlowAnalyst(BaseAnalyst):
 
     def analyze(self, state: AnalysisState) -> AgentSignal:
         ticker = state.get("ticker", "?")
-        ctx = state.get("flow_context") or {}
+        bundle = state.get("evidence")
 
-        if not ctx:
+        if bundle is None:
+            return AgentSignal(
+                agent=self.name,
+                signal="neutral",
+                confidence=0.0,
+                rationale=f"{ticker}: no evidence bundle in state",
+                payload={"stub": True},
+            )
+
+        opt = bundle.options_flow
+        dp = bundle.dark_pool
+        pos = bundle.positioning
+        smart = bundle.smart_money
+        cat = bundle.catalysts
+
+        # If no flow data has landed yet, neutral with a clear "no data" rationale.
+        if opt.alert_count_5d == 0 and dp.prints_5d == 0 and (pos.fee_rate is None):
             return AgentSignal(
                 agent=self.name,
                 signal="neutral",
@@ -48,29 +63,26 @@ class FlowAnalyst(BaseAnalyst):
                 payload={"stub": True},
             )
 
-        # --- pull the structured slices the runner put in flow_context ---
-        opt = ctx.get("options_flow") or {}
-        dp = ctx.get("dark_pool") or {}
-        pos = ctx.get("positioning") or {}
-        smart = ctx.get("smart_money") or {}
+        net_call_prem = float(opt.net_call_premium_5d)
+        net_put_prem = float(opt.net_put_premium_5d)
+        leap_call_prem = float(opt.leap_call_premium_5d)
+        leap_put_prem = float(opt.leap_put_premium_5d)
+        call_at_ask_pct = float(opt.call_at_ask_pct)
+        put_at_ask_pct = float(opt.put_at_ask_pct)
+        n_alerts = int(opt.alert_count_5d)
+        sticky_pct = float(opt.sticky_pct)
 
-        net_call_prem = float(_g(opt, "net_call_premium_5d", 0.0))
-        net_put_prem = float(_g(opt, "net_put_premium_5d", 0.0))
-        leap_call_prem = float(_g(opt, "leap_call_premium_5d", 0.0))
-        leap_put_prem = float(_g(opt, "leap_put_premium_5d", 0.0))
-        call_at_ask_pct = float(_g(opt, "call_at_ask_pct", 0.5))
-        put_at_ask_pct = float(_g(opt, "put_at_ask_pct", 0.5))
-        n_alerts = int(_g(opt, "alert_count_5d", 0))
+        dp_above_vwap_pct = float(dp.above_vwap_pct)
+        dp_premium_5d = float(dp.premium_5d)
 
-        dp_above_vwap_pct = float(_g(dp, "above_vwap_pct", 0.5))
-        dp_premium_5d = float(_g(dp, "premium_5d", 0.0))
+        fee_rate = float(pos.fee_rate or 0.0)
+        gex_total = pos.gex_total  # signed; positive GEX = mean-reverting regime
 
-        fee_rate = float(_g(pos, "fee_rate", 0.0))
-        gex_total = _g(pos, "gex_total")  # signed; positive GEX = mean-reverting regime
+        insider_net_30d = float(smart.insider_net_amount_30d)
+        insider_buys_30d = int(smart.insider_buys_30d)
+        insider_sells_30d = int(smart.insider_sells_30d)
 
-        insider_net_30d = float(_g(smart, "insider_net_amount_30d", 0.0))
-        insider_buys_30d = int(_g(smart, "insider_buys_30d", 0))
-        insider_sells_30d = int(_g(smart, "insider_sells_30d", 0))
+        earnings_proximity = bool(cat.earnings_proximity)
 
         # --- score components ---
         # (1) net premium imbalance, normalized so ±$10M -> ±1
@@ -86,10 +98,20 @@ class FlowAnalyst(BaseAnalyst):
         # (5) insider net (signed)
         insider_signal = clamp(insider_net_30d / 1e7, -1.0, 1.0)  # ±$10M -> ±1
 
+        # Stickiness multiplier on the imbalance signals: flow that vanished
+        # from OI next day is worth less. Maps sticky_pct ∈ [0,1] -> [0.5, 1.5]
+        # so a 50% sticky baseline is neutral, fully sticky is 1.5x, fully
+        # transient is 0.5x.
+        stickiness_mul = 0.5 + sticky_pct  # 0.5 .. 1.5
+
+        # Earnings-proximity dampening: pre-earnings LEAPs are usually event
+        # hedges, not theses. Halve LEAP weight if next earnings within 7d.
+        leap_weight = 0.30 if not earnings_proximity else 0.15
+
         # Weighted aggregate. LEAPs lead, near-term confirms.
         score = (
-            0.30 * leap_imbalance
-            + 0.25 * net_imbalance
+            leap_weight * leap_imbalance * stickiness_mul
+            + 0.25 * net_imbalance * stickiness_mul
             + 0.15 * aggressiveness
             + 0.15 * dp_tone
             + 0.15 * insider_signal
@@ -130,11 +152,17 @@ class FlowAnalyst(BaseAnalyst):
                 f"insiders 30d: {insider_buys_30d} buys / {insider_sells_30d} sells, {net_word} {_fmt_dollars(abs(insider_net_30d))}"
             )
         if squeeze_flag:
-            rationale_parts.append(f"⚠ short fee {fee_rate:.1f}%, possible squeeze setup")
+            rationale_parts.append(f"short fee {fee_rate:.1f}%, possible squeeze setup")
+        if sticky_pct > 0.6:
+            rationale_parts.append(f"flow sticky in OI ({sticky_pct * 100:.0f}%)")
+        elif sticky_pct < 0.4 and total_prem > 1.0:
+            rationale_parts.append(f"flow transient (only {sticky_pct * 100:.0f}% absorbed)")
+        if earnings_proximity:
+            rationale_parts.append("earnings within 7d (LEAP weight halved)")
         if not rationale_parts:
             rationale_parts.append(f"{n_alerts} alerts in 5d, no decisive imbalance")
 
-        rationale = f"{ticker}: " + "; ".join(rationale_parts) + f" → score={score:+.2f}"
+        rationale = f"{ticker}: " + "; ".join(rationale_parts) + f" -> score={score:+.2f}"
 
         return AgentSignal(
             agent=self.name,
@@ -148,7 +176,10 @@ class FlowAnalyst(BaseAnalyst):
                 "aggressiveness": aggressiveness,
                 "dp_tone": dp_tone,
                 "insider_signal": insider_signal,
+                "stickiness_mul": stickiness_mul,
+                "sticky_pct": sticky_pct,
                 "squeeze_flag": squeeze_flag,
+                "earnings_proximity": earnings_proximity,
                 "n_alerts_5d": n_alerts,
                 "gex_total": gex_total,
             },

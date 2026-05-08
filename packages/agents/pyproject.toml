@@ -10,7 +10,11 @@ dependencies = [
     "langgraph>=0.2",
     "anthropic>=0.40",
     "openai>=1.40",  # OpenAI-compatible providers (Moonshot/Kimi, etc.)
+    "cfp-shared",
 ]
+
+[tool.uv.sources]
+cfp-shared = { workspace = true }
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3"]

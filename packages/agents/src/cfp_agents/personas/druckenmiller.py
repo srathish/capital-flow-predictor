@@ -33,51 +33,44 @@ class DruckenmillerPersona(BasePersona):
     name = "druckenmiller"
     system_prompt = SYSTEM_PROMPT
 
-    def extra_context(self, state: AnalysisState) -> str:
-        # Druck weighs the tape heavily AND watches sector flows. Surface
-        # both: technicals payload + UW flow (dark pool, sector ETF flow,
-        # net option premium directionality).
-        out: list[str] = []
+    def lens(self, state: AnalysisState) -> str:
+        # Druck weighs raw tape + sector flow. Note: he reads RAW price tape
+        # from the bundle (not the technicals analyst's interpretation) — that's
+        # the de-anchoring fix. He'll come to his own conclusion about whether
+        # the tape is bullish or bearish.
+        bundle = state.get("evidence")
+        if bundle is None:
+            return ""
 
-        analyst_signals = state.get("analyst_signals", []) or []
-        tech = next((s for s in analyst_signals if s.agent == "technicals"), None)
-        if tech:
-            payload = tech.payload or {}
-            rsi = payload.get("rsi_14")
-            ret_20 = payload.get("momentum_20d")
-            ma50 = payload.get("ma50_dist")
-            ma200 = payload.get("ma200_dist")
-            tape_line = (
-                "Tape (price action): "
-                f"20d return {ret_20:+.1%} | RSI(14) {rsi:.0f} | "
-                f"distance MA50 {ma50:+.1%} | distance MA200 "
-                f"{ma200 if ma200 is None else f'{ma200:+.1%}'}"
+        out: list[str] = ["Druck lens — does macro + tape align?"]
+
+        pc = bundle.price_context
+        if pc.bars_count > 0 and pc.return_20d is not None:
+            ma50_s = f"{pc.ma50_dist * 100:+.1f}%" if pc.ma50_dist is not None else "—"
+            ma200_s = f"{pc.ma200_dist * 100:+.1f}%" if pc.ma200_dist is not None else "—"
+            out.append(
+                f"- Tape: 20d {pc.return_20d * 100:+.1f}%, MA50 dist {ma50_s}, "
+                f"MA200 dist {ma200_s}, vol z {pc.volume_z_20d if pc.volume_z_20d is None else f'{pc.volume_z_20d:+.1f}'}"
             )
-            out.append(tape_line)
 
-        ctx = state.get("flow_context") or {}
-        if ctx:
-            opt = ctx.get("options_flow") or {}
-            dp = ctx.get("dark_pool") or {}
-            etf = ctx.get("etf_context") or {}
-            flow_lines: list[str] = []
-            net_calls = float(opt.get("net_call_premium_5d", 0) or 0)
-            net_puts = float(opt.get("net_put_premium_5d", 0) or 0)
-            if abs(net_calls) + abs(net_puts) > 0:
-                flow_lines.append(
-                    f"Option flow 5d: net calls ${net_calls / 1e6:+.0f}M, net puts ${net_puts / 1e6:+.0f}M"
-                )
-            if dp.get("premium_5d"):
-                flow_lines.append(
-                    f"Dark pool 5d: ${float(dp['premium_5d']) / 1e6:.0f}M, "
-                    f"{float(dp.get('above_vwap_pct', 0.5)) * 100:.0f}% above VWAP"
-                )
-            if etf and etf.get("in_flow_5d") is not None:
-                v = float(etf['in_flow_5d'])
-                flow_lines.append(
-                    f"Sector {etf.get('sector_etf')} ETF flow 5d: ${v / 1e6:+.0f}M"
-                )
-            if flow_lines:
-                out.append("Flow tape (Druck lens — sector + tape confirmation):\n- " + "\n- ".join(flow_lines))
+        opt = bundle.options_flow
+        if abs(opt.net_call_premium_5d) + abs(opt.net_put_premium_5d) > 0:
+            out.append(
+                f"- Option flow 5d: net calls ${opt.net_call_premium_5d / 1e6:+.0f}M, "
+                f"net puts ${opt.net_put_premium_5d / 1e6:+.0f}M (sticky {opt.sticky_pct * 100:.0f}%)"
+            )
 
-        return "\n\n".join(out)
+        dp = bundle.dark_pool
+        if dp.premium_5d > 0:
+            out.append(
+                f"- Dark pool 5d: ${dp.premium_5d / 1e6:.0f}M, "
+                f"{dp.above_vwap_pct * 100:.0f}% above midpoint"
+            )
+
+        etf = bundle.etf_context
+        if etf.sector_etf and etf.in_flow_5d != 0:
+            out.append(
+                f"- Sector {etf.sector_etf} ETF flow 5d: ${etf.in_flow_5d / 1e6:+.0f}M"
+            )
+
+        return "\n".join(out) if len(out) > 1 else ""

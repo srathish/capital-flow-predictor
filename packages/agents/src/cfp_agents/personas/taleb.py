@@ -37,41 +37,45 @@ class TalebPersona(BasePersona):
     name = "taleb"
     system_prompt = SYSTEM_PROMPT
 
-    def extra_context(self, state: AnalysisState) -> str:
-        # Taleb reads vol regime + tail strikes. Volume z-score (regime) plus
-        # IV snapshot from recent UW flow (tail-strike pricing) plus dealer
-        # gamma exposure (a flat dealer book = forced selling on a shock).
-        out: list[str] = []
+    def lens(self, state: AnalysisState) -> str:
+        # Taleb reads raw vol regime + tail strikes + dealer GEX. He sees raw
+        # bundle fields (including realized vol from the price context) — not
+        # the technicals analyst's interpretation.
+        bundle = state.get("evidence")
+        if bundle is None:
+            return ""
 
-        analyst_signals = state.get("analyst_signals", []) or []
-        tech = next((s for s in analyst_signals if s.agent == "technicals"), None)
-        if tech:
-            vol_z = (tech.payload or {}).get("volume_z")
+        out: list[str] = ["Taleb lens — fragility & tail asymmetry:"]
+
+        pc = bundle.price_context
+        if pc.realized_vol_20d is not None:
             out.append(
-                f"Volume z-score (20d) on most recent bar: "
-                f"{vol_z if vol_z is None else f'{vol_z:+.2f}'}"
+                f"- Realized vol (20d, ann.): {pc.realized_vol_20d * 100:.1f}% — "
+                f"vol z-score {pc.volume_z_20d if pc.volume_z_20d is None else f'{pc.volume_z_20d:+.2f}'}"
             )
 
-        ctx = state.get("flow_context") or {}
-        if ctx:
-            opt = ctx.get("options_flow") or {}
-            pos = ctx.get("positioning") or {}
-            tail_lines: list[str] = []
+        opt = bundle.options_flow
+        otm_puts = [t for t in opt.top_trades if t.type == "put"]
+        if otm_puts:
+            strikes = ", ".join(
+                f"${t.strike:.0f}" for t in otm_puts[:3] if t.strike is not None
+            )
+            out.append(f"- Recent large put strikes: {strikes}")
 
-            top = opt.get("top_trades") or []
-            otm_puts = [t for t in top if t.get("type") == "put"]
-            if otm_puts:
-                strikes = ", ".join(
-                    f"${t['strike']:.0f}" for t in otm_puts[:3] if t.get("strike") is not None
-                )
-                tail_lines.append(f"Recent large put strikes: {strikes}")
+        pos = bundle.positioning
+        if pos.gex_total is not None:
+            regime = (
+                "positive (mean-reverting / stable dealer)"
+                if pos.gex_total > 0
+                else "negative (trending / pro-cyclical hedging)"
+            )
+            out.append(f"- Aggregate dealer GEX: {pos.gex_total:+.2e} -> {regime}")
 
-            gex = pos.get("gex_total")
-            if gex is not None:
-                regime = "positive (mean-reverting / stable dealer)" if gex > 0 else "negative (trending / pro-cyclical hedging)"
-                tail_lines.append(f"Aggregate dealer GEX: {gex:+.2e} → {regime}")
+        cat = bundle.catalysts
+        if cat.earnings_proximity:
+            out.append(
+                f"- Earnings within {cat.days_to_earnings} days — event-driven tail "
+                "is mispriced if IV is calm"
+            )
 
-            if tail_lines:
-                out.append("Tail / dealer regime (Taleb lens):\n- " + "\n- ".join(tail_lines))
-
-        return "\n\n".join(out)
+        return "\n".join(out) if len(out) > 1 else ""

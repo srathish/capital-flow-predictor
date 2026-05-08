@@ -1,35 +1,22 @@
-"""Technicals analyst: rule-based signal from prices alone.
+"""Technicals analyst: rule-based signal from PriceContext (already computed
+in the EvidenceBundle).
 
-Inputs: a daily OHLCV DataFrame for one ticker.
-Output: AgentSignal with bull/bear/neutral and a 0..1 confidence.
-
-Heuristics (simple, transparent — Phase 4b is rule-based, no LLM):
+Heuristics (same as before — Phase 4b is rule-based, no LLM):
   + Trend: close above MA50 and MA50 above MA200 -> uptrend (bullish)
   + Momentum: 20d return > 5% -> mild bullish
   + Mean reversion: RSI(14) < 30 -> oversold (bullish), > 70 -> overbought (bearish)
-  + Volume: 20d volume z-score > 1.5 -> conviction multiplier
+  + Volume conviction: 20d volume z-score scales confidence
+
+PriceContext fields are populated once at bundle-build time (see
+cfp_jobs.agents_runner._compute_price_context). The analyst is now a pure
+scorer over those fields, not a feature engineer.
 """
 
 from __future__ import annotations
 
-import math
-
-import numpy as np
-import pandas as pd
-
 from cfp_agents.base import BaseAnalyst, clamp, score_to_signal
+from cfp_agents.bundle_compute import compute_price_context
 from cfp_agents.state import AgentSignal, AnalysisState
-
-
-def _rsi(close: pd.Series, period: int = 14) -> pd.Series:
-    delta = close.diff()
-    gain = delta.clip(lower=0.0)
-    loss = -delta.clip(upper=0.0)
-    avg_gain = gain.rolling(period, min_periods=period).mean()
-    avg_loss = loss.rolling(period, min_periods=period).mean()
-    rs = avg_gain / avg_loss
-    rsi = 100 - (100 / (1 + rs))
-    return rsi.replace([np.inf, -np.inf], np.nan)
 
 
 class TechnicalsAnalyst(BaseAnalyst):
@@ -37,49 +24,51 @@ class TechnicalsAnalyst(BaseAnalyst):
 
     def analyze(self, state: AnalysisState) -> AgentSignal:
         ticker = state.get("ticker", "?")
-        prices = state.get("prices")
-        if prices is None or prices.empty or "close" not in prices.columns:
+        bundle = state.get("evidence")
+
+        # Prefer the canonical PriceContext from the bundle. If no bundle was
+        # attached (tests or direct callers), fall back to computing it on
+        # the fly from state["prices"].
+        if bundle is not None:
+            pc = bundle.price_context
+        else:
+            pc = compute_price_context(state.get("prices"))
+
+        if pc.bars_count == 0:
             return AgentSignal(
                 agent=self.name,
                 signal="neutral",
                 confidence=0.0,
                 rationale=f"{ticker}: no price data",
             )
-
-        df = prices.sort_values("ts").reset_index(drop=True)
-        close = df["close"].astype(float)
-
-        if len(close) < 50:
+        if pc.bars_count < 50:
             return AgentSignal(
                 agent=self.name,
                 signal="neutral",
                 confidence=0.1,
-                rationale=f"{ticker}: only {len(close)} bars, insufficient history",
+                rationale=f"{ticker}: only {pc.bars_count} bars, insufficient history",
             )
 
-        # --- features ---
-        last = float(close.iloc[-1])
-        ma50 = float(close.rolling(50, min_periods=50).mean().iloc[-1])
-        ma200 = (
-            float(close.rolling(200, min_periods=200).mean().iloc[-1])
-            if len(close) >= 200
-            else math.nan
-        )
-        ret_20 = float(close.iloc[-1] / close.iloc[-21] - 1.0) if len(close) >= 21 else 0.0
-        rsi = _rsi(close, 14).iloc[-1]
-        rsi = float(rsi) if pd.notna(rsi) else 50.0
+        ma50_dist = pc.ma50_dist
+        ma200_dist = pc.ma200_dist
+        ret_20 = pc.return_20d if pc.return_20d is not None else 0.0
+        rsi = pc.rsi_14 if pc.rsi_14 is not None else 50.0
+        vol_z = pc.volume_z_20d if pc.volume_z_20d is not None else 0.0
 
         # --- score components, each in roughly -1..+1 ---
         trend = 0.0
-        if not math.isnan(ma200):
-            if last > ma50 > ma200:
+        if ma200_dist is not None and ma50_dist is not None:
+            # close > MA50 > MA200 means ma50_dist > 0 AND last > ma200 (ma200_dist > 0)
+            if ma50_dist > 0 and ma200_dist > 0:
                 trend = 0.8
-            elif last < ma50 < ma200:
+            elif ma50_dist < 0 and ma200_dist < 0:
                 trend = -0.8
-            elif last > ma50:
+            elif ma50_dist > 0:
                 trend = 0.3
-            elif last < ma50:
+            elif ma50_dist < 0:
                 trend = -0.3
+        elif ma50_dist is not None:
+            trend = 0.3 if ma50_dist > 0 else -0.3
 
         momentum = clamp(ret_20 * 5.0, -1.0, 1.0)  # ±20% -> ±1.0
 
@@ -93,20 +82,10 @@ class TechnicalsAnalyst(BaseAnalyst):
         elif rsi > 60:
             mean_rev = -0.1
 
-        # Volume conviction (20d z) — multiplier on confidence, not direction
-        vol_z = 0.0
-        if "volume" in df.columns and len(df) >= 20:
-            v = df["volume"].astype(float)
-            v_mean = v.rolling(20, min_periods=20).mean().iloc[-1]
-            v_std = v.rolling(20, min_periods=20).std().iloc[-1]
-            if v_std and v_std > 0 and pd.notna(v_mean):
-                vol_z = float((v.iloc[-1] - v_mean) / v_std)
-
         # --- aggregate ---
         score = 0.5 * trend + 0.3 * momentum + 0.2 * mean_rev
         score = clamp(score, -1.0, 1.0)
 
-        # Confidence rises with absolute score and volume conviction
         confidence = clamp(abs(score) * (1.0 + 0.2 * clamp(vol_z, 0, 3) / 3))
 
         return AgentSignal(
@@ -122,8 +101,8 @@ class TechnicalsAnalyst(BaseAnalyst):
                 "trend": trend,
                 "momentum_20d": ret_20,
                 "rsi_14": rsi,
-                "ma50_dist": (last / ma50 - 1.0) if ma50 else None,
-                "ma200_dist": (last / ma200 - 1.0) if ma200 and not math.isnan(ma200) else None,
+                "ma50_dist": ma50_dist,
+                "ma200_dist": ma200_dist,
                 "volume_z": vol_z,
             },
         )
