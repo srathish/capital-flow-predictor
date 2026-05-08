@@ -81,6 +81,52 @@ def _ensure_prices(database_url: str, ticker: str) -> pd.DataFrame:
     return prices
 
 
+def _ensure_fundamentals_and_sector(
+    database_url: str, ticker: str, sector: str
+) -> tuple[pd.DataFrame, str]:
+    """Lazy-load fundamentals + resolve sector for any ticker.
+
+    Mirrors `_ensure_prices`: if the fundamentals table has nothing for this
+    ticker, hit FMP and upsert. If `sector` wasn't supplied (the API run
+    endpoint defaults to ""), look it up from FMP's company profile.
+
+    Without this, an out-of-universe ticker (anything not a top-10 sector-ETF
+    constituent) runs with empty fundamentals + 'unspecified' sector, and the
+    personas hallucinate that the ticker is an ETF. See base persona prompt.
+    """
+    from cfp_jobs.settings import settings
+
+    with connect(database_url) as conn:
+        fundamentals = _load_fundamentals(conn, ticker)
+
+    fmp_key = (settings.fmp_api_key or "").strip()
+
+    if fundamentals.empty and fmp_key:
+        log.info("agents: no fundamentals for %s; fetching from FMP", ticker)
+        try:
+            from cfp_jobs.ingestion import fundamentals as fund_ingest
+
+            fund_ingest.ingest(database_url, fmp_key, [ticker], force=True)
+            with connect(database_url) as conn:
+                fundamentals = _load_fundamentals(conn, ticker)
+        except Exception as e:
+            log.warning("FMP fundamentals lookup failed for %s: %s", ticker, e)
+
+    if not sector and fmp_key:
+        try:
+            from cfp_jobs.ingestion.fmp import FmpClient
+
+            with FmpClient(fmp_key) as client:
+                rows = client.profile(ticker)
+            if rows:
+                sector = (rows[0].get("sector") or "").strip()
+                log.info("agents: resolved sector for %s -> %r via FMP profile", ticker, sector)
+        except Exception as e:
+            log.warning("FMP profile lookup failed for %s: %s", ticker, e)
+
+    return fundamentals, sector
+
+
 def upsert_agent_signals(conn: psycopg.Connection, run_ts: datetime, ticker: str, signals: list[AgentSignal]) -> int:
     if not signals:
         return 0
@@ -106,8 +152,7 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     Side effect: writes to agent_signals table.
     """
     prices = _ensure_prices(database_url, ticker)
-    with connect(database_url) as conn:
-        fundamentals = _load_fundamentals(conn, ticker)
+    fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state = {
@@ -193,8 +238,7 @@ def run_analysts_streaming(
     after all parallel nodes), so its presence == "run is complete".
     """
     prices = _ensure_prices(database_url, ticker)
-    with connect(database_url) as conn:
-        fundamentals = _load_fundamentals(conn, ticker)
+    fundamentals, sector = _ensure_fundamentals_and_sector(database_url, ticker, sector)
 
     graph = build_full_graph() if include_personas else build_analyst_graph()
     state: dict = {

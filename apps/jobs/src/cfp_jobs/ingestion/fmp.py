@@ -67,6 +67,11 @@ class FmpClient:
             params={"symbol": ticker, "period": period, "limit": limit},
         ) or []
 
+    def profile(self, ticker: str) -> list[dict]:
+        """Company profile — used to resolve sector/industry for ad-hoc tickers
+        outside the predictor universe. Returns a one-element list on hit, [] on miss."""
+        return self._get("profile", params={"symbol": ticker}) or []
+
     def close(self) -> None:
         self._client.close()
 

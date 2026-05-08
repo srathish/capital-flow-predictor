@@ -126,23 +126,35 @@ class BasePersona(ABC):
         analyst_signals = state.get("analyst_signals", []) or []
 
         # --- fundamentals snapshot ---
-        rev = _latest_metric(fundamentals, "revenue") if fundamentals is not None else None
-        roe = _latest_metric(fundamentals, "roe") if fundamentals is not None else None
-        fcf = _latest_metric(fundamentals, "free_cash_flow") if fundamentals is not None else None
-        de = _latest_metric(fundamentals, "debt_to_equity") if fundamentals is not None else None
-        pe = _latest_metric(fundamentals, "pe_ratio") if fundamentals is not None else None
-        pb = _latest_metric(fundamentals, "price_to_book") if fundamentals is not None else None
-        gm = _latest_metric(fundamentals, "gross_margin") if fundamentals is not None else None
-        nm = _latest_metric(fundamentals, "net_margin") if fundamentals is not None else None
-        mc = _latest_metric(fundamentals, "market_cap") if fundamentals is not None else None
+        has_fundamentals = fundamentals is not None and not fundamentals.empty
+        rev = _latest_metric(fundamentals, "revenue") if has_fundamentals else None
+        roe = _latest_metric(fundamentals, "roe") if has_fundamentals else None
+        fcf = _latest_metric(fundamentals, "free_cash_flow") if has_fundamentals else None
+        de = _latest_metric(fundamentals, "debt_to_equity") if has_fundamentals else None
+        pe = _latest_metric(fundamentals, "pe_ratio") if has_fundamentals else None
+        pb = _latest_metric(fundamentals, "price_to_book") if has_fundamentals else None
+        gm = _latest_metric(fundamentals, "gross_margin") if has_fundamentals else None
+        nm = _latest_metric(fundamentals, "net_margin") if has_fundamentals else None
+        mc = _latest_metric(fundamentals, "market_cap") if has_fundamentals else None
 
-        fund_lines = (
-            f"- Revenue (latest annual): {_fmt(rev, currency=True)}\n"
-            f"- Market cap: {_fmt(mc, currency=True)}\n"
-            f"- ROE: {_fmt(roe, pct=True)}, ROA n/a — gross margin {_fmt(gm, pct=True)}, net margin {_fmt(nm, pct=True)}\n"
-            f"- Free cash flow: {_fmt(fcf, currency=True)}\n"
-            f"- Debt/Equity: {_fmt(de)}, P/E: {_fmt(pe)}, P/B: {_fmt(pb)}"
-        )
+        if has_fundamentals:
+            fund_lines = (
+                f"- Revenue (latest annual): {_fmt(rev, currency=True)}\n"
+                f"- Market cap: {_fmt(mc, currency=True)}\n"
+                f"- ROE: {_fmt(roe, pct=True)}, ROA n/a — gross margin {_fmt(gm, pct=True)}, net margin {_fmt(nm, pct=True)}\n"
+                f"- Free cash flow: {_fmt(fcf, currency=True)}\n"
+                f"- Debt/Equity: {_fmt(de)}, P/E: {_fmt(pe)}, P/B: {_fmt(pb)}"
+            )
+        else:
+            fund_lines = (
+                f"- Fundamentals data is not yet ingested for {ticker} (the data pipeline "
+                "hasn't pulled this name's financials yet — this is a data-availability "
+                "limitation, NOT a signal that the company is unusual).\n"
+                f"- {ticker} IS a publicly traded operating company. Do NOT assume it is "
+                "an ETF, fund, or basket — that would be incorrect. Reason from price "
+                "action and analyst signals; explicitly note that fundamental review is "
+                "deferred."
+            )
 
         # --- analyst signals ---
         if analyst_signals:
@@ -158,7 +170,7 @@ class BasePersona(ABC):
         extra_block = f"\n\nAdditional context:\n{extras}" if extras else ""
 
         return (
-            f"Analyze {ticker} (sector ETF: {sector or 'unknown'}).\n\n"
+            f"Analyze {ticker} (sector: {sector or 'unspecified'}).\n\n"
             f"Latest annual fundamentals:\n{fund_lines}\n\n"
             f"Quantitative analyst signals:\n{analyst_lines}"
             f"{extra_block}\n\n"

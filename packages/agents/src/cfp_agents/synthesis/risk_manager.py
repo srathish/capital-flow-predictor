@@ -19,7 +19,7 @@ from __future__ import annotations
 from typing import Literal
 
 import pandas as pd
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from cfp_agents.state import AgentSignal, AnalysisState
 from cfp_agents.synthesis.base import SynthesizerAgent, aggregate_vote, signals_table
@@ -33,9 +33,12 @@ class RiskAssessment(BaseModel):
         ge=0.0, le=1.0,
         description="Recommended portfolio weight (0..1). 0 = no position.",
     )
+    # Models occasionally emit a signed delta (-0.10) instead of the magnitude
+    # the schema asks for (0.10). Accept either and coerce to absolute via the
+    # validator below — clamps to (0, 1] so we never persist nonsense.
     max_stop_loss: float = Field(
-        ge=0.0, le=1.0,
-        description="Drawdown threshold from entry that triggers exit (e.g. 0.10 = -10%).",
+        le=1.0,
+        description="Drawdown magnitude from entry that triggers exit (e.g. 0.10 = -10%). Always positive.",
     )
     veto: bool = Field(
         description="True if risk considerations override the trader's direction (size to zero).",
@@ -52,6 +55,17 @@ class RiskAssessment(BaseModel):
         default="",
         description="Notes on correlation with likely existing exposures (broader market beta, sector clustering).",
     )
+
+    @field_validator("max_stop_loss", mode="before")
+    @classmethod
+    def _coerce_stop_loss(cls, v: float | int | str) -> float:
+        """Coerce signed deltas (-0.10) to magnitude (0.10) and floor at a small
+        positive so a stop of literally zero doesn't get persisted as 'no stop'."""
+        try:
+            f = abs(float(v))
+        except (TypeError, ValueError):
+            return 0.10
+        return max(0.005, min(f, 1.0))
 
 
 SYSTEM_PROMPT = """\
