@@ -140,7 +140,7 @@ export function EnsembleView({ ticker }: { ticker: string }) {
           <button
             onClick={() => runMutation.mutate()}
             disabled={runMutation.isPending || (isLiveActive && !isComplete)}
-            className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
             {runMutation.isPending
               ? "Starting…"

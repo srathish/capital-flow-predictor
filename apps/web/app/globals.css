@@ -2,39 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Robinhood-inspired palette (dark mode).
+   - Background: true black (#000), the RH dark surface.
+   - Cards: a notch lighter (~#141417) so they read against pure black.
+   - Primary green: #00C805 (RH signature). Used for bullish + CTAs.
+   - Bearish red: #FF5000 (RH orange-red, not crimson).
+   - Subtle hairline borders (~#1f2024).
+   - High-contrast white primary text, warm grey secondary.
+   - Tabular numerics, no neon glow, no chromatic accents. */
+
 @layer base {
   :root {
+    /* Light kept as fallback only — <html> forces .dark. */
     --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
+    --foreground: 0 0% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --border: 220 13% 91%;
-    --primary: 220 14% 14%;
+    --card-foreground: 0 0% 8%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --border: 0 0% 90%;
+    --primary: 134 100% 39%;
     --primary-foreground: 0 0% 100%;
-    --accent: 220 14% 96%;
-    --accent-foreground: 224 71% 4%;
-    --signal-bullish: 142 71% 45%;
-    --signal-bearish: 0 72% 51%;
-    --signal-neutral: 38 92% 50%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 8%;
+    --signal-bullish: 134 100% 39%;
+    --signal-bearish: 16 100% 50%;
+    --signal-neutral: 0 0% 60%;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 20% 98%;
-    --card: 224 71% 7%;
-    --card-foreground: 210 20% 98%;
-    --muted: 215 28% 15%;
-    --muted-foreground: 217 11% 65%;
-    --border: 215 28% 18%;
-    --primary: 210 20% 98%;
-    --primary-foreground: 224 71% 4%;
-    --accent: 215 28% 15%;
-    --accent-foreground: 210 20% 98%;
-    --signal-bullish: 142 65% 52%;
-    --signal-bearish: 0 75% 60%;
-    --signal-neutral: 45 93% 58%;
+    --background: 0 0% 0%;            /* pure black */
+    --foreground: 0 0% 98%;
+    --card: 240 5% 8%;                /* ~#141417 */
+    --card-foreground: 0 0% 98%;
+    --muted: 240 5% 12%;               /* ~#1d1d20 */
+    --muted-foreground: 240 4% 62%;    /* ~#9c9ca5 */
+    --border: 240 4% 14%;              /* ~#222226 hairline */
+    --primary: 134 100% 39%;           /* #00C805 RH green */
+    --primary-foreground: 0 0% 100%;
+    --accent: 240 5% 12%;
+    --accent-foreground: 0 0% 98%;
+    --signal-bullish: 134 100% 39%;    /* #00C805 */
+    --signal-bearish: 16 100% 50%;     /* #FF5000 */
+    --signal-neutral: 240 4% 62%;      /* warm grey, no yellow */
   }
 
   body {

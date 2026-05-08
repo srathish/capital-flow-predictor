@@ -28,9 +28,9 @@ export function Nav() {
                 key={t.href}
                 href={t.href}
                 className={cn(
-                  "rounded-md px-3 py-1.5 transition-colors",
+                  "rounded-full px-3 py-1.5 transition-colors",
                   active
-                    ? "bg-accent text-accent-foreground"
+                    ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -51,11 +51,11 @@ export function Nav() {
             value={ticker}
             onChange={(e) => setTicker(e.target.value)}
             placeholder="ticker (e.g. NVDA)"
-            className="h-8 w-44 rounded-md border bg-background px-2 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+            className="h-9 w-44 rounded-full border border-border bg-card px-3 text-sm outline-none focus:border-primary/60"
           />
           <button
             type="submit"
-            className="h-8 rounded-md border bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className="h-9 rounded-full bg-primary px-4 text-sm font-semibold text-white hover:bg-primary/90"
           >
             Open
           </button>

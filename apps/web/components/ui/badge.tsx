@@ -3,16 +3,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium",
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-tight",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary/10 text-primary",
-        outline: "border-border text-foreground",
-        bullish: "border-transparent bg-signal-bullish/15 text-signal-bullish",
-        bearish: "border-transparent bg-signal-bearish/15 text-signal-bearish",
-        neutral: "border-transparent bg-signal-neutral/15 text-signal-neutral",
-        muted: "border-transparent bg-muted text-muted-foreground",
+        default: "bg-primary/15 text-primary",
+        outline: "border border-border text-foreground",
+        bullish: "bg-signal-bullish text-white",
+        bearish: "bg-signal-bearish text-white",
+        neutral: "bg-muted text-muted-foreground",
+        muted: "bg-muted text-muted-foreground",
       },
     },
     defaultVariants: { variant: "default" },
