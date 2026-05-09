@@ -20,14 +20,16 @@ type Column = {
 
 const fmtPct = (v: number | null | undefined) =>
   v === null || v === undefined ? "—" : `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2)}%`;
-const fmtNum = (v: number | null | undefined, dp = 2) =>
-  v === null || v === undefined ? "—" : v.toFixed(dp);
+// Weight comes from UW pre-multiplied by 100 (so 14.73 means 14.73%, not 1473%).
+// Don't run it through fmtPct or it double-scales.
+const fmtWeight = (v: number | null | undefined) =>
+  v === null || v === undefined ? "—" : `${v.toFixed(2)}%`;
 const fmtRatio = (v: number | null | undefined) =>
   v === null || v === undefined ? "—" : v.toFixed(2);
 
 const COLUMNS: Column[] = [
   { key: "ticker", label: "Ticker", format: (v) => String(v ?? "—"), align: "left" },
-  { key: "weight", label: "Weight", format: (v) => fmtPct(v), align: "right" },
+  { key: "weight", label: "Weight", format: fmtWeight, align: "right" },
   { key: "return_1d", label: "1D", format: fmtPct, signed: true, align: "right" },
   { key: "return_5d", label: "5D", format: fmtPct, signed: true, align: "right" },
   { key: "return_20d", label: "20D", format: fmtPct, signed: true, align: "right" },
