@@ -16,11 +16,11 @@ from datetime import datetime
 from typing import Literal
 
 import numpy as np
+from cfp_shared import PREDICTION_TARGETS
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
-from cfp_shared import PREDICTION_TARGETS
 
 log = logging.getLogger(__name__)
 
@@ -247,7 +247,7 @@ async def get_correlation_network(
         score = float(p["score"]) if p and p["score"] is not None else None
         # Use return-rank fallback if XGB scores are degenerate; else trust
         # the recomputed XGB rank.
-        if use_returns_fallback:
+        if use_returns_fallback:  # noqa: SIM108 — nested ternary would be unreadable
             rank = ret_rank.get(sym)
         else:
             rank = int(p["rank"]) if p else None
