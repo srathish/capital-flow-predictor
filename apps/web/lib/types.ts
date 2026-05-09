@@ -118,6 +118,36 @@ export type ChartDataResponse = {
   markers: ChartMarker[];
 };
 
+// /v1/network/correlation
+export type NetworkBucket = "leader" | "mid" | "laggard" | "unranked";
+
+export type NetworkNode = {
+  id: string;
+  name: string;
+  rank: number | null;
+  score: number | null;
+  bucket: NetworkBucket;
+  return_window: number | null;
+  avg_correlation: number;
+};
+
+export type NetworkEdge = {
+  source: string;
+  target: string;
+  correlation: number;
+};
+
+export type NetworkResponse = {
+  window_days: number;
+  horizon_d: number;
+  min_correlation: number;
+  universe: string[];
+  n_obs: number;
+  nodes: NetworkNode[];
+  edges: NetworkEdge[];
+  as_of: string | null;
+};
+
 // /v1/sectors/{etf}/holdings
 export type HoldingEntry = {
   ticker: string;

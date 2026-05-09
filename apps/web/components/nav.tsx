@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 const tabs = [
   { href: "/", label: "Sectors" },
+  { href: "/network", label: "Network" },
   { href: "/watchlist", label: "Watchlist" },
 ];
 

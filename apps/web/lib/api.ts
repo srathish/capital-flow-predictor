@@ -7,6 +7,7 @@ import type {
   ChatStreamEvent,
   HoldingsResponse,
   HoldingsSort,
+  NetworkResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -78,6 +79,20 @@ export const api = {
     if (params?.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<SectorsResponse>(`/v1/sectors${qs ? `?${qs}` : ""}`);
+  },
+  correlationNetwork(params: {
+    window?: number;
+    minCorrelation?: number;
+    horizon?: 5 | 10 | 20;
+    model?: string;
+  } = {}): Promise<NetworkResponse> {
+    const sp = new URLSearchParams();
+    if (params.window !== undefined) sp.set("window", String(params.window));
+    if (params.minCorrelation !== undefined) sp.set("min_correlation", String(params.minCorrelation));
+    if (params.horizon !== undefined) sp.set("horizon", String(params.horizon));
+    if (params.model) sp.set("model", params.model);
+    const qs = sp.toString();
+    return getJson<NetworkResponse>(`/v1/network/correlation${qs ? `?${qs}` : ""}`);
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(
