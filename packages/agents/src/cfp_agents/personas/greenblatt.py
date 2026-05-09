@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from cfp_agents.personas.base import BasePersona
 from cfp_agents.state import AnalysisState
+from cfp_agents.tools import compute_magic_formula
 
 SYSTEM_PROMPT = """\
 You are Joel Greenblatt of Gotham. Your method has two arms:
@@ -69,6 +70,16 @@ class GreenblattPersona(BasePersona):
                 quant.append(f"FCF yield {fcf_yield * 100:.1f}%")
             if quant:
                 out.append("- Quant joint-score inputs: " + ", ".join(quant))
+
+            # Computed Magic Formula score — gives Greenblatt a real label
+            # to argue from instead of LLM hand-waving on the threshold.
+            mf = compute_magic_formula(
+                pe_ratio=f.pe_ratio,
+                roic=f.roic,
+                roe=f.roe,
+            )
+            if mf is not None:
+                out.append("- " + mf.summary())
 
         cat = bundle.catalysts
         if cat.news_5d:

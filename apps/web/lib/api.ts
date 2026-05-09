@@ -2,8 +2,11 @@ import { parseSseStream } from "./sse";
 import type {
   AgentsForTickerResponse,
   AgentsTimelineResponse,
+  ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
+  HoldingsResponse,
+  HoldingsSort,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -75,6 +78,22 @@ export const api = {
     if (params?.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<SectorsResponse>(`/v1/sectors${qs ? `?${qs}` : ""}`);
+  },
+  chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
+    return getJson<ChartDataResponse>(
+      `/v1/agents/${encodeURIComponent(ticker)}/chart-data?days=${days}`
+    );
+  },
+  etfHoldings(
+    etf: string,
+    sort: HoldingsSort = "weight",
+    direction: "asc" | "desc" = "desc",
+    limit = 500,
+  ): Promise<HoldingsResponse> {
+    const sp = new URLSearchParams({ sort, direction, limit: String(limit) });
+    return getJson<HoldingsResponse>(
+      `/v1/sectors/${encodeURIComponent(etf)}/holdings?${sp}`
+    );
   },
   agentsAtRun(ticker: string, runTs: string): Promise<AgentsForTickerResponse> {
     return getJson<AgentsForTickerResponse>(

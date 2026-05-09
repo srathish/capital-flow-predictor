@@ -127,6 +127,11 @@ class UwClient:
         (no /stock/ prefix)."""
         return self._get(f"/earnings/{ticker}") or []
 
+    def etf_holdings(self, etf: str) -> list[dict]:
+        """Full constituent list with pricing + options sentiment per holding.
+        Replaces the yfinance top-10 stub."""
+        return self._get(f"/etfs/{etf}/holdings") or []
+
     def close(self) -> None:
         self._client.close()
 
@@ -720,6 +725,99 @@ def _upsert_earnings(conn: psycopg.Connection, ticker: str, rows: Iterable[dict]
             )
             n += 1
     return n
+
+
+def _upsert_etf_holdings(conn: psycopg.Connection, etf: str, rows: Iterable[dict]) -> int:
+    sql = """
+        INSERT INTO uw_etf_holdings (
+            etf, ticker, short_name, sector, weight, shares,
+            close, prev_price, open, high, low, volume, avg30_volume,
+            week52_high, week52_low,
+            call_volume, put_volume, call_premium, put_premium,
+            bullish_premium, bearish_premium, has_options,
+            updated, last_fetched
+        ) VALUES (
+            %(etf)s, %(ticker)s, %(short_name)s, %(sector)s, %(weight)s, %(shares)s,
+            %(close)s, %(prev_price)s, %(open)s, %(high)s, %(low)s, %(volume)s, %(avg30_volume)s,
+            %(week52_high)s, %(week52_low)s,
+            %(call_volume)s, %(put_volume)s, %(call_premium)s, %(put_premium)s,
+            %(bullish_premium)s, %(bearish_premium)s, %(has_options)s,
+            %(updated)s, NOW()
+        ) ON CONFLICT (etf, ticker) DO UPDATE SET
+            short_name = EXCLUDED.short_name,
+            sector = EXCLUDED.sector,
+            weight = EXCLUDED.weight,
+            shares = EXCLUDED.shares,
+            close = EXCLUDED.close,
+            prev_price = EXCLUDED.prev_price,
+            open = EXCLUDED.open,
+            high = EXCLUDED.high,
+            low = EXCLUDED.low,
+            volume = EXCLUDED.volume,
+            avg30_volume = EXCLUDED.avg30_volume,
+            week52_high = EXCLUDED.week52_high,
+            week52_low = EXCLUDED.week52_low,
+            call_volume = EXCLUDED.call_volume,
+            put_volume = EXCLUDED.put_volume,
+            call_premium = EXCLUDED.call_premium,
+            put_premium = EXCLUDED.put_premium,
+            bullish_premium = EXCLUDED.bullish_premium,
+            bearish_premium = EXCLUDED.bearish_premium,
+            has_options = EXCLUDED.has_options,
+            updated = EXCLUDED.updated,
+            last_fetched = NOW()
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            ticker = (r.get("ticker") or "").strip().upper()
+            if not ticker:
+                continue
+            cur.execute(
+                sql,
+                {
+                    "etf": etf,
+                    "ticker": ticker,
+                    "short_name": r.get("short_name"),
+                    "sector": r.get("sector"),
+                    "weight": _to_float(r.get("weight")),
+                    "shares": _to_int(r.get("shares")),
+                    "close": _to_float(r.get("close")),
+                    "prev_price": _to_float(r.get("prev_price")),
+                    "open": _to_float(r.get("open")),
+                    "high": _to_float(r.get("high")),
+                    "low": _to_float(r.get("low")),
+                    "volume": _to_int(r.get("volume")),
+                    "avg30_volume": _to_float(r.get("avg30_volume")),
+                    "week52_high": _to_float(r.get("week52_high")),
+                    "week52_low": _to_float(r.get("week52_low")),
+                    "call_volume": _to_int(r.get("call_volume")),
+                    "put_volume": _to_int(r.get("put_volume")),
+                    "call_premium": _to_float(r.get("call_premium")),
+                    "put_premium": _to_float(r.get("put_premium")),
+                    "bullish_premium": _to_float(r.get("bullish_premium")),
+                    "bearish_premium": _to_float(r.get("bearish_premium")),
+                    "has_options": bool(r.get("has_options")),
+                    "updated": _to_date(r.get("updated")),
+                },
+            )
+            n += 1
+    return n
+
+
+def ingest_etf_holdings(database_url: str, api_key: str, etfs: Iterable[str]) -> dict:
+    """Refresh the full constituent list for each ETF. Run nightly."""
+    counts: dict[str, int] = {}
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        for etf in etfs:
+            etf = etf.upper()
+            try:
+                counts[etf] = _upsert_etf_holdings(conn, etf, uw.etf_holdings(etf))
+            except Exception as e:
+                log.warning("etf_holdings failed for %s: %s", etf, e)
+                counts[etf] = 0
+        conn.commit()
+    return counts
 
 
 def _upsert_congress(conn: psycopg.Connection, rows: Iterable[dict]) -> int:

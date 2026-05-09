@@ -7,6 +7,7 @@ import type { AgentKind, AgentSignalEntry, AgentsForTickerResponse } from "@/lib
 import { formatDate, formatNum } from "@/lib/utils";
 import { AgentCard } from "@/components/agent-card";
 import { ChatPanel } from "@/components/chat-panel";
+import { PriceChart } from "@/components/price-chart";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SignalBadge } from "@/components/ui/badge";
@@ -71,6 +72,13 @@ export function EnsembleView({ ticker }: { ticker: string }) {
     queryFn: () => api.agents(upper),
     enabled: activeRunTs === null,
     retry: false,
+  });
+
+  const chart = useQuery({
+    queryKey: ["chart-data", upper],
+    queryFn: () => api.chartData(upper, 180),
+    retry: false,
+    staleTime: 60_000,
   });
 
   const live = useQuery({
@@ -179,6 +187,9 @@ export function EnsembleView({ ticker }: { ticker: string }) {
       {data && (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="space-y-6">
+            {chart.data && chart.data.bars.length > 0 && (
+              <PriceChart data={chart.data} height={360} />
+            )}
             {pm && (
               <Card className="border-primary/30 bg-primary/5">
                 <CardContent className="p-4">

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from cfp_agents.personas.base import BasePersona
 from cfp_agents.state import AnalysisState
+from cfp_agents.tools import compute_dcf
 
 SYSTEM_PROMPT = """\
 You are Seth Klarman of Baupost. Your one rule that organizes everything:
@@ -89,5 +90,28 @@ class KlarmanPersona(BasePersona):
                     f"- Major news 5d: {len(major)} headlines "
                     "(restructuring / asset sale / spinoff watch)"
                 )
+
+        # Klarman wants a conservative valuation floor — a deeper discount rate
+        # than Damodaran's. If the DCF still says cheap, the margin of safety
+        # is real.
+        if (
+            f.has_data
+            and f.free_cash_flow is not None
+            and f.market_cap is not None
+            and bundle.price_context.last_close is not None
+            and bundle.price_context.last_close > 0
+        ):
+            shares_out = f.market_cap / bundle.price_context.last_close
+            result = compute_dcf(
+                fcf_base=f.free_cash_flow,
+                shares_outstanding=shares_out,
+                discount_rate=0.11,            # more conservative than Damodaran
+                growth_rate_explicit=0.04,      # more conservative growth
+                terminal_growth=0.02,
+                years_explicit=5,
+                current_price=bundle.price_context.last_close,
+            )
+            if result is not None:
+                out.append("- Conservative DCF: " + result.summary(current_price=bundle.price_context.last_close))
 
         return "\n".join(out) if len(out) > 1 else ""

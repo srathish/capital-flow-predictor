@@ -86,7 +86,7 @@ export function SectorHeatmap() {
 
 function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
   return (
-    <Link href={`/watchlist#${encodeURIComponent(s.symbol)}`} className="block group">
+    <Link href={`/sectors/${encodeURIComponent(s.symbol)}`} className="block group">
       <Card className={cn("transition-colors", tileBg(s.latest_rank, totalRanked))}>
         <CardHeader className="p-3">
           <div className="flex items-baseline justify-between">

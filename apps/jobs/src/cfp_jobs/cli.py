@@ -366,6 +366,24 @@ def flow_cmd(
     console.print(out)
 
 
+@app.command("flow-holdings")
+def flow_holdings_cmd(
+    etfs: str = typer.Option("", help="Comma-separated ETF tickers; default = PREDICTION_TARGETS"),
+) -> None:
+    """Refresh full ETF constituent lists via Unusual Whales /etfs/{etf}/holdings.
+
+    Replaces the yfinance top-10 stub with the full holding list including
+    per-constituent pricing + options sentiment. Powers /sectors/[etf]."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    etf_list = [e.strip().upper() for e in etfs.split(",") if e.strip()] if etfs else list(PREDICTION_TARGETS)
+    out = ingestion.unusualwhales.ingest_etf_holdings(
+        settings.database_url, settings.unusual_whales_api_key, etf_list
+    )
+    console.print(f"[green]etf_holdings:[/green] {out}")
+
+
 @app.command("flow-etfs")
 def flow_etfs_cmd(
     etfs: str = typer.Option("", help="Comma-separated ETF tickers; default = PREDICTION_TARGETS"),
