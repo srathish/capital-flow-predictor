@@ -17,7 +17,7 @@ from typing import Literal
 
 import numpy as np
 from cfp_shared import PREDICTION_TARGETS
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
@@ -54,13 +54,20 @@ class NetworkResponse(BaseModel):
     as_of: datetime | None
 
 
+_VALID_HORIZONS = {5, 10, 20}
+
+
 @router.get("/correlation", response_model=NetworkResponse)
 async def get_correlation_network(
     window: int = Query(60, ge=20, le=252, description="Trading-days lookback for correlation"),
     min_correlation: float = Query(0.55, ge=0.0, le=1.0),
-    horizon: Literal[5, 10, 20] = Query(10, description="XGB prediction horizon for node coloring"),
+    # FastAPI's Literal[5, 10, 20] doesn't coerce string query params to int —
+    # it rejects "20" because it's not literally the int 20. Take int + validate.
+    horizon: int = Query(10, description="XGB prediction horizon (5, 10, or 20)"),
     model: str = Query("xgb_v1"),
 ) -> NetworkResponse:
+    if horizon not in _VALID_HORIZONS:
+        raise HTTPException(status_code=400, detail=f"horizon must be one of {sorted(_VALID_HORIZONS)}")
     """Pairwise correlation graph over the sector-ETF universe.
 
     Reads daily closes from prices_daily for the universe over the last
