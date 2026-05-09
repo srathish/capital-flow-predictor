@@ -32,6 +32,7 @@ export function NetworkView() {
   const [windowDays, setWindowDays] = useState(60);
   // Default 0.70 — at 0.55 the sector universe shows almost every edge
   // and the graph reads as noise. 0.70 surfaces only meaningful clusters.
+  // The slider min is also 0.50 (anything lower is uninformative noise).
   const [minCorr, setMinCorr] = useState(0.70);
   const [horizon, setHorizon] = useState<5 | 10 | 20>(10);
   const [size, setSize] = useState({ w: 800, h: 560 });
@@ -42,9 +43,11 @@ export function NetworkView() {
   const fgRef = useRef<unknown>(null);
 
   const handleEngineStop = useCallback(() => {
-    // After force simulation settles, fit the graph to the canvas with padding.
+    // After force simulation settles, fit graph with tight padding so the
+    // cluster fills the canvas — too much padding shrinks the graph and
+    // makes labels look oversized relative to nodes.
     const fg = fgRef.current as { zoomToFit?: (ms: number, pad: number) => void } | null;
-    if (fg?.zoomToFit) fg.zoomToFit(400, 60);
+    if (fg?.zoomToFit) fg.zoomToFit(400, 24);
   }, []);
 
   // Tune the d3 forces once on mount: stronger repulsion + shorter links so
@@ -173,18 +176,22 @@ export function NetworkView() {
                   const ranked = data?.nodes.length ?? 26;
                   const inverse = node.rank == null ? 0 : ranked - node.rank + 1;
                   const radius = (4 + inverse * 1.5) ** 0.5 * 1.4;
-                  // Ticker label inside the node, white.
-                  const fontSize = Math.max(10, 14 / globalScale);
-                  ctx.font = `${fontSize}px var(--font-jb-mono), ui-monospace, monospace`;
+                  // Render labels at a CONSTANT screen size regardless of zoom.
+                  // Lightweight-charts: world_size * globalScale = screen pixels.
+                  // So world_size = target_screen_px / globalScale.
+                  const labelScreenPx = 11;
+                  const labelWorld = labelScreenPx / globalScale;
+                  ctx.font = `${labelWorld}px var(--font-jb-mono), ui-monospace, monospace`;
                   ctx.textAlign = "center";
                   ctx.textBaseline = "middle";
                   ctx.fillStyle = "#fff";
                   ctx.fillText(node.id, node.x ?? 0, node.y ?? 0);
-                  // Rank "#N" below the node, muted gray.
+                  // Rank "#N" below the node — slightly smaller, muted gray.
                   if (node.rank != null) {
-                    ctx.font = `${Math.max(8, 10 / globalScale)}px var(--font-jb-mono), ui-monospace, monospace`;
+                    const rankWorld = 9 / globalScale;
+                    ctx.font = `${rankWorld}px var(--font-jb-mono), ui-monospace, monospace`;
                     ctx.fillStyle = "rgba(255,255,255,0.5)";
-                    ctx.fillText(`#${node.rank}`, node.x ?? 0, (node.y ?? 0) + radius + 6);
+                    ctx.fillText(`#${node.rank}`, node.x ?? 0, (node.y ?? 0) + radius + rankWorld * 0.7);
                   }
                 }}
               />
@@ -231,7 +238,7 @@ function Controls({
       <label className="flex items-center gap-2">
         <span>Min correlation</span>
         <input
-          type="range" min={0} max={0.95} step={0.05}
+          type="range" min={0.5} max={0.95} step={0.05}
           value={minCorr}
           onChange={(e) => onMinCorrChange(parseFloat(e.target.value))}
           className="accent-primary"
