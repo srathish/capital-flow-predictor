@@ -806,18 +806,99 @@ def _upsert_etf_holdings(conn: psycopg.Connection, etf: str, rows: Iterable[dict
 
 
 def ingest_etf_holdings(database_url: str, api_key: str, etfs: Iterable[str]) -> dict:
-    """Refresh the full constituent list for each ETF. Run nightly."""
+    """Refresh the full constituent list for each ETF. Run nightly.
+
+    UW indexes the major ETFs but not all of them. For ETFs UW returns 0
+    rows for (e.g. ARKK, SMH, JETS, URNM, WCLD), fall back to yfinance's
+    top-10 holdings + per-name fast_info price snapshot so the sector
+    detail page still renders."""
     counts: dict[str, int] = {}
     with UwClient(api_key) as uw, connect(database_url) as conn:
         for etf in etfs:
             etf = etf.upper()
             try:
-                counts[etf] = _upsert_etf_holdings(conn, etf, uw.etf_holdings(etf))
+                rows = uw.etf_holdings(etf)
+                n = _upsert_etf_holdings(conn, etf, rows)
+                if n == 0:
+                    log.info("UW returned 0 holdings for %s; trying yfinance fallback", etf)
+                    n = _yfinance_holdings_fallback(conn, etf)
+                counts[etf] = n
             except Exception as e:
                 log.warning("etf_holdings failed for %s: %s", etf, e)
                 counts[etf] = 0
         conn.commit()
     return counts
+
+
+def _yfinance_holdings_fallback(conn: psycopg.Connection, etf: str) -> int:
+    """For ETFs UW doesn't index, pull top-10 from yfinance + per-name price
+    snapshot. Options-sentiment fields stay null (yfinance has no flow data)."""
+    try:
+        import yfinance as yf
+    except ImportError:
+        log.warning("yfinance not available for fallback")
+        return 0
+
+    try:
+        df = yf.Ticker(etf).funds_data.top_holdings
+    except Exception as e:
+        log.warning("yfinance top_holdings failed for %s: %s", etf, e)
+        return 0
+    if df is None or df.empty:
+        return 0
+
+    fallback_rows: list[dict] = []
+    for symbol, row in df.iterrows():
+        ticker = str(symbol).upper()
+        weight_frac = _to_float(row.get("Holding Percent"))
+        weight_pct = weight_frac * 100.0 if weight_frac is not None else None
+        name = row.get("Name") if "Name" in row else None
+
+        # Per-ticker price snapshot via yfinance fast_info (one HTTP call each).
+        close = prev = high = low = open_ = w52h = w52l = avg30 = None
+        vol = None
+        try:
+            t = yf.Ticker(ticker)
+            fi = t.fast_info
+            close = _to_float(getattr(fi, "last_price", None))
+            prev = _to_float(getattr(fi, "previous_close", None))
+            open_ = _to_float(getattr(fi, "open", None))
+            high = _to_float(getattr(fi, "day_high", None))
+            low = _to_float(getattr(fi, "day_low", None))
+            w52h = _to_float(getattr(fi, "year_high", None))
+            w52l = _to_float(getattr(fi, "year_low", None))
+            avg30 = _to_float(getattr(fi, "ten_day_average_volume", None))
+            v = getattr(fi, "last_volume", None)
+            vol = _to_int(v) if v is not None else None
+        except Exception as e:
+            log.debug("yfinance fast_info failed for %s: %s", ticker, e)
+
+        fallback_rows.append({
+            "ticker": ticker,
+            "short_name": str(name) if name else None,
+            "sector": None,
+            "weight": weight_pct,
+            "shares": None,
+            "close": close,
+            "prev_price": prev,
+            "open": open_,
+            "high": high,
+            "low": low,
+            "volume": vol,
+            "avg30_volume": avg30,
+            "week52_high": w52h,
+            "week52_low": w52l,
+            "call_volume": None,
+            "put_volume": None,
+            "call_premium": None,
+            "put_premium": None,
+            "bullish_premium": None,
+            "bearish_premium": None,
+            "has_options": None,
+            "updated": None,
+        })
+
+    return _upsert_etf_holdings(conn, etf, fallback_rows)
 
 
 def _upsert_congress(conn: psycopg.Connection, rows: Iterable[dict]) -> int:

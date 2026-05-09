@@ -15,6 +15,7 @@ import {
 } from "lightweight-charts";
 import { useEffect, useRef } from "react";
 import type { ChartDataResponse, ChartMarkerType } from "@/lib/types";
+import { TimeRangeTabs, type TimeRange } from "@/components/ui/time-range-tabs";
 
 const MARKER_STYLES: Record<
   ChartMarkerType,
@@ -46,7 +47,17 @@ function ma(values: { value: number; time: Time }[], window: number) {
   return out;
 }
 
-export function PriceChart({ data, height = 360 }: { data: ChartDataResponse; height?: number }) {
+export function PriceChart({
+  data,
+  height = 360,
+  range,
+  onRangeChange,
+}: {
+  data: ChartDataResponse;
+  height?: number;
+  range?: TimeRange;
+  onRangeChange?: (r: TimeRange) => void;
+}) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
 
@@ -165,15 +176,20 @@ export function PriceChart({ data, height = 360 }: { data: ChartDataResponse; he
 
   return (
     <div className="space-y-2">
-      <div ref={containerRef} className="w-full overflow-hidden rounded-2xl border border-border bg-card" />
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[10px] text-muted-foreground">
-        <span className="flex items-center gap-1"><span className="inline-block h-0.5 w-3 bg-[#60a5fa]" /> MA50</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-0.5 w-3 bg-[#a78bfa]" /> MA200</span>
-        <span className="flex items-center gap-1"><span className="text-[#00C805]">▲</span> Call sweep ($&gt;1M)</span>
-        <span className="flex items-center gap-1"><span className="text-[#FF5000]">▼</span> Put sweep</span>
-        <span className="flex items-center gap-1"><span className="text-[#22d3ee]">●</span> Insider buy</span>
-        <span className="flex items-center gap-1"><span className="text-[#fb923c]">●</span> Insider sell</span>
-        <span className="flex items-center gap-1"><span className="text-[#a78bfa]">■</span> Earnings</span>
+      <div ref={containerRef} className="w-full overflow-hidden rounded-2xl bg-card" />
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-muted-foreground">
+          <span className="flex items-center gap-1"><span className="inline-block h-0.5 w-3 bg-[#60a5fa]" /> MA50</span>
+          <span className="flex items-center gap-1"><span className="inline-block h-0.5 w-3 bg-[#a78bfa]" /> MA200</span>
+          <span className="flex items-center gap-1"><span className="text-[#00C805]">▲</span> Call sweep</span>
+          <span className="flex items-center gap-1"><span className="text-[#FF5000]">▼</span> Put sweep</span>
+          <span className="flex items-center gap-1"><span className="text-[#22d3ee]">●</span> Insider buy</span>
+          <span className="flex items-center gap-1"><span className="text-[#fb923c]">●</span> Insider sell</span>
+          <span className="flex items-center gap-1"><span className="text-[#a78bfa]">■</span> Earnings</span>
+        </div>
+        {range && onRangeChange && (
+          <TimeRangeTabs value={range} onChange={onRangeChange} />
+        )}
       </div>
     </div>
   );

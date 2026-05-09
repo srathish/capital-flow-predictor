@@ -1,12 +1,15 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+// Robinhood-style: borderless surfaces, separated by background contrast (true
+// black page, ~#141417 cards). Borders feel like a windowed app; RH dark uses
+// flat surfaces with generous padding and clear typographic hierarchy.
 export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        "rounded-2xl border border-border bg-card text-card-foreground transition-colors",
+        "rounded-2xl bg-card text-card-foreground transition-colors",
         className
       )}
       {...props}

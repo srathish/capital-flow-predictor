@@ -11,6 +11,8 @@ import { PriceChart } from "@/components/price-chart";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SignalBadge } from "@/components/ui/badge";
+import { TrendPill } from "@/components/ui/trend-pill";
+import { RANGE_TO_DAYS, type TimeRange } from "@/components/ui/time-range-tabs";
 
 const ANALYSTS = ["technicals", "fundamentals", "sentiment", "news", "flow"] as const;
 const PERSONAS = [
@@ -74,9 +76,10 @@ export function EnsembleView({ ticker }: { ticker: string }) {
     retry: false,
   });
 
+  const [range, setRange] = useState<TimeRange>("6M");
   const chart = useQuery({
-    queryKey: ["chart-data", upper],
-    queryFn: () => api.chartData(upper, 180),
+    queryKey: ["chart-data", upper, range],
+    queryFn: () => api.chartData(upper, RANGE_TO_DAYS[range]),
     retry: false,
     staleTime: 60_000,
   });
@@ -132,20 +135,50 @@ export function EnsembleView({ ticker }: { ticker: string }) {
     [signals]
   );
 
+  // Robinhood-style price header: latest close + change vs prior bar.
+  const lastBar = chart.data?.bars?.[chart.data.bars.length - 1];
+  const prevBar = chart.data?.bars?.[chart.data.bars.length - 2];
+  const lastClose = lastBar?.close ?? null;
+  const prevClose = prevBar?.close ?? null;
+  const dayChange = lastClose !== null && prevClose !== null && prevClose > 0
+    ? lastClose - prevClose
+    : null;
+  const dayChangePct = lastClose !== null && prevClose !== null && prevClose > 0
+    ? lastClose / prevClose - 1
+    : null;
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{upper}</h1>
-          <p className="text-sm text-muted-foreground">
+      {/* Robinhood-style header: huge ticker + price, ▲ change pill below, run controls right-aligned. */}
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {upper}
+          </div>
+          <div className="flex items-baseline gap-3">
+            <span className="num text-5xl font-bold tracking-tight">
+              {lastClose !== null ? `$${lastClose.toFixed(2)}` : upper}
+            </span>
+            {(dayChange !== null || dayChangePct !== null) && (
+              <TrendPill value={dayChange} pct={dayChangePct} size="md" />
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">
             {data
-              ? `${isLiveActive && !isComplete ? "Running" : "Last run"} ${formatDate(data.run_ts)} · ${completedCount}/${expectedTotal} signals`
+              ? `${isLiveActive && !isComplete ? "Running ensemble" : "Last ensemble run"} ${formatDate(data.run_ts)} · ${completedCount}/${expectedTotal} signals`
               : isLoading
                 ? "Loading…"
                 : "No ensemble run yet."}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {data && (
+            <div className="flex items-center gap-2 text-xs">
+              <SignalBadge signal="bullish" /> <span className="num">{counts.bullish}</span>
+              <SignalBadge signal="neutral" /> <span className="num">{counts.neutral}</span>
+              <SignalBadge signal="bearish" /> <span className="num">{counts.bearish}</span>
+            </div>
+          )}
           <button
             onClick={() => runMutation.mutate()}
             disabled={runMutation.isPending || (isLiveActive && !isComplete)}
@@ -157,13 +190,6 @@ export function EnsembleView({ ticker }: { ticker: string }) {
                 ? `Running ${completedCount}/${expectedTotal}…`
                 : "Run ensemble"}
           </button>
-          {data && (
-            <div className="flex items-center gap-2 text-sm">
-              <SignalBadge signal="bullish" /> <span className="num">{counts.bullish}</span>
-              <SignalBadge signal="neutral" /> <span className="num">{counts.neutral}</span>
-              <SignalBadge signal="bearish" /> <span className="num">{counts.bearish}</span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -188,7 +214,12 @@ export function EnsembleView({ ticker }: { ticker: string }) {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="space-y-6">
             {chart.data && chart.data.bars.length > 0 && (
-              <PriceChart data={chart.data} height={360} />
+              <PriceChart
+                data={chart.data}
+                height={360}
+                range={range}
+                onRangeChange={setRange}
+              />
             )}
             {pm && (
               <Card className="border-primary/30 bg-primary/5">
