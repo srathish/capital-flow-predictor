@@ -72,8 +72,8 @@ export function NetworkView() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Sector network</h1>
           <p className="text-sm text-muted-foreground">
-            Pairwise correlation graph over {data?.universe.length ?? "—"} sector ETFs.
-            Edge width ∝ |correlation|, node size ∝ avg connectivity, color = predicted bucket.
+            Pairwise correlation graph over {data?.universe.length ?? "—"} sector ETFs by rolling correlation,
+            sized by your XGB rank, with the option to expand a sector into its constituents.
           </p>
         </div>
         <Controls
@@ -109,7 +109,17 @@ export function NetworkView() {
                 height={size.h}
                 backgroundColor="rgba(0,0,0,0)"
                 nodeRelSize={1}
-                nodeVal={(n) => 6 + ((n as AnyNode).avg_correlation || 0) * 18}
+                nodeVal={(n) => {
+                  // Per spec: size ∝ rank — top-ranked sectors biggest, laggards smallest.
+                  // ForceGraph2D treats nodeVal as area, so a flat scale on rank gives
+                  // a clear visual hierarchy. Unranked nodes get the smallest size.
+                  const node = n as AnyNode;
+                  const ranked = data?.nodes.length ?? 26;
+                  if (node.rank == null) return 4;
+                  // rank 1 -> max, rank N -> min
+                  const inverse = ranked - node.rank + 1;          // 1..N (laggard..leader)
+                  return 4 + inverse * 1.5;                          // ~4..~43
+                }}
                 nodeColor={(n) => BUCKET_COLOR[(n as AnyNode).bucket]}
                 nodeLabel={(n) => {
                   const node = n as AnyNode;
@@ -130,17 +140,21 @@ export function NetworkView() {
                 nodeCanvasObjectMode={() => "after"}
                 nodeCanvasObject={(n, ctx, globalScale) => {
                   const node = n as AnyNode;
+                  const ranked = data?.nodes.length ?? 26;
+                  const inverse = node.rank == null ? 0 : ranked - node.rank + 1;
+                  const radius = (4 + inverse * 1.5) ** 0.5 * 1.4;
+                  // Ticker label inside the node, white.
                   const fontSize = Math.max(10, 14 / globalScale);
                   ctx.font = `${fontSize}px var(--font-jb-mono), ui-monospace, monospace`;
                   ctx.textAlign = "center";
                   ctx.textBaseline = "middle";
                   ctx.fillStyle = "#fff";
                   ctx.fillText(node.id, node.x ?? 0, node.y ?? 0);
+                  // Rank "#N" below the node, muted gray.
                   if (node.rank != null) {
                     ctx.font = `${Math.max(8, 10 / globalScale)}px var(--font-jb-mono), ui-monospace, monospace`;
                     ctx.fillStyle = "rgba(255,255,255,0.5)";
-                    const r = (6 + (node.avg_correlation || 0) * 18) ** 0.5 * 1.4 + 6;
-                    ctx.fillText(`#${node.rank}`, node.x ?? 0, (node.y ?? 0) + r);
+                    ctx.fillText(`#${node.rank}`, node.x ?? 0, (node.y ?? 0) + radius + 6);
                   }
                 }}
               />
@@ -235,11 +249,14 @@ function Legend({ response }: { response: NetworkResponse | undefined }) {
       <span className="flex items-center gap-1">
         <span className="inline-block h-3 w-3 rounded-full bg-signal-bearish" /> Predicted laggard (bottom 3)
       </span>
-      {response && (
-        <span className="ml-auto text-[10px]">
-          {response.nodes.length} nodes · {response.edges.length} edges · {response.n_obs} bars in window
-        </span>
-      )}
+      <span className="ml-auto text-[10px]">
+        size = rank · edge = correlation
+        {response && (
+          <span className="ml-2 text-[10px] opacity-70">
+            ({response.nodes.length} nodes · {response.edges.length} edges · {response.n_obs} bars)
+          </span>
+        )}
+      </span>
     </div>
   );
 }
