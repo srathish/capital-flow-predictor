@@ -123,6 +123,38 @@ def _render_flow_block(bundle) -> str:
     if cat_lines:
         sections.append("Catalysts:\n" + "\n".join(cat_lines))
 
+    # Reddit chatter — confluence layer. Surface only when there's
+    # something asymmetric to say (mention spike, contrarian warning,
+    # or stealth flag). Otherwise stays out of the prompt to save tokens.
+    reddit = bundle.reddit
+    if reddit.has_data and (
+        (reddit.spike_ratio is not None and (reddit.spike_ratio > 2.0 or reddit.spike_ratio < 0.5))
+        or reddit.is_contrarian_warning
+        or reddit.is_stealth
+        or (reddit.rank_today is not None and reddit.rank_today <= 30)
+    ):
+        rd_lines: list[str] = []
+        spike_s = f"{reddit.spike_ratio:.1f}x avg" if reddit.spike_ratio is not None else "n/a"
+        rank_s = f"#{reddit.rank_today}" if reddit.rank_today is not None else "unranked"
+        rd_lines.append(
+            f"- Reddit: {reddit.mentions_today} mentions today ({spike_s}), rank {rank_s} (Apewisdom all-stocks)"
+        )
+        if reddit.is_contrarian_warning:
+            rd_lines.append("- Contrarian-warning flag: high chatter — retail likely caught up, move may be late")
+        if reddit.is_stealth:
+            rd_lines.append("- Stealth flag: very low chatter — institutional setup unnoticed by retail")
+        if reddit.by_subreddit:
+            wsb = next((s for s in reddit.by_subreddit if s.subreddit == "wallstreetbets"), None)
+            stocks = next((s for s in reddit.by_subreddit if s.subreddit == "stocks"), None)
+            if wsb or stocks:
+                parts = []
+                if wsb:
+                    parts.append(f"WSB {wsb.mentions}")
+                if stocks:
+                    parts.append(f"r/stocks {stocks.mentions}")
+                rd_lines.append(f"- Per-subreddit: {', '.join(parts)}")
+        sections.append("Reddit chatter (confluence layer, NOT primary signal):\n" + "\n".join(rd_lines))
+
     if not sections:
         return "Flow / positioning / catalysts: no Unusual Whales data available for this ticker yet."
     return "\n\n".join(sections)

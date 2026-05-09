@@ -26,6 +26,8 @@ from cfp_shared import (
     NewsHeadline,
     OptionsFlowCtx,
     PositioningCtx,
+    RedditCtx,
+    RedditSubredditMentions,
     SmartMoneyCtx,
     TopTrade,
 )
@@ -563,6 +565,124 @@ def _ensure_fundamentals_and_sector(
 # Built once per (ticker, run_ts), persisted to run_evidence for replay.
 
 
+def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
+    """Apewisdom snapshots over the last ~7 days. Computes spike ratio
+    (today vs 7d avg from the all-stocks aggregate) and asymmetry flags."""
+    out_subs: list[RedditSubredditMentions] = []
+    mentions_today = 0
+    mentions_7d_avg = 0.0
+    spike_ratio: float | None = None
+    rank_today: int | None = None
+    rank_7d_ago: int | None = None
+    rank_change_7d: int | None = None
+
+    try:
+        with connect(database_url) as conn, conn.cursor() as cur:
+            # all-stocks aggregate — most reliable for the "top-N" rank position.
+            cur.execute(
+                """
+                SELECT mentions, rank, rank_24h_ago, mentions_24h_ago
+                FROM reddit_mentions
+                WHERE ticker = %s AND subreddit = 'all-stocks'
+                  AND snapshot_date = (
+                      SELECT MAX(snapshot_date) FROM reddit_mentions
+                      WHERE ticker = %s AND subreddit = 'all-stocks'
+                  )
+                """,
+                (ticker, ticker),
+            )
+            row = cur.fetchone()
+            if row:
+                mentions_today = int(row[0] or 0)
+                rank_today = int(row[1]) if row[1] is not None else None
+
+            # 7-day average from the same aggregate.
+            cur.execute(
+                """
+                SELECT AVG(mentions)::float, MIN(rank)
+                FROM reddit_mentions
+                WHERE ticker = %s AND subreddit = 'all-stocks'
+                  AND snapshot_date >= CURRENT_DATE - 7
+                """,
+                (ticker,),
+            )
+            r2 = cur.fetchone()
+            if r2:
+                mentions_7d_avg = float(r2[0] or 0.0)
+
+            # 7-day-ago rank for momentum.
+            cur.execute(
+                """
+                SELECT rank FROM reddit_mentions
+                WHERE ticker = %s AND subreddit = 'all-stocks'
+                  AND snapshot_date <= CURRENT_DATE - 7
+                ORDER BY snapshot_date DESC LIMIT 1
+                """,
+                (ticker,),
+            )
+            r3 = cur.fetchone()
+            if r3 and r3[0] is not None:
+                rank_7d_ago = int(r3[0])
+                if rank_today is not None:
+                    rank_change_7d = rank_today - rank_7d_ago
+
+            # Per-subreddit slices for the lens — WSB hype vs broader stocks
+            # attention shows different things.
+            cur.execute(
+                """
+                SELECT subreddit, mentions, upvotes, rank, rank_24h_ago, mentions_24h_ago
+                FROM reddit_mentions
+                WHERE ticker = %s
+                  AND snapshot_date = (
+                      SELECT MAX(snapshot_date) FROM reddit_mentions WHERE ticker = %s
+                  )
+                ORDER BY mentions DESC
+                """,
+                (ticker, ticker),
+            )
+            for sub, m, u, rk, rk_y, m_y in cur.fetchall():
+                if sub == "all-stocks":
+                    continue  # already represented in the top-level fields
+                out_subs.append(RedditSubredditMentions(
+                    subreddit=sub,
+                    mentions=int(m or 0),
+                    upvotes=int(u or 0),
+                    rank=int(rk) if rk is not None else None,
+                    rank_24h_ago=int(rk_y) if rk_y is not None else None,
+                    mentions_24h_ago=int(m_y) if m_y is not None else None,
+                ))
+    except Exception as e:
+        log.warning("reddit ctx build failed for %s: %s", ticker, e)
+        return RedditCtx()
+
+    if mentions_7d_avg > 0:
+        spike_ratio = mentions_today / mentions_7d_avg
+
+    # Asymmetry flags. Calibrated to be conservative — only fire on clearly
+    # elevated or clearly absent chatter.
+    contrarian_warning = (
+        spike_ratio is not None and spike_ratio > 3.0
+        and rank_today is not None and rank_today <= 20
+    )
+    stealth = (
+        mentions_today < 5 and (rank_today is None or rank_today > 100)
+    )
+    has_data = mentions_today > 0 or len(out_subs) > 0 or rank_today is not None
+
+    return RedditCtx(
+        has_data=has_data,
+        mentions_today=mentions_today,
+        mentions_7d_avg=mentions_7d_avg,
+        spike_ratio=spike_ratio,
+        rank_today=rank_today,
+        rank_7d_ago=rank_7d_ago,
+        rank_change_7d=rank_change_7d,
+        is_contrarian_warning=contrarian_warning,
+        is_stealth=stealth,
+        by_subreddit=out_subs,
+    )
+
+
 def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) -> CatalystCtx:
     """Pull last 5d UW news headlines for `ticker` plus earnings proximity from
     the resolved instrument.next_earnings_date."""
@@ -690,6 +810,7 @@ def build_evidence_bundle(
     etf_context = EtfContextCtx(**(flow_dict.get("etf_context") or {}))
 
     catalysts = _build_catalyst_ctx(database_url, ticker, instrument)
+    reddit = _build_reddit_ctx(database_url, ticker)
 
     bundle = EvidenceBundle(
         run_ts=run_ts,
@@ -702,6 +823,7 @@ def build_evidence_bundle(
         smart_money=smart_money,
         catalysts=catalysts,
         etf_context=etf_context,
+        reddit=reddit,
     )
 
     return bundle, prices, fundamentals_df

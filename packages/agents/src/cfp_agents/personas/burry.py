@@ -60,4 +60,19 @@ class BurryPersona(BasePersona):
                 f"- Insider 30d: {smart.insider_buys_30d} buys / "
                 f"{smart.insider_sells_30d} sells, net ${smart.insider_net_amount_30d / 1e6:+.1f}M"
             )
+
+        # Reddit chatter — Burry treats elevated WSB attention as a froth
+        # flag. If the name is in the WSB top-20 with a 3x+ mention spike,
+        # that's the kind of crowded long he shorts.
+        rd = bundle.reddit
+        if rd.has_data and rd.is_contrarian_warning:
+            lines.append(
+                f"- WSB attention: {rd.mentions_today} mentions ({rd.spike_ratio:.1f}x avg), "
+                f"rank #{rd.rank_today} — froth signal"
+            )
+        elif rd.has_data and rd.spike_ratio is not None and rd.spike_ratio > 2.0:
+            lines.append(
+                f"- Reddit chatter rising: {rd.spike_ratio:.1f}x avg — watch for crowded-long setup"
+            )
+
         return "\n".join(lines) if len(lines) > 1 else ""

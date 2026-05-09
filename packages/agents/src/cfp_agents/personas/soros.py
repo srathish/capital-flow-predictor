@@ -92,4 +92,25 @@ class SorosPersona(BasePersona):
                     "(narrative still self-reinforcing or starting to crack?)"
                 )
 
+        # Reddit chatter — Soros reads it as a reflexive-cycle stage indicator.
+        # Quiet (stealth) = early stage, narrative not yet broad. Loud + climbing
+        # = late stage, narrative self-reinforcing among retail. Loud + price
+        # diverging = approaching reversal.
+        rd = bundle.reddit
+        if rd.has_data:
+            stage_hint: str | None = None
+            if rd.is_stealth:
+                stage_hint = "Stage 1-2 (emerging trend, retail unaware)"
+            elif rd.is_contrarian_warning:
+                stage_hint = "Stage 3-4 (acceleration into recognition; bubble territory)"
+            elif rd.spike_ratio is not None and rd.spike_ratio > 2.0:
+                stage_hint = "Stage 2-3 (acceleration; narrative spreading)"
+            if stage_hint:
+                rank_s = f"#{rd.rank_today}" if rd.rank_today is not None else "unranked"
+                out.append(
+                    f"- Reflexive stage indicator: Reddit rank {rank_s}, "
+                    f"{rd.spike_ratio if rd.spike_ratio is None else f'{rd.spike_ratio:.1f}x'} avg mentions "
+                    f"-> {stage_hint}"
+                )
+
         return "\n".join(out) if len(out) > 1 else ""

@@ -184,6 +184,41 @@ class CatalystCtx(_Frozen):
     sentiment_score_5d: float | None = None  # (positive - negative) / total
 
 
+# ---------- reddit (chatter intensity, asymmetry) ----------
+
+
+class RedditSubredditMentions(_Frozen):
+    """Per-subreddit mention snapshot for one ticker."""
+
+    subreddit: str
+    mentions: int = 0
+    upvotes: int = 0
+    rank: int | None = None
+    rank_24h_ago: int | None = None
+    mentions_24h_ago: int | None = None
+
+
+class RedditCtx(_Frozen):
+    """Reddit chatter signals from Apewisdom.
+
+    Two asymmetry flags personas should care about:
+      - is_contrarian_warning: high mentions + price already moving = late
+      - is_stealth: low mentions + bullish setup elsewhere = unnoticed
+    Burry uses contrarian_warning as a froth flag; Soros uses spike_ratio
+    to identify which stage of the reflexive cycle we're in."""
+
+    has_data: bool = False
+    mentions_today: int = 0
+    mentions_7d_avg: float = 0.0
+    spike_ratio: float | None = None       # mentions_today / mentions_7d_avg
+    rank_today: int | None = None
+    rank_7d_ago: int | None = None
+    rank_change_7d: int | None = None      # negative = climbing the ranks (more attention)
+    is_contrarian_warning: bool = False     # high chatter (>3x avg) + already in WSB top-20
+    is_stealth: bool = False                # low chatter (<0.5x avg) + not in top-100
+    by_subreddit: list[RedditSubredditMentions] = Field(default_factory=list)
+
+
 # ---------- ETF context ----------
 
 
@@ -245,6 +280,7 @@ class EvidenceBundle(_Frozen):
     smart_money: SmartMoneyCtx = Field(default_factory=SmartMoneyCtx)
     catalysts: CatalystCtx = Field(default_factory=CatalystCtx)
     etf_context: EtfContextCtx = Field(default_factory=EtfContextCtx)
+    reddit: RedditCtx = Field(default_factory=RedditCtx)
     market_regime: MarketRegimeCtx = Field(default_factory=MarketRegimeCtx)
     vol_surface: VolSurfaceCtx = Field(default_factory=VolSurfaceCtx)
     sector_context: SectorContextCtx = Field(default_factory=SectorContextCtx)

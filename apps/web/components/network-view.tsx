@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import type { NetworkBucket, NetworkEdge, NetworkNode, NetworkResponse } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,11 +30,39 @@ type AnyLink = Record<string, unknown> & GLink;
 export function NetworkView() {
   const router = useRouter();
   const [windowDays, setWindowDays] = useState(60);
-  const [minCorr, setMinCorr] = useState(0.55);
+  // Default 0.70 — at 0.55 the sector universe shows almost every edge
+  // and the graph reads as noise. 0.70 surfaces only meaningful clusters.
+  const [minCorr, setMinCorr] = useState(0.70);
   const [horizon, setHorizon] = useState<5 | 10 | 20>(10);
   const [size, setSize] = useState({ w: 800, h: 560 });
   const [hovered, setHovered] = useState<NetworkNode | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  // ref into ForceGraph2D so we can zoomToFit / tune forces after layout settles.
+  // The lib's TS types are loose; treat the imperative handle as `any`.
+  const fgRef = useRef<unknown>(null);
+
+  const handleEngineStop = useCallback(() => {
+    // After force simulation settles, fit the graph to the canvas with padding.
+    const fg = fgRef.current as { zoomToFit?: (ms: number, pad: number) => void } | null;
+    if (fg?.zoomToFit) fg.zoomToFit(400, 60);
+  }, []);
+
+  // Tune the d3 forces once on mount: stronger repulsion + shorter links so
+  // dense clusters spread out and labels don't overlap.
+  const handleGraphRefReady = useCallback(() => {
+    const fg = fgRef.current as {
+      d3Force?: (name: string) => { strength?: (v: number) => void; distance?: (v: number) => void } | null;
+    } | null;
+    if (!fg?.d3Force) return;
+    const charge = fg.d3Force("charge");
+    if (charge?.strength) charge.strength(-380);
+    const link = fg.d3Force("link");
+    if (link?.distance) link.distance(80);
+  }, []);
+
+  useEffect(() => {
+    handleGraphRefReady();
+  }, [handleGraphRefReady]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["network-correlation", windowDays, minCorr, horizon],
@@ -104,10 +132,12 @@ export function NetworkView() {
             )}
             {data && data.nodes.length > 0 && (
               <ForceGraph2D
+                ref={fgRef as never}
                 graphData={graphData as { nodes: AnyNode[]; links: AnyLink[] }}
                 width={size.w}
                 height={size.h}
                 backgroundColor="rgba(0,0,0,0)"
+                onEngineStop={handleEngineStop}
                 nodeRelSize={1}
                 nodeVal={(n) => {
                   // Per spec: size ∝ rank — top-ranked sectors biggest, laggards smallest.

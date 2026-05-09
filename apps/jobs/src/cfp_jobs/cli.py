@@ -400,6 +400,16 @@ def flow_etfs_cmd(
     console.print(f"[green]etf_flow:[/green] {out}")
 
 
+@app.command("reddit")
+def reddit_cmd() -> None:
+    """Snapshot today's Reddit mention counts via Apewisdom (free, no OAuth).
+
+    Pulls the top ~150 tickers across r/wallstreetbets, r/stocks, r/options,
+    r/investing, plus the union 'all-stocks' aggregate. Idempotent per day."""
+    out = ingestion.reddit_apewisdom.ingest(settings.database_url)
+    console.print(f"[green]reddit_mentions:[/green] {out}")
+
+
 @app.command("flow-congress")
 def flow_congress_cmd(
     limit: int = typer.Option(500, help="Max recent trades to ingest"),
