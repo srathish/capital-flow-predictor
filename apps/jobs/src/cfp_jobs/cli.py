@@ -435,6 +435,40 @@ def flow_congress_cmd(
     console.print(f"[green]congress_trades:[/green] {n} new rows")
 
 
+@app.command("verify-insiders")
+def verify_insiders_cmd(
+    ticker: str = typer.Argument(..., help="Stock ticker, e.g. NVDA"),
+    days: int = typer.Option(180, help="Lookback window in days"),
+) -> None:
+    """Cross-check uw_insider_transactions for a ticker against SEC EDGAR Form 4.
+
+    Reports matches and discrepancies on transaction date. Useful for confirming
+    that the chart's insider-sell markers correspond to real SEC filings, and
+    for catching gaps in the Unusual Whales feed."""
+    from cfp_jobs import verify_insiders as vi
+
+    try:
+        report = vi.verify(settings.database_url, ticker, days=days)
+    except Exception as e:  # network / SEC throttle / parse — surface clearly
+        console.print(f"[red]verify failed:[/red] {e}")
+        raise typer.Exit(1) from e
+
+    console.print(f"[bold]{report['ticker']}[/bold] insider verification, since {report['since']}")
+    console.print(f"  DB rows:      {report['db_count']}")
+    console.print(f"  EDGAR rows:   {report['edgar_count']}")
+    console.print(f"  matched dates: {len(report['matched_dates'])}")
+    if report["db_only_dates"]:
+        console.print(f"  [yellow]DB-only dates ({len(report['db_only_dates'])}):[/yellow] "
+                      f"{', '.join(report['db_only_dates'][:10])}")
+    if report["edgar_only_dates"]:
+        console.print(f"  [yellow]EDGAR-only dates ({len(report['edgar_only_dates'])}):[/yellow] "
+                      f"{', '.join(report['edgar_only_dates'][:10])}")
+    if report["edgar_sample_urls"]:
+        console.print("  Sample EDGAR filings:")
+        for url in report["edgar_sample_urls"]:
+            console.print(f"    {url}")
+
+
 @app.command("skylit-login")
 def skylit_login_cmd(
     env_file: str = typer.Option(

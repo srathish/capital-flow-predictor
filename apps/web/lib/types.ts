@@ -110,6 +110,7 @@ export type ChartMarker = {
   price: number | null;
   label: string;
   detail: string | null;
+  source_url?: string | null;
 };
 
 export type ChartDataResponse = {

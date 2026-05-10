@@ -174,6 +174,10 @@ export function PriceChart({
     };
   }, [data, height]);
 
+  const edgarForm4 = `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${encodeURIComponent(
+    data.ticker
+  )}&type=4&dateb=&owner=include&count=40`;
+
   return (
     <div className="space-y-2">
       <div ref={containerRef} className="w-full overflow-hidden rounded-2xl bg-card" />
@@ -190,6 +194,19 @@ export function PriceChart({
         {range && onRangeChange && (
           <TimeRangeTabs value={range} onChange={onRangeChange} />
         )}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-[10px] text-muted-foreground/70">
+        <span>
+          Data: prices via Yahoo Finance · insider Form 4 + options flow + earnings via Unusual Whales
+        </span>
+        <a
+          href={edgarForm4}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-dotted hover:text-foreground"
+        >
+          Verify {data.ticker} Form 4 on SEC EDGAR →
+        </a>
       </div>
     </div>
   );

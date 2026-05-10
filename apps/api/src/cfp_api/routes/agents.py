@@ -168,6 +168,25 @@ class ChartMarker(BaseModel):
     price: float | None
     label: str            # short caption shown on hover
     detail: str | None    # longer caption (premium, strike, etc.)
+    source_url: str | None = None  # external link to verify the underlying filing/event
+
+
+def _edgar_form4_url(ticker: str) -> str:
+    # EDGAR accepts a ticker in CIK= and resolves it server-side. Listing all
+    # Form 4 filings for the issuer lets users eyeball whether our markers
+    # correspond to real SEC filings on the same dates.
+    return (
+        "https://www.sec.gov/cgi-bin/browse-edgar"
+        f"?action=getcompany&CIK={ticker}&type=4&dateb=&owner=include&count=40"
+    )
+
+
+def _edgar_earnings_url(ticker: str) -> str:
+    # 8-K is where earnings releases are filed.
+    return (
+        "https://www.sec.gov/cgi-bin/browse-edgar"
+        f"?action=getcompany&CIK={ticker}&type=8-K&dateb=&owner=include&count=40"
+    )
 
 
 class ChartDataResponse(BaseModel):
@@ -291,6 +310,7 @@ async def get_chart_data(
             price=_close_at(ts),
             label=f"Insider {'buy' if r['transaction_code'] == 'P' else 'sell'}",
             detail=f"{r['owner_name'] or '?'}: {amt:,.0f} sh @ ${price:.2f} = ${signed_dollars / 1e6:+.2f}M",
+            source_url=_edgar_form4_url(ticker),
         ))
 
     for r in earnings_rows:
@@ -308,6 +328,7 @@ async def get_chart_data(
             price=_close_at(ts),
             label="Earnings",
             detail=", ".join(detail_parts) or None,
+            source_url=_edgar_earnings_url(ticker),
         ))
 
     return ChartDataResponse(ticker=ticker, bars=bars, markers=markers)
