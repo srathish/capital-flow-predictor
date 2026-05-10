@@ -140,6 +140,26 @@ def train_baseline(
                 }
             )
 
+    # Guard: detect degenerate rank distribution before persisting. Past bug saw
+    # every row land at rank=1 — refuse to overwrite good data with bad data.
+    if all_pred_rows:
+        rank_values = [r["rank"] for r in all_pred_rows]
+        unique_ranks = len(set(rank_values))
+        n_unique_target_ts = len({(r["target_ts"], r["horizon_d"]) for r in all_pred_rows})
+        if unique_ranks <= 1 and n_unique_target_ts > 1:
+            raise RuntimeError(
+                f"degenerate rank: only {unique_ranks} unique rank value(s) across "
+                f"{len(all_pred_rows)} predictions. Refusing to upsert — investigate "
+                f"feature pipeline / model training."
+            )
+        if unique_ranks < max(2, n_unique_target_ts):
+            log.warning(
+                "rank distribution looks suspicious: %d unique rank values across %d "
+                "(target_ts, horizon) groups",
+                unique_ranks,
+                n_unique_target_ts,
+            )
+
     with connect(database_url) as conn:
         n = _upsert_predictions(conn, all_pred_rows)
         conn.commit()

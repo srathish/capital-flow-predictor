@@ -22,3 +22,15 @@ extend-exclude = [".venv", "node_modules"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
 ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+exclude = [".venv", "node_modules", "build", "dist"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true

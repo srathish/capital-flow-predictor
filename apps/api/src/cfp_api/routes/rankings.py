@@ -16,7 +16,11 @@ async def get_rankings(
     model: str = Query("xgb_v1", description="Predictor model name"),
     limit: int = Query(50, ge=1, le=200),
 ) -> RankingsResponse:
-    """Most recent predictions for the given horizon + model, sorted by rank."""
+    """Most recent predictions for the given horizon + model, sorted by rank.
+
+    Re-ranks by `score` on the read side to defend against the historically
+    degenerate `predictions.rank` column (same workaround pattern as /v1/network).
+    """
     pool = get_pool()
     sql = """
         WITH latest_run AS (
@@ -30,14 +34,21 @@ async def get_rankings(
             WHERE predictions.run_ts = latest_run.run_ts
               AND predictions.horizon_d = $1
               AND predictions.model = $2
+        ),
+        scored AS (
+            SELECT DISTINCT ON (p.symbol)
+                   p.run_ts, p.target_ts, p.symbol, p.score
+            FROM predictions p, latest_run, latest_target
+            WHERE p.run_ts = latest_run.run_ts
+              AND p.target_ts = latest_target.target_ts
+              AND p.horizon_d = $1
+              AND p.model = $2
+            ORDER BY p.symbol, p.score DESC NULLS LAST
         )
-        SELECT p.run_ts, p.target_ts, p.symbol, p.rank, p.score
-        FROM predictions p, latest_run, latest_target
-        WHERE p.run_ts = latest_run.run_ts
-          AND p.target_ts = latest_target.target_ts
-          AND p.horizon_d = $1
-          AND p.model = $2
-        ORDER BY p.rank ASC
+        SELECT run_ts, target_ts, symbol, score,
+               RANK() OVER (ORDER BY score DESC NULLS LAST) AS rank
+        FROM scored
+        ORDER BY rank ASC, symbol ASC
         LIMIT $3
     """
     async with pool.acquire() as conn:

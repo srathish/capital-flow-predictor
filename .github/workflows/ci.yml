@@ -34,6 +34,8 @@ jobs:
         run: uv sync --all-packages --all-extras
       - name: Lint
         run: uv run ruff check .
+      - name: Type check (mypy, advisory)
+        run: uv run mypy apps packages || true
       - name: Test (api)
         working-directory: apps/api
         run: uv run pytest -q
