@@ -2,11 +2,19 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Sparkline } from "@/components/ui/sparkline";
+import {
+  ALL_CATEGORIES,
+  CATALYST_CATEGORIES,
+  classifyKeywords,
+  type CatalystCategoryId,
+} from "@/lib/catalyst-categories";
+import type { CatalystPost } from "@/lib/types";
 
 const HOUR_OPTIONS = [
   { value: 6, label: "6h" },
@@ -16,49 +24,293 @@ const HOUR_OPTIONS = [
 ] as const;
 
 const SCORE_OPTIONS = [
-  { value: 0.05, label: "Show all" },
-  { value: 0.15, label: "Score ≥ 0.15" },
-  { value: 0.30, label: "Score ≥ 0.30 (high signal)" },
+  { value: 0.05, label: "All" },
+  { value: 0.15, label: "≥ 0.15" },
+  { value: 0.3, label: "≥ 0.30" },
 ] as const;
 
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest" },
+  { value: "score", label: "Top score" },
+  { value: "cluster", label: "Most posts" },
+] as const;
+type SortKey = (typeof SORT_OPTIONS)[number]["value"];
+
+const REFETCH_MS = 60_000;
+const PINNED_KEY = "catalysts:pinned";
+const MUTED_KEY = "catalysts:muted";
+
+type EnrichedPost = CatalystPost & {
+  primaryCategory: CatalystCategoryId;
+  allCategories: CatalystCategoryId[];
+};
+
+type Cluster = {
+  key: string;
+  lead: EnrichedPost;
+  count: number;
+  members: EnrichedPost[];
+};
+
 function formatHoursAgo(h: number): string {
-  if (h < 1) return `${Math.round(h * 60)}m ago`;
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))}m ago`;
   if (h < 24) return `${Math.round(h)}h ago`;
   return `${Math.round(h / 24)}d ago`;
+}
+
+function formatUpdatedAgo(ms: number | null): string {
+  if (!ms) return "—";
+  const sec = Math.max(0, Math.round((Date.now() - ms) / 1000));
+  if (sec < 60) return `${sec}s ago`;
+  if (sec < 3600) return `${Math.round(sec / 60)}m ago`;
+  return `${Math.round(sec / 3600)}h ago`;
+}
+
+function useLocalSet(key: string): [Set<string>, (next: Set<string>) => void] {
+  const [set, setSet] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) setSet(new Set(JSON.parse(raw) as string[]));
+    } catch {
+      /* ignore */
+    }
+  }, [key]);
+  const update = (next: Set<string>) => {
+    setSet(new Set(next));
+    try {
+      localStorage.setItem(key, JSON.stringify(Array.from(next)));
+    } catch {
+      /* ignore */
+    }
+  };
+  return [set, update];
+}
+
+function enrich(posts: CatalystPost[]): EnrichedPost[] {
+  return posts.map((p) => {
+    const c = classifyKeywords(p.keywords);
+    return { ...p, primaryCategory: c.primary, allCategories: c.all };
+  });
+}
+
+function clusterPosts(posts: EnrichedPost[]): Cluster[] {
+  // Dedup near-duplicate posts: same lead ticker + same primary category +
+  // same ~6h bucket. Keep the highest-score post as the cluster head and
+  // attach the rest as members.
+  const buckets = new Map<string, EnrichedPost[]>();
+  for (const p of posts) {
+    const ticker = p.tickers[0] ?? "_";
+    const bucket = Math.floor(p.hours_old / 6);
+    const key = `${ticker}|${p.primaryCategory}|${bucket}`;
+    const arr = buckets.get(key) ?? [];
+    arr.push(p);
+    buckets.set(key, arr);
+  }
+  const clusters: Cluster[] = [];
+  for (const [key, arr] of buckets) {
+    arr.sort((a, b) => b.catalyst_score - a.catalyst_score);
+    clusters.push({ key, lead: arr[0]!, count: arr.length, members: arr });
+  }
+  return clusters;
+}
+
+function buildHourlyHistogram(posts: EnrichedPost[], hoursWindow: number): number[] {
+  const buckets = Math.max(8, Math.min(48, hoursWindow));
+  const out = new Array<number>(buckets).fill(0);
+  const stride = hoursWindow / buckets;
+  for (const p of posts) {
+    if (p.hours_old < 0 || p.hours_old > hoursWindow) continue;
+    // Reverse so older is on the left, newest on the right.
+    const idx = Math.min(buckets - 1, Math.floor((hoursWindow - p.hours_old) / stride));
+    out[idx] = (out[idx] ?? 0) + 1;
+  }
+  return out;
+}
+
+type TickerAgg = {
+  ticker: string;
+  count: number;
+  topCategory: CatalystCategoryId;
+  newestHours: number;
+  histogram: number[];
+};
+
+function aggregateByTicker(
+  posts: EnrichedPost[],
+  hoursWindow: number,
+): TickerAgg[] {
+  const byTicker = new Map<string, EnrichedPost[]>();
+  for (const p of posts) {
+    for (const t of p.tickers) {
+      const arr = byTicker.get(t) ?? [];
+      arr.push(p);
+      byTicker.set(t, arr);
+    }
+  }
+  const aggs: TickerAgg[] = [];
+  for (const [ticker, arr] of byTicker) {
+    const catCounts = new Map<CatalystCategoryId, number>();
+    let newest = Infinity;
+    for (const p of arr) {
+      catCounts.set(p.primaryCategory, (catCounts.get(p.primaryCategory) ?? 0) + 1);
+      if (p.hours_old < newest) newest = p.hours_old;
+    }
+    let topCategory: CatalystCategoryId = "other";
+    let topN = -1;
+    for (const [cat, n] of catCounts) {
+      if (n > topN) {
+        topN = n;
+        topCategory = cat;
+      }
+    }
+    aggs.push({
+      ticker,
+      count: arr.length,
+      topCategory,
+      newestHours: Number.isFinite(newest) ? newest : hoursWindow,
+      histogram: buildHourlyHistogram(arr, hoursWindow),
+    });
+  }
+  return aggs;
 }
 
 export function CatalystsView() {
   const [hours, setHours] = useState<number>(48);
   const [minScore, setMinScore] = useState<number>(0.05);
   const [tickerFilter, setTickerFilter] = useState<string>("");
+  const [sortBy, setSortBy] = useState<SortKey>("newest");
+  const [activeCats, setActiveCats] = useState<Set<CatalystCategoryId>>(new Set());
+  const [mutedSubs, setMutedSubs] = useState<Set<string>>(new Set());
+  const [pinnedTickers, setPinnedTickers] = useLocalSet(PINNED_KEY);
+  const [mutedTickers, setMutedTickers] = useLocalSet(MUTED_KEY);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isFetching, error, refetch, dataUpdatedAt } = useQuery({
     queryKey: ["catalysts", hours, minScore, tickerFilter],
     queryFn: () =>
       api.redditCatalysts({
         hours,
         minScore,
         ticker: tickerFilter.trim().toUpperCase() || undefined,
-        limit: 100,
+        limit: 200,
       }),
     retry: false,
+    refetchInterval: REFETCH_MS,
+    refetchOnWindowFocus: true,
   });
+
+  // Tick state for "updated Xs ago" label.
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const enriched = useMemo<EnrichedPost[]>(
+    () => (data ? enrich(data.posts) : []),
+    [data],
+  );
+
+  const subredditCounts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const p of enriched) m.set(p.subreddit, (m.get(p.subreddit) ?? 0) + 1);
+    return Array.from(m.entries()).sort((a, b) => b[1] - a[1]);
+  }, [enriched]);
+
+  const filtered = useMemo(() => {
+    return enriched.filter((p) => {
+      if (mutedSubs.has(p.subreddit)) return false;
+      if (p.tickers.some((t) => mutedTickers.has(t))) return false;
+      if (activeCats.size > 0) {
+        const hit = p.allCategories.some((c) => activeCats.has(c));
+        if (!hit) return false;
+      }
+      return true;
+    });
+  }, [enriched, mutedSubs, mutedTickers, activeCats]);
+
+  const clusters = useMemo(() => {
+    const cs = clusterPosts(filtered);
+    cs.sort((a, b) => {
+      if (sortBy === "score") return b.lead.catalyst_score - a.lead.catalyst_score;
+      if (sortBy === "cluster") return b.count - a.count;
+      return a.lead.hours_old - b.lead.hours_old;
+    });
+    return cs;
+  }, [filtered, sortBy]);
+
+  const tickerAggs = useMemo(() => {
+    const aggs = aggregateByTicker(filtered, hours);
+    aggs.sort((a, b) => {
+      const aPin = pinnedTickers.has(a.ticker) ? 1 : 0;
+      const bPin = pinnedTickers.has(b.ticker) ? 1 : 0;
+      if (aPin !== bPin) return bPin - aPin;
+      if (b.count !== a.count) return b.count - a.count;
+      return a.newestHours - b.newestHours;
+    });
+    return aggs;
+  }, [filtered, hours, pinnedTickers]);
+
+  const toggleCat = (c: CatalystCategoryId) => {
+    const next = new Set(activeCats);
+    next.has(c) ? next.delete(c) : next.add(c);
+    setActiveCats(next);
+  };
+
+  const toggleSub = (s: string) => {
+    const next = new Set(mutedSubs);
+    next.has(s) ? next.delete(s) : next.add(s);
+    setMutedSubs(next);
+  };
+
+  const togglePin = (t: string) => {
+    const next = new Set(pinnedTickers);
+    next.has(t) ? next.delete(t) : next.add(t);
+    setPinnedTickers(next);
+  };
+
+  const toggleMuteTicker = (t: string) => {
+    const next = new Set(mutedTickers);
+    next.has(t) ? next.delete(t) : next.add(t);
+    setMutedTickers(next);
+  };
+
+  const toggleExpand = (k: string) => {
+    const next = new Set(expanded);
+    next.has(k) ? next.delete(k) : next.add(k);
+    setExpanded(next);
+  };
 
   return (
     <div className="space-y-4">
+      {/* Header */}
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Catalysts</h1>
           <p className="text-sm text-muted-foreground">
-            Reddit posts mentioning a known ticker AND a catalyst keyword
-            (partnership, leak, FDA, acquisition, beat, guidance, insider, …).
-            Designed to surface AAPL/INTC partnership-style chatter before official news.
+            Reddit posts where a known ticker co-occurs with a catalyst keyword.
+            Built to surface partnership / FDA / earnings / leak chatter before
+            it hits official news.
           </p>
+        </div>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="num">
+            Updated {formatUpdatedAgo(dataUpdatedAt || null)}
+            {isFetching && <span className="ml-1 text-primary">·</span>}
+          </span>
+          <button
+            onClick={() => refetch()}
+            className="rounded-full border border-border px-3 py-1.5 font-semibold text-foreground hover:border-primary/60"
+          >
+            Refresh
+          </button>
         </div>
       </div>
 
+      {/* Window + score + ticker search */}
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-muted-foreground">Window:</span>
+        <span className="text-muted-foreground">Window</span>
         {HOUR_OPTIONS.map((opt) => (
           <button
             key={opt.value}
@@ -67,22 +319,23 @@ export function CatalystsView() {
               "rounded-full px-3 py-1.5 font-semibold transition-colors",
               hours === opt.value
                 ? "bg-primary text-white"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {opt.label}
           </button>
         ))}
-        <span className="ml-4 text-muted-foreground">Filter:</span>
+        <span className="ml-3 text-muted-foreground">Score</span>
         {SCORE_OPTIONS.map((opt) => (
           <button
             key={opt.value}
             onClick={() => setMinScore(opt.value)}
+            title="Score combines keyword weight, ticker count, recency. Higher = stronger catalyst signal."
             className={cn(
               "rounded-full px-3 py-1.5 font-semibold transition-colors",
               Math.abs(minScore - opt.value) < 1e-9
                 ? "bg-primary text-white"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {opt.label}
@@ -91,11 +344,61 @@ export function CatalystsView() {
         <input
           value={tickerFilter}
           onChange={(e) => setTickerFilter(e.target.value)}
-          placeholder="ticker (e.g. INTC)"
-          className="ml-4 h-8 w-36 rounded-full border border-border bg-card px-3 text-xs outline-none focus:border-primary/60"
+          placeholder="Ticker (e.g. INTC)"
+          className="ml-3 h-8 w-36 rounded-full border border-border bg-card px-3 text-xs outline-none focus:border-primary/60"
         />
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-muted-foreground">Sort</span>
+          {SORT_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setSortBy(opt.value)}
+              className={cn(
+                "rounded-full px-3 py-1.5 font-semibold transition-colors",
+                sortBy === opt.value
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
 
+      {/* Category chips */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-muted-foreground">Type</span>
+        {ALL_CATEGORIES.map((id) => {
+          const cat = CATALYST_CATEGORIES[id];
+          const active = activeCats.has(id);
+          return (
+            <button
+              key={id}
+              onClick={() => toggleCat(id)}
+              title={cat.description}
+              className={cn(
+                "rounded-full px-2.5 py-1 font-semibold transition-colors",
+                active
+                  ? `${cat.swatch} ${cat.text} ring-1 ring-current`
+                  : `${cat.swatch} ${cat.text} opacity-60 hover:opacity-100`,
+              )}
+            >
+              {cat.label}
+            </button>
+          );
+        })}
+        {activeCats.size > 0 && (
+          <button
+            onClick={() => setActiveCats(new Set())}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            clear
+          </button>
+        )}
+      </div>
+
+      {/* States */}
       {isLoading && <Skeleton className="h-96 w-full" />}
       {error && (
         <Card>
@@ -105,75 +408,241 @@ export function CatalystsView() {
         </Card>
       )}
 
-      {data && data.posts.length === 0 && (
+      {/* Heating-up strip */}
+      {data && tickerAggs.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Heating up
+            </h2>
+            <span className="text-[11px] text-muted-foreground">
+              {tickerAggs.length} ticker{tickerAggs.length === 1 ? "" : "s"} ·
+              {" "}
+              {filtered.length} post{filtered.length === 1 ? "" : "s"}
+            </span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {tickerAggs.slice(0, 24).map((agg) => {
+              const cat = CATALYST_CATEGORIES[agg.topCategory];
+              const pinned = pinnedTickers.has(agg.ticker);
+              return (
+                <div
+                  key={agg.ticker}
+                  className="group min-w-[160px] shrink-0 rounded-lg border border-border bg-card p-3 hover:border-primary/40"
+                >
+                  <div className="flex items-baseline justify-between gap-2">
+                    <Link
+                      href={`/agents/${encodeURIComponent(agg.ticker)}`}
+                      className="font-mono text-sm font-semibold hover:text-primary"
+                    >
+                      ${agg.ticker}
+                    </Link>
+                    <button
+                      onClick={() => togglePin(agg.ticker)}
+                      title={pinned ? "Unpin" : "Pin to top"}
+                      className={cn(
+                        "text-xs",
+                        pinned ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {pinned ? "★" : "☆"}
+                    </button>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between gap-2 text-[11px]">
+                    <span className={cn("rounded px-1.5 py-0.5 font-semibold", cat.swatch, cat.text)}>
+                      {cat.label}
+                    </span>
+                    <span className="num text-muted-foreground">
+                      {agg.count} · {formatHoursAgo(agg.newestHours)}
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    <Sparkline values={agg.histogram} width={140} height={24} />
+                  </div>
+                  <div className="mt-2 flex justify-between text-[10px]">
+                    <button
+                      onClick={() => setTickerFilter(agg.ticker)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      filter
+                    </button>
+                    <button
+                      onClick={() => toggleMuteTicker(agg.ticker)}
+                      className="text-muted-foreground hover:text-signal-bearish"
+                    >
+                      mute
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Subreddit chips (toggle to mute) */}
+      {data && subredditCounts.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 text-[11px]">
+          <span className="text-muted-foreground">Subreddits</span>
+          {subredditCounts.map(([sub, n]) => {
+            const muted = mutedSubs.has(sub);
+            return (
+              <button
+                key={sub}
+                onClick={() => toggleSub(sub)}
+                title={muted ? "Click to include" : "Click to mute"}
+                className={cn(
+                  "rounded-full px-2 py-0.5 transition-colors",
+                  muted
+                    ? "bg-muted text-muted-foreground line-through opacity-60"
+                    : "bg-muted text-foreground hover:bg-primary/15 hover:text-primary",
+                )}
+              >
+                r/{sub}
+                <span className="ml-1 text-muted-foreground">{n}</span>
+              </button>
+            );
+          })}
+          {mutedSubs.size > 0 && (
+            <button
+              onClick={() => setMutedSubs(new Set())}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              unmute all
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Empty */}
+      {data && clusters.length === 0 && (
         <Card>
           <CardContent className="p-6 text-sm text-muted-foreground">
-            No catalyst-flagged posts in this window. Run{" "}
-            <code className="rounded bg-muted px-1">cfp-jobs reddit-catalysts</code>{" "}
-            to refresh, or widen the window / lower the score filter.
+            {data.posts.length === 0
+              ? `No catalyst posts in the last ${formatHoursAgo(hours)}. Try widening the window or lowering the score threshold.`
+              : "Filters hid every post. Clear the category, subreddit, or ticker filters above to see results."}
           </CardContent>
         </Card>
       )}
 
-      {data && data.posts.length > 0 && (
+      {/* Posts list */}
+      {clusters.length > 0 && (
         <div className="space-y-2">
-          {data.posts.map((p) => (
-            <Card key={p.id}>
-              <CardContent className="p-4">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <a
-                    href={p.permalink ?? "#"}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-base font-semibold leading-snug hover:text-primary"
-                  >
-                    {p.title}
-                  </a>
-                  <span className="num text-xs text-muted-foreground">
-                    score {p.catalyst_score.toFixed(2)} · {formatHoursAgo(p.hours_old)}
-                  </span>
-                </div>
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-                  <span className="rounded-full bg-muted px-2 py-0.5">r/{p.subreddit}</span>
-                  {p.author && <span>u/{p.author}</span>}
-                  {p.tickers.length > 0 && (
-                    <span className="flex flex-wrap items-center gap-1">
-                      {p.tickers.map((t) => (
-                        <Link
-                          key={t}
-                          href={`/agents/${encodeURIComponent(t)}`}
-                          className="rounded-full bg-primary/15 px-2 py-0.5 font-semibold text-primary hover:bg-primary/25"
-                        >
-                          ${t}
-                        </Link>
-                      ))}
+          {clusters.map((c) => {
+            const p = c.lead;
+            const cat = CATALYST_CATEGORIES[p.primaryCategory];
+            const isExpanded = expanded.has(c.key);
+            return (
+              <Card key={c.key} className={cn(c.count > 1 && "border-l-2 border-l-primary/40")}>
+                <CardContent className="p-4">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <a
+                      href={p.permalink ?? "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-base font-semibold leading-snug hover:text-primary"
+                    >
+                      {p.title}
+                    </a>
+                    <span
+                      className="num text-xs text-muted-foreground"
+                      title="Score combines keyword weight, ticker count, recency. Higher = stronger catalyst signal."
+                    >
+                      score {p.catalyst_score.toFixed(2)} · {formatHoursAgo(p.hours_old)}
                     </span>
-                  )}
-                  {p.keywords.length > 0 && (
-                    <span className="flex flex-wrap items-center gap-1">
-                      {p.keywords.slice(0, 4).map((k) => (
-                        <span
-                          key={k}
-                          className="rounded-full bg-signal-bearish/15 px-2 py-0.5 font-semibold text-signal-bearish"
-                        >
-                          {k}
-                        </span>
-                      ))}
-                      {p.keywords.length > 4 && (
-                        <span className="text-muted-foreground">+{p.keywords.length - 4}</span>
-                      )}
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                    <span className={cn("rounded-full px-2 py-0.5 font-semibold", cat.swatch, cat.text)}>
+                      {cat.label}
                     </span>
+                    <span className="rounded-full bg-muted px-2 py-0.5">r/{p.subreddit}</span>
+                    {p.author && <span className="hidden sm:inline">u/{p.author}</span>}
+                    {p.tickers.length > 0 && (
+                      <span className="flex flex-wrap items-center gap-1">
+                        {p.tickers.map((t) => {
+                          const pinned = pinnedTickers.has(t);
+                          const muted = mutedTickers.has(t);
+                          return (
+                            <span key={t} className="inline-flex items-center gap-0.5">
+                              <Link
+                                href={`/agents/${encodeURIComponent(t)}`}
+                                className={cn(
+                                  "rounded-full bg-primary/15 px-2 py-0.5 font-semibold text-primary hover:bg-primary/25",
+                                  muted && "opacity-50 line-through",
+                                  pinned && "ring-1 ring-primary",
+                                )}
+                              >
+                                ${t}
+                              </Link>
+                              <button
+                                onClick={() => toggleMuteTicker(t)}
+                                title={muted ? "Unmute ticker" : "Mute ticker"}
+                                className="text-[10px] text-muted-foreground hover:text-signal-bearish"
+                              >
+                                {muted ? "+" : "×"}
+                              </button>
+                            </span>
+                          );
+                        })}
+                      </span>
+                    )}
+                    {p.keywords.length > 0 && (
+                      <span className="hidden flex-wrap items-center gap-1 sm:flex">
+                        {p.keywords.slice(0, 3).map((k) => (
+                          <span
+                            key={k}
+                            className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground"
+                          >
+                            {k}
+                          </span>
+                        ))}
+                        {p.keywords.length > 3 && (
+                          <span className="text-muted-foreground">+{p.keywords.length - 3}</span>
+                        )}
+                      </span>
+                    )}
+                    {c.count > 1 && (
+                      <button
+                        onClick={() => toggleExpand(c.key)}
+                        className="ml-auto text-primary hover:underline"
+                      >
+                        {isExpanded
+                          ? "hide"
+                          : `+${c.count - 1} similar post${c.count - 1 === 1 ? "" : "s"}`}
+                      </button>
+                    )}
+                  </div>
+                  {isExpanded && c.count > 1 && (
+                    <div className="mt-3 space-y-1 border-l border-border pl-3 text-[12px]">
+                      {c.members.slice(1).map((m) => (
+                        <a
+                          key={m.id}
+                          href={m.permalink ?? "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block text-muted-foreground hover:text-foreground"
+                        >
+                          <span className="num mr-2 text-[10px]">
+                            {m.catalyst_score.toFixed(2)}
+                          </span>
+                          {m.title}
+                          <span className="ml-2 text-[10px]">
+                            r/{m.subreddit} · {formatHoursAgo(m.hours_old)}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
 
-      <p className="text-xs text-muted-foreground">
-        Posts persist for 7 days. Run <code className="rounded bg-muted px-1">cfp-jobs reddit-catalysts</code>{" "}
-        every 15-30 min for live updates.
+      <p className="text-[11px] text-muted-foreground">
+        Auto-refreshes every 60s. Score combines keyword weight, ticker count, and recency.
+        Star a ticker to pin it, × to mute. Posts persist for 7 days.
       </p>
     </div>
   );
