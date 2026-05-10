@@ -98,11 +98,10 @@ class FlowAnalyst(BaseAnalyst):
         # (5) insider net (signed)
         insider_signal = clamp(insider_net_30d / 1e7, -1.0, 1.0)  # ±$10M -> ±1
 
-        # Stickiness multiplier on the imbalance signals: flow that vanished
-        # from OI next day is worth less. Maps sticky_pct ∈ [0,1] -> [0.5, 1.5]
-        # so a 50% sticky baseline is neutral, fully sticky is 1.5x, fully
-        # transient is 0.5x.
-        stickiness_mul = 0.5 + sticky_pct  # 0.5 .. 1.5
+        # Stickiness multiplier — sharper now. Heavily transient flow (<25%
+        # absorbed into OI next day) is barely a signal; heavily sticky flow
+        # (>75% absorbed) is amplified. Maps sticky_pct -> [0.3, 1.7].
+        stickiness_mul = 0.3 + sticky_pct * 1.4
 
         # Earnings-proximity dampening: pre-earnings LEAPs are usually event
         # hedges, not theses. Halve LEAP weight if next earnings within 7d.
@@ -119,9 +118,11 @@ class FlowAnalyst(BaseAnalyst):
         score = clamp(score, -1.0, 1.0)
 
         # Confidence rises with magnitude AND with how many sub-signals corroborate.
+        # Bumped multiplier so a meaningful score (|s|>0.2) gets a meaningful
+        # confidence floor (>0.25). Was producing too many low-conf neutrals.
         sub_components = [leap_imbalance, net_imbalance, aggressiveness, dp_tone, insider_signal]
         non_zero = sum(1 for x in sub_components if abs(x) > 0.05)
-        confidence = clamp(abs(score) * (0.6 + 0.1 * non_zero))
+        confidence = clamp(abs(score) * (0.9 + 0.12 * non_zero))
 
         # If short fee is high AND calls are loud, flag squeeze setup.
         squeeze_flag = fee_rate > 5.0 and call_at_ask_pct > 0.6 and net_call_prem > 0
@@ -129,15 +130,21 @@ class FlowAnalyst(BaseAnalyst):
             confidence = clamp(confidence + 0.15)
 
         rationale_parts: list[str] = []
+        # Net imbalance — surface the SIGNED direction explicitly. The raw
+        # numbers can mislead because net_put_prem can be negative (aggressive
+        # put selling = bullish), which the imbalance ratio handles correctly
+        # but the bare $ display does not.
         if abs(net_imbalance) > 0.1:
+            direction = "BULLISH net flow" if net_imbalance > 0 else "BEARISH net flow"
             rationale_parts.append(
-                f"net option premium {'calls' if net_imbalance > 0 else 'puts'} dominate "
-                f"({_fmt_dollars(net_call_prem)} call vs {_fmt_dollars(net_put_prem)} put, 5d)"
+                f"{direction} (calls {_fmt_signed_dollars(net_call_prem)} vs "
+                f"puts {_fmt_signed_dollars(net_put_prem)}, imb {net_imbalance:+.2f})"
             )
         if abs(leap_imbalance) > 0.1:
+            direction = "BULLISH LEAP" if leap_imbalance > 0 else "BEARISH LEAP"
             rationale_parts.append(
-                f"LEAP {'call' if leap_imbalance > 0 else 'put'} premium "
-                f"{_fmt_dollars(leap_call_prem if leap_imbalance > 0 else leap_put_prem)} (>90 DTE)"
+                f"{direction} (>90 DTE: calls {_fmt_signed_dollars(leap_call_prem)}, "
+                f"puts {_fmt_signed_dollars(leap_put_prem)}, imb {leap_imbalance:+.2f})"
             )
         if abs(aggressiveness) > 0.05:
             tone = "lifted at ask" if aggressiveness > 0 else "hit at bid"
@@ -166,7 +173,7 @@ class FlowAnalyst(BaseAnalyst):
 
         return AgentSignal(
             agent=self.name,
-            signal=score_to_signal(score, neutral_band=0.12),
+            signal=score_to_signal(score, neutral_band=0.08),
             confidence=confidence,
             rationale=rationale,
             payload={
@@ -197,3 +204,21 @@ def _fmt_dollars(v: float) -> str:
     if a >= 1e3:
         return f"${a / 1e3:.0f}K"
     return f"${a:.0f}"
+
+
+def _fmt_signed_dollars(v: float) -> str:
+    """Like _fmt_dollars but preserves the sign so negative net premium
+    (aggressive sell-side) is visually distinct from positive (buy-side).
+    Crucial for the flow rationale — `puts -$2.6M` (selling, bullish) vs
+    `puts +$2.6M` (buying, bearish) tell opposite stories."""
+    if v == 0:
+        return "$0"
+    sign = "+" if v > 0 else "-"
+    a = abs(v)
+    if a >= 1e9:
+        return f"{sign}${a / 1e9:.1f}B"
+    if a >= 1e6:
+        return f"{sign}${a / 1e6:.1f}M"
+    if a >= 1e3:
+        return f"{sign}${a / 1e3:.0f}K"
+    return f"{sign}${a:.0f}"
