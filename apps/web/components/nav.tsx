@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 const tabs = [
   { href: "/", label: "Sectors" },
   { href: "/network", label: "Network" },
+  { href: "/reddit", label: "Reddit" },
+  { href: "/catalysts", label: "Catalysts" },
   { href: "/watchlist", label: "Watchlist" },
 ];
 

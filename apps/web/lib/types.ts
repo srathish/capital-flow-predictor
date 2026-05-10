@@ -194,6 +194,56 @@ export type HoldingsSort =
   | "pct_off_52w_high"
   | "volume_z";
 
+// /v1/reddit/mentions
+export type RedditSubMentions = {
+  subreddit: string;
+  mentions: number;
+  rank: number | null;
+};
+
+export type RedditMentionRow = {
+  ticker: string;
+  name: string | null;
+  mentions_today: number;
+  mentions_7d_avg: number;
+  spike_ratio: number | null;
+  rank_today: number | null;
+  rank_7d_ago: number | null;
+  rank_change_7d: number | null;
+  upvotes_today: number;
+  is_contrarian_warning: boolean;
+  is_stealth: boolean;
+  sparkline_7d: number[];
+  by_subreddit: RedditSubMentions[];
+};
+
+export type RedditMentionsResponse = {
+  snapshot_date: string | null;
+  n_total: number;
+  rows: RedditMentionRow[];
+};
+
+export type RedditMentionsSort = "mentions" | "spike" | "rank_change";
+
+// /v1/reddit/catalysts
+export type CatalystPost = {
+  id: string;
+  created_at: string;
+  subreddit: string;
+  author: string | null;
+  title: string;
+  permalink: string | null;
+  tickers: string[];
+  keywords: string[];
+  catalyst_score: number;
+  hours_old: number;
+};
+
+export type CatalystsResponse = {
+  n_total: number;
+  posts: CatalystPost[];
+};
+
 // Chat (SSE)
 export type ChatMessage = {
   role: "user" | "assistant";

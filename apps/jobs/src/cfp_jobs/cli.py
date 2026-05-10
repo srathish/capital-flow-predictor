@@ -410,6 +410,17 @@ def reddit_cmd() -> None:
     console.print(f"[green]reddit_mentions:[/green] {out}")
 
 
+@app.command("reddit-catalysts")
+def reddit_catalysts_cmd() -> None:
+    """Pull catalyst-keyword Reddit posts via RSS (free, no OAuth).
+
+    Surfaces posts mentioning a known ticker AND a catalyst keyword
+    (partnership, leak, FDA, acquisition, etc.) — designed for AAPL/INTC
+    partnership-style pre-announcement chatter. Run every 15-30 min."""
+    out = ingestion.reddit_rss.ingest(settings.database_url)
+    console.print(f"[green]reddit_posts:[/green] {out}")
+
+
 @app.command("flow-congress")
 def flow_congress_cmd(
     limit: int = typer.Option(500, help="Max recent trades to ingest"),

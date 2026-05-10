@@ -7,6 +7,7 @@ from cfp_jobs.ingestion import (
     macro,
     prices,
     reddit_apewisdom,
+    reddit_rss,
     unusualwhales,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     "macro",
     "prices",
     "reddit_apewisdom",
+    "reddit_rss",
     "unusualwhales",
 ]

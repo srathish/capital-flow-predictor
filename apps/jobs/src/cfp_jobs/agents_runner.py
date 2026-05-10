@@ -510,6 +510,97 @@ def _resolve_instrument(database_url: str, ticker: str, sector_hint: str) -> dic
     return out
 
 
+_YF_FIELD_TO_METRIC: dict[str, str] = {
+    # yfinance .info field name -> our long-format metric name
+    "totalRevenue": "revenue",
+    "marketCap": "market_cap",
+    "freeCashflow": "free_cash_flow",
+    "operatingCashflow": "operating_cash_flow",
+    "returnOnEquity": "roe",
+    "returnOnAssets": "roa",
+    "grossMargins": "gross_margin",
+    "operatingMargins": "operating_margin",
+    "profitMargins": "net_margin",
+    "trailingPE": "pe_ratio",
+    "priceToBook": "price_to_book",
+    "priceToSalesTrailing12Months": "price_to_sales",
+    "debtToEquity": "debt_to_equity",
+    "currentRatio": "current_ratio",
+    "quickRatio": "quick_ratio",
+    "earningsGrowth": "earnings_growth",
+    "revenueGrowth": "revenue_growth",
+    "ebitda": "ebitda",
+    "totalDebt": "total_debt",
+    "totalCash": "cash",
+    "enterpriseValue": "enterprise_value",
+    "enterpriseToEbitda": "ev_to_ebitda",
+}
+
+
+def _yfinance_fundamentals_fallback(database_url: str, ticker: str) -> pd.DataFrame:
+    """Pull yfinance .info, map known fields to our metric names, persist + return.
+
+    yfinance scales some ratios oddly: debtToEquity comes back as 153.7 not 1.537
+    (i.e. percent form). We normalize: anything matching a 'ratio' or 'margin' or
+    'roe/roa/yield' metric and >|3| gets divided by 100. Bias to under-correct
+    over-correct."""
+    import yfinance as yf
+
+    try:
+        info = yf.Ticker(ticker).info or {}
+    except Exception as e:
+        log.warning("yfinance .info raise for %s: %s", ticker, e)
+        return pd.DataFrame()
+
+    if not info:
+        return pd.DataFrame()
+
+    today = datetime.now(UTC).date()
+    rows: list[dict] = []
+    for yf_field, metric in _YF_FIELD_TO_METRIC.items():
+        v = info.get(yf_field)
+        if v is None:
+            continue
+        try:
+            value = float(v)
+        except (TypeError, ValueError):
+            continue
+        # Normalize percent-form ratios. yfinance returns debtToEquity as
+        # 153.7 meaning 1.537x; same for some margin/return fields. Apply
+        # only when the metric is a ratio/margin/yield AND value > 3 (real
+        # margins above 300% would be physically impossible).
+        is_ratio_like = (
+            metric in {"debt_to_equity", "current_ratio", "quick_ratio"}
+            or "margin" in metric
+            or metric in {"roe", "roa", "earnings_growth", "revenue_growth"}
+        )
+        if is_ratio_like and abs(value) > 3.0:
+            value = value / 100.0
+        rows.append({
+            "ticker": ticker,
+            "fiscal_period": today,
+            "period_type": "A",
+            "metric": metric,
+            "value": value,
+            "source": "yfinance",
+            "last_fetched": datetime.now(UTC),
+        })
+
+    if not rows:
+        return pd.DataFrame()
+
+    # Persist via the existing upsert helper.
+    from cfp_jobs.db import upsert_fundamentals
+
+    with connect(database_url) as conn:
+        upsert_fundamentals(conn, rows)
+        conn.commit()
+
+    log.info("yfinance .info: persisted %d metrics for %s", len(rows), ticker)
+    with connect(database_url) as conn:
+        return _load_fundamentals(conn, ticker)
+
+
 def _ensure_fundamentals_and_sector(
     database_url: str, ticker: str, sector: str
 ) -> tuple[pd.DataFrame, str]:
@@ -540,6 +631,17 @@ def _ensure_fundamentals_and_sector(
                 fundamentals = _load_fundamentals(conn, ticker)
         except Exception as e:
             log.warning("FMP fundamentals lookup failed for %s: %s", ticker, e)
+
+    # FMP free tier returns 402 for many small-mid caps and ADRs (e.g. IREN).
+    # When that happens we end up with empty fundamentals — fall back to
+    # yfinance .info (free, no key) and synthesize a one-period row per
+    # available metric so the personas have SOMETHING to reason about.
+    if fundamentals.empty:
+        log.info("agents: trying yfinance .info fallback for %s", ticker)
+        try:
+            fundamentals = _yfinance_fundamentals_fallback(database_url, ticker)
+        except Exception as e:
+            log.warning("yfinance fundamentals fallback failed for %s: %s", ticker, e)
 
     if not sector and fmp_key:
         try:

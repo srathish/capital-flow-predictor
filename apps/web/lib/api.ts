@@ -2,12 +2,15 @@ import { parseSseStream } from "./sse";
 import type {
   AgentsForTickerResponse,
   AgentsTimelineResponse,
+  CatalystsResponse,
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
   HoldingsResponse,
   HoldingsSort,
   NetworkResponse,
+  RedditMentionsResponse,
+  RedditMentionsSort,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -79,6 +82,27 @@ export const api = {
     if (params?.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<SectorsResponse>(`/v1/sectors${qs ? `?${qs}` : ""}`);
+  },
+  redditMentions(
+    sort: RedditMentionsSort = "mentions",
+    limit = 50,
+  ): Promise<RedditMentionsResponse> {
+    const sp = new URLSearchParams({ sort, limit: String(limit) });
+    return getJson<RedditMentionsResponse>(`/v1/reddit/mentions?${sp}`);
+  },
+  redditCatalysts(params: {
+    limit?: number;
+    minScore?: number;
+    ticker?: string;
+    hours?: number;
+  } = {}): Promise<CatalystsResponse> {
+    const sp = new URLSearchParams();
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    if (params.minScore !== undefined) sp.set("min_score", String(params.minScore));
+    if (params.ticker) sp.set("ticker", params.ticker);
+    if (params.hours !== undefined) sp.set("hours", String(params.hours));
+    const qs = sp.toString();
+    return getJson<CatalystsResponse>(`/v1/reddit/catalysts${qs ? `?${qs}` : ""}`);
   },
   correlationNetwork(params: {
     window?: number;
