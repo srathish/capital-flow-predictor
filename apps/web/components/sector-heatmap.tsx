@@ -2,19 +2,41 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import { sectorMetaFor } from "@/lib/sectors";
-import type { SectorEntry } from "@/lib/types";
+import type { SectorEntry, SectorScorecardResponse } from "@/lib/types";
 import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const metaFor = sectorMetaFor;
+import { Sparkline } from "@/components/ui/sparkline";
 
 // ────────────────────────────────────────────────────────────────────────────
-// Tile colors + per-tile explanation
+// SPDR sector metadata
 // ────────────────────────────────────────────────────────────────────────────
+
+interface SectorMeta {
+  name: string;
+  theme: "secular growth" | "cyclical" | "defensive" | "rate-sensitive" | "commodity-linked" | "rate beneficiary";
+  drivers: string[];
+}
+
+const SECTOR_META: Record<string, SectorMeta> = {
+  XLK:  { name: "Technology",             theme: "secular growth",      drivers: ["AI capex", "rate sensitivity", "earnings momentum"] },
+  XLC:  { name: "Communication Services", theme: "secular growth",      drivers: ["digital ad spend", "subscriber trends"] },
+  XLY:  { name: "Consumer Discretionary", theme: "cyclical",            drivers: ["consumer sentiment", "wage growth", "credit conditions"] },
+  XLI:  { name: "Industrials",            theme: "cyclical",            drivers: ["PMI trends", "capex cycle", "global trade"] },
+  XLB:  { name: "Materials",              theme: "cyclical",            drivers: ["China demand", "USD strength", "commodity prices"] },
+  XLE:  { name: "Energy",                 theme: "commodity-linked",    drivers: ["crude prices", "OPEC+ supply", "USD strength"] },
+  XLF:  { name: "Financials",             theme: "rate beneficiary",    drivers: ["yield curve", "credit spreads", "loan demand"] },
+  XLV:  { name: "Health Care",            theme: "defensive",           drivers: ["pricing power", "regulatory backdrop", "biotech pipelines"] },
+  XLP:  { name: "Consumer Staples",       theme: "defensive",           drivers: ["risk-off rotation", "input costs", "USD strength"] },
+  XLU:  { name: "Utilities",              theme: "rate-sensitive",      drivers: ["10Y yield", "power demand"] },
+  XLRE: { name: "Real Estate",            theme: "rate-sensitive",      drivers: ["10Y yield", "cap rates", "occupancy trends"] },
+};
+
+function metaFor(symbol: string): SectorMeta {
+  return SECTOR_META[symbol] ?? { name: symbol, theme: "cyclical", drivers: [] };
+}
 
 type Tier = "leader" | "strong" | "neutral" | "weak" | "laggard";
 
@@ -39,35 +61,33 @@ function tileBg(tier: Tier | null): string {
 }
 
 function captionFor(tier: Tier, score: number | null): string {
-  // Short, plain-English line explaining what the tier *means* to a reader.
   switch (tier) {
     case "leader":
       return score !== null && score > 0
         ? "Leading the tape — model still favors this basket"
         : "Top of the pack on relative strength";
-    case "strong":
-      return "Above the median — momentum intact";
-    case "neutral":
-      return "Middle of the pack — no edge signaled";
-    case "weak":
-      return "Below the median — momentum fading";
-    case "laggard":
-      return "Underperforming peers — model expects continued lag";
+    case "strong":  return "Above the median — momentum intact";
+    case "neutral": return "Middle of the pack — no edge signaled";
+    case "weak":    return "Below the median — momentum fading";
+    case "laggard": return "Underperforming peers — model expects continued lag";
   }
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Top-of-page narrative
+// Market read narrative (extended with rotation activity + dispersion)
 // ────────────────────────────────────────────────────────────────────────────
 
 interface MarketRead {
   leaders: SectorEntry[];
   laggards: SectorEntry[];
   scoreRange: number;
+  scoreStdev: number;
   dominantLeaderTheme: string | null;
   dominantLaggardTheme: string | null;
   regime: "risk-on" | "risk-off" | "mixed" | "no-edge";
   paragraph: string;
+  rotationActivity: "calm" | "moderate" | "high";
+  avgAbsRankDelta: number;
 }
 
 function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
@@ -78,6 +98,18 @@ function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
     .map((s) => s.latest_score)
     .filter((v): v is number => v !== null);
   const scoreRange = scores.length ? Math.max(...scores) - Math.min(...scores) : 0;
+  const mean = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+  const variance = scores.length
+    ? scores.reduce((a, b) => a + (b - mean) ** 2, 0) / scores.length
+    : 0;
+  const scoreStdev = Math.sqrt(variance);
+
+  const deltas = ranked
+    .map((s) => (s.latest_rank !== null && s.prior_rank !== null ? Math.abs(s.latest_rank - s.prior_rank) : null))
+    .filter((v): v is number => v !== null);
+  const avgAbsRankDelta = deltas.length ? deltas.reduce((a, b) => a + b, 0) / deltas.length : 0;
+  const rotationActivity: MarketRead["rotationActivity"] =
+    avgAbsRankDelta < 0.6 ? "calm" : avgAbsRankDelta < 1.5 ? "moderate" : "high";
 
   const themeMode = (rows: SectorEntry[]): string | null => {
     const tally = new Map<string, number>();
@@ -96,7 +128,6 @@ function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
   const dominantLeaderTheme = themeMode(leaders);
   const dominantLaggardTheme = themeMode(laggards);
 
-  // Regime read — purely from the THEMES of the top vs bottom baskets.
   const cyclicalish = (t: string | null) =>
     t === "cyclical" || t === "secular growth" || t === "rate beneficiary" || t === "commodity-linked";
   const defensiveish = (t: string | null) =>
@@ -107,21 +138,27 @@ function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
   else if (cyclicalish(dominantLeaderTheme) && defensiveish(dominantLaggardTheme)) regime = "risk-on";
   else if (defensiveish(dominantLeaderTheme) && cyclicalish(dominantLaggardTheme)) regime = "risk-off";
 
-  // Paragraph — a few coupled sentences. Keep it concrete with names + scores.
-  const fmt = (v: number | null) => (v === null ? "—" : v.toFixed(3));
   const leaderNames = leaders.map((s) => `${s.symbol} (${metaFor(s.symbol).name})`).join(", ");
   const laggardNames = laggards.map((s) => `${s.symbol} (${metaFor(s.symbol).name})`).join(", ");
 
   const themeReason = dominantLeaderTheme
-    ? `Two-of-three leaders share a ${dominantLeaderTheme} profile, which the 10-day model is favoring right now.`
+    ? `Two-of-three leaders share a ${dominantLeaderTheme} profile, which the model is favoring right now.`
     : `Leaders span different themes — no single regime is dominating.`;
 
   const dispersionReason =
     scoreRange < 0.05
-      ? `Score range is only ${scoreRange.toFixed(3)} — the pack is tight, so don't read too much into the rank order.`
+      ? `Score range is only ${scoreRange.toFixed(3)} (σ ${scoreStdev.toFixed(3)}) — pack is tight, don't read too much into rank order.`
       : scoreRange < 0.12
-        ? `Score range is ${scoreRange.toFixed(3)} — modest dispersion; the lead is real but not commanding.`
-        : `Score range is ${scoreRange.toFixed(3)} — wide dispersion; the model has a clear preference for the leaders.`;
+        ? `Score range is ${scoreRange.toFixed(3)} (σ ${scoreStdev.toFixed(3)}) — modest dispersion; the lead is real but not commanding.`
+        : `Score range is ${scoreRange.toFixed(3)} (σ ${scoreStdev.toFixed(3)}) — wide dispersion; the model has a clear preference.`;
+
+  const rotationReason = deltas.length
+    ? rotationActivity === "calm"
+      ? `Rotation is calm — avg rank change is ${avgAbsRankDelta.toFixed(2)} since the prior run.`
+      : rotationActivity === "moderate"
+        ? `Rotation is moderate — avg rank change ${avgAbsRankDelta.toFixed(2)}; some baskets are repositioning.`
+        : `Rotation is hot — avg rank change ${avgAbsRankDelta.toFixed(2)}; leadership is shifting fast.`
+    : "";
 
   const regimeLine = {
     "risk-on":  `Read: risk-on rotation. Cyclical / growth baskets lead while defensives lag.`,
@@ -131,21 +168,25 @@ function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
   }[regime];
 
   const paragraph = [
-    `Top 3 (10-day score): ${leaderNames}.`,
+    `Top 3: ${leaderNames}.`,
     `Bottom 3: ${laggardNames}.`,
     themeReason,
     dispersionReason,
+    rotationReason,
     regimeLine,
-  ].join(" ");
+  ].filter(Boolean).join(" ");
 
   return {
     leaders,
     laggards,
     scoreRange,
+    scoreStdev,
     dominantLeaderTheme,
     dominantLaggardTheme,
     regime,
     paragraph,
+    rotationActivity,
+    avgAbsRankDelta,
   };
 }
 
@@ -160,10 +201,25 @@ const REGIME_BADGE: Record<MarketRead["regime"], { label: string; cls: string }>
 // Component
 // ────────────────────────────────────────────────────────────────────────────
 
+const HORIZON_OPTIONS: { value: number; label: string }[] = [
+  { value: 5,  label: "5d"  },
+  { value: 10, label: "10d" },
+  { value: 20, label: "20d" },
+];
+
 export function SectorHeatmap() {
+  const [horizon, setHorizon] = useState<number>(10);
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["sectors", { horizon: 10 }],
-    queryFn: () => api.sectors({ horizon: 10 }),
+    queryKey: ["sectors", { horizon }],
+    queryFn: () => api.sectors({ horizon, history: 30 }),
+  });
+
+  const { data: scorecard } = useQuery({
+    queryKey: ["sector-scorecard", { horizon }],
+    queryFn: () => api.sectorScorecard({ horizon, lookbackRuns: 30 }),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 
   const { ranked, unranked, total, marketRead } = useMemo(() => {
@@ -183,7 +239,7 @@ export function SectorHeatmap() {
     return (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {Array.from({ length: 18 }).map((_, i) => (
-          <Skeleton key={i} className="h-24" />
+          <Skeleton key={i} className="h-32" />
         ))}
       </div>
     );
@@ -193,8 +249,7 @@ export function SectorHeatmap() {
     return (
       <Card className="border-signal-bearish/40">
         <CardContent className="p-4 text-sm text-muted-foreground">
-          Failed to load sectors. Is the API up at{" "}
-          <code className="rounded bg-muted px-1">{process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000"}</code>?
+          Sector data is unavailable right now. Try again in a moment.
         </CardContent>
       </Card>
     );
@@ -202,15 +257,18 @@ export function SectorHeatmap() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-baseline justify-between">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Sector predictions</h1>
           <p className="text-sm text-muted-foreground">
-            10-day relative-strength rankings from <code className="rounded bg-muted px-1">xgb_v1</code>.{" "}
+            {horizon}-day relative-strength rankings from <code className="rounded bg-muted px-1">xgb_v1</code>.{" "}
             {data.run_ts && <>Last run {formatDate(data.run_ts)}.</>}
           </p>
         </div>
+        <HorizonTabs value={horizon} onChange={setHorizon} />
       </div>
+
+      {scorecard && <ScorecardStrip s={scorecard} />}
 
       {marketRead && <MarketReadCard read={marketRead} />}
 
@@ -238,6 +296,85 @@ export function SectorHeatmap() {
 // Sub-components
 // ────────────────────────────────────────────────────────────────────────────
 
+function HorizonTabs({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  return (
+    <div className="inline-flex rounded-full border border-border bg-card p-0.5 text-xs">
+      {HORIZON_OPTIONS.map((opt) => {
+        const active = opt.value === value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "rounded-full px-3 py-1 transition-colors",
+              active
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ScorecardStrip({ s }: { s: SectorScorecardResponse }) {
+  const hit = s.hit_rate;
+  const spread = s.avg_spread;
+  const tone =
+    hit === null ? "neutral" :
+    hit >= 0.55 ? "bullish" :
+    hit <= 0.45 ? "bearish" : "neutral";
+  const toneCls =
+    tone === "bullish" ? "text-signal-bullish" :
+    tone === "bearish" ? "text-signal-bearish" :
+    "text-foreground";
+  const spreadCls =
+    spread === null ? "text-muted-foreground" :
+    spread > 0 ? "text-signal-bullish" :
+    spread < 0 ? "text-signal-bearish" : "text-muted-foreground";
+
+  return (
+    <Card>
+      <CardContent className="grid grid-cols-2 gap-4 p-4 text-xs sm:grid-cols-4">
+        <div>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Hit rate (top-3 &gt; bottom-3)</div>
+          <div className={cn("mt-1 text-lg font-semibold num", toneCls)}>
+            {hit === null ? "—" : `${(hit * 100).toFixed(0)}%`}
+          </div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Avg spread (top − bottom)</div>
+          <div className={cn("mt-1 text-lg font-semibold num", spreadCls)}>
+            {spread === null ? "—" : `${spread > 0 ? "+" : ""}${(spread * 100).toFixed(2)}%`}
+          </div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Avg top-3 / bottom-3</div>
+          <div className="mt-1 text-sm num">
+            <span className={s.avg_top3_return !== null && s.avg_top3_return >= 0 ? "text-signal-bullish" : "text-signal-bearish"}>
+              {s.avg_top3_return === null ? "—" : `${s.avg_top3_return > 0 ? "+" : ""}${(s.avg_top3_return * 100).toFixed(2)}%`}
+            </span>
+            <span className="mx-1 text-muted-foreground">/</span>
+            <span className={s.avg_bottom3_return !== null && s.avg_bottom3_return >= 0 ? "text-signal-bullish" : "text-signal-bearish"}>
+              {s.avg_bottom3_return === null ? "—" : `${s.avg_bottom3_return > 0 ? "+" : ""}${(s.avg_bottom3_return * 100).toFixed(2)}%`}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Runs evaluated</div>
+          <div className="mt-1 text-sm num">
+            {s.n_runs_evaluated} <span className="text-muted-foreground">/ {s.n_runs_total}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function MarketReadCard({ read }: { read: MarketRead }) {
   const badge = REGIME_BADGE[read.regime];
   return (
@@ -251,14 +388,19 @@ function MarketReadCard({ read }: { read: MarketRead }) {
             How to read this rotation in plain English.
           </p>
         </div>
-        <span
-          className={cn(
-            "rounded-full px-2.5 py-1 text-xs font-semibold ring-1",
-            badge.cls
-          )}
-        >
-          {badge.label}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-muted/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground ring-1 ring-border">
+            Rotation: {read.rotationActivity}
+          </span>
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-1 text-xs font-semibold ring-1",
+              badge.cls
+            )}
+          >
+            {badge.label}
+          </span>
+        </div>
       </CardHeader>
       <CardContent className="p-4 pt-1 text-sm leading-relaxed text-foreground">
         <p>{read.paragraph}</p>
@@ -304,9 +446,58 @@ function LeaderLagBlock({
   );
 }
 
+function rankDelta(s: SectorEntry): { value: number | null; arrow: string; cls: string; tip: string } {
+  if (s.latest_rank === null || s.prior_rank === null) {
+    return { value: null, arrow: "·", cls: "text-muted-foreground", tip: "no prior run" };
+  }
+  // Smaller rank = better, so rising = prior > latest.
+  const change = s.prior_rank - s.latest_rank;
+  if (change > 0) {
+    return {
+      value: change,
+      arrow: "▲",
+      cls: "text-signal-bullish",
+      tip: `Climbed ${change} rank${change === 1 ? "" : "s"} since the prior run`,
+    };
+  }
+  if (change < 0) {
+    return {
+      value: change,
+      arrow: "▼",
+      cls: "text-signal-bearish",
+      tip: `Fell ${Math.abs(change)} rank${Math.abs(change) === 1 ? "" : "s"} since the prior run`,
+    };
+  }
+  return { value: 0, arrow: "•", cls: "text-muted-foreground", tip: "Unchanged since the prior run" };
+}
+
+function ConfidenceChip({ value }: { value: number | null }) {
+  if (value === null || !Number.isFinite(value)) return null;
+  const v = Math.max(0, Math.min(1, value));
+  const level: "low" | "med" | "high" = v < 0.34 ? "low" : v < 0.67 ? "med" : "high";
+  const cls = {
+    low:  "bg-muted/60 text-muted-foreground",
+    med:  "bg-amber-500/15 text-amber-400",
+    high: "bg-signal-bullish/15 text-signal-bullish",
+  }[level];
+  return (
+    <span
+      className={cn("rounded-sm px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-border", cls)}
+      title={`Model confidence ${v.toFixed(2)}`}
+    >
+      conf {v.toFixed(2)}
+    </span>
+  );
+}
+
 function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
   const tier = s.latest_rank !== null ? tierFor(s.latest_rank, totalRanked) : null;
   const meta = metaFor(s.symbol);
+  const delta = rankDelta(s);
+
+  // Sparkline shows rank-over-time INVERTED so visually "up = better rank".
+  const sparkValues = s.rank_history.map((r) => -r);
+
   return (
     <Link href={`/sectors/${encodeURIComponent(s.symbol)}`} className="block group">
       <Card className={cn("h-full transition-colors", tileBg(tier))}>
@@ -314,20 +505,40 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
           <div className="flex items-baseline justify-between">
             <CardTitle className="text-base">{s.symbol}</CardTitle>
             {s.latest_rank !== null && (
-              <span className="num text-xs text-muted-foreground">#{s.latest_rank}</span>
+              <span className="num text-xs text-muted-foreground">
+                <span className={cn("mr-1 font-semibold", delta.cls)} title={delta.tip}>
+                  {delta.arrow}
+                  {delta.value !== null && delta.value !== 0 ? Math.abs(delta.value) : ""}
+                </span>
+                #{s.latest_rank}
+              </span>
             )}
           </div>
           <div className="text-[11px] text-muted-foreground">{meta.name}</div>
         </CardHeader>
         <CardContent className="p-3 pt-0 text-xs text-muted-foreground">
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <span>score</span>
             <span className="num">{formatNum(s.latest_score, 4)}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <span>holdings</span>
             <span className="num">{s.n_constituents}</span>
           </div>
+
+          {sparkValues.length >= 2 && (
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <span className="text-[10px] uppercase tracking-wide">rank trend</span>
+              <Sparkline values={sparkValues} width={72} height={20} />
+            </div>
+          )}
+
+          {s.confidence !== null && (
+            <div className="mt-2">
+              <ConfidenceChip value={s.confidence} />
+            </div>
+          )}
+
           {tier && (
             <p className="mt-2 line-clamp-2 leading-snug text-foreground/80">
               {captionFor(tier, s.latest_score)}

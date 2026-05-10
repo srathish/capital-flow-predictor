@@ -33,6 +33,8 @@ const SORT_OPTIONS = [
   { value: "newest", label: "Newest" },
   { value: "score", label: "Top score" },
   { value: "cluster", label: "Most posts" },
+  { value: "engagement", label: "Most upvoted" },
+  { value: "movers", label: "Biggest mover" },
 ] as const;
 type SortKey = (typeof SORT_OPTIONS)[number]["value"];
 
@@ -56,6 +58,37 @@ function formatHoursAgo(h: number): string {
   if (h < 1) return `${Math.max(1, Math.round(h * 60))}m ago`;
   if (h < 24) return `${Math.round(h)}h ago`;
   return `${Math.round(h / 24)}d ago`;
+}
+
+function formatCount(n: number | null | undefined): string {
+  if (n == null) return "—";
+  if (n < 1000) return String(n);
+  if (n < 10_000) return `${(n / 1000).toFixed(1)}k`;
+  return `${Math.round(n / 1000)}k`;
+}
+
+function formatPct(p: number | null | undefined): string {
+  if (p == null || !Number.isFinite(p)) return "—";
+  const sign = p > 0 ? "+" : "";
+  return `${sign}${p.toFixed(1)}%`;
+}
+
+function returnTone(p: number | null | undefined): string {
+  if (p == null || !Number.isFinite(p)) return "text-muted-foreground";
+  if (p > 0.5) return "text-signal-bullish";
+  if (p < -0.5) return "text-signal-bearish";
+  return "text-muted-foreground";
+}
+
+function scoreTooltip(p: CatalystPost): string {
+  const b = p.score_breakdown;
+  const trustStr = b.trust == null ? "—" : b.trust.toFixed(2);
+  return [
+    `Score ${p.catalyst_score.toFixed(2)} = base × recency × trust`,
+    `Base ${b.base.toFixed(2)} (tickers ${b.n_tickers}, keywords ${b.n_keywords})`,
+    `Recency ${b.recency.toFixed(2)} (decays 1.0 → 0.2 over 6h–48h)`,
+    `Trust ${trustStr} (author posting history)`,
+  ].join("\n");
 }
 
 function formatUpdatedAgo(ms: number | null): string {
@@ -235,6 +268,14 @@ export function CatalystsView() {
     cs.sort((a, b) => {
       if (sortBy === "score") return b.lead.catalyst_score - a.lead.catalyst_score;
       if (sortBy === "cluster") return b.count - a.count;
+      if (sortBy === "engagement") {
+        return (b.lead.upvotes ?? 0) - (a.lead.upvotes ?? 0);
+      }
+      if (sortBy === "movers") {
+        const av = Math.abs(a.lead.return_since_post_pct ?? 0);
+        const bv = Math.abs(b.lead.return_since_post_pct ?? 0);
+        return bv - av;
+      }
       return a.lead.hours_old - b.lead.hours_old;
     });
     return cs;
@@ -546,10 +587,50 @@ export function CatalystsView() {
                     </a>
                     <span
                       className="num text-xs text-muted-foreground"
-                      title="Score combines keyword weight, ticker count, recency. Higher = stronger catalyst signal."
+                      title={scoreTooltip(p)}
                     >
                       score {p.catalyst_score.toFixed(2)} · {formatHoursAgo(p.hours_old)}
                     </span>
+                  </div>
+                  {/* Engagement + price reaction row */}
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px]">
+                    {(p.upvotes != null || p.num_comments != null) && (
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        {p.upvotes != null && (
+                          <span className="num" title={`${p.upvotes} upvotes`}>
+                            ▲ {formatCount(p.upvotes)}
+                          </span>
+                        )}
+                        {p.num_comments != null && (
+                          <span className="num" title={`${p.num_comments} comments`}>
+                            💬 {formatCount(p.num_comments)}
+                          </span>
+                        )}
+                      </span>
+                    )}
+                    {p.lead_ticker && (p.return_since_post_pct != null || p.return_next_day_pct != null) && (
+                      <span className="flex items-center gap-2">
+                        <span className="text-muted-foreground">
+                          ${p.lead_ticker}
+                        </span>
+                        {p.return_next_day_pct != null && (
+                          <span
+                            className={cn("num", returnTone(p.return_next_day_pct))}
+                            title={`Next-trading-day close vs close on/before post (${p.price_at_post?.toFixed(2)} → ${p.price_next_day?.toFixed(2)})`}
+                          >
+                            +1d {formatPct(p.return_next_day_pct)}
+                          </span>
+                        )}
+                        {p.return_since_post_pct != null && (
+                          <span
+                            className={cn("num", returnTone(p.return_since_post_pct))}
+                            title={`Latest close vs close on/before post (${p.price_at_post?.toFixed(2)} → ${p.price_now?.toFixed(2)})`}
+                          >
+                            since {formatPct(p.return_since_post_pct)}
+                          </span>
+                        )}
+                      </span>
+                    )}
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                     <span className={cn("rounded-full px-2 py-0.5 font-semibold", cat.swatch, cat.text)}>

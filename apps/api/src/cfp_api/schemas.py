@@ -97,6 +97,10 @@ class SectorEntry(BaseModel):
     symbol: str
     latest_rank: int | None = None
     latest_score: float | None = None
+    confidence: float | None = None
+    prior_rank: int | None = None  # rank from the run before the latest
+    rank_history: list[int] = Field(default_factory=list)  # oldest → newest, latest run last
+    score_history: list[float] = Field(default_factory=list)
     horizon_d: int | None = None
     n_constituents: int = 0
 

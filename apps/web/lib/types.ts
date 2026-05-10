@@ -148,6 +148,52 @@ export type NetworkResponse = {
   as_of: string | null;
 };
 
+// /v1/network/lead-lag
+export type LeadLagEdge = {
+  source: string;
+  target: string;
+  lag: number;
+  p_value: number;
+};
+
+export type LeadLagResponse = {
+  computed_ts: string | null;
+  horizon_d: number;
+  max_p: number;
+  min_lag: number;
+  max_lag: number;
+  universe: string[];
+  nodes: NetworkNode[];
+  edges: LeadLagEdge[];
+};
+
+// /v1/network/sector/{etf}/expand
+export type ExpandedNode = {
+  id: string;
+  name: string;
+  is_parent: boolean;
+  weight: number | null;
+  return_window: number | null;
+  parent_correlation: number | null;
+};
+
+export type ExpandedEdge = {
+  source: string;
+  target: string;
+  correlation: number;
+  is_tether: boolean;
+};
+
+export type ExpandedSectorResponse = {
+  etf: string;
+  window_days: number;
+  min_correlation: number;
+  n_obs: number;
+  nodes: ExpandedNode[];
+  edges: ExpandedEdge[];
+  as_of: string | null;
+};
+
 // /v1/sectors/{etf}/holdings
 export type HoldingEntry = {
   ticker: string;
