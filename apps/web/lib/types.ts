@@ -172,6 +172,8 @@ export type HoldingEntry = {
   bullish_premium: number | null;
   bearish_premium: number | null;
   bullish_pct: number | null;
+  model_score: number | null;
+  model_rank: number | null;
 };
 
 export type HoldingsResponse = {
@@ -180,6 +182,11 @@ export type HoldingsResponse = {
   last_updated: string | null;
   sort: string;
   holdings: HoldingEntry[];
+  median_return_1d: number | null;
+  median_return_5d: number | null;
+  median_return_20d: number | null;
+  pct_above_5d_zero: number | null;
+  pct_above_20d_zero: number | null;
 };
 
 export type HoldingsSort =
@@ -192,7 +199,8 @@ export type HoldingsSort =
   | "bullish_pct"
   | "ticker"
   | "pct_off_52w_high"
-  | "volume_z";
+  | "volume_z"
+  | "model_score";
 
 // /v1/reddit/mentions
 export type RedditSubMentions = {
@@ -201,9 +209,12 @@ export type RedditSubMentions = {
   rank: number | null;
 };
 
+export type RedditAudienceSkew = "wsb" | "investing" | "mixed" | "unknown";
+
 export type RedditMentionRow = {
   ticker: string;
   name: string | null;
+  sector: string | null;
   mentions_today: number;
   mentions_7d_avg: number;
   spike_ratio: number | null;
@@ -213,19 +224,58 @@ export type RedditMentionRow = {
   upvotes_today: number;
   is_contrarian_warning: boolean;
   is_stealth: boolean;
+  is_first_time_entrant: boolean;
+  is_meme: boolean;
   sparkline_7d: number[];
   by_subreddit: RedditSubMentions[];
+  audience_skew: RedditAudienceSkew;
+  momentum_score: number | null;
+  days_in_top20_14d: number;
+  sentiment_bull_share: number | null;
+  n_bullish_kw: number;
+  n_bearish_kw: number;
+  price_change_1d: number | null;
+  price_change_5d: number | null;
+  catalyst_post_count: number;
+  mentions_last_6h: number;
+};
+
+export type RedditBacktestSlice = {
+  spike_threshold: number;
+  n_observations: number;
+  mean_5d_return_pct: number | null;
+  win_rate: number | null;
 };
 
 export type RedditMentionsResponse = {
   snapshot_date: string | null;
+  snapshot_age_hours: number | null;
   n_total: number;
   rows: RedditMentionRow[];
+  backtest: RedditBacktestSlice[] | null;
 };
 
-export type RedditMentionsSort = "mentions" | "spike" | "rank_change";
+export type RedditMentionsSort = "mentions" | "spike" | "rank_change" | "momentum";
+
+export type RedditMentionsParams = {
+  sort?: RedditMentionsSort;
+  limit?: number;
+  q?: string;
+  sector?: string;
+  excludeMeme?: boolean;
+  watchlist?: boolean;
+  backtest?: boolean;
+};
 
 // /v1/reddit/catalysts
+export type CatalystScoreBreakdown = {
+  base: number;
+  recency: number;
+  trust: number | null;
+  n_tickers: number;
+  n_keywords: number;
+};
+
 export type CatalystPost = {
   id: string;
   created_at: string;
@@ -237,6 +287,15 @@ export type CatalystPost = {
   keywords: string[];
   catalyst_score: number;
   hours_old: number;
+  upvotes: number | null;
+  num_comments: number | null;
+  score_breakdown: CatalystScoreBreakdown;
+  lead_ticker: string | null;
+  price_at_post: number | null;
+  price_next_day: number | null;
+  price_now: number | null;
+  return_next_day_pct: number | null;
+  return_since_post_pct: number | null;
 };
 
 export type CatalystsResponse = {
@@ -255,11 +314,25 @@ export type ChatStreamEvent =
   | { type: "done" }
   | { type: "error"; message: string };
 
+// /v1/assistant/chat — top-level assistant with tool calling
+export type AssistantStreamEvent =
+  | { type: "text"; content: string }
+  | { type: "tool_call"; id: string; name: string; args: Record<string, unknown> }
+  | { type: "tool_result"; id: string; name: string; result: unknown }
+  | { type: "done" }
+  | { type: "error"; message: string };
+
+export type AssistantTurn = { role: "user" | "assistant"; content: string };
+
 // /v1/sectors
 export type SectorEntry = {
   symbol: string;
   latest_rank: number | null;
   latest_score: number | null;
+  confidence: number | null;
+  prior_rank: number | null;
+  rank_history: number[]; // oldest → newest
+  score_history: number[];
   horizon_d: number | null;
   n_constituents: number;
 };
@@ -267,4 +340,17 @@ export type SectorEntry = {
 export type SectorsResponse = {
   run_ts: string | null;
   sectors: SectorEntry[];
+};
+
+// /v1/sectors/scorecard
+export type SectorScorecardResponse = {
+  horizon_d: number;
+  model: string;
+  n_runs_evaluated: number;
+  n_runs_total: number;
+  hit_rate: number | null;
+  avg_top3_return: number | null;
+  avg_bottom3_return: number | null;
+  avg_spread: number | null;
+  last_evaluated_run: string | null;
 };

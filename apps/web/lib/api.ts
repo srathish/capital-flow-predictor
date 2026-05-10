@@ -9,12 +9,14 @@ import type {
   HoldingsResponse,
   HoldingsSort,
   NetworkResponse,
+  RedditBacktestSlice,
+  RedditMentionsParams,
   RedditMentionsResponse,
-  RedditMentionsSort,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
   SectorsResponse,
+  SectorScorecardResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -76,19 +78,35 @@ export const api = {
       `/v1/agents/${encodeURIComponent(ticker)}/timeline?agent=${encodeURIComponent(agent)}&limit=${limit}`
     );
   },
-  sectors(params?: { horizon?: number; model?: string }): Promise<SectorsResponse> {
+  sectors(params?: { horizon?: number; model?: string; history?: number }): Promise<SectorsResponse> {
     const sp = new URLSearchParams();
     if (params?.horizon !== undefined) sp.set("horizon", String(params.horizon));
     if (params?.model) sp.set("model", params.model);
+    if (params?.history !== undefined) sp.set("history", String(params.history));
     const qs = sp.toString();
     return getJson<SectorsResponse>(`/v1/sectors${qs ? `?${qs}` : ""}`);
   },
-  redditMentions(
-    sort: RedditMentionsSort = "mentions",
-    limit = 50,
-  ): Promise<RedditMentionsResponse> {
-    const sp = new URLSearchParams({ sort, limit: String(limit) });
+  sectorScorecard(params?: { horizon?: number; model?: string; lookbackRuns?: number }): Promise<SectorScorecardResponse> {
+    const sp = new URLSearchParams();
+    if (params?.horizon !== undefined) sp.set("horizon", String(params.horizon));
+    if (params?.model) sp.set("model", params.model);
+    if (params?.lookbackRuns !== undefined) sp.set("lookback_runs", String(params.lookbackRuns));
+    const qs = sp.toString();
+    return getJson<SectorScorecardResponse>(`/v1/sectors/scorecard${qs ? `?${qs}` : ""}`);
+  },
+  redditMentions(params: RedditMentionsParams = {}): Promise<RedditMentionsResponse> {
+    const sp = new URLSearchParams();
+    sp.set("sort", params.sort ?? "mentions");
+    sp.set("limit", String(params.limit ?? 60));
+    if (params.q) sp.set("q", params.q);
+    if (params.sector) sp.set("sector", params.sector);
+    if (params.excludeMeme) sp.set("exclude_meme", "true");
+    if (params.watchlist) sp.set("watchlist", "true");
+    if (params.backtest) sp.set("backtest", "true");
     return getJson<RedditMentionsResponse>(`/v1/reddit/mentions?${sp}`);
+  },
+  redditBacktest(): Promise<RedditBacktestSlice[]> {
+    return getJson<RedditBacktestSlice[]>(`/v1/reddit/backtest`);
   },
   redditCatalysts(params: {
     limit?: number;
@@ -128,8 +146,9 @@ export const api = {
     sort: HoldingsSort = "weight",
     direction: "asc" | "desc" = "desc",
     limit = 500,
+    horizon = 10,
   ): Promise<HoldingsResponse> {
-    const sp = new URLSearchParams({ sort, direction, limit: String(limit) });
+    const sp = new URLSearchParams({ sort, direction, limit: String(limit), horizon: String(horizon) });
     return getJson<HoldingsResponse>(
       `/v1/sectors/${encodeURIComponent(etf)}/holdings?${sp}`
     );

@@ -87,6 +87,17 @@ def _load_ticker_universe(conn: psycopg.Connection) -> set[str]:
     return prices | holdings
 
 
+def _load_author_history(conn: psycopg.Connection) -> dict[str, int]:
+    """Map author -> count of prior posts in our reddit_posts table. Used as a
+    cheap trust proxy: throwaway accounts that only show up to post one
+    catalyst-keyword pump are heavily discounted."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT author, COUNT(*) FROM reddit_posts WHERE author IS NOT NULL GROUP BY author"
+        )
+        return {row[0]: int(row[1]) for row in cur.fetchall()}
+
+
 def _extract_tickers(text: str, universe: set[str]) -> list[str]:
     found: set[str] = set()
     for m in _TICKER_RE.finditer(text):
@@ -107,16 +118,23 @@ def _extract_keywords(text: str) -> list[str]:
     return hits
 
 
-def _catalyst_score(n_tickers: int, n_keywords: int, hours_old: float) -> float:
-    """Composite score 0..1. Heavier on multi-ticker / multi-keyword posts.
+def _catalyst_score(
+    n_tickers: int,
+    n_keywords: int,
+    hours_old: float,
+    author_post_count: int = 0,
+) -> float:
+    """Composite score 0..1. Heavier on multi-ticker / multi-keyword posts,
+    discounted for throwaway authors.
 
-    Recency: full weight if posted in last 6h, decays linearly to 0.2 at 48h."""
+    Recency: full weight if posted in last 6h, decays linearly to 0.2 at 48h.
+    Author trust: first-time author = 0.5x, ≥100 prior posts in our table = 1.0x
+    (log-scaled in between). The point is to suppress accounts whose only
+    posts in our 7d window are pump-style catalysts."""
     import math
     if n_tickers == 0 or n_keywords == 0:
         return 0.0
     base = math.log(1 + n_tickers) * math.log(1 + n_keywords)
-    # Normalize: most posts will be 1-2 tickers x 1-2 keywords -> base ~0.5-1.5
-    # Cap base at 3.0 (3 tickers x 3 keywords) for the upper edge.
     base_norm = min(base / 3.0, 1.0)
     if hours_old <= 6:
         recency = 1.0
@@ -124,7 +142,9 @@ def _catalyst_score(n_tickers: int, n_keywords: int, hours_old: float) -> float:
         recency = 0.2
     else:
         recency = 1.0 - 0.8 * (hours_old - 6) / 42.0
-    return base_norm * recency
+    # Author trust: 0.5 .. 1.0 mapped via log10(1 + count) / 2
+    trust = 0.5 + 0.5 * min(1.0, math.log10(1 + author_post_count) / 2.0)
+    return base_norm * recency * trust
 
 
 def _parse_rss(xml_text: str) -> list[dict]:
@@ -212,6 +232,7 @@ def ingest(database_url: str, subreddits: Iterable[str] = SUBREDDITS, min_score:
     now = datetime.now(UTC)
     with httpx.Client() as client, connect(database_url) as conn:
         universe = _load_ticker_universe(conn)
+        author_history = _load_author_history(conn)
         for sub in subreddits:
             entries = fetch_subreddit(client, sub)
             kept = 0
@@ -224,7 +245,8 @@ def ingest(database_url: str, subreddits: Iterable[str] = SUBREDDITS, min_score:
                         n_filtered += 1
                         continue
                     hours_old = max(0.0, (now - e["published"]).total_seconds() / 3600)
-                    score = _catalyst_score(len(tickers), len(keywords), hours_old)
+                    author_count = author_history.get(e.get("author") or "", 0)
+                    score = _catalyst_score(len(tickers), len(keywords), hours_old, author_count)
                     if score < min_score:
                         n_filtered += 1
                         continue
