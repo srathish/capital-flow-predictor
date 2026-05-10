@@ -373,11 +373,13 @@ def flow_holdings_cmd(
     """Refresh full ETF constituent lists via Unusual Whales /etfs/{etf}/holdings.
 
     Replaces the yfinance top-10 stub with the full holding list including
-    per-constituent pricing + options sentiment. Powers /sectors/[etf]."""
-    if not settings.unusual_whales_api_key:
-        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
-        raise typer.Exit(1)
+    per-constituent pricing + options sentiment. Powers /sectors/[etf].
+
+    If UNUSUAL_WHALES_API_KEY is unset, falls back to yfinance top-10 for every
+    ETF — enough to render the page without options-sentiment fields."""
     etf_list = [e.strip().upper() for e in etfs.split(",") if e.strip()] if etfs else list(PREDICTION_TARGETS)
+    if not settings.unusual_whales_api_key:
+        console.print("[yellow]UNUSUAL_WHALES_API_KEY not set — using yfinance fallback for all ETFs[/yellow]")
     out = ingestion.unusualwhales.ingest_etf_holdings(
         settings.database_url, settings.unusual_whales_api_key, etf_list
     )

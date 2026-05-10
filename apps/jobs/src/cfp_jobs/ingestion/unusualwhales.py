@@ -805,14 +805,28 @@ def _upsert_etf_holdings(conn: psycopg.Connection, etf: str, rows: Iterable[dict
     return n
 
 
-def ingest_etf_holdings(database_url: str, api_key: str, etfs: Iterable[str]) -> dict:
+def ingest_etf_holdings(database_url: str, api_key: str | None, etfs: Iterable[str]) -> dict:
     """Refresh the full constituent list for each ETF. Run nightly.
 
     UW indexes the major ETFs but not all of them. For ETFs UW returns 0
     rows for (e.g. ARKK, SMH, JETS, URNM, WCLD), fall back to yfinance's
     top-10 holdings + per-name fast_info price snapshot so the sector
-    detail page still renders."""
+    detail page still renders.
+
+    If `api_key` is falsy, skip UW entirely and use yfinance for every ETF."""
     counts: dict[str, int] = {}
+    if not api_key:
+        with connect(database_url) as conn:
+            for etf in etfs:
+                etf = etf.upper()
+                try:
+                    counts[etf] = _yfinance_holdings_fallback(conn, etf)
+                except Exception as e:
+                    log.warning("yfinance holdings failed for %s: %s", etf, e)
+                    counts[etf] = 0
+            conn.commit()
+        return counts
+
     with UwClient(api_key) as uw, connect(database_url) as conn:
         for etf in etfs:
             etf = etf.upper()
