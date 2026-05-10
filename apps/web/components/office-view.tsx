@@ -2,21 +2,16 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Office v2 — Smallville-style top-down view of the agent ensemble.
+ * Office v3 — isometric "sims" view of the agent ensemble.
  *
- * Layout (single floor plan, 16:9):
- *   - Analyst Pit       (5 quantitative analysts)
- *   - Persona Hall      (13 famous-investor personas wander here)
- *   - Bull Office       (bull_researcher)
- *   - Bear Office       (bear_researcher)
- *   - Synthesis Desk    (trader -> risk_manager -> portfolio_manager)
+ * Top-down 2.5D office rendered as a single SVG scene. World is a tile grid
+ * projected to screen with iso(x, y, z). Each agent is a tiny walking person
+ * (head, torso, legs, shadow) wandering inside an assigned room, on top of
+ * an actual floor plan with desks, tables, chairs, plants, and a kitchen
+ * counter — the same Sims-style office the user can peek into and click on.
  *
- * Each agent is a colored disc with their initials. Discs wander randomly
- * inside their assigned room (new target every 2-4s, CSS transition animates
- * the move). Hover shows a speech bubble with the thesis. Click pops a modal.
- *
- * Shares the same data model as v1 (`api.agents`, `api.runEnsemble`,
- * `api.getRunStatus`) so the run controls and live polling are identical.
+ * Data wiring (api.agents, runEnsemble, getRunStatus, signal colors, hover
+ * speech bubble, click-to-detail panel) is unchanged from v2.
  */
 
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -27,7 +22,9 @@ import { cn } from "@/lib/utils";
 import type { AgentSignalEntry, AgentsForTickerResponse, SignalKind } from "@/lib/types";
 import { SignalBadge } from "@/components/ui/badge";
 
-// ---- Agent roster (same order/keys as v1 ensemble-view) ----
+// ────────────────────────────────────────────────────────────────────────────
+// Agent roster
+// ────────────────────────────────────────────────────────────────────────────
 
 type RoomKey = "analysts" | "personas" | "bull" | "bear" | "synthesis";
 
@@ -39,17 +36,14 @@ interface AgentMeta {
   room: RoomKey;
 }
 
-// Faces, not symbols. Each agent is a tiny office worker — pick the face
-// emoji that best evokes the persona's character. Iconography (drum,
-// globe, etc.) was readable but didn't read as PEOPLE.
 const AGENTS: AgentMeta[] = [
-  // Analyst Pit — quant analysts in glasses-and-laptop mode
+  // Analyst Pit — quants at workstations
   { id: "technicals",        initials: "TC", display: "Technicals",        emoji: "👨‍💻", room: "analysts" },
   { id: "fundamentals",      initials: "FN", display: "Fundamentals",      emoji: "👨‍🔬", room: "analysts" },
   { id: "sentiment",         initials: "SE", display: "Sentiment",         emoji: "🧐",   room: "analysts" },
   { id: "news",              initials: "NW", display: "News",              emoji: "🤳",   room: "analysts" },
   { id: "flow",              initials: "FL", display: "Flow",              emoji: "🕵️",   room: "analysts" },
-  // Persona Hall — each face picked to evoke the investor
+  // Persona Hall — investors mingling between tables in the open atrium
   { id: "buffett",           initials: "WB", display: "Buffett",           emoji: "👴",   room: "personas" },
   { id: "burry",             initials: "MB", display: "Burry",             emoji: "🥸",   room: "personas" },
   { id: "druckenmiller",     initials: "SD", display: "Druckenmiller",     emoji: "🤵",   room: "personas" },
@@ -63,43 +57,169 @@ const AGENTS: AgentMeta[] = [
   { id: "damodaran",         initials: "AD", display: "Damodaran",         emoji: "👨‍🏫", room: "personas" },
   { id: "lynch",             initials: "PL", display: "Lynch",             emoji: "🧑‍💼", room: "personas" },
   { id: "ackman",            initials: "BA", display: "Ackman",            emoji: "👨‍⚖️", room: "personas" },
-  // Researcher offices — kept as the literal animals (their whole identity)
+  // Researcher offices — private rooms
   { id: "bull_researcher",   initials: "BU", display: "Bull Researcher",   emoji: "🐂",   room: "bull" },
   { id: "bear_researcher",   initials: "BE", display: "Bear Researcher",   emoji: "🐻",   room: "bear" },
-  // Synthesis desk — the executives
+  // Synthesis kitchen / counter — execs working at the long bar
   { id: "trader",            initials: "TR", display: "Trader",            emoji: "🧠",   room: "synthesis" },
   { id: "risk_manager",      initials: "RM", display: "Risk Manager",      emoji: "🧯",   room: "synthesis" },
   { id: "portfolio_manager", initials: "PM", display: "Portfolio Mgr",     emoji: "👔",   room: "synthesis" },
 ];
 
-// Room layout — percentages of the office canvas. Each room is a rectangle
-// in (x%, y%, w%, h%). Synthesis spans the bottom; analysts left column;
-// personas center; bull/bear stacked on the right.
-const ROOMS: Record<RoomKey, { x: number; y: number; w: number; h: number; label: string }> = {
-  analysts:  { x:  1, y:  1, w: 22, h: 75, label: "Analyst Pit" },
-  personas:  { x: 24, y:  1, w: 50, h: 75, label: "Persona Hall" },
-  bull:      { x: 75, y:  1, w: 24, h: 37, label: "Bull Office" },
-  bear:      { x: 75, y: 39, w: 24, h: 37, label: "Bear Office" },
-  synthesis: { x:  1, y: 77, w: 98, h: 22, label: "Synthesis Desk" },
+// ────────────────────────────────────────────────────────────────────────────
+// World + iso projection
+// ────────────────────────────────────────────────────────────────────────────
+
+// Tile grid in world units. iso() maps a tile point (x, y, z) onto the SVG
+// plane. We pick TILE_W:TILE_H = 16:9 so the projected world matches the
+// container's 16:9 aspect ratio with no letterboxing.
+const TILE_W = 16;
+const TILE_H = 9;
+const WALL_H = 26;     // wall-top z (in screen units, not tiles)
+const FLOOR_Z = 0;
+
+function iso(x: number, y: number, z = 0): { sx: number; sy: number } {
+  return {
+    sx: (x - y) * TILE_W,
+    sy: (x + y) * TILE_H - z,
+  };
+}
+
+// World rectangle (tile coords). Rooms partition it.
+const WORLD_W = 100;
+const WORLD_H = 56;
+
+interface RoomRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  label: string;
+  floor: string;       // floor color
+  floorEdge: string;   // outline / grout color
+}
+
+const ROOMS: Record<RoomKey, RoomRect> = {
+  analysts:  { x:  2, y:  2, w: 26, h: 22, label: "Analyst Pit",    floor: "#1d2230", floorEdge: "#2a3142" },
+  synthesis: { x:  2, y: 26, w: 26, h: 28, label: "Synthesis Kitchen", floor: "#23202a", floorEdge: "#2f2a36" },
+  personas:  { x: 30, y:  2, w: 38, h: 52, label: "Persona Hall",   floor: "#2a2632", floorEdge: "#37313f" },
+  bull:      { x: 70, y:  2, w: 28, h: 24, label: "Bull Office",    floor: "#1c2a26", floorEdge: "#264039" },
+  bear:      { x: 70, y: 28, w: 28, h: 26, label: "Bear Office",    floor: "#2a1d20", floorEdge: "#3a2629" },
 };
 
-// ---- Movement state ----
+// ────────────────────────────────────────────────────────────────────────────
+// Furniture
+// ────────────────────────────────────────────────────────────────────────────
+
+type FurnitureKind =
+  | "desk"          // long monitor desk for analysts
+  | "table"         // round restaurant table
+  | "chair"         // dining chair
+  | "exec_desk"     // big executive desk
+  | "exec_chair"    // executive chair
+  | "bookshelf"     // bookshelf (back wall)
+  | "plant"         // potted plant
+  | "counter"       // long kitchen / synthesis counter
+  | "stool"         // bar stool
+  | "rug";          // floor rug accent
+
+interface Furniture {
+  kind: FurnitureKind;
+  x: number;        // tile x (footprint center, in world coords)
+  y: number;        // tile y
+  rot?: 0 | 1;      // 0 = facing front-right, 1 = rotated 90°
+}
+
+// Hand-placed furniture per room. Coordinates chosen to leave clean walking
+// lanes for the wandering sims.
+const FURNITURE: Furniture[] = [
+  // ───── Analyst Pit ─────
+  { kind: "rug",  x: 14, y: 14 },
+  { kind: "desk", x:  8, y:  8 },
+  { kind: "desk", x:  8, y: 14 },
+  { kind: "desk", x:  8, y: 20 },
+  { kind: "desk", x: 22, y:  8 },
+  { kind: "desk", x: 22, y: 14 },
+  { kind: "desk", x: 22, y: 20 },
+  { kind: "plant", x:  4, y:  4 },
+  { kind: "plant", x: 26, y:  4 },
+
+  // ───── Synthesis Kitchen ─────
+  // Long counter island — three execs work along the bar.
+  { kind: "counter", x:  6, y: 36 },
+  { kind: "counter", x: 14, y: 36 },
+  { kind: "counter", x: 22, y: 36 },
+  { kind: "stool",   x:  6, y: 42 },
+  { kind: "stool",   x: 14, y: 42 },
+  { kind: "stool",   x: 22, y: 42 },
+  { kind: "plant",   x:  4, y: 30 },
+  { kind: "plant",   x: 26, y: 30 },
+  { kind: "plant",   x:  4, y: 50 },
+  { kind: "plant",   x: 26, y: 50 },
+
+  // ───── Persona Hall (the restaurant atrium) ─────
+  // Round tables in a 2x4 grid with chairs around each.
+  ...buildPersonaTables(),
+
+  // ───── Bull Office ─────
+  { kind: "rug",        x: 84, y: 14 },
+  { kind: "exec_desk",  x: 84, y: 12 },
+  { kind: "exec_chair", x: 84, y:  8 },
+  { kind: "bookshelf",  x: 74, y:  6 },
+  { kind: "plant",      x: 95, y:  5 },
+  { kind: "plant",      x: 95, y: 22 },
+
+  // ───── Bear Office ─────
+  { kind: "rug",        x: 84, y: 40 },
+  { kind: "exec_desk",  x: 84, y: 38 },
+  { kind: "exec_chair", x: 84, y: 34 },
+  { kind: "bookshelf",  x: 74, y: 32 },
+  { kind: "plant",      x: 95, y: 31 },
+  { kind: "plant",      x: 95, y: 50 },
+];
+
+function buildPersonaTables(): Furniture[] {
+  const out: Furniture[] = [];
+  // 4 rows × 2 cols of tables.
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 2; col++) {
+      const tx = 38 + col * 18;
+      const ty = 8 + row * 12;
+      out.push({ kind: "table", x: tx, y: ty });
+      // 4 chairs around each table
+      out.push({ kind: "chair", x: tx - 3, y: ty });
+      out.push({ kind: "chair", x: tx + 3, y: ty });
+      out.push({ kind: "chair", x: tx,     y: ty - 3 });
+      out.push({ kind: "chair", x: tx,     y: ty + 3 });
+    }
+  }
+  // a couple of plants in the corners
+  out.push({ kind: "plant", x: 33, y:  4 });
+  out.push({ kind: "plant", x: 65, y:  4 });
+  out.push({ kind: "plant", x: 33, y: 51 });
+  out.push({ kind: "plant", x: 65, y: 51 });
+  return out;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Wandering motion
+// ────────────────────────────────────────────────────────────────────────────
 
 interface AgentPos {
-  // Position is in PERCENT of the OFFICE canvas (not the room) so we can
-  // render every disc in the same coordinate space.
   x: number;
   y: number;
 }
 
-function randomPosInRoom(room: RoomKey, padding = 6): AgentPos {
+function randomPosInRoom(room: RoomKey, padding = 4): AgentPos {
   const r = ROOMS[room];
   const x = r.x + padding + Math.random() * Math.max(0, r.w - padding * 2);
   const y = r.y + padding + Math.random() * Math.max(0, r.h - padding * 2);
   return { x, y };
 }
 
-// ---- The component ----
+// ────────────────────────────────────────────────────────────────────────────
+// Component
+// ────────────────────────────────────────────────────────────────────────────
 
 export function OfficeView({ ticker }: { ticker: string }) {
   const upper = ticker.toUpperCase();
@@ -108,7 +228,7 @@ export function OfficeView({ ticker }: { ticker: string }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Fetch latest or live run — same shape as v1.
+  // Data fetch — same as v2.
   const latest = useQuery({
     queryKey: ["agents", upper],
     queryFn: () => api.agents(upper),
@@ -157,9 +277,7 @@ export function OfficeView({ ticker }: { ticker: string }) {
     [data]
   );
 
-  // ---- Wandering animation ----
-  // Each agent owns a target position. Every 2-4s we re-pick a target. CSS
-  // transition (transform + ~3s ease) handles the actual interpolation.
+  // Wander targets — re-pick every 2-4s, CSS transition animates the move.
   const [positions, setPositions] = useState<Record<string, AgentPos>>(() => {
     const init: Record<string, AgentPos> = {};
     for (const a of AGENTS) init[a.id] = randomPosInRoom(a.room);
@@ -183,52 +301,47 @@ export function OfficeView({ ticker }: { ticker: string }) {
     };
   }, []);
 
-  // Body shirt color, by signal. Bullish = green shirt, bearish = red,
-  // neutral = gray. Pre-run / pending = dark muted; thinking = pulsing blue.
-  function bodyClasses(sig: AgentSignalEntry | undefined, live: boolean): string {
-    if (!sig) {
-      return live
-        ? "bg-primary/60 ring-1 ring-primary/40 animate-pulse"
-        : "bg-muted/60 ring-1 ring-border";
-    }
-    const m: Record<SignalKind, string> = {
-      bullish: "bg-signal-bullish ring-1 ring-signal-bullish/70",
-      bearish: "bg-signal-bearish ring-1 ring-signal-bearish/70",
-      neutral: "bg-muted-foreground/50 ring-1 ring-border",
-    };
-    return m[sig.signal];
-  }
-
-  // Outer halo around the head — same color family but lighter, for instant
-  // signal-recognition at small sizes.
-  function headHaloClasses(sig: AgentSignalEntry | undefined, live: boolean): string {
-    if (!sig) {
-      return live
-        ? "ring-2 ring-primary/50 bg-card"
-        : "ring-1 ring-border bg-card";
-    }
-    const m: Record<SignalKind, string> = {
-      bullish: "ring-2 ring-signal-bullish/60 bg-card",
-      bearish: "ring-2 ring-signal-bearish/60 bg-card",
-      neutral: "ring-1 ring-border bg-card",
-    };
-    return m[sig.signal];
-  }
-
-  const selectedAgent = selectedId
-    ? AGENTS.find((a) => a.id === selectedId)
-    : null;
-  const selectedSignal = selectedAgent ? byAgent.get(selectedAgent.id) : undefined;
-
   const counts = useMemo(() => {
     const c = { bullish: 0, bearish: 0, neutral: 0 };
     for (const s of data?.signals ?? []) c[s.signal]++;
     return c;
   }, [data]);
 
+  const selectedAgent = selectedId ? AGENTS.find((a) => a.id === selectedId) : null;
+  const selectedSignal = selectedAgent ? byAgent.get(selectedAgent.id) : undefined;
+
+  // ───── Z-order: combine furniture + agents and sort back-to-front ─────
+  const renderables = useMemo(() => {
+    type Item =
+      | { kind: "furn"; f: Furniture; depth: number }
+      | { kind: "agent"; a: AgentMeta; pos: AgentPos; depth: number };
+    const items: Item[] = [];
+    for (const f of FURNITURE) {
+      // rugs render under everything else regardless of x+y
+      const depth = f.kind === "rug" ? -1e6 + (f.x + f.y) : f.x + f.y;
+      items.push({ kind: "furn", f, depth });
+    }
+    for (const a of AGENTS) {
+      const p = positions[a.id];
+      items.push({ kind: "agent", a, pos: p, depth: p.x + p.y + 0.5 });
+    }
+    items.sort((a, b) => a.depth - b.depth);
+    return items;
+  }, [positions]);
+
+  // ───── World viewBox bounds ─────
+  // Iso bounds: sx ∈ [(0 − WORLD_H)·TW, WORLD_W·TW]
+  //             sy ∈ [0, (WORLD_W + WORLD_H)·TH]
+  const minSx = (0 - WORLD_H) * TILE_W;
+  const maxSx = WORLD_W * TILE_W;
+  const minSy = -WALL_H - 30; // headroom for walls + sim heads
+  const maxSy = (WORLD_W + WORLD_H) * TILE_H + 40;
+  const vbW = maxSx - minSx;
+  const vbH = maxSy - minSy;
+
   return (
     <div className="space-y-4">
-      {/* Header — mirrors v1 controls plus a v1<->v2 toggle */}
+      {/* Header ─ same controls as v2 */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -280,126 +393,127 @@ export function OfficeView({ ticker }: { ticker: string }) {
         </div>
       )}
 
-      {/* Office floor plan — 16:9 canvas. */}
+      {/* Iso office canvas — 16:9 */}
       <div
-        className="relative w-full overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card to-background"
+        className="relative w-full overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-[#0d0e14] via-[#0a0b10] to-[#06070b] shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
         style={{ aspectRatio: "16 / 9" }}
       >
-        {/* Subtle grid backdrop — pixel-art floor tile feel. */}
-        <div
-          className="absolute inset-0 opacity-[0.10] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        />
+        <svg
+          viewBox={`${minSx} ${minSy} ${vbW} ${vbH}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="h-full w-full"
+        >
+          <defs>
+            {/* Floor highlight gradient — top of each tile is slightly lighter */}
+            <linearGradient id="floor-sheen" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="white" stopOpacity="0.04" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+            {/* Shadow under each agent */}
+            <radialGradient id="sim-shadow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="black" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="black" stopOpacity="0" />
+            </radialGradient>
+            {/* Plant fronds */}
+            <radialGradient id="plant-frond" cx="50%" cy="35%" r="60%">
+              <stop offset="0%" stopColor="#5cd28a" />
+              <stop offset="60%" stopColor="#2d8a52" />
+              <stop offset="100%" stopColor="#1b5734" />
+            </radialGradient>
+            {/* Glass wall (subtle blue tint) */}
+            <linearGradient id="glass-wall" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#7cc9ff" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#5b87b8" stopOpacity="0.05" />
+            </linearGradient>
+          </defs>
 
-        {/* Rooms */}
-        {(Object.entries(ROOMS) as [RoomKey, (typeof ROOMS)[RoomKey]][]).map(
-          ([key, r]) => (
-            <div
-              key={key}
-              className="absolute rounded-lg border border-dashed border-border/70 bg-background/30"
-              style={{
-                left: `${r.x}%`,
-                top: `${r.y}%`,
-                width: `${r.w}%`,
-                height: `${r.h}%`,
-              }}
-            >
-              <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {/* Pass 1: floors */}
+          {(Object.entries(ROOMS) as [RoomKey, RoomRect][]).map(([key, r]) => (
+            <Floor key={key} room={r} />
+          ))}
+
+          {/* Pass 2: back walls of each room (rendered before contents so
+              furniture/sims occlude them naturally) */}
+          {(Object.entries(ROOMS) as [RoomKey, RoomRect][]).map(([key, r]) => (
+            <RoomWalls key={key} room={r} kind={key} />
+          ))}
+
+          {/* Pass 3: room labels (etched into the floor near the back-left) */}
+          {(Object.entries(ROOMS) as [RoomKey, RoomRect][]).map(([key, r]) => {
+            const p = iso(r.x + 1.5, r.y + 1.5, 1);
+            return (
+              <text
+                key={`label-${key}`}
+                x={p.sx}
+                y={p.sy}
+                fontSize="11"
+                fontWeight="700"
+                letterSpacing="2"
+                fill="rgba(255,255,255,0.22)"
+                style={{ textTransform: "uppercase" }}
+              >
                 {r.label}
+              </text>
+            );
+          })}
+
+          {/* Pass 4: furniture + sims in painter's order */}
+          {renderables.map((it, idx) => {
+            if (it.kind === "furn") {
+              return <FurnitureNode key={`f-${idx}`} f={it.f} />;
+            }
+            const sig = byAgent.get(it.a.id);
+            const isLive = isLiveActive && !isComplete && !sig;
+            return (
+              <Sim
+                key={it.a.id}
+                agent={it.a}
+                pos={it.pos}
+                signal={sig}
+                live={isLive}
+                hovered={hoveredId === it.a.id}
+                selected={selectedId === it.a.id}
+                onHover={(h) => setHoveredId(h ? it.a.id : null)}
+                onClick={() => setSelectedId(it.a.id)}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Tooltip overlay anchored above the hovered sim. Rendered as
+            absolutely-positioned HTML so it can use Tailwind. */}
+        {hoveredId && (() => {
+          const a = AGENTS.find((x) => x.id === hoveredId);
+          const sig = a ? byAgent.get(a.id) : undefined;
+          if (!a || !sig?.rationale) return null;
+          const p = positions[a.id];
+          const { sx, sy } = iso(p.x, p.y, 36);
+          // Convert iso (sx, sy) to a percentage of the SVG viewBox.
+          const left = ((sx - minSx) / vbW) * 100;
+          const top = ((sy - minSy) / vbH) * 100;
+          return (
+            <div
+              className="pointer-events-none absolute z-30 w-72 -translate-x-1/2 -translate-y-full rounded-lg border border-border bg-card p-3 text-xs shadow-xl"
+              style={{ left: `${left}%`, top: `${top}%` }}
+            >
+              <div className="mb-1 flex items-center justify-between gap-2">
+                <span className="font-semibold">
+                  {a.emoji} {a.display}
+                </span>
+                <SignalBadge signal={sig.signal} />
+              </div>
+              <p className="line-clamp-4 leading-snug text-muted-foreground">
+                {sig.rationale}
+              </p>
+              <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                conf <span className="num text-foreground">{sig.confidence.toFixed(2)}</span>
               </div>
             </div>
-          )
-        )}
-
-        {/* Agents — absolutely positioned little people. Each is a head
-            (emoji), torso (signal-colored "shirt"), and two stubby legs.
-            CSS transition handles wandering; group-hover scales them up. */}
-        {AGENTS.map((a) => {
-          const sig = byAgent.get(a.id);
-          const pos = positions[a.id];
-          const isSelected = selectedId === a.id;
-          const isHovered = hoveredId === a.id;
-          const isLive = isLiveActive && !isComplete && !sig;
-          return (
-            <button
-              key={a.id}
-              type="button"
-              onMouseEnter={() => setHoveredId(a.id)}
-              onMouseLeave={() => setHoveredId((h) => (h === a.id ? null : h))}
-              onClick={() => setSelectedId(a.id)}
-              className={cn(
-                "group absolute flex -translate-x-1/2 -translate-y-1/2 cursor-pointer flex-col items-center transition-all duration-[2800ms] ease-in-out hover:z-20",
-                isSelected && "z-30"
-              )}
-              style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
-              title={a.display}
-            >
-              {/* Live "thinking" indicator above the head */}
-              {isLive && (
-                <span className="mb-0.5 whitespace-nowrap rounded-full bg-primary/15 px-1.5 py-px text-[8px] font-bold uppercase tracking-wider text-primary">
-                  thinking
-                </span>
-              )}
-
-              {/* Head — emoji centered in a card-colored circle with a
-                  signal-colored ring. Slight bob on selection/hover. */}
-              <div
-                className={cn(
-                  "relative flex h-7 w-7 items-center justify-center rounded-full text-base shadow-md transition-transform group-hover:scale-110",
-                  headHaloClasses(sig, isLive),
-                  isSelected && "scale-110 ring-4 ring-primary"
-                )}
-              >
-                <span className="leading-none drop-shadow-sm">{a.emoji}</span>
-              </div>
-
-              {/* Torso — narrow rounded "shirt" colored by signal */}
-              <div
-                className={cn(
-                  "-mt-[3px] h-3 w-4 rounded-t-md rounded-b-sm shadow",
-                  bodyClasses(sig, isLive),
-                  isSelected && "h-3.5 w-[18px]"
-                )}
-              />
-
-              {/* Stubby legs */}
-              <div className="-mt-px flex gap-[2px]">
-                <span className="block h-1 w-[3px] rounded-sm bg-foreground/70" />
-                <span className="block h-1 w-[3px] rounded-sm bg-foreground/70" />
-              </div>
-
-              {/* Initials label below — small, subtle, only highlights on hover */}
-              <span className="mt-0.5 whitespace-nowrap rounded bg-background/80 px-1 text-[8px] font-bold leading-tight text-muted-foreground group-hover:text-foreground">
-                {a.initials}
-              </span>
-
-              {/* Speech bubble on hover (above the head) */}
-              {isHovered && sig?.rationale && (
-                <div className="pointer-events-none absolute bottom-full left-1/2 z-40 mb-2 w-72 -translate-x-1/2 rounded-lg border border-border bg-card p-3 text-left text-xs shadow-xl">
-                  <div className="mb-1 flex items-center justify-between gap-2">
-                    <span className="font-semibold">
-                      {a.emoji} {a.display}
-                    </span>
-                    <SignalBadge signal={sig.signal} />
-                  </div>
-                  <p className="line-clamp-4 leading-snug text-muted-foreground">
-                    {sig.rationale}
-                  </p>
-                  <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                    conf <span className="num text-foreground">{sig.confidence.toFixed(2)}</span>
-                  </div>
-                </div>
-              )}
-            </button>
           );
-        })}
+        })()}
       </div>
 
-      {/* Legend + selected-agent detail */}
+      {/* Legend + selected-agent detail panel */}
       <div className="grid gap-3 lg:grid-cols-[1fr_2fr]">
         <div className="rounded-lg border border-border bg-card p-3 text-xs">
           <div className="mb-2 font-semibold uppercase tracking-wide text-muted-foreground">
@@ -413,7 +527,7 @@ export function OfficeView({ ticker }: { ticker: string }) {
             <LegendDot color="bg-muted/40" label="Pending — no signal yet" />
           </div>
           <p className="mt-3 text-muted-foreground">
-            Hover any agent for their thesis · click for full detail.
+            Hover any sim for their thesis · click for full detail.
           </p>
         </div>
 
@@ -444,12 +558,384 @@ export function OfficeView({ ticker }: { ticker: string }) {
             </div>
           ) : (
             <p className="text-muted-foreground">
-              Click an agent in the office to read their full thesis here.
+              Click a sim in the office to read their full thesis here.
             </p>
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Sub-components: floor, walls, furniture, sim
+// ────────────────────────────────────────────────────────────────────────────
+
+function isoPoly(corners: [number, number, number][]): string {
+  return corners
+    .map(([x, y, z]) => {
+      const p = iso(x, y, z);
+      return `${p.sx},${p.sy}`;
+    })
+    .join(" ");
+}
+
+/** A single room floor — flat parallelogram at z=0 with a sheen overlay. */
+function Floor({ room }: { room: RoomRect }) {
+  const pts = isoPoly([
+    [room.x,           room.y,           FLOOR_Z],
+    [room.x + room.w,  room.y,           FLOOR_Z],
+    [room.x + room.w,  room.y + room.h,  FLOOR_Z],
+    [room.x,           room.y + room.h,  FLOOR_Z],
+  ]);
+  return (
+    <g>
+      <polygon points={pts} fill={room.floor} stroke={room.floorEdge} strokeWidth="1.2" />
+      <polygon points={pts} fill="url(#floor-sheen)" />
+    </g>
+  );
+}
+
+/** Two back walls (left and top edges of the room). Front-facing walls are
+ *  omitted so we can "look in" from the camera angle. */
+function RoomWalls({ room, kind }: { room: RoomRect; kind: RoomKey }) {
+  // Left wall (along y=room.y, spans x in [room.x, room.x + room.w])
+  const leftWall = isoPoly([
+    [room.x,          room.y, FLOOR_Z],
+    [room.x + room.w, room.y, FLOOR_Z],
+    [room.x + room.w, room.y, WALL_H],
+    [room.x,          room.y, WALL_H],
+  ]);
+  // Right wall (along x=room.x, spans y in [room.y, room.y + room.h])
+  const rightWall = isoPoly([
+    [room.x, room.y,          FLOOR_Z],
+    [room.x, room.y + room.h, FLOOR_Z],
+    [room.x, room.y + room.h, WALL_H],
+    [room.x, room.y,          WALL_H],
+  ]);
+  // Glass for the bull/bear offices, opaque for the rest.
+  const glass = kind === "bull" || kind === "bear";
+  const fillL = glass ? "url(#glass-wall)" : "rgba(255,255,255,0.04)";
+  const fillR = glass ? "url(#glass-wall)" : "rgba(0,0,0,0.25)";
+  const stroke = "rgba(255,255,255,0.10)";
+  return (
+    <g>
+      <polygon points={leftWall} fill={fillL} stroke={stroke} strokeWidth="0.8" />
+      <polygon points={rightWall} fill={fillR} stroke={stroke} strokeWidth="0.8" />
+      {/* Top capping line on each wall to suggest depth */}
+      {(() => {
+        const a = iso(room.x, room.y, WALL_H);
+        const b = iso(room.x + room.w, room.y, WALL_H);
+        const c = iso(room.x, room.y + room.h, WALL_H);
+        return (
+          <>
+            <line x1={a.sx} y1={a.sy} x2={b.sx} y2={b.sy} stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+            <line x1={a.sx} y1={a.sy} x2={c.sx} y2={c.sy} stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+          </>
+        );
+      })()}
+    </g>
+  );
+}
+
+/** Iso cuboid (a box footprint in tile coords with a height in screen units).
+ *  Renders top + two visible side faces. */
+function IsoBox({
+  x, y, w, h, height,
+  top = "#3a3a48",
+  left = "#272731",
+  right = "#1d1d27",
+  stroke = "rgba(0,0,0,0.4)",
+}: {
+  x: number; y: number; w: number; h: number; height: number;
+  top?: string; left?: string; right?: string; stroke?: string;
+}) {
+  const topFace = isoPoly([
+    [x,     y,     height],
+    [x + w, y,     height],
+    [x + w, y + h, height],
+    [x,     y + h, height],
+  ]);
+  const leftFace = isoPoly([
+    [x,     y + h, 0],
+    [x + w, y + h, 0],
+    [x + w, y + h, height],
+    [x,     y + h, height],
+  ]);
+  const rightFace = isoPoly([
+    [x + w, y,     0],
+    [x + w, y + h, 0],
+    [x + w, y + h, height],
+    [x + w, y,     height],
+  ]);
+  return (
+    <g>
+      <polygon points={leftFace}  fill={left}  stroke={stroke} strokeWidth="0.6" />
+      <polygon points={rightFace} fill={right} stroke={stroke} strokeWidth="0.6" />
+      <polygon points={topFace}   fill={top}   stroke={stroke} strokeWidth="0.6" />
+    </g>
+  );
+}
+
+function FurnitureNode({ f }: { f: Furniture }) {
+  switch (f.kind) {
+    case "rug": {
+      // Soft accent rug under desks/exec rooms — flat, slightly inset.
+      const pts = isoPoly([
+        [f.x - 6, f.y - 5, 0.2],
+        [f.x + 6, f.y - 5, 0.2],
+        [f.x + 6, f.y + 5, 0.2],
+        [f.x - 6, f.y + 5, 0.2],
+      ]);
+      return <polygon points={pts} fill="rgba(116,82,160,0.12)" stroke="rgba(116,82,160,0.25)" strokeWidth="0.6" />;
+    }
+    case "desk": {
+      // Long desk + 2 monitors + a chair tucked behind.
+      return (
+        <g>
+          <IsoBox x={f.x - 2.5} y={f.y - 1} w={5} h={2} height={6} top="#3a3441" left="#26222b" right="#1a171d" />
+          {/* Monitors */}
+          <IsoBox x={f.x - 2}   y={f.y - 0.6} w={1.4} h={0.4} height={11} top="#0e1218" left="#0a0d12" right="#070a0e" />
+          <IsoBox x={f.x + 0.6} y={f.y - 0.6} w={1.4} h={0.4} height={11} top="#0e1218" left="#0a0d12" right="#070a0e" />
+          {/* Chair */}
+          <IsoBox x={f.x - 0.7} y={f.y + 1.4} w={1.4} h={1.4} height={5} top="#4d3744" left="#3a2832" right="#2a1f25" />
+        </g>
+      );
+    }
+    case "table": {
+      // Round restaurant table — disc on a pedestal.
+      const top = iso(f.x, f.y, 5);
+      return (
+        <g>
+          <IsoBox x={f.x - 0.4} y={f.y - 0.4} w={0.8} h={0.8} height={5} top="#2c2630" left="#1f1b22" right="#15131a" />
+          <ellipse cx={top.sx} cy={top.sy} rx={2.0 * TILE_W} ry={2.0 * TILE_H} fill="#1a1820" stroke="#3b3340" strokeWidth="0.8" />
+          {/* Place setting hint — small white plates */}
+          <ellipse cx={top.sx - 16} cy={top.sy - 4} rx="4" ry="2" fill="#e8e3dc" opacity="0.85" />
+          <ellipse cx={top.sx + 16} cy={top.sy - 4} rx="4" ry="2" fill="#e8e3dc" opacity="0.85" />
+          <ellipse cx={top.sx}      cy={top.sy + 7} rx="4" ry="2" fill="#e8e3dc" opacity="0.85" />
+        </g>
+      );
+    }
+    case "chair": {
+      // Burgundy dining chair — small box with a back.
+      return (
+        <g>
+          <IsoBox x={f.x - 0.7} y={f.y - 0.7} w={1.4} h={1.4} height={4} top="#4a2630" left="#371b24" right="#26121a" />
+          <IsoBox x={f.x - 0.7} y={f.y + 0.5} w={1.4} h={0.2} height={9} top="#5a2e3a" left="#3f2028" right="#26121a" />
+        </g>
+      );
+    }
+    case "exec_desk": {
+      // Wide executive desk
+      return (
+        <g>
+          <IsoBox x={f.x - 4} y={f.y - 1.4} w={8} h={2.8} height={7} top="#3f3947" left="#2a242f" right="#1c181f" />
+          <IsoBox x={f.x - 1.2} y={f.y - 0.8} w={2.4} h={0.5} height={11} top="#0e1218" left="#0a0d12" right="#070a0e" />
+        </g>
+      );
+    }
+    case "exec_chair": {
+      return (
+        <g>
+          <IsoBox x={f.x - 1.3} y={f.y - 1.3} w={2.6} h={2.6} height={6} top="#3a2638" left="#291b27" right="#1a111a" />
+          <IsoBox x={f.x - 1.3} y={f.y + 1.0} w={2.6} h={0.3} height={13} top="#4a3148" left="#321f30" right="#1a111a" />
+        </g>
+      );
+    }
+    case "bookshelf": {
+      // Tall thin bookshelf flush with the back wall.
+      return (
+        <g>
+          <IsoBox x={f.x - 0.5} y={f.y - 0.4} w={6} h={0.8} height={16} top="#2a2230" left="#1d1722" right="#120e15" />
+          {/* Book stripes */}
+          {[0, 1, 2, 3].map((i) => {
+            const p = iso(f.x - 0.5 + (i + 0.5) * 1.4, f.y, 8 + i * 0.5);
+            return (
+              <rect
+                key={i}
+                x={p.sx - 6}
+                y={p.sy - 6}
+                width={12}
+                height={3}
+                fill={["#a3603a", "#4d6a99", "#7a4f6e", "#5a8a5a"][i]}
+                opacity="0.9"
+              />
+            );
+          })}
+        </g>
+      );
+    }
+    case "plant": {
+      const trunk = iso(f.x, f.y, 0);
+      const fronds = iso(f.x, f.y, 10);
+      return (
+        <g>
+          <IsoBox x={f.x - 0.6} y={f.y - 0.6} w={1.2} h={1.2} height={3} top="#3a2a22" left="#291e18" right="#1a130f" />
+          <ellipse cx={fronds.sx} cy={fronds.sy} rx={2.2 * TILE_W} ry={1.4 * TILE_H} fill="url(#plant-frond)" />
+          <line x1={trunk.sx} y1={trunk.sy - 3} x2={fronds.sx} y2={fronds.sy + 4} stroke="#22150d" strokeWidth="2" />
+        </g>
+      );
+    }
+    case "counter": {
+      // Long kitchen counter — like the bar/island in the reference.
+      return (
+        <g>
+          <IsoBox x={f.x - 3} y={f.y - 1.2} w={6} h={2.4} height={7} top="#2c303a" left="#1b1e25" right="#10131a" />
+          {/* Steel band on top */}
+          {(() => {
+            const a = iso(f.x - 3, f.y - 1.2, 7.2);
+            const b = iso(f.x + 3, f.y - 1.2, 7.2);
+            return <line x1={a.sx} y1={a.sy} x2={b.sx} y2={b.sy} stroke="#7d8493" strokeWidth="1.5" />;
+          })()}
+        </g>
+      );
+    }
+    case "stool": {
+      const top = iso(f.x, f.y, 6);
+      return (
+        <g>
+          <IsoBox x={f.x - 0.2} y={f.y - 0.2} w={0.4} h={0.4} height={6} top="#3a3a3a" left="#28282a" right="#1a1a1c" />
+          <ellipse cx={top.sx} cy={top.sy} rx="6" ry="3" fill="#4a3038" stroke="#2a1c22" strokeWidth="0.6" />
+        </g>
+      );
+    }
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Sim — a tiny isometric person
+// ────────────────────────────────────────────────────────────────────────────
+
+function shirtColor(sig: AgentSignalEntry | undefined, live: boolean): string {
+  if (!sig) return live ? "#7aa3ff" : "#5b6478";
+  const m: Record<SignalKind, string> = {
+    bullish: "#22c55e",
+    bearish: "#ef4444",
+    neutral: "#9ca3af",
+  };
+  return m[sig.signal];
+}
+
+function shirtRing(sig: AgentSignalEntry | undefined, live: boolean): string {
+  if (!sig) return live ? "rgba(122,163,255,0.5)" : "rgba(91,100,120,0.5)";
+  const m: Record<SignalKind, string> = {
+    bullish: "rgba(34,197,94,0.65)",
+    bearish: "rgba(239,68,68,0.65)",
+    neutral: "rgba(156,163,175,0.55)",
+  };
+  return m[sig.signal];
+}
+
+function Sim({
+  agent, pos, signal, live, hovered, selected, onHover, onClick,
+}: {
+  agent: AgentMeta;
+  pos: AgentPos;
+  signal: AgentSignalEntry | undefined;
+  live: boolean;
+  hovered: boolean;
+  selected: boolean;
+  onHover: (h: boolean) => void;
+  onClick: () => void;
+}) {
+  const ground = iso(pos.x, pos.y, 0);
+  const head = iso(pos.x, pos.y, 22);
+  const torso = iso(pos.x, pos.y, 12);
+  const shirt = shirtColor(signal, live);
+  const ring = shirtRing(signal, live);
+  const scale = selected ? 1.25 : hovered ? 1.15 : 1.0;
+  return (
+    <g
+      style={{
+        cursor: "pointer",
+        transition: "transform 2800ms ease-in-out",
+      }}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      onClick={onClick}
+    >
+      {/* Shadow under feet */}
+      <ellipse cx={ground.sx} cy={ground.sy + 2} rx={9 * scale} ry={3.5 * scale} fill="url(#sim-shadow)" />
+
+      {/* Live "thinking" pulse around feet */}
+      {live && (
+        <ellipse
+          cx={ground.sx}
+          cy={ground.sy + 2}
+          rx={13}
+          ry={5}
+          fill="none"
+          stroke="rgba(122,163,255,0.55)"
+          strokeWidth="1.2"
+        >
+          <animate attributeName="rx" values="9;15;9" dur="1.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0;0.8" dur="1.6s" repeatCount="indefinite" />
+        </ellipse>
+      )}
+
+      {/* Group with hover/selected scaling */}
+      <g transform={`translate(${ground.sx}, ${ground.sy}) scale(${scale}) translate(${-ground.sx}, ${-ground.sy})`}>
+        {/* Legs */}
+        <rect x={ground.sx - 3} y={torso.sy + 2} width="2" height="6" fill="#1f2229" rx="0.5" />
+        <rect x={ground.sx + 1} y={torso.sy + 2} width="2" height="6" fill="#1f2229" rx="0.5" />
+
+        {/* Torso (signal-colored shirt) */}
+        <rect
+          x={ground.sx - 5}
+          y={torso.sy - 4}
+          width="10"
+          height="9"
+          rx="2.5"
+          fill={shirt}
+          stroke={ring}
+          strokeWidth="1.2"
+        />
+
+        {/* Head — circle with the persona emoji centered on top */}
+        <circle
+          cx={head.sx}
+          cy={head.sy}
+          r="6.5"
+          fill="#f5e8d4"
+          stroke={selected ? "#ffffff" : "rgba(0,0,0,0.45)"}
+          strokeWidth={selected ? 1.6 : 0.8}
+        />
+        <text
+          x={head.sx}
+          y={head.sy + 3}
+          fontSize="9"
+          textAnchor="middle"
+          style={{ pointerEvents: "none" }}
+        >
+          {agent.emoji}
+        </text>
+
+        {/* Initials tag below the feet */}
+        <g style={{ pointerEvents: "none" }}>
+          <rect
+            x={ground.sx - 9}
+            y={ground.sy + 6}
+            width="18"
+            height="8"
+            rx="2"
+            fill="rgba(10,12,16,0.7)"
+            stroke="rgba(255,255,255,0.10)"
+            strokeWidth="0.5"
+          />
+          <text
+            x={ground.sx}
+            y={ground.sy + 12}
+            fontSize="6"
+            fontWeight="700"
+            textAnchor="middle"
+            fill={hovered || selected ? "#ffffff" : "rgba(255,255,255,0.65)"}
+            letterSpacing="0.5"
+          >
+            {agent.initials}
+          </text>
+        </g>
+      </g>
+    </g>
   );
 }
 
