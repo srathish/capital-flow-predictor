@@ -1,4 +1,7 @@
-# Capital Flow Predictor — Project Status
+# Bellwether — Project Status
+
+(Internal package slugs remain `cfp_*` / `capital-flow-predictor`; the
+user-facing name is **Bellwether**.)
 
 A multi-agent sector-rotation prediction system. XGBoost ranker over sector ETFs + **23-agent** LLM ensemble over individual stocks (5 analysts + 13 famous-investor personas + 2 adversarial researchers + 3 synthesis nodes). Wired to Unusual Whales options flow, FMP fundamentals, FRED macro, yfinance prices, and Reddit chatter via Apewisdom. Live web dashboard with sector heatmap, force-directed correlation network, per-ticker price chart with flow markers, sortable holdings table per sector, **two ensemble views (grid v1 + Smallville office v2)**, chat panel.
 
@@ -515,13 +518,13 @@ Highlights (reverse chronological):
 - **Flow analyst rationale display can mislead** — the "calls dominate" / "puts dominate" text is derived from a signed imbalance ratio, but the displayed `$X call vs $Y put` numbers are absolute values. When net_put_premium is negative (aggressive put SELLING, bullish), the rationale says "calls dominate" but the displayed numbers look like puts dominate. Tightening the rationale.
 - **Top-level assistant chat** — floating chat dock that uses tool-calling to drive runs/navigation/lookups across the app. Designed (Moonshot tool-use), not built.
 - ~~Langfuse instrumentation on `LlmClient`.~~ **DONE** — `cfp_agents.observability` module wraps every `parse`/`stream_chat` call as a Langfuse generation observation under a top-level `ensemble_run` trace. Set `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` env vars on Railway (and optionally on the GitHub Actions cron jobs) to activate. No-op without the keys.
-- **Persona-conditional instrument framing in `personas/base.py`** — branch on `instrument.type == "etf"` so Cathie/Druck/Lynch don't pitch sector ETFs as single businesses. ~30 min surgical fix; called out by the prompt audit.
+- ~~Persona-conditional instrument framing in `personas/base.py`.~~ **DONE** (`f60e092`) — user prompt now branches on `instrument.type == "etf"` and swaps in basket-level framing (sector beta, flow regime, dispersion across constituents) with explicit rule-out of CEO/earnings/moat/DCF language. Verified live on XLK: all 7 value/quality personas (Buffett/Cathie/Damodaran/Druck/Greenblatt/Klarman/Lynch) describe XLK as "a basket of technology stocks" with sector-level reasoning, no single-company drift.
 - **Persona-shaped Chain-of-Thought** — biggest single quality lift available, but ~2× input cost; deferred until Langfuse shows the lift from the prompt-template rewrites first.
 - **Office v2 polish** — agent-to-agent meetup animations when two personas agree, sprite walking animation, room desk graphics, sound effects.
 - **Lead-lag DAG view** — second tab on `/network` reading from `lead_lag_matrix` (Granger pipeline already produces the data).
 - **Cluster-stability over time** per ticker — flags decoupling early.
 - **UW flow overlay on network edges** — color edges by correlation × combined call premium for cluster-level setup detection.
-- ~~XGB `predictions.rank` is degenerate.~~ **PARTIALLY RESOLVED** — Alpha158 port + tie-breaker pushed (commits `590dcf2`, `3cb7d44`, `61e31a6`). Distinct scores 3/26 → 17/26 across the universe. Remaining work: switch `rank:pairwise` → `rank:ndcg`, loosen `min_child_weight` (currently 5, try 1-2), retrain with walk-forward eval to confirm OOS metrics improve from current AUC≈0.5 baseline.
+- ~~XGB `predictions.rank` is degenerate.~~ **RESOLVED** — Alpha158 port (`590dcf2`) + tie-breaker (`3cb7d44`) + objective swap to `rank:ndcg` with looser `min_child_weight=2` and `max_depth=5` (`f60e092`). Distinct scores went **3/26 → 17/26 → 26/26**. OOS metrics on the latest retrain: 5d AUC=0.511 IC=+0.024 Sharpe=+1.70; 10d AUC=0.513 IC=+0.028 Sharpe=+1.08; 20d AUC=0.511 IC=+0.016 Sharpe=+1.24 (was 20d AUC=0.488 IC=-0.016 Sharpe=-1.02 with the old setup — all three horizons flipped from below-random to above-random).
 
 ---
 
