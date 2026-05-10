@@ -62,6 +62,26 @@ To schedule daily refresh as a cron job:
 ```
 (5:30pm ET on weekdays = 22:30 UTC.)
 
+## Skylit (Heatseeker) login refresh
+
+skylit.ai sits behind Clerk auth with Discord OAuth. Discord blocks
+programmatic password login (captcha + ToS), so we drive a real Chromium
+window via Playwright; you sign in once, the script captures the long-lived
+`__client` cookie + Clerk session id, and writes them to the gexester-vexster
+`.env`. After that, gexester-vexster's Clerk auto-refresh keeps JWTs fresh
+for months without further intervention.
+
+```bash
+# One-time: install the bundled Chromium
+uv run playwright install chromium
+
+# Refresh cookies (default target: ~/gexester vexster/.env)
+uv run cfp-jobs skylit-login
+
+# Or point at a different .env
+uv run cfp-jobs skylit-login --env-file /path/to/.env
+```
+
 ## Tests
 
 ```bash

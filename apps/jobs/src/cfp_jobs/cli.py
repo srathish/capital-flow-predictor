@@ -435,6 +435,47 @@ def flow_congress_cmd(
     console.print(f"[green]congress_trades:[/green] {n} new rows")
 
 
+@app.command("skylit-login")
+def skylit_login_cmd(
+    env_file: str = typer.Option(
+        "",
+        "--env-file",
+        help="Target .env file to update (default: ~/gexester vexster/.env)",
+    ),
+    timeout: int = typer.Option(300, help="Max seconds to wait for Discord OAuth"),
+) -> None:
+    """Open Chromium, sign in to skylit.ai with Discord, write Clerk cookies to .env.
+
+    Discord blocks programmatic password login (captcha + ToS), so we drive a
+    real browser. You sign in once; the script captures the long-lived
+    __client cookie + session id and writes them to the target .env. After
+    that, the gexester-vexster Clerk auto-refresh keeps JWTs fresh for months.
+    """
+    from pathlib import Path
+
+    from cfp_jobs import skylit_login
+
+    target = Path(env_file).expanduser() if env_file else skylit_login.DEFAULT_ENV_FILE
+    console.print(f"Target .env: [cyan]{target}[/cyan]")
+    console.print(
+        "[yellow]A Chromium window will open.[/yellow] Sign in with Discord, "
+        "complete any captcha/2FA, and wait for the redirect back to app.skylit.ai."
+    )
+    try:
+        creds = skylit_login.capture_clerk_cookies(timeout_s=timeout)
+    except RuntimeError as e:
+        console.print(f"[red]Login failed:[/red] {e}")
+        raise typer.Exit(1) from e
+
+    skylit_login.write_to_env_file(target, creds)
+    console.print(
+        f"[green]Saved Clerk cookies to {target}[/green]\n"
+        f"  CLERK_SESSION_ID={creds['session_id'][:24]}...\n"
+        f"  CLERK_CLIENT_COOKIE={creds['client_cookie'][:24]}...\n"
+        f"  CLERK_CLIENT_UAT={creds['client_uat'][:24]}..."
+    )
+
+
 @app.command()
 def status() -> None:
     """Report row counts and freshness per data table."""

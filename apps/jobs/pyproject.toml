@@ -24,6 +24,7 @@ dev = [
     "pytest-mock>=3.14",
     "ruff>=0.7",
     "mypy>=1.13",
+    "playwright>=1.49",
 ]
 
 [project.scripts]
