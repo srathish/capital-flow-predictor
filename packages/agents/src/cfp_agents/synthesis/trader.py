@@ -101,7 +101,7 @@ class Trader(SynthesizerAgent):
             "- key_risks: 1-3 specific catalysts that would force a thesis change."
         )
 
-    def to_signal(self, parsed: BaseModel, *, ticker: str) -> AgentSignal:  # noqa: ARG002
+    def to_signal(self, parsed: BaseModel, *, ticker: str) -> AgentSignal:
         assert isinstance(parsed, TraderDecision)
         # Map direction to signal so it lives in agent_signals consistently
         sig_map = {"long": "bullish", "short": "bearish", "avoid": "neutral", "wait": "neutral"}
