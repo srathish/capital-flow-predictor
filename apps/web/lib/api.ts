@@ -6,8 +6,10 @@ import type {
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
+  ExpandedSectorResponse,
   HoldingsResponse,
   HoldingsSort,
+  LeadLagResponse,
   NetworkResponse,
   RedditBacktestSlice,
   RedditMentionsParams,
@@ -23,7 +25,7 @@ import type {
 
 const DEFAULT_BASE_URL = "http://localhost:8000";
 
-function baseUrl(): string {
+export function baseUrl(): string {
   // NEXT_PUBLIC_API_BASE_URL is read at build time on the client; on the server
   // we also accept API_BASE_URL for SSR/RSC fetches.
   const fromEnv =
@@ -135,6 +137,36 @@ export const api = {
     if (params.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<NetworkResponse>(`/v1/network/correlation${qs ? `?${qs}` : ""}`);
+  },
+  leadLagNetwork(params: {
+    maxP?: number;
+    minLag?: number;
+    maxLag?: number;
+    horizon?: 5 | 10 | 20;
+    model?: string;
+  } = {}): Promise<LeadLagResponse> {
+    const sp = new URLSearchParams();
+    if (params.maxP !== undefined) sp.set("max_p", String(params.maxP));
+    if (params.minLag !== undefined) sp.set("min_lag", String(params.minLag));
+    if (params.maxLag !== undefined) sp.set("max_lag", String(params.maxLag));
+    if (params.horizon !== undefined) sp.set("horizon", String(params.horizon));
+    if (params.model) sp.set("model", params.model);
+    const qs = sp.toString();
+    return getJson<LeadLagResponse>(`/v1/network/lead-lag${qs ? `?${qs}` : ""}`);
+  },
+  expandSector(etf: string, params: {
+    window?: number;
+    minCorrelation?: number;
+    top?: number;
+  } = {}): Promise<ExpandedSectorResponse> {
+    const sp = new URLSearchParams();
+    if (params.window !== undefined) sp.set("window", String(params.window));
+    if (params.minCorrelation !== undefined) sp.set("min_correlation", String(params.minCorrelation));
+    if (params.top !== undefined) sp.set("top", String(params.top));
+    const qs = sp.toString();
+    return getJson<ExpandedSectorResponse>(
+      `/v1/network/sector/${encodeURIComponent(etf)}/expand${qs ? `?${qs}` : ""}`
+    );
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(

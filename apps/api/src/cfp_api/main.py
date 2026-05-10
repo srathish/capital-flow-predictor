@@ -6,7 +6,17 @@ from fastapi.responses import JSONResponse
 
 from cfp_api import __version__
 from cfp_api.db import check_db_connection, close_pool, init_pool
-from cfp_api.routes import agents, chat, network, rankings, reddit, scorecard, sectors, watchlist
+from cfp_api.routes import (
+    agents,
+    assistant,
+    chat,
+    network,
+    rankings,
+    reddit,
+    scorecard,
+    sectors,
+    watchlist,
+)
 from cfp_api.settings import settings
 
 
@@ -38,6 +48,7 @@ app.include_router(scorecard.router)
 app.include_router(sectors.router)
 app.include_router(network.router)
 app.include_router(reddit.router)
+app.include_router(assistant.router)
 
 
 @app.get("/")

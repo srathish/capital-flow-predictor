@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { AssistantDock } from "@/components/assistant-dock";
 import { Nav } from "@/components/nav";
 import { Providers } from "./providers";
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Nav />
           <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+          <AssistantDock />
         </Providers>
       </body>
     </html>
