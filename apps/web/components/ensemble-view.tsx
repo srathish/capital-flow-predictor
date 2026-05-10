@@ -236,32 +236,51 @@ export function EnsembleView({ ticker }: { ticker: string }) {
                 onRangeChange={setRange}
               />
             )}
-            {pm && (
-              <Card className="border-primary/30 bg-primary/5">
-                <CardContent className="p-4">
-                  <div className="mb-2 flex items-center justify-between">
-                    <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Portfolio Manager — final
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <SignalBadge signal={pm.signal} />
-                      <span className="text-muted-foreground">
-                        conf <span className="num text-foreground">{formatNum(pm.confidence)}</span>
-                      </span>
-                      {typeof (pm.payload as { target_weight?: unknown })?.target_weight === "number" && (
+            {pm && (() => {
+              // Drive the verdict card's color from the PM's signal so the
+              // user can read the call at a glance: green frame = long,
+              // red = short, grey = avoid/wait. The thicker border + matching
+              // tinted background also make this card visually distinct from
+              // the other agent cards below.
+              const verdictTone =
+                pm.signal === "bullish"
+                  ? "border-signal-bullish/70 bg-signal-bullish/10 ring-1 ring-signal-bullish/40"
+                  : pm.signal === "bearish"
+                    ? "border-signal-bearish/70 bg-signal-bearish/10 ring-1 ring-signal-bearish/40"
+                    : "border-signal-neutral/60 bg-signal-neutral/10 ring-1 ring-signal-neutral/30";
+              const verdictLabel =
+                pm.signal === "bullish"
+                  ? "LONG"
+                  : pm.signal === "bearish"
+                    ? "SHORT"
+                    : "NO TRADE";
+              return (
+                <Card className={`border-2 ${verdictTone}`}>
+                  <CardContent className="p-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        Portfolio Manager — final · {verdictLabel}
+                      </div>
+                      <div className="flex items-center gap-3 text-sm">
+                        <SignalBadge signal={pm.signal} />
                         <span className="text-muted-foreground">
-                          weight{" "}
-                          <span className="num text-foreground">
-                            {formatNum((pm.payload as { target_weight: number }).target_weight, 3)}
-                          </span>
+                          conf <span className="num text-foreground">{formatNum(pm.confidence)}</span>
                         </span>
-                      )}
+                        {typeof (pm.payload as { target_weight?: unknown })?.target_weight === "number" && (
+                          <span className="text-muted-foreground">
+                            weight{" "}
+                            <span className="num text-foreground">
+                              {formatNum((pm.payload as { target_weight: number }).target_weight, 3)}
+                            </span>
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-sm leading-relaxed">{pm.rationale}</p>
-                </CardContent>
-              </Card>
-            )}
+                    <p className="text-sm leading-relaxed">{pm.rationale}</p>
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             <AgentSection
               title="Synthesis"
