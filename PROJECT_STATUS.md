@@ -418,7 +418,7 @@ cfp-jobs eval-agents [--lookback 90]   # forward returns -> agent_eval (run dail
 - **Model**: `xgb.XGBRanker`, `objective="rank:pairwise"`, group=date
 - **Output**: `predictions(run_ts, symbol, horizon_d, model, score, rank, target_ts)`
 
-**Known issue (open):** `predictions.rank` column is currently degenerate — every row is rank=1 across the universe. Network endpoint works around this by re-ranking by `score` server-side, then falling back to realized return when scores are also degenerate. Real fix is in the training loop.
+**Update (2026-05-10):** Alpha158 features ported into `cfp_features.alpha158` (49 new — 9 K-line + 40 rolling stats × 4 windows). Panel grew from ~12 → 83 features. After retrain, score-collapse symptom partially resolved: top 3 (ARKK/SMH/XLK innovation) and bottom 3 (LIT/REMX/SOXX commodities) now real, middle 20 was still tied. Sub-1e-6 tie-breaker added in `xgb_baseline.predict` (weighted blend of return_20d + dist_ma50) — distinct scores now 17/26 (was 3/26). Real next move: switch to `rank:ndcg` objective + loosen `min_child_weight` from 5 to 1-2; that needs walk-forward eval which is set up.
 
 ---
 
@@ -511,7 +511,7 @@ Highlights (reverse chronological):
 
 ## 12. Known issues / pending
 
-- ~~Reddit + catalyst data needs scheduled refresh.~~ **DONE** (`.github/workflows/data-refresh.yml`) — `cfp-jobs reddit-catalysts` every 15 min, `cfp-jobs reddit` hourly, `cfp-jobs eval-agents` daily at 06:00 UTC. Requires `DATABASE_URL` repo secret. Manual dispatch also wired via Actions tab.
+- ~~Reddit + catalyst data needs scheduled refresh.~~ **DONE** (`.github/workflows/data-refresh.yml`) — `cfp-jobs reddit-catalysts` every 15 min, `cfp-jobs reddit` hourly, `cfp-jobs eval-agents` daily at 06:00 UTC, `cfp-jobs features-daily` daily at 06:30, `cfp-jobs train-baseline` weekly Sunday 07:00. Requires `DATABASE_URL` repo secret. Manual dispatch wired via Actions tab.
 - **Flow analyst rationale display can mislead** — the "calls dominate" / "puts dominate" text is derived from a signed imbalance ratio, but the displayed `$X call vs $Y put` numbers are absolute values. When net_put_premium is negative (aggressive put SELLING, bullish), the rationale says "calls dominate" but the displayed numbers look like puts dominate. Tightening the rationale.
 - **Top-level assistant chat** — floating chat dock that uses tool-calling to drive runs/navigation/lookups across the app. Designed (Moonshot tool-use), not built.
 - ~~Langfuse instrumentation on `LlmClient`.~~ **DONE** — `cfp_agents.observability` module wraps every `parse`/`stream_chat` call as a Langfuse generation observation under a top-level `ensemble_run` trace. Set `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` env vars on Railway (and optionally on the GitHub Actions cron jobs) to activate. No-op without the keys.
@@ -521,7 +521,7 @@ Highlights (reverse chronological):
 - **Lead-lag DAG view** — second tab on `/network` reading from `lead_lag_matrix` (Granger pipeline already produces the data).
 - **Cluster-stability over time** per ticker — flags decoupling early.
 - **UW flow overlay on network edges** — color edges by correlation × combined call premium for cluster-level setup detection.
-- **XGB `predictions.rank` is degenerate** (carried over from prior). Network endpoint works around with score re-rank + return fallback. Real fix needed in `xgb_baseline.py`.
+- ~~XGB `predictions.rank` is degenerate.~~ **PARTIALLY RESOLVED** — Alpha158 port + tie-breaker pushed (commits `590dcf2`, `3cb7d44`, `61e31a6`). Distinct scores 3/26 → 17/26 across the universe. Remaining work: switch `rank:pairwise` → `rank:ndcg`, loosen `min_child_weight` (currently 5, try 1-2), retrain with walk-forward eval to confirm OOS metrics improve from current AUC≈0.5 baseline.
 
 ---
 
