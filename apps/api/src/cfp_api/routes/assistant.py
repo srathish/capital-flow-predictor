@@ -181,17 +181,32 @@ async def _tool_get_rankings(args: dict[str, Any]) -> dict[str, Any]:
     if horizon not in (5, 10, 20):
         return {"error": f"horizon must be 5, 10, or 20 (got {horizon})"}
     pool = get_pool()
+    # Each (run_ts, horizon) writes predictions for many target_ts (one per
+    # walk-forward fold's test window). The most recent prediction set is
+    # (latest run_ts, latest target_ts within that run) — without the second
+    # filter we'd return ~1000 rows, blowing past the LLM's context window
+    # on the follow-up summarization turn.
     sql = """
-        SELECT symbol, score, rank, target_ts
-        FROM predictions
-        WHERE horizon_d = $1
-          AND run_ts = (SELECT MAX(run_ts) FROM predictions WHERE horizon_d = $1)
-        ORDER BY rank ASC
+        WITH latest_run AS (
+            SELECT MAX(run_ts) AS run_ts FROM predictions WHERE horizon_d = $1
+        ),
+        latest_target AS (
+            SELECT MAX(target_ts) AS target_ts
+            FROM predictions, latest_run
+            WHERE horizon_d = $1 AND predictions.run_ts = latest_run.run_ts
+        )
+        SELECT p.symbol, p.score, p.rank, p.target_ts
+        FROM predictions p, latest_run, latest_target
+        WHERE p.horizon_d = $1
+          AND p.run_ts = latest_run.run_ts
+          AND p.target_ts = latest_target.target_ts
+        ORDER BY p.rank ASC
     """
     async with pool.acquire() as conn:
         rows = await conn.fetch(sql, horizon)
     return {
         "horizon_d": horizon,
+        "as_of": rows[0]["target_ts"].isoformat() if rows else None,
         "rankings": [
             {"rank": r["rank"], "symbol": r["symbol"], "score": float(r["score"] or 0)}
             for r in rows
