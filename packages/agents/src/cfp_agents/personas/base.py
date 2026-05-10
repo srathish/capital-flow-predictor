@@ -281,23 +281,56 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
         fc = bundle.fundamentals
 
         company_name = inst.company_name or ticker
+        is_etf = (inst.type or "stock").lower() == "etf"
         type_label = (
-            "sector ETF (basket of stocks)"
-            if (inst.type or "stock").lower() == "etf"
+            "sector / thematic ETF (basket of stocks)"
+            if is_etf
             else "publicly traded common stock (operating company)"
         )
         industry_part = f", industry: {inst.industry}" if inst.industry else ""
         size_part = f", marketcap-size: {inst.marketcap_size}" if inst.marketcap_size else ""
         earnings_part = (
-            f", next earnings: {inst.next_earnings_date.isoformat()}"
-            if inst.next_earnings_date
-            else ""
+            ""  # ETFs don't have earnings; only set for stocks
+            if is_etf
+            else (
+                f", next earnings: {inst.next_earnings_date.isoformat()}"
+                if inst.next_earnings_date
+                else ""
+            )
         )
-        descr_part = f"\nBusiness description: {inst.short_description}" if inst.short_description else ""
+        descr_part = f"\nDescription: {inst.short_description}" if inst.short_description else ""
         instrument_block = (
             f"Instrument: {company_name} ({inst.ticker}) — {type_label}, "
             f"sector: {inst.sector}{industry_part}{size_part}{earnings_part}.{descr_part}"
         )
+
+        # ETF vs stock framing — your investing framework still applies, but
+        # at the basket level for ETFs (sector beta, aggregate flow, regime
+        # tailwinds) instead of the single-business level (moat, owner
+        # earnings, management). Without this, value/quality personas (Buffett,
+        # Lynch, Damodaran) drift into pitching ETFs as single companies with
+        # CEOs and earnings calls. Critic-flagged from the prompt audit.
+        if is_etf:
+            instrument_framing = (
+                f"You are evaluating a SECTOR / THEMATIC ETF — a basket of stocks, NOT a single "
+                f"company. Apply your investing framework at the BASKET level: "
+                f"sector beta, aggregate flow regime, macro tailwind/headwind for the "
+                f"sector, relative strength vs SPY, dispersion across constituents. "
+                f"Do NOT discuss the ETF as if it had a CEO, an earnings call, "
+                f"a management team, owner earnings, a moat, or a product cycle — "
+                f"those concepts belong to individual companies, not baskets. "
+                f"Do NOT compute a P/E or DCF on the ETF; compute it on its "
+                f"underlying sector if at all. Use the price tape, flow data, "
+                f"and macro/regime evidence below as your primary inputs."
+            )
+        else:
+            instrument_framing = (
+                f"You are evaluating a SINGLE PUBLICLY TRADED COMPANY ({company_name}). "
+                f"Reason about {company_name} as a real operating business — its "
+                f"business model, industry dynamics, balance sheet, management, "
+                f"customers, competitive position. Never describe a stock as a "
+                f"'fund' or 'basket'."
+            )
 
         # --- raw price context (what the tape looks like) ---
         if pc.bars_count > 0:
@@ -348,11 +381,7 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
             f"{lens_block}\n\n"
             "Provide your verdict in the structured output format.\n\n"
             "Quality bar — non-negotiable:\n"
-            f"- You are analyzing a single security. Reason about {company_name} "
-            "as the entity in the Instrument line above — its business model, "
-            "industry dynamics, balance sheet, management, customers. "
-            "Never describe a stock as a 'fund' or 'basket', and never describe "
-            "an ETF as a single business with management.\n"
+            f"- {instrument_framing}\n"
             "- thesis: 2-3 complete sentences explaining your specific reasoning "
             "from your investing framework. NOT a one-word label or category. "
             "Cite at least one concrete fact (a number, a competitive position, "

@@ -15,15 +15,35 @@ import xgboost as xgb
 
 @dataclass
 class XgbRankParams:
+    """Defaults tuned 2026-05-10 after Alpha158 panel jump (12 -> 83 features).
+
+    Changes from prior defaults:
+      - objective: rank:pairwise -> rank:ndcg
+        Pairwise only optimizes ordering; ndcg also rewards getting the
+        TOP positions right, which matches our use case (top-K sector
+        rotation). With rank:pairwise the model collapsed scores into ~3
+        coarse buckets — ndcg pushes for finer top-of-list discrimination.
+      - min_child_weight: 5.0 -> 2.0
+        With 26 ETFs per group, requiring 5-weight leaves forces the model
+        into shallow trees. Loosening to 2.0 lets it actually use the new
+        Alpha158 splits.
+      - max_depth: 4 -> 5
+        One extra level of conditional structure — pairs well with the
+        wider feature set without blowing up overfit risk on a 26-symbol
+        universe.
+      - early_stopping_rounds: 30 -> 50
+        ndcg eval is noisier on small groups; give the trainer more patience
+        before declaring a stop.
+    """
     n_estimators: int = 300
-    max_depth: int = 4
+    max_depth: int = 5
     learning_rate: float = 0.05
     subsample: float = 0.8
     colsample_bytree: float = 0.8
-    min_child_weight: float = 5.0
+    min_child_weight: float = 2.0
     reg_lambda: float = 1.0
-    early_stopping_rounds: int = 30
-    objective: str = "rank:pairwise"
+    early_stopping_rounds: int = 50
+    objective: str = "rank:ndcg"
     eval_metric: str = "ndcg@5"
     tree_method: str = "hist"
     seed: int = 42
