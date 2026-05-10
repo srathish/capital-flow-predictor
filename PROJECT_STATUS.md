@@ -1,8 +1,8 @@
 # Capital Flow Predictor — Project Status
 
-A multi-agent sector-rotation prediction system. XGBoost ranker over sector ETFs + 21-agent LLM ensemble over individual stocks (5 analysts + 13 famous-investor personas + 3 synthesis nodes). Wired to Unusual Whales options flow, FMP fundamentals, FRED macro, yfinance prices, and Reddit chatter via Apewisdom. Live web dashboard with sector heatmap, force-directed correlation network, per-ticker price chart with flow markers, sortable holdings table per sector, agent ensemble run with chat panel.
+A multi-agent sector-rotation prediction system. XGBoost ranker over sector ETFs + **23-agent** LLM ensemble over individual stocks (5 analysts + 13 famous-investor personas + 2 adversarial researchers + 3 synthesis nodes). Wired to Unusual Whales options flow, FMP fundamentals, FRED macro, yfinance prices, and Reddit chatter via Apewisdom. Live web dashboard with sector heatmap, force-directed correlation network, per-ticker price chart with flow markers, sortable holdings table per sector, **two ensemble views (grid v1 + Smallville office v2)**, chat panel.
 
-Last updated: 2026-05-09 after commit `c1deed3` (yfinance fallback + /reddit page + /catalysts page).
+Last updated: 2026-05-10 after commit `fd5fc9d` (Office v2 — agents render as little people; following the bull/bear researcher pair, 8 legacy persona prompt rewrites, and examples.py few-shot audit).
 
 ---
 
@@ -189,7 +189,7 @@ infra/
 
 ---
 
-## 3. The 21-agent ensemble
+## 3. The 23-agent ensemble
 
 ### EvidenceBundle architecture (Phase A)
 
@@ -228,21 +228,34 @@ EvidenceBundle:
 
 Roster designed for orthogonal signal (Phase B). Dropped from prior roster: Munger, Pabrai, Fisher, Graham, Jhunjhunwala (overlap or wrong region).
 
-| Persona | Lens highlights | Tools |
-|---|---|---|
-| Buffett | quality + moats + insider purchases | — |
-| Burry | deep value short / froth flag (LEAP calls + WSB top-20 + short fee) | — |
-| Druckenmiller | macro + tape + dark pool + sector ETF flow | — |
-| Taleb | tail strikes + dealer GEX regime | — |
-| Soros | reflexivity stage from Reddit rank + spike | — |
-| Simons | pure quant — feature vector ONLY (refuses narrative) | — |
-| Klarman | special situations + insider buys + conservative DCF | tools.dcf (11% WACC) |
-| Greenblatt | Magic Formula joint score + event-driven keywords | tools.magic_formula |
-| Minervini | VCP / Stage 2 / momentum leadership | — |
-| Cathie Wood | secular growth + R&D | — |
-| Damodaran | DCF intrinsic value | tools.dcf (9% WACC) |
-| Lynch | bucket classification + PEG | — |
-| Ackman | concentrated activist + cash flow + dark pool | — |
+**Phase B+ prompt audit (2026-05-09 → 2026-05-10):** all 13 personas now follow the same template — voice quote, `Hard exclusions — you would NEVER` block, explicit `Your bar` line, persona-specific REQUIRED output field in the thesis, and an `Output-distribution expectation` replacing the weak "Be decisive" closer. The 5 newer personas (Soros/Simons/Klarman/Greenblatt/Minervini) were the original template; the 8 legacy personas (Buffett/Burry/Druck/Taleb/Cathie/Damodaran/Lynch/Ackman) were rewritten in `47a6113` + `a48afa5`. `examples.py` few-shots also re-tuned: removed two 0.55-conf hedged-middle anchors (Buffett, Damodaran), added two low-conviction "pass" anchors (Buffett 0.25, Burry 0.20) so personas learn that pass IS an output mode.
+
+| Persona | Lens highlights | Tools | Required thesis field |
+|---|---|---|---|
+| Buffett | quality + moats + insider purchases | — | owner-earnings yield + moat assessment |
+| Burry | deep value short / froth flag (LEAP calls + WSB top-20 + short fee) | — | discount-to-tangible + named catalyst window |
+| Druckenmiller | macro + tape + dark pool + sector ETF flow | — | macro regime + tape confirms/denies |
+| Taleb | tail strikes + dealer GEX regime | — | fragile / robust / antifragile + tail driver |
+| Soros | reflexivity stage from Reddit rank + spike | — | reflexive cycle stage (1-5) |
+| Simons | pure quant — feature vector ONLY (refuses narrative) | — | probability statement + ≥2 measurable features |
+| Klarman | special situations + insider buys + conservative DCF | tools.dcf (11% WACC) | mispricing in $ + specific catalyst |
+| Greenblatt | Magic Formula joint score + event-driven keywords | tools.magic_formula | earnings yield + ROIC vs universe OR event |
+| Minervini | VCP / Stage 2 / momentum leadership | — | stage assessment + tape setup name |
+| Cathie Wood | secular growth + R&D | — | disruption curve + technology platform + TAM |
+| Damodaran | DCF intrinsic value | tools.dcf (9% WACC) | implied story behind current price + credibility |
+| Lynch | bucket classification + PEG | — | which of 6 buckets + bucket-appropriate math |
+| Ackman | concentrated activist + cash flow + dark pool | — | specific catalyst + sizing decision |
+
+### Layer 2.5 — 2 adversarial researchers (LLM, parallel) — NEW
+
+After all 18 analyst+persona signals land, two researchers run in parallel and are each FORCED to take an assigned side:
+
+| Researcher | Job |
+|---|---|
+| `bull_researcher` | Construct the strongest LONG case from the bundle + 18 signals, even if consensus is bearish. Cite specific evidence, name supporting personas, pre-empt the bear's strongest objection. Returns `ResearcherOutput { thesis, key_evidence[3-5], supporting_personas[], counter_argument, conviction }`. |
+| `bear_researcher` | Same shape, opposite side. |
+
+The Trader then ADJUDICATES between the two briefs instead of consuming all 18 raw votes. Pattern from TradingAgents 2024 — forces structural disagreement into the pipeline so a 14-bull / 7-bear split doesn't collapse into a confident long without anyone seriously articulating the short. `Trader.build_user_prompt` consumes the briefs as primary input and provides the raw signals only for citation verification.
 
 ### Layer 3 — 3 synthesis nodes (LLM, sequential)
 
@@ -273,7 +286,7 @@ Before `graph.invoke()`:
 | `run_analysts(...)` | One-shot full run (LangGraph `.invoke()`) |
 | `run_analysts_streaming(...)` | Streams signals as each node lands (for live UI polling) |
 
-`EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 3 = 21`.
+`EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 2 + 3 = 23`. The streaming runner persists `bull_research`, `bear_research`, `trader_decision`, `risk_assessment`, and `portfolio_decision` keys to `agent_signals` as each node completes — frontend polls every ~1.5s and watches the row count climb to 23.
 
 ---
 
@@ -350,7 +363,8 @@ cfp-jobs eval-agents [--lookback 90]   # forward returns -> agent_eval (run dail
 |---|---|
 | `/` | Sector heatmap (XGB ranks → green→red gradient). Tiles link to /sectors/{etf}. |
 | `/sectors/[etf]` | Full constituent table — 73 NVDA/AAPL/MSFT-style holdings for XLK, sortable by 1d/5d/20d/60d return, weight, call/put ratio, bullish %, etc. Click ticker → /agents/{T}. |
-| `/agents/[ticker]` | Two-column ensemble view: chart + 21-agent grid + sticky chat sidebar. |
+| `/agents/[ticker]` | (v1, default) Two-column ensemble view: chart + 23-agent grid + sticky chat sidebar. v1↔v2 toggle pill in header. |
+| `/agents/[ticker]/v2` | (v2, NEW) Smallville office view — top-down 16:9 floor plan with 5 named rooms (Analyst Pit, Persona Hall, Bull Office, Bear Office, Synthesis Desk). 23 agents render as little people (emoji head + signal-colored shirt + stubby legs + initials nameplate), wandering inside their rooms via random target updates every ~3s with smooth CSS transitions. Shirt color = signal (green/red/gray/pulsing-blue for thinking). Hover = speech bubble; click = full-detail panel below. |
 | `/network` | Force-directed sector correlation graph. Min-corr slider, window/horizon dropdowns. |
 | `/reddit` | Top tickers from Apewisdom: sortable by mentions / spike / climbing fastest, per-row sparkline + per-subreddit + asymmetry chips. |
 | `/catalysts` | Reddit posts mentioning a known ticker AND a catalyst keyword. Window + score + ticker filters. |
@@ -444,6 +458,13 @@ NEXT_PUBLIC_API_BASE_URL=https://capital-flow-predictor-production.up.railway.ap
 ## 11. Recent commits (newest first, current session)
 
 ```
+fd5fc9d Office v2: render agents as little people (head + torso + legs)
+89545a6 Fix CI: drop unused noqa: ARG002 in trader.to_signal
+a48afa5 Rewrite 7 legacy personas to new template (Burry/Druck/Taleb/Cathie/Damodaran/Lynch/Ackman)
+47a6113 Persona prompts audit: rewrite Buffett to template, fix examples.py anchors
+3de35cc Office v2.0: Smallville-style top-down agent visualization
+339c8f3 Bull/bear researcher pair before trader + UI scaffolding
+f7a220d Flow analyst: clearer rationale + tighter scoring
 c1deed3 yfinance fundamentals fallback + /reddit page + /catalysts page
 db865cf Network: fix label-balloon + tighter zoom
 720634e Reddit sentiment via Apewisdom + network busy-fix
@@ -466,6 +487,11 @@ adf75ad Fix CORS for chat/run + Robinhood dark theme
 
 Highlights (reverse chronological):
 
+- **Office v2 — agents as little people (`fd5fc9d`)** — replaced colored-disc agents with character composites: emoji head + signal-colored torso "shirt" + stubby legs + initials nameplate. Persona emojis swapped from objects (drum/globe/abacus) to face emojis (👴 Buffett, 🥸 Burry, 🤵 Druck, 🧔 Taleb, 🤓 Greenblatt, 👩‍💻 Cathie, 👨‍⚖️ Ackman, etc.).
+- **Office v2.0 — Smallville-style ensemble visualization (`3de35cc`)** — new `/agents/[T]/v2` route. Top-down 16:9 floor plan with 5 named rooms. 23 agents wander inside their assigned room via random target updates. v1↔v2 toggle pill in both views. Same data layer as v1 so live runs stream into either interchangeably.
+- **Bull/bear researcher pair (Phase 1, `339c8f3`)** — two adversarial researchers run in parallel after personas. Each forced to take its assigned side and produce a structured brief (thesis + key_evidence + supporting_personas + counter_argument + conviction). Trader then ADJUDICATES between the two briefs instead of consuming all 18 raw votes. Pattern from TradingAgents 2024. Total ensemble: 21 → 23 agents.
+- **Persona prompts audit (`47a6113` + `a48afa5`)** — rewrote all 8 legacy persona system prompts (Buffett/Burry/Druck/Taleb/Cathie/Damodaran/Lynch/Ackman) to the structural template established by the 5 newer personas: real voice quote, hard-exclusions block, explicit "Your bar" line, persona-specific REQUIRED output field, output-distribution prior replacing "Be decisive." `examples.py` few-shots also re-tuned — removed two 0.55-conf hedged-middle anchors (Buffett, Damodaran were directly contradicting the conviction-rule validator) and added two low-conviction "pass" anchors (Buffett 0.25, Burry 0.20) so personas learn pass IS an output mode.
+- **Flow analyst tightening (`f7a220d`)** — added `_fmt_signed_dollars` so puts -$2.6M (selling, bullish) is visually distinct from puts +$2.6M (buying, bearish). Tightened stickiness multiplier to [0.3, 1.7]; tightened neutral_band to 0.08; bumped confidence multiplier so meaningful scores produce meaningful confidence floors.
 - **`/reddit` + `/catalysts` pages + yfinance fundamentals fallback** — `/reddit` browses Apewisdom mention rankings with sortable spike/rank-change/per-subreddit. `/catalysts` is the Reddit RSS catalyst-keyword feed (Phase B) — picks up posts mentioning a known ticker AND a catalyst keyword (partnership, leak, FDA, acquisition, beat, guidance, insider…). Verified live with the INTC/MBLY partnership chatter as the top hit. yfinance `.info` fallback fills the FMP gap so IREN-style names get real fundamentals (revenue, ROE, margins, P/E, etc.).
 - **Reddit sentiment via Apewisdom** — replaces stub. RedditCtx in bundle. Asymmetry flags (`is_contrarian_warning` for late chatter, `is_stealth` for institutional setups nobody's noticed). Burry's froth lens + Soros's reflexive-stage indicator both surface it.
 - **Network correlation graph** — `/v1/network/correlation` runs `numpy.corrcoef` over universe log returns, joins to predictions for node coloring. `/network` page with force-directed graph + slider/dropdown controls.
@@ -482,7 +508,10 @@ Highlights (reverse chronological):
 - **Reddit + catalyst data needs scheduled refresh.** `cfp-jobs reddit` daily for mention snapshots (asymmetry flags become meaningful from day 3 of snapshots). `cfp-jobs reddit-catalysts` every 30 min for the live `/catalysts` feed. Both currently one-shot; need Railway cron or GitHub Actions schedule.
 - **Flow analyst rationale display can mislead** — the "calls dominate" / "puts dominate" text is derived from a signed imbalance ratio, but the displayed `$X call vs $Y put` numbers are absolute values. When net_put_premium is negative (aggressive put SELLING, bullish), the rationale says "calls dominate" but the displayed numbers look like puts dominate. Tightening the rationale.
 - **Top-level assistant chat** — floating chat dock that uses tool-calling to drive runs/navigation/lookups across the app. Designed (Moonshot tool-use), not built.
-- **Bull/bear researcher debate round** — currently personas don't see each other's outputs. Adding a Bull-Researcher / Bear-Researcher pair that summarizes the strongest case from each side BEFORE the Trader synthesizes would mimic an investment committee. Trade-off: more LLM cost, risk of consensus collapse. Designed, not built.
+- **Langfuse instrumentation on `LlmClient`** — wrap every LLM call with trace/span metadata so per-persona cost, latency, hit-rate (once eval data accrues) is visible. Was always Phase 2; now also unlocks measuring whether the persona prompt rewrites moved signal quality.
+- **Persona-conditional instrument framing in `personas/base.py`** — branch on `instrument.type == "etf"` so Cathie/Druck/Lynch don't pitch sector ETFs as single businesses. ~30 min surgical fix; called out by the prompt audit.
+- **Persona-shaped Chain-of-Thought** — biggest single quality lift available, but ~2× input cost; deferred until Langfuse shows the lift from the prompt-template rewrites first.
+- **Office v2 polish** — agent-to-agent meetup animations when two personas agree, sprite walking animation, room desk graphics, sound effects.
 - **Lead-lag DAG view** — second tab on `/network` reading from `lead_lag_matrix` (Granger pipeline already produces the data).
 - **Cluster-stability over time** per ticker — flags decoupling early.
 - **UW flow overlay on network edges** — color edges by correlation × combined call premium for cluster-level setup detection.
@@ -509,3 +538,5 @@ Highlights (reverse chronological):
 4. `/agents/INTC` — Reddit chatter (currently #4 trending, 124 mentions) surfaces in the sentiment analyst rationale and in Burry's lens (potential froth flag once 7d-avg accrues).
 5. Chat panel — switch to "Burry" or "Soros", ask "should I short this?" — streamed response cites actual evidence from the bundle.
 6. `/v1/agents/scorecard?horizon=20` — JSON response, mostly empty until `cfp-jobs eval-agents` has run for ≥5 trading days against accumulated agent_signals.
+7. `/agents/IREN/v2` — Smallville office view loads with 23 little people in 5 rooms. Click a persona disc → speech bubble with thesis. Trigger Run → discs pulse blue ("thinking"), then transition to green/red/gray as signals land. Toggle pill swaps back to v1 grid.
+8. Bull/bear researchers visible in `/agents/IREN` v1 ensemble grid under "Researchers (adversarial)" section. Trader's `bull_summary` / `bear_summary` payloads should now read like distilled briefs from the researchers, not flat aggregations of all 21 votes.
