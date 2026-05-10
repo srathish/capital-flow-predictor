@@ -93,10 +93,30 @@ def predict(
     """Return DataFrame: ts, symbol, score, rank.
 
     Rank is 1-based within each ts (1 = highest predicted score).
+
+    `rank:pairwise` produces ordered output but often collapses scores into
+    a few large tied buckets (e.g. with 26 ETFs we see ~3 distinct scores —
+    the middle 20 all tied at the same value). When that happens, downstream
+    consumers (network graph, watchlist) get an arbitrary alphabetical order
+    inside the bucket. We break ties using a tiny weighted blend of two
+    secondary signals already in the panel — return_20d (medium-term
+    momentum) and dist_ma50 (trend position) — scaled small enough that they
+    only nudge ties apart and never override a real model-driven gap.
     """
     panel = panel.sort_values(["ts", "symbol"]).reset_index(drop=True).copy()
     X = panel[feature_cols].to_numpy(dtype=np.float32)  # noqa: N806
     panel["score"] = model.predict(X)
+
+    # Tie-breaker — only kicks in when XGB scores are equal. Magnitude is
+    # capped at 1e-6 so it cannot reorder symbols the model actually
+    # discriminated; it only shapes order INSIDE tied buckets.
+    tie_break = pd.Series(0.0, index=panel.index)
+    for col, weight in (("return_20d", 1e-6), ("dist_ma50", 5e-7)):
+        if col in panel.columns:
+            v = panel[col].fillna(0.0).clip(-1.0, 1.0)
+            tie_break = tie_break + weight * v
+    panel["score"] = panel["score"] + tie_break
+
     panel["rank"] = (
         panel.groupby("ts")["score"].rank(method="first", ascending=False).astype(int)
     )
