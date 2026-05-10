@@ -329,15 +329,129 @@ export function OfficeView({ ticker }: { ticker: string }) {
     return items;
   }, [positions]);
 
-  // ───── World viewBox bounds ─────
+  // ───── World viewBox bounds (the fully-zoomed-out "home" view) ─────
   // Iso bounds: sx ∈ [(0 − WORLD_H)·TW, WORLD_W·TW]
   //             sy ∈ [0, (WORLD_W + WORLD_H)·TH]
-  const minSx = (0 - WORLD_H) * TILE_W;
-  const maxSx = WORLD_W * TILE_W;
-  const minSy = -WALL_H - 30; // headroom for walls + sim heads
-  const maxSy = (WORLD_W + WORLD_H) * TILE_H + 40;
-  const vbW = maxSx - minSx;
-  const vbH = maxSy - minSy;
+  const home = useMemo(() => {
+    const minSx = (0 - WORLD_H) * TILE_W;
+    const maxSx = WORLD_W * TILE_W;
+    const minSy = -WALL_H - 30; // headroom for walls + sim heads
+    const maxSy = (WORLD_W + WORLD_H) * TILE_H + 40;
+    return { x: minSx, y: minSy, w: maxSx - minSx, h: maxSy - minSy };
+  }, []);
+
+  // ───── Pan + zoom ─────
+  // The SVG viewBox is driven by `view`. Wheel zooms (anchored to cursor),
+  // pointer-drag on the background pans. Sim clicks are suppressed for
+  // ~120ms after a real pan so a click-release at the end of a drag does
+  // not accidentally select a sim.
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const [view, setView] = useState(home);
+  const dragRef = useRef<{ px: number; py: number; vx: number; vy: number; moved: boolean } | null>(null);
+  const justPannedRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const ZOOM_MIN = 0.1; // smallest viewBox = 10% of home (deepest zoom-in)
+  const ZOOM_MAX = 1.0; // largest = home (cannot zoom out past full plan)
+
+  // Wheel: scroll up = zoom in (anchored to cursor). Attached natively so we
+  // can preventDefault — React's wheel handlers are passive by default.
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el) return;
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      const rect = el!.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      setView((v) => {
+        const factor = Math.exp(e.deltaY * 0.0015);
+        const ratio = home.h / home.w;
+        let newW = v.w * factor;
+        // Clamp to [home.w * ZOOM_MIN, home.w * ZOOM_MAX]
+        newW = Math.min(home.w * ZOOM_MAX, Math.max(home.w * ZOOM_MIN, newW));
+        const newH = newW * ratio;
+        // Anchor: keep the world point under the cursor stationary
+        const wx = v.x + px * v.w;
+        const wy = v.y + py * v.h;
+        let nx = wx - px * newW;
+        let ny = wy - py * newH;
+        // Clamp panning so we cannot scroll the world off screen
+        nx = Math.min(home.x + home.w - newW, Math.max(home.x, nx));
+        ny = Math.min(home.y + home.h - newH, Math.max(home.y, ny));
+        return { x: nx, y: ny, w: newW, h: newH };
+      });
+    }
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [home]);
+
+  // Pointer drag → pan
+  useEffect(() => {
+    function move(e: PointerEvent) {
+      const d = dragRef.current;
+      if (!d) return;
+      const rect = svgRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const dx = e.clientX - d.px;
+      const dy = e.clientY - d.py;
+      if (!d.moved && Math.hypot(dx, dy) > 4) {
+        d.moved = true;
+        setIsDragging(true);
+      }
+      if (!d.moved) return;
+      setView((v) => {
+        let nx = d.vx - (dx / rect.width) * v.w;
+        let ny = d.vy - (dy / rect.height) * v.h;
+        nx = Math.min(home.x + home.w - v.w, Math.max(home.x, nx));
+        ny = Math.min(home.y + home.h - v.h, Math.max(home.y, ny));
+        return { ...v, x: nx, y: ny };
+      });
+    }
+    function up() {
+      const d = dragRef.current;
+      dragRef.current = null;
+      if (d?.moved) {
+        // Suppress the upcoming click so we don't select a sim by accident.
+        justPannedRef.current = true;
+        setTimeout(() => { justPannedRef.current = false; }, 120);
+      }
+      setIsDragging(false);
+    }
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+    };
+  }, [home]);
+
+  function onSvgPointerDown(e: React.PointerEvent<SVGSVGElement>) {
+    // Start drag from any pointer-down on the SVG. If the user clicks a sim,
+    // they release at <4px and the click fires normally.
+    dragRef.current = { px: e.clientX, py: e.clientY, vx: view.x, vy: view.y, moved: false };
+  }
+
+  function zoomBy(factor: number) {
+    setView((v) => {
+      const ratio = home.h / home.w;
+      let newW = v.w * factor;
+      newW = Math.min(home.w * ZOOM_MAX, Math.max(home.w * ZOOM_MIN, newW));
+      const newH = newW * ratio;
+      // Anchor zoom on the center of the current view.
+      const cx = v.x + v.w / 2;
+      const cy = v.y + v.h / 2;
+      let nx = cx - newW / 2;
+      let ny = cy - newH / 2;
+      nx = Math.min(home.x + home.w - newW, Math.max(home.x, nx));
+      ny = Math.min(home.y + home.h - newH, Math.max(home.y, ny));
+      return { x: nx, y: ny, w: newW, h: newH };
+    });
+  }
+
+  const zoomPct = Math.round((home.w / view.w) * 100);
 
   return (
     <div className="space-y-4">
@@ -399,9 +513,12 @@ export function OfficeView({ ticker }: { ticker: string }) {
         style={{ aspectRatio: "16 / 9" }}
       >
         <svg
-          viewBox={`${minSx} ${minSy} ${vbW} ${vbH}`}
+          ref={svgRef}
+          viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
           preserveAspectRatio="xMidYMid meet"
-          className="h-full w-full"
+          onPointerDown={onSvgPointerDown}
+          className="h-full w-full select-none touch-none"
+          style={{ cursor: isDragging ? "grabbing" : "grab" }}
         >
           <defs>
             {/* Floor highlight gradient — top of each tile is slightly lighter */}
@@ -474,11 +591,55 @@ export function OfficeView({ ticker }: { ticker: string }) {
                 hovered={hoveredId === it.a.id}
                 selected={selectedId === it.a.id}
                 onHover={(h) => setHoveredId(h ? it.a.id : null)}
-                onClick={() => setSelectedId(it.a.id)}
+                onClick={() => {
+                  if (justPannedRef.current) return;
+                  setSelectedId(it.a.id);
+                }}
               />
             );
           })}
         </svg>
+
+        {/* Zoom controls — top-right of the canvas. */}
+        <div className="pointer-events-none absolute right-3 top-3 z-20 flex flex-col items-end gap-1.5">
+          <div className="pointer-events-auto flex items-center overflow-hidden rounded-lg border border-border bg-card/90 text-sm font-semibold shadow backdrop-blur">
+            <button
+              type="button"
+              onClick={() => zoomBy(0.7)}
+              className="px-2.5 py-1 text-foreground hover:bg-accent disabled:opacity-40"
+              disabled={view.w <= home.w * ZOOM_MIN + 0.5}
+              aria-label="Zoom in"
+              title="Zoom in"
+            >
+              +
+            </button>
+            <span className="border-l border-border px-2 py-1 text-xs tabular-nums text-muted-foreground">
+              {zoomPct}%
+            </span>
+            <button
+              type="button"
+              onClick={() => zoomBy(1 / 0.7)}
+              className="border-l border-border px-2.5 py-1 text-foreground hover:bg-accent disabled:opacity-40"
+              disabled={view.w >= home.w * ZOOM_MAX - 0.5}
+              aria-label="Zoom out"
+              title="Zoom out"
+            >
+              −
+            </button>
+            <button
+              type="button"
+              onClick={() => setView(home)}
+              className="border-l border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Reset view"
+              title="Reset view"
+            >
+              reset
+            </button>
+          </div>
+          <div className="pointer-events-none rounded-md bg-card/80 px-2 py-0.5 text-[10px] text-muted-foreground shadow backdrop-blur">
+            scroll to zoom · drag to pan
+          </div>
+        </div>
 
         {/* Tooltip overlay anchored above the hovered sim. Rendered as
             absolutely-positioned HTML so it can use Tailwind. */}
@@ -488,9 +649,12 @@ export function OfficeView({ ticker }: { ticker: string }) {
           if (!a || !sig?.rationale) return null;
           const p = positions[a.id];
           const { sx, sy } = iso(p.x, p.y, 36);
-          // Convert iso (sx, sy) to a percentage of the SVG viewBox.
-          const left = ((sx - minSx) / vbW) * 100;
-          const top = ((sy - minSy) / vbH) * 100;
+          // Convert iso (sx, sy) to a percentage of the *current* SVG view,
+          // so the bubble tracks the sim while the user pans/zooms.
+          const left = ((sx - view.x) / view.w) * 100;
+          const top = ((sy - view.y) / view.h) * 100;
+          // Hide the bubble if the sim is offscreen.
+          if (left < 0 || left > 100 || top < 0 || top > 100) return null;
           return (
             <div
               className="pointer-events-none absolute z-30 w-72 -translate-x-1/2 -translate-y-full rounded-lg border border-border bg-card p-3 text-xs shadow-xl"
