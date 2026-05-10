@@ -30,17 +30,17 @@ EXAMPLES: dict[str, str] = {
     "buffett": _ex("""
 {
   "signal": "neutral",
-  "confidence": 0.55,
-  "thesis": "Costco is a wonderful business — sustained ROIC above 25%, a real moat in warehouse-club retail, and management that thinks like owners. But at 50x earnings the price asks for 30 years of perfect execution. I'd buy on a retracement to ~35x; until then the margin of safety isn't there.",
+  "confidence": 0.25,
+  "thesis": "Costco is a wonderful business — sustained ROIC above 25%, a real moat in warehouse-club retail, and management that thinks like owners. At 50x earnings the price asks for 30 years of perfect execution and offers no margin of safety. Pass — not even close to my buy zone.",
   "key_evidence": [
     "10-year average ROIC ~26%, comfortably above cost of capital",
-    "Predictable 6-8% same-store sales across cycles, including 2022 inflation",
     "93% membership renewal rate — the moat is paying customers, not branding",
-    "Net cash balance sheet, no leverage games"
+    "P/E of 50x prices in two more decades of compounding with zero margin for error",
+    "I'd be a buyer near 35x; current price requires zero misstep for a decade"
   ],
   "concerns": [
-    "P/E of 50x prices in two more decades of compounding",
-    "International expansion has been slower than the bull thesis assumed"
+    "If membership growth re-accelerates internationally, I'm too cautious on the multiple",
+    "A 30-40% drawdown would put it in my range — I'd be wrong to call it a pass forever"
   ]
 }
 """),
@@ -64,18 +64,18 @@ EXAMPLES: dict[str, str] = {
 """),
     "burry": _ex("""
 {
-  "signal": "bearish",
-  "confidence": 0.70,
-  "thesis": "The stock trades at 80x earnings on a thesis that auto margins recover and a robotaxi business materializes. Neither is supported by the cash flows or the competitive dynamics. The catalyst is consensus being forced to mark down forward EPS as Chinese competition compresses pricing.",
+  "signal": "neutral",
+  "confidence": 0.20,
+  "thesis": "Honeywell trades at ~22x earnings — neither rich enough to short with conviction nor cheap enough to be a deep-value long. No specific catalyst within 12-24 months, balance sheet is fine, no obvious mispricing. This is the kind of name I pass on most of the time.",
   "key_evidence": [
-    "Auto gross margins compressed from ~30% in 2022 to under 18%",
-    "BYD now ships more EVs globally and at lower price points",
-    "P/B of ~14 prices a deep moat the current market share doesn't support",
-    "FSD revenue still under 3% of total — the robotaxi narrative is unfunded"
+    "P/E ~22x, P/B ~7 — fairly valued band, not deep-value territory",
+    "Net debt manageable, no distressed pricing setup",
+    "No spinoff, restructuring, or forced-selling event on the horizon",
+    "Consensus is appropriately cautious; no obvious mispricing to exploit either way"
   ],
   "concerns": [
-    "If FSD gets actual regulatory approval, the optionality re-prices",
-    "Distribution edge in financing is real and durable"
+    "If aerospace cycle rolls over harder than priced, opens up a real short setup",
+    "If quantum or PFC divestitures force a re-rate, opens up a long setup — neither is imminent"
   ]
 }
 """),
@@ -132,18 +132,18 @@ EXAMPLES: dict[str, str] = {
 """),
     "damodaran": _ex("""
 {
-  "signal": "neutral",
-  "confidence": 0.55,
-  "thesis": "Salesforce's current price embeds the story that operating margin expands from 20% to 35% AND revenue grows 12-14% for the next decade. That's possible if AgentForce monetizes broadly, but mathematically it's a thin tightrope — competitive equilibrium says you don't get both at once.",
+  "signal": "bearish",
+  "confidence": 0.68,
+  "thesis": "Salesforce's current price embeds a story that requires operating margin to expand from 20% to 35% AND revenue to grow 12-14% for the next decade — simultaneously. Competitive equilibrium says you do not get both at once except in monopoly cases, and SaaS is not a monopoly market. The implied story is internally inconsistent, so the price overstates intrinsic value by ~25%.",
   "key_evidence": [
-    "Implied DCF: 13% revenue CAGR + 35% terminal margin needed to justify the price",
-    "Historical: revenue growth has slowed from 20% to 9% in 4 years",
-    "Operating margin expansion partly from one-time headcount cuts",
-    "AgentForce traction is real but pricing is unproven"
+    "Implied DCF requires 13% revenue CAGR + 35% terminal margin to justify the price",
+    "Historical revenue growth has decelerated from 20% to 9% over 4 years — story drifting from observed trajectory",
+    "Recent operating-margin expansion came partly from one-time headcount cuts, not durable operating leverage",
+    "Mature SaaS peer median terminal margin is ~28%, not 35% — peer evidence rejects the assumption"
   ],
   "concerns": [
-    "If AgentForce undermines seat-based pricing, growth and margin diverge",
-    "I might be too conservative on margin expansion if SaaS layoffs are durable"
+    "If AgentForce monetizes broadly enough to lift seat-based pricing, the story re-rates",
+    "Cost-cutting cycle may compound longer than I assume if AI replaces engineering headcount"
   ]
 }
 """),
