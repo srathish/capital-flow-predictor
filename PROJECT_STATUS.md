@@ -2,7 +2,7 @@
 
 A multi-agent sector-rotation prediction system. XGBoost ranker over sector ETFs + 21-agent LLM ensemble over individual stocks (5 analysts + 13 famous-investor personas + 3 synthesis nodes). Wired to Unusual Whales options flow, FMP fundamentals, FRED macro, yfinance prices, and Reddit chatter via Apewisdom. Live web dashboard with sector heatmap, force-directed correlation network, per-ticker price chart with flow markers, sortable holdings table per sector, agent ensemble run with chat panel.
 
-Last updated: 2026-05-09 after commit `db865cf` (Network label-balloon fix).
+Last updated: 2026-05-09 after commit `c1deed3` (yfinance fallback + /reddit page + /catalysts page).
 
 ---
 
@@ -23,6 +23,7 @@ apps/
         sectors.py           # /v1/sectors heatmap + /v1/sectors/{etf}/holdings
         scorecard.py         # /v1/agents/scorecard + /scorecard/agreement
         network.py           # /v1/network/correlation — force-directed graph data
+        reddit.py            # NEW — /v1/reddit/mentions + /v1/reddit/catalysts
         watchlist.py         # /v1/watchlist
       schemas.py
       db.py                  # asyncpg pool
@@ -40,6 +41,7 @@ apps/
         holdings.py          # legacy yfinance ETF top-10
         unusualwhales.py     # 12 UW endpoints + per-table upserts + yfinance fallback
         reddit_apewisdom.py  # Apewisdom mentions per subreddit
+        reddit_rss.py        # NEW — Reddit RSS catalyst-keyword ingester
       train.py               # XGBoost rank baseline (currently degenerate; see Known Issues)
       watchlist.py           # top-sector × top-name orchestrator
       migrate.py
@@ -51,6 +53,8 @@ apps/
       sectors/[etf]/page.tsx # NEW — full constituent table sortable by 1d/5d/20d/60d return
       agents/[ticker]/page.tsx
       network/page.tsx       # NEW — force-directed sector correlation graph
+      reddit/page.tsx        # NEW — Reddit mention browser (Apewisdom)
+      catalysts/page.tsx     # NEW — Reddit catalyst-keyword post feed
       watchlist/page.tsx
     components/
       ensemble-view.tsx      # Run button, live grid, RH price header, chat sidebar
@@ -58,6 +62,8 @@ apps/
       sector-holdings-view.tsx # NEW — sortable constituent table
       sector-heatmap.tsx
       network-view.tsx       # NEW — react-force-graph-2d wrapper
+      reddit-mentions-view.tsx # NEW — sortable mentions table
+      catalysts-view.tsx       # NEW — keyword-filtered post feed
       chat-panel.tsx
       agent-card.tsx
       watchlist-grid.tsx
@@ -131,6 +137,7 @@ infra/
     0007_agent_eval.sql      # Forward-return tracking for per-persona scorecard
     0008_uw_etf_holdings.sql # Full constituent list (UW with yfinance fallback)
     0009_reddit_mentions.sql # Apewisdom snapshots per subreddit
+    0010_reddit_posts.sql    # Reddit RSS catalyst-keyword posts (GIN tickers/keywords)
 ```
 
 ---
@@ -166,6 +173,7 @@ infra/
 | `uw_earnings` | UW `/earnings/{T}` | lazy + nightly | calendar + expected_move + post-earnings reactions |
 | `uw_etf_holdings` | UW `/etfs/{ETF}/holdings` (yfinance fallback) | nightly | full constituent list with per-name pricing + options sentiment |
 | `reddit_mentions` | Apewisdom | daily snapshot | per-ticker per-subreddit mention counts + upvotes + 24h-ago rank |
+| `reddit_posts` | Reddit RSS | every 30 min | catalyst-keyword posts (GIN tickers + keywords); 7d retention; powers /catalysts |
 
 ### External keys + env vars
 
@@ -253,7 +261,7 @@ Roster designed for orthogonal signal (Phase B). Dropped from prior roster: Mung
 Before `graph.invoke()`:
 
 1. **`_ensure_prices`** — yfinance fallback if `prices_daily` empty.
-2. **`_ensure_fundamentals_and_sector`** — FMP fallback if `fundamentals` empty + sector lookup via FMP `/profile`.
+2. **`_ensure_fundamentals_and_sector`** — FMP fallback if `fundamentals` empty + sector lookup via FMP `/profile`. Falls back further to **`_yfinance_fundamentals_fallback`** (yfinance `.info`) when FMP returns 402 (small-mid caps and ADRs on FMP's paid tier). Maps fields like `totalRevenue`, `marketCap`, `returnOnEquity`, `debtToEquity`, `profitMargins` to our long-format metric names with percent-form normalization.
 3. **`_resolve_instrument`** — UW `/stock/{T}/info` primary, FMP `/profile` fallback. 7-day TTL.
 4. **`build_evidence_bundle`** — assembles all sub-contexts from DB. Lazy refreshes UW data when stale (>24h).
 5. **`persist_evidence`** — writes `run_evidence(run_ts, ticker, bundle_json)`.
@@ -287,6 +295,8 @@ Before `graph.invoke()`:
 | GET | `/v1/agents/scorecard?horizon=20` | per-agent hit rate, IC, regime breakdown |
 | GET | `/v1/agents/scorecard/agreement?horizon=20` | pairwise agreement matrix |
 | GET | `/v1/network/correlation?window=60&min_correlation=0.7&horizon=10` | force-directed graph nodes + edges |
+| GET | `/v1/reddit/mentions?sort=mentions&limit=50` | top tickers by chatter, with 7d sparkline + per-subreddit + asymmetry flags |
+| GET | `/v1/reddit/catalysts?hours=48&min_score=0.05&ticker=INTC` | ranked Reddit posts mentioning ticker + catalyst keyword |
 
 ### Write / Long-running
 
@@ -324,6 +334,7 @@ cfp-jobs flow-congress                 # recent congress trades
 
 # Reddit
 cfp-jobs reddit                        # Apewisdom mention snapshot (all subreddits, top 150)
+cfp-jobs reddit-catalysts              # RSS catalyst-keyword post ingest (run every 30 min)
 
 # Eval
 cfp-jobs eval-agents [--lookback 90]   # forward returns -> agent_eval (run daily)
@@ -341,6 +352,8 @@ cfp-jobs eval-agents [--lookback 90]   # forward returns -> agent_eval (run dail
 | `/sectors/[etf]` | Full constituent table — 73 NVDA/AAPL/MSFT-style holdings for XLK, sortable by 1d/5d/20d/60d return, weight, call/put ratio, bullish %, etc. Click ticker → /agents/{T}. |
 | `/agents/[ticker]` | Two-column ensemble view: chart + 21-agent grid + sticky chat sidebar. |
 | `/network` | Force-directed sector correlation graph. Min-corr slider, window/horizon dropdowns. |
+| `/reddit` | Top tickers from Apewisdom: sortable by mentions / spike / climbing fastest, per-row sparkline + per-subreddit + asymmetry chips. |
+| `/catalysts` | Reddit posts mentioning a known ticker AND a catalyst keyword. Window + score + ticker filters. |
 | `/watchlist` | Top sectors × top names with PM rationale. |
 
 ### `/agents/[ticker]` layout
@@ -431,6 +444,7 @@ NEXT_PUBLIC_API_BASE_URL=https://capital-flow-predictor-production.up.railway.ap
 ## 11. Recent commits (newest first, current session)
 
 ```
+c1deed3 yfinance fundamentals fallback + /reddit page + /catalysts page
 db865cf Network: fix label-balloon + tighter zoom
 720634e Reddit sentiment via Apewisdom + network busy-fix
 b7202bd Network: fix horizon=20 422 — Literal[int] doesn't coerce string query params
@@ -452,6 +466,7 @@ adf75ad Fix CORS for chat/run + Robinhood dark theme
 
 Highlights (reverse chronological):
 
+- **`/reddit` + `/catalysts` pages + yfinance fundamentals fallback** — `/reddit` browses Apewisdom mention rankings with sortable spike/rank-change/per-subreddit. `/catalysts` is the Reddit RSS catalyst-keyword feed (Phase B) — picks up posts mentioning a known ticker AND a catalyst keyword (partnership, leak, FDA, acquisition, beat, guidance, insider…). Verified live with the INTC/MBLY partnership chatter as the top hit. yfinance `.info` fallback fills the FMP gap so IREN-style names get real fundamentals (revenue, ROE, margins, P/E, etc.).
 - **Reddit sentiment via Apewisdom** — replaces stub. RedditCtx in bundle. Asymmetry flags (`is_contrarian_warning` for late chatter, `is_stealth` for institutional setups nobody's noticed). Burry's froth lens + Soros's reflexive-stage indicator both surface it.
 - **Network correlation graph** — `/v1/network/correlation` runs `numpy.corrcoef` over universe log returns, joins to predictions for node coloring. `/network` page with force-directed graph + slider/dropdown controls.
 - **Phase 5 — Chart + sector page + DCF tools** — TradingView lightweight-charts on `/agents/[T]` with flow/insider/earnings markers; full sortable holdings table at `/sectors/[etf]` (UW + yfinance fallback for ETFs UW doesn't index); Damodaran/Klarman/Greenblatt now call computed `tools.dcf` and `tools.magic_formula` to ground reasoning in real numbers.
@@ -464,14 +479,14 @@ Highlights (reverse chronological):
 
 ## 12. Known issues / pending
 
-- **XGB `predictions.rank` is degenerate** (all rows = rank=1). Network endpoint works around with score re-rank + return fallback. Real fix is in `packages/models/src/cfp_models/xgb_baseline.py` training loop.
-- **FMP free tier returns 402** for many small-mid caps and ADRs (e.g. IREN). Currently silently skipped → empty `fundamentals` for those tickers. **Open follow-up:** add yfinance `.info` fallback in `_ensure_fundamentals_and_sector`.
-- **Reddit asymmetry flags need 2-3 days of snapshots** to be meaningful. Spike ratio = 1.0 today because 7d avg = today's value. Schedule `cfp-jobs reddit` daily; meaningful signals from day 3 onward.
-- **Catalyst news feed (Phase B)** — separate `/catalysts` tab pulling Reddit RSS feeds and filtering for catalyst keywords (`partnership`, `leak`, `rumor`, `acquisition`, `FDA`, etc.) — designed for AAPL/INTC partnership-style pre-announcement detection. Not yet built.
+- **Reddit + catalyst data needs scheduled refresh.** `cfp-jobs reddit` daily for mention snapshots (asymmetry flags become meaningful from day 3 of snapshots). `cfp-jobs reddit-catalysts` every 30 min for the live `/catalysts` feed. Both currently one-shot; need Railway cron or GitHub Actions schedule.
+- **Flow analyst rationale display can mislead** — the "calls dominate" / "puts dominate" text is derived from a signed imbalance ratio, but the displayed `$X call vs $Y put` numbers are absolute values. When net_put_premium is negative (aggressive put SELLING, bullish), the rationale says "calls dominate" but the displayed numbers look like puts dominate. Tightening the rationale.
 - **Top-level assistant chat** — floating chat dock that uses tool-calling to drive runs/navigation/lookups across the app. Designed (Moonshot tool-use), not built.
+- **Bull/bear researcher debate round** — currently personas don't see each other's outputs. Adding a Bull-Researcher / Bear-Researcher pair that summarizes the strongest case from each side BEFORE the Trader synthesizes would mimic an investment committee. Trade-off: more LLM cost, risk of consensus collapse. Designed, not built.
 - **Lead-lag DAG view** — second tab on `/network` reading from `lead_lag_matrix` (Granger pipeline already produces the data).
 - **Cluster-stability over time** per ticker — flags decoupling early.
 - **UW flow overlay on network edges** — color edges by correlation × combined call premium for cluster-level setup detection.
+- **XGB `predictions.rank` is degenerate** (carried over from prior). Network endpoint works around with score re-rank + return fallback. Real fix needed in `xgb_baseline.py`.
 
 ---
 
