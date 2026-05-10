@@ -4,40 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo } from "react";
 import { api } from "@/lib/api";
+import { sectorMetaFor } from "@/lib/sectors";
 import type { SectorEntry } from "@/lib/types";
 import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// ────────────────────────────────────────────────────────────────────────────
-// SPDR sector metadata — used to make the explanations human-readable.
-// "theme" lets us spot when the leading basket shares a regime (e.g. all
-// three leaders are cyclicals → risk-on rotation).
-// ────────────────────────────────────────────────────────────────────────────
-
-interface SectorMeta {
-  name: string;
-  theme: "secular growth" | "cyclical" | "defensive" | "rate-sensitive" | "commodity-linked" | "rate beneficiary";
-  drivers: string[];
-}
-
-const SECTOR_META: Record<string, SectorMeta> = {
-  XLK:  { name: "Technology",             theme: "secular growth",      drivers: ["AI capex", "rate sensitivity", "earnings momentum"] },
-  XLC:  { name: "Communication Services", theme: "secular growth",      drivers: ["digital ad spend", "subscriber trends"] },
-  XLY:  { name: "Consumer Discretionary", theme: "cyclical",            drivers: ["consumer sentiment", "wage growth", "credit conditions"] },
-  XLI:  { name: "Industrials",            theme: "cyclical",            drivers: ["PMI trends", "capex cycle", "global trade"] },
-  XLB:  { name: "Materials",              theme: "cyclical",            drivers: ["China demand", "USD strength", "commodity prices"] },
-  XLE:  { name: "Energy",                 theme: "commodity-linked",    drivers: ["crude prices", "OPEC+ supply", "USD strength"] },
-  XLF:  { name: "Financials",             theme: "rate beneficiary",    drivers: ["yield curve", "credit spreads", "loan demand"] },
-  XLV:  { name: "Health Care",            theme: "defensive",           drivers: ["pricing power", "regulatory backdrop", "biotech pipelines"] },
-  XLP:  { name: "Consumer Staples",       theme: "defensive",           drivers: ["risk-off rotation", "input costs", "USD strength"] },
-  XLU:  { name: "Utilities",              theme: "rate-sensitive",      drivers: ["10Y yield", "power demand"] },
-  XLRE: { name: "Real Estate",            theme: "rate-sensitive",      drivers: ["10Y yield", "cap rates", "occupancy trends"] },
-};
-
-function metaFor(symbol: string): SectorMeta {
-  return SECTOR_META[symbol] ?? { name: symbol, theme: "cyclical", drivers: [] };
-}
+const metaFor = sectorMetaFor;
 
 // ────────────────────────────────────────────────────────────────────────────
 // Tile colors + per-tile explanation
