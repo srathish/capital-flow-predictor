@@ -87,6 +87,11 @@ def trace_generation(
 
     Yields a context object with ``.update(output=..., usage_details=...)``.
     No-op when Langfuse isn't configured.
+
+    Uses the Langfuse v4 unified observation API: ``start_as_current_observation``
+    with ``as_type='generation'``. v3's ``start_as_current_generation`` was
+    removed; calling it raises AttributeError. (Spotted in production after
+    Phase 2 shipped silently no-op'd because of this rename.)
     """
     lf = get_langfuse()
     if lf is None:
@@ -94,8 +99,9 @@ def trace_generation(
         return
 
     try:
-        with lf.start_as_current_generation(
+        with lf.start_as_current_observation(
             name=name,
+            as_type="generation",
             model=model,
             input=input_data,
             metadata=metadata or {},
@@ -116,8 +122,11 @@ def trace_run(
     """Wrap an entire ensemble run as a Langfuse trace/span.
 
     All ``trace_generation`` calls inside the ``with`` block nest under this
-    trace, producing a single multi-level view per ticker run.
+    span, producing a single multi-level view per ticker run.
     No-op when Langfuse isn't configured.
+
+    Same v4 API note as ``trace_generation`` — uses ``start_as_current_observation``
+    with ``as_type='span'`` (the v3 ``start_as_current_span`` shortcut was removed).
     """
     lf = get_langfuse()
     if lf is None:
@@ -125,7 +134,11 @@ def trace_run(
         return
 
     try:
-        with lf.start_as_current_span(name=name, metadata=metadata or {}) as span:
+        with lf.start_as_current_observation(
+            name=name,
+            as_type="span",
+            metadata=metadata or {},
+        ) as span:
             yield span
     except Exception as e:
         log.warning("Langfuse run trace %s failed: %s", name, e)
