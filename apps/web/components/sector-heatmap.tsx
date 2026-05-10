@@ -2,28 +2,209 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useMemo } from "react";
 import { api } from "@/lib/api";
 import type { SectorEntry } from "@/lib/types";
 import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function tileBg(rank: number | null, total: number): string {
-  if (rank === null) return "bg-muted/40";
-  // Greener at the top, redder at the bottom; mid sectors muted.
-  const pos = (rank - 1) / Math.max(1, total - 1); // 0..1
-  if (pos < 0.25) return "bg-signal-bullish/25 hover:bg-signal-bullish/40";
-  if (pos < 0.5) return "bg-signal-bullish/10 hover:bg-signal-bullish/20";
-  if (pos > 0.75) return "bg-signal-bearish/25 hover:bg-signal-bearish/40";
-  if (pos > 0.5) return "bg-signal-bearish/10 hover:bg-signal-bearish/20";
-  return "bg-muted hover:bg-muted/70";
+// ────────────────────────────────────────────────────────────────────────────
+// SPDR sector metadata — used to make the explanations human-readable.
+// "theme" lets us spot when the leading basket shares a regime (e.g. all
+// three leaders are cyclicals → risk-on rotation).
+// ────────────────────────────────────────────────────────────────────────────
+
+interface SectorMeta {
+  name: string;
+  theme: "secular growth" | "cyclical" | "defensive" | "rate-sensitive" | "commodity-linked" | "rate beneficiary";
+  drivers: string[];
 }
+
+const SECTOR_META: Record<string, SectorMeta> = {
+  XLK:  { name: "Technology",             theme: "secular growth",      drivers: ["AI capex", "rate sensitivity", "earnings momentum"] },
+  XLC:  { name: "Communication Services", theme: "secular growth",      drivers: ["digital ad spend", "subscriber trends"] },
+  XLY:  { name: "Consumer Discretionary", theme: "cyclical",            drivers: ["consumer sentiment", "wage growth", "credit conditions"] },
+  XLI:  { name: "Industrials",            theme: "cyclical",            drivers: ["PMI trends", "capex cycle", "global trade"] },
+  XLB:  { name: "Materials",              theme: "cyclical",            drivers: ["China demand", "USD strength", "commodity prices"] },
+  XLE:  { name: "Energy",                 theme: "commodity-linked",    drivers: ["crude prices", "OPEC+ supply", "USD strength"] },
+  XLF:  { name: "Financials",             theme: "rate beneficiary",    drivers: ["yield curve", "credit spreads", "loan demand"] },
+  XLV:  { name: "Health Care",            theme: "defensive",           drivers: ["pricing power", "regulatory backdrop", "biotech pipelines"] },
+  XLP:  { name: "Consumer Staples",       theme: "defensive",           drivers: ["risk-off rotation", "input costs", "USD strength"] },
+  XLU:  { name: "Utilities",              theme: "rate-sensitive",      drivers: ["10Y yield", "power demand"] },
+  XLRE: { name: "Real Estate",            theme: "rate-sensitive",      drivers: ["10Y yield", "cap rates", "occupancy trends"] },
+};
+
+function metaFor(symbol: string): SectorMeta {
+  return SECTOR_META[symbol] ?? { name: symbol, theme: "cyclical", drivers: [] };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tile colors + per-tile explanation
+// ────────────────────────────────────────────────────────────────────────────
+
+type Tier = "leader" | "strong" | "neutral" | "weak" | "laggard";
+
+function tierFor(rank: number, total: number): Tier {
+  const pos = (rank - 1) / Math.max(1, total - 1);
+  if (pos < 0.2) return "leader";
+  if (pos < 0.45) return "strong";
+  if (pos > 0.8) return "laggard";
+  if (pos > 0.55) return "weak";
+  return "neutral";
+}
+
+function tileBg(tier: Tier | null): string {
+  switch (tier) {
+    case "leader":  return "bg-signal-bullish/25 hover:bg-signal-bullish/40";
+    case "strong":  return "bg-signal-bullish/10 hover:bg-signal-bullish/20";
+    case "weak":    return "bg-signal-bearish/10 hover:bg-signal-bearish/20";
+    case "laggard": return "bg-signal-bearish/25 hover:bg-signal-bearish/40";
+    case "neutral": return "bg-muted hover:bg-muted/70";
+    default:        return "bg-muted/40";
+  }
+}
+
+function captionFor(tier: Tier, score: number | null): string {
+  // Short, plain-English line explaining what the tier *means* to a reader.
+  switch (tier) {
+    case "leader":
+      return score !== null && score > 0
+        ? "Leading the tape — model still favors this basket"
+        : "Top of the pack on relative strength";
+    case "strong":
+      return "Above the median — momentum intact";
+    case "neutral":
+      return "Middle of the pack — no edge signaled";
+    case "weak":
+      return "Below the median — momentum fading";
+    case "laggard":
+      return "Underperforming peers — model expects continued lag";
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Top-of-page narrative
+// ────────────────────────────────────────────────────────────────────────────
+
+interface MarketRead {
+  leaders: SectorEntry[];
+  laggards: SectorEntry[];
+  scoreRange: number;
+  dominantLeaderTheme: string | null;
+  dominantLaggardTheme: string | null;
+  regime: "risk-on" | "risk-off" | "mixed" | "no-edge";
+  paragraph: string;
+}
+
+function buildMarketRead(ranked: SectorEntry[]): MarketRead | null {
+  if (ranked.length < 4) return null;
+  const leaders = ranked.slice(0, 3);
+  const laggards = ranked.slice(-3).reverse();
+  const scores = ranked
+    .map((s) => s.latest_score)
+    .filter((v): v is number => v !== null);
+  const scoreRange = scores.length ? Math.max(...scores) - Math.min(...scores) : 0;
+
+  const themeMode = (rows: SectorEntry[]): string | null => {
+    const tally = new Map<string, number>();
+    for (const r of rows) {
+      const t = metaFor(r.symbol).theme;
+      tally.set(t, (tally.get(t) ?? 0) + 1);
+    }
+    let best: string | null = null;
+    let bestN = 0;
+    for (const [k, n] of tally) {
+      if (n > bestN) { best = k; bestN = n; }
+    }
+    return bestN >= 2 ? best : null;
+  };
+
+  const dominantLeaderTheme = themeMode(leaders);
+  const dominantLaggardTheme = themeMode(laggards);
+
+  // Regime read — purely from the THEMES of the top vs bottom baskets.
+  const cyclicalish = (t: string | null) =>
+    t === "cyclical" || t === "secular growth" || t === "rate beneficiary" || t === "commodity-linked";
+  const defensiveish = (t: string | null) =>
+    t === "defensive" || t === "rate-sensitive";
+
+  let regime: MarketRead["regime"] = "mixed";
+  if (scoreRange < 0.05) regime = "no-edge";
+  else if (cyclicalish(dominantLeaderTheme) && defensiveish(dominantLaggardTheme)) regime = "risk-on";
+  else if (defensiveish(dominantLeaderTheme) && cyclicalish(dominantLaggardTheme)) regime = "risk-off";
+
+  // Paragraph — a few coupled sentences. Keep it concrete with names + scores.
+  const fmt = (v: number | null) => (v === null ? "—" : v.toFixed(3));
+  const leaderNames = leaders.map((s) => `${s.symbol} (${metaFor(s.symbol).name})`).join(", ");
+  const laggardNames = laggards.map((s) => `${s.symbol} (${metaFor(s.symbol).name})`).join(", ");
+
+  const themeReason = dominantLeaderTheme
+    ? `Two-of-three leaders share a ${dominantLeaderTheme} profile, which the 10-day model is favoring right now.`
+    : `Leaders span different themes — no single regime is dominating.`;
+
+  const dispersionReason =
+    scoreRange < 0.05
+      ? `Score range is only ${scoreRange.toFixed(3)} — the pack is tight, so don't read too much into the rank order.`
+      : scoreRange < 0.12
+        ? `Score range is ${scoreRange.toFixed(3)} — modest dispersion; the lead is real but not commanding.`
+        : `Score range is ${scoreRange.toFixed(3)} — wide dispersion; the model has a clear preference for the leaders.`;
+
+  const regimeLine = {
+    "risk-on":  `Read: risk-on rotation. Cyclical / growth baskets lead while defensives lag.`,
+    "risk-off": `Read: risk-off / defensive bid. Defensive baskets lead while cyclicals lag.`,
+    "mixed":    `Read: rotation is mixed — leadership doesn't cleanly map to a single regime.`,
+    "no-edge":  `Read: scores are bunched — model doesn't see a strong edge between baskets.`,
+  }[regime];
+
+  const paragraph = [
+    `Top 3 (10-day score): ${leaderNames}.`,
+    `Bottom 3: ${laggardNames}.`,
+    themeReason,
+    dispersionReason,
+    regimeLine,
+  ].join(" ");
+
+  return {
+    leaders,
+    laggards,
+    scoreRange,
+    dominantLeaderTheme,
+    dominantLaggardTheme,
+    regime,
+    paragraph,
+  };
+}
+
+const REGIME_BADGE: Record<MarketRead["regime"], { label: string; cls: string }> = {
+  "risk-on":  { label: "Risk-on rotation",  cls: "bg-signal-bullish/15 text-signal-bullish ring-signal-bullish/30" },
+  "risk-off": { label: "Defensive bid",     cls: "bg-signal-bearish/15 text-signal-bearish ring-signal-bearish/30" },
+  "mixed":    { label: "Mixed leadership",  cls: "bg-muted/40 text-muted-foreground ring-border" },
+  "no-edge":  { label: "No clear edge",     cls: "bg-muted/40 text-muted-foreground ring-border" },
+};
+
+// ────────────────────────────────────────────────────────────────────────────
+// Component
+// ────────────────────────────────────────────────────────────────────────────
 
 export function SectorHeatmap() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["sectors", { horizon: 10 }],
     queryFn: () => api.sectors({ horizon: 10 }),
   });
+
+  const { ranked, unranked, total, marketRead } = useMemo(() => {
+    const ranked = (data?.sectors ?? [])
+      .filter((s) => s.latest_rank !== null)
+      .sort((a, b) => (a.latest_rank ?? 999) - (b.latest_rank ?? 999));
+    const unranked = (data?.sectors ?? []).filter((s) => s.latest_rank === null);
+    return {
+      ranked,
+      unranked,
+      total: ranked.length,
+      marketRead: buildMarketRead(ranked),
+    };
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -46,12 +227,6 @@ export function SectorHeatmap() {
     );
   }
 
-  const ranked = data.sectors
-    .filter((s) => s.latest_rank !== null)
-    .sort((a, b) => (a.latest_rank ?? 999) - (b.latest_rank ?? 999));
-  const unranked = data.sectors.filter((s) => s.latest_rank === null);
-  const total = ranked.length;
-
   return (
     <div className="space-y-6">
       <div className="flex items-baseline justify-between">
@@ -63,6 +238,8 @@ export function SectorHeatmap() {
           </p>
         </div>
       </div>
+
+      {marketRead && <MarketReadCard read={marketRead} />}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {ranked.map((s) => (
@@ -84,17 +261,90 @@ export function SectorHeatmap() {
   );
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Sub-components
+// ────────────────────────────────────────────────────────────────────────────
+
+function MarketReadCard({ read }: { read: MarketRead }) {
+  const badge = REGIME_BADGE[read.regime];
+  return (
+    <Card className="border-border bg-card">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 space-y-0 p-4 pb-2">
+        <div>
+          <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Market read
+          </CardTitle>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            How to read this rotation in plain English.
+          </p>
+        </div>
+        <span
+          className={cn(
+            "rounded-full px-2.5 py-1 text-xs font-semibold ring-1",
+            badge.cls
+          )}
+        >
+          {badge.label}
+        </span>
+      </CardHeader>
+      <CardContent className="p-4 pt-1 text-sm leading-relaxed text-foreground">
+        <p>{read.paragraph}</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <LeaderLagBlock title="Why these are leading" rows={read.leaders} kind="leader" />
+          <LeaderLagBlock title="Why these are lagging" rows={read.laggards} kind="laggard" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function LeaderLagBlock({
+  title, rows, kind,
+}: { title: string; rows: SectorEntry[]; kind: "leader" | "laggard" }) {
+  return (
+    <div className="rounded-lg border border-border bg-background/60 p-3">
+      <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {title}
+      </div>
+      <ul className="space-y-1.5 text-xs">
+        {rows.map((r) => {
+          const m = metaFor(r.symbol);
+          const score = r.latest_score;
+          const sign =
+            score === null ? "—" : score > 0 ? `+${score.toFixed(3)}` : score.toFixed(3);
+          const reason =
+            kind === "leader"
+              ? `model score ${sign} on a ${m.theme} basket`
+              : `model score ${sign}, ${m.theme} basket out of favor`;
+          const drivers = m.drivers.length ? `Watch: ${m.drivers.slice(0, 2).join(", ")}.` : "";
+          return (
+            <li key={r.symbol} className="text-foreground">
+              <span className="font-semibold">{r.symbol}</span>{" "}
+              <span className="text-muted-foreground">— {m.name}</span>{" "}
+              <span className="text-muted-foreground">— {reason}.</span>{" "}
+              {drivers && <span className="text-muted-foreground">{drivers}</span>}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
+  const tier = s.latest_rank !== null ? tierFor(s.latest_rank, totalRanked) : null;
+  const meta = metaFor(s.symbol);
   return (
     <Link href={`/sectors/${encodeURIComponent(s.symbol)}`} className="block group">
-      <Card className={cn("transition-colors", tileBg(s.latest_rank, totalRanked))}>
-        <CardHeader className="p-3">
+      <Card className={cn("h-full transition-colors", tileBg(tier))}>
+        <CardHeader className="p-3 pb-1">
           <div className="flex items-baseline justify-between">
             <CardTitle className="text-base">{s.symbol}</CardTitle>
             {s.latest_rank !== null && (
               <span className="num text-xs text-muted-foreground">#{s.latest_rank}</span>
             )}
           </div>
+          <div className="text-[11px] text-muted-foreground">{meta.name}</div>
         </CardHeader>
         <CardContent className="p-3 pt-0 text-xs text-muted-foreground">
           <div className="flex justify-between">
@@ -105,6 +355,11 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
             <span>holdings</span>
             <span className="num">{s.n_constituents}</span>
           </div>
+          {tier && (
+            <p className="mt-2 line-clamp-2 leading-snug text-foreground/80">
+              {captionFor(tier, s.latest_score)}
+            </p>
+          )}
         </CardContent>
       </Card>
     </Link>
