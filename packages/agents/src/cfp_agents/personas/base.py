@@ -169,6 +169,13 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
     name: ClassVar[str] = "base_persona"
     system_prompt: ClassVar[str] = ""
 
+    # Per-persona Chain-of-Thought scaffolding. Each entry is one numbered
+    # reasoning step the model walks through BEFORE writing the structured
+    # verdict — shaped to the persona's investing framework, not generic
+    # "think step by step" boilerplate (which defeats persona separation).
+    # Empty default = persona doesn't yet have a CoT chain (legacy behavior).
+    cot_steps: ClassVar[list[str]] = []
+
     def __init__(self, llm: LlmClient | None = None) -> None:
         self._llm = llm or LlmClient()
 
@@ -312,16 +319,16 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
         # CEOs and earnings calls. Critic-flagged from the prompt audit.
         if is_etf:
             instrument_framing = (
-                f"You are evaluating a SECTOR / THEMATIC ETF — a basket of stocks, NOT a single "
-                f"company. Apply your investing framework at the BASKET level: "
-                f"sector beta, aggregate flow regime, macro tailwind/headwind for the "
-                f"sector, relative strength vs SPY, dispersion across constituents. "
-                f"Do NOT discuss the ETF as if it had a CEO, an earnings call, "
-                f"a management team, owner earnings, a moat, or a product cycle — "
-                f"those concepts belong to individual companies, not baskets. "
-                f"Do NOT compute a P/E or DCF on the ETF; compute it on its "
-                f"underlying sector if at all. Use the price tape, flow data, "
-                f"and macro/regime evidence below as your primary inputs."
+                "You are evaluating a SECTOR / THEMATIC ETF — a basket of stocks, NOT a single "
+                "company. Apply your investing framework at the BASKET level: "
+                "sector beta, aggregate flow regime, macro tailwind/headwind for the "
+                "sector, relative strength vs SPY, dispersion across constituents. "
+                "Do NOT discuss the ETF as if it had a CEO, an earnings call, "
+                "a management team, owner earnings, a moat, or a product cycle — "
+                "those concepts belong to individual companies, not baskets. "
+                "Do NOT compute a P/E or DCF on the ETF; compute it on its "
+                "underlying sector if at all. Use the price tape, flow data, "
+                "and macro/regime evidence below as your primary inputs."
             )
         else:
             instrument_framing = (
@@ -373,12 +380,30 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
         lens_text = self.lens(state).strip()
         lens_block = f"\n\n{self.name}-specific lens:\n{lens_text}" if lens_text else ""
 
+        # --- persona-shaped Chain-of-Thought ---
+        # Each step IS the persona's framework collapsed into a question.
+        # Buffett walks through "do I understand this business" before "what's
+        # the moat" before "what's the price"; Soros walks through "what's the
+        # cycle stage" before "is positioning crowded". Generic CoT defeats
+        # persona separation; persona-shaped CoT preserves it.
+        if self.cot_steps:
+            cot_lines = "\n".join(f"  {i + 1}. {step}" for i, step in enumerate(self.cot_steps))
+            cot_block = (
+                "\n\nReason through these steps internally BEFORE you write the "
+                "structured verdict (you don't need to surface the steps in "
+                "your output — they're scaffolding for your reasoning):\n"
+                f"{cot_lines}"
+            )
+        else:
+            cot_block = ""
+
         return (
             f"{instrument_block}\n\n"
             f"{price_block}\n\n"
             f"{fund_block}\n\n"
             f"{flow_block}"
-            f"{lens_block}\n\n"
+            f"{lens_block}"
+            f"{cot_block}\n\n"
             "Provide your verdict in the structured output format.\n\n"
             "Quality bar — non-negotiable:\n"
             f"- {instrument_framing}\n"

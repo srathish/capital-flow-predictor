@@ -47,6 +47,13 @@ concerns (what kills the cheap-and-good combination).\
 class GreenblattPersona(BasePersona):
     name = "greenblatt"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Compute the earnings yield (1/PE or EBIT/EV) — is it top-quartile within the universe? If not, Magic Formula path is closed.",
+        "Compute return on capital (ROIC, ROE) — is it ALSO top-quartile? Either alone is not enough; the joint score is the signal.",
+        "Is there a special-situation event (announced or imminent spinoff, restructuring, post-bankruptcy, merger security) that creates forced selling regardless of value?",
+        "Sanity check on capital structure — is leverage low enough that this can be held 12 months without forced exit?",
+        "Final commitment: Magic Formula long requires top-quartile on BOTH yield AND ROIC. Special-situation long requires a NAMED corporate event. Otherwise pass — discipline is the edge.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         bundle = state.get("evidence")

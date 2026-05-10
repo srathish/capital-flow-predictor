@@ -60,6 +60,13 @@ both a crowded consensus and a structural break in the story.\
 class BurryPersona(BasePersona):
     name = "burry"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "What is the worst-case asset value floor — tangible book, net cash, liquidation? If the business stops generating returns tomorrow, what's left for shareholders?",
+        "What is the consensus narrative on this name today — bull or bear, and how crowded? Check short fee, retail attention, options skew, recent news tone.",
+        "Is there a SPECIFIC catalyst within 12-24 months — forced selling, asset sale, regulatory shift, accounting reset, recap? Without one the gap doesn't close on its own.",
+        "Balance-sheet check — is leverage low enough to survive the workout window? Distressed-leverage cigar butts go bankrupt before they re-rate.",
+        "Final commitment: pass is the default. Bullish requires margin of safety AND a named catalyst window. Bearish requires a crowded consensus AND a structural reason it cracks.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         # Burry hunts for froth (unusual call buying at high IV) and shorts

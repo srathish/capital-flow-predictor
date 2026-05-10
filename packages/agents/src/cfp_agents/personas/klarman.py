@@ -49,6 +49,13 @@ mispricing in dollars and the specific catalyst), 3-5 bullets of evidence
 class KlarmanPersona(BasePersona):
     name = "klarman"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "What is the conservative intrinsic value floor — tangible book, NAV, sum-of-parts, or conservative-DCF? Don't anchor on multiples; ground in cash and assets.",
+        "What is the SPECIFIC catalyst that closes the gap within 12-24 months — spinoff, asset sale, restructuring, recap, regulatory shift, proxy fight? Without one, this is dead money.",
+        "What is the margin of safety in dollars — current price vs floor value? You want a meaningful discount, not 'fair value'.",
+        "Could you write the LP one-pager in two sentences each — thesis and downside protection? If you can't articulate both crisply, the position isn't ready.",
+        "Final commitment: bullish only when discount + named catalyst + survivable balance sheet all line up. Cash is optionality — passing IS a position.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         bundle = state.get("evidence")

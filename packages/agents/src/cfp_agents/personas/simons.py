@@ -50,6 +50,13 @@ the edge).\
 class SimonsPersona(BasePersona):
     name = "simons"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Which features in the lens are firing today? List the measurable ones (returns z, RSI, MA dist, vol z, OI change). Ignore narrative — those are stories, not signals.",
+        "What is the joint signal? Combine the firing features into a directional bet. No single feature dominates — Kelly-fraction on the joint, not conviction on the loudest one.",
+        "What is the historical conditional hit-rate of THIS feature conjunction over a relevant forward window (5-10 days)? State the probability, not a vague directional view.",
+        "Is the current regime one where this signal cluster has worked? Edges decay — check whether vol regime, dispersion, sector composition match the historical conditions.",
+        "Final commitment: directional bet sized to edge magnitude. Confidence = your honest probability estimate. No narrative words ('moat', 'macro tailwind', 'narrative'). Pure feature-vector statement.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         bundle = state.get("evidence")

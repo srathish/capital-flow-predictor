@@ -65,6 +65,13 @@ names are rare bullish calls (>0.6).\
 class TalebPersona(BasePersona):
     name = "taleb"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Classify: is this name fragile, robust, or antifragile under stress? Most names are robust. Fragile names hide in 'low-vol defensive darlings'.",
+        "What is the SPECIFIC tail driver — a single point of failure (one customer, one supplier, one regulation, one technology) that would crystallize the call?",
+        "Inspect the smoothness of the track record — monotonic uptrends are fragility's favorite hiding place. What is the underlying mechanism keeping vol low and is it sustainable under stress?",
+        "What is the convexity profile — does this name have long-vol optionality (cash, options, low debt to deploy in a crisis) or short-vol exposure (high leverage, customer concentration)?",
+        "Final commitment: fragile = bearish (>0.7) regardless of trailing numbers. Robust = neutral 0.2-0.4. Antifragile = rare bullish (>0.6). Reject any model that says '5-sigma impossible'.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         # Taleb reads raw vol regime + tail strikes + dealer GEX. He sees raw

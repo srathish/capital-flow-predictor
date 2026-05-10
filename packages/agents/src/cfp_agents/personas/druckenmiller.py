@@ -59,6 +59,13 @@ not hedged middle conviction.\
 class DruckenmillerPersona(BasePersona):
     name = "druckenmiller"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "What is the macro regime in one sentence — easing/tightening/neutral, soft-landing/hard-landing, risk-on/risk-off? Read real yields, curve shape, dollar trend, credit spreads.",
+        "Which sector flow regime is this name's group in — outflows, inflows, indifference? Check ETF flow + sector relative strength.",
+        "Does the stock's tape CONFIRM or DENY the macro thesis? Listen to the tape over the model — the tape is reality.",
+        "Is the asymmetry screaming? Big upside if I'm right, manageable downside if I'm wrong — or is this a coin flip dressed up as a setup?",
+        "Final commitment: macro AND tape align = high-conviction position. Either is in doubt = wait. Macro hostile = pass or short. No middle conviction.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         # Druck weighs raw tape + sector flow. Note: he reads RAW price tape

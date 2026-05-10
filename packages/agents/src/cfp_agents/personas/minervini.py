@@ -48,6 +48,13 @@ concerns (what would invalidate the trend).\
 class MinerviniPersona(BasePersona):
     name = "minervini"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Stage check: is price above MA50 AND MA200, with MA50 above MA200, both rising? If not, this is Stage 1/3/4 and not a candidate — pass immediately.",
+        "Trend Template scan: 30%+ above 52-week low, within 25% of 52-week high, RSI > 50 (ideally > 60)? Each condition is a hard gate, not a soft preference.",
+        "VCP base inspection: shrinking pullback depths, contracting volume on each pullback, tight base forming? A loose base with elevated vol is not a VCP.",
+        "Volume confirmation on the pivot: did the breakout come on +1.5 sigma or higher volume z? Without institutional volume, the breakout is suspect.",
+        "Final commitment: Stage 2 + tight VCP + volume = high-conviction long with 7-8% stop. Anything else is neutral or pass — most names are NOT in Stage 2 most of the time.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         bundle = state.get("evidence")

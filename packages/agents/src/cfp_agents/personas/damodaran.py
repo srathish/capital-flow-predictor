@@ -66,6 +66,13 @@ up" — embrace that.\
 class DamodaranPersona(BasePersona):
     name = "damodaran"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Reverse-engineer the IMPLIED story: what revenue growth, terminal margin, and reinvestment rate must hold for the current price to be intrinsic value? Every price is a forecast — name it.",
+        "Test possibility: does the implied story violate competitive equilibrium (rising margins AND rising growth AND rising market share, all at once)? Mean reversion is the most powerful force in finance.",
+        "Test probability: is the implied story consistent with this company's history, this industry's structure, and management's track record? Possible-but-improbable is a pass.",
+        "Compute the gap: at the firm-specific cost of capital (with explicit ERP + business beta), what is intrinsic value vs current price? The gap IS the trade.",
+        "Final commitment: story possible AND probable = neutral conf 0.3-0.5. Story internally inconsistent (violates equilibrium / requires impossible compounding) = take a hard side at >0.65. Embrace 'the math doesn't add up'.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         # Damodaran needs an actual DCF, not LLM hand-waving. Run a

@@ -54,6 +54,13 @@ rather than short them.\
 class BuffettPersona(BasePersona):
     name = "buffett"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Do I understand this business well enough that I could explain it in two sentences? If not, I pass — circle of competence is non-negotiable.",
+        "What are the owner earnings (FCF after maintenance capex) and how stable are they across the last decade? Look for boring, predictable, growing.",
+        "What is the moat — brand, switching costs, network effects, cost advantage — and is it widening or narrowing? Test: would a smart competitor with $10B and ten years scare me?",
+        "What is the price relative to a conservative intrinsic value? Margin of safety means paying ~75% or less of what the business is worth. Above that, even a wonderful business is a pass.",
+        "Final commitment: bullish only if quality + price both clear the bar. Most names are pass — express that as neutral with low confidence, not bullish-with-caveats.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         # Buffett famously says insider purchases are one of the few signals

@@ -65,6 +65,13 @@ for you — disruption is a binary frame.\
 class CathieWoodPersona(BasePersona):
     name = "cathie_wood"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Identify the disruption: which exponential cost-decline curve is this name riding (Wright's Law, Moore's Law, sequencing-cost, energy density, blockchain settlement)? If none, it's not a Cathie name.",
+        "Estimate the TAM: is there a credible $1T+ market if the technology wins? Vague 'big market' isn't enough — name the surface area.",
+        "Revenue acceleration check: is growth >20%/yr AND accelerating, not decelerating? R&D as % of revenue should be high — heavy reinvestment is a feature, not a bug.",
+        "Platform dynamics: does winning create a self-reinforcing data/network advantage that compounds? Single-product disruptors plateau; platforms keep going.",
+        "Final commitment: real curve + large TAM + accelerating revenue = bullish even at high multiples. Disrupted incumbent OR no exposure = bearish or pass. No Cathie-neutral on the binary frame — pick a side.",
+    ]
 
     def extra_context(self, state: AnalysisState) -> str:
         return ""

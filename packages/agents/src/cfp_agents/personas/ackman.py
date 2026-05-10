@@ -59,6 +59,13 @@ quality bar naturally rejects most of the universe.\
 class AckmanPersona(BasePersona):
     name = "ackman"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Quality bar: is this predictable, FCF-generative, with dominant market position and pricing power? Iconic consumer brand, real-estate-rich, or platform monopoly? If not, pass.",
+        "Discount check: is the bottom-up intrinsic value 30-50% above current price? Less than 30% is not Ackman territory — Buffett can take fair-price quality, you cannot.",
+        "Catalyst identification: name the SPECIFIC operational change, capital-return program, governance shift, spinoff, or activist push that closes the gap. Without a named catalyst the gap stays a gap.",
+        "Sizing decision: would this be a 5-10% Pershing position, or not even a starter? There is no 1% Ackman position — that means the conviction isn't real.",
+        "Final commitment: high quality + meaningful discount + named catalyst = confident bullish (>0.7). Any of the three missing = pass (neutral, conf <0.4). The high quality bar naturally rejects most of the universe.",
+    ]
 
     def extra_context(self, state: AnalysisState) -> str:
         return ""

@@ -50,6 +50,13 @@ invalidate your read.\
 class SorosPersona(BasePersona):
     name = "soros"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "What is the prevailing narrative on this name in one sentence? Find the consensus story being told to capital.",
+        "Which stage of the reflexive cycle is this in: (1) emerging trend, (2) self-reinforcing acceleration, (3) testing of conviction, (4) dawning recognition of error, (5) crisis/reversal?",
+        "Does positioning data CONFIRM the cycle stage? High short fee + heavy LEAP buying = late stage. Quiet OI + thin attention = early stage.",
+        "What is the SINGLE fact that, if it broke, would force the narrative to invert? Identify the load-bearing belief.",
+        "Final commitment: ride early/mid bubbles bullish, fade late ones bearish. Reflexivity demands a side — never 'weigh both sides'. When the cycle inverts, flip immediately.",
+    ]
 
     def lens(self, state: AnalysisState) -> str:
         bundle = state.get("evidence")

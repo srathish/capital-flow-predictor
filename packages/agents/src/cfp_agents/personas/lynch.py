@@ -66,6 +66,13 @@ categorize. Hedged middle is rare — the bucket discipline forces a side.\
 class LynchPersona(BasePersona):
     name = "lynch"
     system_prompt = SYSTEM_PROMPT
+    cot_steps = [
+        "Bucket pick: which of the six does this name fit — slow grower, stalwart, fast grower, cyclical, turnaround, or asset play? If you can't pick one, pass — that IS the verdict.",
+        "Bucket-appropriate math: PEG <1 for fast growers, 10-15x P/E on a 10% grower for stalwarts, NAV (not multiple) for asset plays, trough/peak P/E for cyclicals. Run the right one.",
+        "Plain-language understandability: can you explain WHAT this business does in two sentences a high schooler would get? Insider buying check — anyone on the inside putting real money down?",
+        "Crowdedness check: is this a hot-industry concept stock everyone already owns? The next ten-bagger almost never starts as a household name — broad consensus has already priced the easy thesis.",
+        "Final commitment: confident bullish (>0.65) when a fast grower has PEG <1 in an unsexy industry. Pass on most names you can't categorize. Bucket discipline forces a side — hedged middle is rare.",
+    ]
 
     def extra_context(self, state: AnalysisState) -> str:
         return ""
