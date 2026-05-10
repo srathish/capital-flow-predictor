@@ -39,34 +39,37 @@ interface AgentMeta {
   room: RoomKey;
 }
 
+// Faces, not symbols. Each agent is a tiny office worker — pick the face
+// emoji that best evokes the persona's character. Iconography (drum,
+// globe, etc.) was readable but didn't read as PEOPLE.
 const AGENTS: AgentMeta[] = [
-  // Analyst Pit
-  { id: "technicals",        initials: "TC", display: "Technicals",        emoji: "📈", room: "analysts" },
-  { id: "fundamentals",      initials: "FN", display: "Fundamentals",      emoji: "📊", room: "analysts" },
-  { id: "sentiment",         initials: "SE", display: "Sentiment",         emoji: "💬", room: "analysts" },
-  { id: "news",              initials: "NW", display: "News",              emoji: "📰", room: "analysts" },
-  { id: "flow",              initials: "FL", display: "Flow",              emoji: "🌊", room: "analysts" },
-  // Persona Hall
-  { id: "buffett",           initials: "WB", display: "Buffett",           emoji: "🧓", room: "personas" },
-  { id: "burry",             initials: "MB", display: "Burry",             emoji: "🥁", room: "personas" },
-  { id: "druckenmiller",     initials: "SD", display: "Druckenmiller",     emoji: "🌍", room: "personas" },
-  { id: "taleb",             initials: "NT", display: "Taleb",             emoji: "🦢", room: "personas" },
-  { id: "soros",             initials: "GS", display: "Soros",             emoji: "♻️", room: "personas" },
-  { id: "simons",            initials: "JS", display: "Simons",            emoji: "🧮", room: "personas" },
-  { id: "klarman",           initials: "SK", display: "Klarman",           emoji: "🛡️", room: "personas" },
-  { id: "greenblatt",        initials: "JG", display: "Greenblatt",        emoji: "✨", room: "personas" },
-  { id: "minervini",         initials: "MM", display: "Minervini",         emoji: "📐", room: "personas" },
-  { id: "cathie_wood",       initials: "CW", display: "Cathie Wood",       emoji: "🚀", room: "personas" },
-  { id: "damodaran",         initials: "AD", display: "Damodaran",         emoji: "📚", room: "personas" },
-  { id: "lynch",             initials: "PL", display: "Lynch",             emoji: "🛒", room: "personas" },
-  { id: "ackman",            initials: "BA", display: "Ackman",            emoji: "📣", room: "personas" },
-  // Researcher offices
-  { id: "bull_researcher",   initials: "🐂", display: "Bull Researcher",   emoji: "🐂", room: "bull" },
-  { id: "bear_researcher",   initials: "🐻", display: "Bear Researcher",   emoji: "🐻", room: "bear" },
-  // Synthesis desk
-  { id: "trader",            initials: "TR", display: "Trader",            emoji: "🎯", room: "synthesis" },
-  { id: "risk_manager",      initials: "RM", display: "Risk Manager",      emoji: "🛟", room: "synthesis" },
-  { id: "portfolio_manager", initials: "PM", display: "Portfolio Mgr",     emoji: "👔", room: "synthesis" },
+  // Analyst Pit — quant analysts in glasses-and-laptop mode
+  { id: "technicals",        initials: "TC", display: "Technicals",        emoji: "👨‍💻", room: "analysts" },
+  { id: "fundamentals",      initials: "FN", display: "Fundamentals",      emoji: "👨‍🔬", room: "analysts" },
+  { id: "sentiment",         initials: "SE", display: "Sentiment",         emoji: "🧐",   room: "analysts" },
+  { id: "news",              initials: "NW", display: "News",              emoji: "🤳",   room: "analysts" },
+  { id: "flow",              initials: "FL", display: "Flow",              emoji: "🕵️",   room: "analysts" },
+  // Persona Hall — each face picked to evoke the investor
+  { id: "buffett",           initials: "WB", display: "Buffett",           emoji: "👴",   room: "personas" },
+  { id: "burry",             initials: "MB", display: "Burry",             emoji: "🥸",   room: "personas" },
+  { id: "druckenmiller",     initials: "SD", display: "Druckenmiller",     emoji: "🤵",   room: "personas" },
+  { id: "taleb",             initials: "NT", display: "Taleb",             emoji: "🧔",   room: "personas" },
+  { id: "soros",             initials: "GS", display: "Soros",             emoji: "🧓",   room: "personas" },
+  { id: "simons",            initials: "JS", display: "Simons",            emoji: "👨‍🔬", room: "personas" },
+  { id: "klarman",           initials: "SK", display: "Klarman",           emoji: "👨‍💼", room: "personas" },
+  { id: "greenblatt",        initials: "JG", display: "Greenblatt",        emoji: "🤓",   room: "personas" },
+  { id: "minervini",         initials: "MM", display: "Minervini",         emoji: "💪",   room: "personas" },
+  { id: "cathie_wood",       initials: "CW", display: "Cathie Wood",       emoji: "👩‍💻", room: "personas" },
+  { id: "damodaran",         initials: "AD", display: "Damodaran",         emoji: "👨‍🏫", room: "personas" },
+  { id: "lynch",             initials: "PL", display: "Lynch",             emoji: "🧑‍💼", room: "personas" },
+  { id: "ackman",            initials: "BA", display: "Ackman",            emoji: "👨‍⚖️", room: "personas" },
+  // Researcher offices — kept as the literal animals (their whole identity)
+  { id: "bull_researcher",   initials: "BU", display: "Bull Researcher",   emoji: "🐂",   room: "bull" },
+  { id: "bear_researcher",   initials: "BE", display: "Bear Researcher",   emoji: "🐻",   room: "bear" },
+  // Synthesis desk — the executives
+  { id: "trader",            initials: "TR", display: "Trader",            emoji: "🧠",   room: "synthesis" },
+  { id: "risk_manager",      initials: "RM", display: "Risk Manager",      emoji: "🧯",   room: "synthesis" },
+  { id: "portfolio_manager", initials: "PM", display: "Portfolio Mgr",     emoji: "👔",   room: "synthesis" },
 ];
 
 // Room layout — percentages of the office canvas. Each room is a rectangle
@@ -180,17 +183,34 @@ export function OfficeView({ ticker }: { ticker: string }) {
     };
   }, []);
 
-  // Bullish/bearish/neutral color, or pulsing blue if no signal yet.
-  function discClasses(sig: AgentSignalEntry | undefined, live: boolean): string {
+  // Body shirt color, by signal. Bullish = green shirt, bearish = red,
+  // neutral = gray. Pre-run / pending = dark muted; thinking = pulsing blue.
+  function bodyClasses(sig: AgentSignalEntry | undefined, live: boolean): string {
     if (!sig) {
       return live
-        ? "bg-primary/30 text-primary ring-2 ring-primary/40 animate-pulse"
-        : "bg-muted/40 text-muted-foreground ring-1 ring-border";
+        ? "bg-primary/60 ring-1 ring-primary/40 animate-pulse"
+        : "bg-muted/60 ring-1 ring-border";
     }
     const m: Record<SignalKind, string> = {
-      bullish: "bg-signal-bullish text-white ring-2 ring-signal-bullish/60",
-      bearish: "bg-signal-bearish text-white ring-2 ring-signal-bearish/60",
-      neutral: "bg-muted text-foreground ring-1 ring-border",
+      bullish: "bg-signal-bullish ring-1 ring-signal-bullish/70",
+      bearish: "bg-signal-bearish ring-1 ring-signal-bearish/70",
+      neutral: "bg-muted-foreground/50 ring-1 ring-border",
+    };
+    return m[sig.signal];
+  }
+
+  // Outer halo around the head — same color family but lighter, for instant
+  // signal-recognition at small sizes.
+  function headHaloClasses(sig: AgentSignalEntry | undefined, live: boolean): string {
+    if (!sig) {
+      return live
+        ? "ring-2 ring-primary/50 bg-card"
+        : "ring-1 ring-border bg-card";
+    }
+    const m: Record<SignalKind, string> = {
+      bullish: "ring-2 ring-signal-bullish/60 bg-card",
+      bearish: "ring-2 ring-signal-bearish/60 bg-card",
+      neutral: "ring-1 ring-border bg-card",
     };
     return m[sig.signal];
   }
@@ -295,7 +315,9 @@ export function OfficeView({ ticker }: { ticker: string }) {
           )
         )}
 
-        {/* Agents — absolutely positioned, smooth-transition movement. */}
+        {/* Agents — absolutely positioned little people. Each is a head
+            (emoji), torso (signal-colored "shirt"), and two stubby legs.
+            CSS transition handles wandering; group-hover scales them up. */}
         {AGENTS.map((a) => {
           const sig = byAgent.get(a.id);
           const pos = positions[a.id];
@@ -310,18 +332,54 @@ export function OfficeView({ ticker }: { ticker: string }) {
               onMouseLeave={() => setHoveredId((h) => (h === a.id ? null : h))}
               onClick={() => setSelectedId(a.id)}
               className={cn(
-                "absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[11px] font-bold shadow-lg transition-all duration-[2800ms] ease-in-out hover:scale-110 hover:z-20",
-                discClasses(sig, isLive),
-                isSelected && "scale-125 ring-4 ring-primary/70 z-30"
+                "group absolute flex -translate-x-1/2 -translate-y-1/2 cursor-pointer flex-col items-center transition-all duration-[2800ms] ease-in-out hover:z-20",
+                isSelected && "z-30"
               )}
               style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
               title={a.display}
             >
-              <span className="leading-none">{a.initials}</span>
+              {/* Live "thinking" indicator above the head */}
+              {isLive && (
+                <span className="mb-0.5 whitespace-nowrap rounded-full bg-primary/15 px-1.5 py-px text-[8px] font-bold uppercase tracking-wider text-primary">
+                  thinking
+                </span>
+              )}
 
-              {/* Speech bubble on hover */}
+              {/* Head — emoji centered in a card-colored circle with a
+                  signal-colored ring. Slight bob on selection/hover. */}
+              <div
+                className={cn(
+                  "relative flex h-7 w-7 items-center justify-center rounded-full text-base shadow-md transition-transform group-hover:scale-110",
+                  headHaloClasses(sig, isLive),
+                  isSelected && "scale-110 ring-4 ring-primary"
+                )}
+              >
+                <span className="leading-none drop-shadow-sm">{a.emoji}</span>
+              </div>
+
+              {/* Torso — narrow rounded "shirt" colored by signal */}
+              <div
+                className={cn(
+                  "-mt-[3px] h-3 w-4 rounded-t-md rounded-b-sm shadow",
+                  bodyClasses(sig, isLive),
+                  isSelected && "h-3.5 w-[18px]"
+                )}
+              />
+
+              {/* Stubby legs */}
+              <div className="-mt-px flex gap-[2px]">
+                <span className="block h-1 w-[3px] rounded-sm bg-foreground/70" />
+                <span className="block h-1 w-[3px] rounded-sm bg-foreground/70" />
+              </div>
+
+              {/* Initials label below — small, subtle, only highlights on hover */}
+              <span className="mt-0.5 whitespace-nowrap rounded bg-background/80 px-1 text-[8px] font-bold leading-tight text-muted-foreground group-hover:text-foreground">
+                {a.initials}
+              </span>
+
+              {/* Speech bubble on hover (above the head) */}
               {isHovered && sig?.rationale && (
-                <div className="absolute -top-2 left-1/2 z-40 w-72 -translate-x-1/2 -translate-y-full rounded-lg border border-border bg-card p-3 text-left text-xs shadow-xl">
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-40 mb-2 w-72 -translate-x-1/2 rounded-lg border border-border bg-card p-3 text-left text-xs shadow-xl">
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <span className="font-semibold">
                       {a.emoji} {a.display}
@@ -335,13 +393,6 @@ export function OfficeView({ ticker }: { ticker: string }) {
                     conf <span className="num text-foreground">{sig.confidence.toFixed(2)}</span>
                   </div>
                 </div>
-              )}
-
-              {/* Live "thinking" tag */}
-              {isLive && (
-                <span className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-semibold uppercase text-primary">
-                  thinking…
-                </span>
               )}
             </button>
           );
