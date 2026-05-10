@@ -273,13 +273,18 @@ async def get_mentions(
     """
 
     # Catalyst-keyword aggregates over the last 7d.
+    # NOTE: we unnest both tickers AND keywords and ARRAY_AGG the scalar `kw`.
+    # Aggregating `keywords` directly yields a 2-D text array which postgres
+    # rejects when posts have different keyword counts ("cannot accumulate
+    # arrays of different dimensionality"). Counting posts requires
+    # COUNT(DISTINCT id) since the keyword unnest multiplies rows.
     posts_sql = """
         SELECT t AS ticker,
-               COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '48 hours') AS n_48h,
-               COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '6 hours') AS n_6h,
-               ARRAY_AGG(keywords) AS kw_lists
-        FROM reddit_posts, UNNEST(tickers) AS t
-        WHERE created_at >= NOW() - INTERVAL '7 days'
+               COUNT(DISTINCT p.id) FILTER (WHERE p.created_at >= NOW() - INTERVAL '48 hours') AS n_48h,
+               COUNT(DISTINCT p.id) FILTER (WHERE p.created_at >= NOW() - INTERVAL '6 hours') AS n_6h,
+               ARRAY_AGG(kw) AS kws_flat
+        FROM reddit_posts p, UNNEST(p.tickers) AS t, UNNEST(p.keywords) AS kw
+        WHERE p.created_at >= NOW() - INTERVAL '7 days'
           AND t = ANY($1::text[])
         GROUP BY t
     """
@@ -338,12 +343,11 @@ async def get_mentions(
     for r in post_rows:
         n_bull = 0
         n_bear = 0
-        for kws in (r["kw_lists"] or []):
-            for kw in (kws or []):
-                if kw in _BULLISH_KEYWORDS:
-                    n_bull += 1
-                elif kw in _BEARISH_KEYWORDS:
-                    n_bear += 1
+        for kw in (r["kws_flat"] or []):
+            if kw in _BULLISH_KEYWORDS:
+                n_bull += 1
+            elif kw in _BEARISH_KEYWORDS:
+                n_bear += 1
         sentiment_map[r["ticker"]] = (
             n_bull,
             n_bear,
