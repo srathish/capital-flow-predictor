@@ -24,10 +24,14 @@ on:
     - cron: "7 * * * *"
     # Daily at 06:00 UTC — agent forward-return evaluation (computes 5/10/20/60d returns vs SPY)
     - cron: "0 6 * * *"
+    # Daily at 06:30 UTC — rebuild features (after eval-agents updates with prior day prices)
+    - cron: "30 6 * * *"
+    # Weekly Sunday 07:00 UTC — retrain XGB ranker on latest features (Alpha158 + originals)
+    - cron: "0 7 * * 0"
   workflow_dispatch:
     inputs:
       job:
-        description: "Which job to run (reddit-catalysts | reddit | eval-agents)"
+        description: "Which job to run"
         required: false
         default: "reddit-catalysts"
         type: choice
@@ -35,6 +39,8 @@ on:
           - reddit-catalysts
           - reddit
           - eval-agents
+          - features-build
+          - train-baseline
 
 jobs:
   reddit-catalysts:
@@ -88,3 +94,39 @@ jobs:
       - name: Compute forward returns for matured agent signals
         working-directory: apps/jobs
         run: uv run cfp-jobs eval-agents
+
+  features-build:
+    # Daily feature rebuild. Reads prices_daily + macro_daily, writes the
+    # full feature panel (cross-asset + sector v1 + alpha158) to features_daily.
+    # Picks up the new Alpha158 columns automatically since the storage is JSONB.
+    if: github.event.schedule == '30 6 * * *' || github.event.inputs.job == 'features-build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Rebuild full daily feature panel (cross-asset + sector + alpha158)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs features-daily
+
+  train-baseline:
+    # Weekly XGB retrain. Walk-forward over the panel built by features-build,
+    # writes predictions back to the predictions table. Runs after Sunday's
+    # feature rebuild so the model trains on the freshest data.
+    if: github.event.schedule == '0 7 * * 0' || github.event.inputs.job == 'train-baseline'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Walk-forward train + persist predictions
+        working-directory: apps/jobs
+        run: uv run cfp-jobs train-baseline
