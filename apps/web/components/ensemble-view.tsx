@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { api } from "@/lib/api";
 import type { AgentKind, AgentSignalEntry, AgentsForTickerResponse } from "@/lib/types";
 import { formatDate, formatNum } from "@/lib/utils";
@@ -30,6 +31,7 @@ const PERSONAS = [
   "lynch",
   "ackman",
 ] as const;
+const RESEARCHERS = ["bull_researcher", "bear_researcher"] as const;
 const SYNTHESIS = ["trader", "risk_manager", "portfolio_manager"] as const;
 
 const PRETTY_NAMES: Record<string, string> = {
@@ -51,6 +53,8 @@ const PRETTY_NAMES: Record<string, string> = {
   damodaran: "Aswath Damodaran",
   lynch: "Peter Lynch",
   ackman: "Bill Ackman",
+  bull_researcher: "Bull Researcher",
+  bear_researcher: "Bear Researcher",
   trader: "Trader",
   risk_manager: "Risk Manager",
   portfolio_manager: "Portfolio Manager",
@@ -119,7 +123,7 @@ export function EnsembleView({ ticker }: { ticker: string }) {
   }, [isLiveActive, live.data, latest.data]);
 
   const completedCount = isLiveActive ? live.data?.completed ?? 0 : data?.signals.length ?? 0;
-  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 21 : 21;
+  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 23 : 23;
   const isComplete = isLiveActive ? live.data?.is_complete ?? false : true;
 
   const isLoading = isLiveActive ? live.isLoading : latest.isLoading;
@@ -172,6 +176,17 @@ export function EnsembleView({ ticker }: { ticker: string }) {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card p-1 text-xs font-semibold">
+            <span className="rounded-full bg-primary px-3 py-1.5 text-white">
+              Grid (v1)
+            </span>
+            <Link
+              href={`/agents/${encodeURIComponent(upper)}/v2`}
+              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground"
+            >
+              Office (v2)
+            </Link>
+          </div>
           {data && (
             <div className="flex items-center gap-2 text-xs">
               <SignalBadge signal="bullish" /> <span className="num">{counts.bullish}</span>
@@ -252,6 +267,13 @@ export function EnsembleView({ ticker }: { ticker: string }) {
               title="Synthesis"
               description="Trader → Risk Manager → Portfolio Manager (final verdict)"
               agents={SYNTHESIS}
+              byAgent={byAgent}
+              live={isLiveActive && !isComplete}
+            />
+            <AgentSection
+              title="Researchers (adversarial)"
+              description="Each researcher takes an assigned side and builds the strongest case — the Trader then adjudicates between them"
+              agents={RESEARCHERS}
               byAgent={byAgent}
               live={isLiveActive && !isComplete}
             />

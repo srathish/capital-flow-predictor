@@ -1014,7 +1014,13 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     persona_sigs: list[AgentSignal] = result.get("persona_signals", []) or []
 
     synth_sigs: list[AgentSignal] = []
-    for key in ("trader_decision", "risk_assessment", "portfolio_decision"):
+    for key in (
+        "bull_research",
+        "bear_research",
+        "trader_decision",
+        "risk_assessment",
+        "portfolio_decision",
+    ):
         v = result.get(key)
         if isinstance(v, AgentSignal):
             synth_sigs.append(v)
@@ -1057,9 +1063,10 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
     }
 
 
-# Total agents in the full ensemble: 5 analysts + 13 personas + 3 synthesis.
+# Total agents in the full ensemble:
+#   5 analysts + 13 personas + 2 researchers (bull/bear) + 3 synthesis (trader/risk/PM)
 # Used by callers (the API) to compute is_complete during a streaming run.
-EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 3
+EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 2 + 3
 EXPECTED_AGENT_COUNT_ANALYSTS_ONLY = 5
 
 
@@ -1106,7 +1113,13 @@ def run_analysts_streaming(
             new_signals: list[AgentSignal] = []
             new_signals.extend(delta.get("analyst_signals", []) or [])
             new_signals.extend(delta.get("persona_signals", []) or [])
-            for key in ("trader_decision", "risk_assessment", "portfolio_decision"):
+            for key in (
+                "bull_research",
+                "bear_research",
+                "trader_decision",
+                "risk_assessment",
+                "portfolio_decision",
+            ):
                 v = delta.get(key)
                 if isinstance(v, AgentSignal):
                     new_signals.append(v)

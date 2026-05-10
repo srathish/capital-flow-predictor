@@ -64,7 +64,10 @@ class AnalysisState(TypedDict, total=False):
     analyst_signals: Annotated[list[AgentSignal], operator.add]
     # Outputs from persona nodes (Phase 4c)
     persona_signals: Annotated[list[AgentSignal], operator.add]
-    # Outputs from synthesis nodes (Phase 4d) — single signals, not lists
+    # Outputs from synthesis nodes (Phase 4d) — single signals, not lists.
+    # bull/bear researchers run in parallel after personas, BEFORE trader.
+    bull_research: AgentSignal
+    bear_research: AgentSignal
     trader_decision: AgentSignal
     risk_assessment: AgentSignal
     portfolio_decision: AgentSignal

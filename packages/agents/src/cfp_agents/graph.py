@@ -20,7 +20,13 @@ from cfp_agents.analysts import (
 )
 from cfp_agents.personas import all_personas
 from cfp_agents.state import AnalysisState
-from cfp_agents.synthesis import PortfolioManager, RiskManager, Trader
+from cfp_agents.synthesis import (
+    BearResearcher,
+    BullResearcher,
+    PortfolioManager,
+    RiskManager,
+    Trader,
+)
 
 
 def _passthrough(_state: AnalysisState) -> dict:
@@ -73,10 +79,11 @@ def build_persona_graph() -> object:
 
 
 def build_full_graph() -> object:
-    """Phase 4d full graph: analysts -> personas -> trader -> risk -> pm -> END.
+    """Phase 4d full graph: analysts -> personas -> [bull|bear] -> trader -> risk -> pm -> END.
 
-    Synthesis stage is sequential: trader reads all signals; risk reads trader;
-    PM reads trader + risk.
+    Bull and bear researchers run in PARALLEL after personas (each reads the same
+    inputs and is forced to take a side). Trader then reconciles the two
+    adversarial briefs. Risk reads trader; PM reads trader + risk.
     """
     graph = StateGraph(AnalysisState)
 
@@ -104,6 +111,17 @@ def build_full_graph() -> object:
 
     graph.add_node("_personas_done", _passthrough)
 
+    # --- Researchers (parallel, adversarial) ---
+    bull = BullResearcher()
+    bear = BearResearcher()
+    graph.add_node(bull.name, bull)
+    graph.add_node(bear.name, bear)
+    graph.add_edge("_personas_done", bull.name)
+    graph.add_edge("_personas_done", bear.name)
+    graph.add_edge(bull.name, "_researchers_done")
+    graph.add_edge(bear.name, "_researchers_done")
+    graph.add_node("_researchers_done", _passthrough)
+
     # --- Synthesis (sequential) ---
     trader = Trader()
     risk = RiskManager()
@@ -112,7 +130,7 @@ def build_full_graph() -> object:
     graph.add_node(risk.name, risk)
     graph.add_node(pm.name, pm)
 
-    graph.add_edge("_personas_done", trader.name)
+    graph.add_edge("_researchers_done", trader.name)
     graph.add_edge(trader.name, risk.name)
     graph.add_edge(risk.name, pm.name)
     graph.add_edge(pm.name, END)
