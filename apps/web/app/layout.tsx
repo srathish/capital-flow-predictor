@@ -12,8 +12,8 @@ const jbMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Capital Flow Predictor",
-  description: "Sector rotation and agent ensemble dashboard.",
+  title: "Bellwether",
+  description: "Who's leading, who's lagging, and why — sector rotation and an agent ensemble for every ticker.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

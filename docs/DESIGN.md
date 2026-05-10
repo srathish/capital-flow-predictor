@@ -1,4 +1,7 @@
-# Capital Flow Predictor — Engineering Design Doc
+# Bellwether — Engineering Design Doc
+
+(Project codebase / package slugs remain `cfp_*` and `capital-flow-predictor`
+for stability; "Bellwether" is the user-facing product name.)
 
 **Status:** Draft v0.1
 **Owner:** Sai

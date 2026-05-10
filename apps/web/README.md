@@ -1,6 +1,6 @@
 # `@cfp/web` — Next.js dashboard
 
-Three views over the Capital Flow Predictor read API:
+Three views over the Bellwether read API:
 
 - **`/`** — Sector heatmap (rankings from `/v1/rankings` + `/v1/sectors`)
 - **`/watchlist`** — Top constituents per top sector with PM rationale (`/v1/watchlist`)

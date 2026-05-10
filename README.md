@@ -1,6 +1,9 @@
-# Capital Flow Predictor
+# Bellwether
 
-Sector & thematic ETF rotation prediction with causal interpretability.
+Who's leading, who's lagging, and why. Sector & thematic ETF rotation
+prediction with causal interpretability, plus a 23-agent investor ensemble
+that turns the signal into plain English.
+
 Full design: [docs/DESIGN.md](docs/DESIGN.md).
 
 ## Status

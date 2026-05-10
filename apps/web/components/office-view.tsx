@@ -210,12 +210,32 @@ interface AgentPos {
   y: number;
 }
 
+/** Per-agent animation state. Lives in a ref; the rAF loop mutates it in place
+ *  and a forceRender bumps React after each frame. */
+interface AgentAnim {
+  x: number;
+  y: number;
+  tx: number;          // target x
+  ty: number;          // target y
+  walking: boolean;
+  walkPhase: number;   // monotonic; legs swing on sin(phase * 2π)
+  idlePhase: number;   // monotonic; torso breathes when standing
+  partnerId: string | null;  // current conversation partner; null = wandering
+}
+
 function randomPosInRoom(room: RoomKey, padding = 4): AgentPos {
   const r = ROOMS[room];
   const x = r.x + padding + Math.random() * Math.max(0, r.w - padding * 2);
   const y = r.y + padding + Math.random() * Math.max(0, r.h - padding * 2);
   return { x, y };
 }
+
+// Stroll speed in tiles per ms. ~0.005 = unhurried, sims-like pace.
+const WALK_SPEED = 0.005;
+// Distance under which we consider an agent "arrived" at its target.
+const ARRIVE_DIST = 1.0;
+// How often we re-pick targets (and possibly swap conversation partners).
+const TARGET_PICK_INTERVAL_MS = 4500;
 
 // ────────────────────────────────────────────────────────────────────────────
 // Component
@@ -277,28 +297,114 @@ export function OfficeView({ ticker }: { ticker: string }) {
     [data]
   );
 
-  // Wander targets — re-pick every 2-4s, CSS transition animates the move.
-  const [positions, setPositions] = useState<Record<string, AgentPos>>(() => {
-    const init: Record<string, AgentPos> = {};
-    for (const a of AGENTS) init[a.id] = randomPosInRoom(a.room);
-    return init;
-  });
-  const tickRef = useRef<number | null>(null);
-  useEffect(() => {
-    function tick() {
-      setPositions((prev) => {
-        const next = { ...prev };
-        for (const a of AGENTS) {
-          if (Math.random() < 0.55) next[a.id] = randomPosInRoom(a.room);
-        }
-        return next;
-      });
-      tickRef.current = window.setTimeout(tick, 2200 + Math.random() * 1800);
+  // ───── Animation: ref + requestAnimationFrame interpolator ─────
+  // React state held only the *target* in v3, but updates were instant snaps
+  // because each render computed body-part coords from the new (x, y) — the
+  // CSS transition on the wrapper had no transform to animate. v4 puts the
+  // displayed position in a ref, mutates it each frame from a rAF loop, and
+  // bumps React via forceRender so hover bubbles + render order stay current.
+  const animRef = useRef<Record<string, AgentAnim>>({});
+  if (Object.keys(animRef.current).length === 0) {
+    for (const a of AGENTS) {
+      const p = randomPosInRoom(a.room);
+      animRef.current[a.id] = {
+        x: p.x, y: p.y, tx: p.x, ty: p.y,
+        walking: false, walkPhase: 0, idlePhase: Math.random() * 6.28,
+        partnerId: null,
+      };
     }
-    tickRef.current = window.setTimeout(tick, 800);
+  }
+  const [, setFrameTick] = useState(0);
+
+  // Target picker — slow cadence. Tries to *pair up* agents in the same
+  // room so they walk to a shared midpoint and "discuss"; otherwise the
+  // agent wanders to a random spot. Pairing is the key to making this
+  // feel like Smallville and not like a screensaver.
+  useEffect(() => {
+    function pick() {
+      const handled = new Set<string>();
+      // Group agents by room so pairs are room-local.
+      const byRoom: Record<string, string[]> = {};
+      for (const a of AGENTS) (byRoom[a.room] ||= []).push(a.id);
+
+      for (const a of AGENTS) {
+        if (handled.has(a.id)) continue;
+        const cur = animRef.current[a.id];
+        if (!cur) continue;
+        // 65% chance to pair up with another room-mate.
+        if (Math.random() < 0.65) {
+          const candidates = byRoom[a.room].filter(
+            (id) => id !== a.id && !handled.has(id),
+          );
+          if (candidates.length > 0) {
+            const partnerId = candidates[Math.floor(Math.random() * candidates.length)];
+            const partner = animRef.current[partnerId];
+            // Shared meeting point near the midpoint, biased toward room
+            // center so pairs don't pile up against the walls.
+            const r = ROOMS[a.room];
+            const cx = r.x + r.w / 2;
+            const cy = r.y + r.h / 2;
+            const mx = (cur.x + partner.x) / 2 * 0.6 + cx * 0.4;
+            const my = (cur.y + partner.y) / 2 * 0.6 + cy * 0.4;
+            // Stand a tile apart so they don't overlap.
+            cur.tx = mx - 0.9;
+            cur.ty = my;
+            partner.tx = mx + 0.9;
+            partner.ty = my;
+            cur.partnerId = partnerId;
+            partner.partnerId = a.id;
+            handled.add(a.id);
+            handled.add(partnerId);
+            continue;
+          }
+        }
+        // Solo wander.
+        const t = randomPosInRoom(a.room);
+        cur.tx = t.x;
+        cur.ty = t.y;
+        cur.partnerId = null;
+        handled.add(a.id);
+      }
+    }
+    const seed = window.setTimeout(pick, 600);
+    const id = window.setInterval(pick, TARGET_PICK_INTERVAL_MS);
     return () => {
-      if (tickRef.current) window.clearTimeout(tickRef.current);
+      window.clearTimeout(seed);
+      window.clearInterval(id);
     };
+  }, []);
+
+  // rAF interpolator — moves each agent toward its target at WALK_SPEED,
+  // tracks walking/idle phase for the leg + breath animation in <Sim>.
+  useEffect(() => {
+    let raf = 0;
+    let last = performance.now();
+    function frame(now: number) {
+      const dt = Math.min(now - last, 64); // clamp big gaps (tab inactive)
+      last = now;
+      for (const a of AGENTS) {
+        const s = animRef.current[a.id];
+        if (!s) continue;
+        const dx = s.tx - s.x;
+        const dy = s.ty - s.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < ARRIVE_DIST) {
+          s.walking = false;
+          s.idlePhase += dt * 0.0025;
+        } else {
+          const step = Math.min(dist, WALK_SPEED * dt);
+          s.x += (dx / dist) * step;
+          s.y += (dy / dist) * step;
+          s.walking = true;
+          // Leg swing rate scales with movement so the cadence matches gait.
+          s.walkPhase += dt * 0.006;
+        }
+      }
+      setFrameTick((t) => (t + 1) % 1_000_000);
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const counts = useMemo(() => {
@@ -311,23 +417,22 @@ export function OfficeView({ ticker }: { ticker: string }) {
   const selectedSignal = selectedAgent ? byAgent.get(selectedAgent.id) : undefined;
 
   // ───── Z-order: combine furniture + agents and sort back-to-front ─────
-  const renderables = useMemo(() => {
-    type Item =
-      | { kind: "furn"; f: Furniture; depth: number }
-      | { kind: "agent"; a: AgentMeta; pos: AgentPos; depth: number };
-    const items: Item[] = [];
-    for (const f of FURNITURE) {
-      // rugs render under everything else regardless of x+y
-      const depth = f.kind === "rug" ? -1e6 + (f.x + f.y) : f.x + f.y;
-      items.push({ kind: "furn", f, depth });
-    }
-    for (const a of AGENTS) {
-      const p = positions[a.id];
-      items.push({ kind: "agent", a, pos: p, depth: p.x + p.y + 0.5 });
-    }
-    items.sort((a, b) => a.depth - b.depth);
-    return items;
-  }, [positions]);
+  // Computed inline (not memoized) because it reads from animRef which
+  // mutates without React knowing. forceRender drives ~60fps re-renders.
+  type Renderable =
+    | { kind: "furn"; f: Furniture; depth: number }
+    | { kind: "agent"; a: AgentMeta; anim: AgentAnim; depth: number };
+  const renderables: Renderable[] = [];
+  for (const f of FURNITURE) {
+    const depth = f.kind === "rug" ? -1e6 + (f.x + f.y) : f.x + f.y;
+    renderables.push({ kind: "furn", f, depth });
+  }
+  for (const a of AGENTS) {
+    const s = animRef.current[a.id];
+    if (!s) continue;
+    renderables.push({ kind: "agent", a, anim: s, depth: s.x + s.y + 0.5 });
+  }
+  renderables.sort((a, b) => a.depth - b.depth);
 
   // ───── World viewBox bounds (the fully-zoomed-out "home" view) ─────
   // Iso bounds: sx ∈ [(0 − WORLD_H)·TW, WORLD_W·TW]
@@ -461,7 +566,7 @@ export function OfficeView({ ticker }: { ticker: string }) {
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {upper} · Office View
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight">Smallville</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Bellwether Office</h1>
           <p className="text-xs text-muted-foreground">
             {data
               ? `${isLiveActive && !isComplete ? "Running" : "Last run"} · ${completedCount}/${expectedTotal} agents in`
@@ -585,11 +690,12 @@ export function OfficeView({ ticker }: { ticker: string }) {
               <Sim
                 key={it.a.id}
                 agent={it.a}
-                pos={it.pos}
+                anim={it.anim}
                 signal={sig}
                 live={isLive}
                 hovered={hoveredId === it.a.id}
                 selected={selectedId === it.a.id}
+                inConversation={it.anim.partnerId !== null && !it.anim.walking}
                 onHover={(h) => setHoveredId(h ? it.a.id : null)}
                 onClick={() => {
                   if (justPannedRef.current) return;
@@ -647,7 +753,8 @@ export function OfficeView({ ticker }: { ticker: string }) {
           const a = AGENTS.find((x) => x.id === hoveredId);
           const sig = a ? byAgent.get(a.id) : undefined;
           if (!a || !sig?.rationale) return null;
-          const p = positions[a.id];
+          const p = animRef.current[a.id];
+          if (!p) return null;
           const { sx, sy } = iso(p.x, p.y, 36);
           // Convert iso (sx, sy) to a percentage of the *current* SVG view,
           // so the bubble tracks the sim while the user pans/zooms.
@@ -991,82 +1098,108 @@ function shirtRing(sig: AgentSignalEntry | undefined, live: boolean): string {
 }
 
 function Sim({
-  agent, pos, signal, live, hovered, selected, onHover, onClick,
+  agent, anim, signal, live, hovered, selected, inConversation, onHover, onClick,
 }: {
   agent: AgentMeta;
-  pos: AgentPos;
+  anim: AgentAnim;
   signal: AgentSignalEntry | undefined;
   live: boolean;
   hovered: boolean;
   selected: boolean;
+  inConversation: boolean;
   onHover: (h: boolean) => void;
   onClick: () => void;
 }) {
-  const ground = iso(pos.x, pos.y, 0);
-  const head = iso(pos.x, pos.y, 22);
-  const torso = iso(pos.x, pos.y, 12);
+  const ground = iso(anim.x, anim.y, 0);
   const shirt = shirtColor(signal, live);
   const ring = shirtRing(signal, live);
   const scale = selected ? 1.25 : hovered ? 1.15 : 1.0;
+
+  // Local body coords (relative to the sim's ground point at 0, 0). The
+  // wrapper translates the whole sim into place; body parts use these locals.
+  const HEAD_LOCAL_Y = -22;
+  const TORSO_LOCAL_Y = -12;
+  const LEG_BASE_H = 6;
+  const LEG_TOP_LOCAL_Y = TORSO_LOCAL_Y + 6;
+
+  // Walking gait — legs swap which is "lifted" each half-cycle. Idle pose
+  // keeps both at base height but breathes the torso/head.
+  const swing = anim.walking ? Math.sin(anim.walkPhase * Math.PI * 2) : 0;
+  const leftLegH = LEG_BASE_H + (anim.walking ? swing * 1.6 : 0);
+  const rightLegH = LEG_BASE_H - (anim.walking ? swing * 1.6 : 0);
+
+  // Vertical bob — bigger while walking, micro while idling.
+  const bobY = anim.walking
+    ? Math.abs(Math.sin(anim.walkPhase * Math.PI * 2)) * -0.8
+    : Math.sin(anim.idlePhase) * -0.35;
+
   return (
     <g
-      style={{
-        cursor: "pointer",
-        transition: "transform 2800ms ease-in-out",
-      }}
+      style={{ cursor: "pointer" }}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
       onClick={onClick}
+      transform={`translate(${ground.sx}, ${ground.sy})`}
     >
-      {/* Shadow under feet */}
-      <ellipse cx={ground.sx} cy={ground.sy + 2} rx={9 * scale} ry={3.5 * scale} fill="url(#sim-shadow)" />
+      {/* Shadow under feet (stays at ground; doesn't bob) */}
+      <ellipse cx={0} cy={2} rx={9 * scale} ry={3.5 * scale} fill="url(#sim-shadow)" />
 
       {/* Live "thinking" pulse around feet */}
       {live && (
-        <ellipse
-          cx={ground.sx}
-          cy={ground.sy + 2}
-          rx={13}
-          ry={5}
-          fill="none"
-          stroke="rgba(122,163,255,0.55)"
-          strokeWidth="1.2"
-        >
+        <ellipse cx={0} cy={2} rx={13} ry={5} fill="none" stroke="rgba(122,163,255,0.55)" strokeWidth="1.2">
           <animate attributeName="rx" values="9;15;9" dur="1.6s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="0.8;0;0.8" dur="1.6s" repeatCount="indefinite" />
         </ellipse>
       )}
 
-      {/* Group with hover/selected scaling */}
-      <g transform={`translate(${ground.sx}, ${ground.sy}) scale(${scale}) translate(${-ground.sx}, ${-ground.sy})`}>
-        {/* Legs */}
-        <rect x={ground.sx - 3} y={torso.sy + 2} width="2" height="6" fill="#1f2229" rx="0.5" />
-        <rect x={ground.sx + 1} y={torso.sy + 2} width="2" height="6" fill="#1f2229" rx="0.5" />
+      {/* Conversation marker — small "..." bubble above paired sims at rest. */}
+      {inConversation && (
+        <g transform={`translate(8, ${HEAD_LOCAL_Y - 11})`} style={{ pointerEvents: "none" }}>
+          <ellipse cx={0} cy={0} rx={8} ry={4} fill="rgba(20,22,30,0.85)" stroke="rgba(255,255,255,0.18)" strokeWidth="0.6" />
+          {[-3, 0, 3].map((dx, i) => (
+            <circle key={i} cx={dx} cy={0} r={0.9} fill="rgba(255,255,255,0.85)">
+              <animate
+                attributeName="opacity"
+                values="0.2;1;0.2"
+                dur="1.4s"
+                begin={`${i * 0.2}s`}
+                repeatCount="indefinite"
+              />
+            </circle>
+          ))}
+        </g>
+      )}
+
+      {/* Body — scaled around the ground point for hover/selected pop */}
+      <g transform={`scale(${scale}) translate(0, ${bobY})`}>
+        {/* Legs — height swings each step so it looks like one is lifting */}
+        <rect x={-3} y={LEG_TOP_LOCAL_Y} width={2} height={leftLegH} fill="#1f2229" rx={0.5} />
+        <rect x={1}  y={LEG_TOP_LOCAL_Y} width={2} height={rightLegH} fill="#1f2229" rx={0.5} />
 
         {/* Torso (signal-colored shirt) */}
         <rect
-          x={ground.sx - 5}
-          y={torso.sy - 4}
-          width="10"
-          height="9"
-          rx="2.5"
+          x={-5}
+          y={TORSO_LOCAL_Y - 4}
+          width={10}
+          height={9}
+          rx={2.5}
           fill={shirt}
           stroke={ring}
-          strokeWidth="1.2"
+          strokeWidth={1.2}
         />
 
         {/* Head — circle with the persona emoji centered on top */}
         <circle
-          cx={head.sx}
-          cy={head.sy}
-          r="6.5"
+          cx={0}
+          cy={HEAD_LOCAL_Y}
+          r={6.5}
           fill="#f5e8d4"
           stroke={selected ? "#ffffff" : "rgba(0,0,0,0.45)"}
           strokeWidth={selected ? 1.6 : 0.8}
         />
         <text
-          x={head.sx}
-          y={head.sy + 3}
+          x={0}
+          y={HEAD_LOCAL_Y + 3}
           fontSize="9"
           textAnchor="middle"
           style={{ pointerEvents: "none" }}
@@ -1077,23 +1210,23 @@ function Sim({
         {/* Initials tag below the feet */}
         <g style={{ pointerEvents: "none" }}>
           <rect
-            x={ground.sx - 9}
-            y={ground.sy + 6}
-            width="18"
-            height="8"
-            rx="2"
+            x={-9}
+            y={6}
+            width={18}
+            height={8}
+            rx={2}
             fill="rgba(10,12,16,0.7)"
             stroke="rgba(255,255,255,0.10)"
-            strokeWidth="0.5"
+            strokeWidth={0.5}
           />
           <text
-            x={ground.sx}
-            y={ground.sy + 12}
+            x={0}
+            y={12}
             fontSize="6"
-            fontWeight="700"
+            fontWeight={700}
             textAnchor="middle"
             fill={hovered || selected ? "#ffffff" : "rgba(255,255,255,0.65)"}
-            letterSpacing="0.5"
+            letterSpacing={0.5}
           >
             {agent.initials}
           </text>

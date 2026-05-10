@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     await close_pool()
 
 
-app = FastAPI(title="Capital Flow Predictor API", version=__version__, lifespan=lifespan)
+app = FastAPI(title="Bellwether API", version=__version__, lifespan=lifespan)
 
 # CORS — Vercel deployments live on different origins. Allow all in dev;
 # tighten to specific origins in prod via settings.
