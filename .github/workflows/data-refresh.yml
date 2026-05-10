@@ -1,0 +1,90 @@
+name: Data refresh
+
+# Scheduled refresh of the live data layer the agents reason from. Each job
+# runs `cfp-jobs <subcommand>` against the production DB. They write to the
+# same tables the API reads, so freshness here directly drives evidence
+# bundle quality on every ensemble run.
+#
+# Required repo secrets:
+#   DATABASE_URL          — production Postgres connection string (Railway)
+#   FMP_API_KEY           — used by `flow-universe` if the universe needs sector lookups
+#   UNUSUALWHALES_API_KEY — used by `flow-universe`
+#
+# Optional secrets (langfuse traces from cron runs):
+#   LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST
+#
+# All jobs can also be triggered manually via the Actions tab
+# (workflow_dispatch).
+
+on:
+  schedule:
+    # Every 15 minutes — Reddit RSS catalyst feed (live partnership/leak/FDA chatter)
+    - cron: "*/15 * * * *"
+    # Hourly at :07 — Apewisdom mention snapshots (asymmetry flags need 3+ days to mean anything)
+    - cron: "7 * * * *"
+    # Daily at 06:00 UTC — agent forward-return evaluation (computes 5/10/20/60d returns vs SPY)
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Which job to run (reddit-catalysts | reddit | eval-agents)"
+        required: false
+        default: "reddit-catalysts"
+        type: choice
+        options:
+          - reddit-catalysts
+          - reddit
+          - eval-agents
+
+jobs:
+  reddit-catalysts:
+    # Triggered on the */15 schedule, OR manual dispatch with that input
+    if: github.event.schedule == '*/15 * * * *' || github.event.inputs.job == 'reddit-catalysts'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Pull Reddit RSS catalyst posts
+        working-directory: apps/jobs
+        run: uv run cfp-jobs reddit-catalysts
+
+  reddit-mentions:
+    if: github.event.schedule == '7 * * * *' || github.event.inputs.job == 'reddit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Snapshot Apewisdom mention rankings
+        working-directory: apps/jobs
+        run: uv run cfp-jobs reddit
+
+  eval-agents:
+    # Daily forward-return evaluation. Forward returns require >=5 trading
+    # days of price history past the agent_signal row, so this is meaningful
+    # once we have a week+ of accumulated runs.
+    if: github.event.schedule == '0 6 * * *' || github.event.inputs.job == 'eval-agents'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Compute forward returns for matured agent signals
+        working-directory: apps/jobs
+        run: uv run cfp-jobs eval-agents

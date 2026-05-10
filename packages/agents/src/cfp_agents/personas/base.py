@@ -213,7 +213,10 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
 
         try:
             parsed: PersonaOutput | None = self._llm.invoke_persona(
-                system_prompt=full_system, user_prompt=user_prompt
+                system_prompt=full_system,
+                user_prompt=user_prompt,
+                trace_name=f"persona.{self.name}",
+                trace_metadata={"ticker": ticker, "kind": "persona", "agent": self.name},
             )
         except Exception as e:
             return AgentSignal(

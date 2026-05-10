@@ -994,6 +994,9 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
 
     Side effect: writes to agent_signals table.
     """
+    from cfp_agents.observability import flush as _lf_flush
+    from cfp_agents.observability import trace_run
+
     run_ts = datetime.now(UTC)
     bundle, prices, fundamentals = build_evidence_bundle(database_url, ticker, sector, run_ts)
     persist_evidence(database_url, bundle)
@@ -1008,7 +1011,18 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
         "analyst_signals": [],
         "persona_signals": [],
     }
-    result = graph.invoke(state)
+    with trace_run(
+        name="ensemble_run",
+        metadata={
+            "ticker": ticker,
+            "sector": bundle.instrument.sector,
+            "run_ts": run_ts.isoformat(),
+            "include_personas": include_personas,
+            "mode": "invoke",
+        },
+    ):
+        result = graph.invoke(state)
+    _lf_flush()
 
     analyst_sigs: list[AgentSignal] = result.get("analyst_signals", []) or []
     persona_sigs: list[AgentSignal] = result.get("persona_signals", []) or []
@@ -1088,6 +1102,9 @@ def run_analysts_streaming(
     one query. The PM signal is written last (synthesis stage runs sequentially
     after all parallel nodes), so its presence == "run is complete".
     """
+    from cfp_agents.observability import flush as _lf_flush
+    from cfp_agents.observability import trace_run
+
     bundle, prices, fundamentals = build_evidence_bundle(database_url, ticker, sector, run_ts)
     persist_evidence(database_url, bundle)
 
@@ -1103,41 +1120,55 @@ def run_analysts_streaming(
     }
 
     n_persisted = 0
-    # graph.stream() yields one chunk per node completion. Each chunk is
-    # {node_name: state_delta} where state_delta is the fields that node added.
-    for chunk in graph.stream(state):
-        for _node_name, delta in chunk.items():
-            if not isinstance(delta, dict):
-                continue
+    # Wrap the entire ensemble run in one Langfuse trace so all per-persona
+    # generations nest under it. No-op if Langfuse env vars aren't set.
+    with trace_run(
+        name="ensemble_run",
+        metadata={
+            "ticker": ticker,
+            "sector": bundle.instrument.sector,
+            "run_ts": run_ts.isoformat(),
+            "include_personas": include_personas,
+        },
+    ):
+        # graph.stream() yields one chunk per node completion. Each chunk is
+        # {node_name: state_delta} where state_delta is the fields that node added.
+        for chunk in graph.stream(state):
+            for _node_name, delta in chunk.items():
+                if not isinstance(delta, dict):
+                    continue
 
-            new_signals: list[AgentSignal] = []
-            new_signals.extend(delta.get("analyst_signals", []) or [])
-            new_signals.extend(delta.get("persona_signals", []) or [])
-            for key in (
-                "bull_research",
-                "bear_research",
-                "trader_decision",
-                "risk_assessment",
-                "portfolio_decision",
-            ):
-                v = delta.get(key)
-                if isinstance(v, AgentSignal):
-                    new_signals.append(v)
+                new_signals: list[AgentSignal] = []
+                new_signals.extend(delta.get("analyst_signals", []) or [])
+                new_signals.extend(delta.get("persona_signals", []) or [])
+                for key in (
+                    "bull_research",
+                    "bear_research",
+                    "trader_decision",
+                    "risk_assessment",
+                    "portfolio_decision",
+                ):
+                    v = delta.get(key)
+                    if isinstance(v, AgentSignal):
+                        new_signals.append(v)
 
-            if not new_signals:
-                continue
+                if not new_signals:
+                    continue
 
-            try:
-                with connect(database_url) as conn:
-                    upsert_agent_signals(conn, run_ts, ticker, new_signals)
-                    conn.commit()
-                n_persisted += len(new_signals)
-                log.info(
-                    "streaming run %s/%s: +%d signals (total %d)",
-                    ticker, run_ts.isoformat(), len(new_signals), n_persisted,
-                )
-            except Exception as e:
-                log.warning("streaming write failed for %s: %s", ticker, e)
+                try:
+                    with connect(database_url) as conn:
+                        upsert_agent_signals(conn, run_ts, ticker, new_signals)
+                        conn.commit()
+                    n_persisted += len(new_signals)
+                    log.info(
+                        "streaming run %s/%s: +%d signals (total %d)",
+                        ticker, run_ts.isoformat(), len(new_signals), n_persisted,
+                    )
+                except Exception as e:
+                    log.warning("streaming write failed for %s: %s", ticker, e)
+
+    # Force-flush so short-lived API calls don't lose traces.
+    _lf_flush()
 
     return {
         "ticker": ticker,

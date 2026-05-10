@@ -183,9 +183,15 @@ infra/
 | `FRED_API_KEY` | FRED (free) | macro |
 | `FMP_API_KEY` | FMP free 250/day (paid for full coverage) | fundamentals + /profile |
 | `MOONSHOT_API_KEY` | api.moonshot.ai | LLM personas + chat synthesizer |
-| `LLM_PROVIDER` | env | `moonshot` (default) or `anthropic` |
+| `ANTHROPIC_API_KEY` | console.anthropic.com | LLM personas (when `LLM_PROVIDER=anthropic`) |
+| `LLM_PROVIDER` | env | `anthropic` (default) or `moonshot` |
 | `UNUSUAL_WHALES_API_KEY` | UW $200/mo | UW client |
 | `CORS_ORIGINS` | csv | Vercel domain |
+| `LANGFUSE_PUBLIC_KEY` | cloud.langfuse.com (free tier) | Optional — observability tracing on every LLM call |
+| `LANGFUSE_SECRET_KEY` | cloud.langfuse.com | Optional — pairs with public key |
+| `LANGFUSE_HOST` | env (defaults to `https://cloud.langfuse.com`) | Optional — for self-hosted Langfuse |
+
+**Langfuse:** with the public + secret keys set, every `LlmClient.parse` call becomes a Langfuse generation observation tagged with `{ticker, agent, kind=persona|synthesis, provider}` nested under one top-level `ensemble_run` trace per ticker. Without keys set, the instrumentation is a complete no-op (zero overhead). See `cfp_agents.observability` for the wrapper.
 
 ---
 
@@ -505,10 +511,10 @@ Highlights (reverse chronological):
 
 ## 12. Known issues / pending
 
-- **Reddit + catalyst data needs scheduled refresh.** `cfp-jobs reddit` daily for mention snapshots (asymmetry flags become meaningful from day 3 of snapshots). `cfp-jobs reddit-catalysts` every 30 min for the live `/catalysts` feed. Both currently one-shot; need Railway cron or GitHub Actions schedule.
+- ~~Reddit + catalyst data needs scheduled refresh.~~ **DONE** (`.github/workflows/data-refresh.yml`) — `cfp-jobs reddit-catalysts` every 15 min, `cfp-jobs reddit` hourly, `cfp-jobs eval-agents` daily at 06:00 UTC. Requires `DATABASE_URL` repo secret. Manual dispatch also wired via Actions tab.
 - **Flow analyst rationale display can mislead** — the "calls dominate" / "puts dominate" text is derived from a signed imbalance ratio, but the displayed `$X call vs $Y put` numbers are absolute values. When net_put_premium is negative (aggressive put SELLING, bullish), the rationale says "calls dominate" but the displayed numbers look like puts dominate. Tightening the rationale.
 - **Top-level assistant chat** — floating chat dock that uses tool-calling to drive runs/navigation/lookups across the app. Designed (Moonshot tool-use), not built.
-- **Langfuse instrumentation on `LlmClient`** — wrap every LLM call with trace/span metadata so per-persona cost, latency, hit-rate (once eval data accrues) is visible. Was always Phase 2; now also unlocks measuring whether the persona prompt rewrites moved signal quality.
+- ~~Langfuse instrumentation on `LlmClient`.~~ **DONE** — `cfp_agents.observability` module wraps every `parse`/`stream_chat` call as a Langfuse generation observation under a top-level `ensemble_run` trace. Set `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY` env vars on Railway (and optionally on the GitHub Actions cron jobs) to activate. No-op without the keys.
 - **Persona-conditional instrument framing in `personas/base.py`** — branch on `instrument.type == "etf"` so Cathie/Druck/Lynch don't pitch sector ETFs as single businesses. ~30 min surgical fix; called out by the prompt audit.
 - **Persona-shaped Chain-of-Thought** — biggest single quality lift available, but ~2× input cost; deferred until Langfuse shows the lift from the prompt-template rewrites first.
 - **Office v2 polish** — agent-to-agent meetup animations when two personas agree, sprite walking animation, room desk graphics, sound effects.

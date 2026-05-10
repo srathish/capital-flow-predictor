@@ -53,6 +53,8 @@ class SynthesizerAgent(ABC):
                 user_prompt=user_prompt,
                 output_format=self.output_format(),
                 max_tokens=1500,
+                trace_name=f"synth.{self.name}",
+                trace_metadata={"ticker": ticker, "kind": "synthesis", "agent": self.name},
             )
         except Exception as e:
             return self._neutral_fallback(

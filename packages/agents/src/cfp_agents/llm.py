@@ -14,9 +14,11 @@ persona and synthesizer code doesn't care which provider is in use.
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Literal, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from pydantic import BaseModel, Field, model_validator
+
+from cfp_agents.observability import extract_usage, trace_generation
 
 if TYPE_CHECKING:
     pass
@@ -141,42 +143,63 @@ class LlmClient:
         user_prompt: str,
         output_format: type[T],
         max_tokens: int = 1024,
+        trace_name: str = "llm.parse",
+        trace_metadata: dict[str, Any] | None = None,
     ) -> T | None:
-        """Provider-dispatched structured-output call. Returns None if unavailable."""
+        """Provider-dispatched structured-output call. Returns None if unavailable.
+
+        ``trace_name`` and ``trace_metadata`` flow through to Langfuse so the
+        per-persona trace is visible (no-op when Langfuse isn't configured)."""
         if self._client is None:
             return None
 
-        if self.provider == "anthropic":
-            response = self._client.messages.parse(  # type: ignore[union-attr]
-                model=self.model,
-                max_tokens=max_tokens,
-                system=[
-                    {
-                        "type": "text",
-                        "text": system_prompt,
-                        "cache_control": {"type": "ephemeral"},
-                    }
-                ],
-                messages=[{"role": "user", "content": user_prompt}],
-                output_format=output_format,
-            )
-            return response.parsed_output  # type: ignore[no-any-return]
+        with trace_generation(
+            name=trace_name,
+            model=self.model,
+            input_data={"system": system_prompt, "user": user_prompt},
+            metadata={"provider": self.provider, **(trace_metadata or {})},
+        ) as gen:
+            try:
+                if self.provider == "anthropic":
+                    response = self._client.messages.parse(  # type: ignore[union-attr]
+                        model=self.model,
+                        max_tokens=max_tokens,
+                        system=[
+                            {
+                                "type": "text",
+                                "text": system_prompt,
+                                "cache_control": {"type": "ephemeral"},
+                            }
+                        ],
+                        messages=[{"role": "user", "content": user_prompt}],
+                        output_format=output_format,
+                    )
+                    parsed = response.parsed_output  # type: ignore[union-attr]
+                elif self.provider == "moonshot":
+                    # OpenAI-compatible: system + user as plain messages, beta.parse()
+                    # for client-side Pydantic validation against the response.
+                    response = self._client.beta.chat.completions.parse(  # type: ignore[union-attr]
+                        model=self.model,
+                        max_tokens=max_tokens,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        response_format=output_format,
+                    )
+                    parsed = response.choices[0].message.parsed
+                else:
+                    raise ValueError(f"Unknown provider: {self.provider!r}")
 
-        if self.provider == "moonshot":
-            # OpenAI-compatible: system + user as plain messages, beta.parse()
-            # for client-side Pydantic validation against the response.
-            response = self._client.beta.chat.completions.parse(  # type: ignore[union-attr]
-                model=self.model,
-                max_tokens=max_tokens,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                response_format=output_format,
-            )
-            return response.choices[0].message.parsed  # type: ignore[no-any-return]
-
-        raise ValueError(f"Unknown provider: {self.provider!r}")
+                usage = extract_usage(response, self.provider)
+                gen.update(
+                    output=parsed.model_dump() if isinstance(parsed, BaseModel) else parsed,
+                    usage_details=usage,
+                )
+                return parsed  # type: ignore[no-any-return]
+            except Exception as e:
+                gen.update(output={"error": f"{type(e).__name__}: {e}"})
+                raise
 
     def invoke_persona(
         self,
@@ -184,6 +207,8 @@ class LlmClient:
         system_prompt: str,
         user_prompt: str,
         max_tokens: int = 1024,
+        trace_name: str = "persona.parse",
+        trace_metadata: dict[str, Any] | None = None,
     ) -> PersonaOutput | None:
         """Backwards-compat wrapper for the persona path. Calls ``parse`` with PersonaOutput."""
         return self.parse(
@@ -191,6 +216,8 @@ class LlmClient:
             user_prompt=user_prompt,
             output_format=PersonaOutput,
             max_tokens=max_tokens,
+            trace_name=trace_name,
+            trace_metadata=trace_metadata,
         )
 
     # ------- async streaming chat (used by the API's /chat/* endpoints) -------
