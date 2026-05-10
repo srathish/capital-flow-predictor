@@ -88,6 +88,27 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
     return data.holdings.filter(pred);
   }, [data, filter]);
 
+  // Weight comes in as a percentage (14.73 = 14.73%). Contribution = (weight/100) * return.
+  const movers = useMemo(() => {
+    if (!data) return null;
+    const make = (key: "return_1d" | "return_5d") => {
+      const rows = data.holdings
+        .map((h) => {
+          const w = h.weight;
+          const r = h[key];
+          if (w === null || w === undefined || r === null || r === undefined) return null;
+          return { h, contrib: (w / 100) * r, ret: r, weight: w };
+        })
+        .filter((x): x is { h: HoldingEntry; contrib: number; ret: number; weight: number } => x !== null);
+      const sorted = [...rows].sort((a, b) => b.contrib - a.contrib);
+      return {
+        up: sorted.slice(0, 3),
+        down: sorted.slice(-3).reverse(),
+      };
+    };
+    return { d1: make("return_1d"), d5: make("return_5d") };
+  }, [data]);
+
   if (isLoading) {
     return <Skeleton className="h-96 w-full" />;
   }
@@ -157,6 +178,16 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
           />
         </CardContent>
       </Card>
+
+      {/* Top contributors / detractors */}
+      {movers && (
+        <Card>
+          <CardContent className="grid gap-4 p-4 sm:grid-cols-2">
+            <MoversBlock label="1D contribution" up={movers.d1.up} down={movers.d1.down} />
+            <MoversBlock label="5D contribution" up={movers.d5.up} down={movers.d5.down} />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -268,6 +299,59 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+type MoverRow = { h: HoldingEntry; contrib: number; ret: number; weight: number };
+
+function MoversBlock({ label, up, down }: { label: string; up: MoverRow[]; down: MoverRow[] }) {
+  return (
+    <div>
+      <div className="mb-2 text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="grid grid-cols-2 gap-x-4">
+        <MoverList rows={up} sign="up" />
+        <MoverList rows={down} sign="down" />
+      </div>
+    </div>
+  );
+}
+
+function MoverList({ rows, sign }: { rows: MoverRow[]; sign: "up" | "down" }) {
+  if (rows.length === 0) {
+    return <div className="text-xs text-muted-foreground">—</div>;
+  }
+  const headerCls = sign === "up" ? "text-signal-bullish" : "text-signal-bearish";
+  return (
+    <div className="space-y-1">
+      <div className={cn("text-[10px] uppercase tracking-wide", headerCls)}>
+        {sign === "up" ? "Top 3 ↑" : "Bottom 3 ↓"}
+      </div>
+      {rows.map((r) => {
+        const contribBps = r.contrib * 10000; // basis points
+        return (
+          <Link
+            key={r.h.ticker}
+            href={`/agents/${encodeURIComponent(r.h.ticker)}`}
+            className="flex items-baseline justify-between gap-2 text-xs hover:bg-muted/30"
+          >
+            <span className="font-medium">{r.h.ticker}</span>
+            <span className="flex items-baseline gap-2 num">
+              <span
+                className={cn(
+                  contribBps > 0 ? "text-signal-bullish" : contribBps < 0 ? "text-signal-bearish" : "",
+                )}
+              >
+                {contribBps >= 0 ? "+" : ""}
+                {contribBps.toFixed(1)} bp
+              </span>
+              <span className="text-[10px] text-muted-foreground">
+                {r.weight.toFixed(1)}% × {(r.ret * 100).toFixed(2)}%
+              </span>
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 }
