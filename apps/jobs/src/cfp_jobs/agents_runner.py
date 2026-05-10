@@ -1029,6 +1029,8 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
 
     synth_sigs: list[AgentSignal] = []
     for key in (
+        "bull_rebuttal",
+        "bear_rebuttal",
         "bull_research",
         "bear_research",
         "trader_decision",
@@ -1078,9 +1080,9 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
 
 
 # Total agents in the full ensemble:
-#   5 analysts + 13 personas + 2 researchers (bull/bear) + 3 synthesis (trader/risk/PM)
+#   5 analysts + 13 personas + 2 rebuttals (debate) + 2 researchers + 3 synthesis
 # Used by callers (the API) to compute is_complete during a streaming run.
-EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 2 + 3
+EXPECTED_AGENT_COUNT_FULL = 5 + 13 + 2 + 2 + 3
 EXPECTED_AGENT_COUNT_ANALYSTS_ONLY = 5
 
 
@@ -1142,6 +1144,8 @@ def run_analysts_streaming(
                 new_signals.extend(delta.get("analyst_signals", []) or [])
                 new_signals.extend(delta.get("persona_signals", []) or [])
                 for key in (
+                    "bull_rebuttal",
+                    "bear_rebuttal",
                     "bull_research",
                     "bear_research",
                     "trader_decision",

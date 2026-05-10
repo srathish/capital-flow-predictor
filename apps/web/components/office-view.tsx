@@ -286,7 +286,7 @@ export function OfficeView({ ticker }: { ticker: string }) {
     return latest.data ?? null;
   }, [isLiveActive, live.data, latest.data]);
 
-  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 23 : 23;
+  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 25 : 25;
   const completedCount = isLiveActive
     ? live.data?.completed ?? 0
     : data?.signals.length ?? 0;

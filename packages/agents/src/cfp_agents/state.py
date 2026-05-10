@@ -64,6 +64,13 @@ class AnalysisState(TypedDict, total=False):
     analyst_signals: Annotated[list[AgentSignal], operator.add]
     # Outputs from persona nodes (Phase 4c)
     persona_signals: Annotated[list[AgentSignal], operator.add]
+    # Debate stage (Phase 4e) — runs after personas, before researchers.
+    # Top bullish persona rebuts the top bearish persona's strongest claim,
+    # and vice versa. Forces structural cross-examination instead of
+    # pure vote-counting at the synthesizer.
+    bull_rebuttal: AgentSignal
+    bear_rebuttal: AgentSignal
+
     # Outputs from synthesis nodes (Phase 4d) — single signals, not lists.
     # bull/bear researchers run in parallel after personas, BEFORE trader.
     bull_research: AgentSignal

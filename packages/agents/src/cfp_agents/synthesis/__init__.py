@@ -12,15 +12,19 @@ Each node writes a structured AgentSignal back to state and persists to
 `trader`, `risk_manager`, `portfolio_manager`).
 """
 
+from cfp_agents.synthesis.debate import BearRebuttal, BullRebuttal, render_rebuttals
 from cfp_agents.synthesis.portfolio_manager import PortfolioManager
 from cfp_agents.synthesis.researchers import BearResearcher, BullResearcher
 from cfp_agents.synthesis.risk_manager import RiskManager
 from cfp_agents.synthesis.trader import Trader
 
 __all__ = [
+    "BearRebuttal",
     "BearResearcher",
+    "BullRebuttal",
     "BullResearcher",
     "PortfolioManager",
     "RiskManager",
     "Trader",
+    "render_rebuttals",
 ]

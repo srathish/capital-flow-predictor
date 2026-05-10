@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 from cfp_agents.state import AgentSignal, AnalysisState
 from cfp_agents.synthesis.base import SynthesizerAgent, aggregate_vote, signals_table
+from cfp_agents.synthesis.debate import render_rebuttals
 
 
 class TraderDecision(BaseModel):
@@ -79,9 +80,15 @@ class Trader(SynthesizerAgent):
         bear = state.get("bear_research")
         bull_block = _format_brief(bull, "BULL")
         bear_block = _format_brief(bear, "BEAR")
+        rebuttals_block = render_rebuttals(state)
 
         return (
             f"Adjudicate the position decision for {ticker} (sector ETF: {sector or 'unknown'}).\n\n"
+            f"=== DEBATE (top bull persona ↔ top bear persona) ===\n"
+            f"This is the load-bearing disagreement. Each side picked the opponent's "
+            f"strongest claim and stated the explicit condition under which they would "
+            f"flip. Read these BEFORE the researcher briefs.\n\n"
+            f"{rebuttals_block}\n\n"
             f"=== BULL RESEARCHER ===\n{bull_block}\n\n"
             f"=== BEAR RESEARCHER ===\n{bear_block}\n\n"
             f"=== Underlying signals (for citation verification) ===\n"

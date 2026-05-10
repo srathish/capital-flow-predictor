@@ -21,7 +21,9 @@ from cfp_agents.analysts import (
 from cfp_agents.personas import all_personas
 from cfp_agents.state import AnalysisState
 from cfp_agents.synthesis import (
+    BearRebuttal,
     BearResearcher,
+    BullRebuttal,
     BullResearcher,
     PortfolioManager,
     RiskManager,
@@ -111,13 +113,26 @@ def build_full_graph() -> object:
 
     graph.add_node("_personas_done", _passthrough)
 
+    # --- Debate (parallel rebuttals) ---
+    # Top bull persona rebuts top bear's strongest claim, and vice versa.
+    # Forces structural cross-examination before the researchers summarize.
+    bull_reb = BullRebuttal()
+    bear_reb = BearRebuttal()
+    graph.add_node(bull_reb.name, bull_reb)
+    graph.add_node(bear_reb.name, bear_reb)
+    graph.add_edge("_personas_done", bull_reb.name)
+    graph.add_edge("_personas_done", bear_reb.name)
+    graph.add_edge(bull_reb.name, "_debate_done")
+    graph.add_edge(bear_reb.name, "_debate_done")
+    graph.add_node("_debate_done", _passthrough)
+
     # --- Researchers (parallel, adversarial) ---
     bull = BullResearcher()
     bear = BearResearcher()
     graph.add_node(bull.name, bull)
     graph.add_node(bear.name, bear)
-    graph.add_edge("_personas_done", bull.name)
-    graph.add_edge("_personas_done", bear.name)
+    graph.add_edge("_debate_done", bull.name)
+    graph.add_edge("_debate_done", bear.name)
     graph.add_edge(bull.name, "_researchers_done")
     graph.add_edge(bear.name, "_researchers_done")
     graph.add_node("_researchers_done", _passthrough)

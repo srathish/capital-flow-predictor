@@ -123,7 +123,7 @@ export function EnsembleView({ ticker }: { ticker: string }) {
   }, [isLiveActive, live.data, latest.data]);
 
   const completedCount = isLiveActive ? live.data?.completed ?? 0 : data?.signals.length ?? 0;
-  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 23 : 23;
+  const expectedTotal = isLiveActive ? live.data?.expected_total ?? 25 : 25;
   const isComplete = isLiveActive ? live.data?.is_complete ?? false : true;
 
   const isLoading = isLiveActive ? live.isLoading : latest.isLoading;

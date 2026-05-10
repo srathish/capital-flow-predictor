@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 
 from cfp_agents.state import AgentSignal, AnalysisState
 from cfp_agents.synthesis.base import SynthesizerAgent, signals_table
+from cfp_agents.synthesis.debate import render_rebuttals
 
 
 class ResearcherOutput(BaseModel):
@@ -107,10 +108,18 @@ BEAR_SYSTEM_PROMPT = (
 def _build_user_prompt(state: AnalysisState, side: str) -> str:
     ticker = state.get("ticker", "?")
     sector = state.get("sector", "")
+    rebuttals_block = render_rebuttals(state)
     return (
         f"Construct the strongest {side.upper()} case for {ticker} "
         f"(sector ETF: {sector or 'unknown'}).\n\n"
-        f"All agent signals (use these as your inputs — do not invent evidence):\n"
+        f"=== DEBATE (top bull persona ↔ top bear persona) ===\n"
+        f"Before you write your brief, read this structured cross-examination. "
+        f"Each side named the opponent's load-bearing claim and the condition "
+        f"under which they would flip. Your brief should explicitly engage with "
+        f"these — not ignore them.\n\n"
+        f"{rebuttals_block}\n\n"
+        f"=== All agent signals ===\n"
+        f"Use these as your inputs — do not invent evidence:\n"
         f"{signals_table(state)}\n\n"
         f"Produce the ResearcherOutput. Remember: you are the {side} researcher; "
         f"build the {side} case even if consensus disagrees."
