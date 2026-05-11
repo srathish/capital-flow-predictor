@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const tabs = [
   { href: "/", label: "Sectors" },
@@ -64,6 +65,7 @@ export function Nav() {
             Open
           </button>
         </form>
+        <ThemeToggle />
       </div>
     </header>
   );

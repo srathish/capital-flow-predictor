@@ -17,9 +17,25 @@ export const metadata: Metadata = {
   description: "Who's leading, who's lagging, and why — sector rotation and an agent ensemble for every ticker.",
 };
 
+const themeInitScript = `
+(function() {
+  try {
+    var t = localStorage.getItem('theme') || 'dark';
+    var root = document.documentElement;
+    if (t === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
+    root.style.colorScheme = t;
+  } catch (e) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jbMono.variable} dark`}>
+    <html lang="en" className={`${inter.variable} ${jbMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <Providers>
           <Nav />

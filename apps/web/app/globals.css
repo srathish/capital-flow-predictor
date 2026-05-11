@@ -13,21 +13,27 @@
 
 @layer base {
   :root {
-    /* Light kept as fallback only — <html> forces .dark. */
+    /* Robinhood-inspired light palette.
+       - Background: pure white.
+       - Cards: white, separated by hairline borders.
+       - Muted surfaces: a faint cool grey (#f5f5f7).
+       - Borders: ~#e5e5e8 hairline.
+       - Primary green: #00C805 (same as dark).
+       - Bearish: #E5210B (slightly darker for legibility on white). */
     --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    --foreground: 240 6% 10%;          /* ~#181819 */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
-    --border: 0 0% 90%;
-    --primary: 134 100% 39%;
+    --card-foreground: 240 6% 10%;
+    --muted: 240 10% 97%;              /* ~#f5f5f7 */
+    --muted-foreground: 240 4% 38%;    /* ~#5d5d65 */
+    --border: 240 6% 90%;              /* ~#e5e5e8 hairline */
+    --primary: 134 100% 39%;           /* #00C805 RH green */
     --primary-foreground: 0 0% 100%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 8%;
-    --signal-bullish: 134 100% 39%;
-    --signal-bearish: 16 100% 50%;
-    --signal-neutral: 0 0% 60%;
+    --accent: 240 10% 97%;
+    --accent-foreground: 240 6% 10%;
+    --signal-bullish: 134 100% 35%;    /* a touch darker for white bg */
+    --signal-bearish: 8 92% 47%;       /* ~#E5210B for legibility */
+    --signal-neutral: 240 4% 50%;
   }
 
   .dark {
