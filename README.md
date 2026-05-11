@@ -17,15 +17,22 @@ Full design and roadmap: [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What's in the app
 
-The web app is a Next.js 15 dashboard with seven tabs, each backed by its
-own FastAPI route and (where applicable) a background ingestion job.
+The web app is a Next.js 15 dashboard with six top-level tabs plus a
+drill-in Agents view, each backed by its own FastAPI route and (where
+applicable) a background ingestion job. A page-aware assistant dock is
+mounted on every page.
 
 ### Sectors — XGB rotation board
 
 The home page ranks all 26 sector & thematic ETFs by the latest XGB
 prediction, color-coded by theme (secular growth, cyclical, defensive,
-rate-sensitive, …) and annotated with rank deltas, sparklines, and a plain-
-English market read explaining *why* the ranking looks the way it does.
+rate-sensitive, …) and annotated with rank deltas, sparklines, and a
+**plain-English market read** explaining *why* the ranking looks the way
+it does — including a **forward-call narrative card** and **1D / 5D top
+contributors and detractors** per sector. The ranker exposes a scorecard
+(IC vs. naive baseline) so you can see how the model is doing out of
+sample; recent rotation features include macro-sensitivity exposures and
+constituent breadth.
 
 Click any tile to drill into the sector's constituents:
 
@@ -51,6 +58,13 @@ strongest case for their side; a Trader reconciles them; a Risk Manager
 sizes the position; a Portfolio Manager makes the final long / short /
 avoid call.
 
+Beyond the rule-based analysts, the personas receive **structured
+evidence** drawn from Unusual Whales (flow, dark pool, insider, ETF
+holdings), the **skylit.ai / Heatseeker structural snapshot + 0DTE
+Trinity** signals, the Reddit catalyst feed (the sentiment analyst now
+counts catalyst-feed posts toward Reddit evidence), and the latest XGB
+rotation rank for the underlying sector.
+
 You can talk to the synthesizer or any individual persona in their voice
 via SSE-streamed chat at the bottom of the page.
 
@@ -74,10 +88,17 @@ Force-directed graph over the 26 sector ETFs with two modes:
   which on a chosen horizon. Surfaces *"leader moved → watch follower"*
   triggers.
 
-Hover to isolate a node, click to drill into the sector, shift-click to
-expand its top constituents (with their pairwise correlations), drag to pin.
+Plus: a **time slider** to scrub correlation history, a **macro overlay**
+projecting macro series (DGS10, VIX, DXY, …) onto the graph, a
+**watchlist ring** highlighting sectors with active PM verdicts, and a
+**shock mode** that re-runs the graph under a chosen stress (rates up,
+VIX up, oil up). Hover to isolate a node, click to drill into the
+sector, shift-click to expand its top constituents (with their pairwise
+correlations), drag to pin.
 
 ### Catalysts — Reddit posts that matter
+
+![Catalysts feed](docs/screenshots/06-catalysts.png)
 
 Catalyst-keyword feed pulled from r/stocks, r/investing, r/wallstreetbets,
 and r/options. Posts are classified (partnership / FDA / earnings beat /
@@ -85,7 +106,14 @@ insider / acquisition / …), aggregated by ticker, clustered by composite
 score, and persisted. Filter by hour window (6h–7d), confidence threshold,
 sort by newest / top score / cluster size / engagement / biggest mover.
 
-### Reddit chatter — Apewisdom + enrichment
+A **30-day per-category track record** panel sits above the feed: hit
+rate and average forward return per catalyst type over the trailing 30
+days, so you can tell at a glance which categories are paying off and
+which are noise.
+
+### Reddit chatter — Apewisdom + enrichment + ML predictor
+
+![Reddit chatter](docs/screenshots/07-reddit.png)
 
 Top-mentioned tickers from the latest Apewisdom snapshot, enriched with:
 
@@ -96,21 +124,49 @@ Top-mentioned tickers from the latest Apewisdom snapshot, enriched with:
 - catalyst post count + freshness tone
 - sparkline + per-subreddit breakdown
 - contrarian + stealth-setup flags
+- **composite 20d score** + rule-based bull/bear signals with
+  backtested win rates
+- **xgb_reddit_v1** — an ML predictor over the enrichment features.
+  Per-ticker prediction + scorecard (precision @ top-K, lift vs.
+  baseline) backfilled nightly against realized 5d returns, with a
+  `subreddit_edge` feature pulled from per-sub historical IC.
 
 A drawer opens the underlying Reddit thread; a backtest tab aggregates
 "do mention spikes lead price moves?" by spike-bucket.
 
 > **Heads-up:** the Reddit tab depends on migrations `0009_reddit_mentions.sql`
-> + `0010_reddit_posts.sql` plus the `apewisdom` and `reddit_rss` ingestion
-> jobs. If you see "failed to fetch", run `make migrate` then `make daily`.
+> + `0010_reddit_posts.sql` (and `0011_reddit_predictions.sql` +
+> `0013_reddit_outcomes.sql` for the ML scorecard) plus the `apewisdom`
+> and `reddit_rss` ingestion jobs. If you see "failed to fetch", run
+> `make migrate` then `make daily`.
+
+### Flow — unusual options activity
+
+![Flow tab](docs/screenshots/08-flow.png)
+
+Anomaly feed over the Unusual Whales options trade stream, classified
+into seven anomaly kinds: **mega sweep** (big $ swept across exchanges),
+**block** (floor block, often LEAPs), **ask aggression** (≥85% of premium
+lifted), **repeated hits** on a single chain, **IV expansion** during the
+alert, **vol/OI explosion** (brand-new positioning), and **daily skew**
+(net call vs. put premium lopsided beyond 4×). Filter by anomaly kind,
+lookback window (4h / 24h / 3d / 7d), and minimum premium ($100K – $5M).
+
+Behind it sits `/v1/stocks/screen`, a server-side ranker that scores
+tickers as options-trade candidates by combining flow conviction (from
+the `whale_conviction` table, migration `0014`) with the XGB sector
+signal and momentum/volatility features.
 
 ### Top-level assistant
 
 A floating chat dock is mounted on every page. SSE-streamed Moonshot
 tool-calling loop with six tools (`get_rankings`, `get_sectors_heatmap`,
-`get_agents_for_ticker`, `get_catalysts`, `run_ensemble`, `navigate`) so you
-can ask "what's flagged in tech today?" or "run the ensemble on RKLB" from
-anywhere.
+`get_agents_for_ticker`, `get_catalysts`, `run_ensemble`, `navigate`) so
+you can ask "what's flagged in tech today?" or "run the ensemble on
+RKLB" from anywhere. The dock is **page-aware**: it pre-loads the
+current route's context (active sector, ticker, filters) so questions
+like "explain this ranking" or "why is this one flagged?" resolve
+against what you're looking at.
 
 ---
 
@@ -128,7 +184,7 @@ packages/
   agents/     # 25-agent ensemble (LangGraph state machine)
   skills/     # Claude skill bundles
 infra/
-  migrations/ # SQL migrations (0001..0010)
+  migrations/ # SQL migrations (0001..0014)
   railway.toml
 docs/
   DESIGN.md
@@ -137,8 +193,10 @@ docs/
 
 **Data layer:** Postgres + TimescaleDB (`prices_daily`, `macro_daily`,
 `features_daily`, `predictions`, `lead_lag_matrix`, `sector_holdings`,
-`fundamentals`, `agent_signals`, `watchlists`, `uw_*` for Unusual Whales,
-`reddit_mentions`, `reddit_posts`).
+`fundamentals`, `agent_signals`, `watchlists`, `uw_*` for Unusual
+Whales, `uw_etf_holdings`, `reddit_mentions`, `reddit_posts`,
+`reddit_predictions`, `reddit_outcomes`, `etf_breadth_snapshots`,
+`whale_conviction`, `run_evidence`, `agent_eval`, `stock_universe`).
 
 **Agent ensemble:** LangGraph DAG —
 `analysts → personas → debate → researchers → trader → risk_manager → portfolio_manager`.
@@ -224,7 +282,7 @@ uv run cfp-jobs skylit-login
 uv run python scripts/capture_screenshots.py
 ```
 
-Writes 7 PNGs into `docs/screenshots/`.
+Writes 8 PNGs into `docs/screenshots/`.
 
 ---
 

@@ -99,6 +99,9 @@ async def main() -> int:
         # 7. Reddit chatter.
         await shoot(page, f"{BASE}/reddit", "07-reddit")
 
+        # 8. Flow — unusual options activity.
+        await shoot(page, f"{BASE}/flow", "08-flow", settle_ms=2500)
+
         await browser.close()
     return 0
 
