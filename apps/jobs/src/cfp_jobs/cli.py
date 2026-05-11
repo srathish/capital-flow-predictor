@@ -461,6 +461,76 @@ def reddit_backfill_outcomes_cmd() -> None:
     console.print(f"[green]reddit_outcomes:[/green] {out}")
 
 
+@app.command("market-tide")
+def market_tide_cmd() -> None:
+    """Refresh the market-wide net call/put premium tape ('Market Tide').
+
+    UW returns ~1-min buckets for the current RTH session. Run every ~5min
+    during market hours; the Whale Conviction scorer reads this to decide
+    whether a single-name bet is with-tape or against-tape."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    n = ingestion.unusualwhales.ingest_market_tide(
+        settings.database_url, settings.unusual_whales_api_key
+    )
+    console.print(f"[green]market_tide:[/green] {n} rows")
+
+
+@app.command("flow-volatility")
+def flow_volatility_cmd(
+    tickers: str = typer.Option(
+        "",
+        help="Comma-separated tickers; default = constituents of PREDICTION_TARGETS + sector ETFs",
+    ),
+) -> None:
+    """Snapshot per-ticker IV regime (iv30, iv_rank, iv_percentile, rv30).
+
+    Powers the Whale Conviction scorer's vol-regime multiplier. Run nightly
+    after the holdings ingest. ~1 UW call per ticker."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    if tickers:
+        ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    else:
+        with psycopg.connect(to_psycopg_url(settings.database_url)) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT constituent FROM uw_etf_holdings
+                WHERE sector_etf = ANY(%s) AND constituent IS NOT NULL
+                """,
+                (list(PREDICTION_TARGETS),),
+            )
+            ticker_list = sorted({r[0] for r in cur.fetchall()} | set(PREDICTION_TARGETS))
+    n_ok = 0
+    for t in ticker_list:
+        try:
+            with ingestion.unusualwhales.UwClient(settings.unusual_whales_api_key) as uw, \
+                 psycopg.connect(to_psycopg_url(settings.database_url)) as conn:
+                body = uw.volatility_stats(t)
+                if ingestion.unusualwhales._upsert_volatility_stats(conn, t, body):
+                    n_ok += 1
+                conn.commit()
+        except Exception as e:  # noqa: BLE001 — keep going on a single-ticker failure
+            log = logging.getLogger(__name__)
+            log.warning("volatility for %s failed: %s", t, e)
+    console.print(f"[green]volatility:[/green] {n_ok}/{len(ticker_list)} tickers")
+
+
+@app.command("whale-conviction")
+def whale_conviction_cmd() -> None:
+    """Re-derive whale_conviction_signals from the latest flow + dark pool +
+    insider + congress + IV regime + market tide. Run every ~5min during RTH.
+
+    Heuristic 0..100 score per (ticker, window ∈ {4h, 24h}) with the why
+    captured as a JSON list so the UI can render the rationale pills."""
+    from cfp_jobs import score_whale_conviction
+
+    out = score_whale_conviction.run(settings.database_url)
+    console.print(f"[green]whale_conviction:[/green] {out}")
+
+
 @app.command("flow-congress")
 def flow_congress_cmd(
     limit: int = typer.Option(500, help="Max recent trades to ingest"),

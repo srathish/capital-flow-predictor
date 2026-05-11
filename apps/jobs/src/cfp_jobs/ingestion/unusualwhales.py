@@ -132,6 +132,28 @@ class UwClient:
         Replaces the yfinance top-10 stub."""
         return self._get(f"/etfs/{etf}/holdings") or []
 
+    def volatility_stats(self, ticker: str) -> dict | None:
+        """IV regime: iv30, iv_rank, iv_percentile, rv30.
+
+        Regime context that turns "call sweep" into either "bold bet on the
+        cheap" (low IV rank) or "chasing into rich vol" (high IV rank). Returned
+        as a single dict (UW wraps it in {"data": {...}})."""
+        body = self._get(f"/stock/{ticker}/volatility/stats")
+        if isinstance(body, list):
+            return body[0] if body else None
+        return body if isinstance(body, dict) else None
+
+    def market_tide(self, target_date: date | None = None) -> list[dict]:
+        """Market-wide net call/put premium tape (UW's "Market Tide").
+
+        Used as a broad-tape direction marker: a bullish single-name bet that
+        runs *against* a deeply red market tide is much louder than one that
+        runs with it."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get("/market/market-tide", params=params) or []
+
     def close(self) -> None:
         self._client.close()
 
@@ -1038,6 +1060,66 @@ def _upsert_congress(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
     return n
 
 
+def _upsert_volatility_stats(conn: psycopg.Connection, ticker: str, body: dict | None) -> int:
+    """One row per (date, ticker). UW returns the latest snapshot."""
+    if not body:
+        return 0
+    iv30 = _to_float(body.get("iv30"))
+    rv30 = _to_float(body.get("rv30"))
+    iv_rank = _to_float(body.get("iv_rank"))
+    iv_pct = _to_float(body.get("iv_percentile"))
+    # Some UW responses give 0-100, others 0-1; normalize to 0..1.
+    if iv_rank is not None and iv_rank > 1.5:
+        iv_rank /= 100.0
+    if iv_pct is not None and iv_pct > 1.5:
+        iv_pct /= 100.0
+    iv_rv = (iv30 / rv30) if (iv30 is not None and rv30 not in (None, 0)) else None
+    sql = """
+        INSERT INTO uw_volatility_stats (
+            snapshot_date, ticker, iv30, iv_rank, iv_percentile, rv30, iv_rv_ratio, last_fetched
+        ) VALUES (
+            CURRENT_DATE, %s, %s, %s, %s, %s, %s, NOW()
+        ) ON CONFLICT (snapshot_date, ticker) DO UPDATE SET
+            iv30 = EXCLUDED.iv30,
+            iv_rank = EXCLUDED.iv_rank,
+            iv_percentile = EXCLUDED.iv_percentile,
+            rv30 = EXCLUDED.rv30,
+            iv_rv_ratio = EXCLUDED.iv_rv_ratio,
+            last_fetched = NOW()
+    """
+    with conn.cursor() as cur:
+        cur.execute(sql, (ticker, iv30, iv_rank, iv_pct, rv30, iv_rv))
+    return 1
+
+
+def _upsert_market_tide(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
+    sql = """
+        INSERT INTO uw_market_tide (ts, net_call_premium, net_put_premium, net_volume)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (ts) DO UPDATE SET
+            net_call_premium = EXCLUDED.net_call_premium,
+            net_put_premium = EXCLUDED.net_put_premium,
+            net_volume = EXCLUDED.net_volume
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            ts = _to_ts(r.get("timestamp") or r.get("ts") or r.get("date"))
+            if ts is None:
+                continue
+            cur.execute(
+                sql,
+                (
+                    ts,
+                    _to_float(r.get("net_call_premium")),
+                    _to_float(r.get("net_put_premium")),
+                    _to_int(r.get("net_volume")),
+                ),
+            )
+            n += cur.rowcount
+    return n
+
+
 # ---------- ingest entrypoints ----------
 
 
@@ -1049,61 +1131,44 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
     """
     ticker = ticker.upper()
     counts: dict[str, int] = {}
+    # Each upsert runs inside its own savepoint (`with conn.transaction():`).
+    # A failure in one endpoint (missing table, schema drift) rolls back only
+    # that step instead of poisoning the outer transaction and discarding the
+    # entire ticker's data.
+    def _step(key: str, fn):
+        try:
+            with conn.transaction():
+                counts[key] = fn()
+        except Exception as e:
+            log.warning("%s failed for %s: %s", key, ticker, e)
+            counts[key] = 0
+
     with UwClient(api_key) as uw, connect(database_url) as conn:
-        # Stock info first — the instrument frame is the most load-bearing
-        # piece of data the personas read.
-        try:
-            counts["stock_info"] = _upsert_stock_info(conn, ticker, uw.info(ticker))
-        except Exception as e:
-            log.warning("stock_info failed for %s: %s", ticker, e)
-            counts["stock_info"] = 0
-        try:
-            counts["flow_alerts"] = _upsert_flow_alerts(conn, ticker, uw.flow_alerts(ticker))
-        except Exception as e:
-            log.warning("flow_alerts failed for %s: %s", ticker, e)
-            counts["flow_alerts"] = 0
-        try:
-            counts["dark_pool"] = _upsert_dark_pool(conn, ticker, uw.dark_pool(ticker))
-        except Exception as e:
-            log.warning("dark_pool failed for %s: %s", ticker, e)
-            counts["dark_pool"] = 0
-        try:
-            counts["net_prem"] = _upsert_net_prem_daily(conn, ticker, uw.net_prem_ticks(ticker))
-        except Exception as e:
-            log.warning("net_prem failed for %s: %s", ticker, e)
-            counts["net_prem"] = 0
-        try:
-            counts["short_data"] = _upsert_short_data(conn, ticker, uw.short_data(ticker))
-        except Exception as e:
-            log.warning("short_data failed for %s: %s", ticker, e)
-            counts["short_data"] = 0
-        try:
-            counts["greek_exposure"] = _upsert_greek_exposure(conn, ticker, uw.greek_exposure(ticker))
-        except Exception as e:
-            log.warning("greek_exposure failed for %s: %s", ticker, e)
-            counts["greek_exposure"] = 0
-        try:
-            counts["insider"] = _upsert_insider(conn, ticker, uw.insider_transactions(ticker))
-        except Exception as e:
-            log.warning("insider failed for %s: %s", ticker, e)
-            counts["insider"] = 0
-        try:
-            counts["oi_change"] = _upsert_oi_change(conn, ticker, uw.oi_change(ticker))
-        except Exception as e:
-            log.warning("oi_change failed for %s: %s", ticker, e)
-            counts["oi_change"] = 0
-        try:
-            counts["news"] = _upsert_news(conn, uw.news_headlines(ticker))
-        except Exception as e:
-            log.warning("news failed for %s: %s", ticker, e)
-            counts["news"] = 0
-        try:
-            counts["earnings"] = _upsert_earnings(conn, ticker, uw.earnings(ticker))
-        except Exception as e:
-            log.warning("earnings failed for %s: %s", ticker, e)
-            counts["earnings"] = 0
+        _step("stock_info",     lambda: _upsert_stock_info(conn, ticker, uw.info(ticker)))
+        _step("flow_alerts",    lambda: _upsert_flow_alerts(conn, ticker, uw.flow_alerts(ticker)))
+        _step("dark_pool",      lambda: _upsert_dark_pool(conn, ticker, uw.dark_pool(ticker)))
+        _step("net_prem",       lambda: _upsert_net_prem_daily(conn, ticker, uw.net_prem_ticks(ticker)))
+        _step("short_data",     lambda: _upsert_short_data(conn, ticker, uw.short_data(ticker)))
+        _step("greek_exposure", lambda: _upsert_greek_exposure(conn, ticker, uw.greek_exposure(ticker)))
+        _step("insider",        lambda: _upsert_insider(conn, ticker, uw.insider_transactions(ticker)))
+        _step("oi_change",      lambda: _upsert_oi_change(conn, ticker, uw.oi_change(ticker)))
+        _step("news",           lambda: _upsert_news(conn, uw.news_headlines(ticker)))
+        _step("earnings",       lambda: _upsert_earnings(conn, ticker, uw.earnings(ticker)))
+        _step("volatility",     lambda: _upsert_volatility_stats(conn, ticker, uw.volatility_stats(ticker)))
         conn.commit()
     return {"ticker": ticker, **counts}
+
+
+def ingest_market_tide(database_url: str, api_key: str) -> int:
+    """Refresh the market-wide net premium tape. Run every ~5min during RTH.
+
+    UW returns ~one row per 1-minute bucket for the current session; we upsert
+    so a re-run inside the same minute idempotently overwrites."""
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.market_tide()
+        n = _upsert_market_tide(conn, rows)
+        conn.commit()
+    return n
 
 
 def ingest_etfs(database_url: str, api_key: str, etfs: Iterable[str]) -> dict:
