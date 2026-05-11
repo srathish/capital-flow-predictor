@@ -575,3 +575,49 @@ export type SectorScorecardResponse = {
   baseline: ScorecardBaseline;
   last_evaluated_run: string | null;
 };
+
+// --- Unusual options flow feed ---------------------------------------------
+
+export type FlowAnomalyKind =
+  | "mega_sweep"
+  | "block_buy"
+  | "ask_aggression"
+  | "repeated_hits"
+  | "iv_expansion"
+  | "oi_explosion"
+  | "daily_skew";
+
+export type FlowEvent = {
+  ts: string;
+  ticker: string;
+  kind: FlowAnomalyKind;
+  headline: string;
+  premium: number | null;
+  option_type: "call" | "put" | null;
+  expiry: string | null;
+  strike: number | null;
+  underlying_price: number | null;
+  severity: number;
+  iv_end: number | null;
+  iv_start: number | null;
+  ask_side_pct: number | null;
+  trade_count: number | null;
+  volume_oi_ratio: number | null;
+  alert_rule: string | null;
+  option_chain: string | null;
+};
+
+export type FlowResponse = {
+  as_of: string;
+  lookback_hours: number;
+  count_by_kind: Partial<Record<FlowAnomalyKind, number>>;
+  events: FlowEvent[];
+};
+
+export type FlowParams = {
+  lookbackHours?: number;
+  ticker?: string;
+  kind?: FlowAnomalyKind;
+  minPremium?: number;
+  limit?: number;
+};

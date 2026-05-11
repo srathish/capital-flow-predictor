@@ -8,6 +8,8 @@ import type {
   ChatMessage,
   ChatStreamEvent,
   ExpandedSectorResponse,
+  FlowParams,
+  FlowResponse,
   HoldingsResponse,
   HoldingsSort,
   LeadLagResponse,
@@ -212,6 +214,16 @@ export const api = {
     return getJson<ExpandedSectorResponse>(
       `/v1/network/sector/${encodeURIComponent(etf)}/expand${qs ? `?${qs}` : ""}`
     );
+  },
+  flowUnusual(params: FlowParams = {}): Promise<FlowResponse> {
+    const sp = new URLSearchParams();
+    if (params.lookbackHours !== undefined) sp.set("lookback_hours", String(params.lookbackHours));
+    if (params.ticker) sp.set("ticker", params.ticker);
+    if (params.kind) sp.set("kind", params.kind);
+    if (params.minPremium !== undefined) sp.set("min_premium", String(params.minPremium));
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    const qs = sp.toString();
+    return getJson<FlowResponse>(`/v1/flow/unusual${qs ? `?${qs}` : ""}`);
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(
