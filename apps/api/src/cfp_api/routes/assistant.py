@@ -78,15 +78,19 @@ factual question; never make up numbers.
 
 Style:
 - Crisp, factual, sector-rotation-aware. No fluff, no disclaimers.
-- When the user asks "what's hot" or "show me sectors", call get_rankings or
-  get_sectors_heatmap and answer with concrete tickers + scores.
-- When the user mentions a ticker, call get_agents_for_ticker to fetch the
-  latest ensemble verdict before answering.
-- When the user asks to RUN something, call run_ensemble — don't just describe.
-- When the user wants to navigate ("open NVDA", "show catalysts"), call the
-  navigate tool with the right path (e.g. /agents/NVDA, /catalysts, /network).
-- After tool calls, summarize results in 2-3 sentences with the most
-  actionable insight, then offer one follow-up the user might want.
+- When the user asks "what's hot" / "show me sectors" → get_rankings or get_sectors_heatmap.
+- When the user mentions a ticker → get_agents_for_ticker for the latest ensemble verdict.
+- When the user asks "biggest bets" / "where's the whale flow" / "who's loading up" → get_whale_bets.
+- When the user asks "any sweeps on X" / "unusual flow today" / "biggest IV jumps" → get_flow_events.
+- When the user asks "movers in XLK" / "what's hot in the tech sector" → get_sector_holdings.
+- When the user asks "Reddit trending" / "what's WSB chattering about" → get_reddit_mentions.
+- When the user asks "top picks" / "watchlist" / "what should I look at" → get_watchlist.
+- When the user asks "which personas are good" / "track record" / "scorecard" → get_scorecard.
+- When the user asks "best options ideas" / "screen the universe" / "long candidates" → get_stocks_screener.
+- When the user asks to RUN an ensemble → run_ensemble. Don't just describe.
+- When the user wants to navigate ("open NVDA", "show catalysts") → navigate.
+- After tool calls, summarize results in 2-3 sentences with the most actionable insight,
+  then offer one follow-up the user might want.
 
 Available navigation paths:
   /                     dashboard (sector heatmap)
@@ -219,6 +223,116 @@ TOOLS = [
                     "path": {"type": "string", "description": "Frontend route, e.g. /agents/NVDA or /catalysts."},
                 },
                 "required": ["path"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_whale_bets",
+            "description": "Top tickers right now where the options flow is loud, opening, lifted, and corroborated by insiders/dark pool/Congress. Each bet has a 0-100 conviction score plus 'reasons' explaining why. Powered by whale_conviction_signals.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "window_hours": {"type": "integer", "enum": [4, 24], "default": 4},
+                    "direction": {"type": "string", "enum": ["bull", "bear"], "description": "Optional side filter."},
+                    "min_score": {"type": "number", "default": 50, "description": "Conviction-score floor (0-100)."},
+                    "limit": {"type": "integer", "default": 12},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_flow_events",
+            "description": "Unusual options-activity events: mega sweeps, block buys, ask aggression, repeated hits, IV jumps, vol/OI explosions, daily call/put skew. Use for 'what's lighting up on options', 'any big flow on X', or 'biggest sweeps today'.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "lookback_hours": {"type": "integer", "default": 24, "description": "1-168."},
+                    "ticker": {"type": "string", "description": "Optional ticker filter."},
+                    "kind": {
+                        "type": "string",
+                        "enum": ["mega_sweep", "block_buy", "ask_aggression", "repeated_hits", "iv_expansion", "oi_explosion", "daily_skew"],
+                        "description": "Optional anomaly-kind filter.",
+                    },
+                    "min_premium": {"type": "number", "default": 250000},
+                    "limit": {"type": "integer", "default": 25},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_sector_holdings",
+            "description": "Constituent table for a sector ETF: per-name 1d/5d/20d/60d returns, weight, call/put ratio, bullish %. Sortable. Use when the user wants the top movers inside a sector.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "etf": {"type": "string", "description": "ETF ticker (XLK, ARKK, XLE, ...)."},
+                    "sort": {
+                        "type": "string",
+                        "enum": ["return_1d", "return_5d", "return_20d", "return_60d", "weight", "call_put_ratio", "bullish_pct"],
+                        "default": "weight",
+                    },
+                    "limit": {"type": "integer", "default": 25},
+                },
+                "required": ["etf"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_reddit_mentions",
+            "description": "Top tickers by Reddit chatter (Apewisdom). Includes 24h-rank delta, per-subreddit breakdown, and asymmetry flags (is_contrarian_warning, is_stealth).",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "sort": {
+                        "type": "string",
+                        "enum": ["mentions", "rank_change", "spike"],
+                        "default": "mentions",
+                    },
+                    "limit": {"type": "integer", "default": 15},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_watchlist",
+            "description": "Current top-sector x top-name watchlist with Portfolio Manager rationale per ticker. Use when the user asks 'what should I look at' or 'top picks today'.",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_scorecard",
+            "description": "Per-agent track record: hit rate, IC (signed-confidence vs forward-return), avg forward return at the chosen horizon. Use when the user asks which personas are good/bad lately.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "horizon": {"type": "integer", "enum": [5, 10, 20, 60], "default": 20},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_stocks_screener",
+            "description": "Ranked options-trade candidate list across the universe. Pre-filtered by combined flow + sentiment + technical + macro score. Use when the user wants 'best options ideas' or 'screen the universe'.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "direction": {"type": "string", "enum": ["bull", "bear"], "description": "Optional side filter."},
+                    "limit": {"type": "integer", "default": 15},
+                },
             },
         },
     },
@@ -431,6 +545,278 @@ async def _tool_navigate(args: dict[str, Any]) -> dict[str, Any]:
     return {"navigated_to": path}
 
 
+async def _tool_get_whale_bets(args: dict[str, Any]) -> dict[str, Any]:
+    window_hours = int(args.get("window_hours", 4))
+    if window_hours not in (4, 24):
+        window_hours = 4
+    direction = args.get("direction")
+    min_score = float(args.get("min_score", 50))
+    limit = max(1, min(50, int(args.get("limit", 12))))
+    pool = get_pool()
+    sql = """
+        WITH latest AS (
+            SELECT MAX(window_end) AS we
+            FROM whale_conviction_signals
+            WHERE window_hours = $1
+              AND window_end >= NOW() - INTERVAL '6 hours'
+        )
+        SELECT
+            ticker, direction, score,
+            call_premium, put_premium, ask_side_premium,
+            sweep_count, block_count, opening_share, vol_oi_max,
+            dark_pool_above_mid_prem, insider_buy_7d, congress_buy_14d,
+            iv_rank, against_tape, reasons
+        FROM whale_conviction_signals, latest
+        WHERE window_hours = $1
+          AND window_end = latest.we
+          AND score >= $2
+          AND ($3::text IS NULL OR direction = $3)
+        ORDER BY score DESC
+        LIMIT $4
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, window_hours, min_score, direction, limit)
+    bets = []
+    for r in rows:
+        raw_reasons = r["reasons"]
+        if isinstance(raw_reasons, str):
+            try:
+                raw_reasons = json.loads(raw_reasons)
+            except json.JSONDecodeError:
+                raw_reasons = []
+        bets.append(
+            {
+                "ticker": r["ticker"],
+                "direction": r["direction"],
+                "score": float(r["score"]),
+                "call_premium": float(r["call_premium"] or 0),
+                "put_premium": float(r["put_premium"] or 0),
+                "ask_share": (
+                    float(r["ask_side_premium"]) / float(r["call_premium"] if r["direction"] == "bull" else r["put_premium"])
+                    if r["ask_side_premium"] and (r["call_premium"] or r["put_premium"])
+                    else None
+                ),
+                "iv_rank": float(r["iv_rank"]) if r["iv_rank"] is not None else None,
+                "against_tape": r["against_tape"],
+                "reasons": list(raw_reasons or []),
+            }
+        )
+    return {"window_hours": window_hours, "count": len(bets), "bets": bets}
+
+
+async def _tool_get_flow_events(args: dict[str, Any]) -> dict[str, Any]:
+    """Proxy to the flow.unusual endpoint shape, but returning a trimmed dict."""
+    from cfp_api.routes.flow import get_unusual_flow
+
+    lookback = int(args.get("lookback_hours", 24))
+    ticker = (args.get("ticker") or "").upper().strip() or None
+    kind = args.get("kind") or None
+    min_premium = float(args.get("min_premium", 250_000))
+    limit = max(1, min(50, int(args.get("limit", 25))))
+    resp = await get_unusual_flow(
+        lookback_hours=lookback,
+        ticker=ticker,
+        kind=kind,  # type: ignore[arg-type]
+        min_premium=min_premium,
+        limit=limit,
+    )
+    return {
+        "as_of": resp.as_of,
+        "lookback_hours": resp.lookback_hours,
+        "count_by_kind": resp.count_by_kind,
+        "events": [
+            {
+                "ticker": e.ticker,
+                "kind": e.kind,
+                "headline": e.headline,
+                "premium": e.premium,
+                "severity": round(e.severity, 2),
+                "ts": e.ts,
+            }
+            for e in resp.events
+        ],
+    }
+
+
+async def _tool_get_sector_holdings(args: dict[str, Any]) -> dict[str, Any]:
+    etf = (args.get("etf") or "").upper().strip()
+    if not etf:
+        return {"error": "etf is required"}
+    sort_key = (args.get("sort") or "weight").strip()
+    if sort_key not in {"return_1d", "return_5d", "return_20d", "return_60d", "weight", "call_put_ratio", "bullish_pct"}:
+        sort_key = "weight"
+    limit = max(1, min(50, int(args.get("limit", 25))))
+    from cfp_api.routes.sectors import get_etf_holdings
+
+    try:
+        resp = await get_etf_holdings(etf=etf, sort=sort_key, direction="desc", limit=limit)  # type: ignore[arg-type]
+    except Exception as e:
+        return {"error": f"holdings lookup failed: {type(e).__name__}: {e}"}
+    return {
+        "etf": etf,
+        "sort": sort_key,
+        "holdings": [
+            {
+                "ticker": h.ticker,
+                "weight": h.weight,
+                "return_5d": h.return_5d,
+                "return_20d": h.return_20d,
+                "call_put_ratio": h.call_put_ratio,
+                "bullish_pct": h.bullish_pct,
+            }
+            for h in resp.holdings[:limit]
+        ],
+    }
+
+
+async def _tool_get_reddit_mentions(args: dict[str, Any]) -> dict[str, Any]:
+    sort_key = (args.get("sort") or "mentions").strip()
+    if sort_key not in {"mentions", "rank_change", "spike"}:
+        sort_key = "mentions"
+    limit = max(1, min(50, int(args.get("limit", 15))))
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            WITH latest AS (
+                SELECT MAX(snapshot_date) AS d FROM reddit_mentions
+            )
+            SELECT ticker, mentions, mentions_24h_ago, rank, rank_24h_ago, name
+            FROM reddit_mentions, latest
+            WHERE snapshot_date = latest.d
+              AND subreddit = 'all-stocks'
+            ORDER BY CASE
+                WHEN $1 = 'mentions' THEN -mentions
+                WHEN $1 = 'rank_change' THEN COALESCE(rank, 999) - COALESCE(rank_24h_ago, 999)
+                WHEN $1 = 'spike' THEN -(mentions::float / NULLIF(mentions_24h_ago, 0))
+                ELSE -mentions
+            END
+            LIMIT $2
+            """,
+            sort_key,
+            limit,
+        )
+    return {
+        "sort": sort_key,
+        "mentions": [
+            {
+                "ticker": r["ticker"],
+                "name": r["name"],
+                "mentions_today": int(r["mentions"] or 0),
+                "mentions_24h_ago": int(r["mentions_24h_ago"] or 0),
+                "rank_today": r["rank"],
+                "rank_24h_ago": r["rank_24h_ago"],
+                "rank_delta": (
+                    (r["rank_24h_ago"] or 0) - (r["rank"] or 0)
+                    if r["rank"] and r["rank_24h_ago"]
+                    else None
+                ),
+            }
+            for r in rows
+        ],
+    }
+
+
+async def _tool_get_watchlist(_args: dict[str, Any]) -> dict[str, Any]:
+    from cfp_api.routes.watchlist import get_watchlist
+
+    try:
+        resp = await get_watchlist()
+    except Exception as e:
+        return {"error": f"watchlist lookup failed: {type(e).__name__}: {e}"}
+    return {
+        "run_ts": resp.run_ts,
+        "sectors": [
+            {
+                "sector": s.sector,
+                "items": [
+                    {
+                        "ticker": it.ticker,
+                        "rank": it.rank,
+                        "final_signal": it.final_signal,
+                        "final_confidence": it.final_confidence,
+                        "thesis": (
+                            (it.rationale or {}).get("summary")
+                            if isinstance(it.rationale, dict)
+                            else None
+                        ),
+                    }
+                    for it in s.items
+                ],
+            }
+            for s in resp.sectors
+        ],
+    }
+
+
+async def _tool_get_scorecard(args: dict[str, Any]) -> dict[str, Any]:
+    horizon = int(args.get("horizon", 20))
+    if horizon not in (5, 10, 20, 60):
+        horizon = 20
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT agent,
+                   COUNT(*) AS n,
+                   AVG(CASE WHEN hit THEN 1.0 ELSE 0.0 END) AS hit_rate,
+                   AVG(forward_return) AS avg_fwd,
+                   CORR(signed_confidence, forward_return) AS ic
+            FROM agent_eval
+            WHERE horizon_d = $1 AND forward_return IS NOT NULL
+            GROUP BY agent
+            HAVING COUNT(*) >= 5
+            ORDER BY ic DESC NULLS LAST
+            LIMIT 50
+            """,
+            horizon,
+        )
+    return {
+        "horizon_d": horizon,
+        "agents": [
+            {
+                "agent": r["agent"],
+                "n": int(r["n"]),
+                "hit_rate": float(r["hit_rate"] or 0),
+                "avg_forward_return": float(r["avg_fwd"] or 0),
+                "ic": float(r["ic"] or 0) if r["ic"] is not None else None,
+            }
+            for r in rows
+        ],
+    }
+
+
+async def _tool_get_stocks_screener(args: dict[str, Any]) -> dict[str, Any]:
+    direction = args.get("direction") or "bull"
+    limit = max(1, min(50, int(args.get("limit", 15))))
+    signal = "short" if direction == "bear" else "long"
+    from cfp_api.routes.stocks import screen_stocks
+
+    try:
+        resp = await screen_stocks(signal=signal, min_confidence=0.5, sector=None, min_oi=0, exclude_earnings_within_days=0, limit=limit, lookback_days=30)  # type: ignore[arg-type]
+    except Exception as e:
+        return {"error": f"screener failed: {type(e).__name__}: {e}"}
+    items = list(getattr(resp, "items", []) or [])
+    return {
+        "direction": direction,
+        "signal": signal,
+        "universe_size": getattr(resp, "universe_size", None),
+        "candidates": [
+            {
+                "ticker": it.ticker,
+                "sector": it.sector,
+                "final_signal": it.final_signal,
+                "confidence": it.confidence,
+                "composite_score": it.composite_score,
+                "iv_rank": it.iv_rank,
+                "days_to_earnings": it.days_to_earnings,
+                "rationale": (it.rationale or "")[:300] if it.rationale else None,
+            }
+            for it in items[:limit]
+        ],
+    }
+
+
 _TOOL_IMPLS: dict[str, Any] = {
     "get_rankings": _tool_get_rankings,
     "get_sectors_heatmap": _tool_get_sectors_heatmap,
@@ -438,6 +824,13 @@ _TOOL_IMPLS: dict[str, Any] = {
     "get_catalysts": _tool_get_catalysts,
     "run_ensemble": _tool_run_ensemble,
     "navigate": _tool_navigate,
+    "get_whale_bets": _tool_get_whale_bets,
+    "get_flow_events": _tool_get_flow_events,
+    "get_sector_holdings": _tool_get_sector_holdings,
+    "get_reddit_mentions": _tool_get_reddit_mentions,
+    "get_watchlist": _tool_get_watchlist,
+    "get_scorecard": _tool_get_scorecard,
+    "get_stocks_screener": _tool_get_stocks_screener,
 }
 
 
