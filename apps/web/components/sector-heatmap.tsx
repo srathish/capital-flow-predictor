@@ -711,8 +711,16 @@ function ForwardCallCard({
           </div>
         )}
 
+        {fc.stale_days !== null && fc.stale_days >= 7 && (
+          <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-700 dark:text-amber-300">
+            ⚠ Stale forecast — last trained {fc.stale_days} day{fc.stale_days === 1 ? "" : "s"} ago
+            {fc.run_ts && <> on {formatDate(fc.run_ts)}</>}. Re-run training for a current call.
+          </div>
+        )}
         <p className="text-[11px] text-muted-foreground">
-          This is the model's view, not advice. {fc.target_ts && <>Target date: {formatDate(fc.target_ts)}.</>}
+          This is the model's view, not advice.{" "}
+          {fc.run_ts && <>Predicted {formatDate(fc.run_ts)}. </>}
+          {fc.target_ts && <>Projects to {formatDate(fc.target_ts)}.</>}
         </p>
       </CardContent>
     </Card>

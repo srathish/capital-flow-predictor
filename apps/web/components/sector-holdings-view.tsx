@@ -136,6 +136,9 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
   const filterHint = useMemo(() => {
     if (!coverage) return null;
     if (filter === "bullish_model" || filter === "bearish_model") {
+      if (coverage.scored === 0) {
+        return `No holdings have a model score — the model ranks sector ETFs, not individual stocks.`;
+      }
       if (coverage.scored < coverage.total) {
         return `${coverage.scored} of ${coverage.total} have a model score`;
       }
@@ -254,16 +257,29 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
         <span className="text-muted-foreground">Filter:</span>
         {FILTER_OPTIONS.map((opt) => {
           const active = filter === opt.key;
+          const isModelFilter = opt.key === "bullish_model" || opt.key === "bearish_model";
+          const isFlowFilter = opt.key === "bullish_flow" || opt.key === "bearish_flow";
+          const disabled =
+            (isModelFilter && coverage !== null && coverage.scored === 0) ||
+            (isFlowFilter && coverage !== null && coverage.withFlow === 0);
+          const title = disabled
+            ? isModelFilter
+              ? "Model ranks sector ETFs, not individual stocks — no scores on holdings."
+              : "No UW flow data for these holdings."
+            : undefined;
           return (
             <button
               key={opt.key}
               type="button"
-              onClick={() => setFilter(opt.key)}
+              disabled={disabled}
+              title={title}
+              onClick={() => !disabled && setFilter(opt.key)}
               className={cn(
                 "rounded-full border px-2.5 py-1 transition-colors",
                 active
                   ? "border-foreground bg-foreground text-background"
-                  : "border-border text-muted-foreground hover:text-foreground"
+                  : "border-border text-muted-foreground hover:text-foreground",
+                disabled && "cursor-not-allowed opacity-40 hover:text-muted-foreground"
               )}
             >
               {opt.label}

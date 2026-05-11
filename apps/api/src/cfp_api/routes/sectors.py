@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query
@@ -408,7 +408,11 @@ class ForwardCallResponse(BaseModel):
     horizon_d: int
     model: str
     run_ts: datetime | None
+    # Forward projection endpoint: last feature date + horizon_d business days.
+    # NOT the raw target_ts stored in the predictions row (that's the as-of feature date).
     target_ts: datetime | None
+    # Days since run_ts. Lets the UI flag stale forecasts when the model hasn't been retrained.
+    stale_days: int | None
     top: list[ForwardCallEntry]
     bottom: list[ForwardCallEntry]
     score_spread: float | None
@@ -420,6 +424,17 @@ class ForwardCallResponse(BaseModel):
 
 
 _FORWARD_HORIZONS = (5, 10, 20)
+
+
+def _add_business_days(start: datetime, n: int) -> datetime:
+    """Add n business days (Mon–Fri) to start. Naive on holidays — close enough for UI labelling."""
+    d = start
+    added = 0
+    while added < n:
+        d = d + timedelta(days=1)
+        if d.weekday() < 5:
+            added += 1
+    return d
 
 
 @router.get("/forward-call", response_model=ForwardCallResponse)
@@ -482,6 +497,7 @@ async def get_forward_call(
     if not active_rows:
         return ForwardCallResponse(
             horizon_d=horizon, model=model, run_ts=None, target_ts=None,
+            stale_days=None,
             top=[], bottom=[], score_spread=None,
             conviction="low", stability_runs=0, disagreements=[],
         )
@@ -550,11 +566,25 @@ async def get_forward_call(
     disagreements.sort(key=lambda d: abs(d.delta), reverse=True)
     disagreements = disagreements[:4]
 
+    # Forward target is the last feature date + horizon_d business days.
+    # The raw target_ts column stores the feature observation date, not a forward target.
+    raw_target_ts = active_rows[0]["target_ts"]
+    forward_target_ts = (
+        _add_business_days(raw_target_ts, horizon) if raw_target_ts is not None else None
+    )
+
+    run_ts = active_rows[0]["run_ts"]
+    stale_days: int | None = None
+    if run_ts is not None:
+        now = datetime.now(tz=run_ts.tzinfo) if run_ts.tzinfo else datetime.utcnow()
+        stale_days = max(0, (now - run_ts).days)
+
     return ForwardCallResponse(
         horizon_d=horizon,
         model=model,
-        run_ts=active_rows[0]["run_ts"],
-        target_ts=active_rows[0]["target_ts"],
+        run_ts=run_ts,
+        target_ts=forward_target_ts,
+        stale_days=stale_days,
         top=top,
         bottom=bottom,
         score_spread=score_spread,

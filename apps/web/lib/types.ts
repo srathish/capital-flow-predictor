@@ -554,6 +554,7 @@ export type SectorForwardCallResponse = {
   model: string;
   run_ts: string | null;
   target_ts: string | null;
+  stale_days: number | null;
   top: ForwardCallEntry[];
   bottom: ForwardCallEntry[];
   score_spread: number | null;
