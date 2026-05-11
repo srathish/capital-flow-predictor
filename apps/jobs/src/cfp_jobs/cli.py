@@ -164,8 +164,20 @@ def train_baseline_cmd(
         live_table.add_column("Horizon")
         live_table.add_column("Asof (last feature ts)")
         live_table.add_column("Symbols", justify="right")
+        live_table.add_column("Dropped", justify="right")
+        live_table.add_column("Seeds", justify="right")
+        live_table.add_column("Mean conf", justify="right")
+        live_table.add_column("Mean σ(score)", justify="right")
         for h, info in sorted(live.items()):
-            live_table.add_row(f"{h}d", str(info["asof"]), str(info["n_symbols"]))
+            live_table.add_row(
+                f"{h}d",
+                str(info["asof"]),
+                str(info["n_symbols"]),
+                str(info.get("n_dropped", 0)),
+                str(info.get("n_seeds", "—")),
+                f"{info.get('mean_conf', float('nan')):.2f}",
+                f"{info.get('mean_score_std', float('nan')):.3f}",
+            )
         console.print(live_table)
     else:
         console.print("[yellow]live forecast:[/yellow] not produced (see logs)")
