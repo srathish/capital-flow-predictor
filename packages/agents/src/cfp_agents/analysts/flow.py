@@ -130,21 +130,23 @@ class FlowAnalyst(BaseAnalyst):
             confidence = clamp(confidence + 0.15)
 
         rationale_parts: list[str] = []
-        # Net imbalance — surface the SIGNED direction explicitly. The raw
-        # numbers can mislead because net_put_prem can be negative (aggressive
-        # put selling = bullish), which the imbalance ratio handles correctly
-        # but the bare $ display does not.
+        # Net imbalance — describe what HAPPENED on each side in plain English.
+        # The raw signed numbers ("puts -$2.6M") confuse readers because the
+        # sign convention isn't standard. We translate signs into verbs:
+        # positive net = bought at ask (bullish for that side), negative net =
+        # sold at bid (bearish for that side). Then the composite direction
+        # follows the net of both sides.
         if abs(net_imbalance) > 0.1:
             direction = "BULLISH net flow" if net_imbalance > 0 else "BEARISH net flow"
             rationale_parts.append(
-                f"{direction} (calls {_fmt_signed_dollars(net_call_prem)} vs "
-                f"puts {_fmt_signed_dollars(net_put_prem)}, imb {net_imbalance:+.2f})"
+                f"{direction} ({_describe_premium('call', net_call_prem)}, "
+                f"{_describe_premium('put', net_put_prem)}, imb {net_imbalance:+.2f})"
             )
         if abs(leap_imbalance) > 0.1:
             direction = "BULLISH LEAP" if leap_imbalance > 0 else "BEARISH LEAP"
             rationale_parts.append(
-                f"{direction} (>90 DTE: calls {_fmt_signed_dollars(leap_call_prem)}, "
-                f"puts {_fmt_signed_dollars(leap_put_prem)}, imb {leap_imbalance:+.2f})"
+                f"{direction} (>90 DTE: {_describe_premium('call', leap_call_prem)}, "
+                f"{_describe_premium('put', leap_put_prem)}, imb {leap_imbalance:+.2f})"
             )
         if abs(aggressiveness) > 0.05:
             tone = "lifted at ask" if aggressiveness > 0 else "hit at bid"
@@ -206,19 +208,19 @@ def _fmt_dollars(v: float) -> str:
     return f"${a:.0f}"
 
 
-def _fmt_signed_dollars(v: float) -> str:
-    """Like _fmt_dollars but preserves the sign so negative net premium
-    (aggressive sell-side) is visually distinct from positive (buy-side).
-    Crucial for the flow rationale — `puts -$2.6M` (selling, bullish) vs
-    `puts +$2.6M` (buying, bearish) tell opposite stories."""
-    if v == 0:
-        return "$0"
-    sign = "+" if v > 0 else "-"
-    a = abs(v)
-    if a >= 1e9:
-        return f"{sign}${a / 1e9:.1f}B"
-    if a >= 1e6:
-        return f"{sign}${a / 1e6:.1f}M"
-    if a >= 1e3:
-        return f"{sign}${a / 1e3:.0f}K"
-    return f"{sign}${a:.0f}"
+def _describe_premium(side: str, v: float) -> str:
+    """Plain-English version of a signed net premium number.
+
+    Net premium > 0  = traded at the ask (bought)
+    Net premium < 0  = traded at the bid (sold)
+    Near zero        = balanced, no directional bet on that side
+
+    For the rationale string we want a reader to be able to glance at it and
+    immediately know whether someone is opening (buying) or closing (selling)
+    the side in question, without having to decode the sign convention."""
+    if abs(v) < 1e3:
+        return f"{side}s balanced"
+    verb = "bought" if v > 0 else "sold"
+    return f"{side}s {verb} {_fmt_dollars(abs(v))}"
+
+
