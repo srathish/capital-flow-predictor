@@ -16,6 +16,7 @@ from cfp_api.routes import (
     reddit,
     scorecard,
     sectors,
+    stocks,
     watchlist,
 )
 from cfp_api.settings import settings
@@ -51,6 +52,7 @@ app.include_router(network.router)
 app.include_router(reddit.router)
 app.include_router(flow.router)
 app.include_router(assistant.router)
+app.include_router(stocks.router)
 
 
 @app.get("/")

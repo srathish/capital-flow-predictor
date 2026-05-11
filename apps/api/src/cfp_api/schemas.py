@@ -7,7 +7,7 @@ v1/ path or the dashboard adapter.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -108,3 +108,35 @@ class SectorEntry(BaseModel):
 class SectorsResponse(BaseModel):
     run_ts: datetime | None = None
     sectors: list[SectorEntry]
+
+
+# ---------- /v1/stocks/screen ----------
+
+
+ScreenSignal = Literal["long", "short", "avoid", "any"]
+
+
+class StockScreenItem(BaseModel):
+    ticker: str
+    sector: str | None = None
+    final_signal: WatchlistSignal
+    confidence: float
+    target_weight: float | None = None
+    iv_rank: float | None = None  # 0..1 proxy: latest_iv position within trailing-90d min/max
+    latest_iv: float | None = None
+    open_interest: int | None = None  # SUM(curr_oi) across strikes on latest oi-change date
+    liquidity_ok: bool  # whether OI cleared the min_oi gate
+    next_earnings_date: date | None = None
+    days_to_earnings: int | None = None
+    expected_move_pct: float | None = None
+    near_earnings: bool = False  # within exclude_earnings_within_days
+    composite_score: float  # confidence × coalesce(iv_rank, 0.5) × √max(oi, 1)
+    rationale: str | None = None
+
+
+class StockScreenResponse(BaseModel):
+    run_ts: datetime | None = None  # latest portfolio_manager run considered
+    universe_size: int
+    filtered_count: int
+    filters: dict[str, Any]
+    items: list[StockScreenItem]
