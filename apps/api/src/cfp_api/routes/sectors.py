@@ -447,42 +447,62 @@ async def get_forward_call(
     cross-horizon disagreement and rank stability."""
     pool = get_pool()
 
+    # Each run writes predictions for many target_ts (one per date in the
+    # walk-forward panel). We want the latest run AND, within it, the latest
+    # target_ts — without that second filter we'd return whichever rank=1 row
+    # Postgres happened to pick from any historical fold.
     sql_active = """
-        WITH latest AS (
+        WITH latest_run AS (
             SELECT MAX(run_ts) AS rt FROM predictions
             WHERE horizon_d = $1 AND model = $2
+        ),
+        latest_target AS (
+            SELECT MAX(target_ts) AS tt FROM predictions p, latest_run l
+            WHERE p.run_ts = l.rt AND p.horizon_d = $1 AND p.model = $2
         )
         SELECT p.symbol, p.rank, p.score, p.run_ts, p.target_ts
-        FROM predictions p, latest l
-        WHERE p.run_ts = l.rt
+        FROM predictions p, latest_run l, latest_target t
+        WHERE p.run_ts = l.rt AND p.target_ts = t.tt
           AND p.horizon_d = $1 AND p.model = $2
           AND p.rank IS NOT NULL
         ORDER BY p.rank ASC
     """
     sql_other = """
-        WITH latest AS (
+        WITH latest_run AS (
             SELECT MAX(run_ts) AS rt FROM predictions
             WHERE horizon_d = $1 AND model = $2
+        ),
+        latest_target AS (
+            SELECT MAX(target_ts) AS tt FROM predictions p, latest_run l
+            WHERE p.run_ts = l.rt AND p.horizon_d = $1 AND p.model = $2
         )
         SELECT p.symbol, p.rank
-        FROM predictions p, latest l
-        WHERE p.run_ts = l.rt
+        FROM predictions p, latest_run l, latest_target t
+        WHERE p.run_ts = l.rt AND p.target_ts = t.tt
           AND p.horizon_d = $1 AND p.model = $2
           AND p.rank IS NOT NULL
     """
+    # Stability: take the most recent N target_ts values within the latest run
+    # so "held for K runs" actually means "held for K of the most recent
+    # forecast snapshots" rather than K independent training runs.
     sql_stability = """
-        WITH recent_runs AS (
-            SELECT DISTINCT run_ts FROM predictions
+        WITH latest_run AS (
+            SELECT MAX(run_ts) AS rt FROM predictions
             WHERE horizon_d = $1 AND model = $2
-            ORDER BY run_ts DESC
+        ),
+        recent_targets AS (
+            SELECT DISTINCT p.target_ts FROM predictions p, latest_run l
+            WHERE p.run_ts = l.rt AND p.horizon_d = $1 AND p.model = $2
+            ORDER BY p.target_ts DESC
             LIMIT 12
         )
-        SELECT p.run_ts, p.symbol
-        FROM predictions p
-        JOIN recent_runs r ON r.run_ts = p.run_ts
-        WHERE p.horizon_d = $1 AND p.model = $2
+        SELECT p.target_ts AS run_ts, p.symbol
+        FROM predictions p, latest_run l
+        JOIN recent_targets r ON r.target_ts = p.target_ts
+        WHERE p.run_ts = l.rt
+          AND p.horizon_d = $1 AND p.model = $2
           AND p.rank IS NOT NULL AND p.rank <= 3
-        ORDER BY p.run_ts DESC, p.rank ASC
+        ORDER BY p.target_ts DESC, p.rank ASC
     """
 
     other_horizons = tuple(h for h in _FORWARD_HORIZONS if h != horizon)
@@ -576,7 +596,7 @@ async def get_forward_call(
     run_ts = active_rows[0]["run_ts"]
     stale_days: int | None = None
     if run_ts is not None:
-        now = datetime.now(tz=run_ts.tzinfo) if run_ts.tzinfo else datetime.utcnow()
+        now = datetime.now(tz=run_ts.tzinfo) if run_ts.tzinfo else datetime.now(tz=timezone.utc).replace(tzinfo=None)
         stale_days = max(0, (now - run_ts).days)
 
     return ForwardCallResponse(
