@@ -34,6 +34,12 @@ from cfp_shared import (
 from psycopg.types.json import Jsonb
 
 from cfp_jobs.db import connect, to_psycopg_url
+from cfp_jobs.skylit_bridge import (
+    apply_structure_to_positioning,
+    apply_trinity_to_positioning,
+    fetch_structure,
+    fetch_trinity,
+)
 
 log = logging.getLogger(__name__)
 
@@ -311,6 +317,18 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
                 "put_gamma": put_g,
                 "gex_total": call_g + put_g,
             })
+
+        # ---- skylit.ai / Heatseeker structural snapshot + 0DTE Trinity ----
+        # Best-effort: missing repo / expired auth / no live poller -> silently skip.
+        try:
+            apply_structure_to_positioning(positioning, fetch_structure(ticker))
+        except Exception as e:  # noqa: BLE001
+            log.info("skylit structure fetch failed for %s: %s", ticker, e)
+        try:
+            apply_trinity_to_positioning(positioning, ticker, fetch_trinity())
+        except Exception as e:  # noqa: BLE001
+            log.info("skylit trinity fetch failed: %s", e)
+
         out["positioning"] = positioning
 
         # ---- smart_money: insider txns 30d ----

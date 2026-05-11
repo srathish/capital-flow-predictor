@@ -145,6 +145,33 @@ class PositioningCtx(_Frozen):
     gex_total: float | None = None        # call_gamma + put_gamma
     as_of_date: date | None = None
 
+    # ---- skylit.ai / Heatseeker structural snapshot (option 2) ----
+    # All optional; populated when the gexester-vexster bridge succeeds.
+    skylit_spot: float | None = None
+    skylit_regime_score: float | None = None         # signed_total / total_abs, in [-1, +1]
+    skylit_signed_total_gamma: float | None = None
+    skylit_king_strike: float | None = None
+    skylit_king_gamma: float | None = None
+    skylit_floor_strike: float | None = None
+    skylit_floor_significance: float | None = None
+    skylit_ceiling_strike: float | None = None
+    skylit_ceiling_significance: float | None = None
+    skylit_air_pockets: list[dict] | None = None     # [{low, high, span}, ...]
+    skylit_liquidity_vacuums: list[dict] | None = None
+    skylit_expiration: str | None = None
+    skylit_fetched_at_ms: int | None = None
+
+    # ---- 0DTE Trinity (option 3) — only populated for SPY/QQQ/SPX/SPXW ----
+    trinity_classification: str | None = None        # high_confidence_directional, ...
+    trinity_direction: str | None = None             # 'calls' | 'puts' | 'informational_only'
+    trinity_avg_bias: float | None = None            # -100..+100
+    trinity_spread: float | None = None
+    trinity_bias_spx: float | None = None
+    trinity_bias_spy: float | None = None
+    trinity_bias_qqq: float | None = None
+    trinity_whipsaw: bool | None = None
+    trinity_age_minutes: float | None = None
+
 
 # ---------- smart money ----------
 

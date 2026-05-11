@@ -90,6 +90,64 @@ def _render_flow_block(bundle) -> str:
     if pos.gex_total is not None:
         regime = "positive (mean-reverting / supportive)" if pos.gex_total > 0 else "negative (trending / pro-cyclical)"
         pos_lines.append(f"- Aggregate dealer GEX: {pos.gex_total:+.2e} -> {regime}")
+
+    # skylit.ai / Heatseeker structural snapshot (per-strike dealer levels).
+    # ~70% of intraday moves anchor on these nodes (gexester 60-day study).
+    if pos.skylit_spot is not None:
+        spot = pos.skylit_spot
+        pos_lines.append(
+            f"- skylit spot: {spot:.2f}"
+            + (f" | exp {pos.skylit_expiration}" if pos.skylit_expiration else "")
+        )
+        if pos.skylit_regime_score is not None:
+            sign = "long-gamma (mean-revert)" if pos.skylit_regime_score > 0 else "short-gamma (trending)"
+            pos_lines.append(
+                f"- skylit regime: {pos.skylit_regime_score:+.2f} ({sign})"
+            )
+        if pos.skylit_king_strike is not None:
+            side = "above" if pos.skylit_king_strike > spot else "below" if pos.skylit_king_strike < spot else "at"
+            kg = pos.skylit_king_gamma or 0.0
+            kind = "pika ceiling" if kg > 0 else "barney magnet"
+            pos_lines.append(
+                f"- King node: {pos.skylit_king_strike:.2f} {side} spot ({kind}, gamma={kg:+.2e})"
+            )
+        if pos.skylit_floor_strike is not None:
+            sig = pos.skylit_floor_significance or 0.0
+            pos_lines.append(f"- Floor (pika below): {pos.skylit_floor_strike:.2f} (rel_sig {sig:.2%})")
+        if pos.skylit_ceiling_strike is not None:
+            sig = pos.skylit_ceiling_significance or 0.0
+            pos_lines.append(f"- Ceiling (pika above): {pos.skylit_ceiling_strike:.2f} (rel_sig {sig:.2%})")
+        if pos.skylit_liquidity_vacuums:
+            for v in pos.skylit_liquidity_vacuums[:2]:
+                pos_lines.append(
+                    f"- Liquidity vacuum: {v.get('low'):.2f}–{v.get('high'):.2f} "
+                    f"(span {v.get('span'):.2f}) — fast moves likely once breached"
+                )
+        elif pos.skylit_air_pockets:
+            for ap in pos.skylit_air_pockets[:2]:
+                pos_lines.append(f"- Air pocket: {ap.get('low'):.2f}–{ap.get('high'):.2f}")
+
+    # 0DTE Trinity (SPY/QQQ/SPX/SPXW only)
+    if pos.trinity_classification:
+        line = f"- 0DTE Trinity: {pos.trinity_classification}"
+        if pos.trinity_direction and pos.trinity_direction != "informational_only":
+            line += f" -> {pos.trinity_direction}"
+        if pos.trinity_avg_bias is not None:
+            line += f" | avg_bias={pos.trinity_avg_bias:+.0f}"
+        if pos.trinity_spread is not None:
+            line += f" spread={pos.trinity_spread:.0f}"
+        if pos.trinity_age_minutes is not None:
+            line += f" ({pos.trinity_age_minutes:.0f}m old)"
+        pos_lines.append(line)
+        if pos.trinity_whipsaw:
+            pos_lines.append("- Trinity whipsaw flag active — directional setups deprioritized")
+        bias_parts = []
+        if pos.trinity_bias_spx is not None: bias_parts.append(f"SPX={pos.trinity_bias_spx:+.0f}")
+        if pos.trinity_bias_spy is not None: bias_parts.append(f"SPY={pos.trinity_bias_spy:+.0f}")
+        if pos.trinity_bias_qqq is not None: bias_parts.append(f"QQQ={pos.trinity_bias_qqq:+.0f}")
+        if bias_parts:
+            pos_lines.append(f"    components: {' '.join(bias_parts)}")
+
     if pos_lines:
         sections.append("Positioning:\n" + "\n".join(pos_lines))
 
