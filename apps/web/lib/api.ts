@@ -22,6 +22,8 @@ import type {
   RedditScorecardResponse,
   WhalesParams,
   WhalesResponse,
+  ScreenerParams,
+  StockScreenResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -235,6 +237,19 @@ export const api = {
     if (params.limit !== undefined) sp.set("limit", String(params.limit));
     const qs = sp.toString();
     return getJson<WhalesResponse>(`/v1/flow/whales${qs ? `?${qs}` : ""}`);
+  },
+  screenStocks(params: ScreenerParams = {}): Promise<StockScreenResponse> {
+    const sp = new URLSearchParams();
+    if (params.signal) sp.set("signal", params.signal);
+    if (params.minConfidence !== undefined) sp.set("min_confidence", String(params.minConfidence));
+    if (params.sector) sp.set("sector", params.sector);
+    if (params.minOi !== undefined) sp.set("min_oi", String(params.minOi));
+    if (params.excludeEarningsWithinDays !== undefined)
+      sp.set("exclude_earnings_within_days", String(params.excludeEarningsWithinDays));
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    if (params.lookbackDays !== undefined) sp.set("lookback_days", String(params.lookbackDays));
+    const qs = sp.toString();
+    return getJson<StockScreenResponse>(`/v1/stocks/screen${qs ? `?${qs}` : ""}`);
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(

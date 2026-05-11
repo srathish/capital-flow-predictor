@@ -662,3 +662,43 @@ export type WhalesParams = {
   minScore?: number;
   limit?: number;
 };
+
+// --- /v1/stocks/screen ----------------------------------------------------
+
+export type ScreenSignal = "long" | "short" | "avoid" | "any";
+
+export type StockScreenItem = {
+  ticker: string;
+  sector: string | null;
+  final_signal: WatchlistSignal;
+  confidence: number;
+  target_weight: number | null;
+  iv_rank: number | null;
+  latest_iv: number | null;
+  open_interest: number | null;
+  liquidity_ok: boolean;
+  next_earnings_date: string | null;
+  days_to_earnings: number | null;
+  expected_move_pct: number | null;
+  near_earnings: boolean;
+  composite_score: number;
+  rationale: string | null;
+};
+
+export type StockScreenResponse = {
+  run_ts: string | null;
+  universe_size: number;
+  filtered_count: number;
+  filters: Record<string, unknown>;
+  items: StockScreenItem[];
+};
+
+export type ScreenerParams = {
+  signal?: ScreenSignal;
+  minConfidence?: number;
+  sector?: string;
+  minOi?: number;
+  excludeEarningsWithinDays?: number;
+  limit?: number;
+  lookbackDays?: number;
+};

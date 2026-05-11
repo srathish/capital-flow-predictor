@@ -12,6 +12,7 @@ const tabs = [
   { href: "/reddit", label: "Reddit" },
   { href: "/catalysts", label: "Catalysts" },
   { href: "/flow", label: "Flow" },
+  { href: "/screener", label: "Screener" },
   { href: "/watchlist", label: "Watchlist" },
 ];
 
