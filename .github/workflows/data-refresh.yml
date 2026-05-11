@@ -20,6 +20,14 @@ on:
   schedule:
     # Every 15 minutes — Reddit RSS catalyst feed (live partnership/leak/FDA chatter)
     - cron: "*/15 * * * *"
+    # Every 10 minutes during US RTH (13:30-20:00 UTC, Mon-Fri) — market-tide ticks
+    - cron: "*/10 13-20 * * 1-5"
+    # Every 12 minutes during US RTH — whale-conviction scorer (re-derives from current data)
+    - cron: "2,14,26,38,50 13-20 * * 1-5"
+    # Twice during US RTH (14:00, 18:00 UTC, Mon-Fri) — UW flow-universe ingest
+    - cron: "0 14,18 * * 1-5"
+    # Daily at 23:30 UTC (after US close) — snapshot per-ticker IV regime
+    - cron: "30 23 * * 1-5"
     # Hourly at :07 — Apewisdom mention snapshots (asymmetry flags need 3+ days to mean anything)
     - cron: "7 * * * *"
     # Daily at 06:00 UTC — agent forward-return evaluation (computes 5/10/20/60d returns vs SPY)
@@ -45,6 +53,10 @@ on:
           - eval-agents
           - features-build
           - train-baseline
+          - market-tide
+          - whale-conviction
+          - flow-universe
+          - flow-volatility
 
 jobs:
   reddit-catalysts:
@@ -177,3 +189,89 @@ jobs:
       - name: Walk-forward train + persist predictions
         working-directory: apps/jobs
         run: uv run cfp-jobs train-baseline
+
+  market-tide:
+    # Intraday tape direction. UW returns ~1-min buckets for the current
+    # session; we upsert so re-running inside the same minute is idempotent.
+    # Drives the Whale Conviction scorer's "with-tape vs against-tape" pill.
+    if: github.event.schedule == '*/10 13-20 * * 1-5' || github.event.inputs.job == 'market-tide'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Pull market-tide ticks
+        working-directory: apps/jobs
+        run: uv run cfp-jobs market-tide
+
+  whale-conviction:
+    # Heuristic 0..100 score per (ticker, window) from the latest flow + dark
+    # pool + insider + congress + IV regime + market tide. Reads, doesn't fetch.
+    if: startsWith(github.event.schedule, '2,14,26,38,50') || github.event.inputs.job == 'whale-conviction'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Re-derive whale conviction signals
+        working-directory: apps/jobs
+        run: uv run cfp-jobs whale-conviction
+
+  flow-universe:
+    # UW per-ticker flow alerts + dark pool + net premium + greeks + insiders.
+    # Twice a day during RTH for the top constituents — enough for the /flow
+    # page to render and the scorer to have fresh ammunition.
+    if: github.event.schedule == '0 14,18 * * 1-5' || github.event.inputs.job == 'flow-universe'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: UW per-ticker flow ingest across the universe
+        working-directory: apps/jobs
+        run: uv run cfp-jobs flow-universe --max-tickers 80
+
+  flow-volatility:
+    # Per-ticker IV regime (iv30, iv_rank, iv_percentile, rv30). Once daily
+    # after the US close — IV rank changes slowly enough that more frequent
+    # snapshots would just burn UW quota.
+    if: github.event.schedule == '30 23 * * 1-5' || github.event.inputs.job == 'flow-volatility'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Snapshot IV regime per ticker
+        working-directory: apps/jobs
+        run: uv run cfp-jobs flow-volatility

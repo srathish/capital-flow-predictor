@@ -8,6 +8,7 @@ import type { FlowAnomalyKind, FlowEvent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { WhaleBetsPanel } from "@/components/whale-bets-panel";
 
 const REFETCH_MS = 30_000;
 
@@ -173,6 +174,8 @@ export function FlowView() {
         </div>
       </header>
 
+      <WhaleBetsPanel />
+
       {/* Filter row 1: lookback + min premium + ticker filter */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
         <div className="flex items-center gap-1">
@@ -240,7 +243,7 @@ export function FlowView() {
             <button
               key={k}
               title={meta.blurb}
-              onClick={() => setKind(k)}
+              onClick={() => setKind(active && k !== "all" ? "all" : k)}
               className={cn(
                 "flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs",
                 active ? meta.cls : "bg-card text-muted-foreground hover:text-foreground",

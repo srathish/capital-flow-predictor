@@ -20,6 +20,8 @@ import type {
   RedditRuleStats,
   RedditPredictResponse,
   RedditScorecardResponse,
+  WhalesParams,
+  WhalesResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -224,6 +226,15 @@ export const api = {
     if (params.limit !== undefined) sp.set("limit", String(params.limit));
     const qs = sp.toString();
     return getJson<FlowResponse>(`/v1/flow/unusual${qs ? `?${qs}` : ""}`);
+  },
+  whaleBets(params: WhalesParams = {}): Promise<WhalesResponse> {
+    const sp = new URLSearchParams();
+    if (params.windowHours !== undefined) sp.set("window_hours", String(params.windowHours));
+    if (params.direction) sp.set("direction", params.direction);
+    if (params.minScore !== undefined) sp.set("min_score", String(params.minScore));
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    const qs = sp.toString();
+    return getJson<WhalesResponse>(`/v1/flow/whales${qs ? `?${qs}` : ""}`);
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(

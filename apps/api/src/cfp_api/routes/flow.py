@@ -319,6 +319,130 @@ def _headline_for(r) -> str:  # asyncpg.Record
     return f"{prem_str} {side} {strike_str} {expiry_str}"
 
 
+class WhaleBet(BaseModel):
+    ticker: str
+    direction: str                  # 'bull' | 'bear'
+    score: float                    # 0..100
+    window_hours: int
+    window_end: str
+    call_premium: float | None
+    put_premium: float | None
+    ask_side_premium: float | None
+    sweep_count: int | None
+    block_count: int | None
+    opening_share: float | None
+    vol_oi_max: float | None
+    dark_pool_above_mid_prem: float | None
+    insider_buy_7d: float | None
+    congress_buy_14d: int | None
+    iv_rank: float | None
+    against_tape: bool | None
+    reasons: list[str]
+
+
+class WhalesResponse(BaseModel):
+    as_of: str
+    window_hours: int
+    market_tide: str | None         # 'bull' | 'bear' | None
+    count: int
+    bets: list[WhaleBet]
+
+
+@router.get("/whales", response_model=WhalesResponse)
+async def get_whale_bets(
+    window_hours: int = Query(4, description="Aggregation window (4 or 24)"),
+    direction: Literal["bull", "bear"] | None = Query(None),
+    min_score: float = Query(40.0, ge=0, le=100),
+    limit: int = Query(40, ge=1, le=200),
+) -> WhalesResponse:
+    """Top tickers right now where the flow is loud, opening, aggressive, and
+    corroborated by other smart-money signals. Reads the heuristic 0..100
+    `whale_conviction_signals` table refreshed every ~5min by the scorer."""
+    pool = get_pool()
+    sql = """
+        WITH latest AS (
+            SELECT MAX(window_end) AS we
+            FROM whale_conviction_signals
+            WHERE window_hours = $1
+              AND window_end >= NOW() - INTERVAL '6 hours'
+        )
+        SELECT
+            window_end, ticker, direction, score,
+            call_premium, put_premium, ask_side_premium,
+            sweep_count, block_count, opening_share, vol_oi_max,
+            dark_pool_above_mid_prem, insider_buy_7d, congress_buy_14d,
+            iv_rank, against_tape, reasons
+        FROM whale_conviction_signals, latest
+        WHERE window_hours = $1
+          AND window_end = latest.we
+          AND score >= $2
+          AND ($3::text IS NULL OR direction = $3)
+        ORDER BY score DESC
+        LIMIT $4
+    """
+    tape_sql = """
+        SELECT
+            SUM(COALESCE(net_call_premium, 0)) AS calls,
+            SUM(COALESCE(net_put_premium, 0))  AS puts
+        FROM uw_market_tide
+        WHERE ts >= NOW() - INTERVAL '6 hours'
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, window_hours, min_score, direction, limit)
+        tape_row = await conn.fetchrow(tape_sql)
+        ts_row = await conn.fetchrow("SELECT NOW() AT TIME ZONE 'UTC' AS now")
+
+    tape: str | None = None
+    if tape_row and tape_row["calls"] is not None and tape_row["puts"] is not None:
+        diff = float(tape_row["calls"]) - float(tape_row["puts"])
+        if abs(diff) >= 50_000_000:
+            tape = "bull" if diff > 0 else "bear"
+
+    bets: list[WhaleBet] = []
+    for r in rows:
+        raw_reasons = r["reasons"]
+        if isinstance(raw_reasons, str):
+            import json
+            try:
+                raw_reasons = json.loads(raw_reasons)
+            except Exception:
+                raw_reasons = []
+        bets.append(
+            WhaleBet(
+                ticker=r["ticker"],
+                direction=r["direction"],
+                score=float(r["score"]),
+                window_hours=window_hours,
+                window_end=r["window_end"].isoformat(),
+                call_premium=_f(r["call_premium"]),
+                put_premium=_f(r["put_premium"]),
+                ask_side_premium=_f(r["ask_side_premium"]),
+                sweep_count=r["sweep_count"],
+                block_count=r["block_count"],
+                opening_share=_f(r["opening_share"]),
+                vol_oi_max=_f(r["vol_oi_max"]),
+                dark_pool_above_mid_prem=_f(r["dark_pool_above_mid_prem"]),
+                insider_buy_7d=_f(r["insider_buy_7d"]),
+                congress_buy_14d=r["congress_buy_14d"],
+                iv_rank=_f(r["iv_rank"]),
+                against_tape=r["against_tape"],
+                reasons=list(raw_reasons or []),
+            )
+        )
+
+    return WhalesResponse(
+        as_of=ts_row["now"].isoformat(),
+        window_hours=window_hours,
+        market_tide=tape,
+        count=len(bets),
+        bets=bets,
+    )
+
+
+def _f(v) -> float | None:
+    return float(v) if v is not None else None
+
+
 def _severity(kind: str, r) -> float:
     """Cheap 0..1 score so the UI can sort + color rows.
 

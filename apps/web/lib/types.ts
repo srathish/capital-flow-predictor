@@ -621,3 +621,41 @@ export type FlowParams = {
   minPremium?: number;
   limit?: number;
 };
+
+// --- Whale Conviction (derived smart-money score) --------------------------
+
+export type WhaleBet = {
+  ticker: string;
+  direction: "bull" | "bear";
+  score: number;
+  window_hours: number;
+  window_end: string;
+  call_premium: number | null;
+  put_premium: number | null;
+  ask_side_premium: number | null;
+  sweep_count: number | null;
+  block_count: number | null;
+  opening_share: number | null;
+  vol_oi_max: number | null;
+  dark_pool_above_mid_prem: number | null;
+  insider_buy_7d: number | null;
+  congress_buy_14d: number | null;
+  iv_rank: number | null;
+  against_tape: boolean | null;
+  reasons: string[];
+};
+
+export type WhalesResponse = {
+  as_of: string;
+  window_hours: number;
+  market_tide: "bull" | "bear" | null;
+  count: number;
+  bets: WhaleBet[];
+};
+
+export type WhalesParams = {
+  windowHours?: 4 | 24;
+  direction?: "bull" | "bear";
+  minScore?: number;
+  limit?: number;
+};

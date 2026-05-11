@@ -378,6 +378,64 @@ def flow_cmd(
     console.print(out)
 
 
+@app.command("flow-universe")
+def flow_universe_cmd(
+    tickers: str = typer.Option(
+        "",
+        help="Comma-separated tickers; default = top constituents of PREDICTION_TARGETS + the ETFs themselves",
+    ),
+    max_tickers: int = typer.Option(
+        80,
+        help="Cap on tickers per run to stay within UW quota (~6 calls each)",
+    ),
+) -> None:
+    """Refresh per-ticker UW flow/dark-pool/insider/etc. across a universe.
+
+    Wires the same `ingest_ticker` call that `cfp-jobs flow NVDA` does, but
+    iterates over the top constituents of the sector ETFs. Drives the /flow
+    page + the whale-conviction scorer. Run hourly during RTH."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+
+    if tickers:
+        ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    else:
+        with psycopg.connect(to_psycopg_url(settings.database_url)) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT constituent, MAX(weight) AS w
+                FROM uw_etf_holdings
+                WHERE sector_etf = ANY(%s)
+                  AND constituent IS NOT NULL
+                GROUP BY constituent
+                ORDER BY w DESC NULLS LAST
+                LIMIT %s
+                """,
+                (list(PREDICTION_TARGETS), max_tickers),
+            )
+            ticker_list = [r[0] for r in cur.fetchall()]
+            # Include the ETFs themselves so SPY/QQQ/XLK get refreshed too.
+            ticker_list = sorted({*ticker_list, *PREDICTION_TARGETS})
+
+    ticker_list = ticker_list[:max_tickers]
+    console.print(f"[bold]flow-universe[/bold]: {len(ticker_list)} tickers")
+    n_ok = 0
+    n_err = 0
+    for t in ticker_list:
+        try:
+            out = ingestion.unusualwhales.ingest_ticker(
+                settings.database_url, settings.unusual_whales_api_key, t
+            )
+            n_ok += 1
+            total = sum(v for v in out.values() if isinstance(v, int))
+            console.print(f"  [green]{t}[/green] {total} rows")
+        except Exception as e:  # noqa: BLE001
+            n_err += 1
+            console.print(f"  [red]{t}[/red] {type(e).__name__}: {e}")
+    console.print(f"[green]done:[/green] ok={n_ok} err={n_err}")
+
+
 @app.command("flow-holdings")
 def flow_holdings_cmd(
     etfs: str = typer.Option("", help="Comma-separated ETF tickers; default = PREDICTION_TARGETS"),
@@ -503,18 +561,18 @@ def flow_volatility_cmd(
                 (list(PREDICTION_TARGETS),),
             )
             ticker_list = sorted({r[0] for r in cur.fetchall()} | set(PREDICTION_TARGETS))
+    cli_log = logging.getLogger(__name__)
     n_ok = 0
-    for t in ticker_list:
-        try:
-            with ingestion.unusualwhales.UwClient(settings.unusual_whales_api_key) as uw, \
-                 psycopg.connect(to_psycopg_url(settings.database_url)) as conn:
+    with ingestion.unusualwhales.UwClient(settings.unusual_whales_api_key) as uw, \
+         psycopg.connect(to_psycopg_url(settings.database_url)) as conn:
+        for t in ticker_list:
+            try:
                 body = uw.volatility_stats(t)
                 if ingestion.unusualwhales._upsert_volatility_stats(conn, t, body):
                     n_ok += 1
-                conn.commit()
-        except Exception as e:  # noqa: BLE001 — keep going on a single-ticker failure
-            log = logging.getLogger(__name__)
-            log.warning("volatility for %s failed: %s", t, e)
+            except Exception as e:  # noqa: BLE001 — keep going on a single-ticker failure
+                cli_log.warning("volatility for %s failed: %s", t, e)
+        conn.commit()
     console.print(f"[green]volatility:[/green] {n_ok}/{len(ticker_list)} tickers")
 
 
