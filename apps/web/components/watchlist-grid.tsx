@@ -31,7 +31,7 @@ export function WatchlistGrid() {
     return (
       <Card>
         <CardContent className="p-4 text-sm text-muted-foreground">
-          No watchlist available yet. Run <code className="rounded bg-muted px-1">make watchlist-build</code> on the backend, then refresh.
+          No tickers analyzed yet. Run the ensemble on a ticker from the top-nav search, then refresh.
         </CardContent>
       </Card>
     );
@@ -42,8 +42,8 @@ export function WatchlistGrid() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Watchlist</h1>
         <p className="text-sm text-muted-foreground">
-          Top constituents per top-ranked sector, with the Portfolio Manager's verdict.
-          Last run {formatDate(data.run_ts)}.
+          Every ticker the agent ensemble has recently analyzed, grouped by sector, with the Portfolio Manager's verdict.
+          Last analysis {formatDate(data.run_ts)}.
         </p>
       </div>
 
