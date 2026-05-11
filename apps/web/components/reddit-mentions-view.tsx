@@ -114,6 +114,14 @@ export function RedditMentionsView() {
     retry: false,
     staleTime: 1000 * 60 * 30,
   });
+
+  // ML model status — surfaces "calibrating" vs "live" next to the freshness chip.
+  const { data: predict } = useQuery({
+    queryKey: ["reddit-predict"],
+    queryFn: () => api.redditPredict({ limit: 1 }),
+    retry: false,
+    staleTime: 1000 * 60 * 30,
+  });
   const rulesById = useMemo<Record<RedditRuleId, RedditRuleStats | undefined>>(
     () => {
       const acc: Record<string, RedditRuleStats | undefined> = {};
@@ -154,6 +162,23 @@ export function RedditMentionsView() {
             {fresh.text}
             {data?.snapshot_date && <> · {formatDate(data.snapshot_date)}</>}
           </span>
+          {predict && (
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                predict.status === "ok"
+                  ? "bg-primary/15 text-primary"
+                  : "bg-muted text-muted-foreground",
+              )}
+              title={
+                predict.status === "ok"
+                  ? `Model: ${predict.model_version} · ${predict.n_predictions} predictions · trained ${predict.trained_at ? formatDate(predict.trained_at) : "—"}`
+                  : "Model is still calibrating — accumulating snapshots until enough history exists to train responsibly. Composite score + rules already live."
+              }
+            >
+              model: {predict.status === "ok" ? "live" : "calibrating"}
+            </span>
+          )}
         </div>
       </div>
 

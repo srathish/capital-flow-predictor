@@ -423,6 +423,19 @@ def reddit_catalysts_cmd() -> None:
     console.print(f"[green]reddit_posts:[/green] {out}")
 
 
+@app.command("reddit-predict")
+def reddit_predict_cmd() -> None:
+    """Train an XGB regressor on (reddit mention features + price context)
+    → 20d forward return, then emit predictions for the latest snapshot.
+
+    Safe to run from day one — exits with status='calibrating' until at
+    least ~200 matured rows accumulate. Run nightly after `cfp-jobs reddit`."""
+    from cfp_jobs import predict_reddit  # noqa: PLC0415 — defer xgboost import
+
+    out = predict_reddit.run(settings.database_url)
+    console.print(f"[green]reddit_predictions:[/green] {out}")
+
+
 @app.command("flow-congress")
 def flow_congress_cmd(
     limit: int = typer.Option(500, help="Max recent trades to ingest"),

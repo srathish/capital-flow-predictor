@@ -26,6 +26,8 @@ on:
     - cron: "0 6 * * *"
     # Daily at 06:30 UTC — rebuild features (after eval-agents updates with prior day prices)
     - cron: "30 6 * * *"
+    # Daily at 07:30 UTC — train + emit Reddit-features ML predictions
+    - cron: "30 7 * * *"
     # Weekly Sunday 07:00 UTC — retrain XGB ranker on latest features (Alpha158 + originals)
     - cron: "0 7 * * 0"
   workflow_dispatch:
@@ -38,6 +40,7 @@ on:
         options:
           - reddit-catalysts
           - reddit
+          - reddit-predict
           - eval-agents
           - features-build
           - train-baseline
@@ -73,6 +76,26 @@ jobs:
       - name: Snapshot Apewisdom mention rankings
         working-directory: apps/jobs
         run: uv run cfp-jobs reddit
+
+  reddit-predict:
+    # Daily 20d-forward-return predictor. Skips training and writes
+    # nothing until enough history accumulates (status='calibrating').
+    if: github.event.schedule == '30 7 * * *' || github.event.inputs.job == 'reddit-predict'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Run migrations (ensures reddit_predictions table exists)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Train + predict 20d forward returns from Reddit features
+        working-directory: apps/jobs
+        run: uv run cfp-jobs reddit-predict
 
   eval-agents:
     # Daily forward-return evaluation. Forward returns require >=5 trading
