@@ -539,6 +539,9 @@ export type ForwardCallEntry = {
   symbol: string;
   rank: number;
   score: number | null;
+  // 0..1 cross-seed rank stability from the live-forecast ensemble.
+  // null when the row came from a historical walk-forward fold (no ensemble).
+  confidence: number | null;
 };
 
 export type HorizonDisagreement = {

@@ -385,6 +385,11 @@ class ForwardCallEntry(BaseModel):
     symbol: str
     rank: int
     score: float | None
+    # Cross-seed rank stability from the live-forecast ensemble. 1.0 = every
+    # seed placed the symbol at the same rank as the ensemble; 0.0 = seed
+    # ranks spanned the whole universe. None when the row is from a historical
+    # walk-forward fold rather than a live forecast (those have no ensemble).
+    confidence: float | None = None
 
 
 class HorizonDisagreement(BaseModel):
@@ -460,7 +465,7 @@ async def get_forward_call(
             SELECT MAX(target_ts) AS tt FROM predictions p, latest_run l
             WHERE p.run_ts = l.rt AND p.horizon_d = $1 AND p.model = $2
         )
-        SELECT p.symbol, p.rank, p.score, p.run_ts, p.target_ts
+        SELECT p.symbol, p.rank, p.score, p.confidence, p.run_ts, p.target_ts
         FROM predictions p, latest_run l, latest_target t
         WHERE p.run_ts = l.rt AND p.target_ts = t.tt
           AND p.horizon_d = $1 AND p.model = $2
@@ -532,6 +537,7 @@ async def get_forward_call(
             symbol=r["symbol"],
             rank=int(r["rank"]),
             score=float(r["score"]) if r["score"] is not None else None,
+            confidence=float(r["confidence"]) if r["confidence"] is not None else None,
         )
 
     top = [_entry(r) for r in top_rows]

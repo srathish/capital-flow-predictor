@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { SectorEntry, SectorForwardCallResponse, SectorScorecardResponse } from "@/lib/types";
+import type { ForwardCallEntry, SectorEntry, SectorForwardCallResponse, SectorScorecardResponse } from "@/lib/types";
 import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -625,6 +625,42 @@ const CONVICTION_LABEL: Record<SectorForwardCallResponse["conviction"], { tag: s
   low:    { tag: "low conviction",    cls: "bg-muted/40 text-muted-foreground ring-border" },
 };
 
+function ensembleAgreementTone(v: number): { label: string; cls: string } {
+  if (v >= 0.85) return { label: "agree",  cls: "bg-signal-bullish/15 text-signal-bullish ring-signal-bullish/30" };
+  if (v >= 0.6)  return { label: "mixed",  cls: "bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30" };
+  return            { label: "split",  cls: "bg-signal-bearish/15 text-signal-bearish ring-signal-bearish/30" };
+}
+
+function EnsembleAgreementChip({ value }: { value: number }) {
+  const tone = ensembleAgreementTone(value);
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1",
+        tone.cls,
+      )}
+      title={`Cross-seed rank stability: ${(value * 100).toFixed(0)}%. 1.0 = every seed ranked this sector at the same position.`}
+    >
+      <span className="font-mono">{(value * 100).toFixed(0)}%</span>
+      <span className="opacity-75">{tone.label}</span>
+    </span>
+  );
+}
+
+function ForwardCallRow({ e }: { e: ForwardCallEntry }) {
+  const meta = metaFor(e.symbol);
+  return (
+    <div className="flex items-center justify-between gap-2 rounded border border-border/50 bg-background/40 px-2 py-1 text-xs">
+      <div className="flex min-w-0 items-center gap-2">
+        <span className="font-mono text-[10px] text-muted-foreground">#{e.rank}</span>
+        <span className="font-medium">{e.symbol}</span>
+        <span className="truncate text-muted-foreground">{meta.name}</span>
+      </div>
+      {e.confidence !== null && <EnsembleAgreementChip value={e.confidence} />}
+    </div>
+  );
+}
+
 function ForwardCallCard({
   fc,
   scorecard,
@@ -646,6 +682,16 @@ function ForwardCallCard({
   const botNames = fc.bottom.map((e) => `${e.symbol} (${metaFor(e.symbol).name})`).join(", ");
   const window = horizonPhrase(fc.horizon_d);
   const conv = CONVICTION_LABEL[fc.conviction];
+
+  // Aggregate ensemble confidence across top + bottom. Null when none of the
+  // returned rows came from a live forecast (e.g. only historical folds present).
+  const confValues = [...fc.top, ...fc.bottom]
+    .map((e) => e.confidence)
+    .filter((v): v is number => v !== null);
+  const meanConf = confValues.length
+    ? confValues.reduce((a, b) => a + b, 0) / confValues.length
+    : null;
+  const isLive = meanConf !== null;
 
   const leadLine = `Over the ${window}, the model expects ${topNames} to keep leading and ${botNames} to keep lagging.`;
 
@@ -682,14 +728,17 @@ function ForwardCallCard({
       <CardHeader className="pb-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <CardTitle className="text-base">Forward call · {fc.horizon_d}d</CardTitle>
-          <span
-            className={cn(
-              "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
-              conv.cls,
-            )}
-          >
-            {conv.tag}
-          </span>
+          <div className="flex items-center gap-2">
+            {meanConf !== null && <EnsembleAgreementChip value={meanConf} />}
+            <span
+              className={cn(
+                "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
+                conv.cls,
+              )}
+            >
+              {conv.tag}
+            </span>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3 text-sm leading-relaxed">
@@ -697,6 +746,32 @@ function ForwardCallCard({
         <p className="text-muted-foreground">
           {[spreadLine, stabilityLine, hitLine].filter(Boolean).join(" ")}
         </p>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Top — expected leaders
+            </div>
+            <div className="space-y-1">
+              {fc.top.map((e) => <ForwardCallRow key={e.symbol} e={e} />)}
+            </div>
+          </div>
+          <div>
+            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Bottom — expected laggards
+            </div>
+            <div className="space-y-1">
+              {fc.bottom.map((e) => <ForwardCallRow key={e.symbol} e={e} />)}
+            </div>
+          </div>
+        </div>
+
+        {isLive && (
+          <p className="text-[11px] text-muted-foreground">
+            Confidence shows how tightly a 5-seed model ensemble agreed on each sector's
+            rank — 100% = every seed picked the same position; lower means the seeds split.
+          </p>
+        )}
 
         {disagreeLines.length > 0 && (
           <div className="rounded-md border border-border bg-muted/30 p-3">
