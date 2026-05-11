@@ -328,6 +328,23 @@ export type RedditRuleStats = {
   edge_vs_baseline_pct: number | null;
 };
 
+// /v1/reddit/predict
+export type RedditModelPrediction = {
+  ticker: string;
+  pred_return_20d_pct: number | null;
+  pred_score: number | null;
+  features: Record<string, number | null> | null;
+};
+
+export type RedditPredictResponse = {
+  status: "ok" | "calibrating";
+  snapshot_date: string | null;
+  model_version: string | null;
+  trained_at: string | null;
+  n_predictions: number;
+  predictions: RedditModelPrediction[];
+};
+
 export type RedditBacktestSlice = {
   spike_threshold: number;
   n_observations: number;

@@ -16,6 +16,7 @@ import type {
   RedditMentionsParams,
   RedditMentionsResponse,
   RedditRuleStats,
+  RedditPredictResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -114,6 +115,13 @@ export const api = {
   },
   redditRules(): Promise<RedditRuleStats[]> {
     return getJson<RedditRuleStats[]>(`/v1/reddit/rules`);
+  },
+  redditPredict(params: { limit?: number; sort?: "pred_return" | "pred_score" } = {}): Promise<RedditPredictResponse> {
+    const sp = new URLSearchParams();
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    if (params.sort) sp.set("sort", params.sort);
+    const qs = sp.toString();
+    return getJson<RedditPredictResponse>(`/v1/reddit/predict${qs ? `?${qs}` : ""}`);
   },
   redditCatalysts(params: {
     limit?: number;

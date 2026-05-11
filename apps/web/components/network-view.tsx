@@ -11,6 +11,8 @@ import type {
   NetworkBucket,
   NetworkNode,
   NetworkResponse,
+  WatchlistResponse,
+  WatchlistSignal,
 } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,8 +27,21 @@ const BUCKET_COLOR: Record<NetworkBucket, string> = {
   unranked: "#3f3f46",
 };
 
+// Distinct color for macro nodes so they read as "context, not predictions".
+const MACRO_COLOR = "#7dd3fc"; // sky-300
+
 type Mode = "correlation" | "lead-lag";
 type SignFilter = "all" | "positive" | "negative";
+
+// Watchlist signal aggregated per ETF (sector). Drives the portfolio overlay
+// ring drawn around each sector node.
+type SectorOverlay = {
+  netWeight: number;          // sum(long target_weight) - sum(short target_weight)
+  longCount: number;
+  shortCount: number;
+  topLongs: string[];         // top 3 long tickers by weight, for tooltip
+  topShorts: string[];
+};
 
 type GNode = NetworkNode & {
   x?: number;
@@ -75,6 +90,17 @@ export function NetworkView() {
   const [hovered, setHovered] = useState<GNode | null>(null);
   const [search, setSearch] = useState("");
   const [expandedEtf, setExpandedEtf] = useState<string | null>(null);
+  // Time slider: 0 = today (asOf = null → server uses NOW), N = N business days ago.
+  // We let the user scrub ~2y of history.
+  const [daysBack, setDaysBack] = useState(0);
+  const [includeMacros, setIncludeMacros] = useState(false);
+  const [showPortfolio, setShowPortfolio] = useState(true);
+  // Shock-mode (lead-lag): clicking a node simulates a -X% jolt that propagates
+  // through Granger edges with the recorded lags. shockSource is the origin
+  // node id; shockTimer is "days since shock" advanced by the animation loop.
+  const [shockMode, setShockMode] = useState(false);
+  const [shockSource, setShockSource] = useState<string | null>(null);
+  const [shockTimer, setShockTimer] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
   // ref into ForceGraph2D so we can zoomToFit / tune forces after layout settles.
   // The lib's TS types are loose; treat the imperative handle as `any`.
@@ -105,14 +131,76 @@ export function NetworkView() {
     handleGraphRefReady();
   }, [handleGraphRefReady, mode]);
 
+  // Resolve the "as of" calendar date from the daysBack slider. We subtract
+  // *calendar* days from today; the backend forward-fills weekends/holidays.
+  // Sending null when daysBack == 0 lets the server use NOW() and keeps the
+  // cache key stable for "live" loads.
+  const asOf = useMemo<string | null>(() => {
+    if (daysBack <= 0) return null;
+    const d = new Date();
+    d.setDate(d.getDate() - daysBack);
+    return d.toISOString().slice(0, 10);
+  }, [daysBack]);
+
   // Primary data: correlation OR lead-lag, depending on mode.
   const corrQuery = useQuery({
-    queryKey: ["network-correlation", windowDays, minCorr, horizon],
+    queryKey: ["network-correlation", windowDays, minCorr, horizon, asOf, includeMacros],
     queryFn: () =>
-      api.correlationNetwork({ window: windowDays, minCorrelation: minCorr, horizon }),
+      api.correlationNetwork({
+        window: windowDays,
+        minCorrelation: minCorr,
+        horizon,
+        asOf: asOf ?? undefined,
+        includeMacros,
+      }),
     enabled: mode === "correlation",
     retry: false,
   });
+
+  // Watchlist for the portfolio overlay — aggregated per-sector net signal.
+  // Cached separately so the slider doesn't refetch it.
+  const watchlistQuery = useQuery({
+    queryKey: ["watchlist-for-network"],
+    queryFn: () => api.watchlist(),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const sectorOverlay = useMemo<Map<string, SectorOverlay>>(() => {
+    const m = new Map<string, SectorOverlay>();
+    const wl = watchlistQuery.data as WatchlistResponse | undefined;
+    if (!wl) return m;
+    for (const s of wl.sectors) {
+      let net = 0;
+      let longCount = 0;
+      let shortCount = 0;
+      const longs: { t: string; w: number }[] = [];
+      const shorts: { t: string; w: number }[] = [];
+      for (const it of s.items) {
+        const w = it.target_weight ?? 0;
+        const sig = it.final_signal as WatchlistSignal;
+        if (sig === "long") {
+          net += w;
+          longCount += 1;
+          longs.push({ t: it.ticker, w });
+        } else if (sig === "short") {
+          net -= w;
+          shortCount += 1;
+          shorts.push({ t: it.ticker, w });
+        }
+      }
+      longs.sort((a, b) => b.w - a.w);
+      shorts.sort((a, b) => b.w - a.w);
+      m.set(s.sector, {
+        netWeight: net,
+        longCount,
+        shortCount,
+        topLongs: longs.slice(0, 3).map((x) => x.t),
+        topShorts: shorts.slice(0, 3).map((x) => x.t),
+      });
+    }
+    return m;
+  }, [watchlistQuery.data]);
 
   const llQuery = useQuery({
     queryKey: ["network-lead-lag", maxP, maxLag, horizon],
@@ -290,6 +378,74 @@ export function NetworkView() {
     return m;
   }, [visibleLinks]);
 
+  // BFS along *directed* lead-lag edges from `shockSource`, accumulating
+  // lag days as edge cost. Returns Map<nodeId, arrival_day>. The source
+  // arrives at day 0. Unreachable nodes are absent.
+  const shockArrivals = useMemo<Map<string, number>>(() => {
+    const arrivals = new Map<string, number>();
+    if (mode !== "lead-lag" || !shockSource) return arrivals;
+    const ll = llQuery.data as LeadLagResponse | undefined;
+    if (!ll) return arrivals;
+    // Build forward adjacency: source -> [(target, lag)]
+    const fwd = new Map<string, { t: string; lag: number }[]>();
+    for (const e of ll.edges) {
+      const bucket = fwd.get(e.source) ?? [];
+      bucket.push({ t: e.target, lag: Math.max(1, e.lag) });
+      fwd.set(e.source, bucket);
+    }
+    // Dijkstra (lags are small positive ints, but using a simple priority queue
+    // is fine here — universe is <50 nodes).
+    arrivals.set(shockSource, 0);
+    const queue: { id: string; day: number }[] = [{ id: shockSource, day: 0 }];
+    while (queue.length) {
+      queue.sort((a, b) => a.day - b.day);
+      const cur = queue.shift()!;
+      const curDay = arrivals.get(cur.id);
+      if (curDay !== undefined && cur.day > curDay) continue;
+      const nbrs = fwd.get(cur.id) ?? [];
+      for (const { t, lag } of nbrs) {
+        const nd = cur.day + lag;
+        const prev = arrivals.get(t);
+        if (prev === undefined || nd < prev) {
+          arrivals.set(t, nd);
+          queue.push({ id: t, day: nd });
+        }
+      }
+    }
+    return arrivals;
+  }, [shockSource, llQuery.data, mode]);
+
+  // Animation: when shockSource is set, advance shockTimer 1 day every 220ms
+  // until we cover the max arrival; then auto-fade by clearing after a pause.
+  useEffect(() => {
+    if (!shockSource) return;
+    let cancelled = false;
+    setShockTimer(0);
+    const maxDay = Math.max(0, ...Array.from(shockArrivals.values()));
+    let day = 0;
+    const tick = () => {
+      if (cancelled) return;
+      day += 1;
+      setShockTimer(day);
+      if (day <= maxDay + 2) {
+        setTimeout(tick, 220);
+      } else {
+        // Hold for a beat so the user sees the final state, then reset.
+        setTimeout(() => {
+          if (!cancelled) {
+            setShockSource(null);
+            setShockTimer(0);
+          }
+        }, 1800);
+      }
+    };
+    const id = setTimeout(tick, 220);
+    return () => {
+      cancelled = true;
+      clearTimeout(id);
+    };
+  }, [shockSource, shockArrivals]);
+
   const isVisible = useCallback(
     (id: string): boolean => {
       if (!hovered) return true;
@@ -339,7 +495,7 @@ export function NetworkView() {
   const handleNodeClick = useCallback((n: AnyNode, e: MouseEvent) => {
     const node = n as GNode;
     // Shift+click expands the sector into its constituents in-place.
-    // Plain click drills to the sector page.
+    // Plain click drills to the sector page (or triggers a shock in shock mode).
     // Alt/Option-click releases a pinned node.
     if (e.altKey) {
       n.fx = undefined;
@@ -350,8 +506,12 @@ export function NetworkView() {
       setExpandedEtf((cur) => (cur === node.id ? null : node.id));
       return;
     }
+    if (mode === "lead-lag" && shockMode) {
+      setShockSource(node.id);
+      return;
+    }
     router.push(`/sectors/${encodeURIComponent(node.id)}`);
-  }, [router]);
+  }, [router, mode, shockMode]);
 
   const totalEdges = graphData.links.length;
   const visibleEdgeCount = visibleLinks.length;
@@ -456,7 +616,29 @@ export function NetworkView() {
                 }}
                 nodeColor={(n) => {
                   const node = n as AnyNode;
-                  const col = node.isConstituent ? "#a3a3ad" : BUCKET_COLOR[node.bucket];
+                  let col: string;
+                  if (node.isConstituent) {
+                    col = "#a3a3ad";
+                  } else if (node.kind === "macro") {
+                    col = MACRO_COLOR;
+                  } else {
+                    col = BUCKET_COLOR[node.bucket];
+                  }
+                  // Shock overlay: nodes that have "arrived" by the current
+                  // timer step are heated to red, fading back to base color
+                  // as more time passes since their arrival.
+                  if (shockSource) {
+                    const arrival = shockArrivals.get(node.id);
+                    if (arrival === undefined) {
+                      col = withAlpha(col, 0.18); // unreachable: dim
+                    } else if (shockTimer >= arrival) {
+                      const since = shockTimer - arrival;
+                      // Fresh shocks burn red; older arrivals fade to amber.
+                      col = since <= 1 ? "#FF3030" : since <= 3 ? "#FF9030" : "#FFD060";
+                    } else {
+                      col = withAlpha(col, 0.25); // not yet hit
+                    }
+                  }
                   if (!hovered) return col;
                   return isVisible(node.id) ? col : withAlpha(col, 0.12);
                 }}
@@ -509,6 +691,38 @@ export function NetworkView() {
                     const inverse = node.rank == null ? 0 : ranked - node.rank + 1;
                     radius = (4 + inverse * 1.5) ** 0.5 * 1.4;
                   }
+                  // Portfolio overlay ring — green for net-long sector exposure,
+                  // orange for net-short. Width scales with the net weight.
+                  if (
+                    showPortfolio &&
+                    !node.isConstituent &&
+                    node.kind !== "macro"
+                  ) {
+                    const ov = sectorOverlay.get(node.id);
+                    if (ov && (ov.longCount > 0 || ov.shortCount > 0)) {
+                      const ringWorld = 2.5 / globalScale + Math.min(3, Math.abs(ov.netWeight) * 12) / globalScale;
+                      ctx.beginPath();
+                      ctx.arc(node.x ?? 0, node.y ?? 0, radius + ringWorld * 1.2, 0, Math.PI * 2);
+                      ctx.lineWidth = ringWorld;
+                      ctx.strokeStyle =
+                        ov.netWeight >= 0
+                          ? "rgba(0,200,5,0.85)"
+                          : "rgba(255,80,0,0.85)";
+                      ctx.stroke();
+                    }
+                  }
+                  // Shock pulse — draw an expanding ring on nodes that just got hit.
+                  if (shockSource) {
+                    const arrival = shockArrivals.get(node.id);
+                    if (arrival !== undefined && shockTimer === arrival) {
+                      const pulseWorld = (radius + 4) * 1.8;
+                      ctx.beginPath();
+                      ctx.arc(node.x ?? 0, node.y ?? 0, pulseWorld, 0, Math.PI * 2);
+                      ctx.lineWidth = 1.5 / globalScale;
+                      ctx.strokeStyle = "rgba(255,60,60,0.7)";
+                      ctx.stroke();
+                    }
+                  }
                   // Render labels at a CONSTANT screen size regardless of zoom.
                   // Lightweight-charts: world_size * globalScale = screen pixels.
                   // So world_size = target_screen_px / globalScale.
@@ -541,9 +755,18 @@ export function NetworkView() {
           </div>
           {hovered && (
             <div className="pointer-events-none absolute left-3 top-3 rounded-lg bg-card/95 px-3 py-2 text-xs shadow-lg ring-1 ring-border">
-              <div className="font-semibold">{hovered.id}</div>
+              <div className="font-semibold">
+                {hovered.id}
+                {hovered.kind === "macro" && (
+                  <span className="ml-2 rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] text-sky-300">macro</span>
+                )}
+              </div>
               <div className="text-muted-foreground">
-                {hovered.isConstituent ? `constituent of ${hovered.parentEtf}` : hovered.bucket}
+                {hovered.isConstituent
+                  ? `constituent of ${hovered.parentEtf}`
+                  : hovered.kind === "macro"
+                  ? "context overlay"
+                  : hovered.bucket}
                 {hovered.rank != null && ` · rank #${hovered.rank}`}
               </div>
               {hovered.weight != null && (
@@ -559,13 +782,137 @@ export function NetworkView() {
                   {mode === "lead-lag" ? "degree" : "avg |r|"}: {hovered.avg_correlation.toFixed(2)}
                 </div>
               )}
+              {showPortfolio &&
+                !hovered.isConstituent &&
+                hovered.kind !== "macro" &&
+                (() => {
+                  const ov = sectorOverlay.get(hovered.id);
+                  if (!ov || (ov.longCount === 0 && ov.shortCount === 0)) return null;
+                  return (
+                    <div className="mt-1 border-t border-border pt-1 text-[11px]">
+                      <div className="num text-muted-foreground">
+                        watchlist: {ov.netWeight >= 0 ? "+" : ""}
+                        {(ov.netWeight * 100).toFixed(1)}% net
+                      </div>
+                      {ov.topLongs.length > 0 && (
+                        <div className="text-signal-bullish">↑ {ov.topLongs.join(", ")}</div>
+                      )}
+                      {ov.topShorts.length > 0 && (
+                        <div className="text-signal-bearish">↓ {ov.topShorts.join(", ")}</div>
+                      )}
+                    </div>
+                  );
+                })()}
+              {shockSource && shockArrivals.has(hovered.id) && (
+                <div className="mt-1 border-t border-border pt-1 num text-[11px] text-amber-300">
+                  shock arrives day +{shockArrivals.get(hovered.id)}
+                </div>
+              )}
+            </div>
+          )}
+          {shockSource && (
+            <div className="pointer-events-none absolute right-3 top-3 rounded-lg bg-card/95 px-3 py-2 text-xs shadow-lg ring-1 ring-border">
+              <div className="font-semibold text-amber-300">
+                Shock from {shockSource}
+              </div>
+              <div className="num text-muted-foreground">
+                day +{shockTimer} · {shockArrivals.size - 1} followers
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
 
+      <div className="space-y-3 rounded-xl border border-border bg-card/40 px-4 py-3">
+        {mode === "correlation" && (
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span className="w-14 shrink-0 font-semibold uppercase tracking-wide text-foreground/80">
+              When
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={504}
+              step={1}
+              value={daysBack}
+              onChange={(e) => setDaysBack(parseInt(e.target.value))}
+              className="flex-1 accent-primary"
+              title="Drag back in time to replay how the network looked"
+            />
+            <span className="num w-28 text-foreground">
+              {daysBack === 0
+                ? "now"
+                : `${asOf} (-${daysBack}d)`}
+            </span>
+            {daysBack !== 0 && (
+              <button
+                type="button"
+                onClick={() => setDaysBack(0)}
+                className="rounded-full border border-border bg-card px-3 py-1 text-foreground hover:bg-muted"
+              >
+                Reset to now
+              </button>
+            )}
+          </div>
+        )}
+        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span className="w-14 shrink-0 font-semibold uppercase tracking-wide text-foreground/80">
+            Layers
+          </span>
+          {mode === "correlation" && (
+            <label className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={includeMacros}
+                onChange={(e) => setIncludeMacros(e.target.checked)}
+                className="accent-primary"
+              />
+              <span title="Add VIX, TLT, dollar, gold, oil, HY, BTC as context nodes">
+                Macros
+              </span>
+            </label>
+          )}
+          <label className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={showPortfolio}
+              onChange={(e) => setShowPortfolio(e.target.checked)}
+              className="accent-primary"
+            />
+            <span title="Ring each sector by net watchlist exposure (long/short)">
+              Watchlist ring
+            </span>
+          </label>
+          {mode === "lead-lag" && (
+            <label className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={shockMode}
+                onChange={(e) => {
+                  setShockMode(e.target.checked);
+                  if (!e.target.checked) setShockSource(null);
+                }}
+                className="accent-primary"
+              />
+              <span title="Click a node to simulate a shock propagating along Granger lags">
+                Shock mode
+              </span>
+            </label>
+          )}
+          {shockSource && (
+            <button
+              type="button"
+              onClick={() => setShockSource(null)}
+              className="rounded-full border border-border bg-card px-3 py-1 text-foreground hover:bg-muted"
+            >
+              Clear shock ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       <p className="text-xs text-muted-foreground">
-        Hover to isolate · click a node to drill into the sector · shift-click to expand into constituents · drag to pin · alt-click a pin to release.
+        Hover to isolate · click a node to drill into the sector · shift-click to expand into constituents · drag to pin · alt-click a pin to release{mode === "lead-lag" ? " · shock mode: click a node to fire a propagation simulation" : ""}.
       </p>
     </div>
   );

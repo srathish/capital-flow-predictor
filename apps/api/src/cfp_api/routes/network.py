@@ -16,7 +16,7 @@ GET /v1/network/sector/{etf}/expand?window=60&min_correlation=0.55&top=12
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
 import numpy as np
@@ -30,6 +30,14 @@ log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/v1/network", tags=["network"])
 
+# Macro overlay tickers — already ingested via Yahoo into prices_daily
+# (see cfp_shared.universe.CROSS_ASSET). Including these as graph nodes lets
+# the user see how sectors hook to rates (TLT), the dollar (DX-Y.NYB), vol
+# (^VIX), oil (USO), gold (GLD), credit (HYG), and crypto (BTC-USD).
+MACRO_OVERLAY_SYMBOLS: list[str] = [
+    "^VIX", "TLT", "DX-Y.NYB", "GLD", "USO", "HYG", "BTC-USD",
+]
+
 
 class NetworkNode(BaseModel):
     id: str                      # ticker, e.g. "XLK"
@@ -39,6 +47,7 @@ class NetworkNode(BaseModel):
     bucket: Literal["leader", "mid", "laggard", "unranked"]
     return_window: float | None  # realized return over the corr window
     avg_correlation: float       # average |r| to other nodes in graph (for sizing)
+    kind: Literal["sector", "macro"] = "sector"
 
 
 class NetworkEdge(BaseModel):
@@ -69,6 +78,8 @@ async def get_correlation_network(
     # it rejects "20" because it's not literally the int 20. Take int + validate.
     horizon: int = Query(10, description="XGB prediction horizon (5, 10, or 20)"),
     model: str = Query("xgb_v1"),
+    as_of: date | None = Query(None, description="Anchor date for the rolling window (default = today)"),
+    include_macros: bool = Query(False, description="Add macro tickers (VIX, TLT, dollar, gold, oil, HY, BTC) as nodes"),
 ) -> NetworkResponse:
     if horizon not in _VALID_HORIZONS:
         raise HTTPException(status_code=400, detail=f"horizon must be one of {sorted(_VALID_HORIZONS)}")
@@ -81,17 +92,36 @@ async def get_correlation_network(
     laggards). Average |r| per node feeds the FE's node sizing."""
     pool = get_pool()
     universe = list(PREDICTION_TARGETS)
+    macro_set: set[str] = set()
+    if include_macros:
+        macro_set = set(MACRO_OVERLAY_SYMBOLS)
+        universe = universe + MACRO_OVERLAY_SYMBOLS
 
-    # Pull prices for the universe.
-    sql = """
-        SELECT ts, symbol, close
-        FROM prices_daily
-        WHERE symbol = ANY($1::text[])
-          AND ts >= NOW() - ($2 || ' days')::interval
-        ORDER BY ts ASC
-    """
-    async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, universe, str(int(window * 1.5) + 10))
+    # Pull prices for the universe. When `as_of` is provided, anchor the
+    # window at that date so the time slider can replay history; otherwise
+    # use NOW() so a fresh page load gets today's snapshot.
+    pad_days = str(int(window * 1.5) + 10)
+    if as_of is None:
+        sql = """
+            SELECT ts, symbol, close
+            FROM prices_daily
+            WHERE symbol = ANY($1::text[])
+              AND ts >= NOW() - ($2 || ' days')::interval
+            ORDER BY ts ASC
+        """
+        async with pool.acquire() as conn:
+            rows = await conn.fetch(sql, universe, pad_days)
+    else:
+        sql = """
+            SELECT ts, symbol, close
+            FROM prices_daily
+            WHERE symbol = ANY($1::text[])
+              AND ts <= $3::timestamptz
+              AND ts >= $3::timestamptz - ($2 || ' days')::interval
+            ORDER BY ts ASC
+        """
+        async with pool.acquire() as conn:
+            rows = await conn.fetch(sql, universe, pad_days, as_of)
 
     if not rows:
         return NetworkResponse(
@@ -254,11 +284,14 @@ async def get_correlation_network(
 
     nodes: list[NetworkNode] = []
     for i, sym in enumerate(symbols_present):
-        p = pred_by_sym.get(sym)
+        is_macro = sym in macro_set
+        p = None if is_macro else pred_by_sym.get(sym)
         score = float(p["score"]) if p and p["score"] is not None else None
         # Use return-rank fallback if XGB scores are degenerate; else trust
-        # the recomputed XGB rank.
-        if use_returns_fallback:  # noqa: SIM108 — nested ternary would be unreadable
+        # the recomputed XGB rank. Macros are never ranked — they're context.
+        if is_macro:
+            rank = None
+        elif use_returns_fallback:  # noqa: SIM108 — nested ternary would be unreadable
             rank = ret_rank.get(sym)
         else:
             rank = int(p["rank"]) if p else None
@@ -268,9 +301,10 @@ async def get_correlation_network(
             name=sym,
             rank=rank,
             score=score,
-            bucket=_bucket(rank),
+            bucket="unranked" if is_macro else _bucket(rank),
             return_window=window_returns.get(sym),
             avg_correlation=avg_r,
+            kind="macro" if is_macro else "sector",
         ))
 
     return NetworkResponse(
