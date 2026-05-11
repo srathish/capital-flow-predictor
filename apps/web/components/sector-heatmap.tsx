@@ -568,12 +568,27 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
             <span className="num">{s.n_constituents}</span>
           </div>
 
-          {sparkValues.length >= 2 && (
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <span className="text-[10px] uppercase tracking-wide">rank trend</span>
-              <Sparkline values={sparkValues} width={72} height={20} />
-            </div>
-          )}
+          {sparkValues.length >= 2 && (() => {
+            const first = s.rank_history[0];
+            const last = s.rank_history[s.rank_history.length - 1];
+            const runs = s.rank_history.length;
+            const diff = first - last; // positive = climbed (smaller rank is better)
+            let verb: string;
+            let cls: string;
+            if (diff > 0) { verb = "Climbed"; cls = "text-signal-bullish"; }
+            else if (diff < 0) { verb = "Slipped"; cls = "text-signal-bearish"; }
+            else { verb = "Held"; cls = "text-foreground/80"; }
+            const sentence =
+              diff === 0
+                ? `Held #${last} across last ${runs} runs`
+                : `${verb} #${first} → #${last} over last ${runs} runs`;
+            return (
+              <div className="mt-2">
+                <div className={cn("text-[11px] leading-snug", cls)}>{sentence}</div>
+                <Sparkline values={sparkValues} width={140} height={20} />
+              </div>
+            );
+          })()}
 
           {s.confidence !== null && (
             <div className="mt-2">
