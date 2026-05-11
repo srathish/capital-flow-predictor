@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 
 import pandas as pd
 import psycopg
-from cfp_models import metrics, walk_forward
+from cfp_models import metrics, walk_forward, xgb_baseline
 from cfp_models import panel as model_panel
 from cfp_models import targets as targets_mod
 from cfp_shared.universe import PREDICTION_TARGETS
@@ -96,6 +96,7 @@ def train_baseline(
     run_ts = datetime.now(UTC)
     summary: dict[int, dict] = {}
     all_pred_rows: list[dict] = []
+    live_summary: dict[int, dict] = {}
 
     for h in horizons:
         log.info("=== horizon %dd ===", h)
@@ -140,6 +141,59 @@ def train_baseline(
                 }
             )
 
+        # ----- live forward forecast -----
+        # The OOS predictions above only cover historical test folds (their
+        # target_ts is at most last_close − horizon business days, because the
+        # target join in build_panel requires t+N to be observed). To predict
+        # FUTURE movement we train one final model on the entire supervised
+        # panel and score the latest feature row, where the target is unknown.
+        # The forward target date is reconstructed downstream as
+        # last_feature_ts + horizon business days.
+        live_panel, asof_ts = model_panel.build_scoring_panel(features, feature_cols)
+        train_dates = sorted(panel_df["ts"].unique())
+        if live_panel.empty or asof_ts is None or len(train_dates) < 40:
+            log.info("horizon %dd: skipping live forecast (insufficient data)", h)
+        elif asof_ts <= train_dates[-1]:
+            log.info(
+                "horizon %dd: skipping live forecast — latest feature ts %s "
+                "is not newer than last supervised ts %s",
+                h, asof_ts, train_dates[-1],
+            )
+        else:
+            # Hold out the most recent ~21 business days of the supervised
+            # panel for early-stopping validation. This mirrors the
+            # walk-forward val window so the final model's regularization
+            # matches what we measured OOS.
+            val_n = min(21, max(5, len(train_dates) // 8))
+            cutoff = train_dates[-val_n]
+            final_train = panel_df[panel_df["ts"] < cutoff]
+            final_val = panel_df[panel_df["ts"] >= cutoff]
+            if final_train.empty or final_val.empty:
+                log.warning("horizon %dd: live forecast train/val split empty", h)
+            else:
+                final_model = xgb_baseline.train(final_train, final_val, feature_cols)
+                live_preds = xgb_baseline.predict(final_model, live_panel, feature_cols)
+                n_live = len(live_preds)
+                live_summary[h] = {"asof": _to_utc(asof_ts), "n": n_live}
+                log.info(
+                    "horizon %dd live forecast: %d symbols asof=%s",
+                    h, n_live, asof_ts,
+                )
+                for r in live_preds.itertuples():
+                    all_pred_rows.append(
+                        {
+                            "run_ts": run_ts,
+                            "target_ts": _to_utc(r.ts),
+                            "symbol": str(r.symbol),
+                            "horizon_d": int(h),
+                            "model": MODEL_NAME,
+                            "rank": int(r.rank),
+                            "score": float(r.score),
+                            "confidence": None,
+                            "explanation": "live_forecast",
+                        }
+                    )
+
     # Guard: detect degenerate rank distribution before persisting. Past bug saw
     # every row land at rank=1 — refuse to overwrite good data with bad data.
     if all_pred_rows:
@@ -165,7 +219,15 @@ def train_baseline(
         conn.commit()
     log.info("predictions: upserted %d rows", n)
 
-    return {"horizons": summary, "n_predictions": n, "run_ts": run_ts.isoformat()}
+    return {
+        "horizons": summary,
+        "n_predictions": n,
+        "run_ts": run_ts.isoformat(),
+        "live_forecast": {
+            h: {"asof": v["asof"].isoformat(), "n_symbols": v["n"]}
+            for h, v in live_summary.items()
+        },
+    }
 
 
 def evaluate_latest(database_url: str, horizon: int = 10) -> dict:

@@ -87,3 +87,37 @@ def build_panel(
 
     feature_cols = [c for c in panel.columns if c not in {"ts", "symbol", "target"}]
     return panel, feature_cols
+
+
+def build_scoring_panel(
+    features_long: pd.DataFrame,
+    reference_feature_cols: list[str],
+) -> tuple[pd.DataFrame, pd.Timestamp | None]:
+    """Build a single-date, target-free panel for live forward prediction.
+
+    Unlike build_panel — which inner-joins targets and therefore drops every row
+    where t+N is not yet observed — this returns the latest fully-populated
+    feature snapshot per symbol. The caller scores this with a model trained on
+    supervised history to produce a forward forecast for ts + horizon.
+
+    Columns are aligned to reference_feature_cols (missing columns filled NaN)
+    so the scoring matrix matches what the trained model saw.
+    """
+    cross_wide, sector_wide = features_long_to_wide(features_long)
+    if sector_wide.empty:
+        return pd.DataFrame(), None
+    panel = sector_wide.merge(cross_wide, how="left", left_on="ts", right_index=True)
+    if panel.empty:
+        return pd.DataFrame(), None
+
+    latest_ts = panel["ts"].max()
+    latest = panel[panel["ts"] == latest_ts].copy()
+    if latest.empty:
+        return pd.DataFrame(), None
+
+    for c in reference_feature_cols:
+        if c not in latest.columns:
+            latest[c] = float("nan")
+
+    keep = ["ts", "symbol", *reference_feature_cols]
+    return latest[keep].reset_index(drop=True), latest_ts

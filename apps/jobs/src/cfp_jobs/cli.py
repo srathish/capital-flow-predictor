@@ -158,6 +158,18 @@ def train_baseline_cmd(
     console.print(table)
     console.print(f"[green]predictions:[/green] {result['n_predictions']:,} rows")
 
+    live = result.get("live_forecast") or {}
+    if live:
+        live_table = Table(title="Live forward forecast (target = asof + horizon BD)")
+        live_table.add_column("Horizon")
+        live_table.add_column("Asof (last feature ts)")
+        live_table.add_column("Symbols", justify="right")
+        for h, info in sorted(live.items()):
+            live_table.add_row(f"{h}d", str(info["asof"]), str(info["n_symbols"]))
+        console.print(live_table)
+    else:
+        console.print("[yellow]live forecast:[/yellow] not produced (see logs)")
+
 
 @app.command()
 def evaluate(
