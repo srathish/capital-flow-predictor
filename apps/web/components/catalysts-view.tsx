@@ -14,7 +14,7 @@ import {
   classifyKeywords,
   type CatalystCategoryId,
 } from "@/lib/catalyst-categories";
-import type { CatalystPost } from "@/lib/types";
+import type { CatalystPost, CategoryTrackRecord } from "@/lib/types";
 
 const HOUR_OPTIONS = [
   { value: 6, label: "6h" },
@@ -231,6 +231,16 @@ export function CatalystsView() {
     retry: false,
     refetchInterval: REFETCH_MS,
     refetchOnWindowFocus: true,
+  });
+
+  // 30-day backtest of the catalyst signal itself — does each category
+  // actually predict moves? Refreshed every 10 minutes (slow-moving data).
+  const { data: trackRecord } = useQuery({
+    queryKey: ["catalyst-track-record", 30],
+    queryFn: () => api.redditCatalystTrackRecord({ days: 30, minScore: 0.05 }),
+    retry: false,
+    staleTime: 10 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
   // Tick state for "updated Xs ago" label.
@@ -521,6 +531,11 @@ export function CatalystsView() {
         </div>
       )}
 
+      {/* Track record (30d) — does the signal actually work? */}
+      {trackRecord && trackRecord.n_total_with_return > 0 && (
+        <TrackRecordPanel data={trackRecord} onCategoryClick={toggleCat} activeCats={activeCats} />
+      )}
+
       {/* Subreddit chips (toggle to mute) */}
       {data && subredditCounts.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 text-[11px]">
@@ -724,6 +739,125 @@ export function CatalystsView() {
       <p className="text-[11px] text-muted-foreground">
         Auto-refreshes every 60s. Score combines keyword weight, ticker count, and recency.
         Star a ticker to pin it, × to mute. Posts persist for 7 days.
+      </p>
+    </div>
+  );
+}
+
+type TrackRecordPanelProps = {
+  data: {
+    window_days: number;
+    n_total_posts: number;
+    n_total_with_return: number;
+    overall_hit_rate: number | null;
+    overall_avg_return_next_day_pct: number | null;
+    categories: CategoryTrackRecord[];
+  };
+  onCategoryClick: (c: CatalystCategoryId) => void;
+  activeCats: Set<CatalystCategoryId>;
+};
+
+// Sample-size threshold below which we caution that the number is noisy.
+// 20 is a soft floor — at n<20 a binomial hit rate has a 95% CI wider than
+// ±22 percentage points, which isn't useful for ranking categories.
+const TRACK_RECORD_MIN_N = 20;
+
+function TrackRecordPanel({ data, onCategoryClick, activeCats }: TrackRecordPanelProps) {
+  const rows = data.categories.filter((c) => c.n_with_return > 0);
+  const overallHit = data.overall_hit_rate;
+  const overallRet = data.overall_avg_return_next_day_pct;
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Track record · {data.window_days}d
+        </h2>
+        <span className="text-[11px] text-muted-foreground">
+          {data.n_total_with_return}/{data.n_total_posts} posts with a next-day close ·
+          {" "}
+          overall hit {overallHit == null ? "—" : `${(overallHit * 100).toFixed(0)}%`} ·
+          {" "}
+          avg +1d{" "}
+          <span className={cn("num", returnTone(overallRet ?? null))}>
+            {formatPct(overallRet)}
+          </span>
+        </span>
+      </div>
+      <Card>
+        <CardContent className="p-0">
+          <table className="w-full text-[12px]">
+            <thead className="text-[10px] uppercase text-muted-foreground">
+              <tr className="border-b border-border">
+                <th className="px-3 py-2 text-left font-semibold">Category</th>
+                <th className="px-3 py-2 text-right font-semibold">n</th>
+                <th className="px-3 py-2 text-right font-semibold" title="Fraction of posts whose lead ticker closed up the next trading day">
+                  Hit rate
+                </th>
+                <th className="px-3 py-2 text-right font-semibold" title="Mean next-trading-day return of the lead ticker">
+                  Avg +1d
+                </th>
+                <th className="px-3 py-2 text-right font-semibold" title="Median is more robust to outliers than the mean">
+                  Median +1d
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => {
+                const catId = (row.category as CatalystCategoryId) in CATALYST_CATEGORIES
+                  ? (row.category as CatalystCategoryId)
+                  : "other";
+                const cat = CATALYST_CATEGORIES[catId];
+                const active = activeCats.has(catId);
+                const lowN = row.n_with_return < TRACK_RECORD_MIN_N;
+                return (
+                  <tr
+                    key={row.category}
+                    className={cn(
+                      "border-b border-border/40 last:border-0 hover:bg-muted/30",
+                      active && "bg-primary/5",
+                    )}
+                  >
+                    <td className="px-3 py-2">
+                      <button
+                        onClick={() => onCategoryClick(catId)}
+                        title={`Click to ${active ? "remove" : "apply"} ${cat.label} filter`}
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[11px] font-semibold transition-opacity",
+                          cat.swatch,
+                          cat.text,
+                          !active && "opacity-80 hover:opacity-100",
+                          active && "ring-1 ring-current",
+                        )}
+                      >
+                        {cat.label}
+                      </button>
+                    </td>
+                    <td className={cn("num px-3 py-2 text-right", lowN && "text-muted-foreground")}
+                        title={lowN ? `Only ${row.n_with_return} posts — too few to trust` : undefined}>
+                      {row.n_with_return}
+                      {lowN && <span className="ml-1 text-[10px]">·noisy</span>}
+                    </td>
+                    <td className="num px-3 py-2 text-right">
+                      {row.hit_rate == null ? "—" : `${(row.hit_rate * 100).toFixed(0)}%`}
+                    </td>
+                    <td className={cn("num px-3 py-2 text-right", returnTone(row.avg_return_next_day_pct))}>
+                      {formatPct(row.avg_return_next_day_pct)}
+                    </td>
+                    <td className={cn("num px-3 py-2 text-right", returnTone(row.median_return_next_day_pct))}>
+                      {formatPct(row.median_return_next_day_pct)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
+      <p className="text-[10px] text-muted-foreground">
+        Lead-ticker return from close-on-or-before post to next trading day close.
+        Baseline is ~50% hit rate / ~0% avg — buckets above that have measurable edge.
+        Rows with n &lt; {TRACK_RECORD_MIN_N} are too small to trust.
       </p>
     </div>
   );

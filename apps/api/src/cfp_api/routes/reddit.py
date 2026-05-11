@@ -1109,6 +1109,91 @@ async def get_rule_stats() -> list[RuleStats]:
     return await _compute_rule_stats()
 
 
+# ---------- /predict: ML model output ----------
+
+
+class ModelPrediction(BaseModel):
+    """One row in the latest `reddit_predictions` snapshot.
+
+    pred_return_20d is the model's raw expected 20-trading-day return in
+    percent. pred_score is a 0..100 percentile rank within the snapshot
+    (anchors the UI badge across model versions / scales). Features is
+    the raw input vector — useful for debugging / explanation hovers."""
+    ticker: str
+    pred_return_20d_pct: float | None
+    pred_score: float | None
+    features: dict | None
+
+
+class PredictResponse(BaseModel):
+    """Wrapper around the latest model predictions. status='calibrating'
+    when /reddit_predictions is empty (i.e. not enough matured history
+    yet to fit the model — see predict_reddit._MIN_TRAIN_EVENTS)."""
+    status: Literal["ok", "calibrating"]
+    snapshot_date: date | None
+    model_version: str | None
+    trained_at: datetime | None
+    n_predictions: int
+    predictions: list[ModelPrediction]
+
+
+@router.get("/predict", response_model=PredictResponse)
+async def get_predictions(
+    limit: int = Query(60, ge=1, le=500),
+    sort: Literal["pred_return", "pred_score"] = Query("pred_score"),
+) -> PredictResponse:
+    """Return the latest ML predictions (one row per ticker for the most
+    recent snapshot). Calibrating until the model has enough matured
+    history to train responsibly."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        latest = await conn.fetchrow("""
+            SELECT snapshot_date, model_version, MAX(trained_at) AS trained_at
+            FROM reddit_predictions
+            WHERE snapshot_date = (SELECT MAX(snapshot_date) FROM reddit_predictions)
+            GROUP BY snapshot_date, model_version
+            ORDER BY trained_at DESC
+            LIMIT 1
+        """)
+        if latest is None:
+            return PredictResponse(
+                status="calibrating",
+                snapshot_date=None,
+                model_version=None,
+                trained_at=None,
+                n_predictions=0,
+                predictions=[],
+            )
+        order_clause = "pred_score DESC NULLS LAST" if sort == "pred_score" else "pred_return_20d DESC NULLS LAST"
+        rows = await conn.fetch(
+            f"""
+                SELECT ticker, pred_return_20d, pred_score, features
+                FROM reddit_predictions
+                WHERE snapshot_date = $1 AND model_version = $2
+                ORDER BY {order_clause}
+                LIMIT $3
+            """,
+            latest["snapshot_date"], latest["model_version"], limit,
+        )
+
+    return PredictResponse(
+        status="ok",
+        snapshot_date=latest["snapshot_date"],
+        model_version=latest["model_version"],
+        trained_at=latest["trained_at"],
+        n_predictions=len(rows),
+        predictions=[
+            ModelPrediction(
+                ticker=r["ticker"],
+                pred_return_20d_pct=float(r["pred_return_20d"]) if r["pred_return_20d"] is not None else None,
+                pred_score=float(r["pred_score"]) if r["pred_score"] is not None else None,
+                features=r["features"],
+            )
+            for r in rows
+        ],
+    )
+
+
 # ---------- catalyst-keyword feed ----------
 
 
@@ -1186,6 +1271,201 @@ def _score_breakdown(
     return CatalystScoreBreakdown(
         base=base, recency=recency, trust=trust,
         n_tickers=n_tickers, n_keywords=n_keywords,
+    )
+
+
+# Per-category track record — mirrors the client classifier at
+# apps/web/lib/catalyst-categories.ts. Keep these rule lists in sync.
+# Order matters: more specific buckets first so e.g. "fda approval" lands in
+# `regulatory` instead of `partnership`.
+_CATALYST_CATEGORY_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("regulatory", (
+        "fda", "approval", "approved", "clinical", "trial", "phase 3",
+        "phase 2", "phase iii", "phase ii", "recall", "doj", "antitrust",
+        "lawsuit", "sued", "settlement", "ftc", "sec", "investigation",
+        "subpoena",
+    )),
+    ("earnings", (
+        "earnings", "beat", "miss", "missed", "guidance", "guide", "guides",
+        "eps", "revenue", "raised guidance", "lowered guidance", "raises",
+        "lowered", "preannounce", "pre-announce",
+    )),
+    ("insider", (
+        "insider", "form 4", "13d", "13g", "ceo sell", "cfo sell", "ceo buy",
+        "insider buy", "insider sell",
+    )),
+    ("mna", (
+        "acquisition", "acquire", "acquires", "acquired", "merger", "merge",
+        "buyout", "takeover", "take private", "spinoff", "spin-off",
+    )),
+    ("partnership", (
+        "partnership", "partner", "partners", "deal", "contract", "awarded",
+        "supplier", "win", "wins",
+    )),
+    ("product", (
+        "launch", "launches", "release", "released", "unveil", "unveils",
+        "announce", "announces", "announced", "reveal", "reveals", "rollout",
+    )),
+    ("leak", (
+        "leak", "leaked", "rumor", "rumored", "scoop", "alleged", "report",
+        "reports", "sources say", "according to sources",
+    )),
+]
+
+
+def _classify_primary_category(keywords: list[str]) -> str:
+    """Returns the first matching category, or 'other' if no rule matches."""
+    if not keywords:
+        return "other"
+    lowered = [k.lower() for k in keywords]
+    for cat_id, tokens in _CATALYST_CATEGORY_RULES:
+        for t in tokens:
+            if any(k == t or t in k for k in lowered):
+                return cat_id
+    return "other"
+
+
+class CategoryTrackRecord(BaseModel):
+    """Backtest of a single catalyst category over the lookback window.
+
+    Hit rate = fraction of posts with positive +1d return. Avg returns are
+    in percent. n_with_return excludes posts that haven't seen the next
+    trading day close yet (very recent posts, weekends)."""
+    category: str
+    n_posts: int           # total catalyst posts classified into this bucket
+    n_with_return: int     # subset with a usable +1d return
+    hit_rate: float | None
+    avg_return_next_day_pct: float | None
+    median_return_next_day_pct: float | None
+    avg_return_since_post_pct: float | None
+
+
+class CatalystTrackRecordResponse(BaseModel):
+    window_days: int
+    n_total_posts: int
+    n_total_with_return: int
+    overall_hit_rate: float | None
+    overall_avg_return_next_day_pct: float | None
+    categories: list[CategoryTrackRecord]
+
+
+@router.get("/catalyst-track-record", response_model=CatalystTrackRecordResponse)
+async def get_catalyst_track_record(
+    days: int = Query(30, ge=1, le=180, description="Lookback window in days"),
+    min_score: float = Query(0.05, ge=0.0, le=1.0),
+) -> CatalystTrackRecordResponse:
+    """Per-category hit rate and average next-trading-day return for
+    catalyst-flagged Reddit posts. Lets the UI show whether the signal has
+    measurable edge before users trust the live feed."""
+    pool = get_pool()
+    sql = """
+        SELECT
+            p.keywords,
+            p0.close AS price_at_post,
+            p1.close AS price_next_day,
+            pnow.close AS price_now
+        FROM reddit_posts p
+        LEFT JOIN LATERAL (
+            SELECT close FROM prices_daily
+            WHERE p.tickers IS NOT NULL AND array_length(p.tickers, 1) > 0
+              AND symbol = p.tickers[1]
+              AND ts <= p.created_at
+            ORDER BY ts DESC LIMIT 1
+        ) p0 ON true
+        LEFT JOIN LATERAL (
+            SELECT close FROM prices_daily
+            WHERE p.tickers IS NOT NULL AND array_length(p.tickers, 1) > 0
+              AND symbol = p.tickers[1]
+              AND ts > p.created_at
+            ORDER BY ts ASC LIMIT 1
+        ) p1 ON true
+        LEFT JOIN LATERAL (
+            SELECT close FROM prices_daily
+            WHERE p.tickers IS NOT NULL AND array_length(p.tickers, 1) > 0
+              AND symbol = p.tickers[1]
+            ORDER BY ts DESC LIMIT 1
+        ) pnow ON true
+        WHERE p.created_at >= NOW() - ($1 || ' days')::interval
+          AND p.catalyst_score >= $2
+          AND p.keywords IS NOT NULL
+          AND array_length(p.keywords, 1) > 0
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, str(days), min_score)
+
+    # Bucket per-post returns by primary category. Keep median tractable by
+    # holding the raw list per bucket — n is bounded by lookback × throughput.
+    cat_rets_next: dict[str, list[float]] = {}
+    cat_rets_since: dict[str, list[float]] = {}
+    cat_total_posts: dict[str, int] = {}
+    n_total = 0
+    n_total_with_return = 0
+    all_next_returns: list[float] = []
+
+    for r in rows:
+        n_total += 1
+        kw = list(r["keywords"]) if r["keywords"] else []
+        cat = _classify_primary_category(kw)
+        cat_total_posts[cat] = cat_total_posts.get(cat, 0) + 1
+
+        px0 = float(r["price_at_post"]) if r["price_at_post"] is not None else None
+        px1 = float(r["price_next_day"]) if r["price_next_day"] is not None else None
+        pxn = float(r["price_now"]) if r["price_now"] is not None else None
+        if px0 and px1 and px0 > 0:
+            ret_next = (px1 / px0 - 1.0) * 100.0
+            cat_rets_next.setdefault(cat, []).append(ret_next)
+            all_next_returns.append(ret_next)
+            n_total_with_return += 1
+        if px0 and pxn and px0 > 0 and px0 != pxn:
+            cat_rets_since.setdefault(cat, []).append((pxn / px0 - 1.0) * 100.0)
+
+    def _median(xs: list[float]) -> float:
+        s = sorted(xs)
+        n = len(s)
+        if n == 0:
+            return 0.0
+        mid = n // 2
+        return s[mid] if n % 2 == 1 else (s[mid - 1] + s[mid]) / 2.0
+
+    categories: list[CategoryTrackRecord] = []
+    all_cat_ids = {cat for cat, _ in _CATALYST_CATEGORY_RULES} | {"other"} | set(cat_total_posts)
+    for cat in sorted(all_cat_ids):
+        n_posts = cat_total_posts.get(cat, 0)
+        rets_next = cat_rets_next.get(cat, [])
+        rets_since = cat_rets_since.get(cat, [])
+        n_ret = len(rets_next)
+        hit_rate = (sum(1 for x in rets_next if x > 0) / n_ret) if n_ret else None
+        avg_next = (sum(rets_next) / n_ret) if n_ret else None
+        median_next = _median(rets_next) if n_ret else None
+        avg_since = (sum(rets_since) / len(rets_since)) if rets_since else None
+        categories.append(CategoryTrackRecord(
+            category=cat,
+            n_posts=n_posts,
+            n_with_return=n_ret,
+            hit_rate=hit_rate,
+            avg_return_next_day_pct=avg_next,
+            median_return_next_day_pct=median_next,
+            avg_return_since_post_pct=avg_since,
+        ))
+
+    # Sort: buckets with most evidence first, but keep ones with no posts last.
+    categories.sort(key=lambda c: (c.n_posts == 0, -c.n_posts))
+
+    overall_hit = (
+        sum(1 for x in all_next_returns if x > 0) / len(all_next_returns)
+        if all_next_returns else None
+    )
+    overall_avg = (
+        sum(all_next_returns) / len(all_next_returns) if all_next_returns else None
+    )
+
+    return CatalystTrackRecordResponse(
+        window_days=days,
+        n_total_posts=n_total,
+        n_total_with_return=n_total_with_return,
+        overall_hit_rate=overall_hit,
+        overall_avg_return_next_day_pct=overall_avg,
+        categories=categories,
     )
 
 

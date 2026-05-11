@@ -3,6 +3,7 @@ import type {
   AgentsForTickerResponse,
   AgentsTimelineResponse,
   CatalystsResponse,
+  CatalystTrackRecordResponse,
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
@@ -128,17 +129,33 @@ export const api = {
     const qs = sp.toString();
     return getJson<CatalystsResponse>(`/v1/reddit/catalysts${qs ? `?${qs}` : ""}`);
   },
+  redditCatalystTrackRecord(params: {
+    days?: number;
+    minScore?: number;
+  } = {}): Promise<CatalystTrackRecordResponse> {
+    const sp = new URLSearchParams();
+    if (params.days !== undefined) sp.set("days", String(params.days));
+    if (params.minScore !== undefined) sp.set("min_score", String(params.minScore));
+    const qs = sp.toString();
+    return getJson<CatalystTrackRecordResponse>(
+      `/v1/reddit/catalyst-track-record${qs ? `?${qs}` : ""}`,
+    );
+  },
   correlationNetwork(params: {
     window?: number;
     minCorrelation?: number;
     horizon?: 5 | 10 | 20;
     model?: string;
+    asOf?: string;          // YYYY-MM-DD; omit for "now"
+    includeMacros?: boolean;
   } = {}): Promise<NetworkResponse> {
     const sp = new URLSearchParams();
     if (params.window !== undefined) sp.set("window", String(params.window));
     if (params.minCorrelation !== undefined) sp.set("min_correlation", String(params.minCorrelation));
     if (params.horizon !== undefined) sp.set("horizon", String(params.horizon));
     if (params.model) sp.set("model", params.model);
+    if (params.asOf) sp.set("as_of", params.asOf);
+    if (params.includeMacros) sp.set("include_macros", "true");
     const qs = sp.toString();
     return getJson<NetworkResponse>(`/v1/network/correlation${qs ? `?${qs}` : ""}`);
   },

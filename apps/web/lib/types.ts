@@ -122,6 +122,8 @@ export type ChartDataResponse = {
 // /v1/network/correlation
 export type NetworkBucket = "leader" | "mid" | "laggard" | "unranked";
 
+export type NetworkNodeKind = "sector" | "macro";
+
 export type NetworkNode = {
   id: string;
   name: string;
@@ -130,6 +132,7 @@ export type NetworkNode = {
   bucket: NetworkBucket;
   return_window: number | null;
   avg_correlation: number;
+  kind?: NetworkNodeKind; // server defaults to "sector"
 };
 
 export type NetworkEdge = {
@@ -391,6 +394,26 @@ export type CatalystPost = {
 export type CatalystsResponse = {
   n_total: number;
   posts: CatalystPost[];
+};
+
+// /v1/reddit/catalyst-track-record
+export type CategoryTrackRecord = {
+  category: string; // matches CatalystCategoryId on the client
+  n_posts: number;
+  n_with_return: number;
+  hit_rate: number | null;
+  avg_return_next_day_pct: number | null;
+  median_return_next_day_pct: number | null;
+  avg_return_since_post_pct: number | null;
+};
+
+export type CatalystTrackRecordResponse = {
+  window_days: number;
+  n_total_posts: number;
+  n_total_with_return: number;
+  overall_hit_rate: number | null;
+  overall_avg_return_next_day_pct: number | null;
+  categories: CategoryTrackRecord[];
 };
 
 // Chat (SSE)
