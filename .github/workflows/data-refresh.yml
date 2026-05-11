@@ -41,6 +41,7 @@ on:
           - reddit-catalysts
           - reddit
           - reddit-predict
+          - reddit-backfill-outcomes
           - eval-agents
           - features-build
           - train-baseline
@@ -96,6 +97,29 @@ jobs:
       - name: Train + predict 20d forward returns from Reddit features
         working-directory: apps/jobs
         run: uv run cfp-jobs reddit-predict
+      - name: Backfill realized 20d/5d returns on matured predictions + posts
+        working-directory: apps/jobs
+        run: uv run cfp-jobs reddit-backfill-outcomes
+
+  reddit-backfill-outcomes:
+    # Manual-only knob for forcing an outcome backfill (e.g. right after a
+    # price-data fix, without waiting for the next reddit-predict run).
+    if: github.event.inputs.job == 'reddit-backfill-outcomes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply pending migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Backfill realized returns
+        working-directory: apps/jobs
+        run: uv run cfp-jobs reddit-backfill-outcomes
 
   eval-agents:
     # Daily forward-return evaluation. Forward returns require >=5 trading
