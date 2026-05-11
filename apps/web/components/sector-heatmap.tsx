@@ -9,6 +9,7 @@ import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/sparkline";
+import { SectorRotationGraph } from "@/components/sector-rotation-graph";
 
 // ────────────────────────────────────────────────────────────────────────────
 // SPDR sector metadata
@@ -297,6 +298,8 @@ export function SectorHeatmap() {
       )}
 
       {forwardCall && <ForwardCallCard fc={forwardCall} scorecard={scorecard} />}
+
+      <SectorRotationGraph />
     </div>
   );
 }

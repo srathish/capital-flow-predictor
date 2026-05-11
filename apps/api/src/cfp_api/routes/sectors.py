@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from cfp_api.db import get_pool
 from cfp_api.schemas import SectorEntry, SectorsResponse
+from cfp_shared import PREDICTION_TARGETS
 
 router = APIRouter(prefix="/v1/sectors", tags=["sectors"])
 
@@ -844,4 +845,200 @@ async def get_etf_holdings(
         median_return_20d=_median(r20),
         pct_above_5d_zero=_share_pos(r5),
         pct_above_20d_zero=_share_pos(r20),
+    )
+
+
+# ---------- /v1/sectors/rrg (Relative Rotation Graph) ----------
+
+
+RrgQuadrant = Literal["leading", "weakening", "lagging", "improving"]
+
+
+class RrgPoint(BaseModel):
+    ts: datetime
+    rs_ratio: float       # ~100-centered; >100 = outperforming benchmark
+    rs_momentum: float    # ~100-centered; >100 = RS-Ratio accelerating
+    quadrant: RrgQuadrant
+
+
+class RrgSector(BaseModel):
+    symbol: str
+    points: list[RrgPoint]              # oldest -> newest within the requested tail window
+    head_quadrant: RrgQuadrant          # quadrant of the latest point
+    rotation: Literal["accelerating", "decelerating", "stable"]  # head momentum direction
+    distance_from_origin: float         # √((rs−100)² + (mom−100)²) at head — bigger = more extreme
+
+
+class RrgResponse(BaseModel):
+    benchmark: str
+    tail_weeks: int
+    n_window: int                  # smoothing window in business days used for both axes
+    sectors: list[RrgSector]
+    asof: datetime | None
+
+
+def _classify_quadrant(rs: float, mom: float) -> RrgQuadrant:
+    if rs >= 100.0 and mom >= 100.0:
+        return "leading"
+    if rs >= 100.0 and mom < 100.0:
+        return "weakening"
+    if rs < 100.0 and mom < 100.0:
+        return "lagging"
+    return "improving"
+
+
+@router.get("/rrg", response_model=RrgResponse)
+async def get_rrg(
+    tail_weeks: int = Query(8, ge=2, le=26),
+    benchmark: str = Query("SPY"),
+    n_window: int = Query(63, ge=10, le=252),
+) -> RrgResponse:
+    """Relative Rotation Graph for sector + theme ETFs against the benchmark.
+
+    Uses the JdK-style construction: take the price ratio sector/benchmark,
+    z-score it over a rolling n_window (default ~3 months) and re-center to 100
+    to get RS-Ratio. Z-score that series over the same window to get RS-Momentum.
+    The 4-quadrant plot lets traders see at a glance which sectors are
+    *currently* outperforming AND accelerating (leading) vs. fading from a
+    prior lead (weakening) vs. underperforming but turning up (improving).
+
+    Daily bars; tail_weeks * 5 trading days of trail per sector.
+    """
+    import math
+
+    symbols = [*PREDICTION_TARGETS, benchmark]
+    pool = get_pool()
+
+    sql = """
+        SELECT symbol, ts, close
+        FROM prices_daily
+        WHERE symbol = ANY($1::text[])
+        ORDER BY symbol, ts
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, symbols)
+
+    if not rows:
+        return RrgResponse(
+            benchmark=benchmark, tail_weeks=tail_weeks, n_window=n_window,
+            sectors=[], asof=None,
+        )
+
+    # Group prices by symbol -> [(ts, close), ...] sorted asc.
+    by_sym: dict[str, list[tuple[datetime, float]]] = {}
+    for r in rows:
+        by_sym.setdefault(r["symbol"], []).append((r["ts"], float(r["close"])))
+
+    bench = by_sym.get(benchmark)
+    if not bench or len(bench) < n_window + 10:
+        raise HTTPException(
+            status_code=503,
+            detail=f"insufficient {benchmark} price history for RRG (need ~{n_window + 10} bars)",
+        )
+    bench_by_ts = dict(bench)
+    bench_ts_sorted = [t for t, _ in bench]
+
+    tail_n = tail_weeks * 5  # daily bars approx weekly RRG
+    asof_ts: datetime | None = None
+    sectors: list[RrgSector] = []
+
+    for sym in PREDICTION_TARGETS:
+        bars = by_sym.get(sym)
+        if not bars or len(bars) < n_window + tail_n + 10:
+            continue
+
+        # Align to benchmark calendar — drop sector bars whose ts the benchmark
+        # doesn't have. Keeps the ratio honest (no holiday-day mismatches).
+        aligned: list[tuple[datetime, float, float]] = []
+        for ts, c in bars:
+            bp = bench_by_ts.get(ts)
+            if bp is None or bp == 0.0:
+                continue
+            aligned.append((ts, c, bp))
+        if len(aligned) < n_window + tail_n + 5:
+            continue
+
+        # Compute price ratio and a rolling z-score thereof, re-centered to 100.
+        ratios = [c / bp for _, c, bp in aligned]
+        n = len(ratios)
+
+        def _rolling_zscore_100(series: list[float], window: int) -> list[float | None]:
+            out: list[float | None] = []
+            for i in range(len(series)):
+                if i + 1 < window:
+                    out.append(None)
+                    continue
+                w = series[i + 1 - window : i + 1]
+                mean = sum(w) / window
+                var = sum((x - mean) ** 2 for x in w) / window
+                sd = math.sqrt(var) if var > 0 else 0.0
+                if sd == 0.0:
+                    out.append(100.0)
+                else:
+                    out.append(100.0 + (series[i] - mean) / sd)
+            return out
+
+        rs_ratio = _rolling_zscore_100(ratios, n_window)
+
+        # RS-Momentum: same z-score-to-100 transform applied to RS-Ratio, but
+        # we can only compute it from the first non-null index.
+        rs_ratio_clean: list[float] = []
+        first_valid = next((i for i, v in enumerate(rs_ratio) if v is not None), None)
+        if first_valid is None:
+            continue
+        for v in rs_ratio[first_valid:]:
+            rs_ratio_clean.append(v if v is not None else 100.0)
+        mom_window = max(10, n_window // 3)
+        rs_mom_clean = _rolling_zscore_100(rs_ratio_clean, mom_window)
+
+        # Walk back through the tail. We want the last `tail_n` points where
+        # both series are populated.
+        points: list[RrgPoint] = []
+        for j in range(len(rs_mom_clean) - tail_n, len(rs_mom_clean)):
+            if j < 0:
+                continue
+            mom = rs_mom_clean[j]
+            rs = rs_ratio_clean[j]
+            if mom is None:
+                continue
+            ts = aligned[first_valid + j][0]
+            points.append(RrgPoint(
+                ts=ts, rs_ratio=float(rs), rs_momentum=float(mom),
+                quadrant=_classify_quadrant(rs, mom),
+            ))
+        if not points:
+            continue
+
+        head = points[-1]
+        prev_mom = points[-2].rs_momentum if len(points) >= 2 else head.rs_momentum
+        delta = head.rs_momentum - prev_mom
+        rotation: Literal["accelerating", "decelerating", "stable"]
+        if delta > 0.15:
+            rotation = "accelerating"
+        elif delta < -0.15:
+            rotation = "decelerating"
+        else:
+            rotation = "stable"
+        dist = math.sqrt((head.rs_ratio - 100.0) ** 2 + (head.rs_momentum - 100.0) ** 2)
+
+        sectors.append(RrgSector(
+            symbol=sym,
+            points=points,
+            head_quadrant=head.quadrant,
+            rotation=rotation,
+            distance_from_origin=dist,
+        ))
+        if asof_ts is None or head.ts > asof_ts:
+            asof_ts = head.ts
+
+    # Stable order: leading first (closest to top-right corner), then by distance descending.
+    quadrant_pri = {"leading": 0, "improving": 1, "weakening": 2, "lagging": 3}
+    sectors.sort(key=lambda s: (quadrant_pri[s.head_quadrant], -s.distance_from_origin))
+
+    return RrgResponse(
+        benchmark=benchmark,
+        tail_weeks=tail_weeks,
+        n_window=n_window,
+        sectors=sectors,
+        asof=asof_ts,
     )

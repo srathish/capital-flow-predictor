@@ -566,6 +566,32 @@ export type SectorForwardCallResponse = {
   disagreements: HorizonDisagreement[];
 };
 
+// /v1/sectors/rrg — Relative Rotation Graph
+export type RrgQuadrant = "leading" | "weakening" | "lagging" | "improving";
+
+export type RrgPoint = {
+  ts: string;
+  rs_ratio: number;     // ~100 centered; >100 = outperforming benchmark
+  rs_momentum: number;  // ~100 centered; >100 = RS-Ratio accelerating
+  quadrant: RrgQuadrant;
+};
+
+export type RrgSector = {
+  symbol: string;
+  points: RrgPoint[];
+  head_quadrant: RrgQuadrant;
+  rotation: "accelerating" | "decelerating" | "stable";
+  distance_from_origin: number;
+};
+
+export type SectorRrgResponse = {
+  benchmark: string;
+  tail_weeks: number;
+  n_window: number;
+  sectors: RrgSector[];
+  asof: string | null;
+};
+
 export type SectorScorecardResponse = {
   horizon_d: number;
   model: string;

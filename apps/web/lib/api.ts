@@ -30,6 +30,7 @@ import type {
   SectorsResponse,
   SectorScorecardResponse,
   SectorForwardCallResponse,
+  SectorRrgResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -113,6 +114,14 @@ export const api = {
     if (params?.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<SectorForwardCallResponse>(`/v1/sectors/forward-call${qs ? `?${qs}` : ""}`);
+  },
+  sectorRrg(params?: { tailWeeks?: number; benchmark?: string; nWindow?: number }): Promise<SectorRrgResponse> {
+    const sp = new URLSearchParams();
+    if (params?.tailWeeks !== undefined) sp.set("tail_weeks", String(params.tailWeeks));
+    if (params?.benchmark) sp.set("benchmark", params.benchmark);
+    if (params?.nWindow !== undefined) sp.set("n_window", String(params.nWindow));
+    const qs = sp.toString();
+    return getJson<SectorRrgResponse>(`/v1/sectors/rrg${qs ? `?${qs}` : ""}`);
   },
   redditMentions(params: RedditMentionsParams = {}): Promise<RedditMentionsResponse> {
     const sp = new URLSearchParams();
