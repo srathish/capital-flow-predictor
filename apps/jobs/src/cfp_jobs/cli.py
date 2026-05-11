@@ -404,11 +404,11 @@ def flow_universe_cmd(
         with psycopg.connect(to_psycopg_url(settings.database_url)) as conn, conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT constituent, MAX(weight) AS w
+                SELECT ticker, MAX(weight) AS w
                 FROM uw_etf_holdings
-                WHERE sector_etf = ANY(%s)
-                  AND constituent IS NOT NULL
-                GROUP BY constituent
+                WHERE etf = ANY(%s)
+                  AND ticker IS NOT NULL
+                GROUP BY ticker
                 ORDER BY w DESC NULLS LAST
                 LIMIT %s
                 """,
@@ -555,8 +555,8 @@ def flow_volatility_cmd(
         with psycopg.connect(to_psycopg_url(settings.database_url)) as conn, conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT DISTINCT constituent FROM uw_etf_holdings
-                WHERE sector_etf = ANY(%s) AND constituent IS NOT NULL
+                SELECT DISTINCT ticker FROM uw_etf_holdings
+                WHERE etf = ANY(%s) AND ticker IS NOT NULL
                 """,
                 (list(PREDICTION_TARGETS),),
             )
