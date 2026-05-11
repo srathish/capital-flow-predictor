@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/sparkline";
 import { RedditTickerDrawer } from "@/components/reddit-ticker-drawer";
+import { RedditScorecardPanel } from "@/components/reddit-scorecard-panel";
 
 const SORT_OPTIONS: { value: RedditMentionsSort; label: string }[] = [
   { value: "predicted", label: "Best predicted edge" },
@@ -608,6 +609,8 @@ export function RedditMentionsView() {
         Click a row for the catalyst-post drawer (no agent run). Hit "Run agent ensemble" inside
         the drawer when you want the full work-up.
       </p>
+
+      <RedditScorecardPanel />
 
       <RedditTickerDrawer row={selected} onClose={() => setSelected(null)} />
     </div>

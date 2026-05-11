@@ -1585,3 +1585,300 @@ async def get_catalysts(
         ))
 
     return CatalystsResponse(n_total=len(posts), posts=posts)
+
+
+# ---------- /scorecard: model + subreddit + author predictive value ----------
+
+
+class ScorecardCalibrationBucket(BaseModel):
+    """One row of the calibration ladder: predictions falling in this score
+    band, and how their realized returns actually came in. If the model is
+    well-calibrated, mean_realized rises monotonically with score_bucket."""
+    score_bucket: str        # e.g. "0-20", "20-40", ...
+    n: int
+    mean_predicted_pct: float | None
+    mean_realized_pct: float | None
+    hit_rate: float | None   # fraction with sign(predicted) == sign(realized)
+
+
+class ScorecardCall(BaseModel):
+    """One historical prediction with its realized outcome — used for the
+    top-hits / top-misses lists on the UI panel."""
+    snapshot_date: date
+    ticker: str
+    predicted_pct: float
+    realized_pct: float
+    pred_score: float | None
+    error_pct: float         # realized - predicted
+
+
+class SubredditEdge(BaseModel):
+    """Realized predictive value of a subreddit: across every reddit_post that
+    matured and had a primary_ticker, what's the average realized 20d return
+    of the ticker after the post? > 0 means posts there have led to upside."""
+    subreddit: str
+    n_matured: int
+    mean_realized_20d_pct: float
+    hit_rate_up: float       # fraction with realized_20d > 0
+    mean_realized_5d_pct: float | None
+
+
+class AuthorEdge(BaseModel):
+    """Same idea per author. We only list authors with ≥ 3 matured posts so
+    the leaderboard isn't dominated by single lucky calls."""
+    author: str
+    subreddit: str | None    # most-frequent subreddit they post in
+    n_matured: int
+    mean_realized_20d_pct: float
+    hit_rate_up: float
+
+
+class ScorecardResponse(BaseModel):
+    """Production scorekeeping for /reddit/predict and reddit_posts.
+
+    status='calibrating' when nothing has matured yet (≤28 calendar days
+    since the first prediction landed). Once mature, the model section
+    becomes meaningful; subreddit/author edges populate independently as
+    catalyst posts age into their 20d window."""
+    status: Literal["ok", "calibrating"]
+    model_version: str | None
+    window_days: int
+    n_matured: int
+    hit_rate: float | None
+    mean_predicted_pct: float | None
+    mean_realized_pct: float | None
+    mean_abs_error_pct: float | None
+    bullish_hit_rate: float | None  # accuracy when model said up
+    bearish_hit_rate: float | None  # accuracy when model said down
+    calibration: list[ScorecardCalibrationBucket]
+    top_hits: list[ScorecardCall]
+    top_misses: list[ScorecardCall]
+    subreddit_edges: list[SubredditEdge]
+    author_edges: list[AuthorEdge]
+
+
+@router.get("/scorecard", response_model=ScorecardResponse)
+async def get_scorecard(
+    window_days: int = Query(90, ge=14, le=365),
+    model_version: str = Query("xgb_reddit_v1"),
+) -> ScorecardResponse:
+    """How well has the predictor + the reddit feed actually called the
+    market? Looks at every prediction / catalyst post with a matured 20d
+    return inside [today - window_days, today] and computes hit rates,
+    mean error, calibration, and a leaderboard of best/worst calls plus
+    per-subreddit + per-author predictive edge."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        # ---- model accuracy ----
+        rows = await conn.fetch(
+            """
+            SELECT snapshot_date, ticker, pred_return_20d, pred_score,
+                   realized_return_20d
+            FROM reddit_predictions
+            WHERE model_version = $1
+              AND realized_return_20d IS NOT NULL
+              AND snapshot_date >= CURRENT_DATE - $2
+            """,
+            model_version, window_days,
+        )
+
+        n = len(rows)
+        if n == 0:
+            return ScorecardResponse(
+                status="calibrating",
+                model_version=model_version,
+                window_days=window_days,
+                n_matured=0,
+                hit_rate=None,
+                mean_predicted_pct=None,
+                mean_realized_pct=None,
+                mean_abs_error_pct=None,
+                bullish_hit_rate=None,
+                bearish_hit_rate=None,
+                calibration=[],
+                top_hits=[],
+                top_misses=[],
+                subreddit_edges=await _subreddit_edges(conn, window_days),
+                author_edges=await _author_edges(conn, window_days),
+            )
+
+        preds = [float(r["pred_return_20d"]) for r in rows if r["pred_return_20d"] is not None]
+        reals = [float(r["realized_return_20d"]) for r in rows if r["pred_return_20d"] is not None]
+
+        def _sgn(x: float) -> int:
+            return 1 if x > 0 else (-1 if x < 0 else 0)
+
+        hits = sum(1 for p, a in zip(preds, reals, strict=False) if _sgn(p) == _sgn(a) and _sgn(p) != 0)
+        directional = sum(1 for p in preds if _sgn(p) != 0)
+        hit_rate = (hits / directional) if directional else None
+
+        mean_pred = sum(preds) / len(preds) if preds else None
+        mean_real = sum(reals) / len(reals) if reals else None
+        mae = sum(abs(a - p) for p, a in zip(preds, reals, strict=False)) / len(preds) if preds else None
+
+        bull_pairs = [(p, a) for p, a in zip(preds, reals, strict=False) if p > 0]
+        bear_pairs = [(p, a) for p, a in zip(preds, reals, strict=False) if p < 0]
+        bull_hr = (sum(1 for _, a in bull_pairs if a > 0) / len(bull_pairs)) if bull_pairs else None
+        bear_hr = (sum(1 for _, a in bear_pairs if a < 0) / len(bear_pairs)) if bear_pairs else None
+
+        # ---- calibration ladder by pred_score bucket ----
+        buckets: dict[str, list[tuple[float, float]]] = {
+            "0-20": [], "20-40": [], "40-60": [], "60-80": [], "80-100": [],
+        }
+        for r in rows:
+            s = r["pred_score"]
+            if s is None or r["pred_return_20d"] is None or r["realized_return_20d"] is None:
+                continue
+            sv = float(s)
+            key = (
+                "0-20" if sv < 20 else
+                "20-40" if sv < 40 else
+                "40-60" if sv < 60 else
+                "60-80" if sv < 80 else
+                "80-100"
+            )
+            buckets[key].append((float(r["pred_return_20d"]), float(r["realized_return_20d"])))
+
+        calibration: list[ScorecardCalibrationBucket] = []
+        for label in ["0-20", "20-40", "40-60", "60-80", "80-100"]:
+            pairs = buckets[label]
+            if not pairs:
+                calibration.append(ScorecardCalibrationBucket(
+                    score_bucket=label, n=0,
+                    mean_predicted_pct=None, mean_realized_pct=None, hit_rate=None,
+                ))
+                continue
+            ps = [p for p, _ in pairs]
+            as_ = [a for _, a in pairs]
+            dir_ = [(p, a) for p, a in pairs if _sgn(p) != 0]
+            hr = (sum(1 for p, a in dir_ if _sgn(p) == _sgn(a)) / len(dir_)) if dir_ else None
+            calibration.append(ScorecardCalibrationBucket(
+                score_bucket=label,
+                n=len(pairs),
+                mean_predicted_pct=sum(ps) / len(ps),
+                mean_realized_pct=sum(as_) / len(as_),
+                hit_rate=hr,
+            ))
+
+        # ---- top hits / misses ----
+        scored: list[ScorecardCall] = []
+        for r in rows:
+            p = r["pred_return_20d"]
+            a = r["realized_return_20d"]
+            if p is None or a is None:
+                continue
+            scored.append(ScorecardCall(
+                snapshot_date=r["snapshot_date"],
+                ticker=r["ticker"],
+                predicted_pct=float(p),
+                realized_pct=float(a),
+                pred_score=float(r["pred_score"]) if r["pred_score"] is not None else None,
+                error_pct=float(a) - float(p),
+            ))
+
+        # A "hit" = sign agreement; rank within hits by realized magnitude (best
+        # bullish call = biggest realized rip when we said up).
+        agreers = [c for c in scored if _sgn(c.predicted_pct) == _sgn(c.realized_pct) and _sgn(c.predicted_pct) != 0]
+        misses = [c for c in scored if _sgn(c.predicted_pct) != _sgn(c.realized_pct) and _sgn(c.predicted_pct) != 0]
+        agreers.sort(key=lambda c: abs(c.realized_pct), reverse=True)
+        misses.sort(key=lambda c: abs(c.error_pct), reverse=True)
+
+        return ScorecardResponse(
+            status="ok",
+            model_version=model_version,
+            window_days=window_days,
+            n_matured=n,
+            hit_rate=hit_rate,
+            mean_predicted_pct=mean_pred,
+            mean_realized_pct=mean_real,
+            mean_abs_error_pct=mae,
+            bullish_hit_rate=bull_hr,
+            bearish_hit_rate=bear_hr,
+            calibration=calibration,
+            top_hits=agreers[:5],
+            top_misses=misses[:5],
+            subreddit_edges=await _subreddit_edges(conn, window_days),
+            author_edges=await _author_edges(conn, window_days),
+        )
+
+
+async def _subreddit_edges(conn, window_days: int) -> list[SubredditEdge]:
+    """Aggregate realized 5d/20d returns across reddit_posts grouped by
+    subreddit. Filtered to posts with primary_ticker + matured 20d realized
+    return inside the window. Sorted by mean_realized_20d_pct desc."""
+    rows = await conn.fetch(
+        """
+        SELECT subreddit,
+               COUNT(*)                              AS n,
+               AVG(realized_return_20d)              AS mean_20d,
+               AVG(realized_return_5d)               AS mean_5d,
+               AVG(CASE WHEN realized_return_20d > 0 THEN 1.0 ELSE 0.0 END) AS hit_up
+        FROM reddit_posts
+        WHERE realized_return_20d IS NOT NULL
+          AND primary_ticker IS NOT NULL
+          AND created_at::date >= CURRENT_DATE - $1
+        GROUP BY subreddit
+        HAVING COUNT(*) >= 5
+        ORDER BY mean_20d DESC NULLS LAST
+        """,
+        window_days,
+    )
+    out: list[SubredditEdge] = []
+    for r in rows:
+        out.append(SubredditEdge(
+            subreddit=r["subreddit"],
+            n_matured=int(r["n"]),
+            mean_realized_20d_pct=float(r["mean_20d"]) if r["mean_20d"] is not None else 0.0,
+            hit_rate_up=float(r["hit_up"]) if r["hit_up"] is not None else 0.0,
+            mean_realized_5d_pct=float(r["mean_5d"]) if r["mean_5d"] is not None else None,
+        ))
+    return out
+
+
+async def _author_edges(conn, window_days: int) -> list[AuthorEdge]:
+    """Per-author predictive edge. Requires ≥3 matured posts so a single
+    lucky call doesn't dominate the leaderboard. Returns top 25 by
+    mean_realized_20d_pct."""
+    rows = await conn.fetch(
+        """
+        WITH base AS (
+            SELECT author, subreddit, realized_return_20d
+            FROM reddit_posts
+            WHERE realized_return_20d IS NOT NULL
+              AND primary_ticker IS NOT NULL
+              AND author IS NOT NULL
+              AND created_at::date >= CURRENT_DATE - $1
+        ),
+        per_author AS (
+            SELECT author,
+                   COUNT(*)                                AS n,
+                   AVG(realized_return_20d)                AS mean_20d,
+                   AVG(CASE WHEN realized_return_20d > 0 THEN 1.0 ELSE 0.0 END) AS hit_up
+            FROM base
+            GROUP BY author
+            HAVING COUNT(*) >= 3
+        ),
+        modal_sub AS (
+            SELECT DISTINCT ON (author) author, subreddit
+            FROM base
+            GROUP BY author, subreddit
+            ORDER BY author, COUNT(*) DESC
+        )
+        SELECT p.author, m.subreddit, p.n, p.mean_20d, p.hit_up
+        FROM per_author p
+        LEFT JOIN modal_sub m USING (author)
+        ORDER BY p.mean_20d DESC NULLS LAST
+        LIMIT 25
+        """,
+        window_days,
+    )
+    return [
+        AuthorEdge(
+            author=r["author"],
+            subreddit=r["subreddit"],
+            n_matured=int(r["n"]),
+            mean_realized_20d_pct=float(r["mean_20d"]) if r["mean_20d"] is not None else 0.0,
+            hit_rate_up=float(r["hit_up"]) if r["hit_up"] is not None else 0.0,
+        )
+        for r in rows
+    ]

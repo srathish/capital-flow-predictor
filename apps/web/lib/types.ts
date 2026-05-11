@@ -345,6 +345,58 @@ export type RedditPredictResponse = {
   predictions: RedditModelPrediction[];
 };
 
+// /v1/reddit/scorecard
+export type RedditScorecardCalibrationBucket = {
+  score_bucket: string;
+  n: number;
+  mean_predicted_pct: number | null;
+  mean_realized_pct: number | null;
+  hit_rate: number | null;
+};
+
+export type RedditScorecardCall = {
+  snapshot_date: string;
+  ticker: string;
+  predicted_pct: number;
+  realized_pct: number;
+  pred_score: number | null;
+  error_pct: number;
+};
+
+export type RedditSubredditEdge = {
+  subreddit: string;
+  n_matured: number;
+  mean_realized_20d_pct: number;
+  hit_rate_up: number;
+  mean_realized_5d_pct: number | null;
+};
+
+export type RedditAuthorEdge = {
+  author: string;
+  subreddit: string | null;
+  n_matured: number;
+  mean_realized_20d_pct: number;
+  hit_rate_up: number;
+};
+
+export type RedditScorecardResponse = {
+  status: "ok" | "calibrating";
+  model_version: string | null;
+  window_days: number;
+  n_matured: number;
+  hit_rate: number | null;
+  mean_predicted_pct: number | null;
+  mean_realized_pct: number | null;
+  mean_abs_error_pct: number | null;
+  bullish_hit_rate: number | null;
+  bearish_hit_rate: number | null;
+  calibration: RedditScorecardCalibrationBucket[];
+  top_hits: RedditScorecardCall[];
+  top_misses: RedditScorecardCall[];
+  subreddit_edges: RedditSubredditEdge[];
+  author_edges: RedditAuthorEdge[];
+};
+
 export type RedditBacktestSlice = {
   spike_threshold: number;
   n_observations: number;

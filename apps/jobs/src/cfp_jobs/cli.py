@@ -448,6 +448,19 @@ def reddit_predict_cmd() -> None:
     console.print(f"[green]reddit_predictions:[/green] {out}")
 
 
+@app.command("reddit-backfill-outcomes")
+def reddit_backfill_outcomes_cmd() -> None:
+    """Fill realized 20d/5d returns on matured reddit_predictions and reddit_posts.
+
+    Anchor date + ~28 calendar days must have passed before a row becomes
+    scoreable. Idempotent; safe to run multiple times per day. Run nightly
+    after the price-data refresh."""
+    from cfp_jobs import backfill_reddit_outcomes  # noqa: PLC0415
+
+    out = backfill_reddit_outcomes.run(settings.database_url)
+    console.print(f"[green]reddit_outcomes:[/green] {out}")
+
+
 @app.command("flow-congress")
 def flow_congress_cmd(
     limit: int = typer.Option(500, help="Max recent trades to ingest"),

@@ -17,6 +17,7 @@ import type {
   RedditMentionsResponse,
   RedditRuleStats,
   RedditPredictResponse,
+  RedditScorecardResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -130,6 +131,13 @@ export const api = {
     if (params.sort) sp.set("sort", params.sort);
     const qs = sp.toString();
     return getJson<RedditPredictResponse>(`/v1/reddit/predict${qs ? `?${qs}` : ""}`);
+  },
+  redditScorecard(params: { windowDays?: number; modelVersion?: string } = {}): Promise<RedditScorecardResponse> {
+    const sp = new URLSearchParams();
+    if (params.windowDays !== undefined) sp.set("window_days", String(params.windowDays));
+    if (params.modelVersion) sp.set("model_version", params.modelVersion);
+    const qs = sp.toString();
+    return getJson<RedditScorecardResponse>(`/v1/reddit/scorecard${qs ? `?${qs}` : ""}`);
   },
   redditCatalysts(params: {
     limit?: number;

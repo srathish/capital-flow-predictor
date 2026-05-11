@@ -53,7 +53,94 @@ _FEATURE_COLS = [
     "price_5d_pct",
     "price_20d_pct",
     "rel_volume",
+    "subreddit_edge",
 ]
+
+
+def _subreddit_edge_table(conn: psycopg.Connection) -> dict[str, float]:
+    """Per-subreddit mean realized 20d return across reddit_posts that
+    matured. This is the "which feeds actually predict moves" lookup that
+    the front-end scorecard surfaces; we reuse it here as a feature so
+    the next model train can lean on subreddits with historical edge.
+
+    Slight lookahead acknowledged: the lookup uses ALL matured posts, so
+    a 2026-02 training snapshot can technically see posts that matured
+    in 2026-04. Acceptable for v1 — the alternative is a per-snapshot
+    rolling join that 10x's the query cost. Revisit once we outgrow it.
+    Subreddits with <5 matured posts are dropped (too noisy to trust)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT subreddit, AVG(realized_return_20d) AS mean_20d
+            FROM reddit_posts
+            WHERE realized_return_20d IS NOT NULL AND primary_ticker IS NOT NULL
+            GROUP BY subreddit
+            HAVING COUNT(*) >= 5
+            """
+        )
+        rows = cur.fetchall()
+    return {r[0]: float(r[1]) for r in rows if r[1] is not None}
+
+
+def _attach_subreddit_edge(
+    conn: psycopg.Connection, df: pd.DataFrame
+) -> pd.DataFrame:
+    """For each (snapshot_date, ticker) row, compute a mention-weighted
+    average of the per-subreddit edge — i.e. if 80% of today's NVDA chatter
+    is in r/wallstreetbets and WSB's historical edge is +1.5%, NVDA's
+    subreddit_edge tilts toward +1.5%. The 'all-stocks' aggregate row is
+    excluded so we don't double-count. Missing edge → 0.0 (neutral)."""
+    if df.empty:
+        df["subreddit_edge"] = 0.0
+        return df
+    edge = _subreddit_edge_table(conn)
+    if not edge:
+        df["subreddit_edge"] = 0.0
+        return df
+
+    keys = {(row["snapshot_date"], row["ticker"]) for _, row in df.iterrows()}
+    if not keys:
+        df["subreddit_edge"] = 0.0
+        return df
+
+    # One round-trip: fetch (snapshot_date, ticker, subreddit, mentions) for
+    # all rows in the panel and aggregate client-side.
+    dates = sorted({d for d, _ in keys})
+    tickers = sorted({t for _, t in keys})
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT snapshot_date, ticker, subreddit, mentions
+            FROM reddit_mentions
+            WHERE subreddit <> 'all-stocks'
+              AND snapshot_date = ANY(%s)
+              AND ticker = ANY(%s)
+            """,
+            (dates, tickers),
+        )
+        rows = cur.fetchall()
+
+    per_key_num: dict[tuple, float] = {}
+    per_key_den: dict[tuple, float] = {}
+    for d, t, sub, n in rows:
+        e = edge.get(sub)
+        if e is None or n is None:
+            continue
+        k = (d, t)
+        nf = float(n)
+        per_key_num[k] = per_key_num.get(k, 0.0) + e * nf
+        per_key_den[k] = per_key_den.get(k, 0.0) + nf
+
+    def _lookup(d, t) -> float:
+        k = (d, t)
+        den = per_key_den.get(k, 0.0)
+        if den <= 0:
+            return 0.0
+        return per_key_num[k] / den
+
+    df = df.copy()
+    df["subreddit_edge"] = [_lookup(r["snapshot_date"], r["ticker"]) for _, r in df.iterrows()]
+    return df
 
 
 def _load_training_panel(conn: psycopg.Connection) -> pd.DataFrame:
@@ -395,6 +482,11 @@ def run(database_url: str) -> dict:
                 "model_version": MODEL_VERSION,
             }
 
+        # Attach the subreddit-edge feature: which subreddits' chatter has
+        # historically led to bigger 20d moves. NB: must be added BEFORE the
+        # train+predict path so both sides see the same column set.
+        train_panel = _attach_subreddit_edge(conn, train_panel)
+
         model = _train_model(train_panel)
         if model is None:
             return {
@@ -405,6 +497,7 @@ def run(database_url: str) -> dict:
             }
 
         today_panel = _load_predict_panel(conn)
+        today_panel = _attach_subreddit_edge(conn, today_panel)
         n_pred = _predict_and_upsert(conn, model, today_panel)
         return {
             "status": "ok",
