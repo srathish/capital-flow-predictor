@@ -22,6 +22,7 @@ import type {
   RunStatusResponse,
   SectorsResponse,
   SectorScorecardResponse,
+  SectorForwardCallResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -98,6 +99,13 @@ export const api = {
     if (params?.lookbackRuns !== undefined) sp.set("lookback_runs", String(params.lookbackRuns));
     const qs = sp.toString();
     return getJson<SectorScorecardResponse>(`/v1/sectors/scorecard${qs ? `?${qs}` : ""}`);
+  },
+  sectorForwardCall(params?: { horizon?: number; model?: string }): Promise<SectorForwardCallResponse> {
+    const sp = new URLSearchParams();
+    if (params?.horizon !== undefined) sp.set("horizon", String(params.horizon));
+    if (params?.model) sp.set("model", params.model);
+    const qs = sp.toString();
+    return getJson<SectorForwardCallResponse>(`/v1/sectors/forward-call${qs ? `?${qs}` : ""}`);
   },
   redditMentions(params: RedditMentionsParams = {}): Promise<RedditMentionsResponse> {
     const sp = new URLSearchParams();

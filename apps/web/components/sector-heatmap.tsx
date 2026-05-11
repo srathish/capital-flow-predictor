@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { SectorEntry, SectorScorecardResponse } from "@/lib/types";
+import type { SectorEntry, SectorForwardCallResponse, SectorScorecardResponse } from "@/lib/types";
 import { cn, formatDate, formatNum } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -222,6 +222,13 @@ export function SectorHeatmap() {
     retry: false,
   });
 
+  const { data: forwardCall } = useQuery({
+    queryKey: ["sector-forward-call", { horizon }],
+    queryFn: () => api.sectorForwardCall({ horizon }),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
+
   const { ranked, unranked, total, marketRead } = useMemo(() => {
     const ranked = (data?.sectors ?? [])
       .filter((s) => s.latest_rank !== null)
@@ -288,6 +295,8 @@ export function SectorHeatmap() {
           </div>
         </div>
       )}
+
+      {forwardCall && <ForwardCallCard fc={forwardCall} scorecard={scorecard} />}
     </div>
   );
 }
@@ -580,5 +589,117 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Forward call card — bottom-of-tab narrative ("for the next ~N days, the
+// model thinks X, Y, Z keep leading…") with cross-horizon disagreement and
+// stability anchor. Reads from /v1/sectors/forward-call + existing scorecard.
+// ────────────────────────────────────────────────────────────────────────────
+
+function horizonPhrase(d: number): string {
+  if (d <= 6)  return `next week`;
+  if (d <= 14) return `next ~2 weeks`;
+  return `next ~${Math.round(d / 5)} weeks`;
+}
+
+const CONVICTION_LABEL: Record<SectorForwardCallResponse["conviction"], { tag: string; cls: string }> = {
+  high:   { tag: "high conviction",   cls: "bg-signal-bullish/15 text-signal-bullish ring-signal-bullish/30" },
+  medium: { tag: "medium conviction", cls: "bg-muted/40 text-foreground ring-border" },
+  low:    { tag: "low conviction",    cls: "bg-muted/40 text-muted-foreground ring-border" },
+};
+
+function ForwardCallCard({
+  fc,
+  scorecard,
+}: {
+  fc: SectorForwardCallResponse;
+  scorecard: SectorScorecardResponse | undefined;
+}) {
+  if (fc.top.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-4 text-sm text-muted-foreground">
+          No forward call yet — wait for the next prediction run.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const topNames = fc.top.map((e) => `${e.symbol} (${metaFor(e.symbol).name})`).join(", ");
+  const botNames = fc.bottom.map((e) => `${e.symbol} (${metaFor(e.symbol).name})`).join(", ");
+  const window = horizonPhrase(fc.horizon_d);
+  const conv = CONVICTION_LABEL[fc.conviction];
+
+  const leadLine = `Over the ${window}, the model expects ${topNames} to keep leading and ${botNames} to keep lagging.`;
+
+  const spreadLine =
+    fc.score_spread === null
+      ? ""
+      : fc.score_spread >= 0.12
+        ? `Top-vs-bottom score gap is ${fc.score_spread.toFixed(3)} — wide, the call is decisive.`
+        : fc.score_spread >= 0.05
+          ? `Top-vs-bottom score gap is ${fc.score_spread.toFixed(3)} — modest edge.`
+          : `Top-vs-bottom score gap is only ${fc.score_spread.toFixed(3)} — the pack is tight, treat rank order as soft.`;
+
+  const stabilityLine =
+    fc.stability_runs >= 2
+      ? `Top-3 set has held for ${fc.stability_runs} consecutive runs — the model has been saying this for a while.`
+      : `Top-3 set just shifted this run — fresh call, not yet confirmed.`;
+
+  const hitLine =
+    scorecard && scorecard.hit_rate !== null
+      ? `Recent calibration at this horizon: ${(scorecard.hit_rate * 100).toFixed(0)}% top-3-beats-bottom-3 hit rate over the last ${scorecard.n_runs_evaluated} runs.`
+      : `Calibration history isn't available yet for this horizon.`;
+
+  const disagreeLines = fc.disagreements.map((d) => {
+    const name = metaFor(d.symbol).name;
+    const verdict =
+      d.delta > 0
+        ? `the ${d.other_horizon_d}d model is more bullish on ${d.symbol} (${name}): ranks it #${d.other_rank} vs #${d.active_rank} here`
+        : `the ${d.other_horizon_d}d model is more bearish on ${d.symbol} (${name}): ranks it #${d.other_rank} vs #${d.active_rank} here`;
+    return verdict;
+  });
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <CardTitle className="text-base">Forward call · {fc.horizon_d}d</CardTitle>
+          <span
+            className={cn(
+              "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
+              conv.cls,
+            )}
+          >
+            {conv.tag}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm leading-relaxed">
+        <p className="text-foreground">{leadLine}</p>
+        <p className="text-muted-foreground">
+          {[spreadLine, stabilityLine, hitLine].filter(Boolean).join(" ")}
+        </p>
+
+        {disagreeLines.length > 0 && (
+          <div className="rounded-md border border-border bg-muted/30 p-3">
+            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Cross-horizon disagreement
+            </div>
+            <ul className="space-y-1 text-xs text-foreground/85">
+              {disagreeLines.map((line, i) => (
+                <li key={i}>· {line}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p className="text-[11px] text-muted-foreground">
+          This is the model's view, not advice. {fc.target_ts && <>Target date: {formatDate(fc.target_ts)}.</>}
+        </p>
+      </CardContent>
+    </Card>
   );
 }

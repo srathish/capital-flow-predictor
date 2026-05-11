@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
@@ -376,6 +376,192 @@ def _ranks(xs: list[float]) -> list[float]:
             ranks[indexed[k][0]] = avg
         i = j + 1
     return ranks
+
+
+# ---------- /v1/sectors/forward-call ----------
+
+
+class ForwardCallEntry(BaseModel):
+    symbol: str
+    rank: int
+    score: float | None
+
+
+class HorizonDisagreement(BaseModel):
+    """One sector ranked very differently in another horizon's latest run.
+
+    `delta = active_rank - other_rank`. Positive delta = the active horizon is
+    *less bullish* on this symbol than `other_horizon_d`; negative = more bullish.
+    """
+    symbol: str
+    active_rank: int
+    other_horizon_d: int
+    other_rank: int
+    delta: int
+
+
+class ForwardCallResponse(BaseModel):
+    """Structured forward-looking call assembled from the latest run across all
+    three trained horizons. The frontend renders the prose; this endpoint
+    supplies the facts.
+    """
+    horizon_d: int
+    model: str
+    run_ts: datetime | None
+    target_ts: datetime | None
+    top: list[ForwardCallEntry]
+    bottom: list[ForwardCallEntry]
+    score_spread: float | None
+    conviction: Literal["high", "medium", "low"]
+    # Number of consecutive most-recent runs whose top-3 SET (any order) equals today's.
+    stability_runs: int
+    # Symbols whose rank in another horizon disagrees by ≥ 4 slots (top by magnitude, max 4).
+    disagreements: list[HorizonDisagreement]
+
+
+_FORWARD_HORIZONS = (5, 10, 20)
+
+
+@router.get("/forward-call", response_model=ForwardCallResponse)
+async def get_forward_call(
+    horizon: int = Query(10, ge=1, le=60),
+    model: str = Query("xgb_v1"),
+) -> ForwardCallResponse:
+    """Forward-looking call assembled from the latest run of the chosen horizon
+    plus the latest runs of the other trained horizons, so the UI can flag
+    cross-horizon disagreement and rank stability."""
+    pool = get_pool()
+
+    sql_active = """
+        WITH latest AS (
+            SELECT MAX(run_ts) AS rt FROM predictions
+            WHERE horizon_d = $1 AND model = $2
+        )
+        SELECT p.symbol, p.rank, p.score, p.run_ts, p.target_ts
+        FROM predictions p, latest l
+        WHERE p.run_ts = l.rt
+          AND p.horizon_d = $1 AND p.model = $2
+          AND p.rank IS NOT NULL
+        ORDER BY p.rank ASC
+    """
+    sql_other = """
+        WITH latest AS (
+            SELECT MAX(run_ts) AS rt FROM predictions
+            WHERE horizon_d = $1 AND model = $2
+        )
+        SELECT p.symbol, p.rank
+        FROM predictions p, latest l
+        WHERE p.run_ts = l.rt
+          AND p.horizon_d = $1 AND p.model = $2
+          AND p.rank IS NOT NULL
+    """
+    sql_stability = """
+        WITH recent_runs AS (
+            SELECT DISTINCT run_ts FROM predictions
+            WHERE horizon_d = $1 AND model = $2
+            ORDER BY run_ts DESC
+            LIMIT 12
+        )
+        SELECT p.run_ts, p.symbol
+        FROM predictions p
+        JOIN recent_runs r ON r.run_ts = p.run_ts
+        WHERE p.horizon_d = $1 AND p.model = $2
+          AND p.rank IS NOT NULL AND p.rank <= 3
+        ORDER BY p.run_ts DESC, p.rank ASC
+    """
+
+    other_horizons = tuple(h for h in _FORWARD_HORIZONS if h != horizon)
+
+    async with pool.acquire() as conn:
+        active_rows = await conn.fetch(sql_active, horizon, model)
+        other_by_h: dict[int, list] = {}
+        for h in other_horizons:
+            other_by_h[h] = await conn.fetch(sql_other, h, model)
+        stability_rows = await conn.fetch(sql_stability, horizon, model)
+
+    if not active_rows:
+        return ForwardCallResponse(
+            horizon_d=horizon, model=model, run_ts=None, target_ts=None,
+            top=[], bottom=[], score_spread=None,
+            conviction="low", stability_runs=0, disagreements=[],
+        )
+
+    n = len(active_rows)
+    top_k = max(1, min(3, n // 3))
+    top_rows = list(active_rows[:top_k])
+    bottom_rows = list(active_rows[-top_k:])
+
+    def _entry(r) -> ForwardCallEntry:
+        return ForwardCallEntry(
+            symbol=r["symbol"],
+            rank=int(r["rank"]),
+            score=float(r["score"]) if r["score"] is not None else None,
+        )
+
+    top = [_entry(r) for r in top_rows]
+    bottom = [_entry(r) for r in bottom_rows]
+
+    top_score = top[0].score if top else None
+    bot_score = bottom[-1].score if bottom else None
+    score_spread: float | None = (
+        top_score - bot_score if (top_score is not None and bot_score is not None) else None
+    )
+
+    if score_spread is None:
+        conviction: Literal["high", "medium", "low"] = "low"
+    elif score_spread >= 0.12:
+        conviction = "high"
+    elif score_spread >= 0.05:
+        conviction = "medium"
+    else:
+        conviction = "low"
+
+    # Stability of the *set* (order-insensitive) of top-3 symbols across recent runs.
+    from collections import defaultdict
+    runs_top: dict[Any, set[str]] = defaultdict(set)
+    for r in stability_rows:
+        runs_top[r["run_ts"]].add(r["symbol"])
+    if runs_top:
+        sorted_runs = sorted(runs_top.keys(), reverse=True)
+        latest_set = runs_top[sorted_runs[0]]
+        stability_runs = 0
+        for rt in sorted_runs:
+            if runs_top[rt] == latest_set:
+                stability_runs += 1
+            else:
+                break
+    else:
+        stability_runs = 0
+
+    active_rank_by_sym = {r["symbol"]: int(r["rank"]) for r in active_rows}
+    disagreements: list[HorizonDisagreement] = []
+    for h, rows in other_by_h.items():
+        other_rank_by_sym = {r["symbol"]: int(r["rank"]) for r in rows}
+        for sym, ar in active_rank_by_sym.items():
+            or_ = other_rank_by_sym.get(sym)
+            if or_ is None:
+                continue
+            delta = ar - or_
+            if abs(delta) >= 4:
+                disagreements.append(HorizonDisagreement(
+                    symbol=sym, active_rank=ar, other_horizon_d=h,
+                    other_rank=or_, delta=delta,
+                ))
+    disagreements.sort(key=lambda d: abs(d.delta), reverse=True)
+    disagreements = disagreements[:4]
+
+    return ForwardCallResponse(
+        horizon_d=horizon,
+        model=model,
+        run_ts=active_rows[0]["run_ts"],
+        target_ts=active_rows[0]["target_ts"],
+        top=top,
+        bottom=bottom,
+        score_spread=score_spread,
+        conviction=conviction,
+        stability_runs=stability_runs,
+        disagreements=disagreements,
+    )
 
 
 # ---------- per-ETF holdings ----------

@@ -480,6 +480,34 @@ export type ScorecardBaseline = {
   avg_spread: number | null;
 };
 
+// /v1/sectors/forward-call
+export type ForwardCallEntry = {
+  symbol: string;
+  rank: number;
+  score: number | null;
+};
+
+export type HorizonDisagreement = {
+  symbol: string;
+  active_rank: number;
+  other_horizon_d: number;
+  other_rank: number;
+  delta: number;
+};
+
+export type SectorForwardCallResponse = {
+  horizon_d: number;
+  model: string;
+  run_ts: string | null;
+  target_ts: string | null;
+  top: ForwardCallEntry[];
+  bottom: ForwardCallEntry[];
+  score_spread: number | null;
+  conviction: "high" | "medium" | "low";
+  stability_runs: number;
+  disagreements: HorizonDisagreement[];
+};
+
 export type SectorScorecardResponse = {
   horizon_d: number;
   model: string;
