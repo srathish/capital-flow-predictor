@@ -691,10 +691,18 @@ async def get_etf_holdings(
             SELECT MAX(run_ts) AS run_ts FROM predictions
             WHERE horizon_d = $2 AND model = $3
         ),
-        latest_preds AS (
-            SELECT p.symbol, p.rank, p.score
+        -- Within the latest run, take only the most recent target_ts. Walk-forward
+        -- CV writes ~1,250 target_ts per run; without this we'd return a random fold.
+        latest_pred_target AS (
+            SELECT MAX(p.target_ts) AS target_ts
             FROM predictions p, latest_pred_run lpr
             WHERE p.run_ts = lpr.run_ts
+              AND p.horizon_d = $2 AND p.model = $3
+        ),
+        latest_preds AS (
+            SELECT p.symbol, p.rank, p.score
+            FROM predictions p, latest_pred_run lpr, latest_pred_target lpt
+            WHERE p.run_ts = lpr.run_ts AND p.target_ts = lpt.target_ts
               AND p.horizon_d = $2 AND p.model = $3
         )
         SELECT

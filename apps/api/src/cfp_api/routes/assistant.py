@@ -386,11 +386,18 @@ async def _tool_get_sectors_heatmap(_args: dict[str, Any]) -> dict[str, Any]:
     async with pool.acquire() as conn:
         rows = await conn.fetch(
             """
-            WITH latest_pred AS (
-                SELECT DISTINCT ON (symbol) symbol, rank, score
-                FROM predictions
-                WHERE horizon_d = 10
-                ORDER BY symbol, run_ts DESC
+            WITH latest_run AS (
+                SELECT MAX(run_ts) AS rt FROM predictions WHERE horizon_d = 10
+            ),
+            latest_target AS (
+                SELECT MAX(target_ts) AS tt FROM predictions p, latest_run l
+                WHERE p.run_ts = l.rt AND p.horizon_d = 10
+            ),
+            latest_pred AS (
+                SELECT p.symbol, p.rank, p.score
+                FROM predictions p, latest_run l, latest_target t
+                WHERE p.run_ts = l.rt AND p.target_ts = t.tt
+                  AND p.horizon_d = 10
             ),
             latest_close AS (
                 SELECT DISTINCT ON (symbol) symbol, ts, close
