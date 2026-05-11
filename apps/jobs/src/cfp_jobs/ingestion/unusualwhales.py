@@ -23,14 +23,14 @@ from __future__ import annotations
 import logging
 import time
 from collections.abc import Iterable
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from typing import Any
 
 import httpx
 import psycopg
 from psycopg.types.json import Jsonb
 
-from cfp_jobs.db import connect
+from cfp_jobs.db import connect, upsert_etf_breadth
 
 log = logging.getLogger(__name__)
 
@@ -805,6 +805,90 @@ def _upsert_etf_holdings(conn: psycopg.Connection, etf: str, rows: Iterable[dict
     return n
 
 
+def _snapshot_breadth_for_etf(conn: psycopg.Connection, etf: str) -> int:
+    """Read the current uw_etf_holdings snapshot for `etf` and write one
+    breadth row into etf_breadth_snapshots for today's date.
+
+    Run after every holdings refresh so we accumulate a real time series
+    that the ranker can train on.
+    """
+    sql = """
+        SELECT weight, close, prev_price, week52_high, week52_low,
+               bullish_premium, bearish_premium, call_premium, put_premium
+        FROM uw_etf_holdings
+        WHERE etf = %s
+    """
+    with conn.cursor() as cur:
+        cur.execute(sql, (etf,))
+        rows = cur.fetchall()
+    if not rows:
+        return 0
+
+    n = len(rows)
+    # Build aggregates with defensive None handling — UW occasionally omits
+    # week52_* on freshly-IPO'd names, etc.
+    n_up = 0
+    n_up_denom = 0
+    weighted_num = 0.0
+    weighted_denom = 0.0
+    near_high = 0
+    near_low = 0
+    n_52w = 0
+    dist_high_vals: list[float] = []
+    bull_sum = 0.0
+    bear_sum = 0.0
+    call_sum = 0.0
+    put_sum = 0.0
+
+    for r in rows:
+        weight, close, prev, hi52, lo52, bull, bear, call, put = r
+        if close is not None and prev not in (None, 0):
+            n_up_denom += 1
+            if close > prev:
+                n_up += 1
+            if weight is not None and weight > 0:
+                weighted_num += float(weight) * (float(close) / float(prev) - 1.0)
+                weighted_denom += float(weight)
+        if close is not None and hi52 not in (None, 0) and lo52 not in (None, 0):
+            n_52w += 1
+            if float(close) >= 0.95 * float(hi52):
+                near_high += 1
+            if float(close) <= 1.05 * float(lo52):
+                near_low += 1
+            dist_high_vals.append(float(close) / float(hi52) - 1.0)
+        if bull is not None:
+            bull_sum += float(bull)
+        if bear is not None:
+            bear_sum += float(bear)
+        if call is not None:
+            call_sum += float(call)
+        if put is not None:
+            put_sum += float(put)
+
+    def _med(xs: list[float]) -> float | None:
+        if not xs:
+            return None
+        s = sorted(xs)
+        m = len(s) // 2
+        return s[m] if len(s) % 2 else (s[m - 1] + s[m]) / 2.0
+
+    now = datetime.now(UTC)
+    row = {
+        "etf": etf,
+        "snapshot_date": now.date(),
+        "n_constituents": n,
+        "pct_up_1d": (n_up / n_up_denom) if n_up_denom else None,
+        "weighted_ret_1d": (weighted_num / weighted_denom) if weighted_denom else None,
+        "pct_within_5pct_52w_high": (near_high / n_52w) if n_52w else None,
+        "pct_within_5pct_52w_low": (near_low / n_52w) if n_52w else None,
+        "median_dist_52w_high": _med(dist_high_vals),
+        "bullish_premium_share": (bull_sum / (bull_sum + bear_sum)) if (bull_sum + bear_sum) > 0 else None,
+        "call_put_premium_ratio": (call_sum / put_sum) if put_sum > 0 else None,
+        "last_fetched": now,
+    }
+    return upsert_etf_breadth(conn, [row])
+
+
 def ingest_etf_holdings(database_url: str, api_key: str | None, etfs: Iterable[str]) -> dict:
     """Refresh the full constituent list for each ETF. Run nightly.
 
@@ -821,6 +905,7 @@ def ingest_etf_holdings(database_url: str, api_key: str | None, etfs: Iterable[s
                 etf = etf.upper()
                 try:
                     counts[etf] = _yfinance_holdings_fallback(conn, etf)
+                    _snapshot_breadth_for_etf(conn, etf)
                 except Exception as e:
                     log.warning("yfinance holdings failed for %s: %s", etf, e)
                     counts[etf] = 0
@@ -837,6 +922,7 @@ def ingest_etf_holdings(database_url: str, api_key: str | None, etfs: Iterable[s
                     log.info("UW returned 0 holdings for %s; trying yfinance fallback", etf)
                     n = _yfinance_holdings_fallback(conn, etf)
                 counts[etf] = n
+                _snapshot_breadth_for_etf(conn, etf)
             except Exception as e:
                 log.warning("etf_holdings failed for %s: %s", etf, e)
                 counts[etf] = 0

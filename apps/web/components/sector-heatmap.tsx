@@ -337,13 +337,32 @@ function ScorecardStrip({ s }: { s: SectorScorecardResponse }) {
     spread > 0 ? "text-signal-bullish" :
     spread < 0 ? "text-signal-bearish" : "text-muted-foreground";
 
+  // IC tone — anything > 0.05 is meaningful for a small-N ranker.
+  const ic = s.ic_mean;
+  const icCls =
+    ic === null ? "text-muted-foreground" :
+    ic > 0.05 ? "text-signal-bullish" :
+    ic < -0.05 ? "text-signal-bearish" : "text-foreground";
+
+  // Model vs naïve 20d-momentum baseline. If we can't beat the baseline,
+  // call it out — that's the whole point of running this comparison.
+  const b = s.baseline;
+  const hitDelta = (hit !== null && b.hit_rate !== null) ? hit - b.hit_rate : null;
+  const spreadDelta = (spread !== null && b.avg_spread !== null) ? spread - b.avg_spread : null;
+  const beatsBaseline =
+    hitDelta !== null && spreadDelta !== null && (hitDelta > 0.02 || spreadDelta > 0.002);
+  const deltaCls = beatsBaseline ? "text-signal-bullish" : (hitDelta !== null && hitDelta < 0 ? "text-signal-bearish" : "text-muted-foreground");
+
   return (
     <Card>
-      <CardContent className="grid grid-cols-2 gap-4 p-4 text-xs sm:grid-cols-4">
+      <CardContent className="grid grid-cols-2 gap-4 p-4 text-xs sm:grid-cols-5">
         <div>
           <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Hit rate (top-3 &gt; bottom-3)</div>
           <div className={cn("mt-1 text-lg font-semibold num", toneCls)}>
             {hit === null ? "—" : `${(hit * 100).toFixed(0)}%`}
+          </div>
+          <div className="mt-0.5 text-[10px] text-muted-foreground">
+            Naïve mom: {b.hit_rate === null ? "—" : `${(b.hit_rate * 100).toFixed(0)}%`}
           </div>
         </div>
         <div>
@@ -351,23 +370,37 @@ function ScorecardStrip({ s }: { s: SectorScorecardResponse }) {
           <div className={cn("mt-1 text-lg font-semibold num", spreadCls)}>
             {spread === null ? "—" : `${spread > 0 ? "+" : ""}${(spread * 100).toFixed(2)}%`}
           </div>
+          <div className="mt-0.5 text-[10px] text-muted-foreground">
+            Naïve mom: {b.avg_spread === null ? "—" : `${b.avg_spread > 0 ? "+" : ""}${(b.avg_spread * 100).toFixed(2)}%`}
+          </div>
         </div>
         <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Avg top-3 / bottom-3</div>
-          <div className="mt-1 text-sm num">
-            <span className={s.avg_top3_return !== null && s.avg_top3_return >= 0 ? "text-signal-bullish" : "text-signal-bearish"}>
-              {s.avg_top3_return === null ? "—" : `${s.avg_top3_return > 0 ? "+" : ""}${(s.avg_top3_return * 100).toFixed(2)}%`}
-            </span>
-            <span className="mx-1 text-muted-foreground">/</span>
-            <span className={s.avg_bottom3_return !== null && s.avg_bottom3_return >= 0 ? "text-signal-bullish" : "text-signal-bearish"}>
-              {s.avg_bottom3_return === null ? "—" : `${s.avg_bottom3_return > 0 ? "+" : ""}${(s.avg_bottom3_return * 100).toFixed(2)}%`}
-            </span>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Rank IC (mean ± σ)</div>
+          <div className={cn("mt-1 text-lg font-semibold num", icCls)}>
+            {ic === null ? "—" : `${ic > 0 ? "+" : ""}${ic.toFixed(3)}`}
+          </div>
+          <div className="mt-0.5 text-[10px] text-muted-foreground">
+            {s.ic_stdev === null ? "σ —" : `σ ${s.ic_stdev.toFixed(3)}`}
+            {s.ic_t_stat !== null && <> · t={s.ic_t_stat.toFixed(2)}</>}
+          </div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">vs 20d momentum</div>
+          <div className={cn("mt-1 text-sm font-semibold num", deltaCls)}>
+            {hitDelta === null ? "—" : `${hitDelta >= 0 ? "+" : ""}${(hitDelta * 100).toFixed(0)}pp hit`}
+          </div>
+          <div className="mt-0.5 text-[10px] text-muted-foreground">
+            {spreadDelta === null ? "" : `${spreadDelta >= 0 ? "+" : ""}${(spreadDelta * 100).toFixed(2)}% spread`}
           </div>
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Runs evaluated</div>
           <div className="mt-1 text-sm num">
             {s.n_runs_evaluated} <span className="text-muted-foreground">/ {s.n_runs_total}</span>
+          </div>
+          <div className="mt-0.5 text-[10px] text-muted-foreground">
+            top-3 {s.avg_top3_return === null ? "—" : `${(s.avg_top3_return * 100).toFixed(1)}%`} /
+            bot-3 {s.avg_bottom3_return === null ? "—" : `${(s.avg_bottom3_return * 100).toFixed(1)}%`}
           </div>
         </div>
       </CardContent>

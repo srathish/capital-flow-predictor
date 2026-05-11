@@ -31,6 +31,7 @@ MARKET_SENTINEL = "_MARKET_"
 CROSS_ASSET_SET = "cross_asset_v1"
 SECTOR_SET = "sector_v1"
 LEAD_LAG_SET = "lead_lag_v1"
+BREADTH_SET = "breadth_v1"
 
 
 def _load_prices(conn: psycopg.Connection, since: datetime | None = None) -> pd.DataFrame:
@@ -216,6 +217,76 @@ def build_lead_lag(database_url: str, max_lag: int = 10, lookback: int = 252) ->
 
     log.info("lead_lag: %d pairs, %d targets with significant leaders", len(matrix_rows), len(feat_rows))
     return len(matrix_rows)
+
+
+def build_breadth(database_url: str) -> int:
+    """Promote etf_breadth_snapshots rows into the features_daily breadth_v1 set.
+
+    For each (etf, snapshot_date), upsert a feature row keyed by (ts=snapshot_date,
+    symbol=etf, feature_set='breadth_v1'). The model panel joins this set with
+    sector_v1 on (ts, symbol) so the ranker can use breadth alongside the
+    per-sector momentum + macro-sensitivity features.
+    """
+    sql = """
+        SELECT etf, snapshot_date,
+               n_constituents,
+               pct_up_1d, weighted_ret_1d,
+               pct_within_5pct_52w_high, pct_within_5pct_52w_low,
+               median_dist_52w_high,
+               bullish_premium_share, call_put_premium_ratio
+        FROM etf_breadth_snapshots
+        ORDER BY snapshot_date, etf
+    """
+    with connect(database_url) as conn, conn.cursor() as cur:
+        cur.execute(sql)
+        cols = [d.name for d in cur.description]
+        rows = cur.fetchall()
+
+    if not rows:
+        log.warning("build_breadth: etf_breadth_snapshots empty; nothing to promote")
+        return 0
+
+    rows_out: list[dict] = []
+    for r in rows:
+        rec = dict(zip(cols, r, strict=False))
+        snap = rec["snapshot_date"]
+        # snapshot_date is a DATE — promote to a UTC timestamp at midnight so it
+        # joins cleanly against the equity-calendar ts used by sector_v1.
+        ts = datetime(snap.year, snap.month, snap.day, tzinfo=UTC)
+        payload: dict[str, float] = {}
+        for k in (
+            "n_constituents",
+            "pct_up_1d", "weighted_ret_1d",
+            "pct_within_5pct_52w_high", "pct_within_5pct_52w_low",
+            "median_dist_52w_high",
+            "bullish_premium_share", "call_put_premium_ratio",
+        ):
+            v = rec.get(k)
+            if v is None:
+                continue
+            try:
+                f = float(v)
+            except (TypeError, ValueError):
+                continue
+            if math.isnan(f) or math.isinf(f):
+                continue
+            payload[k] = f
+        if not payload:
+            continue
+        rows_out.append(
+            {
+                "ts": ts,
+                "symbol": str(rec["etf"]),
+                "feature_set": BREADTH_SET,
+                "payload": payload,
+            }
+        )
+
+    with connect(database_url) as conn:
+        n = upsert_features(conn, rows_out)
+        conn.commit()
+    log.info("breadth: %d rows promoted to features_daily", n)
+    return n
 
 
 def status(database_url: str) -> pd.DataFrame:

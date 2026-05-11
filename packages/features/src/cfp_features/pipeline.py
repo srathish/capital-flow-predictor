@@ -44,6 +44,25 @@ def build(
     macro_wide = panel.macro_to_wide(macro_long)
     macro_aligned = panel.align_macro(macro_wide, prices_wide.index)
 
+    # Macro factor inputs for the per-sector sensitivity features. Naming is
+    # the canonical key used inside sector._factor_innovations; the underlying
+    # series can be FRED (DGS10, T10Y2Y, DCOILWTICO, BAMLH0A0HYM2) or Yahoo
+    # (DX-Y.NYB, ^VIX) — sector.py is source-agnostic.
+    def _col(df: pd.DataFrame, name: str):
+        return df[name] if name in df.columns else None
+
+    macro_factors: dict[str, pd.Series] = {}
+    for key, series in (
+        ("DGS10",  _col(macro_aligned, "DGS10")),
+        ("T10Y2Y", _col(macro_aligned, "T10Y2Y")),
+        ("WTI",    _col(macro_aligned, "DCOILWTICO")),
+        ("HY_OAS", _col(macro_aligned, "BAMLH0A0HYM2")),
+        ("DXY",    _col(prices_wide,   "DX-Y.NYB")),
+        ("VIX",    _col(prices_wide,   "^VIX")),
+    ):
+        if series is not None:
+            macro_factors[key] = series
+
     cross_df = cross_asset.compute(prices_wide, macro_aligned)
     sector_df = sector.compute(
         prices_wide,
@@ -53,5 +72,6 @@ def build(
         open_wide=open_wide,
         high_wide=high_wide,
         low_wide=low_wide,
+        macro_factors=macro_factors,
     )
     return cross_df, sector_df

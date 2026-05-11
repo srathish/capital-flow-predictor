@@ -104,6 +104,17 @@ async def get_sectors(
 # ---------- /v1/sectors/scorecard ----------
 
 
+class BaselineMetrics(BaseModel):
+    """Naive-momentum baseline: rank sectors at each run by their trailing
+    20d return (no model, no features) and run the same top-3 vs bottom-3
+    forward-return test. Lets the UI show whether xgb_v1 actually beats
+    naïve momentum."""
+    hit_rate: float | None
+    avg_top3_return: float | None
+    avg_bottom3_return: float | None
+    avg_spread: float | None
+
+
 class ScorecardResponse(BaseModel):
     horizon_d: int
     model: str
@@ -113,6 +124,14 @@ class ScorecardResponse(BaseModel):
     avg_top3_return: float | None
     avg_bottom3_return: float | None
     avg_spread: float | None  # avg(top3 ret − bottom3 ret) in raw pct (e.g. 0.0123 = 1.23%)
+    # Spearman rank IC of model rank vs realized forward return per run,
+    # then averaged across the evaluated runs. Stdev is reported so the UI
+    # can show ±σ; t_stat = mean / (stdev / sqrt(n)) gives a rough significance read.
+    ic_mean: float | None
+    ic_stdev: float | None
+    ic_t_stat: float | None
+    # Naïve 20d-momentum baseline run over the same set of run_ts.
+    baseline: BaselineMetrics
     last_evaluated_run: datetime | None
 
 
@@ -123,13 +142,19 @@ async def get_scorecard(
     lookback_runs: int = Query(30, ge=3, le=120),
 ) -> ScorecardResponse:
     """Backtest the model: for each of the last N runs, compare the actual
-    forward-`horizon` return of the top-3 ranked sectors vs the bottom-3.
+    forward-`horizon` return of the top-3 ranked sectors vs the bottom-3,
+    compute the Spearman rank IC between model rank and realized return,
+    and run a naïve 20d-momentum baseline over the same runs.
 
     A "hit" = top-3 basket avg return > bottom-3 basket avg return over horizon.
     Skips runs where the horizon hasn't elapsed yet (no realized data).
     """
     pool = get_pool()
 
+    # Per-run, per-symbol model rank + realized forward return.
+    # Wider than the previous query: we need every symbol's rank+return per run
+    # (not just bucketed top/bottom rows) so we can compute IC and re-rank
+    # symbols by their trailing 20d return for the naïve baseline.
     sql = """
         WITH recent_runs AS (
             SELECT DISTINCT run_ts
@@ -145,66 +170,46 @@ async def get_scorecard(
             JOIN recent_runs r ON r.run_ts = p.run_ts
             WHERE p.horizon_d = $1 AND p.model = $2 AND p.rank IS NOT NULL
         ),
-        max_rank_per_run AS (
-            SELECT run_ts, MAX(rank) AS max_rank
-            FROM runs_with_ranks
-            GROUP BY run_ts
-        ),
-        buckets AS (
-            SELECT r.run_ts, r.symbol, r.rank, m.max_rank,
-                   CASE
-                       WHEN r.rank <= 3 THEN 'top'
-                       WHEN r.rank > m.max_rank - 3 THEN 'bottom'
-                       ELSE NULL
-                   END AS bucket
+        prices_at AS (
+            SELECT r.run_ts, r.symbol, r.rank,
+                   p_now.close  AS close_now,
+                   p_fwd.close  AS close_fwd,
+                   p_prev.close AS close_prev20
             FROM runs_with_ranks r
-            JOIN max_rank_per_run m ON m.run_ts = r.run_ts
-        ),
-        bucket_filtered AS (
-            SELECT * FROM buckets WHERE bucket IS NOT NULL
-        ),
-        forward_returns AS (
-            SELECT b.run_ts, b.symbol, b.bucket,
-                   p_now.close AS close_now,
-                   p_fwd.close AS close_fwd
-            FROM bucket_filtered b
             LEFT JOIN LATERAL (
                 SELECT close FROM prices_daily
-                WHERE symbol = b.symbol AND ts <= b.run_ts
+                WHERE symbol = r.symbol AND ts <= r.run_ts
                 ORDER BY ts DESC LIMIT 1
             ) p_now ON TRUE
             LEFT JOIN LATERAL (
                 SELECT close FROM prices_daily
-                WHERE symbol = b.symbol AND ts <= b.run_ts + ($1 || ' days')::INTERVAL
+                WHERE symbol = r.symbol AND ts <= r.run_ts + ($1 || ' days')::INTERVAL
                 ORDER BY ts DESC LIMIT 1
             ) p_fwd ON TRUE
-        ),
-        per_run AS (
-            SELECT run_ts, bucket,
-                   AVG(CASE WHEN close_now > 0 AND close_fwd IS NOT NULL
-                            THEN close_fwd / close_now - 1.0 END) AS avg_ret
-            FROM forward_returns
-            GROUP BY run_ts, bucket
-        ),
-        pivoted AS (
-            SELECT run_ts,
-                   MAX(CASE WHEN bucket = 'top' THEN avg_ret END) AS top_ret,
-                   MAX(CASE WHEN bucket = 'bottom' THEN avg_ret END) AS bot_ret
-            FROM per_run
-            GROUP BY run_ts
+            LEFT JOIN LATERAL (
+                SELECT close FROM prices_daily
+                WHERE symbol = r.symbol AND ts <= r.run_ts - INTERVAL '20 days'
+                ORDER BY ts DESC LIMIT 1
+            ) p_prev ON TRUE
         )
-        SELECT run_ts, top_ret, bot_ret
-        FROM pivoted
-        WHERE top_ret IS NOT NULL AND bot_ret IS NOT NULL
-        ORDER BY run_ts DESC
+        SELECT run_ts, symbol, rank,
+               CASE WHEN close_now > 0 AND close_fwd IS NOT NULL
+                    THEN close_fwd / close_now - 1.0 END AS fwd_ret,
+               CASE WHEN close_prev20 > 0 AND close_now IS NOT NULL
+                    THEN close_now / close_prev20 - 1.0 END AS mom_20d
+        FROM prices_at
+        ORDER BY run_ts DESC, rank ASC
     """
     async with pool.acquire() as conn:
-        # Total recent runs (pre-filter) for the denominator of n_runs_total.
         total_runs = await conn.fetchval(
             "SELECT COUNT(DISTINCT run_ts) FROM predictions WHERE horizon_d = $1 AND model = $2",
             horizon, model,
         )
         rows = await conn.fetch(sql, horizon, model, horizon, lookback_runs)
+
+    empty_baseline = BaselineMetrics(
+        hit_rate=None, avg_top3_return=None, avg_bottom3_return=None, avg_spread=None,
+    )
 
     if not rows:
         return ScorecardResponse(
@@ -216,25 +221,161 @@ async def get_scorecard(
             avg_top3_return=None,
             avg_bottom3_return=None,
             avg_spread=None,
+            ic_mean=None,
+            ic_stdev=None,
+            ic_t_stat=None,
+            baseline=empty_baseline,
             last_evaluated_run=None,
         )
 
-    n = len(rows)
-    hits = sum(1 for r in rows if (r["top_ret"] or 0.0) > (r["bot_ret"] or 0.0))
-    avg_top = sum(r["top_ret"] for r in rows) / n
-    avg_bot = sum(r["bot_ret"] for r in rows) / n
+    # Group rows by run_ts.
+    from collections import defaultdict
+    per_run: dict = defaultdict(list)
+    for r in rows:
+        per_run[r["run_ts"]].append(r)
+
+    # Per-run aggregates: model top3/bot3 returns, model rank IC, baseline top3/bot3.
+    model_tops: list[float] = []
+    model_bots: list[float] = []
+    ics: list[float] = []
+    base_tops: list[float] = []
+    base_bots: list[float] = []
+
+    for run_ts in sorted(per_run.keys(), reverse=True):
+        run_rows = per_run[run_ts]
+        # Drop any symbols missing forward return (calendar gaps, fresh listings).
+        valid = [r for r in run_rows if r["fwd_ret"] is not None]
+        if len(valid) < 6:  # need at least top-3 and bottom-3
+            continue
+
+        # ----- Model side -----
+        sorted_by_rank = sorted(valid, key=lambda r: r["rank"])
+        n_sym = len(sorted_by_rank)
+        top_n = min(3, n_sym // 2)
+        top3 = sorted_by_rank[:top_n]
+        bot3 = sorted_by_rank[-top_n:]
+        model_top = sum(float(r["fwd_ret"]) for r in top3) / len(top3)
+        model_bot = sum(float(r["fwd_ret"]) for r in bot3) / len(bot3)
+        model_tops.append(model_top)
+        model_bots.append(model_bot)
+
+        # Spearman IC: per-run rank correlation of model rank vs realized return rank.
+        ic = _spearman(
+            [float(r["rank"]) for r in valid],
+            [float(r["fwd_ret"]) for r in valid],
+        )
+        if ic is not None:
+            # Convention: model rank 1 = best (highest predicted), so we negate
+            # the rank before correlating with realized return so a "good" IC
+            # is positive (low rank ↔ high return).
+            ics.append(-ic)
+
+        # ----- Naïve 20d-momentum baseline (re-rank same symbols on same date) -----
+        with_mom = [r for r in valid if r["mom_20d"] is not None]
+        if len(with_mom) >= 6:
+            sorted_by_mom = sorted(with_mom, key=lambda r: float(r["mom_20d"]), reverse=True)
+            mom_top_n = min(3, len(sorted_by_mom) // 2)
+            base_top = sum(float(r["fwd_ret"]) for r in sorted_by_mom[:mom_top_n]) / mom_top_n
+            base_bot = sum(float(r["fwd_ret"]) for r in sorted_by_mom[-mom_top_n:]) / mom_top_n
+            base_tops.append(base_top)
+            base_bots.append(base_bot)
+
+    n_eval = len(model_tops)
+    if n_eval == 0:
+        return ScorecardResponse(
+            horizon_d=horizon,
+            model=model,
+            n_runs_evaluated=0,
+            n_runs_total=int(total_runs or 0),
+            hit_rate=None,
+            avg_top3_return=None,
+            avg_bottom3_return=None,
+            avg_spread=None,
+            ic_mean=None,
+            ic_stdev=None,
+            ic_t_stat=None,
+            baseline=empty_baseline,
+            last_evaluated_run=None,
+        )
+
+    hits = sum(1 for t, b in zip(model_tops, model_bots, strict=True) if t > b)
+    avg_top = sum(model_tops) / n_eval
+    avg_bot = sum(model_bots) / n_eval
+
+    ic_mean = sum(ics) / len(ics) if ics else None
+    if ics and len(ics) >= 2:
+        mean = ic_mean or 0.0
+        var = sum((x - mean) ** 2 for x in ics) / (len(ics) - 1)
+        ic_stdev: float | None = var ** 0.5
+        ic_t_stat: float | None = (mean / (ic_stdev / (len(ics) ** 0.5))) if ic_stdev > 0 else None
+    else:
+        ic_stdev = None
+        ic_t_stat = None
+
+    if base_tops:
+        b_hits = sum(1 for t, b in zip(base_tops, base_bots, strict=True) if t > b)
+        baseline = BaselineMetrics(
+            hit_rate=b_hits / len(base_tops),
+            avg_top3_return=sum(base_tops) / len(base_tops),
+            avg_bottom3_return=sum(base_bots) / len(base_bots),
+            avg_spread=(sum(base_tops) - sum(base_bots)) / len(base_tops),
+        )
+    else:
+        baseline = empty_baseline
 
     return ScorecardResponse(
         horizon_d=horizon,
         model=model,
-        n_runs_evaluated=n,
+        n_runs_evaluated=n_eval,
         n_runs_total=int(total_runs or 0),
-        hit_rate=hits / n,
+        hit_rate=hits / n_eval,
         avg_top3_return=avg_top,
         avg_bottom3_return=avg_bot,
         avg_spread=avg_top - avg_bot,
-        last_evaluated_run=rows[0]["run_ts"],
+        ic_mean=ic_mean,
+        ic_stdev=ic_stdev,
+        ic_t_stat=ic_t_stat,
+        baseline=baseline,
+        last_evaluated_run=max(per_run.keys()),
     )
+
+
+def _spearman(xs: list[float], ys: list[float]) -> float | None:
+    """Pearson correlation of ranks (Spearman) without scipy.
+
+    Returns None if inputs are degenerate (constant or length < 2). Ties are
+    handled with average-rank, which is the standard Spearman convention.
+    """
+    if len(xs) != len(ys) or len(xs) < 2:
+        return None
+    rx = _ranks(xs)
+    ry = _ranks(ys)
+    n = len(rx)
+    mx = sum(rx) / n
+    my = sum(ry) / n
+    num = sum((rx[i] - mx) * (ry[i] - my) for i in range(n))
+    dx2 = sum((rx[i] - mx) ** 2 for i in range(n))
+    dy2 = sum((ry[i] - my) ** 2 for i in range(n))
+    denom = (dx2 * dy2) ** 0.5
+    if denom == 0:
+        return None
+    return num / denom
+
+
+def _ranks(xs: list[float]) -> list[float]:
+    """Average-rank ranking (1-based). Ties get the mean of their slot range."""
+    indexed = sorted(enumerate(xs), key=lambda t: t[1])
+    ranks = [0.0] * len(xs)
+    i = 0
+    while i < len(indexed):
+        j = i
+        while j + 1 < len(indexed) and indexed[j + 1][1] == indexed[i][1]:
+            j += 1
+        avg = (i + j) / 2.0 + 1.0  # 1-based midpoint of the tied slot range
+        for k in range(i, j + 1):
+            ranks[indexed[k][0]] = avg
+        i = j + 1
+    return ranks
 
 
 # ---------- per-ETF holdings ----------

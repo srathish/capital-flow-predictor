@@ -117,6 +117,18 @@ def features_daily_cmd(
     )
 
 
+@app.command("features-breadth")
+def features_breadth_cmd() -> None:
+    """Promote etf_breadth_snapshots into the breadth_v1 feature set.
+
+    Runs after the holdings ingest snapshots constituent breadth into
+    etf_breadth_snapshots; this lifts those rows into features_daily so
+    panel.py can join them per (ts, ETF) for training and inference.
+    """
+    n = features_mod.build_breadth(settings.database_url)
+    console.print(f"[green]breadth:[/green] {n:,} rows")
+
+
 @app.command("train-baseline")
 def train_baseline_cmd(
     horizons: str = typer.Option("5,10,20", help="Comma-separated horizons in days"),

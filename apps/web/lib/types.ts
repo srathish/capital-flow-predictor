@@ -473,6 +473,13 @@ export type SectorsResponse = {
 };
 
 // /v1/sectors/scorecard
+export type ScorecardBaseline = {
+  hit_rate: number | null;
+  avg_top3_return: number | null;
+  avg_bottom3_return: number | null;
+  avg_spread: number | null;
+};
+
 export type SectorScorecardResponse = {
   horizon_d: number;
   model: string;
@@ -482,5 +489,9 @@ export type SectorScorecardResponse = {
   avg_top3_return: number | null;
   avg_bottom3_return: number | null;
   avg_spread: number | null;
+  ic_mean: number | null;
+  ic_stdev: number | null;
+  ic_t_stat: number | null;
+  baseline: ScorecardBaseline;
   last_evaluated_run: string | null;
 };

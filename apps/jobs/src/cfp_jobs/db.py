@@ -117,6 +117,40 @@ def upsert_holdings(conn: psycopg.Connection, rows: list[dict]) -> int:
     return len(rows)
 
 
+ETF_BREADTH_UPSERT = """
+INSERT INTO etf_breadth_snapshots (
+    etf, snapshot_date, n_constituents,
+    pct_up_1d, weighted_ret_1d,
+    pct_within_5pct_52w_high, pct_within_5pct_52w_low, median_dist_52w_high,
+    bullish_premium_share, call_put_premium_ratio,
+    last_fetched
+) VALUES (
+    %(etf)s, %(snapshot_date)s, %(n_constituents)s,
+    %(pct_up_1d)s, %(weighted_ret_1d)s,
+    %(pct_within_5pct_52w_high)s, %(pct_within_5pct_52w_low)s, %(median_dist_52w_high)s,
+    %(bullish_premium_share)s, %(call_put_premium_ratio)s,
+    %(last_fetched)s
+) ON CONFLICT (etf, snapshot_date) DO UPDATE SET
+    n_constituents = EXCLUDED.n_constituents,
+    pct_up_1d = EXCLUDED.pct_up_1d,
+    weighted_ret_1d = EXCLUDED.weighted_ret_1d,
+    pct_within_5pct_52w_high = EXCLUDED.pct_within_5pct_52w_high,
+    pct_within_5pct_52w_low = EXCLUDED.pct_within_5pct_52w_low,
+    median_dist_52w_high = EXCLUDED.median_dist_52w_high,
+    bullish_premium_share = EXCLUDED.bullish_premium_share,
+    call_put_premium_ratio = EXCLUDED.call_put_premium_ratio,
+    last_fetched = EXCLUDED.last_fetched
+"""
+
+
+def upsert_etf_breadth(conn: psycopg.Connection, rows: list[dict]) -> int:
+    if not rows:
+        return 0
+    with conn.cursor() as cur:
+        cur.executemany(ETF_BREADTH_UPSERT, rows)
+    return len(rows)
+
+
 def upsert_fundamentals(conn: psycopg.Connection, rows: list[dict]) -> int:
     if not rows:
         return 0

@@ -14,11 +14,15 @@ def features_long_to_wide(
     market_sentinel: str = "_MARKET_",
     cross_asset_set: str = "cross_asset_v1",
     sector_set: str = "sector_v1",
+    breadth_set: str = "breadth_v1",
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Split features_daily into (cross_asset_wide, sector_wide).
 
     cross_asset_wide: indexed by ts, columns = cross-asset feature names
-    sector_wide:      long-format, ts + symbol + sector feature columns
+    sector_wide:      long-format, ts + symbol + sector feature columns,
+                      with breadth_v1 merged in via per-symbol asof so each
+                      sector row carries the most recent constituent-breadth
+                      snapshot (refreshed daily, may lag sector ts by minutes).
     """
     if not {"ts", "symbol", "feature_set", "payload"}.issubset(features_long.columns):
         raise ValueError("features_long missing required columns")
@@ -28,6 +32,7 @@ def features_long_to_wide(
         & (features_long["feature_set"] == cross_asset_set)
     ]
     sector = features_long[features_long["feature_set"] == sector_set]
+    breadth = features_long[features_long["feature_set"] == breadth_set]
 
     def _expand(df: pd.DataFrame, keep: list[str]) -> pd.DataFrame:
         if df.empty:
@@ -37,7 +42,24 @@ def features_long_to_wide(
         return pd.concat([df[keep].reset_index(drop=True), payload_df.reset_index(drop=True)], axis=1)
 
     cross_wide = _expand(cross, ["ts"]).set_index("ts").sort_index() if not cross.empty else pd.DataFrame()
-    sector_wide = _expand(sector, ["ts", "symbol"]).sort_values(["ts", "symbol"]).reset_index(drop=True) if not sector.empty else pd.DataFrame()
+    sector_wide = (
+        _expand(sector, ["ts", "symbol"]).sort_values(["ts", "symbol"]).reset_index(drop=True)
+        if not sector.empty else pd.DataFrame()
+    )
+
+    if not breadth.empty and not sector_wide.empty:
+        breadth_wide = _expand(breadth, ["ts", "symbol"]).sort_values(["ts", "symbol"]).reset_index(drop=True)
+        # Normalize ts to a single dtype/timezone so merge_asof matches cleanly.
+        sector_wide["ts"] = pd.to_datetime(sector_wide["ts"], utc=True)
+        breadth_wide["ts"] = pd.to_datetime(breadth_wide["ts"], utc=True)
+        sector_wide = pd.merge_asof(
+            sector_wide.sort_values("ts"),
+            breadth_wide.sort_values("ts"),
+            on="ts",
+            by="symbol",
+            direction="backward",
+        ).sort_values(["ts", "symbol"]).reset_index(drop=True)
+
     return cross_wide, sector_wide
 
 

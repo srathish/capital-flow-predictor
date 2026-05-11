@@ -37,7 +37,7 @@ def _load_features(conn: psycopg.Connection) -> pd.DataFrame:
     sql = """
         SELECT ts, symbol, feature_set, payload
         FROM features_daily
-        WHERE feature_set IN ('cross_asset_v1', 'sector_v1')
+        WHERE feature_set IN ('cross_asset_v1', 'sector_v1', 'breadth_v1')
         ORDER BY ts, symbol
     """
     with conn.cursor() as cur:
