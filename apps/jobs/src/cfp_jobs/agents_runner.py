@@ -685,9 +685,36 @@ def _ensure_fundamentals_and_sector(
 # Built once per (ticker, run_ts), persisted to run_evidence for replay.
 
 
+_REDDIT_BULLISH_KEYWORDS: tuple[str, ...] = (
+    "partnership", "partner with", "deal with", "agreement with",
+    "acquisition", "acquired", "acquires", "acquiring", "buyout", "takeover",
+    "fda approval", "fda approves", "fda clearance",
+    "raised guidance",
+    "earnings beat", "beat estimates",
+    "insider buy", "insider purchase",
+    "contract", "contract win", "awarded",
+    "buyback", "share repurchase", "dividend hike",
+    "ipo",
+)
+_REDDIT_BEARISH_KEYWORDS: tuple[str, ...] = (
+    "missed guidance", "cut guidance", "lowered guidance",
+    "earnings miss", "missed estimates",
+    "fda rejection", "fda denies", "fda crl", "complete response letter",
+    "insider sell", "insider selling",
+    "lawsuit", "sued", "fraud", "investigation",
+    "recall",
+    "going concern", "bankruptcy",
+    "dilution", "share offering", "secondary offering",
+    "downgrade",
+)
+
+
 def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
-    """Apewisdom snapshots over the last ~7 days. Computes spike ratio
-    (today vs 7d avg from the all-stocks aggregate) and asymmetry flags."""
+    """Apewisdom snapshots over the last ~7 days + reddit_posts catalyst feed.
+    Computes spike ratio (today vs 7d avg from the all-stocks aggregate),
+    asymmetry flags, and a 7-day count of catalyst posts (so tickers absent
+    from the Apewisdom top-150 still register as having chatter when the
+    RSS-scraped feed has tagged posts about them — e.g. BTBT)."""
     out_subs: list[RedditSubredditMentions] = []
     mentions_today = 0
     mentions_7d_avg = 0.0
@@ -695,6 +722,9 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
     rank_today: int | None = None
     rank_7d_ago: int | None = None
     rank_change_7d: int | None = None
+    catalyst_posts_7d = 0
+    catalyst_posts_bullish_7d = 0
+    catalyst_posts_bearish_7d = 0
 
     try:
         with connect(database_url) as conn, conn.cursor() as cur:
@@ -771,6 +801,27 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
                     rank_24h_ago=int(rk_y) if rk_y is not None else None,
                     mentions_24h_ago=int(m_y) if m_y is not None else None,
                 ))
+            # Catalyst-feed chatter from reddit_posts (independent of Apewisdom).
+            # Counts posts in the last 7 days that mention this ticker, plus a
+            # bullish/bearish split via keyword-list overlap. Lets the analyst
+            # see chatter that doesn't crack Apewisdom's top-150.
+            cur.execute(
+                """
+                SELECT
+                    COUNT(*)                                          AS n,
+                    COUNT(*) FILTER (WHERE keywords && %s::text[])    AS n_bull,
+                    COUNT(*) FILTER (WHERE keywords && %s::text[])    AS n_bear
+                FROM reddit_posts
+                WHERE %s = ANY(tickers)
+                  AND created_at > NOW() - INTERVAL '7 days'
+                """,
+                (list(_REDDIT_BULLISH_KEYWORDS), list(_REDDIT_BEARISH_KEYWORDS), ticker),
+            )
+            r4 = cur.fetchone()
+            if r4:
+                catalyst_posts_7d = int(r4[0] or 0)
+                catalyst_posts_bullish_7d = int(r4[1] or 0)
+                catalyst_posts_bearish_7d = int(r4[2] or 0)
     except Exception as e:
         log.warning("reddit ctx build failed for %s: %s", ticker, e)
         return RedditCtx()
@@ -787,7 +838,12 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
     stealth = (
         mentions_today < 5 and (rank_today is None or rank_today > 100)
     )
-    has_data = mentions_today > 0 or len(out_subs) > 0 or rank_today is not None
+    has_data = (
+        mentions_today > 0
+        or len(out_subs) > 0
+        or rank_today is not None
+        or catalyst_posts_7d > 0
+    )
 
     return RedditCtx(
         has_data=has_data,
@@ -800,6 +856,9 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
         is_contrarian_warning=contrarian_warning,
         is_stealth=stealth,
         by_subreddit=out_subs,
+        catalyst_posts_7d=catalyst_posts_7d,
+        catalyst_posts_bullish_7d=catalyst_posts_bullish_7d,
+        catalyst_posts_bearish_7d=catalyst_posts_bearish_7d,
     )
 
 

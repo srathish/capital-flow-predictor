@@ -35,7 +35,11 @@ class SentimentAnalyst(BaseAnalyst):
                 agent=self.name,
                 signal="neutral",
                 confidence=0.0,
-                rationale=f"{ticker}: no Reddit chatter data (run `cfp-jobs reddit`)",
+                rationale=(
+                    f"{ticker}: no Reddit data — ticker has zero Apewisdom mentions "
+                    f"and no catalyst-feed posts in the last 7 days (run "
+                    f"`cfp-jobs reddit` + `cfp-jobs reddit-catalysts` to refresh)"
+                ),
                 payload={"stub": True},
             )
 
@@ -58,6 +62,18 @@ class SentimentAnalyst(BaseAnalyst):
         if r.is_stealth:
             score += 0.1
 
+        # Catalyst-feed posts (reddit_posts table). A ticker can be absent from
+        # Apewisdom's top-150 yet have several tagged catalyst posts (BTBT, small
+        # caps). Net bullish/bearish keyword tilt nudges the score the same
+        # direction the chatter is leaning.
+        if r.catalyst_posts_7d > 0:
+            net_kw = r.catalyst_posts_bullish_7d - r.catalyst_posts_bearish_7d
+            if net_kw != 0:
+                # ±0.05 per net post, capped at ±0.2 — same magnitude band as
+                # the spike/asymmetry signals, so catalyst chatter can't
+                # dominate by itself.
+                score += max(-0.2, min(0.2, net_kw * 0.05))
+
         # Confidence is low by design — Reddit is a confluence layer, not a
         # primary signal. Capped at 0.4 so Trader/PM weight it lightly.
         confidence = min(0.4, abs(score) * 1.5 + 0.05) if score != 0 else 0.05
@@ -70,11 +86,26 @@ class SentimentAnalyst(BaseAnalyst):
         if r.is_stealth:
             flags.append("stealth")
 
-        rationale = (
-            f"{ticker}: {r.mentions_today} mentions today vs {r.mentions_7d_avg:.1f} 7d avg "
-            f"({spike_str}), rank {rank_str}"
-            + (f" [{', '.join(flags)}]" if flags else "")
-        )
+        # Rationale: lead with Apewisdom when present, but fall through to the
+        # catalyst feed when it's the only thing we've got — explains BTBT-style
+        # "showed up on /reddit but agent said no data" cases.
+        if r.mentions_today > 0 or r.rank_today is not None:
+            rationale = (
+                f"{ticker}: {r.mentions_today} mentions today vs {r.mentions_7d_avg:.1f} 7d avg "
+                f"({spike_str}), rank {rank_str}"
+            )
+        else:
+            rationale = (
+                f"{ticker}: no Apewisdom top-150 chatter, but {r.catalyst_posts_7d} catalyst "
+                f"post(s) tagged this ticker in the last 7d"
+            )
+        if r.catalyst_posts_7d > 0:
+            rationale += (
+                f" · {r.catalyst_posts_7d} catalyst post(s)"
+                f" ({r.catalyst_posts_bullish_7d}↑/{r.catalyst_posts_bearish_7d}↓)"
+            )
+        if flags:
+            rationale += f" [{', '.join(flags)}]"
 
         return AgentSignal(
             agent=self.name,
@@ -90,6 +121,9 @@ class SentimentAnalyst(BaseAnalyst):
                 "rank_change_7d": r.rank_change_7d,
                 "contrarian_warning": r.is_contrarian_warning,
                 "stealth": r.is_stealth,
+                "catalyst_posts_7d": r.catalyst_posts_7d,
+                "catalyst_posts_bullish_7d": r.catalyst_posts_bullish_7d,
+                "catalyst_posts_bearish_7d": r.catalyst_posts_bearish_7d,
                 "by_subreddit": [
                     {"subreddit": s.subreddit, "mentions": s.mentions, "rank": s.rank}
                     for s in r.by_subreddit

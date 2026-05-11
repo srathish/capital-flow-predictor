@@ -244,6 +244,14 @@ class RedditCtx(_Frozen):
     is_contrarian_warning: bool = False     # high chatter (>3x avg) + already in WSB top-20
     is_stealth: bool = False                # low chatter (<0.5x avg) + not in top-100
     by_subreddit: list[RedditSubredditMentions] = Field(default_factory=list)
+    # Catalyst-feed chatter (reddit_posts table — RSS-scraped posts tagged with
+    # rumor/partnership/FDA/etc. keywords). Independent of Apewisdom: a ticker
+    # can have zero Apewisdom mentions yet several catalyst posts (BTBT-style).
+    # Counted toward has_data so the sentiment analyst doesn't go neutral when
+    # there's clear catalyst chatter just not enough volume for the top-150.
+    catalyst_posts_7d: int = 0
+    catalyst_posts_bullish_7d: int = 0    # subset matched against bullish keyword set
+    catalyst_posts_bearish_7d: int = 0    # subset matched against bearish keyword set
 
 
 # ---------- ETF context ----------
