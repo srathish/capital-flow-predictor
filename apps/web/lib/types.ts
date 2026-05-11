@@ -247,6 +247,8 @@ export type HoldingsSort =
   | "return_60d"
   | "call_put_ratio"
   | "bullish_pct"
+  | "bullish_premium"
+  | "bearish_premium"
   | "ticker"
   | "pct_off_52w_high"
   | "volume_z"

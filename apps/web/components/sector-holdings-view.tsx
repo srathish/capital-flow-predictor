@@ -28,6 +28,14 @@ const fmtRatio = (v: number | null | undefined) =>
   v === null || v === undefined ? "—" : v.toFixed(2);
 const fmtScore = (v: number | null | undefined) =>
   v === null || v === undefined ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(3)}`;
+const fmtUsdCompact = (v: number | null | undefined) => {
+  if (v === null || v === undefined) return "—";
+  const abs = Math.abs(v);
+  if (abs >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
+  if (abs >= 1e6) return `$${(v / 1e6).toFixed(2)}M`;
+  if (abs >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+  return `$${v.toFixed(0)}`;
+};
 
 const COLUMNS: Column[] = [
   { key: "ticker", label: "Ticker", format: (v) => String(v ?? "—"), align: "left" },
@@ -40,15 +48,41 @@ const COLUMNS: Column[] = [
   { key: "pct_off_52w_high", label: "Off 52W H", format: fmtPct, signed: true, align: "right" },
   { key: "volume_z", label: "Vol vs 30D", format: fmtPct, signed: true, align: "right" },
   { key: "call_put_ratio", label: "Call/Put", format: fmtRatio, align: "right" },
-  { key: "bullish_pct", label: "Bullish $", format: fmtPct, align: "right" },
+  { key: "bullish_premium", label: "Bull $", format: fmtUsdCompact, align: "right" },
+  { key: "bearish_premium", label: "Bear $", format: fmtUsdCompact, align: "right" },
+  { key: "bullish_pct", label: "Bull %", format: fmtPct, align: "right" },
 ];
 
-type Filter = "all" | "bullish_model" | "bearish_model" | "above_5d" | "below_5d" | "weight_gt_1pct";
+type Filter =
+  | "all"
+  | "bullish_model"
+  | "bearish_model"
+  | "bullish_flow"
+  | "bearish_flow"
+  | "above_5d"
+  | "below_5d"
+  | "weight_gt_1pct";
 
 const FILTER_OPTIONS: { key: Filter; label: string; predicate: (h: HoldingEntry) => boolean }[] = [
   { key: "all", label: "All", predicate: () => true },
   { key: "bullish_model", label: "Model bullish", predicate: (h) => (h.model_score ?? 0) > 0 },
   { key: "bearish_model", label: "Model bearish", predicate: (h) => (h.model_score ?? 0) < 0 },
+  {
+    key: "bullish_flow",
+    label: "Bullish flow",
+    predicate: (h) =>
+      h.bullish_premium !== null &&
+      h.bearish_premium !== null &&
+      h.bullish_premium > h.bearish_premium,
+  },
+  {
+    key: "bearish_flow",
+    label: "Bearish flow",
+    predicate: (h) =>
+      h.bullish_premium !== null &&
+      h.bearish_premium !== null &&
+      h.bearish_premium > h.bullish_premium,
+  },
   { key: "above_5d", label: "Up 5D", predicate: (h) => (h.return_5d ?? 0) > 0 },
   { key: "below_5d", label: "Down 5D", predicate: (h) => (h.return_5d ?? 0) < 0 },
   { key: "weight_gt_1pct", label: "Weight ≥ 1%", predicate: (h) => (h.weight ?? 0) >= 1 },
@@ -87,6 +121,32 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
     const pred = FILTER_OPTIONS.find((f) => f.key === filter)?.predicate ?? (() => true);
     return data.holdings.filter(pred);
   }, [data, filter]);
+
+  // Coverage stats — surface why a filter may return fewer rows than expected.
+  const coverage = useMemo(() => {
+    if (!data) return null;
+    const total = data.holdings.length;
+    const scored = data.holdings.filter((h) => h.model_score !== null).length;
+    const withFlow = data.holdings.filter(
+      (h) => h.bullish_premium !== null && h.bearish_premium !== null,
+    ).length;
+    return { total, scored, withFlow };
+  }, [data]);
+
+  const filterHint = useMemo(() => {
+    if (!coverage) return null;
+    if (filter === "bullish_model" || filter === "bearish_model") {
+      if (coverage.scored < coverage.total) {
+        return `${coverage.scored} of ${coverage.total} have a model score`;
+      }
+    }
+    if (filter === "bullish_flow" || filter === "bearish_flow") {
+      if (coverage.withFlow < coverage.total) {
+        return `${coverage.withFlow} of ${coverage.total} have UW flow`;
+      }
+    }
+    return null;
+  }, [coverage, filter]);
 
   // Weight comes in as a percentage (14.73 = 14.73%). Contribution = (weight/100) * return.
   const movers = useMemo(() => {
@@ -214,6 +274,9 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
           showing {filtered.length} of {data.n_holdings}
         </span>
       </div>
+      {filterHint && (
+        <div className="-mt-1 text-[11px] text-muted-foreground">{filterHint}</div>
+      )}
 
       <Card>
         <CardContent className="p-0">

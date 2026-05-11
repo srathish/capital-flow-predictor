@@ -610,8 +610,8 @@ class HoldingsResponse(BaseModel):
 
 _VALID_SORT = {
     "weight", "return_1d", "return_5d", "return_20d", "return_60d",
-    "call_put_ratio", "bullish_pct", "ticker", "pct_off_52w_high", "volume_z",
-    "model_score",
+    "call_put_ratio", "bullish_pct", "bullish_premium", "bearish_premium",
+    "ticker", "pct_off_52w_high", "volume_z", "model_score",
 }
 
 
