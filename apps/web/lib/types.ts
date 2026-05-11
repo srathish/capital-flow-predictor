@@ -258,6 +258,27 @@ export type RedditSubMentions = {
 
 export type RedditAudienceSkew = "wsb" | "investing" | "mixed" | "unknown";
 
+export type RedditPredictiveSignal = "buy" | "fade" | "watch" | "neutral";
+
+export type RedditRuleId =
+  | "contrarian_top"
+  | "stealth_setup"
+  | "first_time_bull"
+  | "wsb_only_hype"
+  | "investing_accumulation"
+  | "fading_hype"
+  | "price_confirming_spike";
+
+export type RedditScoreComponents = {
+  spike: number;
+  momentum: number;
+  sentiment: number;
+  audience: number;
+  price_confirm: number;
+  freshness: number;
+  stealth_bonus: number;
+};
+
 export type RedditMentionRow = {
   ticker: string;
   name: string | null;
@@ -285,6 +306,23 @@ export type RedditMentionRow = {
   price_change_5d: number | null;
   catalyst_post_count: number;
   mentions_last_6h: number;
+  // Predictive layer
+  pred_score: number;
+  pred_return_20d_pct: number;
+  pred_signal: RedditPredictiveSignal;
+  pred_confidence: number;
+  score_components: RedditScoreComponents;
+  matched_rules: RedditRuleId[];
+};
+
+export type RedditRuleStats = {
+  rule_id: RedditRuleId;
+  description: string;
+  expected_direction: "long" | "short";
+  n_events: number;
+  win_rate: number | null;
+  mean_20d_return_pct: number | null;
+  edge_vs_baseline_pct: number | null;
 };
 
 export type RedditBacktestSlice = {
@@ -302,7 +340,12 @@ export type RedditMentionsResponse = {
   backtest: RedditBacktestSlice[] | null;
 };
 
-export type RedditMentionsSort = "mentions" | "spike" | "rank_change" | "momentum";
+export type RedditMentionsSort =
+  | "mentions"
+  | "spike"
+  | "rank_change"
+  | "momentum"
+  | "predicted";
 
 export type RedditMentionsParams = {
   sort?: RedditMentionsSort;

@@ -82,6 +82,42 @@ class SubMentions(BaseModel):
     rank: int | None
 
 
+PredictiveSignal = Literal["buy", "fade", "watch", "neutral"]
+
+# Ordered set of rule ids the composite scorer can flag for a row. Each rule
+# has a corresponding historical win-rate row from /v1/reddit/rules.
+RULE_IDS = (
+    "contrarian_top",
+    "stealth_setup",
+    "first_time_bull",
+    "wsb_only_hype",
+    "investing_accumulation",
+    "fading_hype",
+    "price_confirming_spike",
+)
+RuleId = Literal[
+    "contrarian_top",
+    "stealth_setup",
+    "first_time_bull",
+    "wsb_only_hype",
+    "investing_accumulation",
+    "fading_hype",
+    "price_confirming_spike",
+]
+
+
+class ScoreComponents(BaseModel):
+    """Signed contribution (~ -25..+25 each) of every feature to pred_score.
+    Sum of these + 50 baseline ≈ pred_score (clamped to 0..100)."""
+    spike: float
+    momentum: float
+    sentiment: float
+    audience: float
+    price_confirm: float
+    freshness: float
+    stealth_bonus: float
+
+
 class MentionRow(BaseModel):
     ticker: str
     name: str | None
@@ -109,6 +145,13 @@ class MentionRow(BaseModel):
     price_change_5d: float | None
     catalyst_post_count: int
     mentions_last_6h: int
+    # Predictive layer (composite + rules)
+    pred_score: float           # 0..100, 50 = neutral
+    pred_return_20d_pct: float  # signed % (heuristic estimate)
+    pred_signal: PredictiveSignal
+    pred_confidence: float      # 0..1, derived from rule win rates + history depth
+    score_components: ScoreComponents
+    matched_rules: list[RuleId]
 
 
 class BacktestSlice(BaseModel):
@@ -171,13 +214,228 @@ def _momentum_slope(hist: list[int]) -> float | None:
     return slope / mean_y  # normalized: +0.3 means ~+30% per day on the trend
 
 
+# ---------- predictive scoring + rules ----------
+#
+# The composite score combines existing features into a single 0..100 view
+# of "what's the expected 20d edge here?". Each component contributes a
+# signed ~ -25..+25 to the score; baseline 50 = neutral. We then translate
+# the score into a pred_return_20d_pct using a calibration constant (rough
+# fit to the historical 5d backtest, extrapolated to 20d).
+#
+# Rules are coarse pattern flags. They are independently backtested via
+# /v1/reddit/rules — the win rates returned there feed pred_confidence.
+
+# A reasonable default win rate when a rule has no historical evidence
+# yet (data is still accumulating). 0.55 lets the rule contribute mild
+# confidence but not over-weight; once /rules returns real history this
+# is overridden by the cached values.
+_RULE_PRIOR_WIN_RATE: dict[str, float] = {
+    "contrarian_top": 0.55,
+    "stealth_setup": 0.55,
+    "first_time_bull": 0.55,
+    "wsb_only_hype": 0.55,
+    "investing_accumulation": 0.55,
+    "fading_hype": 0.55,
+    "price_confirming_spike": 0.55,
+}
+
+# Sign of each rule's expected forward edge. +1 = bullish, -1 = bearish.
+_RULE_SIGN: dict[str, int] = {
+    "contrarian_top": -1,
+    "stealth_setup": +1,
+    "first_time_bull": +1,
+    "wsb_only_hype": -1,
+    "investing_accumulation": +1,
+    "fading_hype": -1,
+    "price_confirming_spike": +1,
+}
+
+
+def _clip(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+
+def _score_components(
+    spike: float | None,
+    momentum: float | None,
+    bull_share: float | None,
+    n_kw_total: int,
+    audience: str,
+    price_1d: float | None,
+    price_5d: float | None,
+    mentions_6h: int,
+    is_stealth: bool,
+) -> ScoreComponents:
+    """Map raw features → signed contributions. Tuned by hand to match the
+    asymmetries the page calls out (stealth = positive edge, hype top = fade,
+    investing-skew accumulation = positive, WSB-only = noisy).
+
+    Each component is bounded so no single feature can dominate."""
+    # SPIKE: small spikes (1–2x) are constructive; >3x is hype, gets fade.
+    if spike is None:
+        spike_c = 0.0
+    elif spike <= 0.5:
+        # very-low chatter relative to baseline — mildly bearish (interest dying)
+        spike_c = -6.0
+    elif spike <= 1.5:
+        spike_c = +5.0 * (spike - 1.0) / 0.5  # +0 at 1x, +5 at 1.5x
+    elif spike <= 3.0:
+        spike_c = +5.0 - 8.0 * (spike - 1.5) / 1.5  # +5 → -3
+    else:
+        spike_c = -12.0  # 3x+ : crowded top
+    spike_c = _clip(spike_c, -15.0, +12.0)
+
+    # MOMENTUM: chatter trending up (slope > 0) is positive up to a point.
+    if momentum is None:
+        mom_c = 0.0
+    else:
+        mom_c = _clip(momentum * 30.0, -10.0, +10.0)
+
+    # SENTIMENT: catalyst-keyword bull/bear share. Needs a few keywords to count.
+    if bull_share is None or n_kw_total < 2:
+        sent_c = 0.0
+    else:
+        sent_c = _clip((bull_share - 0.5) * 25.0, -12.0, +12.0)
+
+    # AUDIENCE: investing-skew quality > mixed > wsb-only.
+    aud_c = {"investing": +6.0, "mixed": +1.0, "wsb": -5.0, "unknown": 0.0}[audience]
+
+    # PRICE CONFIRMATION: forward chatter + recent up-move is constructive;
+    # chatter into a 5d down-move is the fade pattern.
+    price_c = 0.0
+    if price_5d is not None:
+        price_c += _clip(price_5d * 0.4, -6.0, +6.0)
+    if price_1d is not None:
+        price_c += _clip(price_1d * 0.3, -3.0, +3.0)
+
+    # FRESHNESS: live mentions in last 6h (above what Apewisdom 24h rolling
+    # captures) signal incoming attention. Mild positive contribution.
+    fresh_c = _clip(math.log(1 + mentions_6h) * 1.5, 0.0, +6.0)
+
+    # STEALTH BONUS: low chatter + on-the-radar is the asymmetric setup.
+    stealth_c = +8.0 if is_stealth else 0.0
+
+    return ScoreComponents(
+        spike=round(spike_c, 2),
+        momentum=round(mom_c, 2),
+        sentiment=round(sent_c, 2),
+        audience=round(aud_c, 2),
+        price_confirm=round(price_c, 2),
+        freshness=round(fresh_c, 2),
+        stealth_bonus=round(stealth_c, 2),
+    )
+
+
+def _detect_rules(
+    spike: float | None,
+    rank_today: int | None,
+    is_stealth: bool,
+    is_first_time: bool,
+    audience: str,
+    bull_share: float | None,
+    n_kw_total: int,
+    mentions_today: int,
+    price_5d: float | None,
+    momentum: float | None,
+) -> list[str]:
+    """Pattern flags. Stays in lockstep with _RULE_SIGN / _RULE_PRIOR_WIN_RATE
+    above and the SQL in /v1/reddit/rules. Adding a rule? Update all three."""
+    out: list[str] = []
+    if spike is not None and spike >= 3.0 and rank_today is not None and rank_today <= 20:
+        out.append("contrarian_top")
+    if is_stealth:
+        out.append("stealth_setup")
+    if is_first_time and bull_share is not None and bull_share >= 0.6 and n_kw_total >= 2:
+        out.append("first_time_bull")
+    if (
+        audience == "wsb"
+        and spike is not None and spike >= 2.0
+        and mentions_today >= 10
+    ):
+        out.append("wsb_only_hype")
+    if (
+        audience == "investing"
+        and spike is not None and 1.2 <= spike <= 3.0
+        and (bull_share is None or bull_share >= 0.4)
+    ):
+        out.append("investing_accumulation")
+    if momentum is not None and momentum < -0.1 and spike is not None and spike < 0.8:
+        out.append("fading_hype")
+    if (
+        spike is not None and spike >= 1.5
+        and price_5d is not None and price_5d >= 2.0
+        and (bull_share is None or bull_share >= 0.5)
+    ):
+        out.append("price_confirming_spike")
+    return out
+
+
+def _compose_signal(
+    components: ScoreComponents,
+    matched_rules: list[str],
+    rule_win_rates: dict[str, float],
+) -> tuple[float, float, PredictiveSignal, float]:
+    """Combine score components + matched rules into:
+      (pred_score 0..100, pred_return_20d_pct, pred_signal, pred_confidence)
+    """
+    raw = (
+        components.spike
+        + components.momentum
+        + components.sentiment
+        + components.audience
+        + components.price_confirm
+        + components.freshness
+        + components.stealth_bonus
+    )
+
+    # Rule adjustment: each matched rule nudges raw by its sign × rule-strength.
+    # The strength is anchored on the rule's historical win rate over a 50%
+    # coin-flip baseline (so a 65% win-rate rule contributes ±3.0).
+    rule_adj = 0.0
+    for rule in matched_rules:
+        wr = rule_win_rates.get(rule, _RULE_PRIOR_WIN_RATE.get(rule, 0.5))
+        rule_adj += _RULE_SIGN.get(rule, 0) * (wr - 0.5) * 20.0
+
+    composite = raw + rule_adj
+    pred_score = _clip(50.0 + composite, 0.0, 100.0)
+
+    # Calibration: a +30 composite ≈ +6% expected 20d return. Linear mapping
+    # (chosen so the score range maps to ±10% in extremes — matches the
+    # backtest endpoint's observed magnitudes when extrapolated to 20d).
+    pred_return = composite * 0.2
+
+    if pred_score >= 62:
+        signal: PredictiveSignal = "buy"
+    elif pred_score <= 38:
+        signal = "fade"
+    elif matched_rules:
+        signal = "watch"
+    else:
+        signal = "neutral"
+
+    # Confidence = mean of matched-rule win rates, shrunk toward 0.5 when no
+    # rules match. Reflects "how much historical backing does this row have?"
+    if matched_rules:
+        mean_wr = sum(
+            rule_win_rates.get(r, _RULE_PRIOR_WIN_RATE.get(r, 0.5)) for r in matched_rules
+        ) / len(matched_rules)
+        # Distance from coin-flip → 0..1 confidence
+        confidence = _clip(abs(mean_wr - 0.5) * 2.0, 0.0, 1.0)
+    else:
+        confidence = 0.1  # nothing matched → very low conviction by definition
+
+    return pred_score, pred_return, signal, round(confidence, 3)
+
+
 # ---------- /mentions ----------
 
 
 @router.get("/mentions", response_model=MentionsResponse)
 async def get_mentions(
     limit: int = Query(60, ge=1, le=300),
-    sort: Literal["mentions", "spike", "rank_change", "momentum"] = Query("mentions"),
+    sort: Literal[
+        "mentions", "spike", "rank_change", "momentum", "predicted",
+    ] = Query("mentions"),
     q: str | None = Query(None, description="Ticker prefix search (case-insensitive)"),
     sector: str | None = Query(None, description="Filter to tickers in this watchlist sector"),
     exclude_meme: bool = Query(False, description="Drop perma-WSB names (GME, AMC, …)"),
@@ -365,6 +623,11 @@ async def get_mentions(
 
     wl_set: set[str] | None = {r["ticker"] for r in wl_rows} if watchlist else None
 
+    # Rule win-rate cache — used by _compose_signal to weight matched rules
+    # by their historical edge. Cheap one-shot, swallowed on failure so
+    # the page still works when no history is accumulated yet.
+    rule_win_rates_cache: dict[str, float] = await _rule_win_rates_cached()
+
     # Snapshot freshness.
     snapshot_date: date | None = None
     snapshot_age_hours: float | None = None
@@ -429,6 +692,36 @@ async def get_mentions(
         chg_1d = ((px0 - px1) / px1 * 100.0) if (px0 is not None and px1) else None
         chg_5d = ((px0 - px5) / px5 * 100.0) if (px0 is not None and px5) else None
 
+        momentum = _momentum_slope(hist)
+
+        # --- predictive layer ---
+        components = _score_components(
+            spike=spike,
+            momentum=momentum,
+            bull_share=bull_share,
+            n_kw_total=n_bull + n_bear,
+            audience=skew,
+            price_1d=chg_1d,
+            price_5d=chg_5d,
+            mentions_6h=n_6h,
+            is_stealth=stealth,
+        )
+        matched = _detect_rules(
+            spike=spike,
+            rank_today=rank_today,
+            is_stealth=stealth,
+            is_first_time=is_first_time,
+            audience=skew,
+            bull_share=bull_share,
+            n_kw_total=n_bull + n_bear,
+            mentions_today=mentions_today,
+            price_5d=chg_5d,
+            momentum=momentum,
+        )
+        pred_score, pred_return, pred_signal, pred_conf = _compose_signal(
+            components, matched, rule_win_rates_cache,
+        )
+
         out.append(MentionRow(
             ticker=ticker,
             name=r["name"],
@@ -447,7 +740,7 @@ async def get_mentions(
             sparkline_7d=hist,
             by_subreddit=subs,
             audience_skew=skew,
-            momentum_score=_momentum_slope(hist),
+            momentum_score=momentum,
             days_in_top20_14d=int(r["days_top20_14d"] or 0),
             sentiment_bull_share=bull_share,
             n_bullish_kw=n_bull,
@@ -456,6 +749,12 @@ async def get_mentions(
             price_change_5d=chg_5d,
             catalyst_post_count=n_48h,
             mentions_last_6h=n_6h,
+            pred_score=round(pred_score, 1),
+            pred_return_20d_pct=round(pred_return, 2),
+            pred_signal=pred_signal,
+            pred_confidence=pred_conf,
+            score_components=components,
+            matched_rules=list(matched),  # type: ignore[arg-type]
         ))
 
     if sort == "mentions":
@@ -466,6 +765,10 @@ async def get_mentions(
         out.sort(key=lambda r: r.rank_change_7d if r.rank_change_7d is not None else 999)
     elif sort == "momentum":
         out.sort(key=lambda r: -(r.momentum_score or -math.inf))
+    elif sort == "predicted":
+        # Best predicted edge first. Tie-break on confidence so well-
+        # backed signals beat heuristic-only rows of the same score.
+        out.sort(key=lambda r: (-r.pred_score, -r.pred_confidence))
 
     backtest_slices: list[BacktestSlice] | None = None
     if backtest:
@@ -560,6 +863,250 @@ async def get_backtest() -> list[BacktestSlice]:
     """Standalone endpoint for the same backtest stats so the front-end can
     lazy-load it without slowing the main /mentions request."""
     return await _compute_backtest()
+
+
+# ---------- /rules: per-pattern 20d backtest ----------
+
+
+class RuleStats(BaseModel):
+    """Backtested win rate + mean 20d forward return for a named pattern.
+
+    A row was "matched" on a given (snapshot_date, ticker) if the pattern's
+    SQL predicate evaluated true for that snapshot. Forward return is the
+    20-trading-day close-to-close move after the snapshot. n_events is the
+    count of matched (date, ticker) pairs. Until ≥20 events accumulate the
+    UI displays this as "calibrating"."""
+    rule_id: RuleId
+    description: str
+    expected_direction: Literal["long", "short"]
+    n_events: int
+    win_rate: float | None
+    mean_20d_return_pct: float | None
+    edge_vs_baseline_pct: float | None  # mean_20d − baseline mean 20d return
+
+
+# SQL predicates for each rule. Kept close to _detect_rules logic. The
+# events query lateral-joins onto avg7 / rank_24h / etc so the predicate
+# can use the same enriched view that the live scorer does.
+_RULE_PREDICATES: dict[str, tuple[str, str, Literal["long", "short"]]] = {
+    "contrarian_top": (
+        "Crowded top: spike ≥ 3× and rank ≤ 20 → expect fade.",
+        "spike >= 3.0 AND rank <= 20",
+        "short",
+    ),
+    "stealth_setup": (
+        "Stealth: low chatter, off the radar — asymmetric setup.",
+        "mentions < 5 AND (rank IS NULL OR rank > 100)",
+        "long",
+    ),
+    "first_time_bull": (
+        "First-time entrant: no top-100 appearance in prior 30d.",
+        "prior_30d_n = 0 AND rank IS NOT NULL AND rank <= 100",
+        "long",
+    ),
+    "wsb_only_hype": (
+        "WSB-only hype: spike ≥ 2× from wallstreetbets alone.",
+        "wsb_share >= 0.7 AND spike >= 2.0 AND mentions >= 10",
+        "short",
+    ),
+    "investing_accumulation": (
+        "Investing-skew accumulation: quality subs noticing the name.",
+        "inv_share >= 0.7 AND spike BETWEEN 1.2 AND 3.0",
+        "long",
+    ),
+    "fading_hype": (
+        "Fading hype: chatter decaying (spike < 0.8, momentum negative).",
+        "spike < 0.8 AND momentum_slope < -0.1",
+        "short",
+    ),
+    "price_confirming_spike": (
+        "Spike + 5d price up: retail chasing a real move.",
+        "spike >= 1.5 AND price_5d_pct >= 2.0",
+        "long",
+    ),
+}
+
+
+# 20 trading days ≈ 28 calendar days; using a hard 28-day window is the
+# pragmatic match given prices_daily is daily and we want the lateral
+# joins to stay cheap (no row_number windowing).
+_RULES_BACKTEST_SQL = """
+WITH bounds AS (
+    SELECT MAX(snapshot_date) AS d_max FROM reddit_mentions WHERE subreddit='all-stocks'
+),
+events AS (
+    SELECT
+        m.snapshot_date, m.ticker, m.mentions, m.rank,
+        a.avg_m,
+        (m.mentions::float / NULLIF(a.avg_m, 0)) AS spike,
+        COALESCE((
+            SELECT SUM(sm.mentions)::float / NULLIF(SUM(SUM(sm.mentions)) OVER (), 0)
+            FROM reddit_mentions sm
+            WHERE sm.snapshot_date = m.snapshot_date AND sm.ticker = m.ticker
+              AND sm.subreddit = 'wallstreetbets'
+            GROUP BY sm.snapshot_date, sm.ticker
+        ), 0) AS wsb_share,
+        COALESCE((
+            SELECT SUM(sm.mentions)::float / NULLIF(SUM(SUM(sm.mentions)) OVER (), 0)
+            FROM reddit_mentions sm
+            WHERE sm.snapshot_date = m.snapshot_date AND sm.ticker = m.ticker
+              AND sm.subreddit IN ('investing','stocks','SecurityAnalysis','ValueInvesting')
+            GROUP BY sm.snapshot_date, sm.ticker
+        ), 0) AS inv_share,
+        COALESCE((
+            SELECT COUNT(*)::int FROM reddit_mentions p
+            WHERE p.subreddit='all-stocks' AND p.ticker = m.ticker
+              AND p.snapshot_date BETWEEN m.snapshot_date - 30 AND m.snapshot_date - 1
+              AND p.rank IS NOT NULL AND p.rank <= 100
+        ), 0) AS prior_30d_n,
+        -- 7d trailing mention slope, normalized by mean (matches the python
+        -- _momentum_slope helper). Returns NULL when <3 observations.
+        (
+            SELECT CASE
+                WHEN COUNT(*) < 3 OR AVG(mentions) = 0 THEN NULL
+                ELSE
+                    REGR_SLOPE(mentions::float, EXTRACT(EPOCH FROM snapshot_date)::float / 86400.0)
+                    / NULLIF(AVG(mentions), 0)
+            END
+            FROM reddit_mentions s
+            WHERE s.subreddit='all-stocks' AND s.ticker = m.ticker
+              AND s.snapshot_date BETWEEN m.snapshot_date - 6 AND m.snapshot_date
+        ) AS momentum_slope
+    FROM reddit_mentions m
+    JOIN bounds b ON true
+    LEFT JOIN LATERAL (
+        SELECT AVG(mentions)::float AS avg_m
+        FROM reddit_mentions
+        WHERE subreddit='all-stocks' AND ticker = m.ticker
+          AND snapshot_date BETWEEN m.snapshot_date - 7 AND m.snapshot_date - 1
+    ) a ON true
+    WHERE m.subreddit='all-stocks'
+      AND m.snapshot_date <= b.d_max - 28
+      AND m.snapshot_date >= b.d_max - 365
+),
+priced AS (
+    SELECT e.*,
+           p0.close AS px0,
+           pf.close AS pxf,
+           p5b.close AS px_5d_back,
+           pb.close AS px0_baseline,
+           pbf.close AS pxf_baseline
+    FROM events e
+    LEFT JOIN LATERAL (
+        SELECT close FROM prices_daily
+        WHERE symbol = e.ticker AND ts::date <= e.snapshot_date
+        ORDER BY ts DESC LIMIT 1
+    ) p0 ON true
+    LEFT JOIN LATERAL (
+        SELECT close FROM prices_daily
+        WHERE symbol = e.ticker AND ts::date <= e.snapshot_date + 28
+        ORDER BY ts DESC LIMIT 1
+    ) pf ON true
+    LEFT JOIN LATERAL (
+        SELECT close FROM prices_daily
+        WHERE symbol = e.ticker AND ts::date <= e.snapshot_date - 5
+        ORDER BY ts DESC LIMIT 1
+    ) p5b ON true
+    LEFT JOIN LATERAL (
+        SELECT close FROM prices_daily
+        WHERE symbol = 'SPY' AND ts::date <= e.snapshot_date
+        ORDER BY ts DESC LIMIT 1
+    ) pb ON true
+    LEFT JOIN LATERAL (
+        SELECT close FROM prices_daily
+        WHERE symbol = 'SPY' AND ts::date <= e.snapshot_date + 28
+        ORDER BY ts DESC LIMIT 1
+    ) pbf ON true
+    WHERE p0.close IS NOT NULL AND pf.close IS NOT NULL
+),
+enriched AS (
+    SELECT
+        *,
+        (pxf - px0) / px0 * 100.0 AS ret_20d,
+        CASE
+            WHEN px_5d_back IS NOT NULL AND px_5d_back > 0
+            THEN (px0 - px_5d_back) / px_5d_back * 100.0
+            ELSE NULL
+        END AS price_5d_pct,
+        CASE
+            WHEN px0_baseline IS NOT NULL AND pxf_baseline IS NOT NULL
+            THEN (pxf_baseline - px0_baseline) / px0_baseline * 100.0
+            ELSE NULL
+        END AS spy_ret_20d
+    FROM priced
+)
+SELECT
+    COUNT(*) AS n_events,
+    AVG(ret_20d) AS mean_ret,
+    AVG(CASE WHEN ret_20d > 0 THEN 1.0 ELSE 0.0 END) AS win_rate,
+    AVG(spy_ret_20d) AS mean_spy_ret
+FROM enriched
+WHERE {predicate}
+"""
+
+
+# In-process cache for the rule win-rate table. SQL is expensive to run on
+# every /mentions request; the values change only when fresh snapshots
+# land, so a 10-minute TTL is plenty.
+_rule_cache: dict[str, tuple[float, dict[str, float]]] = {}
+_RULE_CACHE_TTL_SEC = 600.0
+
+
+async def _rule_win_rates_cached() -> dict[str, float]:
+    """Return {rule_id: win_rate} for the live scorer. Falls back to priors
+    when the SQL has no events (no accumulated history) or errors out."""
+    import time
+    now = time.monotonic()
+    cached = _rule_cache.get("v1")
+    if cached and (now - cached[0]) < _RULE_CACHE_TTL_SEC:
+        return cached[1]
+    try:
+        stats = await _compute_rule_stats()
+    except Exception as e:  # pragma: no cover — defensive
+        log.warning("rule stats query failed: %s", e)
+        return dict(_RULE_PRIOR_WIN_RATE)
+    out = dict(_RULE_PRIOR_WIN_RATE)
+    for s in stats:
+        if s.win_rate is not None and s.n_events >= 5:
+            out[s.rule_id] = s.win_rate
+    _rule_cache["v1"] = (now, out)
+    return out
+
+
+async def _compute_rule_stats() -> list[RuleStats]:
+    pool = get_pool()
+    out: list[RuleStats] = []
+    async with pool.acquire() as conn:
+        for rule_id in RULE_IDS:
+            desc, predicate, direction = _RULE_PREDICATES[rule_id]
+            sql = _RULES_BACKTEST_SQL.format(predicate=predicate)
+            try:
+                row = await conn.fetchrow(sql)
+            except Exception as e:
+                log.warning("rule '%s' backtest failed: %s", rule_id, e)
+                row = None
+            n_events = int(row["n_events"] or 0) if row else 0
+            mean_ret = float(row["mean_ret"]) if row and row["mean_ret"] is not None else None
+            win_rate = float(row["win_rate"]) if row and row["win_rate"] is not None else None
+            mean_spy = float(row["mean_spy_ret"]) if row and row["mean_spy_ret"] is not None else None
+            edge = (mean_ret - mean_spy) if (mean_ret is not None and mean_spy is not None) else None
+            out.append(RuleStats(
+                rule_id=rule_id,  # type: ignore[arg-type]
+                description=desc,
+                expected_direction=direction,
+                n_events=n_events,
+                win_rate=win_rate,
+                mean_20d_return_pct=mean_ret,
+                edge_vs_baseline_pct=edge,
+            ))
+    return out
+
+
+@router.get("/rules", response_model=list[RuleStats])
+async def get_rule_stats() -> list[RuleStats]:
+    """Backtested historical edge for every predictive rule. Used by the UI
+    to show how much past evidence backs each matched-rule chip on a row."""
+    return await _compute_rule_stats()
 
 
 # ---------- catalyst-keyword feed ----------

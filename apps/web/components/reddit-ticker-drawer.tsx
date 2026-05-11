@@ -6,7 +6,39 @@ import { useEffect } from "react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Sparkline } from "@/components/ui/sparkline";
-import type { RedditMentionRow } from "@/lib/types";
+import type {
+  RedditMentionRow,
+  RedditRuleId,
+  RedditRuleStats,
+  RedditPredictiveSignal,
+} from "@/lib/types";
+
+const SIGNAL_STYLE: Record<RedditPredictiveSignal, { label: string; cls: string }> = {
+  buy: { label: "BUY", cls: "bg-signal-bullish/15 text-signal-bullish" },
+  fade: { label: "FADE", cls: "bg-signal-bearish/15 text-signal-bearish" },
+  watch: { label: "WATCH", cls: "bg-primary/15 text-primary" },
+  neutral: { label: "NEUTRAL", cls: "bg-muted text-muted-foreground" },
+};
+
+const RULE_LABEL: Record<RedditRuleId, string> = {
+  contrarian_top: "crowded top",
+  stealth_setup: "stealth",
+  first_time_bull: "first-time bull",
+  wsb_only_hype: "wsb-only hype",
+  investing_accumulation: "quality accumulation",
+  fading_hype: "fading hype",
+  price_confirming_spike: "price-confirming spike",
+};
+
+const COMPONENT_LABEL: Record<keyof RedditMentionRow["score_components"], string> = {
+  spike: "Spike",
+  momentum: "Momentum",
+  sentiment: "Sentiment",
+  audience: "Audience",
+  price_confirm: "Price confirm",
+  freshness: "Freshness",
+  stealth_bonus: "Stealth bonus",
+};
 
 function formatHoursAgo(h: number): string {
   if (h < 1) return `${Math.round(h * 60)}m ago`;
@@ -30,6 +62,15 @@ export function RedditTickerDrawer({
         : Promise.resolve({ n_total: 0, posts: [] }),
     enabled: !!row,
     retry: false,
+  });
+
+  // Rule stats — used to annotate which patterns matched this row.
+  const { data: rules } = useQuery({
+    queryKey: ["reddit-rules"],
+    queryFn: () => api.redditRules(),
+    enabled: !!row,
+    retry: false,
+    staleTime: 1000 * 60 * 30,
   });
 
   useEffect(() => {
@@ -109,6 +150,108 @@ export function RedditTickerDrawer({
           <Stat label="Audience" value={row.audience_skew} />
           <Stat label="Top-20 days /14" value={String(row.days_in_top20_14d)} />
           <Stat label="Last 6h posts" value={String(row.mentions_last_6h)} />
+        </div>
+
+        {/* prediction breakdown */}
+        <div className="mt-4 rounded-lg border border-border p-3">
+          <div className="mb-2 flex items-baseline justify-between">
+            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              20-day prediction
+            </div>
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                SIGNAL_STYLE[row.pred_signal].cls,
+              )}
+            >
+              {SIGNAL_STYLE[row.pred_signal].label} · {row.pred_score.toFixed(0)}/100
+            </span>
+          </div>
+          <div className="mb-2 flex items-baseline gap-3 text-sm">
+            <span
+              className={cn(
+                "num font-semibold",
+                row.pred_return_20d_pct > 0 && "text-signal-bullish",
+                row.pred_return_20d_pct < 0 && "text-signal-bearish",
+              )}
+            >
+              {row.pred_return_20d_pct >= 0 ? "+" : ""}
+              {row.pred_return_20d_pct.toFixed(2)}% expected
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              confidence {(row.pred_confidence * 100).toFixed(0)}%
+            </span>
+          </div>
+          <div className="space-y-1">
+            {(Object.keys(row.score_components) as (keyof typeof row.score_components)[])
+              .filter((k) => Math.abs(row.score_components[k]) >= 0.5)
+              .sort((a, b) => Math.abs(row.score_components[b]) - Math.abs(row.score_components[a]))
+              .map((k) => {
+                const v = row.score_components[k];
+                const w = Math.min(100, (Math.abs(v) / 15) * 100);
+                return (
+                  <div key={k} className="flex items-center gap-2 text-[11px]">
+                    <span className="w-28 text-muted-foreground">{COMPONENT_LABEL[k]}</span>
+                    <div className="relative h-1.5 flex-1 rounded-full bg-muted">
+                      <div
+                        className={cn(
+                          "absolute top-0 h-full rounded-full",
+                          v > 0 ? "bg-signal-bullish left-1/2" : "bg-signal-bearish right-1/2",
+                        )}
+                        style={{ width: `${w / 2}%` }}
+                      />
+                    </div>
+                    <span
+                      className={cn(
+                        "num w-12 text-right tabular-nums",
+                        v > 0 ? "text-signal-bullish" : "text-signal-bearish",
+                      )}
+                    >
+                      {v > 0 ? "+" : ""}
+                      {v.toFixed(1)}
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+          {row.matched_rules.length > 0 && (
+            <div className="mt-3 border-t border-border/60 pt-2">
+              <div className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                Matched patterns
+              </div>
+              <div className="space-y-1">
+                {row.matched_rules.map((rid) => {
+                  const s = (rules ?? []).find((x) => x.rule_id === rid);
+                  return (
+                    <div key={rid} className="flex items-baseline justify-between text-[11px]">
+                      <span className="font-medium">{RULE_LABEL[rid]}</span>
+                      <span className="text-muted-foreground">
+                        {s && s.n_events >= 5 && s.win_rate !== null ? (
+                          <>
+                            win {(s.win_rate * 100).toFixed(0)}% · n={s.n_events}
+                            {s.edge_vs_baseline_pct !== null && (
+                              <span
+                                className={cn(
+                                  "ml-1 num tabular-nums",
+                                  s.edge_vs_baseline_pct > 0 && "text-signal-bullish",
+                                  s.edge_vs_baseline_pct < 0 && "text-signal-bearish",
+                                )}
+                              >
+                                ({s.edge_vs_baseline_pct >= 0 ? "+" : ""}
+                                {s.edge_vs_baseline_pct.toFixed(1)}% vs SPY)
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span>calibrating · n={s?.n_events ?? 0}</span>
+                        )}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* sparkline */}

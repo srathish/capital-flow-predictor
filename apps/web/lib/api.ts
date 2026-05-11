@@ -14,6 +14,7 @@ import type {
   RedditBacktestSlice,
   RedditMentionsParams,
   RedditMentionsResponse,
+  RedditRuleStats,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -109,6 +110,9 @@ export const api = {
   },
   redditBacktest(): Promise<RedditBacktestSlice[]> {
     return getJson<RedditBacktestSlice[]>(`/v1/reddit/backtest`);
+  },
+  redditRules(): Promise<RedditRuleStats[]> {
+    return getJson<RedditRuleStats[]>(`/v1/reddit/rules`);
   },
   redditCatalysts(params: {
     limit?: number;

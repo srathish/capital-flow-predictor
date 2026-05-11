@@ -7,6 +7,9 @@ import type {
   RedditAudienceSkew,
   RedditMentionRow,
   RedditMentionsSort,
+  RedditPredictiveSignal,
+  RedditRuleId,
+  RedditRuleStats,
 } from "@/lib/types";
 import { cn, formatDate } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,11 +18,29 @@ import { Sparkline } from "@/components/ui/sparkline";
 import { RedditTickerDrawer } from "@/components/reddit-ticker-drawer";
 
 const SORT_OPTIONS: { value: RedditMentionsSort; label: string }[] = [
+  { value: "predicted", label: "Best predicted edge" },
   { value: "mentions", label: "Most mentions" },
   { value: "spike", label: "Biggest spike" },
   { value: "rank_change", label: "Climbing fastest" },
   { value: "momentum", label: "Strongest momentum" },
 ];
+
+const SIGNAL_STYLE: Record<RedditPredictiveSignal, { label: string; cls: string }> = {
+  buy: { label: "BUY", cls: "bg-signal-bullish/15 text-signal-bullish" },
+  fade: { label: "FADE", cls: "bg-signal-bearish/15 text-signal-bearish" },
+  watch: { label: "WATCH", cls: "bg-primary/15 text-primary" },
+  neutral: { label: "—", cls: "bg-muted text-muted-foreground" },
+};
+
+const RULE_LABEL: Record<RedditRuleId, string> = {
+  contrarian_top: "crowded top",
+  stealth_setup: "stealth",
+  first_time_bull: "first-time bull",
+  wsb_only_hype: "wsb-only",
+  investing_accumulation: "quality accum",
+  fading_hype: "fading",
+  price_confirming_spike: "price confirms",
+};
 
 const SKEW_COLOR: Record<RedditAudienceSkew, string> = {
   wsb: "bg-signal-bearish/15 text-signal-bearish",
@@ -56,7 +77,7 @@ function normalizeSparkline(values: number[], mode: "raw" | "z"): number[] {
 }
 
 export function RedditMentionsView() {
-  const [sort, setSort] = useState<RedditMentionsSort>("mentions");
+  const [sort, setSort] = useState<RedditMentionsSort>("predicted");
   const [q, setQ] = useState("");
   const [sectorFilter, setSectorFilter] = useState<string>("");
   const [excludeMeme, setExcludeMeme] = useState(false);
@@ -86,6 +107,22 @@ export function RedditMentionsView() {
     staleTime: 1000 * 60 * 30,
   });
 
+  // Rule win-rate stats — drives the confidence dots + the "rule edge" panel.
+  const { data: rules } = useQuery({
+    queryKey: ["reddit-rules"],
+    queryFn: () => api.redditRules(),
+    retry: false,
+    staleTime: 1000 * 60 * 30,
+  });
+  const rulesById = useMemo<Record<RedditRuleId, RedditRuleStats | undefined>>(
+    () => {
+      const acc: Record<string, RedditRuleStats | undefined> = {};
+      for (const r of rules ?? []) acc[r.rule_id] = r;
+      return acc as Record<RedditRuleId, RedditRuleStats | undefined>;
+    },
+    [rules],
+  );
+
   const sectors = useMemo(() => {
     if (!data) return [];
     const s = new Set<string>();
@@ -101,8 +138,8 @@ export function RedditMentionsView() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Reddit chatter</h1>
           <p className="text-sm text-muted-foreground">
-            Apewisdom rankings (WSB · stocks · options · investing) enriched with sentiment,
-            price moves, and live catalyst posts.
+            Predicted 20-day edge from retail chatter — composite score, pattern rules, and
+            backtested win rates. Sort by predicted edge to see the best setups first.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -227,6 +264,10 @@ export function RedditMentionsView() {
                 <thead>
                   <tr className="border-b border-border text-[11px] uppercase tracking-wide text-muted-foreground">
                     <th className="px-3 py-2 text-left">Ticker</th>
+                    <th className="px-3 py-2 text-left">Signal</th>
+                    <th className="px-3 py-2 text-right">Pred 20d</th>
+                    <th className="px-3 py-2 text-left">Conf</th>
+                    <th className="px-3 py-2 text-left">Rules</th>
                     <th className="px-3 py-2 text-right">Mentions</th>
                     <th className="px-3 py-2 text-right">Spike</th>
                     <th className="px-3 py-2 text-right">Rank</th>
@@ -255,6 +296,25 @@ export function RedditMentionsView() {
                             {r.name}
                           </div>
                         )}
+                      </td>
+                      <td className="px-3 py-2">
+                        <SignalBadge signal={r.pred_signal} score={r.pred_score} />
+                      </td>
+                      <td
+                        className={cn(
+                          "num px-3 py-2 text-right font-semibold",
+                          r.pred_return_20d_pct > 0 && "text-signal-bullish",
+                          r.pred_return_20d_pct < 0 && "text-signal-bearish",
+                        )}
+                      >
+                        {r.pred_return_20d_pct >= 0 ? "+" : ""}
+                        {r.pred_return_20d_pct.toFixed(1)}%
+                      </td>
+                      <td className="px-3 py-2">
+                        <ConfidenceDots value={r.pred_confidence} />
+                      </td>
+                      <td className="px-3 py-2">
+                        <RuleChips rules={r.matched_rules} stats={rulesById} />
                       </td>
                       <td className="num px-3 py-2 text-right">
                         <div>{r.mentions_today}</div>
@@ -399,24 +459,33 @@ export function RedditMentionsView() {
               <CardContent className="p-3">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <div className="font-semibold">{r.ticker}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="font-semibold">{r.ticker}</div>
+                      <SignalBadge signal={r.pred_signal} score={r.pred_score} />
+                    </div>
                     {r.name && (
                       <div className="text-[10px] text-muted-foreground">{r.name}</div>
                     )}
                   </div>
                   <div className="num text-right text-sm">
-                    <div className="font-semibold">{r.mentions_today}</div>
                     <div
                       className={cn(
-                        "text-[11px]",
-                        r.spike_ratio !== null && r.spike_ratio > 1.5 && "text-signal-bullish",
-                        r.spike_ratio !== null && r.spike_ratio < 0.5 && "text-signal-bearish",
+                        "font-semibold",
+                        r.pred_return_20d_pct > 0 && "text-signal-bullish",
+                        r.pred_return_20d_pct < 0 && "text-signal-bearish",
                       )}
                     >
-                      {r.spike_ratio !== null ? `${r.spike_ratio.toFixed(1)}x` : "—"}
+                      {r.pred_return_20d_pct >= 0 ? "+" : ""}
+                      {r.pred_return_20d_pct.toFixed(1)}% 20d
                     </div>
+                    <ConfidenceDots value={r.pred_confidence} />
                   </div>
                 </div>
+                {r.matched_rules.length > 0 && (
+                  <div className="mt-1">
+                    <RuleChips rules={r.matched_rules} stats={rulesById} />
+                  </div>
+                )}
                 <div className="mt-2 grid grid-cols-3 gap-2 text-[11px]">
                   <div>
                     <span className="text-muted-foreground">rank</span>{" "}
@@ -541,6 +610,96 @@ function SentimentBar({
       <span className="text-[10px] tabular-nums text-muted-foreground">
         {bull}/{bear}
       </span>
+    </div>
+  );
+}
+
+function SignalBadge({
+  signal,
+  score,
+}: {
+  signal: RedditPredictiveSignal;
+  score: number;
+}) {
+  const s = SIGNAL_STYLE[signal];
+  return (
+    <span
+      className={cn(
+        "rounded-full px-2 py-0.5 text-[10px] font-semibold tabular-nums",
+        s.cls,
+      )}
+      title={`composite score ${score.toFixed(1)}/100`}
+    >
+      {s.label}
+      <span className="ml-1 opacity-70">{score.toFixed(0)}</span>
+    </span>
+  );
+}
+
+function ConfidenceDots({ value }: { value: number }) {
+  // 4-dot scale, filled in by win-rate-distance-from-coin-flip.
+  const filled = Math.round(_clip01(value) * 4);
+  return (
+    <div className="flex items-center gap-0.5" title={`confidence ${(value * 100).toFixed(0)}%`}>
+      {[0, 1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={cn(
+            "h-1.5 w-1.5 rounded-full",
+            i < filled ? "bg-primary" : "bg-muted",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function _clip01(x: number): number {
+  if (!Number.isFinite(x)) return 0;
+  return Math.max(0, Math.min(1, x));
+}
+
+function RuleChips({
+  rules,
+  stats,
+}: {
+  rules: RedditRuleId[];
+  stats: Record<RedditRuleId, RedditRuleStats | undefined>;
+}) {
+  if (rules.length === 0) {
+    return <span className="text-[10px] text-muted-foreground">—</span>;
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {rules.map((rid) => {
+        const s = stats[rid];
+        const wr = s?.win_rate ?? null;
+        const n = s?.n_events ?? 0;
+        const isBull = s?.expected_direction === "long";
+        const cls = wr === null
+          ? "bg-muted text-muted-foreground"
+          : isBull
+            ? "bg-signal-bullish/15 text-signal-bullish"
+            : "bg-signal-bearish/15 text-signal-bearish";
+        const tip = wr === null || n < 5
+          ? `${s?.description ?? rid} (calibrating, n=${n})`
+          : `${s?.description ?? rid} — win ${(wr * 100).toFixed(0)}% over n=${n}`;
+        return (
+          <span
+            key={rid}
+            className={cn(
+              "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+              cls,
+            )}
+            title={tip}
+          >
+            {RULE_LABEL[rid]}
+            {wr !== null && n >= 5 && (
+              <span className="ml-1 opacity-70">{(wr * 100).toFixed(0)}%</span>
+            )}
+          </span>
+        );
+      })}
     </div>
   );
 }
