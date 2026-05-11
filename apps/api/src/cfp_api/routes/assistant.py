@@ -48,8 +48,24 @@ class ChatTurn(BaseModel):
     content: str
 
 
+class PageContext(BaseModel):
+    """Snapshot of what the user is currently looking at in the frontend.
+
+    Sent on every chat request so the assistant can resolve deictic references
+    ("this ticker", "here", "current sector") without forcing the user to
+    re-type the symbol that's already on screen.
+    """
+
+    route: str | None = None  # e.g. "/agents/NVDA", "/sectors/XLK"
+    ticker: str | None = None  # active stock/ETF from /agents/[ticker]
+    etf: str | None = None  # active sector ETF from /sectors/[etf]
+    tab: str | None = None  # active sub-tab within a page if any
+    query: dict[str, str] | None = None  # current URL search params
+
+
 class AssistantChatRequest(BaseModel):
     messages: list[ChatTurn] = Field(min_length=1, max_length=40)
+    context: PageContext | None = None
 
 
 # ---------- system prompt ----------
@@ -80,8 +96,44 @@ Available navigation paths:
   /network              correlation network
   /reddit               apewisdom mentions
   /catalysts            reddit RSS catalyst feed
+  /flow                 unusual options-activity feed
   /watchlist            top sectors x top names
+
+Page context:
+- A second system message titled "[Page context]" tells you which page the
+  user is currently viewing and the active ticker / ETF / tab on that page.
+- When the user says "this", "this ticker", "here", "current", "the one I'm
+  looking at", or otherwise refers to context without naming a symbol,
+  default to the active ticker/ETF from page context.
+- Don't ask the user to re-state what's already on screen. Just use it.
+- Page context can be missing or partial — if it is, fall back to asking
+  the user for the symbol.
 """
+
+
+def _format_page_context(ctx: "PageContext | None") -> str | None:
+    """Render the user's current page state as a compact system message.
+
+    Returns None if there is no useful context to send.
+    """
+    if ctx is None:
+        return None
+    lines: list[str] = []
+    if ctx.route:
+        lines.append(f"route: {ctx.route}")
+    if ctx.ticker:
+        lines.append(f"active_ticker: {ctx.ticker.upper()}")
+    if ctx.etf:
+        lines.append(f"active_sector_etf: {ctx.etf.upper()}")
+    if ctx.tab:
+        lines.append(f"active_tab: {ctx.tab}")
+    if ctx.query:
+        q = ", ".join(f"{k}={v}" for k, v in ctx.query.items() if v)
+        if q:
+            lines.append(f"query: {q}")
+    if not lines:
+        return None
+    return "[Page context] The user is currently viewing:\n" + "\n".join(lines)
 
 
 # ---------- tool definitions (OpenAI/Moonshot tool-call schema) ----------
@@ -422,12 +474,15 @@ def _sse(event: dict[str, Any]) -> str:
     return f"data: {json.dumps(event)}\n\n"
 
 
-async def _run_assistant_loop(messages: list[ChatTurn]):
+async def _run_assistant_loop(messages: list[ChatTurn], context: PageContext | None = None):
     """Stream the assistant turn — alternates LLM token-streams and tool calls
     until the model stops requesting tools or hits the cap."""
 
     model = "moonshot-v1-32k"
     history: list[dict[str, Any]] = [{"role": "system", "content": _SYSTEM_PROMPT}]
+    ctx_msg = _format_page_context(context)
+    if ctx_msg:
+        history.append({"role": "system", "content": ctx_msg})
     for m in messages:
         history.append({"role": m.role, "content": m.content})
 
@@ -538,7 +593,7 @@ async def _run_assistant_loop(messages: list[ChatTurn]):
 async def assistant_chat(req: AssistantChatRequest) -> StreamingResponse:
     """SSE stream: text tokens + tool_call events + tool_result events + done."""
     return StreamingResponse(
-        _run_assistant_loop(req.messages),
+        _run_assistant_loop(req.messages, req.context),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

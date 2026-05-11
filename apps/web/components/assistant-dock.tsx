@@ -20,11 +20,21 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { baseUrl } from "@/lib/api";
 import { parseAssistantStream } from "@/lib/sse";
 import type { AssistantStreamEvent, AssistantTurn } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+// Snapshot of where the user is in the app, sent on every chat turn so the
+// assistant can resolve "this ticker", "here", etc. without re-prompting.
+interface PageContextPayload {
+  route: string | null;
+  ticker: string | null;
+  etf: string | null;
+  tab: string | null;
+  query: Record<string, string> | null;
+}
 
 // ---- Local message model — what we render inside the dock ----
 
@@ -98,8 +108,30 @@ export function AssistantDock() {
   const [messages, setMessages] = useState<DockMessage[]>([]);
   const [streaming, setStreaming] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  function snapshotContext(): PageContextPayload {
+    const rawTicker = params?.ticker;
+    const rawEtf = params?.etf;
+    const ticker = Array.isArray(rawTicker) ? rawTicker[0] : rawTicker;
+    const etf = Array.isArray(rawEtf) ? rawEtf[0] : rawEtf;
+    const query: Record<string, string> = {};
+    if (typeof window !== "undefined") {
+      new URLSearchParams(window.location.search).forEach((v, k) => {
+        query[k] = v;
+      });
+    }
+    return {
+      route: pathname ?? null,
+      ticker: ticker ? String(ticker).toUpperCase() : null,
+      etf: etf ? String(etf).toUpperCase() : null,
+      tab: query.tab ?? null,
+      query: Object.keys(query).length ? query : null,
+    };
+  }
 
   // Auto-scroll on new content
   useEffect(() => {
@@ -136,7 +168,7 @@ export function AssistantDock() {
       const resp = await fetch(`${baseUrl()}/v1/assistant/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: pruned }),
+        body: JSON.stringify({ messages: pruned, context: snapshotContext() }),
         signal: controller.signal,
       });
 
