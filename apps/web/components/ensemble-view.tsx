@@ -100,7 +100,8 @@ export function EnsembleView({ ticker }: { ticker: string }) {
   });
 
   const runMutation = useMutation({
-    mutationFn: () => api.runEnsemble(upper),
+    mutationFn: (opts?: { provider?: string; tier?: string }) =>
+      api.runEnsemble(upper, undefined, opts),
     onSuccess: (res) => {
       setActiveRunTs(res.run_ts);
       setRunError(null);
@@ -109,6 +110,19 @@ export function EnsembleView({ ticker }: { ticker: string }) {
       setRunError(err.message);
     },
   });
+
+  const [deepMenuOpen, setDeepMenuOpen] = useState(false);
+  const deepMenuRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!deepMenuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (deepMenuRef.current && !deepMenuRef.current.contains(e.target as Node)) {
+        setDeepMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [deepMenuOpen]);
 
   const isLiveActive = activeRunTs !== null;
   const data: AgentsForTickerResponse | null = useMemo(() => {
@@ -195,7 +209,7 @@ export function EnsembleView({ ticker }: { ticker: string }) {
             </div>
           )}
           <button
-            onClick={() => runMutation.mutate()}
+            onClick={() => runMutation.mutate(undefined)}
             disabled={runMutation.isPending || (isLiveActive && !isComplete)}
             className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
@@ -205,6 +219,40 @@ export function EnsembleView({ ticker }: { ticker: string }) {
                 ? `Running ${completedCount}/${expectedTotal}…`
                 : "Run ensemble"}
           </button>
+          <div className="relative" ref={deepMenuRef}>
+            <button
+              onClick={() => setDeepMenuOpen((v) => !v)}
+              disabled={runMutation.isPending || (isLiveActive && !isComplete)}
+              title="Re-run on Anthropic Claude — costs real money per run"
+              className="rounded-full border border-primary/40 bg-card px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/5 disabled:opacity-60"
+            >
+              Deep Analysis ▾
+            </button>
+            {deepMenuOpen && (
+              <div className="absolute right-0 z-10 mt-1 w-56 overflow-hidden rounded-lg border border-border bg-popover text-sm shadow-lg">
+                <button
+                  onClick={() => {
+                    setDeepMenuOpen(false);
+                    runMutation.mutate({ provider: "anthropic", tier: "sonnet" });
+                  }}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-muted"
+                >
+                  <span className="font-medium">Sonnet 4.6</span>
+                  <span className="text-xs text-muted-foreground">~$0.19</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setDeepMenuOpen(false);
+                    runMutation.mutate({ provider: "anthropic", tier: "opus" });
+                  }}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-muted"
+                >
+                  <span className="font-medium">Opus 4.7</span>
+                  <span className="text-xs text-muted-foreground">~$0.95</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

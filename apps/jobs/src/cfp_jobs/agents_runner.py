@@ -1273,6 +1273,7 @@ def run_analysts_streaming(
     *,
     run_ts: datetime,
     include_personas: bool = True,
+    llm_override: dict[str, str] | None = None,
 ) -> dict:
     """Run the ensemble and write each signal to the DB as it lands.
 
@@ -1283,6 +1284,9 @@ def run_analysts_streaming(
     All signals share the supplied ``run_ts`` so a poll can fetch them in
     one query. The PM signal is written last (synthesis stage runs sequentially
     after all parallel nodes), so its presence == "run is complete".
+
+    ``llm_override`` (Deep Analysis button) routes every LLM call in this run
+    to the given provider/model instead of the process-wide default.
     """
     from cfp_agents.observability import flush as _lf_flush
     from cfp_agents.observability import trace_run
@@ -1300,6 +1304,8 @@ def run_analysts_streaming(
         "analyst_signals": [],
         "persona_signals": [],
     }
+    if llm_override:
+        state["llm_override"] = llm_override
 
     n_persisted = 0
     # Wrap the entire ensemble run in one Langfuse trace so all per-persona
@@ -1311,6 +1317,7 @@ def run_analysts_streaming(
             "sector": bundle.instrument.sector,
             "run_ts": run_ts.isoformat(),
             "include_personas": include_personas,
+            "llm_override": llm_override,
         },
     ):
         # graph.stream() yields one chunk per node completion. Each chunk is

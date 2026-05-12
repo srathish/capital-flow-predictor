@@ -35,7 +35,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from cfp_agents.llm import LlmClient
-from cfp_agents.state import AgentSignal, AnalysisState
+from cfp_agents.state import AgentSignal, AnalysisState, llm_override_for
 
 # ───────────────────────── Output schema ─────────────────────────
 
@@ -219,6 +219,8 @@ class _RebuttalNode:
             side=self.side,
         )
 
+        provider_override, model_override = llm_override_for(state)
+
         try:
             parsed = self._llm.parse(
                 system_prompt=system_prompt,
@@ -233,6 +235,8 @@ class _RebuttalNode:
                     "self_persona": self_signal.agent,
                     "opponent_persona": opponent.agent,
                 },
+                provider_override=provider_override,
+                model_override=model_override,
             )
         except Exception as e:
             return self._neutral(ticker, f"LLM call failed: {type(e).__name__}: {e}")

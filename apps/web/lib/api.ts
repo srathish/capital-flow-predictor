@@ -301,8 +301,16 @@ export const api = {
       `/v1/agents/${encodeURIComponent(ticker)}?run_ts=${encodeURIComponent(runTs)}`
     );
   },
-  runEnsemble(ticker: string, sector?: string): Promise<RunResponse> {
-    const qs = sector ? `?sector=${encodeURIComponent(sector)}` : "";
+  runEnsemble(
+    ticker: string,
+    sector?: string,
+    opts?: { provider?: string; tier?: string }
+  ): Promise<RunResponse> {
+    const params = new URLSearchParams();
+    if (sector) params.set("sector", sector);
+    if (opts?.provider) params.set("provider", opts.provider);
+    if (opts?.tier) params.set("tier", opts.tier);
+    const qs = params.toString() ? `?${params.toString()}` : "";
     return fetch(`${baseUrl()}/v1/agents/${encodeURIComponent(ticker)}/run${qs}`, {
       method: "POST",
       headers: { Accept: "application/json", ...authHeaders() },

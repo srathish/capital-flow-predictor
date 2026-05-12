@@ -19,7 +19,7 @@ from typing import ClassVar
 from pydantic import BaseModel
 
 from cfp_agents.llm import LlmClient
-from cfp_agents.state import AgentSignal, AnalysisState
+from cfp_agents.state import AgentSignal, AnalysisState, llm_override_for
 
 
 class SynthesizerAgent(ABC):
@@ -47,6 +47,8 @@ class SynthesizerAgent(ABC):
         except Exception as e:
             return self._neutral_fallback(ticker, f"prompt build failed: {e}")
 
+        provider_override, model_override = llm_override_for(state)
+
         try:
             parsed = self._llm.parse(
                 system_prompt=self.system_prompt,
@@ -55,6 +57,8 @@ class SynthesizerAgent(ABC):
                 max_tokens=1500,
                 trace_name=f"synth.{self.name}",
                 trace_metadata={"ticker": ticker, "kind": "synthesis", "agent": self.name},
+                provider_override=provider_override,
+                model_override=model_override,
             )
         except Exception as e:
             return self._neutral_fallback(

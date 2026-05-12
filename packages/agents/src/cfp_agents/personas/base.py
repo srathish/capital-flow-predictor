@@ -19,9 +19,8 @@ from cfp_shared import EvidenceBundle, Instrument
 
 from cfp_agents.bundle_compute import compute_fundamentals_ctx, compute_price_context
 from cfp_agents.llm import LlmClient, PersonaOutput
-from cfp_agents.state import llm_override_for
 from cfp_agents.personas.examples import EXAMPLES
-from cfp_agents.state import AgentSignal, AnalysisState
+from cfp_agents.state import AgentSignal, AnalysisState, llm_override_for
 
 
 def _fmt(value: float | None, *, pct: bool = False, currency: bool = False) -> str:
@@ -277,12 +276,16 @@ class BasePersona(ABC):  # noqa: B024 — kept abstract for taxonomy; subclasses
         # keeps base prompts portable and the example registry centralized.
         full_system = self.system_prompt + EXAMPLES.get(self.name, "")
 
+        provider_override, model_override = llm_override_for(state)
+
         try:
             parsed: PersonaOutput | None = self._llm.invoke_persona(
                 system_prompt=full_system,
                 user_prompt=user_prompt,
                 trace_name=f"persona.{self.name}",
                 trace_metadata={"ticker": ticker, "kind": "persona", "agent": self.name},
+                provider_override=provider_override,
+                model_override=model_override,
             )
         except Exception as e:
             return AgentSignal(

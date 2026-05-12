@@ -392,7 +392,20 @@ class RunStatusResponse(BaseModel):
     signals: list[AgentSignalEntry]
 
 
-def _kickoff_ensemble(ticker: str, run_ts: datetime, sector: str = "") -> None:
+# Maps the UI "tier" query param to a concrete Anthropic model. Keep cheap
+# tiers first so users see them before they click the spendy one.
+_DEEP_ANALYSIS_TIERS: dict[str, str] = {
+    "sonnet": "claude-sonnet-4-6",
+    "opus": "claude-opus-4-7",
+}
+
+
+def _kickoff_ensemble(
+    ticker: str,
+    run_ts: datetime,
+    sector: str = "",
+    llm_override: dict[str, str] | None = None,
+) -> None:
     """Run the streaming ensemble synchronously inside a worker thread.
 
     Lives outside the async event loop so LangGraph's blocking node calls don't
@@ -408,6 +421,7 @@ def _kickoff_ensemble(ticker: str, run_ts: datetime, sector: str = "") -> None:
             sector=sector,
             run_ts=run_ts,
             include_personas=True,
+            llm_override=llm_override,
         )
     except Exception as e:
         log.exception("ensemble run failed for %s/%s: %s", ticker, run_ts.isoformat(), e)
@@ -419,16 +433,37 @@ def _kickoff_ensemble(ticker: str, run_ts: datetime, sector: str = "") -> None:
     status_code=202,
     dependencies=[Depends(rate_limit_run)],
 )
-async def run_ensemble(ticker: str, sector: str = Query("")) -> RunResponse:
+async def run_ensemble(
+    ticker: str,
+    sector: str = Query(""),
+    provider: str = Query("", description="Override LLM provider for this run (e.g. 'anthropic'). Empty = process default."),
+    tier: str = Query("", description="Deep Analysis tier when provider=anthropic: 'sonnet' or 'opus'."),
+) -> RunResponse:
     """Kick off a new ensemble run for `ticker`. Returns immediately with a run_ts.
 
     The actual run takes ~30-40 seconds. Poll
     ``GET /v1/agents/{ticker}/runs/{run_ts}`` to watch agents complete one by one.
+
+    When ``provider`` is supplied (Deep Analysis button), every LLM call in the
+    run is routed to that provider instead of the process default. For
+    ``provider=anthropic``, ``tier`` selects the model.
     """
     ticker = ticker.upper()
     run_ts = datetime.now(UTC)
 
-    task = asyncio.create_task(asyncio.to_thread(_kickoff_ensemble, ticker, run_ts, sector))
+    llm_override: dict[str, str] | None = None
+    if provider:
+        prov = provider.lower()
+        model: str | None = None
+        if prov == "anthropic":
+            model = _DEEP_ANALYSIS_TIERS.get(tier.lower()) if tier else None
+        llm_override = {"provider": prov}
+        if model:
+            llm_override["model"] = model
+
+    task = asyncio.create_task(
+        asyncio.to_thread(_kickoff_ensemble, ticker, run_ts, sector, llm_override)
+    )
     _running_tasks.add(task)
     task.add_done_callback(_running_tasks.discard)
     ensemble_runs_total.inc(ticker=ticker)
