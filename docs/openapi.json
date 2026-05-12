@@ -1,6 +1,33 @@
 {
   "components": {
     "schemas": {
+      "AddTickerRequest": {
+        "properties": {
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "ticker": {
+            "maxLength": 12,
+            "minLength": 1,
+            "title": "Ticker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticker"
+        ],
+        "title": "AddTickerRequest",
+        "type": "object"
+      },
       "AgentScore": {
         "properties": {
           "agent": {
@@ -1053,6 +1080,57 @@
           "summary"
         ],
         "title": "ComparisonResponse",
+        "type": "object"
+      },
+      "CustomWatchlistEntry": {
+        "properties": {
+          "added_at": {
+            "format": "date-time",
+            "title": "Added At",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "ticker": {
+            "title": "Ticker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticker",
+          "added_at"
+        ],
+        "title": "CustomWatchlistEntry",
+        "type": "object"
+      },
+      "CustomWatchlistResponse": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/CustomWatchlistEntry"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "entries"
+        ],
+        "title": "CustomWatchlistResponse",
         "type": "object"
       },
       "ExpandedEdge": {
@@ -5314,7 +5392,7 @@
     },
     "/v1/agents/{ticker}/run": {
       "post": {
-        "description": "Kick off a new ensemble run for `ticker`. Returns immediately with a run_ts.\n\nThe actual run takes ~30-40 seconds. Poll\n``GET /v1/agents/{ticker}/runs/{run_ts}`` to watch agents complete one by one.",
+        "description": "Kick off a new ensemble run for `ticker`. Returns immediately with a run_ts.\n\nThe actual run takes ~30-40 seconds. Poll\n``GET /v1/agents/{ticker}/runs/{run_ts}`` to watch agents complete one by one.\n\nWhen ``provider`` is supplied (Deep Analysis button), every LLM call in the\nrun is routed to that provider instead of the process default. For\n``provider=anthropic``, ``tier`` selects the model.",
         "operationId": "run_ensemble_v1_agents__ticker__run_post",
         "parameters": [
           {
@@ -5333,6 +5411,30 @@
             "schema": {
               "default": "",
               "title": "Sector",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Override LLM provider for this run (e.g. 'anthropic'). Empty = process default.",
+            "in": "query",
+            "name": "provider",
+            "required": false,
+            "schema": {
+              "default": "",
+              "description": "Override LLM provider for this run (e.g. 'anthropic'). Empty = process default.",
+              "title": "Provider",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Deep Analysis tier when provider=anthropic: 'sonnet' or 'opus'.",
+            "in": "query",
+            "name": "tier",
+            "required": false,
+            "schema": {
+              "default": "",
+              "description": "Deep Analysis tier when provider=anthropic: 'sonnet' or 'opus'.",
+              "title": "Tier",
               "type": "string"
             }
           },
@@ -5651,6 +5753,137 @@
         "summary": "Assistant Chat",
         "tags": [
           "assistant"
+        ]
+      }
+    },
+    "/v1/backtest/monte-carlo": {
+      "get": {
+        "description": "Return the bootstrap percentile distribution of return/DD/Sharpe/win-rate.",
+        "operationId": "monte_carlo_v1_backtest_monte_carlo_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "maxLength": 12,
+              "minLength": 1,
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Lookback window in trading days",
+            "in": "query",
+            "name": "days",
+            "required": false,
+            "schema": {
+              "default": 252,
+              "description": "Lookback window in trading days",
+              "maximum": 2520,
+              "minimum": 30,
+              "title": "Days",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Bootstrap sample count",
+            "in": "query",
+            "name": "n_sims",
+            "required": false,
+            "schema": {
+              "default": 2000,
+              "description": "Bootstrap sample count",
+              "maximum": 20000,
+              "minimum": 100,
+              "title": "N Sims",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Block bootstrap size; >1 preserves autocorrelation",
+            "in": "query",
+            "name": "block_size",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "Block bootstrap size; >1 preserves autocorrelation",
+              "maximum": 60,
+              "minimum": 1,
+              "title": "Block Size",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "seed",
+            "required": false,
+            "schema": {
+              "default": 42,
+              "title": "Seed",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Monte Carlo V1 Backtest Monte Carlo Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Monte Carlo",
+        "tags": [
+          "backtest"
         ]
       }
     },
@@ -8102,6 +8335,268 @@
           }
         },
         "summary": "Get Watchlist",
+        "tags": [
+          "watchlist"
+        ]
+      }
+    },
+    "/v1/watchlist/custom/add": {
+      "post": {
+        "operationId": "add_to_custom_watchlist_v1_watchlist_custom_add_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Session-Id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTickerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomWatchlistResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add To Custom Watchlist",
+        "tags": [
+          "watchlist"
+        ]
+      }
+    },
+    "/v1/watchlist/custom/list": {
+      "get": {
+        "operationId": "list_custom_watchlist_v1_watchlist_custom_list_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Session-Id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomWatchlistResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Custom Watchlist",
+        "tags": [
+          "watchlist"
+        ]
+      }
+    },
+    "/v1/watchlist/custom/{ticker}": {
+      "delete": {
+        "operationId": "remove_from_custom_watchlist_v1_watchlist_custom__ticker__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ticker",
+            "required": true,
+            "schema": {
+              "title": "Ticker",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Session-Id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomWatchlistResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove From Custom Watchlist",
         "tags": [
           "watchlist"
         ]

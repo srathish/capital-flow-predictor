@@ -67,6 +67,9 @@ Rejections return `429 Too Many Requests` with a `Retry-After` header.
 ### `/v1/assistant/chat`
 - **POST** — Assistant Chat
 
+### `/v1/backtest/monte-carlo`
+- **GET** — Monte Carlo
+
 ### `/v1/flow/unusual`
 - **GET** — 
 
@@ -135,6 +138,15 @@ Rejections return `429 Too Many Requests` with a `Retry-After` header.
 
 ### `/v1/watchlist`
 - **GET** — Get Watchlist
+
+### `/v1/watchlist/custom/add`
+- **POST** — 
+
+### `/v1/watchlist/custom/list`
+- **GET** — 
+
+### `/v1/watchlist/custom/{ticker}`
+- **DELETE** — 
 
 ### `/v1/watchlist/{sector}`
 - **GET** — Get Watchlist Sector

@@ -310,13 +310,38 @@ CI runs the same commands plus a Postgres service container — see
 ## Deploy
 
 API: Railway, Dockerfile-based — [infra/railway.toml](infra/railway.toml).
-Web: Vercel — [apps/web/vercel.json](apps/web/vercel.json), set
-`NEXT_PUBLIC_API_BASE_URL` to your deployed API URL.
+Web: Vercel — [apps/web/vercel.json](apps/web/vercel.json).
 
-**On every prod deploy: run `make migrate` against the prod DB.** Migrations
-are not auto-applied at boot. (Symptom of skipping this: tabs that depend on
-new tables — most recently the Reddit tab — return 500 with `relation "X"
-does not exist`.)
+**Required env vars** (full list with sensible defaults: [.env.example](.env.example)):
+
+| Env | Where | Value |
+|-----|-------|-------|
+| `DATABASE_URL` | Railway | Auto-injected by Postgres add-on |
+| `API_KEYS_RAW` | Railway | `openssl rand -hex 32` — leave empty to disable auth (dev only) |
+| `CORS_ORIGINS_RAW` | Railway | `https://<your-vercel-domain>` |
+| `ANTHROPIC_API_KEY` | Railway | Required for the **Deep Analysis** Claude path |
+| `MOONSHOT_API_KEY` | Railway | Default LLM for the ensemble |
+| `UNUSUAL_WHALES_API_KEY` | Railway | Required for flow/dark-pool/insider context |
+| `FRED_API_KEY`, `FMP_API_KEY` | Railway | Required for macro + fundamentals |
+| `NEXT_PUBLIC_API_BASE_URL` | Vercel | `https://<your-railway-domain>` |
+| `NEXT_PUBLIC_API_KEY` | Vercel | **Same value** as one of the `API_KEYS_RAW` entries |
+
+Migrations are auto-applied at boot via the FastAPI lifespan hook
+(`apps/api/src/cfp_api/migrations.py`) — no manual `make migrate` step needed
+unless you're seeding into a brand-new DB.
+
+**Post-deploy verification:**
+
+```bash
+API_BASE=https://<your-api> API_KEY=<your-key> ./scripts/smoke_test.sh
+```
+
+Should print `8 passed, 0 failed`. The same script runs on every push to `main`
+via [.github/workflows/smoke.yml](.github/workflows/smoke.yml). See
+[docs/RUNBOOK_VERIFY.md](docs/RUNBOOK_VERIFY.md) for deeper checks.
+
+**Endpoints documented in [docs/API.md](docs/API.md)** (regenerate via
+`python scripts/export_openapi.py` after route changes).
 
 ---
 

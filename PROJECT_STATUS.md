@@ -549,3 +549,49 @@ Highlights (reverse chronological):
 6. `/v1/agents/scorecard?horizon=20` — JSON response, mostly empty until `cfp-jobs eval-agents` has run for ≥5 trading days against accumulated agent_signals.
 7. `/agents/IREN/v2` — Smallville office view loads with 23 little people in 5 rooms. Click a persona disc → speech bubble with thesis. Trigger Run → discs pulse blue ("thinking"), then transition to green/red/gray as signals land. Toggle pill swaps back to v1 grid.
 8. Bull/bear researchers visible in `/agents/IREN` v1 ensemble grid under "Researchers (adversarial)" section. Trader's `bull_summary` / `bear_summary` payloads should now read like distilled briefs from the researchers, not flat aggregations of all 21 votes.
+
+---
+
+## 15. Production hardening (2026-05-11)
+
+System-wide audit pass that turned the project from "dev demo" to "shippable to outside users." All landed in main as four commits (`23f3ba6` → `b2ef1d8` → `5673d88` → and the Deep Analysis push).
+
+### API
+- **Auth.** Bearer / X-API-Key dep on every `/v1/*` route. Driven by `API_KEYS_RAW` env (comma-separated; empty = auth disabled for dev). Constant-time compare.
+- **Rate limit.** In-process sliding window per identity (api key or IP). Two buckets: `default` (120/min) and `run` (30/hour) for the LLM-expensive `/v1/agents/*/run` + `/chat` paths.
+- **`/metrics`** Prometheus text format — `cfp_http_requests_total`, `cfp_http_request_duration_seconds` (histogram), `cfp_ensemble_runs_total{ticker}`, `cfp_auth_failures_total{reason}`, `cfp_rate_limit_hits_total{bucket}`.
+- **Structured JSON logging** with per-request `request_id` propagated via middleware + `X-Request-ID` response header.
+- **`/v1/health/detailed`** per-table freshness (max_ts, age_hours, row_count, fresh boolean) + `stale_tables[]` flag. Public (load balancer probes).
+- **`/v1/agents/{T}/comparison`** pairwise persona snapshot (e.g. Buffett vs Burry on NVDA).
+- **`/v1/backtest/monte-carlo`** bootstrap return/DD/Sharpe distribution for any ticker.
+- **`/v1/watchlist/custom/*`** session-keyed personal watchlist (add/list/remove). Trivial to switch to user-id when real auth lands.
+- **Auto-migration on boot** via `cfp_api.migrations.apply_pending_migrations` — no more `make migrate` after every deploy.
+
+### Pipeline
+- **Regime detection** (`cfp_features.regime`): VIX + SPY 50d/200d + breadth → `{bull, chop, bear}` + `risk_multiplier` (1.0 / 0.5 / 0.0). Wired into `MarketRegimeCtx` on every EvidenceBundle.
+- **Position sizing** (`cfp_models.position_sizing`): half-Kelly × regime multiplier × drawdown brake × 10% per-position cap. PM agent's `deterministic_target_weight` now uses it instead of raw `confidence × max_per_position`.
+- **Missing signals** in `MarketRegimeCtx`: `insider_net_buy_30d_usd`, `dark_pool_volume_ratio`, `reddit_mention_velocity_7d`.
+- **Monte Carlo** (`cfp_models.monte_carlo`): IID + stationary-block bootstrap, used by the new backtest endpoint.
+
+### Tests
+- 76 backend (was 31) — auth, rate limit, metrics, comparison, jobs upsert SQL contract, eval hit classifier, migration discovery, regime labels, signal builders, Kelly math, drawdown brake, MC percentile ordering.
+- 22 frontend (was 0) — Vitest setup; covers `lib/api.ts` query-string assembly + ApiError, `utils.ts`, `catalyst-categories.ts` classifyKeywords.
+
+### Ops
+- `scripts/smoke_test.sh` — 6-8 checks against any `API_BASE`. Used by [.github/workflows/smoke.yml](.github/workflows/smoke.yml) post-deploy.
+- `infra/seeds/` — 3 SQL fixtures so a fresh local DB has something to render.
+- `infra/rollback/down.sql` + RPO/RTO doc.
+- `infra/terraform/` — scaffolding for codifying Vercel env vars (Railway provider still community-maintained, deferred).
+- `docs/API.md` (auto-generated), `docs/PERSONAS.md` (versioned roster + changelog), `docs/STAGING.md`, `docs/RUNBOOK_VERIFY.md`.
+- `.env.example` covers all new env vars including `API_KEYS_RAW`, `RATE_LIMIT_*`, `HEALTH_STALE_HOURS_*`.
+
+### Deploy-time fixes from this session
+- Rotated `API_KEYS_RAW` from the placeholder `sk_live_abc,sk_live_def` (which had leaked into chat logs) to a fresh 64-char hex value on both Railway + Vercel.
+- Added `ANTHROPIC_API_KEY` on Railway to unblock the Deep Analysis (Claude Sonnet / Opus) route.
+- Confirmed end-to-end: 8/8 smoke green in prod, Deep Analysis run on RKLB reached 22/25 agents in 80s.
+
+### Known follow-ups
+- `stale_tables: ['uw_insider_transactions']` — UW insider ingest cron in `.github/workflows/data-refresh.yml` needs investigation; not a code regression.
+- Bundle building takes ~60s on a brand-new ticker (10+ sequential UW calls). Parallelizing with `asyncio.gather` would cut Deep Analysis end-to-end from ~90s to ~30s.
+- Personas could run concurrently inside LangGraph (saves another ~15s).
+- `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000` is set on Railway service env (leaked from `.env` import) — harmless, but should be removed for hygiene.
