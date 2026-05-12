@@ -155,9 +155,29 @@ export function ChatPanel({ ticker, runTs, availableAgents }: Props) {
                     {m.role === "user" ? "You" : target === "ensemble" ? "Ensemble" : prettyLabel(target)}
                   </div>
                   <div className="whitespace-pre-wrap leading-relaxed">
-                    {m.content}
-                    {streaming && i === messages.length - 1 && m.role === "assistant" && (
-                      <span className="ml-0.5 inline-block h-3 w-1.5 animate-pulse bg-primary align-middle" />
+                    {streaming && i === messages.length - 1 && m.role === "assistant" && !m.content ? (
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                        thinking
+                        <span className="inline-flex">
+                          {[0, 1, 2].map((d) => (
+                            <span
+                              key={d}
+                              className="ml-[1px] animate-pulse"
+                              style={{ animationDelay: `${d * 0.2}s` }}
+                            >
+                              .
+                            </span>
+                          ))}
+                        </span>
+                      </span>
+                    ) : (
+                      <>
+                        {m.content}
+                        {streaming && i === messages.length - 1 && m.role === "assistant" && (
+                          <span className="ml-0.5 inline-block h-3 w-1.5 animate-pulse bg-primary align-middle" />
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

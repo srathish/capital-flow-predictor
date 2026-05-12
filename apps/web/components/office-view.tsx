@@ -751,8 +751,8 @@ export function OfficeView({ ticker }: { ticker: string }) {
             absolutely-positioned HTML so it can use Tailwind. */}
         {hoveredId && (() => {
           const a = AGENTS.find((x) => x.id === hoveredId);
-          const sig = a ? byAgent.get(a.id) : undefined;
-          if (!a || !sig?.rationale) return null;
+          if (!a) return null;
+          const sig = byAgent.get(a.id);
           const p = animRef.current[a.id];
           if (!p) return null;
           const { sx, sy } = iso(p.x, p.y, 36);
@@ -762,6 +762,8 @@ export function OfficeView({ ticker }: { ticker: string }) {
           const top = ((sy - view.y) / view.h) * 100;
           // Hide the bubble if the sim is offscreen.
           if (left < 0 || left > 100 || top < 0 || top > 100) return null;
+          const pending = !sig?.rationale;
+          const isLivePending = pending && isLiveActive && !isComplete;
           return (
             <div
               className="pointer-events-none absolute z-30 w-72 -translate-x-1/2 -translate-y-full rounded-lg border border-border bg-card p-3 text-xs shadow-xl"
@@ -771,14 +773,38 @@ export function OfficeView({ ticker }: { ticker: string }) {
                 <span className="font-semibold">
                   {a.emoji} {a.display}
                 </span>
-                <SignalBadge signal={sig.signal} />
+                {sig ? (
+                  <SignalBadge signal={sig.signal} />
+                ) : isLivePending ? (
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                    thinking
+                  </span>
+                ) : (
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    pending
+                  </span>
+                )}
               </div>
-              <p className="line-clamp-4 leading-snug text-muted-foreground">
-                {sig.rationale}
-              </p>
-              <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                conf <span className="num text-foreground">{sig.confidence.toFixed(2)}</span>
-              </div>
+              {sig?.rationale ? (
+                <>
+                  <p className="line-clamp-4 leading-snug text-muted-foreground">
+                    {sig.rationale}
+                  </p>
+                  <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    conf <span className="num text-foreground">{sig.confidence.toFixed(2)}</span>
+                  </div>
+                </>
+              ) : isLivePending ? (
+                <p className="leading-snug text-muted-foreground">
+                  Thinking
+                  <DotPulse />
+                </p>
+              ) : (
+                <p className="leading-snug text-muted-foreground">
+                  No signal yet for this agent on this run.
+                </p>
+              )}
             </div>
           );
         })()}
@@ -820,10 +846,14 @@ export function OfficeView({ ticker }: { ticker: string }) {
               </div>
               {selectedSignal?.rationale ? (
                 <p className="leading-relaxed text-muted-foreground">{selectedSignal.rationale}</p>
+              ) : isLiveActive && !isComplete ? (
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                  Thinking<DotPulse />
+                </p>
               ) : (
                 <p className="text-muted-foreground">
-                  No signal yet for this agent on this run.{" "}
-                  {isLiveActive && !isComplete && "Still thinking…"}
+                  No signal yet for this agent on this run.
                 </p>
               )}
             </div>
@@ -1233,6 +1263,24 @@ function Sim({
         </g>
       </g>
     </g>
+  );
+}
+
+/** Animated "..." that follows the word "Thinking" so a pending agent
+ *  reads as actively working instead of just blank. */
+function DotPulse() {
+  return (
+    <span className="inline-flex">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="ml-[1px] inline-block animate-pulse"
+          style={{ animationDelay: `${i * 0.2}s` }}
+        >
+          .
+        </span>
+      ))}
+    </span>
   );
 }
 
