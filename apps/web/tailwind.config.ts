@@ -37,11 +37,21 @@ const config: Config = {
       },
       animation: {
         "fade-in": "fadeIn 200ms ease-out",
+        "bounce-slow": "bounceSlow 2s ease-in-out infinite",
+        shimmer: "shimmer 2.4s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },
+        },
+        bounceSlow: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-3px)" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
         },
       },
     },

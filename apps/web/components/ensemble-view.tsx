@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { api } from "@/lib/api";
@@ -361,24 +361,140 @@ function AgentSection({
   );
 }
 
+// Agent-specific "what would this persona be doing right now" phrases.
+// These rotate while the agent is thinking so each card feels alive and
+// hints at the agent's actual reasoning style. Fallback used for anyone
+// not listed.
+const PENDING_PHRASES: Record<string, string[]> = {
+  trader:            ["Scanning the tape",        "Sizing the entry",       "Reading the order book", "Adjudicating bull vs bear"],
+  risk_manager:      ["Stress-testing drawdowns", "Modeling tail scenarios", "Checking correlation",   "Setting position limits"],
+  portfolio_manager: ["Weighing conviction",      "Synthesizing all views",  "Sizing the position",    "Calling the trade"],
+  bull_researcher:   ["Building the long thesis", "Hunting for upside",      "Modeling growth",        "Stacking the bullish case"],
+  bear_researcher:   ["Looking for cracks",       "Modeling the downside",   "Hunting for red flags",  "Stacking the bearish case"],
+  buffett:           ["Calculating intrinsic value", "Checking moat strength", "Reading the 10-K",     "Measuring margin of safety"],
+  burry:             ["Reading 10-K footnotes",   "Hunting for accounting tricks", "Modeling tail risk", "Counting shorts"],
+  druckenmiller:     ["Watching central banks",   "Reading the macro tape",  "Sizing a top-down bet"],
+  taleb:             ["Modeling fat tails",       "Pricing convexity",       "Stress-testing extremes"],
+  soros:             ["Looking for reflexivity",  "Hunting for the inflection", "Reading market psychology"],
+  simons:            ["Running the model",        "Crunching the factors",   "Backtesting signals"],
+  klarman:           ["Measuring margin of safety", "Reading the balance sheet", "Hunting for mispricings"],
+  greenblatt:        ["Ranking on ROIC",          "Sorting by earnings yield", "Running the Magic Formula"],
+  minervini:         ["Checking the trend template", "Watching volume thrust", "Looking for VCP setups"],
+  cathie_wood:       ["Modeling S-curves",        "Sizing disruption",       "Forecasting TAM"],
+  damodaran:         ["Building the DCF",         "Stress-testing assumptions", "Computing cost of capital"],
+  lynch:             ["Looking for ten-baggers",  "Walking the mall",        "Checking PEG"],
+  ackman:            ["Building the activist case", "Stress-testing the franchise", "Pressuring management"],
+  technicals:        ["Computing RSI / MACD",     "Reading the chart",       "Scanning support/resistance"],
+  fundamentals:      ["Pulling the 10-Q",         "Modeling growth",         "Reading the footnotes"],
+  sentiment:         ["Reading social posts",     "Measuring crowd mood",    "Counting bullish mentions"],
+  news:              ["Scanning headlines",       "Reading press releases",  "Weighing the catalysts"],
+  flow:              ["Watching options flow",    "Tracking dark pool prints", "Sizing unusual activity"],
+};
+const DEFAULT_PHRASES = ["Reading the data", "Building the thesis", "Weighing the evidence", "Drafting the call"];
+
+const PENDING_EMOJI: Record<string, string> = {
+  trader: "🧠", risk_manager: "🧯", portfolio_manager: "👔",
+  bull_researcher: "🐂", bear_researcher: "🐻",
+  buffett: "👴", burry: "🥸", druckenmiller: "🤵", taleb: "🧔", soros: "🧓",
+  simons: "👨‍🔬", klarman: "👨‍💼", greenblatt: "🤓", minervini: "💪",
+  cathie_wood: "👩‍💻", damodaran: "👨‍🏫", lynch: "🧑‍💼", ackman: "👨‍⚖️",
+  technicals: "📈", fundamentals: "📊", sentiment: "💬", news: "📰", flow: "🌊",
+};
+
 function PendingCard({ name, live }: { name: string; live: boolean }) {
-  return (
-    <div className="flex h-full min-h-[176px] flex-col rounded-lg border border-dashed bg-muted/20 p-4">
-      <div className="flex items-center justify-between">
+  const phrases = PENDING_PHRASES[name] ?? DEFAULT_PHRASES;
+  const emoji = PENDING_EMOJI[name] ?? "🤔";
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const startedAt = useRef<number | null>(null);
+
+  // Only spin the rotators while live — keep the card cheap when idle.
+  useEffect(() => {
+    if (!live) {
+      startedAt.current = null;
+      setElapsed(0);
+      return;
+    }
+    startedAt.current = performance.now();
+    const phraseId = window.setInterval(() => {
+      setPhraseIdx((i) => (i + 1) % phrases.length);
+    }, 2200);
+    const tickId = window.setInterval(() => {
+      if (startedAt.current !== null) {
+        setElapsed(Math.floor((performance.now() - startedAt.current) / 1000));
+      }
+    }, 250);
+    return () => {
+      window.clearInterval(phraseId);
+      window.clearInterval(tickId);
+    };
+  }, [live, phrases.length]);
+
+  if (!live) {
+    // Idle (between runs, or never run) — keep it quiet.
+    return (
+      <div className="flex h-full min-h-[176px] flex-col rounded-lg border border-dashed bg-muted/20 p-4">
         <div className="text-sm font-semibold text-muted-foreground">
           {PRETTY_NAMES[name] ?? name}
         </div>
-        {live && (
-          <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-            <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-            thinking
-          </span>
-        )}
+        <p className="mt-4 text-xs text-muted-foreground">
+          No signal yet — run the ensemble to wake this agent up.
+        </p>
       </div>
-      <div className="mt-4 space-y-2">
+    );
+  }
+
+  return (
+    <div className="relative flex h-full min-h-[176px] flex-col overflow-hidden rounded-lg border border-dashed border-primary/30 bg-gradient-to-br from-primary/[0.06] via-card to-card p-4">
+      {/* Subtle scanning shimmer to imply work in progress */}
+      <div className="pointer-events-none absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-primary/[0.08] to-transparent" />
+      <div className="relative flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-lg animate-bounce-slow" aria-hidden>
+            {emoji}
+          </span>
+          <div className="text-sm font-semibold text-foreground">
+            {PRETTY_NAMES[name] ?? name}
+          </div>
+        </div>
+        <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+          <span className="relative inline-flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-70" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+          </span>
+          thinking · {elapsed}s
+        </span>
+      </div>
+
+      {/* Rotating status line — fades in/out as it cycles */}
+      <div className="relative mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <span key={phraseIdx} className="animate-fade-in italic">
+          {phrases[phraseIdx]}
+        </span>
+        <span className="inline-flex">
+          {[0, 1, 2].map((d) => (
+            <span
+              key={d}
+              className="animate-pulse"
+              style={{ animationDelay: `${d * 0.2}s` }}
+            >
+              .
+            </span>
+          ))}
+        </span>
+      </div>
+
+      {/* Pretend "tokens streaming" lines — they cycle width to feel alive */}
+      <div className="relative mt-auto space-y-2 pt-4">
         <div className="h-2 w-full animate-pulse rounded bg-muted" />
-        <div className="h-2 w-4/5 animate-pulse rounded bg-muted" />
-        <div className="h-2 w-3/5 animate-pulse rounded bg-muted" />
+        <div
+          className="h-2 animate-pulse rounded bg-muted"
+          style={{ width: `${50 + ((phraseIdx * 17) % 40)}%` }}
+        />
+        <div
+          className="h-2 animate-pulse rounded bg-muted"
+          style={{ width: `${30 + ((phraseIdx * 23) % 50)}%` }}
+        />
       </div>
     </div>
   );
