@@ -7,7 +7,9 @@ import type {
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
+  CustomWatchlistResponse,
   ExpandedSectorResponse,
+  PersonaComparisonResponse,
   FlowParams,
   FlowResponse,
   HoldingsResponse,
@@ -304,6 +306,38 @@ export const api = {
   getRunStatus(ticker: string, runTs: string): Promise<RunStatusResponse> {
     return getJson<RunStatusResponse>(
       `/v1/agents/${encodeURIComponent(ticker)}/runs/${encodeURIComponent(runTs)}`
+    );
+  },
+  // --- Custom (session-keyed) watchlist ---
+  listCustomWatchlist(sessionId: string): Promise<CustomWatchlistResponse> {
+    return getJson<CustomWatchlistResponse>(`/v1/watchlist/custom/list`, {
+      headers: { "X-Session-Id": sessionId },
+    });
+  },
+  addToCustomWatchlist(sessionId: string, ticker: string, note?: string): Promise<CustomWatchlistResponse> {
+    return fetch(`${baseUrl()}/v1/watchlist/custom/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json", "X-Session-Id": sessionId },
+      body: JSON.stringify({ ticker, note }),
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as CustomWatchlistResponse;
+    });
+  },
+  removeFromCustomWatchlist(sessionId: string, ticker: string): Promise<CustomWatchlistResponse> {
+    return fetch(`${baseUrl()}/v1/watchlist/custom/${encodeURIComponent(ticker)}`, {
+      method: "DELETE",
+      headers: { Accept: "application/json", "X-Session-Id": sessionId },
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as CustomWatchlistResponse;
+    });
+  },
+  // Pairwise persona comparison
+  agentsComparison(ticker: string, left: string, right: string): Promise<PersonaComparisonResponse> {
+    const sp = new URLSearchParams({ left, right });
+    return getJson<PersonaComparisonResponse>(
+      `/v1/agents/${encodeURIComponent(ticker)}/comparison?${sp}`,
     );
   },
   chatEnsemble(

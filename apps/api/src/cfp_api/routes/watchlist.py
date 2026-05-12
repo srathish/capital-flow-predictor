@@ -6,7 +6,10 @@ import json
 from collections import defaultdict
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from datetime import datetime
+
+from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel, Field
 
 from cfp_api.db import get_pool
 from cfp_api.schemas import (
@@ -208,3 +211,92 @@ async def get_watchlist_sector(sector: str) -> WatchlistSector:
             for r in rows
         ],
     )
+
+
+# ---------- Custom (user-defined) watchlist ----------
+#
+# Session-keyed for now: client generates a UUID, sends it via the
+# X-Session-Id header. Trivial to switch to a real user_id when auth lands —
+# the table key is just renamed.
+
+
+class CustomWatchlistEntry(BaseModel):
+    ticker: str
+    note: str | None = None
+    added_at: datetime
+
+
+class CustomWatchlistResponse(BaseModel):
+    session_id: str
+    entries: list[CustomWatchlistEntry]
+
+
+class AddTickerRequest(BaseModel):
+    ticker: str = Field(..., min_length=1, max_length=12)
+    note: str | None = Field(default=None, max_length=200)
+
+
+def _validate_session_id(session_id: str | None) -> str:
+    if not session_id or not (8 <= len(session_id) <= 64):
+        raise HTTPException(status_code=400, detail="X-Session-Id header required (8-64 chars)")
+    return session_id
+
+
+@router.get("/custom/list", response_model=CustomWatchlistResponse)
+async def list_custom_watchlist(
+    x_session_id: str | None = Header(default=None, alias="X-Session-Id"),
+) -> CustomWatchlistResponse:
+    sid = _validate_session_id(x_session_id)
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT ticker, note, added_at FROM custom_watchlist
+            WHERE session_id = $1 ORDER BY added_at DESC
+            """,
+            sid,
+        )
+    return CustomWatchlistResponse(
+        session_id=sid,
+        entries=[
+            CustomWatchlistEntry(ticker=r["ticker"], note=r["note"], added_at=r["added_at"])
+            for r in rows
+        ],
+    )
+
+
+@router.post("/custom/add", response_model=CustomWatchlistResponse, status_code=201)
+async def add_to_custom_watchlist(
+    body: AddTickerRequest,
+    x_session_id: str | None = Header(default=None, alias="X-Session-Id"),
+) -> CustomWatchlistResponse:
+    sid = _validate_session_id(x_session_id)
+    ticker = body.ticker.strip().upper()
+    if not ticker.isalpha() or len(ticker) > 12:
+        raise HTTPException(status_code=400, detail="invalid ticker")
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO custom_watchlist (session_id, ticker, note)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (session_id, ticker) DO UPDATE SET note = EXCLUDED.note
+            """,
+            sid, ticker, body.note,
+        )
+    return await list_custom_watchlist(x_session_id=x_session_id)
+
+
+@router.delete("/custom/{ticker}", response_model=CustomWatchlistResponse)
+async def remove_from_custom_watchlist(
+    ticker: str,
+    x_session_id: str | None = Header(default=None, alias="X-Session-Id"),
+) -> CustomWatchlistResponse:
+    sid = _validate_session_id(x_session_id)
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        await conn.execute(
+            "DELETE FROM custom_watchlist WHERE session_id = $1 AND ticker = $2",
+            sid, ticker.upper(),
+        )
+    return await list_custom_watchlist(x_session_id=x_session_id)

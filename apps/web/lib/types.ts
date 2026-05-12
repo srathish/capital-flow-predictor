@@ -744,3 +744,31 @@ export type FinvizPreset = {
 export type FinvizPresetsResponse = {
   presets: FinvizPreset[];
 };
+
+export type CustomWatchlistEntry = {
+  ticker: string;
+  note: string | null;
+  added_at: string;
+};
+
+export type CustomWatchlistResponse = {
+  session_id: string;
+  entries: CustomWatchlistEntry[];
+};
+
+export type PersonaSnapshot = {
+  persona: string;
+  signal: string | null;
+  confidence: number | null;
+  rationale: string | null;
+  run_ts: string | null;
+};
+
+export type PersonaComparisonResponse = {
+  ticker: string;
+  left: PersonaSnapshot;
+  right: PersonaSnapshot;
+  agree: boolean;
+  confidence_delta: number;
+  summary: string;
+};

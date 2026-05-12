@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MyWatchlist } from "@/components/my-watchlist";
 import { WatchlistGrid } from "@/components/watchlist-grid";
 
 export const metadata: Metadata = {
@@ -6,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function WatchlistPage() {
-  return <WatchlistGrid />;
+  return (
+    <div className="space-y-6">
+      <MyWatchlist />
+      <WatchlistGrid />
+    </div>
+  );
 }
