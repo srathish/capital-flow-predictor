@@ -69,10 +69,12 @@ PRESET_META: Final[dict[str, dict[str, str]]] = {
     "canslim": {"label": "CANSLIM", "thesis": "bullish"},
 }
 
-# Finviz renders ticker symbols as quote-link anchors. The class is stable
-# across all view modes (v=111/121/131/141). Tickers are alnum + dot/dash
-# (e.g. BRK.B). We require the trailing & to avoid catching trailing junk.
-_TICKER_RE = re.compile(r'href="quote\.ashx\?t=([A-Z0-9.\-]+)&', re.IGNORECASE)
+# Finviz renders every cell in a result row as an anchor pointing to the
+# ticker's quote page.  In 2025 they shortened the path from
+# `quote.ashx?t=TICKER&...` to `quote?t=TICKER&...` — match both forms so we
+# stay resilient to future re-renames.  Tickers are alnum + dot/dash (e.g.
+# BRK.B).  Many anchors per row resolve to the same ticker; the caller dedups.
+_TICKER_RE = re.compile(r'href="quote(?:\.ashx)?\?t=([A-Z0-9.\-]+)&', re.IGNORECASE)
 
 # Finviz blocks default httpx UA; mimic a desktop browser.
 _HEADERS = {

@@ -712,6 +712,7 @@ export type StockScreenItem = {
   near_earnings: boolean;
   composite_score: number;
   rationale: string | null;
+  has_agent_verdict: boolean;
 };
 
 export type StockScreenResponse = {
@@ -731,4 +732,15 @@ export type ScreenerParams = {
   excludeEarningsWithinDays?: number;
   limit?: number;
   lookbackDays?: number;
+  finvizPreset?: string;
+};
+
+export type FinvizPreset = {
+  key: string;
+  label: string;
+  thesis: "bullish" | "bearish";
+};
+
+export type FinvizPresetsResponse = {
+  presets: FinvizPreset[];
 };

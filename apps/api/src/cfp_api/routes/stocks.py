@@ -247,6 +247,7 @@ async def screen_stocks(
         SELECT
             ticker,
             pm_run_ts,
+            universe_rank,
             rationale,
             wl_sector,
             final_signal,
@@ -262,14 +263,28 @@ async def screen_stocks(
                 * SQRT(GREATEST(COALESCE(total_oi, 1), 1))
             ) AS composite_score
         FROM joined
-        ORDER BY composite_score DESC NULLS LAST
+        ORDER BY composite_score DESC NULLS LAST, universe_rank ASC NULLS LAST
     """
 
     async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, str(lookback_days))
+        if finviz_tickers is not None:
+            rows = await conn.fetch(sql, str(lookback_days), finviz_tickers)
+        else:
+            rows = await conn.fetch(sql, str(lookback_days))
 
     universe_size = len(rows)
     if universe_size == 0:
+        if finviz_preset is not None:
+            # Finviz returned tickers but none survived the universe-build (this
+            # should be unreachable given we short-circuit empty Finviz earlier,
+            # but defensively return an empty result rather than a 404).
+            return StockScreenResponse(
+                run_ts=None,
+                universe_size=0,
+                filtered_count=0,
+                filters={"finviz_preset": finviz_preset},
+                items=[],
+            )
         raise HTTPException(
             status_code=404,
             detail=(
@@ -278,11 +293,12 @@ async def screen_stocks(
             ),
         )
 
-    latest_run = max((r["pm_run_ts"] for r in rows), default=None)
+    latest_run = max((r["pm_run_ts"] for r in rows if r["pm_run_ts"] is not None), default=None)
 
     items: list[StockScreenItem] = []
     for r in rows:
         sig = r["final_signal"]
+        has_verdict = r["pm_run_ts"] is not None
         conf = float(r["confidence"] or 0.0)
         sec = r["wl_sector"]
         total_oi = int(r["total_oi"]) if r["total_oi"] is not None else None
@@ -296,11 +312,17 @@ async def screen_stocks(
             and 0 <= days_to_e <= exclude_earnings_within_days
         )
 
-        # Apply filters
-        if signal != "any" and sig != signal:
-            continue
-        if conf < min_confidence:
-            continue
+        # When a Finviz preset is the universe, tickers without a recent
+        # agent verdict are kept regardless of the signal / min-confidence
+        # gates — the user explicitly asked to see Finviz hits, and dropping
+        # unrated names would silently turn this into an intersection-only
+        # view.  Sector, OI, IV-rank, and earnings gates still apply.
+        finviz_unrated = finviz_preset is not None and not has_verdict
+        if not finviz_unrated:
+            if signal != "any" and sig != signal:
+                continue
+            if conf < min_confidence:
+                continue
         if sector_norm is not None and sec != sector_norm:
             continue
         if min_oi > 0 and not liquidity_ok:
@@ -330,6 +352,7 @@ async def screen_stocks(
                 near_earnings=near_earn,
                 composite_score=float(r["composite_score"] or 0.0),
                 rationale=r["rationale"],
+                has_agent_verdict=has_verdict,
             )
         )
 
@@ -344,6 +367,7 @@ async def screen_stocks(
         "exclude_earnings_within_days": exclude_earnings_within_days,
         "lookback_days": lookback_days,
         "limit": limit,
+        "finviz_preset": finviz_preset,
     }
 
     return StockScreenResponse(

@@ -86,6 +86,14 @@ export function ScreenerView() {
   const [lookbackDays, setLookbackDays] = useState(30);
   const [minOi, setMinOi] = useState(0);
   const [minIvRank, setMinIvRank] = useState(0);
+  const [finvizPreset, setFinvizPreset] = useState("");
+
+  const { data: presetsData } = useQuery({
+    queryKey: ["finviz-presets"],
+    queryFn: () => api.finvizPresets(),
+    staleTime: 60 * 60 * 1000,
+  });
+  const presets = presetsData?.presets ?? [];
 
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: [
@@ -97,6 +105,7 @@ export function ScreenerView() {
       lookbackDays,
       minOi,
       minIvRank,
+      finvizPreset,
     ],
     queryFn: () =>
       api.screenStocks({
@@ -108,6 +117,7 @@ export function ScreenerView() {
         excludeEarningsWithinDays: excludeEarnings,
         lookbackDays,
         limit: 50,
+        finvizPreset: finvizPreset || undefined,
       }),
     refetchInterval: 60_000,
   });
@@ -119,7 +129,9 @@ export function ScreenerView() {
       <header className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">Screener</h1>
         <p className="text-sm text-muted-foreground">
-          Tickers the agent ensemble verdict ranks as options-trade candidates.
+          {finvizPreset
+            ? "Finviz preset hits, with the agent ensemble's verdict overlaid where available."
+            : "Tickers the agent ensemble verdict ranks as options-trade candidates."}{" "}
           Composite = PM confidence × IV-rank × √open-interest.
         </p>
         <div className="ml-auto text-xs text-muted-foreground">
@@ -133,6 +145,41 @@ export function ScreenerView() {
           )}
         </div>
       </header>
+
+      {/* Preset row — Finviz universe selector lives on its own line so the
+          dropdown has room to breathe and the user understands it swaps the
+          source of candidates entirely. */}
+      <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+        <span className="uppercase tracking-wide text-muted-foreground">universe</span>
+        <button
+          onClick={() => setFinvizPreset("")}
+          className={cn(
+            "rounded-full border border-border px-3 py-1",
+            !finvizPreset
+              ? "bg-primary/15 text-primary"
+              : "bg-card text-muted-foreground hover:text-foreground",
+          )}
+        >
+          agent ensemble
+        </button>
+        <select
+          value={finvizPreset}
+          onChange={(e) => setFinvizPreset(e.target.value)}
+          className="rounded-full border border-border bg-card px-3 py-1 text-xs"
+        >
+          <option value="">+ finviz preset…</option>
+          {presets.map((p) => (
+            <option key={p.key} value={p.key}>
+              finviz · {p.label}
+            </option>
+          ))}
+        </select>
+        {finvizPreset ? (
+          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-amber-400">
+            finviz universe — unrated rows allowed
+          </span>
+        ) : null}
+      </div>
 
       {/* Filter row */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
@@ -314,21 +361,30 @@ function ScreenerRow({ item }: { item: StockScreenItem }) {
         )}
       </td>
       <td className="px-3 py-2">
-        <span
-          className={cn(
-            "rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-            item.final_signal === "long"
-              ? "bg-signal-bullish/15 text-signal-bullish"
-              : item.final_signal === "short"
-                ? "bg-signal-bearish/15 text-signal-bearish"
-                : "bg-foreground/10 text-muted-foreground",
-          )}
-        >
-          {item.final_signal}
-        </span>
+        {item.has_agent_verdict ? (
+          <span
+            className={cn(
+              "rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+              item.final_signal === "long"
+                ? "bg-signal-bullish/15 text-signal-bullish"
+                : item.final_signal === "short"
+                  ? "bg-signal-bearish/15 text-signal-bearish"
+                  : "bg-foreground/10 text-muted-foreground",
+            )}
+          >
+            {item.final_signal}
+          </span>
+        ) : (
+          <span
+            className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-400"
+            title="Finviz hit; the agent ensemble hasn't analyzed this ticker yet. Click to run."
+          >
+            unrated
+          </span>
+        )}
       </td>
       <td className="px-3 py-2 text-right font-mono text-xs">
-        {fmtPct(item.confidence)}
+        {item.has_agent_verdict ? fmtPct(item.confidence) : "—"}
       </td>
       <td className="px-3 py-2 text-right font-mono text-xs">
         {fmtPct(item.iv_rank)}

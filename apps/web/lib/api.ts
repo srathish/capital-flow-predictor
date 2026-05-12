@@ -24,6 +24,7 @@ import type {
   WhalesResponse,
   ScreenerParams,
   StockScreenResponse,
+  FinvizPresetsResponse,
   RankingsResponse,
   RunResponse,
   RunStatusResponse,
@@ -258,8 +259,12 @@ export const api = {
       sp.set("exclude_earnings_within_days", String(params.excludeEarningsWithinDays));
     if (params.limit !== undefined) sp.set("limit", String(params.limit));
     if (params.lookbackDays !== undefined) sp.set("lookback_days", String(params.lookbackDays));
+    if (params.finvizPreset) sp.set("finviz_preset", params.finvizPreset);
     const qs = sp.toString();
     return getJson<StockScreenResponse>(`/v1/stocks/screen${qs ? `?${qs}` : ""}`);
+  },
+  finvizPresets(): Promise<FinvizPresetsResponse> {
+    return getJson<FinvizPresetsResponse>("/v1/stocks/finviz-presets");
   },
   chartData(ticker: string, days = 180): Promise<ChartDataResponse> {
     return getJson<ChartDataResponse>(
