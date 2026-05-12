@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars (gitignored) and fill in real values for local plan.
+# Sensitive vars are read from environment in prod (TF_VAR_<name>).
+
+api_log_level             = "INFO"
+api_cors_origins          = "https://bellwether.app"
+api_keys                  = ""  # set in env via TF_VAR_api_keys
+rate_limit_default_per_min = 120
+rate_limit_run_per_hour    = 30
+
+next_public_api_base_url = "https://api.bellwether.app"

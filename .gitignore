@@ -32,3 +32,4 @@ node_modules/
 # Data
 data/
 *.parquet
+infra/terraform/terraform.tfvars
