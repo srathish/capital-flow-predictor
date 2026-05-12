@@ -9,6 +9,7 @@ import type {
   ChatStreamEvent,
   CustomWatchlistResponse,
   ExpandedSectorResponse,
+  CalibrationResponse,
   PersonaComparisonResponse,
   ReplayResponse,
   FlowParams,
@@ -282,6 +283,13 @@ export const api = {
     return getJson<ReplayResponse>(
       `/v1/agents/${encodeURIComponent(ticker)}/replay?date=${encodeURIComponent(isoDate)}`,
     );
+  },
+  screenerCalibration(params: { days?: number; horizon?: 5 | 10 | 20 | 60 } = {}): Promise<CalibrationResponse> {
+    const sp = new URLSearchParams();
+    if (params.days !== undefined) sp.set("days", String(params.days));
+    if (params.horizon !== undefined) sp.set("horizon", String(params.horizon));
+    const qs = sp.toString();
+    return getJson<CalibrationResponse>(`/v1/stocks/screen/calibration${qs ? `?${qs}` : ""}`);
   },
   finvizPresets(): Promise<FinvizPresetsResponse> {
     return getJson<FinvizPresetsResponse>("/v1/stocks/finviz-presets");

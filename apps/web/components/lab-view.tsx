@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import type { ReplayResponse, StockScreenItem } from "@/lib/types";
+import type { CalibrationResponse, ReplayResponse, StockScreenItem } from "@/lib/types";
 
 // Secret /lab tab — experiments + under-construction widgets. Reached by
 // typing "saiyeesh" anywhere on the site (see lib/lab.ts).
@@ -13,22 +13,80 @@ function fmtPct(x: number | null | undefined, digits = 1): string {
   return `${(x * 100).toFixed(digits)}%`;
 }
 
+function CalibrationLine({ data }: { data: CalibrationResponse | null }) {
+  if (!data) return null;
+  if (data.n_total === 0) {
+    return (
+      <p className="text-xs text-muted-foreground">
+        No matured PM signals over the last {data.window_days}d — calibration unavailable.
+      </p>
+    );
+  }
+  const top = data.buckets.find((b) => b.label === ">=75");
+  const lo = data.buckets.find((b) => b.label === "<25");
+  const overall = data.overall_hit_rate ?? 0;
+  const overallExcess = data.overall_mean_excess ?? 0;
+  return (
+    <div className="space-y-1 text-xs">
+      <p className="text-muted-foreground">
+        <span className="font-semibold text-foreground">Calibration ({data.horizon_days}d):</span>{" "}
+        across {data.n_total} PM signals over the last {data.window_days}d,{" "}
+        overall hit rate <span className="font-mono">{(overall * 100).toFixed(1)}%</span>,{" "}
+        mean signed excess <span className="font-mono">{(overallExcess * 100).toFixed(2)}%</span>.
+      </p>
+      <div className="flex flex-wrap gap-3 font-mono text-[11px]">
+        {data.buckets.map((b) => (
+          <span
+            key={b.label}
+            className={`rounded border px-2 py-0.5 ${
+              b.hit_rate_10d !== null && b.hit_rate_10d > overall
+                ? "border-green-500/60 text-green-300"
+                : "border-border/60 text-muted-foreground"
+            }`}
+          >
+            score {b.label} (n={b.n}):{" "}
+            {b.hit_rate_10d !== null ? `${(b.hit_rate_10d * 100).toFixed(0)}% hit` : "—"}
+            {b.mean_excess_10d !== null ? ` · ${(b.mean_excess_10d * 100).toFixed(2)}% excess` : ""}
+          </span>
+        ))}
+      </div>
+      {top && lo && top.hit_rate_10d !== null && lo.hit_rate_10d !== null && (
+        <p className="text-muted-foreground">
+          Top bucket beat the bottom by{" "}
+          <span className="font-mono text-foreground">
+            {((top.hit_rate_10d - lo.hit_rate_10d) * 100).toFixed(1)} pp
+          </span>{" "}
+          on hit rate.
+        </p>
+      )}
+      <p className="text-[10px] text-muted-foreground">{data.note}</p>
+    </div>
+  );
+}
+
 function OpportunityScreener() {
   const [items, setItems] = useState<StockScreenItem[] | null>(null);
+  const [calib, setCalib] = useState<CalibrationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await api.screenStocks({
-          signal: "long",
-          minConfidence: 0.5,
-          limit: 25,
-          sort: "opportunity",
-          lookbackDays: 60,
-        });
-        if (!cancelled) setItems(res.items);
+        const [res, cal] = await Promise.all([
+          api.screenStocks({
+            signal: "long",
+            minConfidence: 0.5,
+            limit: 25,
+            sort: "opportunity",
+            lookbackDays: 60,
+          }),
+          api.screenerCalibration({ days: 90, horizon: 10 }).catch(() => null),
+        ]);
+        if (!cancelled) {
+          setItems(res.items);
+          setCalib(cal);
+        }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "load failed");
       }
@@ -45,6 +103,9 @@ function OpportunityScreener() {
         <span className="text-xs text-muted-foreground">
           0–100 composite · conviction + IV rank + liquidity + sector + earnings
         </span>
+      </div>
+      <div className="mb-3 rounded border border-border/40 bg-muted/20 p-2">
+        <CalibrationLine data={calib} />
       </div>
       {error && <p className="text-xs text-destructive">{error}</p>}
       {items === null && !error && (

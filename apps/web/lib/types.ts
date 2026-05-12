@@ -748,6 +748,27 @@ export type FinvizPresetsResponse = {
   presets: FinvizPreset[];
 };
 
+export type CalibrationBucket = {
+  label: string;
+  lo: number;
+  hi: number | null;
+  n: number;
+  hit_rate_10d: number | null;
+  mean_excess_10d: number | null;
+  median_excess_10d: number | null;
+};
+
+export type CalibrationResponse = {
+  window_days: number;
+  horizon_days: number;
+  hit_threshold: number;
+  n_total: number;
+  overall_hit_rate: number | null;
+  overall_mean_excess: number | null;
+  buckets: CalibrationBucket[];
+  note: string;
+};
+
 export type ReplayForwardReturn = {
   horizon_days: number;
   ticker_return: number | null;

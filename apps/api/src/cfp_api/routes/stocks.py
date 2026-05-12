@@ -19,6 +19,7 @@ from datetime import date as date_t
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
 
 from cfp_api.db import get_pool
 from cfp_api.finviz import PRESETS as FINVIZ_PRESETS
@@ -93,6 +94,135 @@ def _opportunity_score(
         "sector_strength": round(sector_pts, 2),
         "earnings_window": round(earnings_pts, 2),
     }
+
+
+class CalibrationBucket(BaseModel):
+    label: str                # e.g. ">=75", "50-75", "25-50", "<25"
+    lo: float                 # inclusive lower bound on conviction-score (0..100)
+    hi: float | None          # exclusive upper bound; None == open-ended
+    n: int                    # number of PM signals in this bucket with valid fwd return
+    hit_rate_10d: float | None    # fraction hit at 10d (None if n < 5)
+    mean_excess_10d: float | None # mean fwd_return_10d (signed by direction) (None if n < 5)
+    median_excess_10d: float | None
+
+
+class CalibrationResponse(BaseModel):
+    window_days: int
+    horizon_days: int
+    hit_threshold: float
+    n_total: int
+    overall_hit_rate: float | None
+    overall_mean_excess: float | None
+    buckets: list[CalibrationBucket]
+    note: str
+
+
+@router.get("/screen/calibration", response_model=CalibrationResponse)
+async def screen_calibration(
+    days: int = Query(default=90, ge=14, le=365, description="Lookback window in calendar days"),
+    horizon: int = Query(default=10, description="Forward-return horizon. Must be one of {5, 10, 20, 60}."),
+) -> CalibrationResponse:
+    if horizon not in (5, 10, 20, 60):
+        raise HTTPException(status_code=422, detail="horizon must be one of 5, 10, 20, 60")
+    """How does the opportunity score's conviction component (≈40% of total)
+    predict forward returns? Joins `agent_eval` PM rows over the last `days`
+    and buckets by `confidence × signal_weight × 100`. The other 60% of the
+    composite (IV rank, liquidity, sector strength, earnings) isn't
+    backtestable from historical rows yet — see note in response.
+    """
+    pool = get_pool()
+    horizon_int = horizon  # already a Literal[5,10,20,60] int
+    # Pull all matured PM rows in the window. signal in {bullish,bearish,neutral}
+    # gets coerced to its directional weight on the read side so we don't need
+    # to bake the formula into SQL.
+    sql = f"""
+        SELECT confidence, signal,
+               fwd_return_{horizon_int}d AS excess,
+               hit_{horizon_int}d AS hit
+        FROM agent_eval
+        WHERE agent = 'portfolio_manager'
+          AND run_ts >= NOW() - ($1 || ' days')::interval
+          AND fwd_return_{horizon_int}d IS NOT NULL
+    """  # noqa: S608 — horizon is regex-gated
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, str(days))
+
+    bucket_defs = [
+        (">=75", 75.0, None),
+        ("50-75", 50.0, 75.0),
+        ("25-50", 25.0, 50.0),
+        ("<25",   0.0,  25.0),
+    ]
+
+    def _score(conf: float | None, signal: str | None) -> float:
+        sig_w = {"bullish": 1.0, "bearish": 0.85, "neutral": 0.0}.get(signal or "", 0.0)
+        return max(0.0, min(1.0, conf or 0.0)) * sig_w * 100.0
+
+    def _signed_excess(excess: float | None, signal: str | None) -> float | None:
+        # Sign so that "good for the call" is positive regardless of direction.
+        if excess is None:
+            return None
+        if signal == "bearish":
+            return -float(excess)
+        return float(excess)
+
+    n_total = 0
+    overall_hits = 0
+    overall_signed: list[float] = []
+    buckets: list[CalibrationBucket] = []
+
+    # Pre-compute (score, hit, signed_excess) once.
+    scored = []
+    for r in rows:
+        s = _score(r["confidence"], r["signal"])
+        se = _signed_excess(r["excess"], r["signal"])
+        h = bool(r["hit"]) if r["hit"] is not None else None
+        scored.append((s, h, se))
+        n_total += 1
+        if h is True:
+            overall_hits += 1
+        if se is not None:
+            overall_signed.append(se)
+
+    for label, lo, hi in bucket_defs:
+        sel = [
+            (s, h, se) for s, h, se in scored
+            if s >= lo and (hi is None or s < hi)
+        ]
+        n = len(sel)
+        if n >= 5:
+            graded = [h for _, h, _ in sel if h is not None]
+            hit_rate = (sum(1 for h in graded if h) / len(graded)) if graded else None
+            signed = sorted(se for _, _, se in sel if se is not None)
+            mean = (sum(signed) / len(signed)) if signed else None
+            med = signed[len(signed) // 2] if signed else None
+        else:
+            hit_rate = mean = med = None
+        buckets.append(CalibrationBucket(
+            label=label, lo=lo, hi=hi, n=n,
+            hit_rate_10d=hit_rate,
+            mean_excess_10d=mean,
+            median_excess_10d=med,
+        ))
+
+    overall_hit_rate = (overall_hits / n_total) if n_total else None
+    overall_mean = (sum(overall_signed) / len(overall_signed)) if overall_signed else None
+
+    return CalibrationResponse(
+        window_days=days,
+        horizon_days=horizon_int,
+        hit_threshold=0.01,  # mirrors cfp_jobs.eval_agents.HIT_THRESHOLD
+        n_total=n_total,
+        overall_hit_rate=overall_hit_rate,
+        overall_mean_excess=overall_mean,
+        buckets=buckets,
+        note=(
+            "Calibrated on the conviction component (≈40% of opportunity score). "
+            "IV rank / liquidity / sector strength / earnings-window components "
+            "aren't backtested historically — they're additive to score but "
+            "their out-of-sample lift is still TBD."
+        ),
+    )
 
 
 @router.get("/finviz-presets", response_model=FinvizPresetsResponse)
