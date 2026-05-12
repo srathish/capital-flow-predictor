@@ -132,6 +132,7 @@ class StockScreenItem(BaseModel):
     near_earnings: bool = False  # within exclude_earnings_within_days
     composite_score: float  # confidence × coalesce(iv_rank, 0.5) × √max(oi, 1)
     rationale: str | None = None
+    has_agent_verdict: bool = True  # False when ticker came from Finviz with no recent PM run
 
 
 class StockScreenResponse(BaseModel):
@@ -140,3 +141,13 @@ class StockScreenResponse(BaseModel):
     filtered_count: int
     filters: dict[str, Any]
     items: list[StockScreenItem]
+
+
+class FinvizPreset(BaseModel):
+    key: str
+    label: str
+    thesis: str  # "bullish" or "bearish" — the trade direction this preset implies
+
+
+class FinvizPresetsResponse(BaseModel):
+    presets: list[FinvizPreset]

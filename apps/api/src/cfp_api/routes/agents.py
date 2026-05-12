@@ -14,10 +14,12 @@ import logging
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
+from cfp_api.metrics import ensemble_runs_total
+from cfp_api.ratelimit import rate_limit_run
 from cfp_api.schemas import (
     AgentsForTickerResponse,
     AgentSignalEntry,
@@ -411,7 +413,12 @@ def _kickoff_ensemble(ticker: str, run_ts: datetime, sector: str = "") -> None:
         log.exception("ensemble run failed for %s/%s: %s", ticker, run_ts.isoformat(), e)
 
 
-@router.post("/{ticker}/run", response_model=RunResponse, status_code=202)
+@router.post(
+    "/{ticker}/run",
+    response_model=RunResponse,
+    status_code=202,
+    dependencies=[Depends(rate_limit_run)],
+)
 async def run_ensemble(ticker: str, sector: str = Query("")) -> RunResponse:
     """Kick off a new ensemble run for `ticker`. Returns immediately with a run_ts.
 
@@ -424,6 +431,7 @@ async def run_ensemble(ticker: str, sector: str = Query("")) -> RunResponse:
     task = asyncio.create_task(asyncio.to_thread(_kickoff_ensemble, ticker, run_ts, sector))
     _running_tasks.add(task)
     task.add_done_callback(_running_tasks.discard)
+    ensemble_runs_total.inc(ticker=ticker)
 
     return RunResponse(
         ticker=ticker,
@@ -472,4 +480,82 @@ async def get_run_status(ticker: str, run_ts: datetime) -> RunStatusResponse:
             )
             for r in rows
         ],
+    )
+
+
+# ---------- Pairwise persona comparison ----------
+
+
+class PersonaSnapshot(BaseModel):
+    persona: str
+    signal: str | None
+    confidence: float | None
+    rationale: str | None
+    run_ts: datetime | None
+
+
+class ComparisonResponse(BaseModel):
+    ticker: str
+    left: PersonaSnapshot
+    right: PersonaSnapshot
+    agree: bool
+    confidence_delta: float  # left.conf - right.conf
+    summary: str  # one-line "left:long(0.7) vs right:short(0.4) — disagree"
+
+
+@router.get("/{ticker}/comparison", response_model=ComparisonResponse)
+async def get_persona_comparison(
+    ticker: str,
+    left: str = Query(..., description="First persona (e.g. buffett)"),
+    right: str = Query(..., description="Second persona (e.g. burry)"),
+) -> ComparisonResponse:
+    """Compare two personas' latest takes on the same ticker.
+
+    Reads the latest agent_signals row per (ticker, persona) — these may come
+    from different runs, which is intentional: a persona that hasn't fired
+    recently still appears with its last known stance.
+    """
+    pool = get_pool()
+    ticker = ticker.upper()
+    left_name = left.strip().lower()
+    right_name = right.strip().lower()
+    if left_name == right_name:
+        raise HTTPException(status_code=400, detail="left and right must differ")
+
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT DISTINCT ON (agent) agent, signal, confidence, rationale, run_ts
+            FROM agent_signals
+            WHERE ticker = $1 AND agent = ANY($2::text[])
+            ORDER BY agent, run_ts DESC
+            """,
+            ticker, [left_name, right_name],
+        )
+    by_agent = {r["agent"]: r for r in rows}
+
+    def _snap(name: str) -> PersonaSnapshot:
+        r = by_agent.get(name)
+        if r is None:
+            return PersonaSnapshot(persona=name, signal=None, confidence=None, rationale=None, run_ts=None)
+        return PersonaSnapshot(
+            persona=name,
+            signal=r["signal"],
+            confidence=float(r["confidence"] or 0.0),
+            rationale=r["rationale"],
+            run_ts=r["run_ts"],
+        )
+
+    l = _snap(left_name)
+    r = _snap(right_name)
+    agree = bool(l.signal and r.signal and l.signal == r.signal)
+    delta = (l.confidence or 0.0) - (r.confidence or 0.0)
+    verdict = "agree" if agree else "disagree"
+    summary = (
+        f"{l.persona}:{l.signal or '?'}({l.confidence or 0:.2f}) "
+        f"vs {r.persona}:{r.signal or '?'}({r.confidence or 0:.2f}) — {verdict}"
+    )
+    return ComparisonResponse(
+        ticker=ticker, left=l, right=r, agree=agree,
+        confidence_delta=round(delta, 4), summary=summary,
     )

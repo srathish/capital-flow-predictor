@@ -20,7 +20,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 
 from cfp_api.db import get_pool
+from cfp_api.finviz import PRESETS as FINVIZ_PRESETS
+from cfp_api.finviz import available_presets, fetch_preset_tickers
 from cfp_api.schemas import (
+    FinvizPresetsResponse,
     ScreenSignal,
     StockScreenItem,
     StockScreenResponse,
@@ -39,6 +42,12 @@ _PM_TO_WATCHLIST_SIGNAL_SQL = """
         ELSE 'avoid'
     END
 """
+
+
+@router.get("/finviz-presets", response_model=FinvizPresetsResponse)
+async def list_finviz_presets() -> FinvizPresetsResponse:
+    """List Finviz screener presets the frontend can offer as universe filters."""
+    return FinvizPresetsResponse(presets=available_presets())  # type: ignore[arg-type]
 
 
 @router.get("/screen", response_model=StockScreenResponse)
@@ -65,10 +74,53 @@ async def screen_stocks(
         le=365,
         description="How far back to consider portfolio_manager runs as the universe",
     ),
+    finviz_preset: str | None = Query(
+        default=None,
+        description=(
+            "If set, constrain the universe to tickers from this Finviz preset "
+            "(see /v1/stocks/finviz-presets). Agent verdicts are LEFT-joined, "
+            "so tickers with no recent agent run still appear (with null conf)."
+        ),
+    ),
 ) -> StockScreenResponse:
     """Rank stocks the agents have analyzed by options-trade attractiveness."""
     pool = get_pool()
     sector_norm = sector.upper() if sector else None
+
+    # Finviz preset → resolve to a ticker universe up front.  When set, the
+    # screener flips from "agent-driven universe" to "Finviz-driven universe
+    # with agent overlay" — so tickers with no recent portfolio_manager run
+    # still appear (null confidence/rationale) instead of being dropped.
+    finviz_tickers: list[str] | None = None
+    if finviz_preset is not None:
+        if finviz_preset not in FINVIZ_PRESETS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown finviz_preset '{finviz_preset}'. See /v1/stocks/finviz-presets.",
+            )
+        finviz_tickers = await fetch_preset_tickers(finviz_preset)
+        if not finviz_tickers:
+            # Finviz returned nothing (network blip, parse miss, or the preset
+            # genuinely has no hits today).  Short-circuit with an empty result
+            # rather than running a SQL query that would join against an empty
+            # universe.
+            return StockScreenResponse(
+                run_ts=None,
+                universe_size=0,
+                filtered_count=0,
+                filters={
+                    "signal": signal,
+                    "min_confidence": min_confidence,
+                    "sector": sector_norm,
+                    "min_oi": min_oi,
+                    "min_iv_rank": min_iv_rank,
+                    "exclude_earnings_within_days": exclude_earnings_within_days,
+                    "lookback_days": lookback_days,
+                    "limit": limit,
+                    "finviz_preset": finviz_preset,
+                },
+                items=[],
+            )
 
     # The SQL is structured as a sequence of CTEs:
     #   pm_latest    — most-recent portfolio_manager verdict per ticker (the universe)
@@ -79,15 +131,48 @@ async def screen_stocks(
     #   earnings_next — soonest future earnings event per ticker
     # The outer SELECT joins all enrichments LEFT, so a ticker with no UW data
     # still ranks (its iv_rank/oi will be null but composite still computes).
+    #
+    # When `finviz_tickers` is set, we unnest a passed-in array as the
+    # universe and LEFT JOIN agent_signals onto it.  Otherwise the universe
+    # comes from recent portfolio_manager rows.
+    if finviz_tickers is not None:
+        # WITH ORDINALITY preserves Finviz's original rank so we can use it as
+        # a tiebreaker when the agent ensemble hasn't run on the ticker yet.
+        pm_cte = """
+            pm_latest AS (
+                SELECT
+                    fv.ticker,
+                    fv.universe_rank,
+                    pm.run_ts,
+                    pm.signal,
+                    pm.confidence,
+                    pm.rationale
+                FROM UNNEST($2::text[]) WITH ORDINALITY AS fv(ticker, universe_rank)
+                LEFT JOIN LATERAL (
+                    SELECT run_ts, signal, confidence, rationale
+                    FROM agent_signals
+                    WHERE agent = 'portfolio_manager'
+                      AND ticker = fv.ticker
+                      AND run_ts > NOW() - ($1 || ' days')::interval
+                    ORDER BY run_ts DESC
+                    LIMIT 1
+                ) pm ON TRUE
+            ),
+        """
+    else:
+        pm_cte = """
+            pm_latest AS (
+                SELECT DISTINCT ON (ticker)
+                    ticker, NULL::bigint AS universe_rank, run_ts, signal, confidence, rationale
+                FROM agent_signals
+                WHERE agent = 'portfolio_manager'
+                  AND run_ts > NOW() - ($1 || ' days')::interval
+                ORDER BY ticker, run_ts DESC
+            ),
+        """
+
     sql = f"""
-        WITH pm_latest AS (
-            SELECT DISTINCT ON (ticker)
-                ticker, run_ts, signal, confidence, rationale
-            FROM agent_signals
-            WHERE agent = 'portfolio_manager'
-              AND run_ts > NOW() - ($1 || ' days')::interval
-            ORDER BY ticker, run_ts DESC
-        ),
+        WITH {pm_cte}
         wl_latest AS (
             SELECT DISTINCT ON (ticker)
                 ticker, sector, final_signal, final_confidence, target_weight
@@ -136,6 +221,7 @@ async def screen_stocks(
             SELECT
                 pm.ticker,
                 pm.run_ts AS pm_run_ts,
+                pm.universe_rank,
                 pm.rationale,
                 wl.sector AS wl_sector,
                 COALESCE(wl.final_signal, {_PM_TO_WATCHLIST_SIGNAL_SQL}) AS final_signal,
