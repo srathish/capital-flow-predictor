@@ -1677,7 +1677,7 @@ async def get_scorecard(
             FROM reddit_predictions
             WHERE model_version = $1
               AND realized_return_20d IS NOT NULL
-              AND snapshot_date >= CURRENT_DATE - $2
+              AND snapshot_date >= CURRENT_DATE - $2::int
             """,
             model_version, window_days,
         )
@@ -1816,7 +1816,7 @@ async def _subreddit_edges(conn, window_days: int) -> list[SubredditEdge]:
         FROM reddit_posts
         WHERE realized_return_20d IS NOT NULL
           AND primary_ticker IS NOT NULL
-          AND created_at::date >= CURRENT_DATE - $1
+          AND created_at::date >= CURRENT_DATE - $1::int
         GROUP BY subreddit
         HAVING COUNT(*) >= 5
         ORDER BY mean_20d DESC NULLS LAST
@@ -1847,7 +1847,7 @@ async def _author_edges(conn, window_days: int) -> list[AuthorEdge]:
             WHERE realized_return_20d IS NOT NULL
               AND primary_ticker IS NOT NULL
               AND author IS NOT NULL
-              AND created_at::date >= CURRENT_DATE - $1
+              AND created_at::date >= CURRENT_DATE - $1::int
         ),
         per_author AS (
             SELECT author,
