@@ -42,11 +42,6 @@ POLL_INTERVAL_S = 1.0
 SESSION_HYDRATION_WAIT_S = 15.0
 SESSION_HYDRATION_TICK_S = 0.5
 
-# Path fragments that mean "still on the auth flow, not authenticated yet."
-# We refuse to break the wait-loop while the page URL contains any of these,
-# because Clerk drops a pre-auth __client cookie just from loading /sign-in
-# and that cookie alone is NOT proof the user is signed in.
-_AUTH_PATH_FRAGMENTS = ("/sign-in", "/sign-up", "/factor-", "/sso-callback", "/verify")
 
 
 def _ensure_playwright() -> None:
@@ -81,56 +76,67 @@ def capture_clerk_cookies(timeout_s: int = LOGIN_TIMEOUT_S) -> dict[str, str]:
         client_uat: str | None = None
         session_id: str | None = None
 
-        # Wait for the user to actually sign in. The previous bug here:
-        # Clerk drops an anonymous __client cookie just from loading /sign-in,
-        # and the page URL contains "app.skylit.ai" from the moment the page
-        # opens. So the old break condition fired in ~1 second, before the
-        # user could click anything, and the daemon closed the browser before
-        # any real session existed.
-        #
-        # Real signal that authentication completed: the page URL has moved
-        # OFF the auth flow (no /sign-in, /sso-callback, etc.) AND Clerk's
-        # in-page SDK reports at least one session with an id. Once we see
-        # that, the cookie is the authenticated one and we can capture it.
+        # Wait for the user to actually sign in. We trust Clerk's in-page SDK
+        # as the authority here, NOT the URL: Clerk v5 keeps users on
+        # /sign-in/sso-callback (or similar) even after OAuth completes, so
+        # gating on "URL has left /sign-in" stalls forever despite the user
+        # being fully authenticated. The earlier bug was the opposite — we
+        # gated on the URL containing "app.skylit.ai" which is always true,
+        # so we closed the window too early. The fix on both sides is the
+        # same: read window.Clerk.session.id; that's non-null iff a real
+        # authenticated session exists.
+        log.info("Waiting for Clerk session — sign in with Discord in the browser window.")
+        last_log = 0.0
         while time.monotonic() < deadline:
-            url = page.url or ""
-            on_auth_path = any(frag in url for frag in _AUTH_PATH_FRAGMENTS)
-            on_host = SKYLIT_DASHBOARD_HOST in url
+            try:
+                # Clerk v5: window.Clerk.session is the active session.
+                # Fallback to client.sessions[0] for older SDK builds.
+                sid = page.evaluate(
+                    "() => window.Clerk?.session?.id ?? "
+                    "(window.Clerk?.client?.sessions || [])"
+                    ".map(s => s && s.id).filter(Boolean)[0] ?? null"
+                )
+            except Exception as e:
+                # Bumped from debug -> warning so a stalled run leaves a
+                # visible trail. Page may genuinely be navigating, but if
+                # this fires every tick something is wrong.
+                log.warning("Clerk SDK eval failed: %s", e)
+                sid = None
 
-            if on_host and not on_auth_path:
-                # Probably done with OAuth — confirm with the SDK before
-                # touching cookies. Use a short eval so a stuck page doesn't
-                # block the whole loop.
-                try:
-                    sid = page.evaluate(
-                        "() => (window.Clerk?.client?.sessions || [])"
-                        ".map(s => s && s.id).filter(Boolean)[0] || null"
-                    )
-                except Exception as e:
-                    log.debug("Clerk SDK eval failed (page may be navigating): %s", e)
-                    sid = None
-                if sid:
+            if sid:
+                # Read cookies now. By construction these are the
+                # post-authentication values — Clerk only populates
+                # session.id after OAuth fully completes.
+                for c in context.cookies():
+                    if "skylit.ai" not in (c.get("domain") or ""):
+                        continue
+                    if c.get("name") == "__client":
+                        client_cookie = c.get("value")
+                    elif c.get("name") == "__client_uat":
+                        client_uat = c.get("value")
+                if client_cookie:
                     session_id = sid
-                    # Now grab the cookies — but only now, because earlier
-                    # __client values may be pre-auth.
-                    for c in context.cookies():
-                        if "skylit.ai" not in (c.get("domain") or ""):
-                            continue
-                        if c.get("name") == "__client":
-                            client_cookie = c.get("value")
-                        elif c.get("name") == "__client_uat":
-                            client_uat = c.get("value")
-                    if client_cookie:
-                        break  # done — got both session id and authenticated cookie
+                    log.info("Captured session %s... and __client cookie", sid[:24])
+                    break
+                # Session present but cookie not yet — keep polling; Clerk
+                # usually drops the cookie within one tick of the session
+                # becoming available.
+
+            now = time.monotonic()
+            if now - last_log > 15.0:
+                # Periodic heartbeat so a stuck run isn't silent. Log the
+                # current URL so we can see whether the operator got past
+                # the OAuth redirect.
+                log.info("Still waiting for sign-in (url=%s)", (page.url or "")[:80])
+                last_log = now
             time.sleep(POLL_INTERVAL_S)
         else:
             browser.close()
             raise RuntimeError(
                 f"Timed out after {timeout_s}s waiting for sign-in. "
-                "Did Discord OAuth complete and redirect back to app.skylit.ai? "
-                "(The previous version of this code closed the browser too "
-                "early — if that's what you saw, the timeout message is wrong "
-                "and you should look at logs for 'Clerk SDK eval failed'.)"
+                "Did Discord OAuth complete? If the browser window shows you "
+                "logged in but this still timed out, capture window.Clerk "
+                "diagnostics from the page console and file an issue."
             )
 
         # Belt-and-braces: if for some reason the SDK gave us a session id but
