@@ -30,7 +30,6 @@ import logging
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 import httpx
 
@@ -113,19 +112,41 @@ def _handle_request(cfg: WatchConfig, client: httpx.Client, req: dict) -> None:
         _complete(client, req_id, False, f"unexpected error: {type(e).__name__}: {e}")
         return
 
+    # Primary: POST captured cookies to Bellwether so they land in
+    # skylit_credentials (Postgres). The Railway-hosted gex service reads
+    # that table on boot — this is how cookies flow from the operator's
+    # laptop into the cloud-deployed poller.
     try:
-        skylit_login.write_to_env_file(cfg.env_file, creds)
+        resp = client.post(
+            "/v1/skylit/credentials",
+            json={
+                "client_cookie": creds["client_cookie"],
+                "client_uat": creds.get("client_uat", ""),
+                "session_id": creds["session_id"],
+                "source": "skylit-watch",
+            },
+        )
+        resp.raise_for_status()
     except Exception as e:
-        log.exception("skylit-watch: cookie capture OK but env write failed for req %s", req_id)
+        log.exception("skylit-watch: cookie capture OK but Postgres save failed for req %s", req_id)
         _complete(
             client, req_id, False,
-            f"captured cookies but failed to write {cfg.env_file}: {e}",
+            f"captured cookies but failed to save to Postgres: {e}",
         )
         return
 
+    # Secondary best-effort: also write to local .env so an operator running
+    # gex locally (DATABASE_URL unset) picks them up too. Failures here are
+    # logged but never reported as the request outcome — Postgres is the
+    # source of truth.
+    try:
+        skylit_login.write_to_env_file(cfg.env_file, creds)
+    except Exception as e:
+        log.warning("skylit-watch: .env write failed (Postgres save already succeeded): %s", e)
+
     sid_short = creds["session_id"][:24]
     cookie_len = len(creds["client_cookie"])
-    summary = f"captured session {sid_short}..., cookie len {cookie_len}, wrote to {cfg.env_file}"
+    summary = f"captured session {sid_short}..., cookie len {cookie_len}, saved to Postgres"
     log.info("skylit-watch: req %s done — %s", req_id, summary)
     _complete(client, req_id, True, summary)
 

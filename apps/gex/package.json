@@ -1,0 +1,26 @@
+{
+  "name": "@cfp/gex",
+  "private": true,
+  "version": "0.1.0",
+  "description": "GEX data pipeline — Heatseeker SSE poller + scheduled briefs + intraday alerts. Migrated from the standalone gexester-vexster repo (now archived).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "smoke": "node src/smoke.js",
+    "brief": "node scripts/morning-brief.js",
+    "monitor": "node scripts/intraday-monitor.js",
+    "scan": "D=$(date +%Y-%m-%d) && node scanner/scripts/scan-day.js --date=$D && node scanner/scripts/refine-picks.js --date=$D --top=10 && node scanner/scripts/daily-report.js --date=$D --discord",
+    "schedule": "node scripts/schedule.js",
+    "replay": "DATA_DIR=./data/replay node scripts/run-replay.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5",
+    "luxon": "^3.5.0",
+    "pg": "^8.13.0"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "version": "experiment_lower-trinity-mod-15",
+  "calibrated_at": "2026-04-30T08:39:51.755Z",
+  "calibration_data_window": null,
+  "_note": "All values are pre-calibration placeholders from spec §9.4. Replaced empirically after 60+ Phase 1 sessions via notebooks/. Do NOT hand-tune.",
+  "node_significance": {
+    "min_significance_for_floor_ceiling": 0.05,
+    "min_significance_for_gatekeeper": 0.03,
+    "min_significance_for_stop_node": 0.03,
+    "min_significance_for_pika_cloud_member": 0.02
+  },
+  "deflection_zones": {
+    "SPXW": 5,
+    "SPX": 5,
+    "SPY": 0.5,
+    "QQQ": 0.5
+  },
+  "tap_probabilities": {
+    "tap_1": 0.8,
+    "tap_2": 0.66,
+    "tap_3": 0.33,
+    "tap_4_plus": null
+  },
+  "tap_separation": {
+    "cooldown_minutes": 10,
+    "distance_multiplier_of_zone": 3,
+    "consolidation_threshold_minutes": 10,
+    "_iter1_note": "Bumped from 5min/2× to 10min/3× — 60-day replay showed strikes racking up 20+ taps/day at the old cooldown, which is frame-cadence inflation, not real deflections."
+  },
+  "bias_score_weights": {
+    "pattern_signal": 0.3,
+    "king_node_position": 0.2,
+    "floor_ceiling_proximity": 0.15,
+    "regime_modifier": 0.1,
+    "velocity_signal": 0.15,
+    "rolling_signal": 0.1
+  },
+  "velocity_thresholds": {
+    "window_30s": {
+      "growing": 0.2,
+      "decaying": -0.2
+    },
+    "window_1m": {
+      "growing": 0.15,
+      "decaying": -0.15
+    },
+    "window_5m": {
+      "growing": 0.1,
+      "decaying": -0.1
+    },
+    "window_15m": {
+      "growing": 0.07,
+      "decaying": -0.07
+    },
+    "window_30m": {
+      "growing": 0.05,
+      "decaying": -0.05
+    }
+  },
+  "velocity_windows_seconds": {
+    "window_30s": 30,
+    "window_1m": 60,
+    "window_5m": 300,
+    "window_15m": 900,
+    "window_30m": 1800,
+    "window_session": null
+  },
+  "rolling_awareness_score_contribution": {
+    "watching": 10,
+    "monitoring": 20,
+    "tracking": 35,
+    "confirmed": 50,
+    "anticipatory_bonus_wide": 5,
+    "anticipatory_bonus_tight": 10
+  },
+  "trinity_thresholds": {
+    "high_confidence_avg": 35,
+    "moderate_confidence_avg": 15,
+    "divergence_spread": 100,
+    "divergence_individual_min": 45,
+    "_iter1_note": "Lowered from 60/30/120/60. Bias scores cap empirically around 62 (max possible ~82 given component weights), so |avg|>60 was unreachable. 45 is realistic upper-tier and 25 is realistic moderate."
+  },
+  "rr_gating": {
+    "full_size": 3,
+    "reduced_size": 2,
+    "reject_below": 2
+  },
+  "regime_thresholds": {
+    "positive_clear": 0.3,
+    "negative_clear": -0.3
+  },
+  "class_modifiers": {
+    "real": 1,
+    "ambiguous": 0.6,
+    "hedge": 0.3
+  },
+  "operator_overlay_status": {
+    "overlay_2_pin_behavior": "needs_more_data",
+    "overlay_4_paired_trade": "needs_more_data",
+    "overlay_7_anticipatory_rolling": "needs_more_data"
+  }
+}

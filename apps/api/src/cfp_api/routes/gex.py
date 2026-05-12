@@ -311,6 +311,94 @@ async def get_skylit_status() -> SkylitStatusResponse:
     )
 
 
+# ---------- /v1/skylit/credentials ----------
+
+
+class SkylitCredentialsIn(BaseModel):
+    """Body the skylit-watch daemon POSTs after a successful Playwright capture.
+
+    This replaces the daemon's old "write to local .env" path. With the gex
+    service now running on Railway, the credential must live in Postgres so
+    a deploy doesn't lose it.
+    """
+    client_cookie: str = Field(..., min_length=10, max_length=2000)
+    client_uat: str = Field(default="", max_length=2000)
+    session_id: str = Field(..., min_length=5, max_length=200)
+    # Free-text tag: 'skylit-watch' for normal daemon captures, 'bootstrap'
+    # for the one-time seed from a local .env. Surfaced in skylit_credentials
+    # so we can audit who wrote what.
+    source: str = Field(default="skylit-watch", max_length=64)
+
+
+class SkylitCredentialsStatusOut(BaseModel):
+    """Read shape — never returns the cookie value itself, only metadata."""
+    present: bool
+    captured_at: datetime | None
+    session_id_prefix: str | None  # first 24 chars only, for UI display
+    source: str | None
+
+
+@router.post("/v1/skylit/credentials", response_model=SkylitCredentialsStatusOut)
+async def upsert_skylit_credentials(payload: SkylitCredentialsIn) -> SkylitCredentialsStatusOut:
+    """Upsert the single-row skylit credential. Called by:
+      1. cfp-jobs skylit-watch after a Playwright capture (source='skylit-watch')
+      2. The cfp-jobs skylit-bootstrap script when seeding from a local .env
+         (source='bootstrap'), one-time after the monorepo migration.
+
+    The gex Railway service reads this row at boot via direct Postgres access
+    (no HTTP hop) — see apps/gex/src/store/pg.js loadSkylitCredentials.
+    """
+    pool = get_pool()
+    sql = """
+        INSERT INTO skylit_credentials
+            (id, client_cookie, client_uat, session_id, captured_at, source)
+        VALUES (1, $1, $2, $3, NOW(), $4)
+        ON CONFLICT (id) DO UPDATE SET
+            client_cookie = EXCLUDED.client_cookie,
+            client_uat    = EXCLUDED.client_uat,
+            session_id    = EXCLUDED.session_id,
+            captured_at   = EXCLUDED.captured_at,
+            source        = EXCLUDED.source
+        RETURNING captured_at, session_id, source
+    """
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            sql, payload.client_cookie, payload.client_uat,
+            payload.session_id, payload.source,
+        )
+    if row is None:
+        raise HTTPException(status_code=500, detail="upsert returned no row")
+    return SkylitCredentialsStatusOut(
+        present=True,
+        captured_at=row["captured_at"],
+        session_id_prefix=row["session_id"][:24],
+        source=row["source"],
+    )
+
+
+@router.get("/v1/skylit/credentials/status", response_model=SkylitCredentialsStatusOut)
+async def get_skylit_credentials_status() -> SkylitCredentialsStatusOut:
+    """Metadata-only read — confirms whether a credential exists and how fresh
+    it is. The actual cookie + session id are never returned over this surface
+    (the only consumer that needs the values is the gex service, which reads
+    them via direct Postgres access)."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT captured_at, session_id, source FROM skylit_credentials WHERE id = 1"
+        )
+    if row is None:
+        return SkylitCredentialsStatusOut(
+            present=False, captured_at=None, session_id_prefix=None, source=None,
+        )
+    return SkylitCredentialsStatusOut(
+        present=True,
+        captured_at=row["captured_at"],
+        session_id_prefix=row["session_id"][:24],
+        source=row["source"],
+    )
+
+
 # ---------- /v1/skylit/reauth/* ----------
 
 

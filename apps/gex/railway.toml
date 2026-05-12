@@ -1,0 +1,35 @@
+# Railway service config for the gex poller + scheduler.
+#
+# The Bellwether project on Railway now has TWO services:
+#   1. `capital-flow-predictor-api` (Python FastAPI)   — infra/railway.toml
+#   2. `capital-flow-predictor-gex` (Node.js poller)   — apps/gex/railway.toml   ← this file
+#
+# Setup (one-time, via the Railway dashboard):
+#   1. In the project that already runs the API, click "+ New Service" → "GitHub repo"
+#   2. Pick this same repo and main branch
+#   3. In Settings → Source, set Root Directory = / (we reference apps/gex from the Dockerfile path)
+#   4. In Settings → Build, set Dockerfile Path = apps/gex/Dockerfile
+#   5. In Settings → Variables, set:
+#        DATABASE_URL    (link to the shared Postgres plugin — same DB the API uses)
+#        DATA_DIR        /data
+#        TICKERS         SPXW,SPY,QQQ
+#        # Optional. Leave unset to skip Discord; the UI is the primary surface now.
+#        DISCORD_BRIEF_WEBHOOK_URL
+#   6. In Settings → Volumes, mount a volume at /data so SQLite + JSONL archives
+#      survive container restarts.
+#
+# Skylit cookies do NOT go in Railway env vars. They live in Postgres, written
+# by the cfp-jobs skylit-watch daemon running on the operator's laptop after
+# a Discord OAuth click. See `cfp-jobs skylit-bootstrap` for the one-time seed
+# from a local .env after this migration goes live.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/gex/Dockerfile"
+
+[deploy]
+# No HTTP health check — gex isn't an HTTP service. Railway will rely on the
+# process not crashing as the liveness signal. The poller logs every snapshot
+# tick at debug level; INFO-level logs cover lifecycle changes.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

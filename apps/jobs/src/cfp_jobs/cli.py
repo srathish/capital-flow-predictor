@@ -702,6 +702,65 @@ def skylit_login_cmd(
     )
 
 
+@app.command("skylit-bootstrap")
+def skylit_bootstrap_cmd(
+    env_file: str = typer.Option(
+        "",
+        "--env-file",
+        help="Source .env to read CLERK_* from (default: ~/gexester vexster/.env)",
+    ),
+    api_url: str = typer.Option(
+        "",
+        "--api-url",
+        envvar="BELLWETHER_API_URL",
+        help="Bellwether API base URL",
+    ),
+    api_key: str = typer.Option(
+        "",
+        "--api-key",
+        envvar="BELLWETHER_API_KEY",
+        help="API key for Bellwether",
+    ),
+) -> None:
+    """One-time seed: read CLERK_* from a local .env and POST to /v1/skylit/credentials.
+
+    Used the day you migrate from the standalone gexester repo to the monorepo
+    layout. After this runs, the Railway-hosted gex service finds the cookies
+    in Postgres on its next boot and you don't have to re-do Discord OAuth.
+
+    Subsequent re-auths use `cfp-jobs skylit-watch` + the /gex UI button.
+    """
+    from pathlib import Path
+
+    from cfp_jobs import skylit_bootstrap, skylit_login
+
+    if not api_url or not api_key:
+        console.print("[red]--api-url / BELLWETHER_API_URL and --api-key / BELLWETHER_API_KEY are required[/red]")
+        raise typer.Exit(2)
+
+    target = Path(env_file).expanduser() if env_file else skylit_login.DEFAULT_ENV_FILE
+    console.print(f"Reading CLERK_* from [cyan]{target}[/cyan]")
+    try:
+        result = skylit_bootstrap.bootstrap_from_env(
+            env_file=target, api_url=api_url, api_key=api_key,
+        )
+    except FileNotFoundError as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+    except RuntimeError as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+    except Exception as e:  # network, HTTP, etc.
+        console.print(f"[red]Upload failed: {e}[/red]")
+        raise typer.Exit(1) from e
+
+    console.print(
+        f"[green]Seeded skylit_credentials[/green] | "
+        f"session {result.get('session_id_prefix', '?')}... | "
+        f"captured_at {result.get('captured_at', '?')}"
+    )
+
+
 @app.command("skylit-watch")
 def skylit_watch_cmd(
     api_url: str = typer.Option(
