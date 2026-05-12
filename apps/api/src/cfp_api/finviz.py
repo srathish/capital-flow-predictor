@@ -86,6 +86,11 @@ _HEADERS = {
 }
 
 _CACHE_TTL_S = 15 * 60
+# Short TTL for empty results so a Finviz throttle/403 doesn't poison the
+# cache for 15 minutes — we retry on the next request and recover as soon as
+# Finviz responds again. Legit "no hits today" results just re-fetch once a
+# minute, which is fine for Finviz quota.
+_CACHE_TTL_EMPTY_S = 60
 _cache: dict[str, tuple[float, list[str]]] = {}
 _locks: dict[str, asyncio.Lock] = {}
 
@@ -110,15 +115,20 @@ async def fetch_preset_tickers(preset: str, *, max_pages: int = 2) -> list[str]:
     if preset not in PRESETS:
         raise ValueError(f"unknown preset: {preset}")
 
-    now = time.time()
+    def _cache_fresh(entry: tuple[float, list[str]] | None) -> bool:
+        if entry is None:
+            return False
+        ttl = _CACHE_TTL_S if entry[1] else _CACHE_TTL_EMPTY_S
+        return time.time() - entry[0] < ttl
+
     cached = _cache.get(preset)
-    if cached and now - cached[0] < _CACHE_TTL_S:
-        return cached[1]
+    if _cache_fresh(cached):
+        return cached[1]  # type: ignore[index]
 
     async with _lock_for(preset):
         cached = _cache.get(preset)
-        if cached and time.time() - cached[0] < _CACHE_TTL_S:
-            return cached[1]
+        if _cache_fresh(cached):
+            return cached[1]  # type: ignore[index]
 
         base_url = PRESETS[preset]
         seen: list[str] = []
