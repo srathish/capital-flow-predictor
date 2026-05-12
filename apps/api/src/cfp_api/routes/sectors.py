@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from datetime import datetime, timedelta, timezone
 from typing import Any, Literal
 
@@ -406,6 +407,11 @@ class HorizonDisagreement(BaseModel):
     delta: int
 
 
+DispersionRegime = Literal[
+    "high_dispersion", "normal_dispersion", "low_dispersion", "unknown"
+]
+
+
 class ForwardCallResponse(BaseModel):
     """Structured forward-looking call assembled from the latest run across all
     three trained horizons. The frontend renders the prose; this endpoint
@@ -427,9 +433,128 @@ class ForwardCallResponse(BaseModel):
     stability_runs: int
     # Symbols whose rank in another horizon disagrees by ≥ 4 slots (top by magnitude, max 4).
     disagreements: list[HorizonDisagreement]
+    # Cross-sectional dispersion regime. When the cross-section is tight
+    # (low_dispersion), sector-rotation alpha collapses — every ETF is moving
+    # together and the ranker's ordering is mostly noise. The route forces
+    # `conviction` to "low" in that regime regardless of the score spread.
+    dispersion_regime: DispersionRegime
+    dispersion_z: float | None
 
 
 _FORWARD_HORIZONS = (5, 10, 20)
+
+# Same thresholds as cfp_features.dispersion. Keep in sync — duplicated rather
+# than imported because this module already avoids the pandas dependency that
+# cfp_features pulls in.
+_DISPERSION_HIGH_Z = 0.5
+_DISPERSION_LOW_Z = -0.5
+# Window for the z-score and for how many calendar days of price history to
+# query. 60 trading-day z-score needs ~80 calendar days of bars to populate;
+# we also need an extra 5 days at the head for the return_5d calculation.
+_DISP_Z_WINDOW = 60
+_DISP_PRICE_DAYS = 130
+
+
+def _dispersion_regime_from_z(z: float | None) -> DispersionRegime:
+    """Map a z-score to a regime label. Mirrors `cfp_features.dispersion.regime_label`
+    but typed to the Literal used in `ForwardCallResponse`."""
+    if z is None or not math.isfinite(z):
+        return "unknown"
+    if z > _DISPERSION_HIGH_Z:
+        return "high_dispersion"
+    if z < _DISPERSION_LOW_Z:
+        return "low_dispersion"
+    return "normal_dispersion"
+
+
+async def _compute_dispersion_z(pool) -> float | None:
+    """Compute the latest cross-sectional dispersion z-score from prices_daily.
+
+    Procedure (matches `cfp_features.dispersion.compute`):
+      1. For each PREDICTION_TARGETS symbol, build a (date -> close) series
+         from the last ~130 calendar days of bars.
+      2. Per symbol, compute return_5d on the date axis.
+      3. Per date, take the population std of return_5d across symbols.
+      4. Z-score the resulting time-series against its trailing 60-obs window.
+      5. Return the most recent finite value.
+
+    Returns None if we don't have enough history (warmup) or the prices table
+    is empty for the targets. Quietly degrades — the route still serves the
+    call, just labelled `dispersion_regime='unknown'`.
+    """
+    sql = """
+        SELECT symbol, ts::date AS d, close
+        FROM prices_daily
+        WHERE symbol = ANY($1::text[])
+          AND ts >= NOW() - ($2 || ' days')::INTERVAL
+        ORDER BY ts ASC
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, PREDICTION_TARGETS, _DISP_PRICE_DAYS)
+
+    if not rows:
+        return None
+
+    # Bucket closes by date so we have a fixed per-date cross-section. Using
+    # date (not full timestamp) avoids spurious mismatches when bars carry
+    # different intraday timestamps for the same trading day.
+    by_sym: dict[str, dict] = {}
+    all_dates: set = set()
+    for r in rows:
+        d = r["d"]
+        all_dates.add(d)
+        by_sym.setdefault(r["symbol"], {})[d] = float(r["close"])
+
+    if len(all_dates) < _DISP_Z_WINDOW // 2 + 5:
+        return None
+
+    sorted_dates = sorted(all_dates)
+
+    # Per symbol: 5d returns aligned to the universe date axis. We index by
+    # position within `sorted_dates` so "5 days ago" means 5 trading days of
+    # the cross-section, not calendar days.
+    per_date_returns: dict = {d: [] for d in sorted_dates}
+    for sym, closes in by_sym.items():
+        prev5: list[float | None] = [None] * len(sorted_dates)
+        # Fill closes aligned to the universe calendar (gaps stay None — that
+        # symbol simply didn't trade that day; it gets skipped in the std).
+        aligned = [closes.get(d) for d in sorted_dates]
+        for i in range(5, len(aligned)):
+            now = aligned[i]
+            then = aligned[i - 5]
+            if now is None or then is None or then == 0:
+                continue
+            prev5[i] = now / then - 1.0
+        for i, ret in enumerate(prev5):
+            if ret is not None:
+                per_date_returns[sorted_dates[i]].append(ret)
+
+    # Cross-sectional std per date. Need ≥4 symbols to call it a cross-section.
+    xs_std_series: list[tuple[object, float]] = []
+    for d in sorted_dates:
+        rets = per_date_returns[d]
+        if len(rets) < 4:
+            continue
+        mean = sum(rets) / len(rets)
+        var = sum((r - mean) ** 2 for r in rets) / len(rets)
+        xs_std_series.append((d, math.sqrt(var)))
+
+    if len(xs_std_series) < _DISP_Z_WINDOW // 2 + 1:
+        return None
+
+    # Trailing z of the latest value vs the prior `_DISP_Z_WINDOW` observations.
+    values = [v for _, v in xs_std_series]
+    latest = values[-1]
+    window = values[-(_DISP_Z_WINDOW + 1) : -1]  # exclude `latest` from its own baseline
+    if len(window) < _DISP_Z_WINDOW // 2:
+        return None
+    w_mean = sum(window) / len(window)
+    w_var = sum((v - w_mean) ** 2 for v in window) / len(window)
+    if w_var <= 0:
+        return None
+    z = (latest - w_mean) / math.sqrt(w_var)
+    # Match the clip applied in cfp_features.dispersion.
+    return max(-5.0, min(5.0, z))
 
 
 def _add_business_days(start: datetime, n: int) -> datetime:
@@ -521,12 +646,19 @@ async def get_forward_call(
             other_by_h[h] = await conn.fetch(sql_other, h, model)
         stability_rows = await conn.fetch(sql_stability, horizon, model)
 
+    # Dispersion is computed even when there are no rankings so the UI can
+    # still surface the regime (useful for empty-state messaging).
+    dispersion_z = await _compute_dispersion_z(pool)
+    dispersion_regime = _dispersion_regime_from_z(dispersion_z)
+
     if not active_rows:
         return ForwardCallResponse(
             horizon_d=horizon, model=model, run_ts=None, target_ts=None,
             stale_days=None,
             top=[], bottom=[], score_spread=None,
             conviction="low", stability_runs=0, disagreements=[],
+            dispersion_regime=dispersion_regime,
+            dispersion_z=dispersion_z,
         )
 
     n = len(active_rows)
@@ -559,6 +691,17 @@ async def get_forward_call(
         conviction = "medium"
     else:
         conviction = "low"
+
+    # Dispersion gate. When the cross-section is tight, even a wide score
+    # spread is not credible — the model is discriminating between sectors
+    # that are all moving together, and the realized return ordering is
+    # mostly noise. Cap conviction at "medium" in low-dispersion regimes and
+    # collapse it entirely if the rest of the signal is also weak.
+    if dispersion_regime == "low_dispersion":
+        if conviction == "high":
+            conviction = "medium"
+        elif conviction == "medium" and (score_spread is None or score_spread < 0.08):
+            conviction = "low"
 
     # Stability of the *set* (order-insensitive) of top-3 symbols across recent runs.
     from collections import defaultdict
@@ -619,6 +762,8 @@ async def get_forward_call(
         conviction=conviction,
         stability_runs=stability_runs,
         disagreements=disagreements,
+        dispersion_regime=dispersion_regime,
+        dispersion_z=dispersion_z,
     )
 
 
@@ -905,8 +1050,6 @@ async def get_rrg(
 
     Daily bars; tail_weeks * 5 trading days of trail per sector.
     """
-    import math
-
     symbols = [*PREDICTION_TARGETS, benchmark]
     pool = get_pool()
 

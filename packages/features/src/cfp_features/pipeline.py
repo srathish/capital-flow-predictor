@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from cfp_features import cross_asset, panel, sector
+from cfp_features import cross_asset, cross_sectional, dispersion, panel, sector
 
 
 def build(
@@ -74,4 +74,20 @@ def build(
         low_wide=low_wide,
         macro_factors=macro_factors,
     )
+
+    # Cross-sectional transforms — per-date z-score and pct-rank of the
+    # high-signal momentum / trend / RS-vs-SPY columns. Appended in place so
+    # downstream persistence treats them as additional sector_v1 features.
+    sector_df = cross_sectional.compute(sector_df)
+
+    # Market dispersion / breadth — same value broadcast to every symbol on
+    # the date, so they live at the cross-asset (per-ts) level. The ranker
+    # sees them as scalar regime features, and the forward-call API uses
+    # `xs_dispersion_z` to gate conviction when dispersion is low.
+    disp_df = dispersion.compute(sector_df)
+    if not disp_df.empty:
+        # Avoid clobbering existing cross-asset columns if a future refactor
+        # introduces a name collision; suffix='_disp' keeps the audit clean.
+        cross_df = cross_df.join(disp_df, how="outer", rsuffix="_disp")
+
     return cross_df, sector_df
