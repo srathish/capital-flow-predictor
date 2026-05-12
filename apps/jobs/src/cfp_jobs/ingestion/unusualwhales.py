@@ -23,6 +23,7 @@ from __future__ import annotations
 import logging
 import time
 from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, date, datetime
 from typing import Any
 
@@ -1124,37 +1125,78 @@ def _upsert_market_tide(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
 
 
 def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
-    """Pull all the per-ticker UW endpoints in one pass and upsert.
+    """Pull all the per-ticker UW endpoints in parallel, then upsert serially.
 
     Used by `cfp-jobs flow TICKER` and lazily by the agent runner when a
     ticker has no recent UW data and a run is requested.
+
+    Performance note: the 11 endpoints used to run sequentially (~30-60s on
+    a cold ticker). httpx.Client is thread-safe across concurrent requests
+    via its connection pool, so we fetch all 11 in parallel; the DB upserts
+    stay serial because psycopg connections aren't thread-safe and the
+    upserts themselves are fast (<50ms each).
     """
     ticker = ticker.upper()
     counts: dict[str, int] = {}
-    # Each upsert runs inside its own savepoint (`with conn.transaction():`).
-    # A failure in one endpoint (missing table, schema drift) rolls back only
-    # that step instead of poisoning the outer transaction and discarding the
-    # entire ticker's data.
-    def _step(key: str, fn):
-        try:
-            with conn.transaction():
-                counts[key] = fn()
-        except Exception as e:
-            log.warning("%s failed for %s: %s", key, ticker, e)
+
+    # (name, fetch_callable, upsert_callable_factory)
+    # The upsert factory takes the fetched payload + conn and returns the count.
+    # Defining them like this lets us run fetches in parallel and upserts serially
+    # without restructuring error isolation.
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        fetchers: dict[str, Any] = {
+            "stock_info":     lambda: uw.info(ticker),
+            "flow_alerts":    lambda: uw.flow_alerts(ticker),
+            "dark_pool":      lambda: uw.dark_pool(ticker),
+            "net_prem":       lambda: uw.net_prem_ticks(ticker),
+            "short_data":     lambda: uw.short_data(ticker),
+            "greek_exposure": lambda: uw.greek_exposure(ticker),
+            "insider":        lambda: uw.insider_transactions(ticker),
+            "oi_change":      lambda: uw.oi_change(ticker),
+            "news":           lambda: uw.news_headlines(ticker),
+            "earnings":       lambda: uw.earnings(ticker),
+            "volatility":     lambda: uw.volatility_stats(ticker),
+        }
+        results: dict[str, Any] = {}
+        errors: dict[str, Exception] = {}
+        # 11 endpoints; UW limit is 120/min so 11 concurrent is safely under
+        # the budget. Cap at 11 workers to match the call count.
+        with ThreadPoolExecutor(max_workers=11, thread_name_prefix="uw") as ex:
+            future_to_key = {ex.submit(fn): key for key, fn in fetchers.items()}
+            for fut in future_to_key:
+                key = future_to_key[fut]
+                try:
+                    results[key] = fut.result()
+                except Exception as e:  # noqa: BLE001
+                    errors[key] = e
+
+        # Upsert serially — each in its own savepoint so a single bad payload
+        # rolls back only its step (matches previous behavior).
+        upserters: dict[str, Any] = {
+            "stock_info":     lambda p: _upsert_stock_info(conn, ticker, p),
+            "flow_alerts":    lambda p: _upsert_flow_alerts(conn, ticker, p),
+            "dark_pool":      lambda p: _upsert_dark_pool(conn, ticker, p),
+            "net_prem":       lambda p: _upsert_net_prem_daily(conn, ticker, p),
+            "short_data":     lambda p: _upsert_short_data(conn, ticker, p),
+            "greek_exposure": lambda p: _upsert_greek_exposure(conn, ticker, p),
+            "insider":        lambda p: _upsert_insider(conn, ticker, p),
+            "oi_change":      lambda p: _upsert_oi_change(conn, ticker, p),
+            "news":           lambda p: _upsert_news(conn, p),
+            "earnings":       lambda p: _upsert_earnings(conn, ticker, p),
+            "volatility":     lambda p: _upsert_volatility_stats(conn, ticker, p),
+        }
+        for key, payload in results.items():
+            try:
+                with conn.transaction():
+                    counts[key] = upserters[key](payload)
+            except Exception as e:  # noqa: BLE001
+                log.warning("%s upsert failed for %s: %s", key, ticker, e)
+                counts[key] = 0
+        # Any keys that errored during fetch get logged + counted as 0.
+        for key, e in errors.items():
+            log.warning("%s fetch failed for %s: %s", key, ticker, e)
             counts[key] = 0
 
-    with UwClient(api_key) as uw, connect(database_url) as conn:
-        _step("stock_info",     lambda: _upsert_stock_info(conn, ticker, uw.info(ticker)))
-        _step("flow_alerts",    lambda: _upsert_flow_alerts(conn, ticker, uw.flow_alerts(ticker)))
-        _step("dark_pool",      lambda: _upsert_dark_pool(conn, ticker, uw.dark_pool(ticker)))
-        _step("net_prem",       lambda: _upsert_net_prem_daily(conn, ticker, uw.net_prem_ticks(ticker)))
-        _step("short_data",     lambda: _upsert_short_data(conn, ticker, uw.short_data(ticker)))
-        _step("greek_exposure", lambda: _upsert_greek_exposure(conn, ticker, uw.greek_exposure(ticker)))
-        _step("insider",        lambda: _upsert_insider(conn, ticker, uw.insider_transactions(ticker)))
-        _step("oi_change",      lambda: _upsert_oi_change(conn, ticker, uw.oi_change(ticker)))
-        _step("news",           lambda: _upsert_news(conn, uw.news_headlines(ticker)))
-        _step("earnings",       lambda: _upsert_earnings(conn, ticker, uw.earnings(ticker)))
-        _step("volatility",     lambda: _upsert_volatility_stats(conn, ticker, uw.volatility_stats(ticker)))
         conn.commit()
     return {"ticker": ticker, **counts}
 

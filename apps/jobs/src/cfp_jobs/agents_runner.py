@@ -1201,7 +1201,10 @@ def run_analysts(database_url: str, ticker: str, sector: str = "", *, include_pe
             "mode": "invoke",
         },
     ):
-        result = graph.invoke(state)
+        # max_concurrency lets LangGraph run all 13 personas (and the parallel
+        # rebuttals + researchers) at the same time instead of in batches of
+        # ~CPU count. LLM calls are I/O-bound, so 20 concurrent threads is fine.
+        result = graph.invoke(state, config={"max_concurrency": 20})
     _lf_flush()
 
     analyst_sigs: list[AgentSignal] = result.get("analyst_signals", []) or []
@@ -1320,9 +1323,11 @@ def run_analysts_streaming(
             "llm_override": llm_override,
         },
     ):
+        # max_concurrency=20 lets LangGraph run all 13 personas + parallel
+        # rebuttal/researcher pairs at the same time (LLM calls are I/O-bound).
         # graph.stream() yields one chunk per node completion. Each chunk is
         # {node_name: state_delta} where state_delta is the fields that node added.
-        for chunk in graph.stream(state):
+        for chunk in graph.stream(state, config={"max_concurrency": 20}):
             for _node_name, delta in chunk.items():
                 if not isinstance(delta, dict):
                     continue
