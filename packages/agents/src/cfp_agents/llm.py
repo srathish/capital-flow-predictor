@@ -201,6 +201,16 @@ class LlmClient:
                     DEFAULT_ANTHROPIC_MODEL if provider == "anthropic"
                     else DEFAULT_MOONSHOT_MODEL
                 )
+            # Override targeted a provider that isn't configured on this host —
+            # raise loudly instead of silently producing "empty LLM response"
+            # for every agent. The surrounding persona/synthesizer catches this
+            # and surfaces the reason in the agent rationale.
+            if client is None:
+                raise RuntimeError(
+                    f"Deep Analysis override requested provider {provider!r} "
+                    f"but no client could be built — check that "
+                    f"{provider.upper()}_API_KEY is set in this environment."
+                )
         else:
             client = self._client
 
