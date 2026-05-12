@@ -157,6 +157,34 @@ tickers as options-trade candidates by combining flow conviction (from
 the `whale_conviction` table, migration `0014`) with the XGB sector
 signal and momentum/volatility features.
 
+### GEX — morning brief + intraday level alerts (SPY / QQQ / SPXW)
+
+The GEX tab surfaces structural reads from the **skylit.ai / Heatseeker
+0DTE GEX data** for the index trio. The morning brief auto-fires at
+**09:31 ET** on NYSE trading days with king nodes, pika floors and
+ceilings, barney walls, regime score, bias, and active patterns per
+ticker. Intraday checkpoints (10:00, 10:30, …, 15:55 ET) emit a card
+**only when something material changed since the last baseline** —
+regime crossing ±0.30, king sign flip, spot breaking a baseline floor or
+ceiling, trinity alignment shift, or a new pattern detected. Filter by
+source (Brief / Monitor / Scanner) or by ticker.
+
+A live skylit auth status badge (green / yellow / red) sits at the top
+of the page along with a **Re-auth skylit** button — clicking it queues
+a job for the local `cfp-jobs skylit-watch` daemon, which opens a
+Chromium window for Discord OAuth and writes the captured Clerk cookie
+back into Postgres so the next deploy survives without manual re-auth.
+With the in-process rotation persistence fix, you only need to re-auth
+when Clerk genuinely expires the underlying session (roughly once a
+quarter, not every other day).
+
+The poller, scheduler, brief, and monitor all live in `apps/gex/` and
+deploy as a second Railway service alongside the API, reading cookies
+from Postgres (`skylit_credentials`) on boot. See
+[apps/gex/railway.toml](apps/gex/railway.toml) for service setup notes
+and the bootstrap CLI (`cfp-jobs skylit-bootstrap`) for the one-time
+migration of cookies from a local `.env`.
+
 ### Top-level assistant
 
 A floating chat dock is mounted on every page. SSE-streamed Moonshot
@@ -174,9 +202,10 @@ against what you're looking at.
 
 ```
 apps/
-  api/        # FastAPI inference + chat service
-  jobs/       # Ingestion, training, ensemble runner, watchlist builder
-  web/        # Next.js 15 + React 19 + Tailwind + lightweight-charts
+  api/        # FastAPI inference + chat service (Railway)
+  jobs/       # Ingestion, training, ensemble runner, watchlist builder, skylit-watch daemon
+  web/        # Next.js 15 + React 19 + Tailwind + lightweight-charts (Vercel)
+  gex/        # Node.js Heatseeker SSE poller + 09:31 ET scheduler + intraday monitor (Railway, separate service)
 packages/
   shared/     # Pydantic schemas
   features/   # Feature engineering (Alpha158, Granger, sector flows)
@@ -184,8 +213,9 @@ packages/
   agents/     # 25-agent ensemble (LangGraph state machine)
   skills/     # Claude skill bundles
 infra/
-  migrations/ # SQL migrations (0001..0014)
-  railway.toml
+  migrations/ # SQL migrations (0001..0017)
+  railway.toml      # API service config
+                    # Note: apps/gex has its own railway.toml — second service in the same project
 docs/
   DESIGN.md
   screenshots/
@@ -265,15 +295,41 @@ uv run --package cfp-jobs cfp-jobs build-watchlist
 ### Skylit (Heatseeker) login refresh
 
 skylit.ai sits behind Clerk + Discord OAuth. Discord blocks programmatic
-login (captcha + ToS), so we drive a real Chromium window once via
-Playwright; the script captures the long-lived `__client` cookie + Clerk
-session id and writes them to the consumer `.env`. Clerk auto-refresh
-keeps JWTs fresh for months after that.
+login (captcha + ToS), so a human consent click in a real Chromium
+window is unavoidable. With the gex service deployed on Railway,
+cookies now live in Postgres (`skylit_credentials`); the laptop's only
+role is to capture fresh cookies when needed, which the
+**rotation-persistence fix** makes a roughly quarterly event rather
+than daily.
+
+Two workflows depending on whether you're seeding for the first time or
+refreshing later:
+
+**One-time bootstrap** — if you already have valid CLERK_* values in a
+local `.env` (e.g. you ran the standalone gexester-vexster before),
+seed Postgres without re-doing OAuth:
+
+```bash
+BELLWETHER_API_URL=https://capital-flow-predictor-production.up.railway.app \
+BELLWETHER_API_KEY=<your key> \
+uv run cfp-jobs skylit-bootstrap
+```
+
+**Ongoing re-auth** — leave this daemon running on your laptop; it
+long-polls Bellwether for re-auth requests, opens Chromium for Discord
+OAuth on demand (click the **Re-auth skylit** button in the GEX tab),
+and writes the captured cookies back to Postgres automatically.
 
 ```bash
 uv run playwright install chromium
-uv run cfp-jobs skylit-login
+caffeinate -i env \
+  BELLWETHER_API_URL=https://capital-flow-predictor-production.up.railway.app \
+  BELLWETHER_API_KEY=<your key> \
+  uv run cfp-jobs skylit-watch
 ```
+
+`cfp-jobs skylit-login` (the original one-shot CLI that writes to `.env`)
+still works for fully-local dev where Postgres isn't in play.
 
 ### Capturing fresh README screenshots
 

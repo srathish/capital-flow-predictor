@@ -356,13 +356,21 @@ export default function GexPage() {
 
       {feed.length === 0 && !feedError && (
         <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground">
-          No GEX feed entries yet.{" "}
           {status?.health === "red" ? (
-            <>skylit auth is broken — fix it first.</>
+            <>skylit auth is broken — fix it before market open.</>
           ) : status?.health === "yellow" ? (
-            <>gexester hasn&apos;t reported in a while — is it running?</>
+            <>
+              The gex service hasn&apos;t reported in a while. Check the Railway
+              service logs.
+            </>
           ) : (
-            <>Run gexester locally and embed posts will mirror here.</>
+            <>
+              Morning briefs auto-fire at <span className="font-mono">09:31 ET</span>{" "}
+              on NYSE trading days. Intraday updates post here when something
+              material changes for SPY / QQQ / SPXW — king node flip, regime
+              cross, floor or ceiling break, structural divergence. Nothing
+              has fired today yet; sit tight.
+            </>
           )}
         </div>
       )}
