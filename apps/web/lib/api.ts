@@ -10,6 +10,7 @@ import type {
   CustomWatchlistResponse,
   ExpandedSectorResponse,
   PersonaComparisonResponse,
+  ReplayResponse,
   FlowParams,
   FlowResponse,
   HoldingsResponse,
@@ -273,8 +274,14 @@ export const api = {
     if (params.limit !== undefined) sp.set("limit", String(params.limit));
     if (params.lookbackDays !== undefined) sp.set("lookback_days", String(params.lookbackDays));
     if (params.finvizPreset) sp.set("finviz_preset", params.finvizPreset);
+    if (params.sort) sp.set("sort", params.sort);
     const qs = sp.toString();
     return getJson<StockScreenResponse>(`/v1/stocks/screen${qs ? `?${qs}` : ""}`);
+  },
+  agentsReplay(ticker: string, isoDate: string): Promise<ReplayResponse> {
+    return getJson<ReplayResponse>(
+      `/v1/agents/${encodeURIComponent(ticker)}/replay?date=${encodeURIComponent(isoDate)}`,
+    );
   },
   finvizPresets(): Promise<FinvizPresetsResponse> {
     return getJson<FinvizPresetsResponse>("/v1/stocks/finviz-presets");

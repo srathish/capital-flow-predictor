@@ -711,6 +711,8 @@ export type StockScreenItem = {
   expected_move_pct: number | null;
   near_earnings: boolean;
   composite_score: number;
+  opportunity_score: number | null;
+  opportunity_breakdown: Record<string, number> | null;
   rationale: string | null;
   has_agent_verdict: boolean;
 };
@@ -733,6 +735,7 @@ export type ScreenerParams = {
   limit?: number;
   lookbackDays?: number;
   finvizPreset?: string;
+  sort?: "composite" | "opportunity" | "confidence" | "iv_rank" | "open_interest";
 };
 
 export type FinvizPreset = {
@@ -743,6 +746,33 @@ export type FinvizPreset = {
 
 export type FinvizPresetsResponse = {
   presets: FinvizPreset[];
+};
+
+export type ReplayForwardReturn = {
+  horizon_days: number;
+  ticker_return: number | null;
+  spy_return: number | null;
+  excess_return: number | null;
+  hit: boolean | null;
+};
+
+export type ReplaySignal = {
+  agent: string;
+  signal: string | null;
+  confidence: number | null;
+  rationale: string | null;
+  payload: Record<string, unknown>;
+};
+
+export type ReplayResponse = {
+  ticker: string;
+  as_of: string;
+  run_ts: string | null;
+  has_bundle: boolean;
+  pm_signal: string | null;
+  pm_confidence: number | null;
+  forward_returns: ReplayForwardReturn[];
+  signals: ReplaySignal[];
 };
 
 export type CustomWatchlistEntry = {

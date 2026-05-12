@@ -38,6 +38,8 @@ on:
     - cron: "30 7 * * *"
     # Weekly Sunday 07:00 UTC — retrain XGB ranker on latest features (Alpha158 + originals)
     - cron: "0 7 * * 0"
+    # 09:00 ET (= 13:00 UTC) weekdays — pre-market brief.
+    - cron: "0 13 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -57,6 +59,7 @@ on:
           - whale-conviction
           - flow-universe
           - flow-volatility
+          - morning-brief
 
 jobs:
   reddit-catalysts:
@@ -153,6 +156,25 @@ jobs:
       - name: Compute forward returns for matured agent signals
         working-directory: apps/jobs
         run: uv run cfp-jobs eval-agents
+
+  morning-brief:
+    # Pre-market brief — 09:00 ET (13:00 UTC) weekdays. Posts rank movers,
+    # watchlist deltas, stale-table warnings, and today/tomorrow earnings
+    # to MORNING_BRIEF_WEBHOOK_URL (Discord-compatible). No webhook = no-op.
+    if: github.event.schedule == '0 13 * * 1-5' || github.event.inputs.job == 'morning-brief'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      MORNING_BRIEF_WEBHOOK_URL: ${{ secrets.MORNING_BRIEF_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Build + post pre-market brief
+        working-directory: apps/jobs
+        run: uv run cfp-jobs morning-brief
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the

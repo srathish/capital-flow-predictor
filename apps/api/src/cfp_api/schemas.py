@@ -131,6 +131,11 @@ class StockScreenItem(BaseModel):
     expected_move_pct: float | None = None
     near_earnings: bool = False  # within exclude_earnings_within_days
     composite_score: float  # confidence × coalesce(iv_rank, 0.5) × √max(oi, 1)
+    # Composite opportunity score in [0,100] — combines PM conviction, IV rank,
+    # liquidity, sector strength, and earnings proximity into one rankable number.
+    # Breakdown lives in `opportunity_breakdown` so the UI can show "why" tooltips.
+    opportunity_score: float | None = None
+    opportunity_breakdown: dict[str, float] | None = None
     rationale: str | None = None
     has_agent_verdict: bool = True  # False when ticker came from Finviz with no recent PM run
 

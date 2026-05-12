@@ -27,6 +27,7 @@ from rich.table import Table  # noqa: E402
 
 from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
+from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import train as train_mod  # noqa: E402
 from cfp_jobs import watchlist as watchlist_mod  # noqa: E402
 from cfp_jobs.db import to_psycopg_url  # noqa: E402
@@ -841,6 +842,30 @@ def status() -> None:
     for tbl, rows, latest, keys in results:
         table.add_row(tbl, f"{rows:,}", str(latest or "—"), str(keys))
     console.print(table)
+
+
+@app.command("morning-brief")
+def morning_brief_cmd(
+    webhook: str = typer.Option(
+        "",
+        envvar="MORNING_BRIEF_WEBHOOK_URL",
+        help=(
+            "Discord/Slack webhook URL. If empty, the brief is printed to stdout "
+            "and NOT posted. Read from MORNING_BRIEF_WEBHOOK_URL env if unset."
+        ),
+    ),
+    dry_run: bool = typer.Option(False, help="Build the brief but never post."),
+) -> None:
+    """Build the pre-market brief and (optionally) POST it to a webhook.
+
+    Designed for the GH Actions data-refresh cron at 09:00 ET on weekdays.
+    """
+    target = "" if dry_run else webhook
+    brief = morning_brief_mod.run(settings.database_url, webhook_url=target)
+    n = sum(len(brief.get(k, [])) for k in ("rank_movers", "watchlist_deltas", "stale_tables", "earnings_today_tomorrow"))
+    console.print(f"morning-brief: {n} entries across all sections")
+    if target:
+        console.print(f"  posted: {brief.get('_post_status')}")
 
 
 if __name__ == "__main__":

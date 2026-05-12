@@ -14,6 +14,7 @@ returning candidates with null IV/OI rather than excluding them. The
 
 from __future__ import annotations
 
+import math
 from datetime import date as date_t
 from typing import Any
 
@@ -42,6 +43,56 @@ _PM_TO_WATCHLIST_SIGNAL_SQL = """
         ELSE 'avoid'
     END
 """
+
+
+def _opportunity_score(
+    *,
+    confidence: float,
+    iv_rank: float | None,
+    open_interest: int | None,
+    universe_rank: int | None,
+    near_earnings: bool,
+    has_verdict: bool,
+    signal: str | None,
+) -> tuple[float | None, dict[str, float]]:
+    """Composite 0-100 opportunity score with an interpretable breakdown.
+
+    Borrowed from the options-test repo's 0-120 scoring idea, retargeted to
+    the inputs we already compute in the screener so we don't double-fetch.
+    Components (max points):
+        conviction      40  — PM confidence × signal weight (avoid = 0)
+        iv_rank         20  — implied vol within trailing-90d range
+        liquidity       20  — log10(open_interest) scaled
+        sector_strength 15  — top XGB-ranked sectors get more points
+        earnings_window  5  — proximity penalty inverted; clean = full points
+
+    Returns (None, {}) when there's no PM verdict — Finviz-only rows opt out
+    of the score so we don't pretend conviction exists.
+    """
+    if not has_verdict:
+        return None, {}
+    signal_weight = {"long": 1.0, "short": 0.85, "avoid": 0.0}.get(signal or "", 0.0)
+    conviction_pts = max(0.0, min(1.0, confidence)) * signal_weight * 40.0
+    iv_pts = max(0.0, min(1.0, (iv_rank if iv_rank is not None else 0.0))) * 20.0
+    # log10(1) = 0 → minimum, log10(1e5) = 5 → max. Scale to 20.
+    if open_interest is None or open_interest <= 0:
+        liq_pts = 0.0
+    else:
+        liq_pts = max(0.0, min(20.0, math.log10(open_interest + 1) * 4.0))
+    if universe_rank is None:
+        sector_pts = 5.0
+    else:
+        # universe_rank is 1..~26 sectors. Rank 1-3 = 15 pts, then decays.
+        sector_pts = max(0.0, 15.0 - max(0, universe_rank - 1) * 0.7)
+    earnings_pts = 0.0 if near_earnings else 5.0
+    total = conviction_pts + iv_pts + liq_pts + sector_pts + earnings_pts
+    return round(total, 2), {
+        "conviction": round(conviction_pts, 2),
+        "iv_rank": round(iv_pts, 2),
+        "liquidity": round(liq_pts, 2),
+        "sector_strength": round(sector_pts, 2),
+        "earnings_window": round(earnings_pts, 2),
+    }
 
 
 @router.get("/finviz-presets", response_model=FinvizPresetsResponse)
@@ -80,6 +131,14 @@ async def screen_stocks(
             "If set, constrain the universe to tickers from this Finviz preset "
             "(see /v1/stocks/finviz-presets). Agent verdicts are LEFT-joined, "
             "so tickers with no recent agent run still appear (with null conf)."
+        ),
+    ),
+    sort: str = Query(
+        default="composite",
+        pattern="^(composite|opportunity|confidence|iv_rank|open_interest)$",
+        description=(
+            "Rank order. 'composite' (default, legacy) keeps confidence×iv×√oi; "
+            "'opportunity' uses the 0-100 composite score (recommended)."
         ),
     ),
 ) -> StockScreenResponse:
@@ -333,6 +392,15 @@ async def screen_stocks(
         if near_earn:
             continue
 
+        opp_score, opp_breakdown = _opportunity_score(
+            confidence=conf,
+            iv_rank=iv_rank_val,
+            open_interest=total_oi,
+            universe_rank=r["universe_rank"],
+            near_earnings=near_earn,
+            has_verdict=has_verdict,
+            signal=sig,
+        )
         items.append(
             StockScreenItem(
                 ticker=r["ticker"],
@@ -351,10 +419,23 @@ async def screen_stocks(
                 ),
                 near_earnings=near_earn,
                 composite_score=float(r["composite_score"] or 0.0),
+                opportunity_score=opp_score,
+                opportunity_breakdown=opp_breakdown,
                 rationale=r["rationale"],
                 has_agent_verdict=has_verdict,
             )
         )
+
+    # Re-sort if a non-default order was requested. SQL ordered by composite —
+    # for any other key, sort the materialized list in Python (cheap, N ≤ 100s).
+    if sort == "opportunity":
+        items.sort(key=lambda i: (i.opportunity_score or 0.0), reverse=True)
+    elif sort == "confidence":
+        items.sort(key=lambda i: i.confidence, reverse=True)
+    elif sort == "iv_rank":
+        items.sort(key=lambda i: (i.iv_rank or 0.0), reverse=True)
+    elif sort == "open_interest":
+        items.sort(key=lambda i: (i.open_interest or 0), reverse=True)
 
     items = items[:limit]
 
