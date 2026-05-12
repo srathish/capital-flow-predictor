@@ -100,6 +100,31 @@ const SUGGESTIONS = [
   "Open the network graph",
 ];
 
+// Persist chat across page refreshes within the same browser tab. We drop the
+// `pending` flag on save so a refresh mid-stream doesn't leave a ghost spinner.
+const STORAGE_KEY = "bellwether.assistant.dock.v1";
+
+function loadStoredMessages(): DockMessage[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((m: unknown): m is DockMessage => {
+        if (!m || typeof m !== "object") return false;
+        const r = (m as { role?: unknown }).role;
+        return r === "user" || r === "assistant";
+      })
+      .map((m) =>
+        m.role === "assistant" ? { ...m, pending: false } : m,
+      );
+  } catch {
+    return [];
+  }
+}
+
 // ---- Component ----
 
 export function AssistantDock() {
@@ -107,6 +132,32 @@ export function AssistantDock() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<DockMessage[]>([]);
   const [streaming, setStreaming] = useState(false);
+  const hydratedRef = useRef(false);
+
+  // Rehydrate prior session on mount; runs once. We do this in an effect rather
+  // than as initial useState to avoid SSR/CSR hydration mismatch on the dock.
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    const restored = loadStoredMessages();
+    if (restored.length) setMessages(restored);
+  }, []);
+
+  // Persist on every change, but only after hydration so we don't immediately
+  // overwrite stored messages with an empty initial state.
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    if (typeof window === "undefined") return;
+    try {
+      if (messages.length === 0) {
+        window.sessionStorage.removeItem(STORAGE_KEY);
+      } else {
+        window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      }
+    } catch {
+      // sessionStorage can fail (quota, private mode) — degrade silently
+    }
+  }, [messages]);
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
