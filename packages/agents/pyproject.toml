@@ -12,10 +12,12 @@ dependencies = [
     "openai>=1.40",  # OpenAI-compatible providers (Moonshot/Kimi, etc.)
     "langfuse>=3.0",  # observability — no-op without LANGFUSE_PUBLIC_KEY env var
     "cfp-shared",
+    "cfp-models",  # position sizing math + Monte Carlo lives here
 ]
 
 [tool.uv.sources]
 cfp-shared = { workspace = true }
+cfp-models = { workspace = true }
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3"]

@@ -106,9 +106,18 @@ def _latest_realized_vol(prices: pd.DataFrame | None) -> float | None:
 
 
 def deterministic_target_weight(state: AnalysisState) -> tuple[float, dict]:
-    """Compute baseline target weight from trader confidence + vol scaling.
+    """Compute baseline target weight from trader confidence + Kelly + regime + vol.
 
-    Returns (weight, breakdown) where breakdown explains the components.
+    Layered sizing (each multiplier defends a different lens):
+      1. Kelly fraction from (win_prob = trader.confidence, win_loss_ratio = 2)
+      2. Half-Kelly haircut + per-position cap (10%)
+      3. Regime multiplier (1.0 bull / 0.5 chop / 0.0 bear) from the EvidenceBundle
+      4. Vol scale: realized vol > 40% halves the position
+      5. Vote alignment: if the weighted ensemble vote contradicts the trader's
+         direction, halve the position again
+
+    The breakdown dict is what the LLM commentary sees, so naming matches the
+    fields personas can reference (kelly_raw, regime, etc.).
     """
     trader: AgentSignal | None = state.get("trader_decision")
     if trader is None:
@@ -116,30 +125,55 @@ def deterministic_target_weight(state: AnalysisState) -> tuple[float, dict]:
 
     direction = (trader.payload or {}).get("direction", "wait")
     if direction in {"avoid", "wait"}:
-        return 0.0, {"reason": f"trader_direction={direction}"}
+        return 0.0, {"reason": f"trader_direction={direction}", "direction": direction}
 
-    base = trader.confidence * MAX_PER_POSITION
+    # Kelly + caps live in cfp_models so the API can call the same math when
+    # backtesting position sizing without re-importing the agent stack.
+    from cfp_models.position_sizing import PositionSizingConfig, size_position
+
+    # Pull regime context off the EvidenceBundle when present; default to chop
+    # (0.5 risk_multiplier) so a missing bundle still gets a reasonable sizing.
+    bundle = state.get("evidence")
+    regime_mult = 0.5
+    regime_label = "unknown"
+    if bundle is not None and getattr(bundle, "market_regime", None) is not None:
+        regime_mult = float(bundle.market_regime.risk_multiplier or 0.5)
+        regime_label = bundle.market_regime.regime or "unknown"
+
     vol = _latest_realized_vol(state.get("prices"))
     vol_scale = 1.0
     if vol is not None and vol > HIGH_VOL_THRESHOLD:
         vol_scale = 0.5
 
-    # Sanity check: vote agrees with trader direction?
+    # Vote alignment sanity check (preserves v1 behavior).
     agg = aggregate_vote(state)
     direction_sign = {"long": 1.0, "short": -1.0}.get(direction, 0.0)
     vote_aligned = (agg["weighted_score"] * direction_sign) > 0
 
-    weight = base * vol_scale
+    sizing = size_position(
+        win_prob=max(0.0, min(1.0, trader.confidence)),
+        win_loss_ratio=2.0,  # canonical 2:1 reward:risk for a thesis-driven position
+        regime_multiplier=regime_mult,
+        current_drawdown=0.0,  # no portfolio-level DD telemetry yet
+        cfg=PositionSizingConfig(max_per_position=MAX_PER_POSITION, kelly_haircut=0.5),
+    )
+    weight = sizing["final_size"] * vol_scale
     if not vote_aligned:
-        weight *= 0.5  # vote disagrees with trader direction — half size
+        weight *= 0.5
 
     return weight, {
-        "base": base,
+        "kelly_raw": sizing["kelly_raw"],
+        "kelly_sized": sizing["kelly_sized"],
+        "regime": regime_label,
+        "regime_mult": regime_mult,
         "vol_scale": vol_scale,
         "realized_vol_20d": vol,
         "vote_aligned": vote_aligned,
         "direction": direction,
         "trader_confidence": trader.confidence,
+        # `base` is kept for backward-compat with existing prompt/log code that
+        # references it; equals the half-Kelly sized fraction before regime/vol.
+        "base": sizing["kelly_sized"],
     }
 
 

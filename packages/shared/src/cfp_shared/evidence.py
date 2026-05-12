@@ -267,11 +267,26 @@ class EtfContextCtx(_Frozen):
 
 
 class MarketRegimeCtx(_Frozen):
-    """Reserved for Tier 2: VIX, breadth, term structure, FOMC proximity."""
+    """Market regime + structural risk signals fed to every agent.
+
+    `regime` is one of {bull, chop, bear, unknown}. `risk_multiplier` (0..1)
+    is the position-sizing knob: 1.0 in bull, 0.5 in chop, 0.0 in bear.
+    """
 
     vix: float | None = None
     spx_trend: str | None = None
     fomc_proximity_days: int | None = None
+    regime: str = "unknown"
+    risk_multiplier: float = 0.5
+    breadth_pct_above_50d: float | None = None
+    spy_above_50d: bool | None = None
+    spy_above_200d: bool | None = None
+    # Tier-3 add-ons: insider sentiment + dark-pool ratio + reddit velocity.
+    # These three signals are read by the same risk-on/off lens that uses
+    # VIX/breadth, so keeping them on this ctx avoids a flag-day on the schema.
+    insider_net_buy_30d_usd: float | None = None
+    dark_pool_volume_ratio: float | None = None
+    reddit_mention_velocity_7d: float | None = None
 
 
 class VolSurfaceCtx(_Frozen):

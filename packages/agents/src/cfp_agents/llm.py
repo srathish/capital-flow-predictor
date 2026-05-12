@@ -136,6 +136,42 @@ class LlmClient:
     def available(self) -> bool:
         return self._client is not None
 
+    def _get_alt_client(self, provider: str) -> tuple[object | None, str | None]:
+        """Lazily build and cache a secondary SDK client for ``provider``.
+
+        Used when a per-call override targets a different provider than the
+        one this LlmClient was constructed for (e.g. default Kimi but the
+        Deep Analysis button asks for Anthropic on a single run)."""
+        if not hasattr(self, "_alt_clients"):
+            self._alt_clients: dict[str, tuple[object | None, str | None]] = {}
+        if provider in self._alt_clients:
+            return self._alt_clients[provider]
+
+        client: object | None = None
+        key: str | None = None
+        if provider == "anthropic":
+            key = os.environ.get("ANTHROPIC_API_KEY", "")
+            if key:
+                try:
+                    import anthropic
+                    client = anthropic.Anthropic(api_key=key)
+                except ImportError:
+                    client = None
+        elif provider == "moonshot":
+            key = os.environ.get("MOONSHOT_API_KEY", "")
+            base = os.environ.get("MOONSHOT_BASE_URL", DEFAULT_MOONSHOT_BASE_URL)
+            if key:
+                try:
+                    from openai import OpenAI
+                    client = OpenAI(api_key=key, base_url=base)
+                except ImportError:
+                    client = None
+        else:
+            raise ValueError(f"Unknown provider: {provider!r}")
+
+        self._alt_clients[provider] = (client, key)
+        return client, key
+
     def parse(
         self,
         *,
@@ -145,24 +181,42 @@ class LlmClient:
         max_tokens: int = 1024,
         trace_name: str = "llm.parse",
         trace_metadata: dict[str, Any] | None = None,
+        provider_override: str | None = None,
+        model_override: str | None = None,
     ) -> T | None:
         """Provider-dispatched structured-output call. Returns None if unavailable.
 
         ``trace_name`` and ``trace_metadata`` flow through to Langfuse so the
-        per-persona trace is visible (no-op when Langfuse isn't configured)."""
-        if self._client is None:
+        per-persona trace is visible (no-op when Langfuse isn't configured).
+
+        ``provider_override`` / ``model_override`` let a single call escape the
+        process-wide default — used by the Deep Analysis button to run a
+        specific ticker on Claude while the rest of the app stays on Kimi."""
+        provider = (provider_override or self.provider).lower()
+        model = model_override or (self.model if provider == self.provider else None)
+        if provider != self.provider:
+            client, _ = self._get_alt_client(provider)
+            if model is None:
+                model = (
+                    DEFAULT_ANTHROPIC_MODEL if provider == "anthropic"
+                    else DEFAULT_MOONSHOT_MODEL
+                )
+        else:
+            client = self._client
+
+        if client is None:
             return None
 
         with trace_generation(
             name=trace_name,
-            model=self.model,
+            model=model,
             input_data={"system": system_prompt, "user": user_prompt},
-            metadata={"provider": self.provider, **(trace_metadata or {})},
+            metadata={"provider": provider, **(trace_metadata or {})},
         ) as gen:
             try:
-                if self.provider == "anthropic":
-                    response = self._client.messages.parse(  # type: ignore[union-attr]
-                        model=self.model,
+                if provider == "anthropic":
+                    response = client.messages.parse(  # type: ignore[union-attr]
+                        model=model,
                         max_tokens=max_tokens,
                         system=[
                             {
@@ -175,11 +229,11 @@ class LlmClient:
                         output_format=output_format,
                     )
                     parsed = response.parsed_output  # type: ignore[union-attr]
-                elif self.provider == "moonshot":
+                elif provider == "moonshot":
                     # OpenAI-compatible: system + user as plain messages, beta.parse()
                     # for client-side Pydantic validation against the response.
-                    response = self._client.beta.chat.completions.parse(  # type: ignore[union-attr]
-                        model=self.model,
+                    response = client.beta.chat.completions.parse(  # type: ignore[union-attr]
+                        model=model,
                         max_tokens=max_tokens,
                         messages=[
                             {"role": "system", "content": system_prompt},
@@ -189,9 +243,9 @@ class LlmClient:
                     )
                     parsed = response.choices[0].message.parsed
                 else:
-                    raise ValueError(f"Unknown provider: {self.provider!r}")
+                    raise ValueError(f"Unknown provider: {provider!r}")
 
-                usage = extract_usage(response, self.provider)
+                usage = extract_usage(response, provider)
                 gen.update(
                     output=parsed.model_dump() if isinstance(parsed, BaseModel) else parsed,
                     usage_details=usage,
@@ -209,6 +263,8 @@ class LlmClient:
         max_tokens: int = 1024,
         trace_name: str = "persona.parse",
         trace_metadata: dict[str, Any] | None = None,
+        provider_override: str | None = None,
+        model_override: str | None = None,
     ) -> PersonaOutput | None:
         """Backwards-compat wrapper for the persona path. Calls ``parse`` with PersonaOutput."""
         return self.parse(
@@ -218,6 +274,8 @@ class LlmClient:
             max_tokens=max_tokens,
             trace_name=trace_name,
             trace_metadata=trace_metadata,
+            provider_override=provider_override,
+            model_override=model_override,
         )
 
     # ------- async streaming chat (used by the API's /chat/* endpoints) -------

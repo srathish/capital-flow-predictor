@@ -16,6 +16,8 @@ COPY pyproject.toml uv.lock /app/
 COPY packages /app/packages
 COPY apps/api /app/apps/api
 COPY apps/jobs /app/apps/jobs
+# Schema migrations applied at startup by cfp_api.migrations.
+COPY infra/migrations /app/infra/migrations
 
 # Install the workspace; --no-dev skips test + lint extras.
 RUN uv sync --frozen --no-dev --package cfp-api

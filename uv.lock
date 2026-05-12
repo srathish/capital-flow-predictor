@@ -193,6 +193,7 @@ version = "0.1.0"
 source = { editable = "packages/agents" }
 dependencies = [
     { name = "anthropic" },
+    { name = "cfp-models" },
     { name = "cfp-shared" },
     { name = "langfuse" },
     { name = "langgraph" },
@@ -210,6 +211,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.40" },
+    { name = "cfp-models", editable = "packages/models" },
     { name = "cfp-shared", editable = "packages/shared" },
     { name = "langfuse", specifier = ">=3.0" },
     { name = "langgraph", specifier = ">=0.2" },

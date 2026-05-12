@@ -78,3 +78,17 @@ class AnalysisState(TypedDict, total=False):
     trader_decision: AgentSignal
     risk_assessment: AgentSignal
     portfolio_decision: AgentSignal
+
+    # Optional per-run LLM override (Deep Analysis button). When set, every
+    # persona / synthesizer / debate node routes its call to this provider+model
+    # instead of the process-wide LLM_PROVIDER default. Shape: {"provider": str,
+    # "model": str | None}.
+    llm_override: dict[str, str]
+
+
+def llm_override_for(state: AnalysisState) -> tuple[str | None, str | None]:
+    """Pull (provider, model) overrides from state, if any. Both may be None."""
+    override = state.get("llm_override")
+    if not override:
+        return (None, None)
+    return (override.get("provider"), override.get("model"))

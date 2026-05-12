@@ -57,10 +57,21 @@ class ApiError extends Error {
   }
 }
 
+function authHeaders(): Record<string, string> {
+  // NEXT_PUBLIC_API_KEY is read at build time on the client; on the server we
+  // also accept the server-only API_KEY. Empty string means "no auth header" —
+  // matches the API's "auth disabled when API_KEYS unset" behavior.
+  const key =
+    typeof window === "undefined"
+      ? process.env.API_KEY ?? process.env.NEXT_PUBLIC_API_KEY
+      : process.env.NEXT_PUBLIC_API_KEY;
+  return key ? { Authorization: `Bearer ${key}` } : {};
+}
+
 async function getJson<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${baseUrl()}${path}`, {
     ...init,
-    headers: { Accept: "application/json", ...(init?.headers ?? {}) },
+    headers: { Accept: "application/json", ...authHeaders(), ...(init?.headers ?? {}) },
     cache: init?.cache ?? "no-store",
   });
   if (!res.ok) {
@@ -294,7 +305,7 @@ export const api = {
     const qs = sector ? `?sector=${encodeURIComponent(sector)}` : "";
     return fetch(`${baseUrl()}/v1/agents/${encodeURIComponent(ticker)}/run${qs}`, {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: { Accept: "application/json", ...authHeaders() },
     }).then(async (res) => {
       if (!res.ok) {
         const body = await res.text().catch(() => "");
@@ -317,7 +328,12 @@ export const api = {
   addToCustomWatchlist(sessionId: string, ticker: string, note?: string): Promise<CustomWatchlistResponse> {
     return fetch(`${baseUrl()}/v1/watchlist/custom/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", "X-Session-Id": sessionId },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...authHeaders(),
+        "X-Session-Id": sessionId,
+      },
       body: JSON.stringify({ ticker, note }),
     }).then(async (res) => {
       if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
@@ -327,7 +343,7 @@ export const api = {
   removeFromCustomWatchlist(sessionId: string, ticker: string): Promise<CustomWatchlistResponse> {
     return fetch(`${baseUrl()}/v1/watchlist/custom/${encodeURIComponent(ticker)}`, {
       method: "DELETE",
-      headers: { Accept: "application/json", "X-Session-Id": sessionId },
+      headers: { Accept: "application/json", ...authHeaders(), "X-Session-Id": sessionId },
     }).then(async (res) => {
       if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
       return (await res.json()) as CustomWatchlistResponse;
@@ -377,7 +393,11 @@ async function* streamChat(
 ): AsyncGenerator<ChatStreamEvent> {
   const res = await fetch(`${baseUrl()}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "text/event-stream",
+      ...authHeaders(),
+    },
     body: JSON.stringify({ messages, ...(runTs ? { run_ts: runTs } : {}) }),
     signal,
   });

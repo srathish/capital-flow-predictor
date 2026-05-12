@@ -23,6 +23,7 @@ from cfp_shared import (
     EtfContextCtx,
     EvidenceBundle,
     Instrument,
+    MarketRegimeCtx,
     NewsHeadline,
     OptionsFlowCtx,
     PositioningCtx,
@@ -927,6 +928,106 @@ def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) 
     )
 
 
+def _build_market_regime_ctx(
+    database_url: str,
+    ticker: str,
+    smart_money_dict: dict,
+    dark_pool_ctx: DarkPoolCtx,
+) -> MarketRegimeCtx:
+    """Compute the SPY/VIX regime label + structural risk signals.
+
+    Every input is best-effort: if SPY history is missing or the regime
+    computation throws, we return an "unknown" regime with a 0.5 risk
+    multiplier (chop-equivalent) so the ensemble still produces a defensible
+    size. Insider / dark-pool numbers are copied through from the already-
+    computed contexts; reddit velocity is computed here from reddit_mentions.
+    """
+    regime_label = "unknown"
+    risk_mult = 0.5
+    breadth: float | None = None
+    spy50: bool | None = None
+    spy200: bool | None = None
+    vix: float | None = None
+    spx_trend: str | None = None
+
+    try:
+        from cfp_features.regime import label_regimes
+
+        with connect(database_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT ts, symbol, close FROM prices_daily
+                WHERE symbol IN ('SPY', '^VIX')
+                  AND ts >= NOW() - INTERVAL '400 days'
+                ORDER BY ts
+                """,
+            )
+            rows = cur.fetchall()
+        if rows:
+            df = pd.DataFrame(rows, columns=["ts", "symbol", "close"])
+            wide = df.pivot_table(index="ts", columns="symbol", values="close", aggfunc="last")
+            if "SPY" in wide.columns:
+                wide = wide.sort_index()
+                out = label_regimes(wide)
+                last = out.iloc[-1]
+                regime_label = str(last["regime"])
+                risk_mult = float(last["risk_multiplier"])
+                spy50 = bool(last["spy_above_50d"]) if pd.notna(last["spy_above_50d"]) else None
+                spy200 = bool(last["spy_above_200d"]) if pd.notna(last["spy_above_200d"]) else None
+                if pd.notna(last["vix_level"]):
+                    vix = float(last["vix_level"])
+                spx_trend = "up" if spy50 else "down"
+    except Exception as e:  # noqa: BLE001 — never fail the bundle on a regime hiccup
+        log.warning("regime computation failed for %s: %s", ticker, e)
+
+    # Reddit mention velocity (7d slope) — best-effort, returns None on miss.
+    reddit_velocity: float | None = None
+    try:
+        from cfp_features.signals import reddit_mention_velocity
+
+        with connect(database_url) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT ts::date AS ts, ticker, COUNT(*)::int AS count
+                FROM reddit_mentions
+                WHERE ticker = %s
+                  AND ts >= NOW() - INTERVAL '21 days'
+                GROUP BY ts::date, ticker
+                ORDER BY ts
+                """,
+                (ticker,),
+            )
+            rows = cur.fetchall()
+        if rows and len(rows) >= 7:
+            df = pd.DataFrame(rows, columns=["ts", "ticker", "count"])
+            vel = reddit_mention_velocity(df, window=7)
+            if not vel.empty and ticker in vel.columns:
+                val = vel[ticker].dropna()
+                if not val.empty:
+                    reddit_velocity = float(val.iloc[-1])
+    except Exception as e:  # noqa: BLE001
+        log.debug("reddit velocity computation failed for %s: %s", ticker, e)
+
+    # Pass-through aggregates from already-computed contexts.
+    insider_net = smart_money_dict.get("insider_net_amount_30d")
+    dark_ratio = getattr(dark_pool_ctx, "dark_pool_pct_30d", None) or getattr(
+        dark_pool_ctx, "dark_pool_ratio", None
+    )
+
+    return MarketRegimeCtx(
+        vix=vix,
+        spx_trend=spx_trend,
+        regime=regime_label,
+        risk_multiplier=risk_mult,
+        breadth_pct_above_50d=breadth,
+        spy_above_50d=spy50,
+        spy_above_200d=spy200,
+        insider_net_buy_30d_usd=float(insider_net) if insider_net is not None else None,
+        dark_pool_volume_ratio=float(dark_ratio) if dark_ratio is not None else None,
+        reddit_mention_velocity_7d=reddit_velocity,
+    )
+
+
 def build_evidence_bundle(
     database_url: str, ticker: str, sector: str, run_ts: datetime
 ) -> tuple[EvidenceBundle, pd.DataFrame, pd.DataFrame]:
@@ -990,6 +1091,7 @@ def build_evidence_bundle(
 
     catalysts = _build_catalyst_ctx(database_url, ticker, instrument)
     reddit = _build_reddit_ctx(database_url, ticker)
+    market_regime = _build_market_regime_ctx(database_url, ticker, smart_money_dict, dark_pool)
 
     bundle = EvidenceBundle(
         run_ts=run_ts,
@@ -1003,6 +1105,7 @@ def build_evidence_bundle(
         catalysts=catalysts,
         etf_context=etf_context,
         reddit=reddit,
+        market_regime=market_regime,
     )
 
     return bundle, prices, fundamentals_df

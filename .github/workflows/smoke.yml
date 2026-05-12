@@ -1,0 +1,42 @@
+name: Post-deploy smoke
+
+# Fires after every push to main that succeeds in CI. Hits the prod API to
+# confirm the new deploy is live + healthy. Doesn't block the push (deploys
+# happen in parallel via Railway/Vercel webhooks), but surfaces a clear red
+# flag if something landed broken.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    # Give Railway/Vercel a minute to redeploy before we poke them.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for deploy to settle
+        run: sleep 90
+
+      - name: Run smoke test against prod
+        env:
+          API_BASE: ${{ vars.API_BASE_URL || 'https://api.bellwether.app' }}
+          API_KEY: ${{ secrets.SMOKE_API_KEY }}
+        run: ./scripts/smoke_test.sh
+
+      - name: Check stale_tables is empty
+        if: always()
+        env:
+          API_BASE: ${{ vars.API_BASE_URL || 'https://api.bellwether.app' }}
+          API_KEY: ${{ secrets.SMOKE_API_KEY }}
+        run: |
+          set -euo pipefail
+          body="$(curl -sf -H "Authorization: Bearer ${API_KEY:-}" "$API_BASE/v1/health/detailed")"
+          echo "$body" | jq .
+          stale_count="$(echo "$body" | jq '.stale_tables | length')"
+          if [[ "$stale_count" -gt 0 ]]; then
+              echo "::warning::$stale_count stale tables — a data-refresh cron is likely failing."
+              echo "$body" | jq '.stale_tables'
+          fi

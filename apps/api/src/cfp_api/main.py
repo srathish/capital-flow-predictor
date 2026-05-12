@@ -10,9 +10,11 @@ from cfp_api.auth import require_api_key
 from cfp_api.db import check_db_connection, close_pool, init_pool
 from cfp_api.logging_setup import RequestContextMiddleware, configure_logging
 from cfp_api.metrics import MetricsMiddleware, auth_failures_total, rate_limit_hits_total, render_metrics
+from cfp_api.migrations import apply_pending_migrations
 from cfp_api.routes import (
     agents,
     assistant,
+    backtest,
     chat,
     flow,
     health,
@@ -30,6 +32,7 @@ from cfp_api.settings import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     configure_logging(settings.log_level)
+    await apply_pending_migrations(settings.database_url)
     await init_pool(settings.database_url)
     yield
     await close_pool()
@@ -87,6 +90,7 @@ app.include_router(reddit.router, dependencies=PROTECTED)
 app.include_router(flow.router, dependencies=PROTECTED)
 app.include_router(assistant.router, dependencies=PROTECTED)
 app.include_router(stocks.router, dependencies=PROTECTED)
+app.include_router(backtest.router, dependencies=PROTECTED)
 # Health stays open — used by load balancers and the FE landing page.
 app.include_router(health.router)
 
