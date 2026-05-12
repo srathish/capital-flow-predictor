@@ -73,5 +73,94 @@ class CathieWoodPersona(BasePersona):
         "Final commitment: real curve + large TAM + accelerating revenue = bullish even at high multiples. Disrupted incumbent OR no exposure = bearish or pass. No Cathie-neutral on the binary frame — pick a side.",
     ]
 
-    def extra_context(self, state: AnalysisState) -> str:
-        return ""
+    def lens(self, state: AnalysisState) -> str:
+        # Cathie reads sector/industry as a disruption-curve hint, gross
+        # margin as a platform-economics signal, and *negative* FCF / net
+        # margin as a FEATURE (heavy reinvestment) rather than a bug. She
+        # also treats a 60%+ drawdown in a name with the curve intact as
+        # an entry, so MA200 distance + 60d return get surfaced as buy-the-
+        # dip context, not a sell signal. LEAP call premium speaks to
+        # whether long-cycle flow corroborates the thesis.
+        bundle = state.get("evidence")
+        if bundle is None:
+            return ""
+
+        out: list[str] = ["Cathie Wood lens — disruption curve + TAM + accelerating reinvestment:"]
+
+        inst = bundle.instrument
+        sector_hints: list[str] = []
+        if inst.sector and inst.sector != "Unknown":
+            sector_hints.append(f"sector={inst.sector}")
+        if inst.industry:
+            sector_hints.append(f"industry={inst.industry}")
+        if sector_hints:
+            out.append(
+                "- Disruption-curve check (Wright's Law / Moore's Law / "
+                "sequencing / energy density / blockchain?): " + ", ".join(sector_hints)
+            )
+
+        f = bundle.fundamentals
+        if f.has_data:
+            platform: list[str] = []
+            if f.gross_margin is not None:
+                platform.append(
+                    f"gross margin {f.gross_margin * 100:.1f}% "
+                    f"({'platform-like' if f.gross_margin > 0.5 else 'hardware/early-stage'})"
+                )
+            if f.net_margin is not None:
+                # Negative net margin in a disruption name is a FEATURE per
+                # Cathie — re-frame so the model doesn't read it as a red flag.
+                tag = "reinvestment mode (feature)" if f.net_margin < 0 else "profitable"
+                platform.append(f"net margin {f.net_margin * 100:.1f}% — {tag}")
+            if platform:
+                out.append("- Platform economics: " + ", ".join(platform))
+
+            if f.free_cash_flow is not None:
+                if f.free_cash_flow < 0:
+                    out.append(
+                        f"- FCF: ${f.free_cash_flow / 1e9:.2f}B (NEGATIVE) — "
+                        "heavy R&D / capacity buildout is a feature in a true "
+                        "disruptor; only a red flag if the cost curve is broken"
+                    )
+                else:
+                    out.append(
+                        f"- FCF: ${f.free_cash_flow / 1e9:.2f}B positive — "
+                        "platform stage approached; check if reinvestment is "
+                        "still the right call"
+                    )
+
+            if f.pe_ratio is not None:
+                out.append(
+                    f"- Trailing P/E {f.pe_ratio:.1f} — note: trailing multiples "
+                    "structurally understate platform optionality; do NOT pass "
+                    "on a high P/E alone if the cost curve is intact"
+                )
+
+        # Drawdown context — for Cathie, a 60%+ drawdown in a curve-intact
+        # name is an entry, not an exit. Surface so the model treats weakness
+        # accordingly.
+        pc = bundle.price_context
+        if pc.bars_count > 0:
+            tape: list[str] = []
+            if pc.return_60d is not None:
+                tape.append(f"60d return {pc.return_60d * 100:+.1f}%")
+            if pc.ma200_dist is not None:
+                tape.append(f"MA200 dist {pc.ma200_dist * 100:+.1f}%")
+            if pc.realized_vol_20d is not None:
+                tape.append(
+                    f"realized vol {pc.realized_vol_20d * 100:.1f}% "
+                    "(innovation names are volatile — feature)"
+                )
+            if tape:
+                out.append("- Tape (drawdown = entry if curve intact): " + ", ".join(tape))
+
+        # Long-dated call flow corroborates the long-cycle thesis.
+        opt = bundle.options_flow
+        if opt.leap_call_premium_5d > 1e6:
+            out.append(
+                f"- LEAP (>90 DTE) call premium 5d: "
+                f"${opt.leap_call_premium_5d / 1e6:.0f}M — long-cycle flow "
+                "consistent with platform-stage conviction"
+            )
+
+        return "\n".join(out) if len(out) > 1 else ""

@@ -67,5 +67,66 @@ class AckmanPersona(BasePersona):
         "Final commitment: high quality + meaningful discount + named catalyst = confident bullish (>0.7). Any of the three missing = pass (neutral, conf <0.4). The high quality bar naturally rejects most of the universe.",
     ]
 
-    def extra_context(self, state: AnalysisState) -> str:
-        return ""
+    def lens(self, state: AnalysisState) -> str:
+        # Ackman wants three boxes ticked: quality (ROE/ROIC/margins/FCF),
+        # meaningful discount (FCF yield, P/E), and a named catalyst (major
+        # news = spinoff / buyback / activist push candidates; insider buys
+        # = alignment; earnings proximity = catalyst horizon).
+        bundle = state.get("evidence")
+        if bundle is None:
+            return ""
+
+        out: list[str] = ["Ackman lens — quality + discount + named catalyst:"]
+
+        f = bundle.fundamentals
+        if f.has_data:
+            quality: list[str] = []
+            if f.roe is not None:
+                quality.append(f"ROE {f.roe * 100:.1f}%")
+            if f.roic is not None:
+                quality.append(f"ROIC {f.roic * 100:.1f}%")
+            if f.gross_margin is not None:
+                quality.append(f"gross margin {f.gross_margin * 100:.1f}%")
+            if f.net_margin is not None:
+                quality.append(f"net margin {f.net_margin * 100:.1f}%")
+            if quality:
+                out.append("- Quality bar (predictable + FCF-generative?): " + ", ".join(quality))
+
+            discount: list[str] = []
+            if f.pe_ratio is not None:
+                discount.append(f"P/E {f.pe_ratio:.1f}")
+            if f.free_cash_flow is not None and f.market_cap:
+                fcf_yield = f.free_cash_flow / f.market_cap
+                discount.append(f"FCF yield {fcf_yield * 100:.1f}%")
+            if f.debt_to_equity is not None:
+                discount.append(f"D/E {f.debt_to_equity:.2f}")
+            if discount:
+                out.append("- Discount check (30-50% gap to intrinsic?): " + ", ".join(discount))
+
+        # Catalyst candidates — Ackman's bar requires a NAMED catalyst.
+        cat = bundle.catalysts
+        cat_lines: list[str] = []
+        if cat.next_earnings_date and cat.days_to_earnings is not None:
+            cat_lines.append(
+                f"next earnings {cat.next_earnings_date.isoformat()} "
+                f"({cat.days_to_earnings}d out)"
+            )
+        if cat.news_5d:
+            major = [h for h in cat.news_5d if h.is_major]
+            if major:
+                cat_lines.append(
+                    f"{len(major)} MAJOR headlines 5d (scan for spinoff / buyback / "
+                    "activist / governance signals)"
+                )
+        if cat_lines:
+            out.append("- Catalyst candidates: " + "; ".join(cat_lines))
+
+        # Insider purchases = management alignment, a soft catalyst signal.
+        smart = bundle.smart_money
+        if smart.insider_buys_30d > 0:
+            out.append(
+                f"- Insider purchases 30d: {smart.insider_buys_30d} buys, "
+                f"net ${smart.insider_net_amount_30d / 1e6:+.1f}M — alignment signal"
+            )
+
+        return "\n".join(out) if len(out) > 1 else ""

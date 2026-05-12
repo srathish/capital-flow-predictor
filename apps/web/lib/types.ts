@@ -727,6 +727,7 @@ export type ScreenerParams = {
   minConfidence?: number;
   sector?: string;
   minOi?: number;
+  minIvRank?: number;
   excludeEarningsWithinDays?: number;
   limit?: number;
   lookbackDays?: number;

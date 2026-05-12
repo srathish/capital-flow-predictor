@@ -503,7 +503,8 @@ async def get_forward_call(
             LIMIT 12
         )
         SELECT p.target_ts AS run_ts, p.symbol
-        FROM predictions p, latest_run l
+        FROM predictions p
+        CROSS JOIN latest_run l
         JOIN recent_targets r ON r.target_ts = p.target_ts
         WHERE p.run_ts = l.rt
           AND p.horizon_d = $1 AND p.model = $2

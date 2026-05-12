@@ -253,6 +253,7 @@ export const api = {
     if (params.minConfidence !== undefined) sp.set("min_confidence", String(params.minConfidence));
     if (params.sector) sp.set("sector", params.sector);
     if (params.minOi !== undefined) sp.set("min_oi", String(params.minOi));
+    if (params.minIvRank !== undefined) sp.set("min_iv_rank", String(params.minIvRank));
     if (params.excludeEarningsWithinDays !== undefined)
       sp.set("exclude_earnings_within_days", String(params.excludeEarningsWithinDays));
     if (params.limit !== undefined) sp.set("limit", String(params.limit));

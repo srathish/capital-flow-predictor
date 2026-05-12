@@ -31,16 +31,23 @@ class SentimentAnalyst(BaseAnalyst):
         ticker = state.get("ticker", "?")
         bundle = state.get("evidence")
         if bundle is None or not bundle.reddit.has_data:
+            # Quiet on Reddit IS a data point for a confluence layer: it means
+            # no froth, no contrarian-warning trigger, no stealth signal. We
+            # report this transparently as "signal dark, weight others" rather
+            # than blaming the user to refresh a job — the synthesizer should
+            # downweight this analyst when stub=True instead of treating the
+            # 0.0 confidence as ambiguous.
             return AgentSignal(
                 agent=self.name,
                 signal="neutral",
                 confidence=0.0,
                 rationale=(
-                    f"{ticker}: no Reddit data — ticker has zero Apewisdom mentions "
-                    f"and no catalyst-feed posts in the last 7 days (run "
-                    f"`cfp-jobs reddit` + `cfp-jobs reddit-catalysts` to refresh)"
+                    f"{ticker}: no Reddit chatter detected (zero Apewisdom mentions, "
+                    f"zero catalyst-feed posts in 7d) — sentiment layer dark for this "
+                    f"name; absence of froth is itself a (weak) signal, but neither "
+                    f"contrarian-warning nor stealth flags are active"
                 ),
-                payload={"stub": True},
+                payload={"stub": True, "reason": "no_reddit_data"},
             )
 
         r = bundle.reddit

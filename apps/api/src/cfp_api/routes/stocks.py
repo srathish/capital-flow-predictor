@@ -47,6 +47,12 @@ async def screen_stocks(
     min_confidence: float = Query(default=0.5, ge=0.0, le=1.0),
     sector: str | None = Query(default=None, description="Filter to one sector ETF (e.g. XLK)"),
     min_oi: int = Query(default=0, ge=0, description="Open-interest gate (ticker-aggregated)"),
+    min_iv_rank: float = Query(
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="IV-rank gate (0..1). Drops tickers where the 90d IV-rank proxy is below this.",
+    ),
     exclude_earnings_within_days: int = Query(
         default=0,
         ge=0,
@@ -213,6 +219,9 @@ async def screen_stocks(
             continue
         if min_oi > 0 and not liquidity_ok:
             continue
+        iv_rank_val = float(r["iv_rank"]) if r["iv_rank"] is not None else None
+        if min_iv_rank > 0.0 and (iv_rank_val is None or iv_rank_val < min_iv_rank):
+            continue
         if near_earn:
             continue
 
@@ -245,6 +254,7 @@ async def screen_stocks(
         "min_confidence": min_confidence,
         "sector": sector_norm,
         "min_oi": min_oi,
+        "min_iv_rank": min_iv_rank,
         "exclude_earnings_within_days": exclude_earnings_within_days,
         "lookback_days": lookback_days,
         "limit": limit,

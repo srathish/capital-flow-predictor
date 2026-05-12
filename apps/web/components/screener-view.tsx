@@ -29,6 +29,13 @@ const EARNINGS_EXCLUDE = [
   { value: 10, label: "exclude <10d" },
 ];
 
+const IV_RANK_FLOORS = [
+  { value: 0, label: "off" },
+  { value: 0.5, label: "≥50%" },
+  { value: 0.7, label: "≥70%" },
+  { value: 0.9, label: "≥90%" },
+];
+
 const SECTOR_OPTIONS = [
   { value: "", label: "all sectors" },
   { value: "XLK", label: "XLK · Tech" },
@@ -78,6 +85,7 @@ export function ScreenerView() {
   const [excludeEarnings, setExcludeEarnings] = useState(0);
   const [lookbackDays, setLookbackDays] = useState(30);
   const [minOi, setMinOi] = useState(0);
+  const [minIvRank, setMinIvRank] = useState(0);
 
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: [
@@ -88,6 +96,7 @@ export function ScreenerView() {
       excludeEarnings,
       lookbackDays,
       minOi,
+      minIvRank,
     ],
     queryFn: () =>
       api.screenStocks({
@@ -95,6 +104,7 @@ export function ScreenerView() {
         minConfidence,
         sector: sector || undefined,
         minOi,
+        minIvRank: minIvRank > 0 ? minIvRank : undefined,
         excludeEarningsWithinDays: excludeEarnings,
         lookbackDays,
         limit: 50,
@@ -214,6 +224,22 @@ export function ScreenerView() {
           <option value={10000}>10K</option>
           <option value={100000}>100K</option>
         </select>
+
+        <span className="ml-3 uppercase tracking-wide text-muted-foreground">min IV rank</span>
+        {IV_RANK_FLOORS.map((f) => (
+          <button
+            key={f.value}
+            onClick={() => setMinIvRank(f.value)}
+            className={cn(
+              "rounded-full border border-border px-3 py-1",
+              minIvRank === f.value
+                ? "bg-primary/15 text-primary"
+                : "bg-card text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       {/* Results */}
@@ -312,8 +338,22 @@ function ScreenerRow({ item }: { item: StockScreenItem }) {
           "px-3 py-2 text-right font-mono text-xs",
           item.liquidity_ok ? "" : "text-muted-foreground",
         )}
+        title={
+          item.liquidity_ok
+            ? undefined
+            : "Open interest below the current min-OI gate — illiquid, fills may slip"
+        }
       >
-        {fmtInt(item.open_interest)}
+        <span className="inline-flex items-center justify-end gap-1">
+          <span
+            className={cn(
+              "inline-block h-1.5 w-1.5 rounded-full",
+              item.liquidity_ok ? "bg-signal-bullish/60" : "bg-amber-500/60",
+            )}
+            aria-hidden
+          />
+          {fmtInt(item.open_interest)}
+        </span>
       </td>
       <td className="px-3 py-2 text-right font-mono text-xs">
         {item.days_to_earnings == null ? (

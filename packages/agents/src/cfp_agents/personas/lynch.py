@@ -74,5 +74,71 @@ class LynchPersona(BasePersona):
         "Final commitment: confident bullish (>0.65) when a fast grower has PEG <1 in an unsexy industry. Pass on most names you can't categorize. Bucket discipline forces a side — hedged middle is rare.",
     ]
 
-    def extra_context(self, state: AnalysisState) -> str:
-        return ""
+    def lens(self, state: AnalysisState) -> str:
+        # Lynch bucketing requires (a) size + industry as bucket hints, (b)
+        # P/E and P/B for the multiple math (PEG needs growth rate which isn't
+        # in the bundle — flag that explicitly so the model reasons it from
+        # revenue + industry rather than hallucinating), (c) FCF for dividend
+        # support on slow growers, (d) insider purchases (Lynch's favorite
+        # signal). The "is this a hot-industry name?" check is left to the
+        # model — industry name is surfaced so it can apply that judgment.
+        bundle = state.get("evidence")
+        if bundle is None:
+            return ""
+
+        out: list[str] = ["Lynch lens — bucket the name first, then run the bucket math:"]
+
+        inst = bundle.instrument
+        bucket_hints: list[str] = []
+        if inst.marketcap_size:
+            bucket_hints.append(f"size={inst.marketcap_size}")
+        if inst.industry:
+            bucket_hints.append(f"industry={inst.industry}")
+        if inst.sector and inst.sector != "Unknown":
+            bucket_hints.append(f"sector={inst.sector}")
+        if bucket_hints:
+            out.append(
+                "- Bucket hints (slow grower / stalwart / fast grower / cyclical "
+                "/ turnaround / asset play?): " + ", ".join(bucket_hints)
+            )
+
+        f = bundle.fundamentals
+        if f.has_data:
+            mult: list[str] = []
+            if f.pe_ratio is not None:
+                mult.append(f"P/E {f.pe_ratio:.1f}")
+            if f.price_to_book is not None:
+                mult.append(f"P/B {f.price_to_book:.2f} (asset-play check)")
+            if f.roe is not None:
+                mult.append(f"ROE {f.roe * 100:.1f}%")
+            if f.net_margin is not None:
+                mult.append(f"net margin {f.net_margin * 100:.1f}%")
+            if mult:
+                out.append("- Bucket math inputs: " + ", ".join(mult))
+
+            # Slow grower / dividend support check
+            if f.free_cash_flow is not None and f.market_cap:
+                fcf_yield = f.free_cash_flow / f.market_cap
+                out.append(
+                    f"- FCF yield {fcf_yield * 100:.1f}% — does cash support a "
+                    "dividend (slow grower) or fuel reinvestment (fast grower)?"
+                )
+
+            # Bundle has no growth rate; PEG must be reasoned from sector +
+            # company description rather than computed. Be explicit so the
+            # model doesn't invent a number.
+            out.append(
+                "- PEG note: bundle does not carry a growth rate — for the "
+                "fast-grower bucket, reason growth qualitatively from sector "
+                "stage and revenue base; do not invent a precise PEG."
+            )
+
+        smart = bundle.smart_money
+        if smart.insider_buys_30d > 0:
+            out.append(
+                f"- Insider PURCHASES 30d: {smart.insider_buys_30d} buys, "
+                f"net ${smart.insider_net_amount_30d / 1e6:+.1f}M — "
+                "Lynch: 'insiders sell for many reasons; they buy for one'"
+            )
+
+        return "\n".join(out) if len(out) > 1 else ""
