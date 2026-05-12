@@ -34,6 +34,19 @@ SKYLIT_SIGNIN_URL = "https://app.skylit.ai/sign-in"
 SKYLIT_DASHBOARD_HOST = "app.skylit.ai"
 LOGIN_TIMEOUT_S = 300  # 5 min for user to complete Discord OAuth
 POLL_INTERVAL_S = 1.0
+# After landing back on the dashboard, Clerk's SDK needs a beat to hydrate
+# (load session state, populate window.Clerk.client.sessions[]). The previous
+# code polled once and bailed; we now keep polling for up to this many seconds
+# for a real session id before giving up. 15s is comfortable headroom for a
+# normally-loading page.
+SESSION_HYDRATION_WAIT_S = 15.0
+SESSION_HYDRATION_TICK_S = 0.5
+
+# Path fragments that mean "still on the auth flow, not authenticated yet."
+# We refuse to break the wait-loop while the page URL contains any of these,
+# because Clerk drops a pre-auth __client cookie just from loading /sign-in
+# and that cookie alone is NOT proof the user is signed in.
+_AUTH_PATH_FRAGMENTS = ("/sign-in", "/sign-up", "/factor-", "/sso-callback", "/verify")
 
 
 def _ensure_playwright() -> None:
@@ -66,37 +79,87 @@ def capture_clerk_cookies(timeout_s: int = LOGIN_TIMEOUT_S) -> dict[str, str]:
         deadline = time.monotonic() + timeout_s
         client_cookie: str | None = None
         client_uat: str | None = None
+        session_id: str | None = None
 
+        # Wait for the user to actually sign in. The previous bug here:
+        # Clerk drops an anonymous __client cookie just from loading /sign-in,
+        # and the page URL contains "app.skylit.ai" from the moment the page
+        # opens. So the old break condition fired in ~1 second, before the
+        # user could click anything, and the daemon closed the browser before
+        # any real session existed.
+        #
+        # Real signal that authentication completed: the page URL has moved
+        # OFF the auth flow (no /sign-in, /sso-callback, etc.) AND Clerk's
+        # in-page SDK reports at least one session with an id. Once we see
+        # that, the cookie is the authenticated one and we can capture it.
         while time.monotonic() < deadline:
-            cookies = context.cookies()
-            for c in cookies:
-                # Clerk's __client cookie lives on the skylit.ai apex (or clerk.skylit.ai).
-                if c.get("name") == "__client" and "skylit.ai" in (c.get("domain") or ""):
-                    client_cookie = c.get("value")
-                if c.get("name") == "__client_uat" and "skylit.ai" in (c.get("domain") or ""):
-                    client_uat = c.get("value")
+            url = page.url or ""
+            on_auth_path = any(frag in url for frag in _AUTH_PATH_FRAGMENTS)
+            on_host = SKYLIT_DASHBOARD_HOST in url
 
-            if client_cookie and SKYLIT_DASHBOARD_HOST in (page.url or ""):
-                # Authenticated AND landed back on app.skylit.ai
-                break
+            if on_host and not on_auth_path:
+                # Probably done with OAuth — confirm with the SDK before
+                # touching cookies. Use a short eval so a stuck page doesn't
+                # block the whole loop.
+                try:
+                    sid = page.evaluate(
+                        "() => (window.Clerk?.client?.sessions || [])"
+                        ".map(s => s && s.id).filter(Boolean)[0] || null"
+                    )
+                except Exception as e:
+                    log.debug("Clerk SDK eval failed (page may be navigating): %s", e)
+                    sid = None
+                if sid:
+                    session_id = sid
+                    # Now grab the cookies — but only now, because earlier
+                    # __client values may be pre-auth.
+                    for c in context.cookies():
+                        if "skylit.ai" not in (c.get("domain") or ""):
+                            continue
+                        if c.get("name") == "__client":
+                            client_cookie = c.get("value")
+                        elif c.get("name") == "__client_uat":
+                            client_uat = c.get("value")
+                    if client_cookie:
+                        break  # done — got both session id and authenticated cookie
             time.sleep(POLL_INTERVAL_S)
         else:
             browser.close()
             raise RuntimeError(
                 f"Timed out after {timeout_s}s waiting for sign-in. "
-                "Did Discord OAuth complete and redirect back to app.skylit.ai?"
+                "Did Discord OAuth complete and redirect back to app.skylit.ai? "
+                "(The previous version of this code closed the browser too "
+                "early — if that's what you saw, the timeout message is wrong "
+                "and you should look at logs for 'Clerk SDK eval failed'.)"
             )
 
-        # Pull the active session id from the in-page Clerk SDK so we don't
-        # have to make a second API call. Falls back to /v1/client if needed.
-        session_id: str | None = None
-        try:
-            session_id = page.evaluate(
-                "() => window.Clerk?.client?.sessions?.[0]?.id ?? null"
-            )
-        except Exception as e:
-            log.debug("window.Clerk.client lookup failed: %s — falling back to API", e)
+        # Belt-and-braces: if for some reason the SDK gave us a session id but
+        # the in-page Clerk object regressed by the time we ask again (e.g.
+        # navigation happened), keep polling for a few more seconds rather
+        # than failing. Same goes for cookies — Clerk can rotate __client in
+        # the moments right after sign-in and we'd rather grab the latest one.
+        hydrate_deadline = time.monotonic() + SESSION_HYDRATION_WAIT_S
+        while time.monotonic() < hydrate_deadline:
+            for c in context.cookies():
+                if "skylit.ai" not in (c.get("domain") or ""):
+                    continue
+                if c.get("name") == "__client" and c.get("value"):
+                    client_cookie = c.get("value")
+                elif c.get("name") == "__client_uat" and c.get("value"):
+                    client_uat = c.get("value")
+            try:
+                sid = page.evaluate(
+                    "() => (window.Clerk?.client?.sessions || [])"
+                    ".map(s => s && s.id).filter(Boolean)[0] || null"
+                )
+                if sid:
+                    session_id = sid
+            except Exception:
+                pass
+            time.sleep(SESSION_HYDRATION_TICK_S)
 
+        # API fallback only if the SDK never gave us anything — same shape as
+        # before, just no longer the primary path.
         if not session_id:
             try:
                 resp = page.request.get(
