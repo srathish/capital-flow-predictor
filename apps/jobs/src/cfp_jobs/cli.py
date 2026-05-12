@@ -702,6 +702,49 @@ def skylit_login_cmd(
     )
 
 
+@app.command("skylit-watch")
+def skylit_watch_cmd(
+    api_url: str = typer.Option(
+        "",
+        "--api-url",
+        envvar="BELLWETHER_API_URL",
+        help="Bellwether API base URL (e.g. https://capital-flow-predictor-production.up.railway.app)",
+    ),
+    api_key: str = typer.Option(
+        "",
+        "--api-key",
+        envvar="BELLWETHER_API_KEY",
+        help="API key for Bellwether (matches API_KEYS on the server)",
+    ),
+    env_file: str = typer.Option(
+        "",
+        "--env-file",
+        help="Target .env to update (default: ~/gexester vexster/.env)",
+    ),
+    oauth_timeout: int = typer.Option(
+        300,
+        "--oauth-timeout",
+        help="Max seconds to wait for Discord OAuth after browser opens",
+    ),
+) -> None:
+    """Long-poll Bellwether for UI-initiated re-auth requests; run Playwright.
+
+    Designed to run on your laptop. When the operator clicks the "Re-auth
+    skylit" button in the Bellwether UI tab, this daemon's next long-poll
+    returns the claimed request, Chromium opens, you complete Discord OAuth,
+    and the captured cookies land in gexester's .env automatically.
+
+    Keep this running in a terminal (or wire into your laptop's launch
+    items). Ctrl-C to stop.
+    """
+    from cfp_jobs import skylit_watch
+
+    skylit_watch.cli_run(
+        api_url=api_url, api_key=api_key,
+        env_file=env_file or None, oauth_timeout=oauth_timeout,
+    )
+
+
 @app.command()
 def status() -> None:
     """Report row counts and freshness per data table."""

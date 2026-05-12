@@ -17,6 +17,7 @@ from cfp_api.routes import (
     backtest,
     chat,
     flow,
+    gex,
     health,
     network,
     rankings,
@@ -91,6 +92,11 @@ app.include_router(flow.router, dependencies=PROTECTED)
 app.include_router(assistant.router, dependencies=PROTECTED)
 app.include_router(stocks.router, dependencies=PROTECTED)
 app.include_router(backtest.router, dependencies=PROTECTED)
+# gexester-vexster integration: feed mirror + skylit auth status + reauth queue.
+# Mounted under PROTECTED so gexester needs the API key to write status/feed,
+# and the daemon needs it to long-poll the reauth queue. Same surface as
+# everything else.
+app.include_router(gex.router, dependencies=PROTECTED)
 # Health stays open — used by load balancers and the FE landing page.
 app.include_router(health.router)
 
