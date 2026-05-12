@@ -21,7 +21,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/api";
+import { authHeaders, baseUrl } from "@/lib/api";
 import { parseAssistantStream } from "@/lib/sse";
 import type { AssistantStreamEvent, AssistantTurn } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -218,7 +218,7 @@ export function AssistantDock() {
     try {
       const resp = await fetch(`${baseUrl()}/v1/assistant/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeaders() },
         body: JSON.stringify({ messages: pruned, context: snapshotContext() }),
         signal: controller.signal,
       });

@@ -57,7 +57,7 @@ class ApiError extends Error {
   }
 }
 
-function authHeaders(): Record<string, string> {
+export function authHeaders(): Record<string, string> {
   // NEXT_PUBLIC_API_KEY is read at build time on the client; on the server we
   // also accept the server-only API_KEY. Empty string means "no auth header" —
   // matches the API's "auth disabled when API_KEYS unset" behavior.
