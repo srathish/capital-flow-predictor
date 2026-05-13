@@ -181,11 +181,17 @@ function StatusCard({
           skylit.ai auth{" "}
           <span className={badge.text}>{badge.label}</span>
         </h2>
+        <a
+          href="/gex/accuracy"
+          className="ml-auto rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
+        >
+          Plan accuracy →
+        </a>
         <button
           type="button"
           onClick={onReauth}
           disabled={reauthDisabled}
-          className="ml-auto rounded-full bg-primary px-3 py-1 text-xs font-medium text-white hover:bg-primary/90 disabled:opacity-50"
+          className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-white hover:bg-primary/90 disabled:opacity-50"
         >
           Re-auth skylit
         </button>

@@ -45,6 +45,10 @@ on:
     # Every 10 min during RTH, offset 5 min from market-tide to avoid collision.
     # Skylit GEX structure snapshots for SPY/QQQ/SPX persisted to Postgres.
     - cron: "5,15,25,35,45,55 13-20 * * 1-5"
+    # 22:30 ET (= 03:30 UTC next day) Tue-Sat — score the day's brief/monitor
+    # plan calls against actual SPY/QQQ/SPXW intraday tape. Runs after 1-min
+    # bars settle on yfinance. Re-runs any pending plans from the last 7 days.
+    - cron: "30 3 * * 2-6"
   workflow_dispatch:
     inputs:
       job:
@@ -67,6 +71,7 @@ on:
           - morning-brief
           - ensemble-rerun-stale
           - gex-snapshot
+          - score-gex-plans
 
 jobs:
   reddit-catalysts:
@@ -245,6 +250,28 @@ jobs:
         # carries the real dealer GEX positioning. The cash SPX index isn't
         # on Skylit's tape. The determined-quietude env uses SPXW too.
         run: node scripts/persist-snapshots.js --tickers=SPY,QQQ,SPXW
+
+  score-gex-plans:
+    # Nightly self-grading of brief / monitor CALLS / PUTS plans. Parses
+    # gex_feed, fetches yfinance 1-min bars for SPY/QQQ/^GSPC, determines
+    # whether the break level was crossed and whether target hit before stop,
+    # then upserts gex_plan_outcomes. Powers the /gex/accuracy tab.
+    if: github.event.schedule == '30 3 * * 2-6' || github.event.inputs.job == 'score-gex-plans'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations (gex_plan_outcomes idempotent)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Score the last 7 days of plans against intraday tape
+        working-directory: apps/jobs
+        run: uv run cfp-jobs score-gex-plans --days 7
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the

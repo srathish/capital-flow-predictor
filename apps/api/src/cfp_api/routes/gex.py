@@ -24,7 +24,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
-from datetime import UTC, datetime
+from datetime import UTC, date as date_t, datetime, timedelta
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query
@@ -640,3 +640,159 @@ async def gex_structure(
                 expiry_views=expiry_views,
             ))
     return GexStructureResponse(requested_tickers=requested, states=states)
+
+
+# ---------- /v1/gex/scorecard — plan-outcome accuracy ----------
+#
+# Reads gex_plan_outcomes (populated by `cfp-jobs score-gex-plans`) and
+# aggregates per-ticker / per-source / per-side hit rates and realized R:R.
+# Powers the /gex/accuracy tab so the operator can see whether the brief and
+# monitor plans actually played out against SPY/QQQ/SPXW intraday tape.
+
+
+class ScorecardBucket(BaseModel):
+    label: str
+    n_total: int
+    n_resolved: int            # entered AND finalized (not pending)
+    n_pending: int
+    n_target: int
+    n_stop: int
+    n_expired: int             # entered but neither target nor stop hit
+    n_never_entered: int       # break level never crossed
+    hit_rate: float | None     # n_target / n_resolved
+    mean_realized_rr: float | None
+    mean_predicted_rr: float | None
+    rr_ratio: float | None     # realized / predicted
+
+
+class ScorecardPlay(BaseModel):
+    feed_id: int
+    posted_at: datetime
+    trading_day: date_t | None
+    ticker: str
+    source: str
+    side: str
+    break_level: float
+    target: float
+    stop: float
+    predicted_rr: float | None
+    entered_at: datetime | None
+    exited_at: datetime | None
+    exit_reason: str
+    realized_rr: float | None
+    day_high: float | None
+    day_low: float | None
+    day_close: float | None
+
+
+class ScorecardResponse(BaseModel):
+    since: datetime
+    overall: ScorecardBucket
+    by_ticker: list[ScorecardBucket]
+    by_source: list[ScorecardBucket]
+    by_side: list[ScorecardBucket]
+    recent: list[ScorecardPlay]
+
+
+def _bucket(label: str, rows: list[dict]) -> ScorecardBucket:
+    n_total = len(rows)
+    n_pending = sum(1 for r in rows if r["exit_reason"] == "pending")
+    resolved = [r for r in rows if r["exit_reason"] in ("target", "stop", "expired")]
+    n_resolved = len(resolved)
+    n_target = sum(1 for r in resolved if r["exit_reason"] == "target")
+    n_stop = sum(1 for r in resolved if r["exit_reason"] == "stop")
+    n_expired = sum(1 for r in resolved if r["exit_reason"] == "expired")
+    n_never_entered = n_pending  # pending means never crossed the break level
+    hit_rate = (n_target / n_resolved) if n_resolved > 0 else None
+    # R:R averages exclude unresolved + never-entered rows.
+    rr_rows = [r for r in resolved if r["realized_rr"] is not None]
+    mean_realized = (sum(r["realized_rr"] for r in rr_rows) / len(rr_rows)) if rr_rows else None
+    pred_rows = [r for r in resolved if r["predicted_rr"] is not None]
+    mean_pred = (sum(r["predicted_rr"] for r in pred_rows) / len(pred_rows)) if pred_rows else None
+    rr_ratio = (mean_realized / mean_pred) if (mean_realized is not None and mean_pred not in (None, 0)) else None
+    return ScorecardBucket(
+        label=label,
+        n_total=n_total,
+        n_resolved=n_resolved,
+        n_pending=n_pending,
+        n_target=n_target,
+        n_stop=n_stop,
+        n_expired=n_expired,
+        n_never_entered=n_never_entered,
+        hit_rate=hit_rate,
+        mean_realized_rr=mean_realized,
+        mean_predicted_rr=mean_pred,
+        rr_ratio=rr_ratio,
+    )
+
+
+@router.get("/v1/gex/scorecard", response_model=ScorecardResponse)
+async def gex_scorecard(
+    days: int = Query(30, ge=1, le=365, description="Calendar days to summarize."),
+    limit_recent: int = Query(50, ge=1, le=500),
+) -> ScorecardResponse:
+    """Aggregate plan-outcome accuracy across the last ``days``.
+
+    Fields are computed in Python (not SQL) so we can keep the bucket logic
+    identical across the overall / per-ticker / per-source / per-side cuts.
+    """
+    since = datetime.now(UTC) - timedelta(days=days)
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT feed_id, posted_at, trading_day, ticker, source, side,
+                   break_level, target, stop, predicted_rr,
+                   entered_at, exited_at, exit_reason, realized_rr,
+                   day_high, day_low, day_close
+            FROM gex_plan_outcomes
+            WHERE posted_at >= $1
+            ORDER BY posted_at DESC
+            """,
+            since,
+        )
+    data = [dict(r) for r in rows]
+
+    overall = _bucket("overall", data)
+
+    def group(key: str) -> list[ScorecardBucket]:
+        seen: dict[str, list[dict]] = {}
+        for r in data:
+            seen.setdefault(r[key] or "", []).append(r)
+        return [_bucket(k, v) for k, v in sorted(seen.items())]
+
+    by_ticker = group("ticker")
+    by_source = group("source")
+    by_side = group("side")
+
+    recent = [
+        ScorecardPlay(
+            feed_id=r["feed_id"],
+            posted_at=r["posted_at"],
+            trading_day=r["trading_day"],
+            ticker=r["ticker"],
+            source=r["source"],
+            side=r["side"],
+            break_level=float(r["break_level"]),
+            target=float(r["target"]),
+            stop=float(r["stop"]),
+            predicted_rr=float(r["predicted_rr"]) if r["predicted_rr"] is not None else None,
+            entered_at=r["entered_at"],
+            exited_at=r["exited_at"],
+            exit_reason=r["exit_reason"],
+            realized_rr=float(r["realized_rr"]) if r["realized_rr"] is not None else None,
+            day_high=float(r["day_high"]) if r["day_high"] is not None else None,
+            day_low=float(r["day_low"]) if r["day_low"] is not None else None,
+            day_close=float(r["day_close"]) if r["day_close"] is not None else None,
+        )
+        for r in data[:limit_recent]
+    ]
+
+    return ScorecardResponse(
+        since=since,
+        overall=overall,
+        by_ticker=by_ticker,
+        by_source=by_source,
+        by_side=by_side,
+        recent=recent,
+    )

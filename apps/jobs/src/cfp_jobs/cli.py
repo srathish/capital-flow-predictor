@@ -899,6 +899,28 @@ def ensemble_rerun_stale_cmd(
             console.print(f"  ✗ {f['ticker']}: {f['error']}")
 
 
+@app.command("score-gex-plans")
+def score_gex_plans_cmd(
+    days: int = typer.Option(7, help="Calendar days of gex_feed plans to (re)score."),
+) -> None:
+    """Score brief/monitor plan calls against actual SPY/QQQ/SPXW price action.
+
+    Parses CALLS/PUTS plan lines from gex_feed, pulls yfinance intraday bars
+    for the trading day, determines whether the break level was crossed and
+    whether target hit before stop, and upserts one row per (feed_id, ticker,
+    side) into gex_plan_outcomes. Idempotent — designed for the GH Actions
+    nightly cron at ~22:00 ET.
+    """
+    from cfp_jobs import score_gex_plans
+
+    summary = score_gex_plans.run(settings.database_url, days=days)
+    console.print(
+        f"[green]gex-plan-scoring:[/green] seen={summary['plans_seen']} "
+        f"scored={summary['scored']} errors={summary['errors']} "
+        f"finished={summary['finished_at']}"
+    )
+
+
 @app.command("morning-brief")
 def morning_brief_cmd(
     webhook: str = typer.Option(
