@@ -192,7 +192,7 @@ async def _gex_verdict(pool: asyncpg.Pool, ticker: str) -> Verdict:
         SELECT spot, structure
         FROM skylit_structures
         WHERE ticker = $1
-        ORDER BY captured_at DESC
+        ORDER BY fetched_at DESC
         LIMIT 1
         """,
         ticker,
