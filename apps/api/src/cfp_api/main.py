@@ -113,6 +113,9 @@ app.include_router(replay.router, dependencies=PROTECTED)
 # everything else.
 app.include_router(gex.router, dependencies=PROTECTED)
 app.include_router(discord.router, dependencies=PROTECTED)
+# SSE stream uses query-param auth (EventSource can't set headers) — it
+# does its own validation against settings.api_keys_raw inside the handler.
+app.include_router(discord.stream_router)
 # Health stays open — used by load balancers and the FE landing page.
 app.include_router(health.router)
 

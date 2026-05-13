@@ -35,6 +35,12 @@ log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/v1/discord", tags=["discord"])
 
+# SSE lives on a separate router so it can accept the API key via query
+# string — EventSource (browser API) can't set custom headers, so the
+# standard Bearer/X-API-Key dependency that PROTECTED applies wouldn't work
+# here. The stream router gets its own minimal auth check below.
+stream_router = APIRouter(prefix="/v1/discord", tags=["discord"])
+
 
 # ---------- response models ----------
 
@@ -577,9 +583,24 @@ async def delete_notification_rule(rule_id: int) -> None:
         raise HTTPException(status_code=404, detail="rule_not_found")
 
 
-@router.get("/stream")
+def _validate_stream_api_key(api_key: str | None) -> None:
+    """Manual API-key check for the SSE endpoint. EventSource can't set
+    custom headers, so we accept the key via ?api_key=… instead. When the
+    server hasn't configured any keys (dev mode), this is a no-op — matches
+    the PROTECTED dependency's behavior."""
+    from cfp_api.settings import settings as _s
+    raw = (_s.api_keys_raw or "").strip()
+    if not raw:
+        return
+    valid = {k.strip() for k in raw.split(",") if k.strip()}
+    if not api_key or api_key.strip() not in valid:
+        raise HTTPException(status_code=401, detail="invalid_or_missing_key")
+
+
+@stream_router.get("/stream")
 async def stream_messages(
     since_id: Annotated[int | None, Query(description="Last message_id the client has seen.")] = None,
+    api_key: Annotated[str | None, Query(description="API key (EventSource cannot set headers).")] = None,
 ):
     """SSE stream of newly-captured Discord messages.
 
@@ -595,6 +616,7 @@ async def stream_messages(
     is intentionally NOT computed here; the client refreshes the main
     ``/messages`` view in the background to pick up enriched fields.
     """
+    _validate_stream_api_key(api_key)
     import asyncio
     import json as _json
     pool = get_pool()

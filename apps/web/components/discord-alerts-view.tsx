@@ -145,8 +145,10 @@ export function DiscordAlertsView() {
   // invalidate the messages query so React Query refetches with full scoring.
   // We don't render SSE rows directly because scoring + watchlist + author
   // stats are computed on the /messages endpoint, not the lightweight stream.
+  // The API key goes via query string — EventSource can't set headers.
   useEffect(() => {
-    const url = `${baseUrl()}/v1/discord/stream`;
+    const key = process.env.NEXT_PUBLIC_API_KEY ?? "";
+    const url = `${baseUrl()}/v1/discord/stream${key ? `?api_key=${encodeURIComponent(key)}` : ""}`;
     const es = new EventSource(url, { withCredentials: false });
     es.addEventListener("message", () => {
       queryClient.invalidateQueries({ queryKey: ["discord", "messages"] });
