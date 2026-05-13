@@ -233,8 +233,10 @@ jobs:
         with:
           node-version: "20"
       - name: Install apps/gex deps
+        # npm install (not ci) — apps/gex has no committed package-lock.json
+        # and only 4 runtime deps. --omit=dev skips test/lint extras.
         working-directory: apps/gex
-        run: npm ci
+        run: npm install --omit=dev --no-audit --no-fund
       - name: Fetch + persist SPY/QQQ/SPX structure snapshots
         working-directory: apps/gex
         run: node scripts/persist-snapshots.js --tickers SPY,QQQ,SPX
