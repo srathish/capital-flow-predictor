@@ -293,13 +293,26 @@ def _count(verdicts: list[Verdict], want: str) -> int:
     return sum(1 for v in verdicts if v == want)
 
 
+async def _safe(fn, pool: asyncpg.Pool, ticker: str, label: str) -> Verdict:
+    """Run a signal lookup; if it throws (schema mismatch, transient DB
+    issue, bad JSON, anything), log the trace and return None. We never
+    want one broken signal source to 500 the entire /discord/messages
+    endpoint — the page degrades to '—' chips and recovers on its own
+    once the underlying data is healthy."""
+    try:
+        return await fn(pool, ticker)
+    except Exception:
+        log.exception("discord_scoring %s failed for ticker=%s", label, ticker)
+        return None
+
+
 async def score_ticker(
     pool: asyncpg.Pool, ticker: str, cross_chat_count: int
 ) -> TickerScore:
-    flow = await _flow_verdict(pool, ticker)
-    gex = await _gex_verdict(pool, ticker)
-    whale = await _whale_verdict(pool, ticker)
-    reddit = await _reddit_verdict(pool, ticker)
+    flow = await _safe(_flow_verdict, pool, ticker, "flow")
+    gex = await _safe(_gex_verdict, pool, ticker, "gex")
+    whale = await _safe(_whale_verdict, pool, ticker, "whale")
+    reddit = await _safe(_reddit_verdict, pool, ticker, "reddit")
     verdicts: list[Verdict] = [flow, gex, whale, reddit]
     return TickerScore(
         ticker=ticker,
