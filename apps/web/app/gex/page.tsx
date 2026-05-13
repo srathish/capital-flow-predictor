@@ -109,6 +109,55 @@ function colorBar(color: number | null): string {
   return "#" + color.toString(16).padStart(6, "0");
 }
 
+// Group items by NYSE trading day (ET calendar date of item.ts). Cards from
+// catch-up firings + the brief + on-time monitors all land under the same
+// day. Returns groups in newest-first order. Each new trading day naturally
+// starts a fresh section above; older sessions collapse behind a toggle so
+// the feed doesn't accumulate as an endless wall.
+const ET_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+const ET_LABEL_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+});
+
+function etTradingDay(iso: string): string {
+  // Returns ISO YYYY-MM-DD in ET. Intl's en-US format is MM/DD/YYYY → reorder.
+  const parts = ET_FORMATTER.formatToParts(new Date(iso));
+  const get = (t: string) => parts.find((p) => p.type === t)?.value || "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
+function etTradingDayLabel(day: string): string {
+  // Render a YYYY-MM-DD as "Wed, May 14". Today gets the "Today" label.
+  const today = etTradingDay(new Date().toISOString());
+  if (day === today) return "Today";
+  // Yesterday detection — subtract one ET-day from today.
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  if (day === etTradingDay(yesterdayDate.toISOString())) return "Yesterday";
+  // Parse YYYY-MM-DD as ET noon to avoid TZ ambiguity at midnight boundaries.
+  return ET_LABEL_FORMATTER.format(new Date(`${day}T12:00:00-04:00`));
+}
+
+function groupFeedByDay(items: FeedItem[]): { day: string; label: string; items: FeedItem[] }[] {
+  const byDay = new Map<string, FeedItem[]>();
+  for (const it of items) {
+    const day = etTradingDay(it.ts);
+    if (!byDay.has(day)) byDay.set(day, []);
+    byDay.get(day)!.push(it);
+  }
+  return Array.from(byDay.entries())
+    .sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0))  // newest day first
+    .map(([day, items]) => ({ day, label: etTradingDayLabel(day), items }));
+}
+
 // ---------- subcomponents ----------
 
 function StatusCard({
@@ -183,6 +232,64 @@ function StatusCard({
               </li>
             ))}
           </ul>
+        </details>
+      )}
+    </div>
+  );
+}
+
+function FeedDaySection({
+  label, items, defaultOpen,
+}: {
+  label: string; items: FeedItem[]; defaultOpen: boolean;
+}) {
+  return (
+    <details open={defaultOpen} className="group">
+      <summary className="flex cursor-pointer select-none items-baseline gap-2 py-1 text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground">
+        <span className="transition-transform group-open:rotate-90">▸</span>
+        <span className="font-semibold">{label}</span>
+        <span className="text-[10px] normal-case tracking-normal">
+          ({items.length} {items.length === 1 ? "entry" : "entries"})
+        </span>
+      </summary>
+      <ul className="mt-2 space-y-3">
+        {items.map((item) => (
+          <li key={item.id}>
+            <FeedCard item={item} />
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+function GroupedFeed({ items }: { items: FeedItem[] }) {
+  const groups = React.useMemo(() => groupFeedByDay(items), [items]);
+  if (groups.length === 0) return null;
+  // Today (newest group) always expanded; everything else collapsed so the
+  // tab opens clean each morning regardless of how much history accumulates.
+  const [today, ...older] = groups;
+  const olderTotal = older.reduce((n, g) => n + g.items.length, 0);
+
+  return (
+    <div className="space-y-3">
+      <FeedDaySection label={today.label} items={today.items} defaultOpen />
+      {older.length > 0 && (
+        <details className="rounded-xl border bg-card/40 p-3">
+          <summary className="cursor-pointer select-none text-xs text-muted-foreground hover:text-foreground">
+            ▸ Previous sessions ({older.length} day{older.length === 1 ? "" : "s"},{" "}
+            {olderTotal} {olderTotal === 1 ? "entry" : "entries"})
+          </summary>
+          <div className="mt-3 space-y-4">
+            {older.map((g) => (
+              <FeedDaySection
+                key={g.day}
+                label={g.label}
+                items={g.items}
+                defaultOpen={false}
+              />
+            ))}
+          </div>
         </details>
       )}
     </div>
@@ -375,13 +482,7 @@ export default function GexPage() {
         </div>
       )}
 
-      <ul className="space-y-3">
-        {feed.map(item => (
-          <li key={item.id}>
-            <FeedCard item={item} />
-          </li>
-        ))}
-      </ul>
+      <GroupedFeed items={feed} />
     </main>
   );
 }
