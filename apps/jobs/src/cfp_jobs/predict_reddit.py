@@ -384,7 +384,7 @@ def _train_model(df: pd.DataFrame) -> Any | None:
 
     # Import here so the predict module doesn't drag xgboost into every
     # other cfp-jobs command's startup path.
-    import xgboost as xgb  # noqa: PLC0415
+    import xgboost as xgb
 
     df = _prep(df)
     X = df[_FEATURE_COLS].to_numpy(dtype=np.float64)

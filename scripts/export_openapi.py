@@ -21,7 +21,7 @@ def _project_root() -> Path:
 def main() -> int:
     root = _project_root()
     sys.path.insert(0, str(root / "apps" / "api" / "src"))
-    from cfp_api.main import app  # noqa: E402
+    from cfp_api.main import app
 
     schema = app.openapi()
     out = root / "docs" / "openapi.json"

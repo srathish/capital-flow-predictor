@@ -456,7 +456,7 @@ def flow_universe_cmd(
             n_ok += 1
             total = sum(v for v in out.values() if isinstance(v, int))
             console.print(f"  [green]{t}[/green] {total} rows")
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             n_err += 1
             console.print(f"  [red]{t}[/red] {type(e).__name__}: {e}")
     console.print(f"[green]done:[/green] ok={n_ok} err={n_err}")
@@ -526,7 +526,7 @@ def reddit_predict_cmd() -> None:
 
     Safe to run from day one — exits with status='calibrating' until at
     least ~200 matured rows accumulate. Run nightly after `cfp-jobs reddit`."""
-    from cfp_jobs import predict_reddit  # noqa: PLC0415 — defer xgboost import
+    from cfp_jobs import predict_reddit
 
     out = predict_reddit.run(settings.database_url)
     console.print(f"[green]reddit_predictions:[/green] {out}")
@@ -539,7 +539,7 @@ def reddit_backfill_outcomes_cmd() -> None:
     Anchor date + ~28 calendar days must have passed before a row becomes
     scoreable. Idempotent; safe to run multiple times per day. Run nightly
     after the price-data refresh."""
-    from cfp_jobs import backfill_reddit_outcomes  # noqa: PLC0415
+    from cfp_jobs import backfill_reddit_outcomes
 
     out = backfill_reddit_outcomes.run(settings.database_url)
     console.print(f"[green]reddit_outcomes:[/green] {out}")
@@ -596,7 +596,7 @@ def flow_volatility_cmd(
                 body = uw.volatility_stats(t)
                 if ingestion.unusualwhales._upsert_volatility_stats(conn, t, body):
                     n_ok += 1
-            except Exception as e:  # noqa: BLE001 — keep going on a single-ticker failure
+            except Exception as e:
                 cli_log.warning("volatility for %s failed: %s", t, e)
         conn.commit()
     console.print(f"[green]volatility:[/green] {n_ok}/{len(ticker_list)} tickers")

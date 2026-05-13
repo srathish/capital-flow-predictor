@@ -291,7 +291,7 @@ async def get_correlation_network(
         # the recomputed XGB rank. Macros are never ranked — they're context.
         if is_macro:
             rank = None
-        elif use_returns_fallback:  # noqa: SIM108 — nested ternary would be unreadable
+        elif use_returns_fallback:
             rank = ret_rank.get(sym)
         else:
             rank = int(p["rank"]) if p else None

@@ -23,6 +23,22 @@ extend-exclude = [".venv", "node_modules"]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
 ignore = ["E501"]
 
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI requires Query/Depends/Path/Body/Header/Form/File/Cookie as call
+# expressions in argument defaults — the framework reads them at signature
+# introspection time to wire up validation. Whitelist them so B008 stops
+# flagging idiomatic route handlers.
+extend-immutable-calls = [
+    "fastapi.Body",
+    "fastapi.Cookie",
+    "fastapi.Depends",
+    "fastapi.File",
+    "fastapi.Form",
+    "fastapi.Header",
+    "fastapi.Path",
+    "fastapi.Query",
+]
+
 [tool.ruff.lint.per-file-ignores]
 # Persona class attributes (cot_steps, etc.) are intentional class-level data
 # overridden by subclasses, not mistakenly-shared mutable defaults. Annotating

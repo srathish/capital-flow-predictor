@@ -325,11 +325,11 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
         # Best-effort: missing repo / expired auth / no live poller -> silently skip.
         try:
             apply_structure_to_positioning(positioning, fetch_structure(ticker))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.info("skylit structure fetch failed for %s: %s", ticker, e)
         try:
             apply_trinity_to_positioning(positioning, ticker, fetch_trinity())
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.info("skylit trinity fetch failed: %s", e)
 
         out["positioning"] = positioning
@@ -1089,7 +1089,7 @@ def _build_market_regime_ctx(
                 if pd.notna(last["vix_level"]):
                     vix = float(last["vix_level"])
                 spx_trend = "up" if spy50 else "down"
-    except Exception as e:  # noqa: BLE001 — never fail the bundle on a regime hiccup
+    except Exception as e:
         log.warning("regime computation failed for %s: %s", ticker, e)
 
     # Reddit mention velocity (7d slope) — best-effort, returns None on miss.
@@ -1117,7 +1117,7 @@ def _build_market_regime_ctx(
                 val = vel[ticker].dropna()
                 if not val.empty:
                     reddit_velocity = float(val.iloc[-1])
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.debug("reddit velocity computation failed for %s: %s", ticker, e)
 
     # Pass-through aggregates from already-computed contexts.

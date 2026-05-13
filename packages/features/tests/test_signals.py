@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-
 from cfp_features.signals import (
     dark_pool_volume_ratio,
     insider_net_buy_30d,

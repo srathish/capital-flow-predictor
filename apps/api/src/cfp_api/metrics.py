@@ -75,7 +75,7 @@ class _Histogram:
                 cum = 0
                 for i, b in enumerate(self.BUCKETS):
                     cum += buckets[i]
-                    lp = lab_pairs + [("le", str(b))]
+                    lp = [*lab_pairs, ("le", str(b))]
                     lab_s = ",".join(f'{lab}="{val}"' for lab, val in lp)
                     out.append(f"{self.name}_bucket{{{lab_s}}} {cum}")
                 lp = lab_pairs + [("le", "+Inf")]

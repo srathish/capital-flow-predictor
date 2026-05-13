@@ -14,7 +14,6 @@ import re
 from unittest.mock import MagicMock
 
 from cfp_agents.state import AgentSignal
-
 from cfp_jobs.agents_runner import AGENT_SIGNAL_UPSERT, upsert_agent_signals
 
 

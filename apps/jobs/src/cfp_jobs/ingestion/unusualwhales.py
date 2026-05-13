@@ -135,7 +135,7 @@ class UwClient:
                     )
                     try:
                         out.extend(self.flow_alerts(ticker, limit=page_size))
-                    except Exception as inner:  # noqa: BLE001
+                    except Exception as inner:
                         log.warning("fallback flow_alerts also failed for %s: %s", ticker, inner)
                     break
                 raise
@@ -1248,7 +1248,7 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
                 key = future_to_key[fut]
                 try:
                     results[key] = fut.result()
-                except Exception as e:  # noqa: BLE001
+                except Exception as e:
                     errors[key] = e
 
         # Upsert serially — each in its own savepoint so a single bad payload
@@ -1270,7 +1270,7 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
             try:
                 with conn.transaction():
                     counts[key] = upserters[key](payload)
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.warning("%s upsert failed for %s: %s", key, ticker, e)
                 counts[key] = 0
         # Any keys that errored during fetch get logged + counted as 0.

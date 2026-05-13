@@ -49,7 +49,7 @@ def collect_candidates(
                 "SELECT DISTINCT ticker FROM custom_watchlist ORDER BY ticker"
             )
             out["custom_watchlist"] = [r[0] for r in cur.fetchall()]
-        except Exception as e:  # noqa: BLE001 — table may not exist on old DBs
+        except Exception as e:
             log.warning("custom_watchlist lookup failed: %s", e)
             out["custom_watchlist"] = []
 
@@ -65,7 +65,7 @@ def collect_candidates(
                 (flow_premium_threshold,),
             )
             out["flow_alerts_24h"] = [r[0] for r in cur.fetchall()]
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("flow_alerts lookup failed: %s", e)
             out["flow_alerts_24h"] = []
 
@@ -80,7 +80,7 @@ def collect_candidates(
                 """
             )
             out["insider_buys_24h"] = [r[0] for r in cur.fetchall()]
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("insider buys lookup failed: %s", e)
             out["insider_buys_24h"] = []
 
@@ -94,7 +94,7 @@ def collect_candidates(
                 """
             )
             out["earnings_tomorrow"] = [r[0] for r in cur.fetchall()]
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("earnings tomorrow lookup failed: %s", e)
             out["earnings_tomorrow"] = []
 
@@ -116,7 +116,7 @@ def collect_candidates(
                 (str(stale_hours),),
             )
             out["stale_pm"] = [r[0] for r in cur.fetchall()]
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("stale-PM lookup failed: %s", e)
             out["stale_pm"] = []
 
@@ -188,7 +188,7 @@ def run(
             elapsed = time.monotonic() - t0
             summary["ran"].append({"ticker": ticker, "source": source, "elapsed_s": round(elapsed, 1)})
             log.info("rerun-stale %s (%s) ok in %.1fs", ticker, source, elapsed)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             elapsed = time.monotonic() - t0
             summary["failed"].append({"ticker": ticker, "source": source, "error": str(e)[:200]})
             log.warning("rerun-stale %s (%s) failed after %.1fs: %s", ticker, source, elapsed, e)

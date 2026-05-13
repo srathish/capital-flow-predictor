@@ -95,19 +95,23 @@ def rolling_features(
         rng = (cmax_h - cmin_l).clip(lower=_EPS)
         out[f"RSV_{w}"] = (close - cmin_l) / rng
 
+        # The lambdas below close over `w`, but `.apply()` runs them
+        # synchronously inside this iteration — there's no deferred execution,
+        # so the loop-variable capture is safe. (Silences B023.)
+
         # Rank within window (0 = lowest, 1 = highest of the W bars)
         out[f"RANK_{w}"] = roll_close.apply(
-            lambda x: float(pd.Series(x).rank(pct=True).iloc[-1]) if len(x) == w else np.nan,
+            lambda x: float(pd.Series(x).rank(pct=True).iloc[-1]) if len(x) == w else np.nan,  # noqa: B023
             raw=False,
         )
 
         # Recency of window-max / window-min — distance from current bar (0 = today, 1 = W-1 bars ago)
         out[f"IMAX_{w}"] = roll_high.apply(
-            lambda x: float((len(x) - 1 - np.argmax(x)) / max(len(x) - 1, 1)) if len(x) == w else np.nan,
+            lambda x: float((len(x) - 1 - np.argmax(x)) / max(len(x) - 1, 1)) if len(x) == w else np.nan,  # noqa: B023
             raw=True,
         )
         out[f"IMIN_{w}"] = roll_low.apply(
-            lambda x: float((len(x) - 1 - np.argmin(x)) / max(len(x) - 1, 1)) if len(x) == w else np.nan,
+            lambda x: float((len(x) - 1 - np.argmin(x)) / max(len(x) - 1, 1)) if len(x) == w else np.nan,  # noqa: B023
             raw=True,
         )
 

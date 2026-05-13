@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
+from cfp_shared import PREDICTION_TARGETS
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
 from cfp_api.schemas import SectorEntry, SectorsResponse
-from cfp_shared import PREDICTION_TARGETS
 
 router = APIRouter(prefix="/v1/sectors", tags=["sectors"])
 
@@ -747,7 +747,7 @@ async def get_forward_call(
     run_ts = active_rows[0]["run_ts"]
     stale_days: int | None = None
     if run_ts is not None:
-        now = datetime.now(tz=run_ts.tzinfo) if run_ts.tzinfo else datetime.now(tz=timezone.utc).replace(tzinfo=None)
+        now = datetime.now(tz=run_ts.tzinfo) if run_ts.tzinfo else datetime.now(tz=UTC).replace(tzinfo=None)
         stale_days = max(0, (now - run_ts).days)
 
     return ForwardCallResponse(

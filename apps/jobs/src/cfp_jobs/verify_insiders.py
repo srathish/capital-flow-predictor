@@ -9,12 +9,12 @@ either silent UW gaps or fabricated/stale data.
 from __future__ import annotations
 
 import logging
+import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
 import psycopg
-import urllib.request
 
 from cfp_jobs.db import to_psycopg_url
 
@@ -38,7 +38,7 @@ class FilingRef:
 def fetch_edgar_form4(ticker: str, since: date) -> list[FilingRef]:
     url = EDGAR_FORM4_FEED.format(ticker=ticker.upper())
     req = urllib.request.Request(url, headers={"User-Agent": _UA, "Accept": "application/atom+xml"})
-    with urllib.request.urlopen(req, timeout=20) as resp:  # noqa: S310 — sec.gov is fixed host
+    with urllib.request.urlopen(req, timeout=20) as resp:
         body = resp.read()
     # Atom namespace.
     ns = {"a": "http://www.w3.org/2005/Atom"}

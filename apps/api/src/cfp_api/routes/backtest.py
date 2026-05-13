@@ -64,7 +64,7 @@ async def monte_carlo(
     return {
         "ticker": sym,
         "lookback_days": days,
-        "n_bars": int(len(closes)),
+        "n_bars": len(closes),
         "realized": {
             "total_return": float(np.prod(1.0 + daily_returns) - 1.0),
             "mean_daily": float(np.mean(daily_returns)),

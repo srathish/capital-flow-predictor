@@ -78,7 +78,7 @@ def _parse_payload(raw: Any) -> dict[str, Any]:
 @router.get("/{ticker}", response_model=AgentsForTickerResponse)
 async def get_agents_for_ticker(
     ticker: str,
-    run_ts: datetime | None = Query(  # noqa: B008 — idiomatic FastAPI Depends pattern
+    run_ts: datetime | None = Query(
         default=None,
         description="If set, return signals for this specific run; otherwise the latest run.",
     ),

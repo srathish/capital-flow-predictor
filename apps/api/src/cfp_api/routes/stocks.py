@@ -143,7 +143,7 @@ async def screen_calibration(
         WHERE agent = 'portfolio_manager'
           AND run_ts >= NOW() - ($1 || ' days')::interval
           AND fwd_return_{horizon_int}d IS NOT NULL
-    """  # noqa: S608 — horizon is regex-gated
+    """
     async with pool.acquire() as conn:
         rows = await conn.fetch(sql, str(days))
 

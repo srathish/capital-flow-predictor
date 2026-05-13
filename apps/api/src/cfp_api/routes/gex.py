@@ -24,7 +24,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query
@@ -241,8 +241,7 @@ def _rollup_health(row: dict | None) -> tuple[str, str]:
         return "red", f"cookie rotation NOT persisting: {row.get('persist_error') or 'unknown error'}"
     posted_at = row.get("posted_at")
     if posted_at is not None:
-        from datetime import timezone
-        now = datetime.now(tz=posted_at.tzinfo or timezone.utc)
+        now = datetime.now(tz=posted_at.tzinfo or UTC)
         age_s = (now - posted_at).total_seconds()
         if age_s > 30 * 60:
             return "yellow", f"no heartbeat for {int(age_s // 60)} minutes — is gexester running?"

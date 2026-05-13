@@ -32,7 +32,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-
 _RISK_MULT = {"bull": 1.0, "chop": 0.5, "bear": 0.0}
 
 

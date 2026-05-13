@@ -115,7 +115,7 @@ Page context:
 """
 
 
-def _format_page_context(ctx: "PageContext | None") -> str | None:
+def _format_page_context(ctx: PageContext | None) -> str | None:
     """Render the user's current page state as a compact system message.
 
     Returns None if there is no useful context to send.

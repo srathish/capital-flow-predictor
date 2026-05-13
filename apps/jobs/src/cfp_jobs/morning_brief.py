@@ -105,7 +105,7 @@ def _section_stale_tables(conn) -> list[dict]:
     with conn.cursor() as cur:
         for table, col, thresh in checks:
             try:
-                cur.execute(f"SELECT MAX({col}) FROM {table}")  # noqa: S608 — static table list
+                cur.execute(f"SELECT MAX({col}) FROM {table}")
                 max_ts = cur.fetchone()[0]
                 if max_ts is None:
                     out.append({"table": table, "max_ts": None, "age_hours": None})
@@ -116,7 +116,7 @@ def _section_stale_tables(conn) -> list[dict]:
                     age_h = (datetime.now(UTC) - datetime(max_ts.year, max_ts.month, max_ts.day, tzinfo=UTC)).total_seconds() / 3600
                 if age_h > thresh:
                     out.append({"table": table, "age_hours": round(age_h, 1), "threshold": thresh})
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.debug("stale-check %s failed: %s", table, e)
     return out
 
@@ -148,7 +148,7 @@ def _safe(conn, name: str, fn) -> Any:
     try:
         with conn.transaction():
             return fn(conn)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("morning-brief %s failed: %s", name, e)
         return []
 
@@ -222,7 +222,7 @@ def run(database_url: str, webhook_url: str | None = None) -> dict[str, Any]:
             status = send_brief(brief, webhook_url)
             log.info("morning-brief posted (HTTP %s)", status)
             brief["_post_status"] = status
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.error("morning-brief webhook post failed: %s", e)
             brief["_post_status"] = f"error: {e}"
     else:

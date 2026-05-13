@@ -9,7 +9,12 @@ from cfp_api import __version__
 from cfp_api.auth import require_api_key
 from cfp_api.db import check_db_connection, close_pool, init_pool
 from cfp_api.logging_setup import RequestContextMiddleware, configure_logging
-from cfp_api.metrics import MetricsMiddleware, auth_failures_total, rate_limit_hits_total, render_metrics
+from cfp_api.metrics import (
+    MetricsMiddleware,
+    auth_failures_total,
+    rate_limit_hits_total,
+    render_metrics,
+)
 from cfp_api.migrations import apply_pending_migrations
 from cfp_api.routes import (
     agents,

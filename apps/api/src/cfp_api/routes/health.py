@@ -71,7 +71,7 @@ async def detailed_health() -> dict[str, Any]:
                 row["exists"] = True
                 if ts_col is not None:
                     max_ts = await conn.fetchval(
-                        f"SELECT MAX({ts_col}) FROM {table}"  # noqa: S608 — table list is static
+                        f"SELECT MAX({ts_col}) FROM {table}"
                     )
                     if max_ts is None:
                         row["max_ts"] = None
@@ -91,7 +91,7 @@ async def detailed_health() -> dict[str, Any]:
                         row["fresh"] = age_h <= _freshness_threshold(table)
                 if want_count:
                     row["row_count"] = await conn.fetchval(
-                        f"SELECT COUNT(*) FROM {table}"  # noqa: S608
+                        f"SELECT COUNT(*) FROM {table}"
                     )
                 if row.get("fresh") is False:
                     overall_ok = False

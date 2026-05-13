@@ -9,7 +9,6 @@ from __future__ import annotations
 import os
 
 import pytest
-
 from cfp_jobs.migrate import apply_all, find_migrations_dir
 
 
