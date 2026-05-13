@@ -111,6 +111,15 @@ class SentimentAnalyst(BaseAnalyst):
                 f" · {r.catalyst_posts_7d} catalyst post(s)"
                 f" ({r.catalyst_posts_bullish_7d}↑/{r.catalyst_posts_bearish_7d}↓)"
             )
+        # Surface up to 2 top post titles in the rationale so downstream
+        # synthesizers (and humans reading the analyst signal) see WHAT the
+        # chatter is about, not just the count. Personas already get richer
+        # excerpts via base.py — this is the short version for the analyst
+        # signal trail.
+        top_excerpts = (r.recent_post_excerpts or [])[:2]
+        if top_excerpts:
+            titles = " | ".join(f'"{e.title[:70]}"' for e in top_excerpts)
+            rationale += f" · top posts: {titles}"
         if flags:
             rationale += f" [{', '.join(flags)}]"
 
@@ -134,6 +143,16 @@ class SentimentAnalyst(BaseAnalyst):
                 "by_subreddit": [
                     {"subreddit": s.subreddit, "mentions": s.mentions, "rank": s.rank}
                     for s in r.by_subreddit
+                ],
+                "recent_post_excerpts": [
+                    {
+                        "subreddit": e.subreddit,
+                        "title": e.title,
+                        "upvotes": e.upvotes,
+                        "num_comments": e.num_comments,
+                        "keywords": e.keywords,
+                    }
+                    for e in (r.recent_post_excerpts or [])[:3]
                 ],
             },
         )

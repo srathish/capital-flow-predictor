@@ -184,10 +184,40 @@ class CongressTrade(_Frozen):
     transaction_date: date | None = None
 
 
+class InsiderActor(_Frozen):
+    """A single insider's aggregated activity over the 30d window.
+
+    Surfaces the buy/sell narrative depth that the old summary (`insider_buys_30d`
+    + `insider_net_amount_30d`) flattened away. A net of +$1M reads identically
+    whether it's "10 directors each bought $100k" or "the CFO bought $1M solo" —
+    very different conviction signals. Personas now see the top participants
+    by side so they can frame that asymmetry.
+    """
+
+    filer: str
+    title: str | None = None
+    side: str  # 'buy' | 'sell'
+    total_amount: float
+    txn_count: int
+
+
 class SmartMoneyCtx(_Frozen):
     insider_buys_30d: int = 0
     insider_sells_30d: int = 0
     insider_net_amount_30d: float = 0.0  # signed $
+    # Buy/sell asymmetry — the unsigned totals on each side. With these +
+    # the count fields you can answer "5 buyers vs 1 seller" or "$5M bought,
+    # $4.8M sold (net only +$200k but flow was heavy on both sides)".
+    insider_total_buy_amount_30d: float = 0.0
+    insider_total_sell_amount_30d: float = 0.0
+    # Unique insider headcount on each side — distinguishes one mega-buyer
+    # from many small ones (and vice versa).
+    insider_unique_buyers_30d: int = 0
+    insider_unique_sellers_30d: int = 0
+    # Top participants by side. Empty when no transactions; capped at 3 per
+    # side so the prompt stays compact even on heavily-traded names.
+    top_insider_buyers: list[InsiderActor] = Field(default_factory=list)
+    top_insider_sellers: list[InsiderActor] = Field(default_factory=list)
     congress_trades: list[CongressTrade] = Field(default_factory=list)
 
 
@@ -209,6 +239,13 @@ class CatalystCtx(_Frozen):
     expected_move_perc: float | None = None
     news_5d: list[NewsHeadline] = Field(default_factory=list)
     sentiment_score_5d: float | None = None  # (positive - negative) / total
+    # Headline-sentiment rollup over the same 5d window. Per-headline
+    # `sentiment` tags are already in news_5d but personas had no aggregate;
+    # exposing the counts directly lets them say "net 3 positive vs 1
+    # negative" without re-counting from the headline list.
+    news_sentiment_positive_5d: int = 0
+    news_sentiment_neutral_5d: int = 0
+    news_sentiment_negative_5d: int = 0
 
 
 # ---------- reddit (chatter intensity, asymmetry) ----------
@@ -223,6 +260,26 @@ class RedditSubredditMentions(_Frozen):
     rank: int | None = None
     rank_24h_ago: int | None = None
     mentions_24h_ago: int | None = None
+
+
+class RedditPostExcerpt(_Frozen):
+    """A single Reddit catalyst-feed post, trimmed for prompt budget.
+
+    Replaces the "10 posts mention NVDA" volume-only view with actual content
+    excerpts so personas can distinguish substantive theses ("bull case on
+    NVDA: data center growth, Mellanox synergy, no AMD pressure") from pump
+    spam ("🚀🚀🚀 NVDA to 1500"). Title + ~300-char body slice + engagement
+    metadata keeps each excerpt ~400 tokens so 5 excerpts stays under 2k tokens.
+    """
+
+    subreddit: str
+    title: str
+    body_excerpt: str = ""                # first ~300 chars of selftext
+    upvotes: int | None = None
+    num_comments: int | None = None
+    keywords: list[str] = Field(default_factory=list)   # catalyst keywords matched
+    posted_at: datetime | None = None
+    permalink: str | None = None
 
 
 class RedditCtx(_Frozen):
@@ -252,6 +309,11 @@ class RedditCtx(_Frozen):
     catalyst_posts_7d: int = 0
     catalyst_posts_bullish_7d: int = 0    # subset matched against bullish keyword set
     catalyst_posts_bearish_7d: int = 0    # subset matched against bearish keyword set
+    # Up to ~5 most-engaged recent catalyst posts so the sentiment analyst
+    # and personas can read what's actually being said, not just count
+    # mentions. Capped + trimmed in _build_reddit_ctx to keep prompt budget
+    # reasonable. Empty when reddit_posts has nothing for this ticker.
+    recent_post_excerpts: list[RedditPostExcerpt] = Field(default_factory=list)
 
 
 # ---------- ETF context ----------

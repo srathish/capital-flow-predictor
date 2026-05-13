@@ -22,12 +22,14 @@ from cfp_shared import (
     DarkPoolCtx,
     EtfContextCtx,
     EvidenceBundle,
+    InsiderActor,
     Instrument,
     MarketRegimeCtx,
     NewsHeadline,
     OptionsFlowCtx,
     PositioningCtx,
     RedditCtx,
+    RedditPostExcerpt,
     RedditSubredditMentions,
     SmartMoneyCtx,
     TopTrade,
@@ -333,19 +335,26 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
         out["positioning"] = positioning
 
         # ---- smart_money: insider txns 30d ----
+        # Aggregate the totals (buy/sell counts + signed net + unsigned totals)
+        # and the unique-actor counts, so personas can frame asymmetry:
+        # "5 buyers vs 1 seller, $1.2M bought / $200k sold" rather than just
+        # "net +$1M". The signed-net stays because some downstream consumers
+        # (regime ctx, sentiment proxies) rely on it.
         cur.execute(
             """
             SELECT
               COUNT(*) FILTER (WHERE transaction_code = 'P'),
               COUNT(*) FILTER (WHERE transaction_code = 'S'),
               COALESCE(SUM(CASE WHEN transaction_code = 'P' THEN amount * COALESCE(price, 0) END), 0),
-              COALESCE(SUM(CASE WHEN transaction_code = 'S' THEN amount * COALESCE(price, 0) END), 0)
+              COALESCE(SUM(CASE WHEN transaction_code = 'S' THEN amount * COALESCE(price, 0) END), 0),
+              COUNT(DISTINCT owner_name) FILTER (WHERE transaction_code = 'P'),
+              COUNT(DISTINCT owner_name) FILTER (WHERE transaction_code = 'S')
             FROM uw_insider_transactions
             WHERE ticker = %s AND transaction_date > CURRENT_DATE - 30
             """,
             (ticker,),
         )
-        r = cur.fetchone() or (0, 0, 0, 0)
+        r = cur.fetchone() or (0, 0, 0, 0, 0, 0)
         # SUM(amount * price): amount is signed (negative = sell), so the buy side
         # gives positive $ and the sell side gives negative $. Net = sum of both.
         buy_dollars = float(r[2] or 0)
@@ -354,7 +363,62 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
             "insider_buys_30d": int(r[0] or 0),
             "insider_sells_30d": int(r[1] or 0),
             "insider_net_amount_30d": buy_dollars + sell_dollars,
+            # Unsigned totals — buy_dollars is already positive, sell_dollars
+            # is negative (signed). abs() the sell side so personas read it as
+            # "X bought, Y sold" with both as positive magnitudes.
+            "insider_total_buy_amount_30d": buy_dollars,
+            "insider_total_sell_amount_30d": abs(sell_dollars),
+            "insider_unique_buyers_30d": int(r[4] or 0),
+            "insider_unique_sellers_30d": int(r[5] or 0),
         }
+
+        # Top actors per side — capped at 3 each so the prompt stays tight on
+        # heavily-traded names. Ordered by total dollar magnitude.
+        # Title is synthesized from the role flags (no free-text title column on
+        # uw_insider_transactions). Officer > director > 10%-owner > "Insider".
+        # bool_or aggregates so a single owner with mixed flags across rows
+        # still gets the most-senior tag.
+        cur.execute(
+            """
+            SELECT
+              owner_name,
+              CASE
+                WHEN bool_or(is_officer)            THEN 'Officer'
+                WHEN bool_or(is_director)           THEN 'Director'
+                WHEN bool_or(is_ten_percent_owner)  THEN '10% Owner'
+                ELSE 'Insider'
+              END                                                        AS title,
+              CASE WHEN transaction_code = 'P' THEN 'buy' ELSE 'sell' END AS side,
+              SUM(ABS(amount * COALESCE(price, 0)))                      AS total_amt,
+              COUNT(*)                                                   AS n_txn
+            FROM uw_insider_transactions
+            WHERE ticker = %s AND transaction_date > CURRENT_DATE - 30
+              AND owner_name IS NOT NULL
+              AND transaction_code IN ('P', 'S')
+            GROUP BY owner_name, transaction_code
+            ORDER BY total_amt DESC NULLS LAST
+            LIMIT 12
+            """,
+            (ticker,),
+        )
+        buyers: list[dict] = []
+        sellers: list[dict] = []
+        for row in cur.fetchall():
+            actor = {
+                "filer": row[0],
+                "title": row[1],
+                "side": row[2],
+                "total_amount": float(row[3] or 0),
+                "txn_count": int(row[4] or 0),
+            }
+            if row[2] == "buy" and len(buyers) < 3:
+                buyers.append(actor)
+            elif row[2] == "sell" and len(sellers) < 3:
+                sellers.append(actor)
+            if len(buyers) >= 3 and len(sellers) >= 3:
+                break
+        out["smart_money"]["top_insider_buyers"] = buyers
+        out["smart_money"]["top_insider_sellers"] = sellers
 
         # ---- congress trades on this ticker, 30d ----
         cur.execute(
@@ -726,6 +790,7 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
     catalyst_posts_7d = 0
     catalyst_posts_bullish_7d = 0
     catalyst_posts_bearish_7d = 0
+    recent_excerpts: list[dict] = []
 
     try:
         with connect(database_url) as conn, conn.cursor() as cur:
@@ -823,6 +888,41 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
                 catalyst_posts_7d = int(r4[0] or 0)
                 catalyst_posts_bullish_7d = int(r4[1] or 0)
                 catalyst_posts_bearish_7d = int(r4[2] or 0)
+
+            # Fetch up to 5 most-engaged post excerpts. We rank by an
+            # engagement composite (upvotes + 3 × num_comments) — comments
+            # are scarcer than upvotes and signal real discussion, hence the
+            # 3× weight. Falls back to recency when engagement is null.
+            # body is trimmed to 300 chars at write time (below) to keep
+            # the prompt budget bounded regardless of selftext length.
+            cur.execute(
+                """
+                SELECT subreddit, title, body, upvotes, num_comments,
+                       keywords, created_at, permalink
+                FROM reddit_posts
+                WHERE %s = ANY(tickers)
+                  AND created_at > NOW() - INTERVAL '7 days'
+                ORDER BY (COALESCE(upvotes, 0) + 3 * COALESCE(num_comments, 0)) DESC,
+                         created_at DESC
+                LIMIT 5
+                """,
+                (ticker,),
+            )
+            recent_excerpts = []
+            for row in cur.fetchall():
+                body = row[2] or ""
+                if len(body) > 300:
+                    body = body[:297].rstrip() + "..."
+                recent_excerpts.append({
+                    "subreddit": row[0],
+                    "title": (row[1] or "")[:160],
+                    "body_excerpt": body,
+                    "upvotes": int(row[3]) if row[3] is not None else None,
+                    "num_comments": int(row[4]) if row[4] is not None else None,
+                    "keywords": list(row[5] or []),
+                    "posted_at": row[6],
+                    "permalink": row[7],
+                })
     except Exception as e:
         log.warning("reddit ctx build failed for %s: %s", ticker, e)
         return RedditCtx()
@@ -860,6 +960,7 @@ def _build_reddit_ctx(database_url: str, ticker: str) -> RedditCtx:
         catalyst_posts_7d=catalyst_posts_7d,
         catalyst_posts_bullish_7d=catalyst_posts_bullish_7d,
         catalyst_posts_bearish_7d=catalyst_posts_bearish_7d,
+        recent_post_excerpts=[RedditPostExcerpt(**e) for e in recent_excerpts],
     )
 
 
@@ -890,11 +991,16 @@ def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) 
                         is_major=bool(row[4]),
                     )
                 )
-            # Sentiment score = (positive - negative) / total over the same window.
+            # Sentiment rollup over the same 5d window. Returns the raw counts
+            # (kept as new fields so personas can read "3 positive / 1 neutral
+            # / 0 negative" directly) AND the normalized score (legacy field
+            # consumers may still use). The neutral count is a real signal —
+            # 8/8 neutral is a meaningfully different state than 0/0.
             cur.execute(
                 """
                 SELECT
                   COUNT(*) FILTER (WHERE sentiment = 'positive'),
+                  COUNT(*) FILTER (WHERE sentiment = 'neutral'),
                   COUNT(*) FILTER (WHERE sentiment = 'negative'),
                   COUNT(*) FILTER (WHERE sentiment IN ('positive', 'negative', 'neutral'))
                 FROM uw_news
@@ -902,8 +1008,11 @@ def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) 
                 """,
                 (ticker,),
             )
-            r = cur.fetchone() or (0, 0, 0)
-            pos, neg, total = int(r[0] or 0), int(r[1] or 0), int(r[2] or 0)
+            r = cur.fetchone() or (0, 0, 0, 0)
+            pos = int(r[0] or 0)
+            neu = int(r[1] or 0)
+            neg = int(r[2] or 0)
+            total = int(r[3] or 0)
             if total > 0:
                 sentiment_score = (pos - neg) / total
     except Exception as e:
@@ -925,6 +1034,9 @@ def _build_catalyst_ctx(database_url: str, ticker: str, instrument: Instrument) 
         earnings_proximity=proximity,
         news_5d=headlines,
         sentiment_score_5d=sentiment_score,
+        news_sentiment_positive_5d=pos,
+        news_sentiment_neutral_5d=neu,
+        news_sentiment_negative_5d=neg,
     )
 
 
@@ -1085,6 +1197,12 @@ def build_evidence_bundle(
         insider_buys_30d=int(smart_money_dict.get("insider_buys_30d", 0)),
         insider_sells_30d=int(smart_money_dict.get("insider_sells_30d", 0)),
         insider_net_amount_30d=float(smart_money_dict.get("insider_net_amount_30d", 0.0)),
+        insider_total_buy_amount_30d=float(smart_money_dict.get("insider_total_buy_amount_30d", 0.0)),
+        insider_total_sell_amount_30d=float(smart_money_dict.get("insider_total_sell_amount_30d", 0.0)),
+        insider_unique_buyers_30d=int(smart_money_dict.get("insider_unique_buyers_30d", 0)),
+        insider_unique_sellers_30d=int(smart_money_dict.get("insider_unique_sellers_30d", 0)),
+        top_insider_buyers=[InsiderActor(**a) for a in smart_money_dict.get("top_insider_buyers", [])],
+        top_insider_sellers=[InsiderActor(**a) for a in smart_money_dict.get("top_insider_sellers", [])],
         congress_trades=[CongressTrade(**ct) for ct in smart_money_dict.get("congress_trades", [])],
     )
     etf_context = EtfContextCtx(**(flow_dict.get("etf_context") or {}))

@@ -154,10 +154,35 @@ def _render_flow_block(bundle) -> str:
     # Smart money
     sm_lines: list[str] = []
     if smart.insider_buys_30d > 0 or smart.insider_sells_30d > 0:
+        # Two-line summary: counts + signed net on the first line; gross
+        # buy / gross sell + unique-actor counts on the second so personas can
+        # see asymmetry — "$5M bought / $4.8M sold, net only +$200k but heavy
+        # 2-way flow" reads very differently from "$5M net buying, single
+        # buyer." Top actors are listed under the headline so big single
+        # filers are visible by name + title.
         sm_lines.append(
             f"- Insider 30d: {smart.insider_buys_30d} buys / {smart.insider_sells_30d} sells, "
             f"net {_fmt(smart.insider_net_amount_30d, currency=True)}"
         )
+        if smart.insider_total_buy_amount_30d > 0 or smart.insider_total_sell_amount_30d > 0:
+            sm_lines.append(
+                f"    Gross: {_fmt(smart.insider_total_buy_amount_30d, currency=True)} bought "
+                f"by {smart.insider_unique_buyers_30d} insider(s), "
+                f"{_fmt(smart.insider_total_sell_amount_30d, currency=True)} sold "
+                f"by {smart.insider_unique_sellers_30d} insider(s)"
+            )
+        if smart.top_insider_buyers:
+            for a in smart.top_insider_buyers[:3]:
+                sm_lines.append(
+                    f"      BUY  {a.filer} ({a.title or 'Insider'}): "
+                    f"{_fmt(a.total_amount, currency=True)} across {a.txn_count} txn"
+                )
+        if smart.top_insider_sellers:
+            for a in smart.top_insider_sellers[:3]:
+                sm_lines.append(
+                    f"      SELL {a.filer} ({a.title or 'Insider'}): "
+                    f"{_fmt(a.total_amount, currency=True)} across {a.txn_count} txn"
+                )
     if smart.congress_trades:
         sm_lines.append(f"- {len(smart.congress_trades)} recent congressional trades")
         for ct in smart.congress_trades[:3]:
@@ -174,6 +199,23 @@ def _render_flow_block(bundle) -> str:
         cat_lines.append(f"- Next earnings: {cat.next_earnings_date.isoformat()}{proximity_note}")
     if cat.news_5d:
         cat_lines.append(f"- {len(cat.news_5d)} news headlines 5d:")
+        # Sentiment rollup BEFORE the headlines so personas read the tilt
+        # first ("3 pos / 1 neu / 0 neg, net bullish") and the individual
+        # headlines second. Saves them from re-counting from the list.
+        pos5 = cat.news_sentiment_positive_5d
+        neu5 = cat.news_sentiment_neutral_5d
+        neg5 = cat.news_sentiment_negative_5d
+        if pos5 + neu5 + neg5 > 0:
+            net = pos5 - neg5
+            if net >= 2:
+                tilt = "bullish tilt"
+            elif net <= -2:
+                tilt = "bearish tilt"
+            else:
+                tilt = "balanced/mixed"
+            cat_lines.append(
+                f"    Sentiment: {pos5} positive / {neu5} neutral / {neg5} negative ({tilt})"
+            )
         for h in cat.news_5d[:5]:
             sent = f"[{h.sentiment}]" if h.sentiment else ""
             major = "*MAJOR*" if h.is_major else ""
@@ -211,6 +253,30 @@ def _render_flow_block(bundle) -> str:
                 if stocks:
                     parts.append(f"r/stocks {stocks.mentions}")
                 rd_lines.append(f"- Per-subreddit: {', '.join(parts)}")
+        # Post excerpts — actual content from the catalyst feed so personas
+        # can distinguish substance ("data center growth thesis with sources")
+        # from spam ("🚀🚀🚀 to the moon"). Only surface posts with at least
+        # SOME engagement OR a non-empty body; bare title-only posts add
+        # noise. Capped at 3 here even though we collect 5 — keeps the
+        # prompt tight on chatty days.
+        substantive_excerpts = [
+            e for e in (reddit.recent_post_excerpts or [])
+            if e.body_excerpt or (e.upvotes or 0) >= 10 or (e.num_comments or 0) >= 5
+        ][:3]
+        if substantive_excerpts:
+            rd_lines.append("- Recent catalyst-feed posts (what people are actually saying):")
+            for e in substantive_excerpts:
+                meta = []
+                if e.upvotes is not None:
+                    meta.append(f"{e.upvotes}↑")
+                if e.num_comments is not None:
+                    meta.append(f"{e.num_comments} comments")
+                if e.keywords:
+                    meta.append(f"tags: {', '.join(e.keywords[:4])}")
+                meta_str = f" [{' · '.join(meta)}]" if meta else ""
+                rd_lines.append(f'    r/{e.subreddit}: "{e.title}"{meta_str}')
+                if e.body_excerpt:
+                    rd_lines.append(f"      → {e.body_excerpt}")
         sections.append("Reddit chatter (confluence layer, NOT primary signal):\n" + "\n".join(rd_lines))
 
     if not sections:
