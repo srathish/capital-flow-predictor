@@ -9,7 +9,8 @@ export const CLERK_JS_VERSION = '5.124.0';
 export const STREAM_URL = (symbol, token) =>
   `${HEATSEEKER_BASE}/api/stream?symbol=${encodeURIComponent(symbol)}&token=${encodeURIComponent(token)}&max_strikes=200&max_expirations=10`;
 
-// SPX has the largest strike chain and takes the longest to stream; 25s gives
-// it headroom while still failing fast on dead connections.
-export const SSE_TIMEOUT_MS = 25_000;
-export const FETCH_TIMEOUT_MS = 15_000;
+// SPX has the largest strike chain and takes the longest to stream; bump
+// both timeouts so the SSE connect (FETCH_TIMEOUT_MS) and the snapshot wait
+// (SSE_TIMEOUT_MS) both have headroom. Still well under the 5-min job timeout.
+export const SSE_TIMEOUT_MS = 30_000;
+export const FETCH_TIMEOUT_MS = 30_000;
