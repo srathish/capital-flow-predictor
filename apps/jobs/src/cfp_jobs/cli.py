@@ -845,6 +845,31 @@ def status() -> None:
     console.print(table)
 
 
+@app.command("flow-backfill")
+def flow_backfill_cmd(
+    ticker: str = typer.Argument(..., help="Ticker symbol, e.g. NVDA"),
+    days: int = typer.Option(365, help="Calendar days to walk back."),
+    chunk_days: int = typer.Option(30, help="Page size in days (shrink for busy names)."),
+) -> None:
+    """Backfill UW flow alerts for a single ticker.
+
+    The default ingest only pulls the most recent 200 alerts. This command
+    walks back in `chunk_days` windows so per-ticker history matches UW
+    retention. Idempotent — re-run safely to fill gaps.
+    """
+    api_key = (settings.unusual_whales_api_key or "").strip()
+    if not api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set; aborting.[/]")
+        raise typer.Exit(code=1)
+    result = ingestion.unusualwhales.ingest_flow_history(
+        settings.database_url, api_key, ticker, days=days, chunk_days=chunk_days,
+    )
+    console.print(
+        f"{result['ticker']}: fetched {result['fetched']} alerts, "
+        f"upserted {result['upserted']} (requested ~{result['days_requested']}d)"
+    )
+
+
 @app.command("ensemble-rerun-stale")
 def ensemble_rerun_stale_cmd(
     max_tickers: int = typer.Option(30, help="Cap on how many tickers to re-analyze."),

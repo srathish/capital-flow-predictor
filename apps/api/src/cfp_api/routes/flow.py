@@ -487,6 +487,19 @@ class ExpiryBucket(BaseModel):
     bullish_score: float  # ((net_call_ask − net_put_ask) / bucket_total_premium)
 
 
+class OiGrowthStrike(BaseModel):
+    """An option strike where open interest has been growing (or shrinking)
+    over the lookback window. Sourced from uw_oi_change daily deltas — the
+    answer to 'which strikes are positions being added to?'."""
+    strike: float
+    option_type: Literal["call", "put"]
+    expiry: str | None              # YYYY-MM-DD
+    oi_delta: int                   # sum of daily oi_diff_plain over window
+    current_oi: int                 # latest curr_oi
+    days_with_data: int             # how many days had a delta in window
+    days_of_oi_increases: int | None  # UW-supplied streak of consecutive increases
+
+
 class TopStrike(BaseModel):
     strike: float
     option_type: Literal["call", "put"]
@@ -526,6 +539,8 @@ class FlowAggregateResponse(BaseModel):
     leap_put_premium: float
     expiry_buckets: list[ExpiryBucket]
     expiry_headline: str  # one-line "where is the money concentrated in time?"
+    oi_growth_strikes: list[OiGrowthStrike]  # which strikes have positions been added to?
+    oi_growth_window_days: int               # the window we summed daily deltas over
     top_strikes: list[TopStrike]
     top_trades: list[TopTradeAgg]
 
@@ -538,8 +553,17 @@ async def flow_aggregate(
         ge=1,
         le=1825,
         description=(
-            "Lookback window in days. Default 730 = effectively 'all data we have' "
-            "since UW retention rarely exceeds ~2 years."
+            "Flow-alerts lookback window in days. Default 730 = effectively "
+            "'all data we have' since UW retention rarely exceeds ~2 years."
+        ),
+    ),
+    oi_window: int = Query(
+        30,
+        ge=1,
+        le=365,
+        description=(
+            "Window for summing daily OI deltas to identify which strikes have "
+            "had positions added or removed. Default 30d."
         ),
     ),
 ) -> FlowAggregateResponse:
@@ -647,6 +671,41 @@ async def flow_aggregate(
             """,
             sym, str(days),
         )
+        # OI growth — which strikes have positions actually been added to
+        # over the window? Parses OCC-format option_symbol
+        # (NVDA281215C00225000 → expiry 2028-12-15, call, strike 225.00).
+        oi_rows = await conn.fetch(
+            """
+            WITH parsed AS (
+                SELECT
+                    substring(option_symbol from '(\\d{6})[CP]\\d{8}$') AS exp_yymmdd,
+                    substring(option_symbol from '\\d{6}([CP])\\d{8}$') AS type_letter,
+                    substring(option_symbol from '\\d{6}[CP](\\d{8})$') AS strike_padded,
+                    oi_diff_plain, curr_oi, days_of_oi_increases, curr_date
+                FROM uw_oi_change
+                WHERE ticker = $1
+                  AND curr_date > CURRENT_DATE - $2::int
+                  AND option_symbol ~ '\\d{6}[CP]\\d{8}$'
+            ),
+            agg AS (
+                SELECT
+                    CASE WHEN type_letter = 'C' THEN 'call' ELSE 'put' END AS option_type,
+                    to_date(exp_yymmdd, 'YYMMDD') AS expiry,
+                    strike_padded::int / 1000.0 AS strike,
+                    SUM(oi_diff_plain)::bigint AS oi_delta,
+                    COUNT(*)::int AS days_with_data,
+                    MAX(days_of_oi_increases) AS streak,
+                    -- pick the most recent curr_oi per strike
+                    (array_agg(curr_oi ORDER BY curr_date DESC))[1]::bigint AS current_oi
+                FROM parsed
+                GROUP BY 1, 2, 3
+            )
+            SELECT * FROM agg
+            ORDER BY ABS(oi_delta) DESC NULLS LAST
+            LIMIT 12
+            """,
+            sym, oi_window,
+        )
 
     if agg is None or (agg["n"] or 0) == 0:
         # Return an empty-but-well-formed response so the FE can render
@@ -663,6 +722,7 @@ async def flow_aggregate(
             avg_ticket_size=0.0,
             leap_call_premium=0.0, leap_put_premium=0.0,
             expiry_buckets=[], expiry_headline="No expiry-tagged alerts available.",
+            oi_growth_strikes=[], oi_growth_window_days=oi_window,
             top_strikes=[], top_trades=[],
         )
 
@@ -808,6 +868,19 @@ async def flow_aggregate(
         leap_put_premium=float(agg["leap_put"] or 0.0),
         expiry_buckets=expiry_buckets,
         expiry_headline=expiry_headline,
+        oi_growth_strikes=[
+            OiGrowthStrike(
+                strike=float(r["strike"]),
+                option_type=r["option_type"],
+                expiry=r["expiry"].isoformat() if r["expiry"] else None,
+                oi_delta=int(r["oi_delta"] or 0),
+                current_oi=int(r["current_oi"] or 0),
+                days_with_data=int(r["days_with_data"] or 0),
+                days_of_oi_increases=(int(r["streak"]) if r["streak"] is not None else None),
+            )
+            for r in oi_rows
+        ],
+        oi_growth_window_days=oi_window,
         top_strikes=top_strikes,
         top_trades=top_trades,
     )

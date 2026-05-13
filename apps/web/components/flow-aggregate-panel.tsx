@@ -194,6 +194,69 @@ export function FlowAggregatePanel() {
             </div>
           )}
 
+          {data.oi_growth_strikes.length > 0 && (
+            <div>
+              <div className="mb-1 flex items-center justify-between">
+                <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Open interest growth · positions added to in last {data.oi_growth_window_days}d
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Daily OI deltas summed per strike. Positive Δ = positions opening (or
+                  netting open); negative = closing.
+                </span>
+              </div>
+              <div className="overflow-hidden rounded border border-border/50">
+                <table className="w-full text-xs">
+                  <thead className="bg-muted/40 text-muted-foreground">
+                    <tr>
+                      <th className="px-2 py-1 text-left">Strike</th>
+                      <th className="px-2 py-1 text-left">Type</th>
+                      <th className="px-2 py-1 text-left">Expiry</th>
+                      <th className="px-2 py-1 text-right">ΔOI ({data.oi_growth_window_days}d)</th>
+                      <th className="px-2 py-1 text-right">Current OI</th>
+                      <th className="px-2 py-1 text-right">Streak</th>
+                      <th className="px-2 py-1 text-right">Days w/ data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.oi_growth_strikes.map((s, i) => {
+                      const isGrowth = s.oi_delta > 0;
+                      const sideCls = s.option_type === "call" ? "text-green-300" : "text-rose-300";
+                      const deltaCls = isGrowth
+                        ? "text-green-300"
+                        : s.oi_delta < 0
+                          ? "text-rose-300"
+                          : "text-muted-foreground";
+                      return (
+                        <tr
+                          key={`${s.strike}-${s.option_type}-${s.expiry}-${i}`}
+                          className="border-t border-border/40"
+                        >
+                          <td className="px-2 py-1 font-mono font-semibold">${s.strike.toFixed(2)}</td>
+                          <td className={`px-2 py-1 uppercase ${sideCls}`}>{s.option_type}</td>
+                          <td className="px-2 py-1 font-mono">{s.expiry ?? "—"}</td>
+                          <td className={`px-2 py-1 text-right font-mono ${deltaCls}`}>
+                            {s.oi_delta > 0 ? "+" : ""}{s.oi_delta.toLocaleString()}
+                          </td>
+                          <td className="px-2 py-1 text-right font-mono">{s.current_oi.toLocaleString()}</td>
+                          <td className="px-2 py-1 text-right font-mono">
+                            {s.days_of_oi_increases !== null ? `${s.days_of_oi_increases}d` : "—"}
+                          </td>
+                          <td className="px-2 py-1 text-right">{s.days_with_data}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                "Streak" = consecutive trading days OI has grown on this contract (UW signal).
+                Big positive deltas on far-dated calls = real bullish accumulation;
+                deep-OTM put accumulation often = hedging, not directional bearish bets.
+              </p>
+            </div>
+          )}
+
           {data.top_strikes.length > 0 && (
             <div>
               <div className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">

@@ -768,6 +768,16 @@ export type FlowTopTrade = {
   option_chain: string | null;
 };
 
+export type FlowOiGrowthStrike = {
+  strike: number;
+  option_type: "call" | "put";
+  expiry: string | null;
+  oi_delta: number;
+  current_oi: number;
+  days_with_data: number;
+  days_of_oi_increases: number | null;
+};
+
 export type FlowExpiryBucket = {
   label: string;
   days_min: number;
@@ -800,6 +810,8 @@ export type FlowAggregateResponse = {
   leap_put_premium: number;
   expiry_buckets: FlowExpiryBucket[];
   expiry_headline: string;
+  oi_growth_strikes: FlowOiGrowthStrike[];
+  oi_growth_window_days: number;
   top_strikes: FlowTopStrike[];
   top_trades: FlowTopTrade[];
 };

@@ -71,8 +71,89 @@ class UwClient:
             return body["data"]
         return body
 
-    def flow_alerts(self, ticker: str, limit: int = 50) -> list[dict]:
-        return self._get(f"/stock/{ticker}/flow-alerts", params={"limit": limit}) or []
+    def flow_alerts(
+        self,
+        ticker: str,
+        limit: int = 200,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> list[dict]:
+        """One page of flow alerts. UW caps `limit` at 200 per request.
+
+        ``start_date`` / ``end_date`` (YYYY-MM-DD, UTC) filter on created_at.
+        Use ``flow_alerts_history`` to walk back in time across multiple pages.
+        """
+        params: dict[str, Any] = {"limit": limit}
+        if start_date:
+            params["start_date"] = start_date
+        if end_date:
+            params["end_date"] = end_date
+        return self._get(f"/stock/{ticker}/flow-alerts", params=params) or []
+
+    def flow_alerts_history(
+        self,
+        ticker: str,
+        days: int = 365,
+        page_size: int = 200,
+        chunk_days: int = 30,
+    ) -> list[dict]:
+        """Walk back ``days`` calendar days in ``chunk_days``-sized windows.
+
+        UW returns 403 on date-filtered flow-alerts requests at our current
+        subscription tier — historical date queries on this endpoint are
+        a paid feature we don't have. When that happens we fall back to a
+        single unfiltered call (returns the most recent page_size alerts).
+
+        Dedups on (option_chain, created_at, total_premium) since UW can
+        return overlapping rows at chunk boundaries.
+        """
+        from datetime import UTC, datetime, timedelta
+
+        seen: set[tuple[str, str, float]] = set()
+        out: list[dict] = []
+        end_d = datetime.now(UTC).date()
+        chunks_done = 0
+        max_chunks = max(1, (days + chunk_days - 1) // chunk_days)
+        while chunks_done < max_chunks:
+            start_d = end_d - timedelta(days=chunk_days)
+            try:
+                page = self.flow_alerts(
+                    ticker,
+                    limit=page_size,
+                    start_date=start_d.isoformat(),
+                    end_date=end_d.isoformat(),
+                )
+            except httpx.HTTPStatusError as e:
+                # 403 = our tier doesn't allow historical date filters here.
+                # Fall back once to an unfiltered call and stop.
+                if e.response.status_code == 403:
+                    log.info(
+                        "flow_alerts date-filtered request 403'd for %s; "
+                        "subscription tier doesn't support historical queries. "
+                        "Falling back to latest unfiltered page.",
+                        ticker,
+                    )
+                    try:
+                        out.extend(self.flow_alerts(ticker, limit=page_size))
+                    except Exception as inner:  # noqa: BLE001
+                        log.warning("fallback flow_alerts also failed for %s: %s", ticker, inner)
+                    break
+                raise
+            if not page:
+                break  # no alerts in this window — assume rest is empty
+            for row in page:
+                key = (
+                    str(row.get("option_chain", "")),
+                    str(row.get("created_at", "")),
+                    float(row.get("total_premium") or 0),
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append(row)
+            chunks_done += 1
+            end_d = start_d
+        return out
 
     def dark_pool(self, ticker: str, limit: int = 100) -> list[dict]:
         return self._get(f"/darkpool/{ticker}", params={"limit": limit}) or []
@@ -1199,6 +1280,33 @@ def ingest_ticker(database_url: str, api_key: str, ticker: str) -> dict:
 
         conn.commit()
     return {"ticker": ticker, **counts}
+
+
+def ingest_flow_history(
+    database_url: str,
+    api_key: str,
+    ticker: str,
+    days: int = 365,
+    chunk_days: int = 30,
+) -> dict:
+    """Backfill uw_flow_alerts for `ticker` going back `days` calendar days.
+
+    The default ingest_ticker() only pulls the most recent 200 alerts. This
+    paginated version walks back in `chunk_days`-sized windows so the per-
+    ticker history matches whatever UW actually retains. Idempotent — the
+    upsert dedups on the alert primary key.
+    """
+    ticker = ticker.upper()
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.flow_alerts_history(ticker, days=days, chunk_days=chunk_days)
+        try:
+            with conn.transaction():
+                n = _upsert_flow_alerts(conn, ticker, rows)
+        except Exception as e:
+            log.warning("flow-history upsert failed for %s: %s", ticker, e)
+            n = 0
+        conn.commit()
+    return {"ticker": ticker, "fetched": len(rows), "upserted": n, "days_requested": days}
 
 
 def ingest_market_tide(database_url: str, api_key: str) -> int:
