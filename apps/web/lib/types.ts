@@ -932,6 +932,19 @@ export type PersonaComparisonResponse = {
   summary: string;
 };
 
+export type DiscordVerdict = "bull" | "bear" | "neutral" | null;
+
+export type DiscordTickerScore = {
+  ticker: string;
+  flow: DiscordVerdict;
+  gex: DiscordVerdict;
+  whale: DiscordVerdict;
+  reddit: DiscordVerdict;
+  cross_chat_count: number;
+  bull_count: number;
+  bear_count: number;
+};
+
 export type DiscordMessage = {
   message_id: string;
   guild_id: string;
@@ -946,6 +959,9 @@ export type DiscordMessage = {
   content: string;
   attachment_urls: string[];
   posted_at: string;
+  tickers: string[];
+  scores: DiscordTickerScore[];
+  confluence: number;
 };
 
 export type DiscordMessagesResponse = {

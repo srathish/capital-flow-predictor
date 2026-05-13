@@ -4,14 +4,19 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { DiscordMessage } from "@/lib/types";
+import type {
+  DiscordMessage,
+  DiscordTickerScore,
+  DiscordVerdict,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Grouped view: server -> channel -> messages, newest first within each group.
-// Refreshes every 15s so plays show up without manual reload. The listener
-// service writes into discord_messages from Railway; the API serves /v1/discord/messages.
+// Server -> channel grouping; within each group we sort by confluence
+// (alerts confirmed by more of our own signals float to the top), then by
+// recency. The "Alerts only" toggle hides chat banter — messages with no
+// extracted ticker and no attachment.
 
 type Group = {
   guildName: string;
@@ -19,6 +24,7 @@ type Group = {
   channelId: string;
   messages: DiscordMessage[];
   newestAt: string;
+  topConfluence: number;
 };
 
 function groupMessages(msgs: DiscordMessage[]): Group[] {
@@ -29,6 +35,7 @@ function groupMessages(msgs: DiscordMessage[]): Group[] {
     if (existing) {
       existing.messages.push(m);
       if (m.posted_at > existing.newestAt) existing.newestAt = m.posted_at;
+      if (m.confluence > existing.topConfluence) existing.topConfluence = m.confluence;
     } else {
       buckets.set(key, {
         guildName: m.guild_name,
@@ -36,12 +43,22 @@ function groupMessages(msgs: DiscordMessage[]): Group[] {
         channelId: m.channel_id,
         messages: [m],
         newestAt: m.posted_at,
+        topConfluence: m.confluence,
       });
     }
   }
-  return Array.from(buckets.values()).sort((a, b) =>
-    a.newestAt < b.newestAt ? 1 : a.newestAt > b.newestAt ? -1 : 0
-  );
+  // Sort messages within each group: confluence DESC, then recency DESC.
+  for (const g of buckets.values()) {
+    g.messages.sort((a, b) => {
+      if (a.confluence !== b.confluence) return b.confluence - a.confluence;
+      return a.posted_at < b.posted_at ? 1 : a.posted_at > b.posted_at ? -1 : 0;
+    });
+  }
+  // Sort groups: highest top-confluence first, then most-recent.
+  return Array.from(buckets.values()).sort((a, b) => {
+    if (a.topConfluence !== b.topConfluence) return b.topConfluence - a.topConfluence;
+    return a.newestAt < b.newestAt ? 1 : a.newestAt > b.newestAt ? -1 : 0;
+  });
 }
 
 function timeAgo(iso: string): string {
@@ -56,28 +73,43 @@ function timeAgo(iso: string): string {
   return `${d}d ago`;
 }
 
-// Light-touch ticker extractor for the "tickers seen" chip row.
-// Matches $XXXX or bare uppercase 1-5 letter tokens that aren't common
-// English words. Good enough to scan the feed at a glance.
-const TICKER_STOPLIST = new Set([
-  "A", "I", "AM", "PM", "ET", "EOD", "OTM", "ITM", "ATM", "FOMC", "CPI",
-  "PPI", "GDP", "EPS", "PE", "USD", "ETF", "YOLO", "DD", "TLDR", "FYI",
-  "EDIT", "LFG", "GM", "GN", "BTC", "ETH", "TBH", "IMO", "IMHO",
-]);
+const VERDICT_STYLE: Record<NonNullable<DiscordVerdict>, string> = {
+  bull: "bg-signal-bullish/15 text-signal-bullish border-signal-bullish/30",
+  bear: "bg-signal-bearish/15 text-signal-bearish border-signal-bearish/30",
+  neutral: "bg-muted text-muted-foreground border-border",
+};
 
-function extractTickers(content: string): string[] {
-  const tickers = new Set<string>();
-  for (const m of content.matchAll(/\$([A-Z]{1,5})\b/g)) tickers.add(m[1]);
-  for (const m of content.matchAll(/\b([A-Z]{2,5})\b/g)) {
-    if (!TICKER_STOPLIST.has(m[1])) tickers.add(m[1]);
+function VerdictChip({
+  label,
+  verdict,
+}: {
+  label: string;
+  verdict: DiscordVerdict;
+}) {
+  if (verdict == null) {
+    return (
+      <span className="rounded-md border border-dashed border-border px-1.5 py-0.5 text-[10px] text-muted-foreground/60">
+        {label}: —
+      </span>
+    );
   }
-  return Array.from(tickers);
+  return (
+    <span
+      className={cn(
+        "rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase",
+        VERDICT_STYLE[verdict]
+      )}
+    >
+      {label}: {verdict}
+    </span>
+  );
 }
 
 export function DiscordAlertsView() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [activeGuild, setActiveGuild] = useState<string | null>(null);
+  const [alertsOnly, setAlertsOnly] = useState(true);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["discord", "messages", search],
@@ -85,8 +117,15 @@ export function DiscordAlertsView() {
     refetchInterval: 15_000,
   });
 
-  const messages = data?.messages ?? [];
-  const groups = useMemo(() => groupMessages(messages), [messages]);
+  const rawMessages = data?.messages ?? [];
+  const visibleMessages = useMemo(() => {
+    if (!alertsOnly) return rawMessages;
+    return rawMessages.filter(
+      (m) => m.tickers.length > 0 || m.attachment_urls.length > 0
+    );
+  }, [rawMessages, alertsOnly]);
+
+  const groups = useMemo(() => groupMessages(visibleMessages), [visibleMessages]);
   const guilds = useMemo(() => {
     const seen = new Set<string>();
     const ordered: string[] = [];
@@ -102,14 +141,16 @@ export function DiscordAlertsView() {
     ? groups.filter((g) => g.guildName === activeGuild)
     : groups;
 
+  const hiddenCount = rawMessages.length - visibleMessages.length;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
       <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Discord Alerts</h1>
           <p className="text-sm text-muted-foreground">
-            Live mirror of plays from the channels you're in — newest first,
-            refreshes every 15s.
+            Verified against your own flow / GEX / whale / reddit signals.
+            Stronger confluence floats up. Refreshes every 15s.
           </p>
         </div>
         <Link
@@ -135,6 +176,18 @@ export function DiscordAlertsView() {
         >
           refresh
         </button>
+        <label className="ml-1 inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs">
+          <input
+            type="checkbox"
+            checked={alertsOnly}
+            onChange={(e) => setAlertsOnly(e.target.checked)}
+            className="h-3.5 w-3.5 accent-primary"
+          />
+          Alerts only{" "}
+          {hiddenCount > 0 && (
+            <span className="text-muted-foreground">(hides {hiddenCount})</span>
+          )}
+        </label>
         <div className="ml-auto flex flex-wrap gap-1.5">
           <button
             onClick={() => setActiveGuild(null)}
@@ -183,10 +236,11 @@ export function DiscordAlertsView() {
       {!isLoading && !error && visibleGroups.length === 0 && (
         <Card>
           <CardContent className="p-6 text-sm text-muted-foreground">
-            No messages captured yet. If the listener is running, make sure
-            you've added at least one row to <code>discord_sources</code>
-            (server + channel name) and that your user account is in those
-            channels.
+            {rawMessages.length === 0
+              ? "No messages captured yet. Add a (server, channel) pair in configure sources."
+              : alertsOnly
+                ? "No ticker-bearing messages in the current view. Toggle 'Alerts only' off to see chat."
+                : "No messages match the current filter."}
           </CardContent>
         </Card>
       )}
@@ -220,14 +274,18 @@ export function DiscordAlertsView() {
 }
 
 function MessageRow({ msg }: { msg: DiscordMessage }) {
-  const tickers = useMemo(() => extractTickers(msg.content), [msg.content]);
   const images = msg.attachment_urls.filter((u) =>
     /\.(png|jpe?g|gif|webp)(\?|$)/i.test(u)
   );
   const otherFiles = msg.attachment_urls.filter((u) => !images.includes(u));
 
   return (
-    <li className="rounded-lg border border-border bg-background/40 p-3">
+    <li
+      className={cn(
+        "rounded-lg border bg-background/40 p-3",
+        msg.confluence >= 2 ? "border-primary/40" : "border-border"
+      )}
+    >
       <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
         <span className="font-medium text-foreground">{msg.author_name}</span>
         {msg.author_is_bot && (
@@ -247,19 +305,9 @@ function MessageRow({ msg }: { msg: DiscordMessage }) {
           {msg.content}
         </div>
       )}
-      {tickers.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {tickers.map((t) => (
-            <Link
-              key={t}
-              href={`/agents/${t}`}
-              className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-primary/20"
-            >
-              ${t}
-            </Link>
-          ))}
-        </div>
-      )}
+      {msg.scores.map((s) => (
+        <TickerScoreRow key={s.ticker} score={s} />
+      ))}
       {images.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           {images.map((url) => (
@@ -291,5 +339,27 @@ function MessageRow({ msg }: { msg: DiscordMessage }) {
         </div>
       )}
     </li>
+  );
+}
+
+function TickerScoreRow({ score }: { score: DiscordTickerScore }) {
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-2">
+      <Link
+        href={`/agents/${score.ticker}`}
+        className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary/20"
+      >
+        ${score.ticker}
+      </Link>
+      <VerdictChip label="flow" verdict={score.flow} />
+      <VerdictChip label="gex" verdict={score.gex} />
+      <VerdictChip label="whale" verdict={score.whale} />
+      <VerdictChip label="reddit" verdict={score.reddit} />
+      {score.cross_chat_count >= 2 && (
+        <span className="rounded-md border border-primary/40 bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-primary">
+          {score.cross_chat_count} servers · 30m
+        </span>
+      )}
+    </div>
   );
 }

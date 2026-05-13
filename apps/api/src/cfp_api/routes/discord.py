@@ -14,13 +14,19 @@ UI — listener reloads the allowlist every 60s.
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from cfp_api.db import get_pool
+from cfp_api.discord_scoring import (
+    TickerScore,
+    Verdict,
+    extract_tickers,
+    score_ticker,
+)
 
 log = logging.getLogger(__name__)
 
@@ -28,6 +34,18 @@ router = APIRouter(prefix="/v1/discord", tags=["discord"])
 
 
 # ---------- response models ----------
+
+
+class DiscordTickerScore(BaseModel):
+    ticker: str
+    # 'bull' | 'bear' | 'neutral' | None (None = no data for that signal)
+    flow: str | None
+    gex: str | None
+    whale: str | None
+    reddit: str | None
+    cross_chat_count: int       # # distinct guilds mentioning this ticker in last 30min
+    bull_count: int
+    bear_count: int
 
 
 class DiscordMessage(BaseModel):
@@ -44,6 +62,9 @@ class DiscordMessage(BaseModel):
     content: str
     attachment_urls: list[str]
     posted_at: datetime
+    tickers: list[str] = []                       # server-extracted, validated
+    scores: list[DiscordTickerScore] = []         # one per ticker
+    confluence: int = 0                           # max(bull_count, bear_count) across tickers
 
 
 class DiscordMessagesResponse(BaseModel):
@@ -134,8 +155,11 @@ async def get_messages(
         *params,
     )
 
-    messages = [
-        DiscordMessage(
+    # First pass: build base messages and extract tickers per message.
+    base: list[tuple[DiscordMessage, list[str]]] = []
+    all_tickers: set[str] = set()
+    for r in rows:
+        msg = DiscordMessage(
             message_id=str(r["message_id"]),
             guild_id=str(r["guild_id"]),
             guild_name=r["guild_name"],
@@ -147,16 +171,161 @@ async def get_messages(
             author_name=r["author_name"],
             author_is_bot=r["author_is_bot"],
             content=r["content"],
-            # attachment_urls comes back from asyncpg as a JSON string when the
-            # column is jsonb without a custom codec — decode defensively.
             attachment_urls=_coerce_urls(r["attachment_urls"]),
             posted_at=r["posted_at"],
         )
-        for r in rows
-    ]
+        tickers = await extract_tickers(pool, msg.content)
+        msg.tickers = tickers
+        all_tickers.update(tickers)
+        base.append((msg, tickers))
+
+    # Cross-server confluence: for each ticker we saw in the result set,
+    # count distinct guilds that mentioned it within the last 30 minutes.
+    # One query over the recent message window — cheap.
+    cross_counts: dict[str, int] = {t: 0 for t in all_tickers}
+    if all_tickers:
+        cross_counts = await _compute_cross_chat_counts(pool, all_tickers)
+
+    # Score each (message, ticker) pair, using the discord_alert_scores
+    # cache when fresh (<10min) and recomputing otherwise.
+    scores_by_msg: dict[int, list[DiscordTickerScore]] = {}
+    for msg, tickers in base:
+        if not tickers:
+            scores_by_msg[int(msg.message_id)] = []
+            continue
+        out: list[DiscordTickerScore] = []
+        for t in tickers:
+            cached = await _fetch_cached_score(pool, int(msg.message_id), t)
+            if cached is None:
+                fresh = await score_ticker(pool, t, cross_counts.get(t, 0))
+                await _persist_score(pool, int(msg.message_id), fresh)
+                out.append(_to_pydantic(fresh))
+            else:
+                # Refresh cross_chat_count on read (it's recency-sensitive)
+                # even when other verdicts are still cached.
+                cached.cross_chat_count = cross_counts.get(t, 0)
+                out.append(cached)
+        scores_by_msg[int(msg.message_id)] = out
+
+    # Finalize messages: attach scores + composite confluence.
+    messages: list[DiscordMessage] = []
+    for msg, _t in base:
+        msg.scores = scores_by_msg[int(msg.message_id)]
+        if msg.scores:
+            msg.confluence = max(
+                max(s.bull_count, s.bear_count) for s in msg.scores
+            )
+        else:
+            msg.confluence = 0
+        messages.append(msg)
 
     total_row = await pool.fetchrow("SELECT COUNT(*) AS n FROM discord_messages")
     return DiscordMessagesResponse(messages=messages, total=total_row["n"] if total_row else 0)
+
+
+# ---------- scoring cache helpers ----------
+
+
+_SCORE_TTL_SECONDS = 600  # 10 minutes
+
+
+async def _fetch_cached_score(
+    pool, message_id: int, ticker: str
+) -> DiscordTickerScore | None:
+    row = await pool.fetchrow(
+        """
+        SELECT flow_verdict, gex_verdict, whale_verdict, reddit_verdict,
+               cross_chat_count, bull_count, bear_count, scored_at
+        FROM discord_alert_scores
+        WHERE message_id = $1 AND ticker = $2
+        """,
+        message_id,
+        ticker,
+    )
+    if not row:
+        return None
+    age = (datetime.now(timezone.utc) - row["scored_at"]).total_seconds()
+    if age > _SCORE_TTL_SECONDS:
+        return None
+    return DiscordTickerScore(
+        ticker=ticker,
+        flow=row["flow_verdict"],
+        gex=row["gex_verdict"],
+        whale=row["whale_verdict"],
+        reddit=row["reddit_verdict"],
+        cross_chat_count=row["cross_chat_count"] or 0,
+        bull_count=row["bull_count"],
+        bear_count=row["bear_count"],
+    )
+
+
+async def _persist_score(pool, message_id: int, score: TickerScore) -> None:
+    await pool.execute(
+        """
+        INSERT INTO discord_alert_scores
+            (message_id, ticker, flow_verdict, gex_verdict, whale_verdict,
+             reddit_verdict, cross_chat_count, bull_count, bear_count, scored_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now())
+        ON CONFLICT (message_id, ticker) DO UPDATE SET
+            flow_verdict = EXCLUDED.flow_verdict,
+            gex_verdict = EXCLUDED.gex_verdict,
+            whale_verdict = EXCLUDED.whale_verdict,
+            reddit_verdict = EXCLUDED.reddit_verdict,
+            cross_chat_count = EXCLUDED.cross_chat_count,
+            bull_count = EXCLUDED.bull_count,
+            bear_count = EXCLUDED.bear_count,
+            scored_at = now()
+        """,
+        message_id,
+        score.ticker,
+        score.flow,
+        score.gex,
+        score.whale,
+        score.reddit,
+        score.cross_chat_count,
+        score.bull_count,
+        score.bear_count,
+    )
+
+
+def _to_pydantic(s: TickerScore) -> DiscordTickerScore:
+    return DiscordTickerScore(
+        ticker=s.ticker,
+        flow=s.flow,
+        gex=s.gex,
+        whale=s.whale,
+        reddit=s.reddit,
+        cross_chat_count=s.cross_chat_count,
+        bull_count=s.bull_count,
+        bear_count=s.bear_count,
+    )
+
+
+async def _compute_cross_chat_counts(pool, tickers: set[str]) -> dict[str, int]:
+    """For each ticker, count distinct guilds whose messages in the last
+    30 minutes contained that ticker (cashtag or word boundary). This is
+    cheap because we run ONE query per unique ticker mentioning condition.
+
+    We use a tilde-ILIKE pattern that matches either '$XYZ' or word-bounded
+    'XYZ' to avoid pulling all messages back into Python."""
+    if not tickers:
+        return {}
+    counts: dict[str, int] = {}
+    for t in tickers:
+        # \mXYZ\M is Postgres word-boundary regex. ILIKE for the cashtag is
+        # fast on a short window.
+        row = await pool.fetchrow(
+            """
+            SELECT COUNT(DISTINCT guild_id) AS n
+            FROM discord_messages
+            WHERE posted_at > now() - INTERVAL '30 minutes'
+              AND (content ~* $1 OR content ILIKE $2)
+            """,
+            rf"\m{t}\M",
+            f"%${t}%",
+        )
+        counts[t] = int(row["n"] if row else 0)
+    return counts
 
 
 @router.get("/inventory", response_model=DiscordInventoryResponse)
