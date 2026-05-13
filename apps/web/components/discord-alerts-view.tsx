@@ -47,10 +47,18 @@ function groupMessages(msgs: DiscordMessage[]): Group[] {
       });
     }
   }
-  // Sort messages within each group: confluence DESC, then recency DESC.
+  // Composite sort priority within each group:
+  //   parsed-play (typed strike/side) > watchlist hit > confluence > recency
+  const priority = (m: DiscordMessage): number => {
+    const hasPlay = m.has_parsed_play ? 1 : 0;
+    const watchlist = m.scores.some((s) => s.in_watchlist) ? 1 : 0;
+    return hasPlay * 100 + watchlist * 50 + m.confluence * 10;
+  };
   for (const g of buckets.values()) {
     g.messages.sort((a, b) => {
-      if (a.confluence !== b.confluence) return b.confluence - a.confluence;
+      const pa = priority(a);
+      const pb = priority(b);
+      if (pa !== pb) return pb - pa;
       return a.posted_at < b.posted_at ? 1 : a.posted_at > b.posted_at ? -1 : 0;
     });
   }
@@ -59,6 +67,21 @@ function groupMessages(msgs: DiscordMessage[]): Group[] {
     if (a.topConfluence !== b.topConfluence) return b.topConfluence - a.topConfluence;
     return a.newestAt < b.newestAt ? 1 : a.newestAt > b.newestAt ? -1 : 0;
   });
+}
+
+function formatPlay(s: { side: string | null; strike: number | null; expiry: string | null }): string | null {
+  if (!s.side && !s.strike) return null;
+  const sideAbbrev =
+    s.side === "call" ? "c" : s.side === "put" ? "p" : s.side ?? "";
+  const strike = s.strike != null ? String(s.strike) : "";
+  const expiry = s.expiry ?? "";
+  const inner = [strike + sideAbbrev, expiry].filter(Boolean).join(" ");
+  return inner || null;
+}
+
+function formatPnl(pct: number): string {
+  const sign = pct > 0 ? "+" : "";
+  return `${sign}${(pct * 100).toFixed(1)}%`;
 }
 
 function timeAgo(iso: string): string {
@@ -278,12 +301,20 @@ function MessageRow({ msg }: { msg: DiscordMessage }) {
     /\.(png|jpe?g|gif|webp)(\?|$)/i.test(u)
   );
   const otherFiles = msg.attachment_urls.filter((u) => !images.includes(u));
+  const hasWatchlist = msg.scores.some((s) => s.in_watchlist);
+  const hasPlay = msg.has_parsed_play;
 
   return (
     <li
       className={cn(
         "rounded-lg border bg-background/40 p-3",
-        msg.confluence >= 2 ? "border-primary/40" : "border-border"
+        hasPlay
+          ? "border-primary/60 ring-1 ring-primary/20"
+          : hasWatchlist
+            ? "border-primary/40"
+            : msg.confluence >= 2
+              ? "border-primary/40"
+              : "border-border"
       )}
     >
       <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
@@ -343,6 +374,17 @@ function MessageRow({ msg }: { msg: DiscordMessage }) {
 }
 
 function TickerScoreRow({ score }: { score: DiscordTickerScore }) {
+  const playText = formatPlay(score);
+  const pnl = score.pnl_pct_underlying;
+  const pnlClass =
+    pnl == null
+      ? ""
+      : pnl > 0
+        ? "text-signal-bullish"
+        : pnl < 0
+          ? "text-signal-bearish"
+          : "text-muted-foreground";
+
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2">
       <Link
@@ -351,6 +393,47 @@ function TickerScoreRow({ score }: { score: DiscordTickerScore }) {
       >
         ${score.ticker}
       </Link>
+      {score.in_watchlist && (
+        <span
+          title="In your watchlist"
+          className="rounded-md border border-primary/50 bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold text-primary"
+        >
+          ★ watchlist
+        </span>
+      )}
+      {score.first_mover && (
+        <span
+          title="This server was first to mention this ticker today"
+          className="rounded-md border border-amber-500/50 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500"
+        >
+          FIRST
+        </span>
+      )}
+      {playText && (
+        <span className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[10px] font-semibold uppercase">
+          {playText}
+        </span>
+      )}
+      {score.entry_price != null && (
+        <span className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          entry @ {score.entry_price.toFixed(2)}
+        </span>
+      )}
+      {pnl != null && (
+        <span
+          className={cn(
+            "rounded-md border px-1.5 py-0.5 text-[10px] font-semibold",
+            pnl > 0
+              ? "border-signal-bullish/40 bg-signal-bullish/10"
+              : pnl < 0
+                ? "border-signal-bearish/40 bg-signal-bearish/10"
+                : "border-border bg-card",
+            pnlClass
+          )}
+        >
+          spot {formatPnl(pnl)}
+        </span>
+      )}
       <VerdictChip label="flow" verdict={score.flow} />
       <VerdictChip label="gex" verdict={score.gex} />
       <VerdictChip label="whale" verdict={score.whale} />

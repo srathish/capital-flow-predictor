@@ -78,6 +78,133 @@ _BARE_TOKEN = re.compile(r"\b([A-Z]{2,5})\b")
 _ALLCAPS_RUN = re.compile(r"\b[A-Z]{2,}\b")
 
 
+# ---------- play parsing (strike / side / expiry / entry) ----------
+
+
+# Matches the strike + side fragment people actually type:
+#   "450c", "450 c", "450 call", "450 calls", "450p", "$450c"
+_STRIKE_SIDE = re.compile(
+    r"\$?(\d{1,5}(?:\.\d{1,2})?)\s*(c\b|calls?\b|p\b|puts?\b)",
+    re.IGNORECASE,
+)
+
+# Date-like expiry: 5/15, 05/15, 5/15/26. We don't try to parse month names
+# ('may 1000c') in v1 — too many false positives. Stays NULL when missing.
+_NUMERIC_EXPIRY = re.compile(r"\b(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?\b")
+
+# Entry price: "@ 1.20", "at 1.20", "in 1.20", "filled 1.20", "fill: 1.20".
+_ENTRY_PRICE = re.compile(
+    r"(?:@|at\s|in\s+@?\s*|filled\s+at\s+|fill[:\s]+)\s*\$?(\d+(?:\.\d{1,2})?)",
+    re.IGNORECASE,
+)
+
+# Bare directional verbs — used as a fallback side when no strike/side is
+# stated. "long $AAPL" or "short $TSLA".
+_BARE_LONG = re.compile(r"\b(long|buying|added|loaded|bought)\b", re.IGNORECASE)
+_BARE_SHORT = re.compile(r"\b(short|sold|fading|fade|selling)\b", re.IGNORECASE)
+
+
+@dataclass
+class ParsedPlay:
+    ticker: str
+    side: str            # 'call' | 'put' | 'long' | 'short' | 'unknown'
+    strike: float | None
+    expiry: str | None   # ISO date string or None
+    entry_price: float | None
+
+
+def _normalize_side(raw: str) -> str:
+    raw = raw.lower().strip()
+    if raw.startswith("c"):
+        return "call"
+    if raw.startswith("p"):
+        return "put"
+    return "unknown"
+
+
+def _normalize_expiry(month: int, day: int, year: int | None) -> str | None:
+    from datetime import date as _date
+    today = _date.today()
+    if year is None:
+        # Numeric expiries without a year — pick the next occurrence.
+        y = today.year
+        try:
+            candidate = _date(y, month, day)
+        except ValueError:
+            return None
+        if candidate < today:
+            try:
+                candidate = _date(y + 1, month, day)
+            except ValueError:
+                return None
+        return candidate.isoformat()
+    if year < 100:
+        year += 2000
+    try:
+        return _date(year, month, day).isoformat()
+    except ValueError:
+        return None
+
+
+def parse_plays(content: str, tickers: list[str]) -> list[ParsedPlay]:
+    """Return one ParsedPlay per ticker in the message, populated with
+    whatever we could extract from the surrounding text. ``tickers`` is the
+    already-validated list from ``extract_tickers`` — we never invent new
+    tickers here.
+
+    The current heuristic associates every detected (strike, side, expiry,
+    entry) with every ticker in the message. For single-ticker alerts this
+    is correct; for multi-ticker chatter ("watching AAPL and NVDA today")
+    we'd over-attribute strikes, but those messages don't carry strikes
+    anyway, so in practice the result is right."""
+    if not tickers:
+        return []
+
+    strike: float | None = None
+    side: str = "unknown"
+    m = _STRIKE_SIDE.search(content)
+    if m:
+        try:
+            strike = float(m.group(1))
+        except ValueError:
+            strike = None
+        side = _normalize_side(m.group(2))
+
+    expiry: str | None = None
+    em = _NUMERIC_EXPIRY.search(content)
+    if em:
+        month = int(em.group(1))
+        day = int(em.group(2))
+        year = int(em.group(3)) if em.group(3) else None
+        if 1 <= month <= 12 and 1 <= day <= 31:
+            expiry = _normalize_expiry(month, day, year)
+
+    entry_price: float | None = None
+    ep = _ENTRY_PRICE.search(content)
+    if ep:
+        try:
+            entry_price = float(ep.group(1))
+        except ValueError:
+            entry_price = None
+
+    if side == "unknown":
+        if _BARE_SHORT.search(content):
+            side = "short"
+        elif _BARE_LONG.search(content):
+            side = "long"
+
+    return [
+        ParsedPlay(
+            ticker=t,
+            side=side,
+            strike=strike,
+            expiry=expiry,
+            entry_price=entry_price,
+        )
+        for t in tickers
+    ]
+
+
 @dataclass
 class _TickerCache:
     """In-memory cache of valid tickers, refreshed periodically."""

@@ -943,6 +943,16 @@ export type DiscordTickerScore = {
   cross_chat_count: number;
   bull_count: number;
   bear_count: number;
+  in_watchlist: boolean;
+  first_mover: boolean;
+  side: string | null;
+  strike: number | null;
+  expiry: string | null;
+  entry_price: number | null;
+  entry_underlying: number | null;
+  current_underlying: number | null;
+  pnl_pct_underlying: number | null;
+  status: string | null;
 };
 
 export type DiscordMessage = {
@@ -962,6 +972,7 @@ export type DiscordMessage = {
   tickers: string[];
   scores: DiscordTickerScore[];
   confluence: number;
+  has_parsed_play: boolean;
 };
 
 export type DiscordMessagesResponse = {
