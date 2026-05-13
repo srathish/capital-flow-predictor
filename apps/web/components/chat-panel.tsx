@@ -45,6 +45,12 @@ export function ChatPanel({ ticker, runTs, availableAgents }: Props) {
   }, [ticker]);
 
   useEffect(() => {
+    // Reset history when switching agents — each persona starts fresh.
+    setMessages([]);
+    setError(null);
+  }, [target]);
+
+  useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
@@ -107,23 +113,37 @@ export function ChatPanel({ ticker, runTs, availableAgents }: Props) {
       <CardHeader className="flex-shrink-0 space-y-2 pb-3">
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-sm font-semibold">Talk to the agents</CardTitle>
-          <select
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-            disabled={streaming}
-            className="rounded-full border border-border bg-card px-3 py-1 text-xs"
-          >
-            {PERSONA_OPTIONS.map((opt) => {
-              const isPersona = opt.value !== "ensemble";
-              const disabled = isPersona && availableAgents && !availableAgents.has(opt.value);
-              return (
-                <option key={opt.value} value={opt.value} disabled={disabled}>
-                  {opt.label}
-                  {disabled ? " (not in run)" : ""}
-                </option>
-              );
-            })}
-          </select>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                abortRef.current?.abort();
+                setMessages([]);
+                setError(null);
+              }}
+              disabled={streaming || messages.length === 0}
+              className="rounded-full border border-border bg-card px-3 py-1 text-xs hover:bg-muted disabled:opacity-40"
+            >
+              Clear
+            </button>
+            <select
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              disabled={streaming}
+              className="rounded-full border border-border bg-card px-3 py-1 text-xs"
+            >
+              {PERSONA_OPTIONS.map((opt) => {
+                const isPersona = opt.value !== "ensemble";
+                const disabled = isPersona && availableAgents && !availableAgents.has(opt.value);
+                return (
+                  <option key={opt.value} value={opt.value} disabled={disabled}>
+                    {opt.label}
+                    {disabled ? " (not in run)" : ""}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">
           {target === "ensemble"
