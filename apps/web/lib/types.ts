@@ -783,6 +783,9 @@ export type FlowExpiryBucket = {
 export type FlowAggregateResponse = {
   ticker: string;
   days: number;
+  oldest_alert_ts: string | null;
+  newest_alert_ts: string | null;
+  coverage_summary: string;
   n_alerts: number;
   total_premium: number;
   total_call_premium: number;

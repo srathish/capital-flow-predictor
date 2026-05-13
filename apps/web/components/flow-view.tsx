@@ -8,6 +8,7 @@ import type { FlowAnomalyKind, FlowEvent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FlowAggregatePanel } from "@/components/flow-aggregate-panel";
 import { WhaleBetsPanel } from "@/components/whale-bets-panel";
 
 const REFETCH_MS = 30_000;
@@ -175,6 +176,10 @@ export function FlowView() {
       </header>
 
       <WhaleBetsPanel />
+
+      <div className="mb-4">
+        <FlowAggregatePanel />
+      </div>
 
       {/* Filter row 1: lookback + min premium + ticker filter */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">

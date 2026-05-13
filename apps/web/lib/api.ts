@@ -285,9 +285,10 @@ export const api = {
       `/v1/agents/${encodeURIComponent(ticker)}/replay?date=${encodeURIComponent(isoDate)}`,
     );
   },
-  flowAggregate(ticker: string, days = 90): Promise<FlowAggregateResponse> {
+  flowAggregate(ticker: string): Promise<FlowAggregateResponse> {
+    // Server defaults to days=730 (~"all data we have"). No window param needed.
     return getJson<FlowAggregateResponse>(
-      `/v1/flow/aggregate/${encodeURIComponent(ticker)}?days=${days}`,
+      `/v1/flow/aggregate/${encodeURIComponent(ticker)}`,
     );
   },
   screenerCalibration(params: { days?: number; horizon?: 5 | 10 | 20 | 60 } = {}): Promise<CalibrationResponse> {

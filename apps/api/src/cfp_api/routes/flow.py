@@ -508,7 +508,10 @@ class TopTradeAgg(BaseModel):
 
 class FlowAggregateResponse(BaseModel):
     ticker: str
-    days: int
+    days: int                          # window applied (kept for the FE filter)
+    oldest_alert_ts: str | None        # earliest alert created_at we considered
+    newest_alert_ts: str | None        # latest alert created_at we considered
+    coverage_summary: str              # one-line "N alerts from X to Y (~Zd of data)"
     n_alerts: int
     total_premium: float
     total_call_premium: float
@@ -530,7 +533,15 @@ class FlowAggregateResponse(BaseModel):
 @router.get("/aggregate/{ticker}", response_model=FlowAggregateResponse)
 async def flow_aggregate(
     ticker: str,
-    days: int = Query(90, ge=1, le=365, description="Lookback window in days"),
+    days: int = Query(
+        730,
+        ge=1,
+        le=1825,
+        description=(
+            "Lookback window in days. Default 730 = effectively 'all data we have' "
+            "since UW retention rarely exceeds ~2 years."
+        ),
+    ),
 ) -> FlowAggregateResponse:
     """All UW flow for one ticker, aggregated. Returns the bull/bear lean
     + the strike with the most dollars done + the largest single tickets.
@@ -551,6 +562,8 @@ async def flow_aggregate(
             """
             SELECT
               COUNT(*)::int AS n,
+              MIN(created_at) AS oldest,
+              MAX(created_at) AS newest,
               COALESCE(SUM(total_premium), 0)::float AS total_prem,
               COALESCE(SUM(CASE WHEN option_type='call' THEN total_premium ELSE 0 END), 0)::float AS call_prem,
               COALESCE(SUM(CASE WHEN option_type='put'  THEN total_premium ELSE 0 END), 0)::float AS put_prem,
@@ -639,14 +652,17 @@ async def flow_aggregate(
         # Return an empty-but-well-formed response so the FE can render
         # "no flow in window" without a special error path.
         return FlowAggregateResponse(
-            ticker=sym, days=days, n_alerts=0,
+            ticker=sym, days=days,
+            oldest_alert_ts=None, newest_alert_ts=None,
+            coverage_summary=f"No UW flow alerts ingested for {sym}.",
+            n_alerts=0,
             total_premium=0.0, total_call_premium=0.0, total_put_premium=0.0,
             net_call_premium=0.0, net_put_premium=0.0,
             bullish_score=0.0, verdict="mixed",
-            verdict_reason=f"No flow alerts in the last {days}d.",
+            verdict_reason=f"No flow alerts for {sym} in the last {days}d.",
             avg_ticket_size=0.0,
             leap_call_premium=0.0, leap_put_premium=0.0,
-            expiry_buckets=[], expiry_headline=f"No flow alerts in the last {days}d.",
+            expiry_buckets=[], expiry_headline="No expiry-tagged alerts available.",
             top_strikes=[], top_trades=[],
         )
 
@@ -762,8 +778,23 @@ async def flow_aggregate(
             )
         )
 
+    oldest = agg["oldest"]
+    newest = agg["newest"]
+    if oldest is not None and newest is not None:
+        span_days = max(1, (newest - oldest).days)
+        coverage_summary = (
+            f"{n} alerts spanning {oldest.date().isoformat()} → "
+            f"{newest.date().isoformat()} (~{span_days}d of data)."
+        )
+    else:
+        coverage_summary = f"{n} alerts in window."
+
     return FlowAggregateResponse(
-        ticker=sym, days=days, n_alerts=n,
+        ticker=sym, days=days,
+        oldest_alert_ts=oldest.isoformat() if oldest else None,
+        newest_alert_ts=newest.isoformat() if newest else None,
+        coverage_summary=coverage_summary,
+        n_alerts=n,
         total_premium=total_prem,
         total_call_premium=float(agg["call_prem"] or 0.0),
         total_put_premium=float(agg["put_prem"] or 0.0),
