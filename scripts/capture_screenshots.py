@@ -102,6 +102,9 @@ async def main() -> int:
         # 8. Flow — unusual options activity.
         await shoot(page, f"{BASE}/flow", "08-flow", settle_ms=2500)
 
+        # 9. Lab — opportunity score + calibration + freshness.
+        await shoot(page, f"{BASE}/lab", "09-lab", settle_ms=2500)
+
         await browser.close()
     return 0
 

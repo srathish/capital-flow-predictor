@@ -108,9 +108,15 @@ export function PriceChart({
       scaleMargins: { top: 0.85, bottom: 0 },
     });
 
-    const sortedBars = [...data.bars].sort(
-      (a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime()
-    );
+    // Sort, then dedupe by second-resolution timestamp — lightweight-charts
+    // asserts on duplicate or out-of-order times. Last write wins.
+    const sortedBars = (() => {
+      const byTs = new Map<number, (typeof data.bars)[number]>();
+      for (const b of data.bars) byTs.set(toUnix(b.ts) as number, b);
+      return [...byTs.values()].sort(
+        (a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime()
+      );
+    })();
 
     const candleData = sortedBars
       .filter((b) => b.open !== null && b.high !== null && b.low !== null && b.close !== null)

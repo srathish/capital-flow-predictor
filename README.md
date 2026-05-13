@@ -59,11 +59,14 @@ sizes the position; a Portfolio Manager makes the final long / short /
 avoid call.
 
 Beyond the rule-based analysts, the personas receive **structured
-evidence** drawn from Unusual Whales (flow, dark pool, insider, ETF
+evidence** drawn from Unusual Whales (flow, dark pool, **insider
+asymmetry** — buy-vs-sell value tilt with cluster detection, ETF
 holdings), the **skylit.ai / Heatseeker structural snapshot + 0DTE
-Trinity** signals, the Reddit catalyst feed (the sentiment analyst now
-counts catalyst-feed posts toward Reddit evidence), and the latest XGB
-rotation rank for the underlying sector.
+Trinity** signals, the Reddit catalyst feed (**post bodies included**,
+not just titles — the sentiment analyst now counts catalyst-feed posts
+toward Reddit evidence and emits a **news sentiment rollup** with the
+top three headlines per ticker), and the latest XGB rotation rank for
+the underlying sector.
 
 You can talk to the synthesizer or any individual persona in their voice
 via SSE-streamed chat at the bottom of the page.
@@ -149,13 +152,57 @@ into seven anomaly kinds: **mega sweep** (big $ swept across exchanges),
 **block** (floor block, often LEAPs), **ask aggression** (≥85% of premium
 lifted), **repeated hits** on a single chain, **IV expansion** during the
 alert, **vol/OI explosion** (brand-new positioning), and **daily skew**
-(net call vs. put premium lopsided beyond 4×). Filter by anomaly kind,
-lookback window (4h / 24h / 3d / 7d), and minimum premium ($100K – $5M).
+(net call vs. put premium lopsided beyond 4×). Filter by anomaly kind
+and minimum premium ($100K – $5M) — the window dropdown was dropped so
+the panel analyzes every alert we've ingested.
 
 Behind it sits `/v1/stocks/screen`, a server-side ranker that scores
 tickers as options-trade candidates by combining flow conviction (from
 the `whale_conviction` table, migration `0014`) with the XGB sector
 signal and momentum/volatility features.
+
+**Per-ticker flow aggregate.** Punch in any symbol and the panel rolls
+up every alert we've ingested for it (default lookback 730d):
+call-premium share, ask aggression %, sweep %, premium concentration in
+the top expiry, **expiry-bucket breakdown** (0–7d / 8–30d / 31–90d /
+90d+), and **OI growth by strike** so you can see where new positioning
+is actually being built versus where it's just churn. A verdict header
+classifies the print as bullish flow / bearish flow / mixed with a
+plain-English reason.
+
+**Suggested Plays — PROCEED / WAIT / SKIP.** On top of the aggregate,
+`/v1/flow/suggest-plays/{ticker}` emits a decisive gate plus a ranked
+list of specific contracts (strike, expiry, side, rationale). Falls
+through to flow-only candidates when the OI snapshot lags ingest so the
+panel never goes blank just because the nightly snapshot hasn't caught
+up.
+
+Backfill is run manually via `cfp-jobs flow-backfill <TICKER>` (uses a
+paginated UW client to walk historical alerts).
+
+### Lab — opportunity score, calibration, ensemble freshness
+
+![Lab](docs/screenshots/09-lab.png)
+
+A secret `/lab` tab (not in the top nav, link is in the dock) collects
+the tooling we use to keep the ensemble honest:
+
+- **Opportunity score (0–100)** per ticker — `/v1/stocks/{T}/opportunity`
+  combines XGB sector edge, flow conviction, persona consensus, and
+  catalyst freshness into one number.
+- **Calibration line** — predicted opportunity score vs. realized 5d
+  forward return, bucketed, so you can eyeball whether the score is
+  paying off.
+- **Screener freshness panel** — last-run timestamp + the catalyst
+  rerun queue (`cfp-jobs rerun-stale` triggers an ensemble refresh on
+  any ticker that picked up a fresh, high-confidence Reddit catalyst).
+- **Replay** — `/v1/agents/{T}/replay` returns the exact persona
+  signals + debate transcript from any prior run for diffing.
+
+The **morning brief** (`cfp-jobs morning-brief`) is the cron-fed
+narrative version of all of the above: today's top opportunity scores,
+fresh catalysts, flow standouts, and any GEX regime shifts, dropped
+into the daily refresh log so you have one page to skim at the open.
 
 ### GEX — morning brief + intraday level alerts (SPY / QQQ / SPXW)
 
@@ -338,7 +385,7 @@ still works for fully-local dev where Postgres isn't in play.
 uv run python scripts/capture_screenshots.py
 ```
 
-Writes 8 PNGs into `docs/screenshots/`.
+Writes 9 PNGs into `docs/screenshots/`.
 
 ---
 
