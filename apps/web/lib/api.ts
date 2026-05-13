@@ -8,8 +8,11 @@ import type {
   ChatMessage,
   ChatStreamEvent,
   CustomWatchlistResponse,
+  DiscordAuthorsResponse,
   DiscordInventoryResponse,
   DiscordMessagesResponse,
+  DiscordNotificationRule,
+  DiscordNotificationRulesResponse,
   DiscordSource,
   DiscordSourcesResponse,
   ExpandedSectorResponse,
@@ -462,6 +465,40 @@ export const api = {
   },
   discordDeleteSource(id: number): Promise<void> {
     return fetch(`${baseUrl()}/v1/discord/sources/${id}`, {
+      method: "DELETE",
+      headers: { ...authHeaders() },
+    }).then((res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+    });
+  },
+  discordAuthors(params: { lookbackDays?: number; minResolved?: number } = {}): Promise<DiscordAuthorsResponse> {
+    const sp = new URLSearchParams();
+    if (params.lookbackDays !== undefined) sp.set("lookback_days", String(params.lookbackDays));
+    if (params.minResolved !== undefined) sp.set("min_resolved", String(params.minResolved));
+    const qs = sp.toString();
+    return getJson<DiscordAuthorsResponse>(`/v1/discord/authors${qs ? `?${qs}` : ""}`);
+  },
+  discordNotificationRules(): Promise<DiscordNotificationRulesResponse> {
+    return getJson<DiscordNotificationRulesResponse>(`/v1/discord/notifications/rules`);
+  },
+  discordAddNotificationRule(body: {
+    name: string;
+    min_confluence: number;
+    tickers: string[];
+    channel: "ntfy" | "discord_webhook";
+    target: string;
+  }): Promise<DiscordNotificationRule> {
+    return fetch(`${baseUrl()}/v1/discord/notifications/rules`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      body: JSON.stringify(body),
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as DiscordNotificationRule;
+    });
+  },
+  discordDeleteNotificationRule(id: number): Promise<void> {
+    return fetch(`${baseUrl()}/v1/discord/notifications/rules/${id}`, {
       method: "DELETE",
       headers: { ...authHeaders() },
     }).then((res) => {

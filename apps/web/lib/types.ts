@@ -973,6 +973,38 @@ export type DiscordMessage = {
   scores: DiscordTickerScore[];
   confluence: number;
   has_parsed_play: boolean;
+  author_stats: DiscordAuthorStats | null;
+};
+
+export type DiscordAuthorStats = {
+  author_id: string;
+  author_name: string;
+  total_plays: number;
+  resolved_plays: number;
+  wins: number;
+  losses: number;
+  win_rate: number | null;
+  avg_pnl_pct: number | null;
+  lookback_days: number;
+};
+
+export type DiscordAuthorsResponse = {
+  authors: DiscordAuthorStats[];
+};
+
+export type DiscordNotificationRule = {
+  id: number;
+  name: string;
+  min_confluence: number;
+  tickers: string[];
+  channel: "ntfy" | "discord_webhook";
+  target: string;
+  enabled: boolean;
+  created_at: string;
+};
+
+export type DiscordNotificationRulesResponse = {
+  rules: DiscordNotificationRule[];
 };
 
 export type DiscordMessagesResponse = {

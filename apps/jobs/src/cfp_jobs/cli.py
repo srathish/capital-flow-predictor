@@ -899,6 +899,54 @@ def ensemble_rerun_stale_cmd(
             console.print(f"  ✗ {f['ticker']}: {f['error']}")
 
 
+@app.command("score-discord-plays")
+def score_discord_plays_cmd(
+    days: int = typer.Option(30, help="Calendar days of open plays to (re)score."),
+) -> None:
+    """Mark-to-market the parsed Discord plays in discord_alert_plays.
+
+    For each open play, snapshots entry_underlying (if missing) using the
+    underlying price closest to captured_at, refreshes current_underlying
+    to the latest print, recomputes direction-adjusted pnl_pct_underlying,
+    and marks final status for plays whose expiry has passed. Idempotent.
+
+    Designed to run on a Railway cron every 5 min during RTH (or GH Actions).
+    """
+    from cfp_jobs import score_discord_plays
+
+    summary = score_discord_plays.run(settings.database_url, days=days)
+    console.print(
+        f"[green]discord-plays:[/green] seen={summary['seen']} "
+        f"updated={summary['updated']} closed={summary['closed']} "
+        f"finished={summary['finished_at']}"
+    )
+
+
+@app.command("dispatch-discord-notifications")
+def dispatch_discord_notifications_cmd(
+    lookback: int = typer.Option(
+        30, help="Minutes of recent messages to consider for dispatch."
+    ),
+) -> None:
+    """Push high-confluence Discord alerts to configured webhooks.
+
+    Reads discord_notification_rules and the discord_alert_scores cache;
+    for each (rule, message, ticker) tuple that meets the rule's confluence
+    threshold and hasn't been dispatched yet, POSTs to ntfy or a Discord
+    webhook URL. Idempotent via discord_notifications PK.
+    """
+    from cfp_jobs import dispatch_discord_notifications
+
+    summary = dispatch_discord_notifications.run(
+        settings.database_url, lookback_minutes=lookback
+    )
+    console.print(
+        f"[green]discord-notify:[/green] seen={summary['seen']} "
+        f"dispatched={summary['dispatched']} failed={summary['failed']} "
+        f"finished={summary['finished_at']}"
+    )
+
+
 @app.command("score-gex-plans")
 def score_gex_plans_cmd(
     days: int = typer.Option(7, help="Calendar days of gex_feed plans to (re)score."),

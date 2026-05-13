@@ -2,9 +2,10 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { api } from "@/lib/api";
+import { useEffect, useMemo, useState } from "react";
+import { api, baseUrl } from "@/lib/api";
 import type {
+  DiscordAuthorStats,
   DiscordMessage,
   DiscordTickerScore,
   DiscordVerdict,
@@ -137,8 +138,24 @@ export function DiscordAlertsView() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["discord", "messages", search],
     queryFn: () => api.discordMessages({ limit: 300, q: search || undefined }),
-    refetchInterval: 15_000,
+    refetchInterval: 30_000,  // background safety net; SSE handles real-time
   });
+
+  // Real-time: SSE stream tells us when a new message lands, and we
+  // invalidate the messages query so React Query refetches with full scoring.
+  // We don't render SSE rows directly because scoring + watchlist + author
+  // stats are computed on the /messages endpoint, not the lightweight stream.
+  useEffect(() => {
+    const url = `${baseUrl()}/v1/discord/stream`;
+    const es = new EventSource(url, { withCredentials: false });
+    es.addEventListener("message", () => {
+      queryClient.invalidateQueries({ queryKey: ["discord", "messages"] });
+    });
+    es.onerror = () => {
+      // EventSource auto-reconnects; nothing to do.
+    };
+    return () => es.close();
+  }, [queryClient]);
 
   const rawMessages = data?.messages ?? [];
   const visibleMessages = useMemo(() => {
@@ -176,12 +193,20 @@ export function DiscordAlertsView() {
             Stronger confluence floats up. Refreshes every 15s.
           </p>
         </div>
-        <Link
-          href="/discord/sources"
-          className="text-xs text-muted-foreground underline-offset-4 hover:underline"
-        >
-          configure sources
-        </Link>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <Link href="/discord/sources" className="underline-offset-4 hover:underline">
+            sources
+          </Link>
+          <Link href="/discord/authors" className="underline-offset-4 hover:underline">
+            authors
+          </Link>
+          <Link
+            href="/discord/notifications"
+            className="underline-offset-4 hover:underline"
+          >
+            notifications
+          </Link>
+        </div>
       </header>
 
       <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -296,6 +321,31 @@ export function DiscordAlertsView() {
   );
 }
 
+function AuthorTrustBadge({ stats }: { stats: DiscordAuthorStats }) {
+  if (stats.win_rate == null) {
+    return (
+      <span className="rounded-md border border-dashed border-border px-1.5 py-0.5 text-[10px] text-muted-foreground/70">
+        {stats.total_plays}p · ?
+      </span>
+    );
+  }
+  const pct = Math.round(stats.win_rate * 100);
+  const cls =
+    pct >= 60
+      ? "border-signal-bullish/40 bg-signal-bullish/10 text-signal-bullish"
+      : pct <= 40
+        ? "border-signal-bearish/40 bg-signal-bearish/10 text-signal-bearish"
+        : "border-border bg-card text-muted-foreground";
+  return (
+    <span
+      title={`${stats.wins}W / ${stats.losses}L over ${stats.lookback_days}d · ${stats.total_plays} total plays`}
+      className={cn("rounded-md border px-1.5 py-0.5 text-[10px] font-semibold", cls)}
+    >
+      {pct}% · {stats.resolved_plays}p
+    </span>
+  );
+}
+
 function MessageRow({ msg }: { msg: DiscordMessage }) {
   const images = msg.attachment_urls.filter((u) =>
     /\.(png|jpe?g|gif|webp)(\?|$)/i.test(u)
@@ -324,6 +374,7 @@ function MessageRow({ msg }: { msg: DiscordMessage }) {
             bot
           </span>
         )}
+        {msg.author_stats && <AuthorTrustBadge stats={msg.author_stats} />}
         {msg.thread_name && (
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
             thread: {msg.thread_name}

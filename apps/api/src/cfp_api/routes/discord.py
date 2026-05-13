@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from cfp_api.db import get_pool
@@ -61,6 +62,22 @@ class DiscordTickerScore(BaseModel):
     status: str | None = None            # 'open' | 'win_itm' | 'loss_otm' | 'expired_unknown'
 
 
+class DiscordAuthorStats(BaseModel):
+    author_id: str
+    author_name: str
+    total_plays: int               # all plays we've parsed for this author
+    resolved_plays: int            # plays whose expiry has passed (win_itm or loss_otm)
+    wins: int
+    losses: int
+    win_rate: float | None         # wins / resolved_plays, NULL when resolved < 5
+    avg_pnl_pct: float | None      # mean direction-adjusted spot move
+    lookback_days: int
+
+
+class DiscordAuthorsResponse(BaseModel):
+    authors: list[DiscordAuthorStats]
+
+
 class DiscordMessage(BaseModel):
     message_id: str               # snowflakes can exceed JS safe-int range
     guild_id: str
@@ -79,6 +96,7 @@ class DiscordMessage(BaseModel):
     scores: list[DiscordTickerScore] = []         # one per ticker
     confluence: int = 0                           # max(bull_count, bear_count) across tickers
     has_parsed_play: bool = False                 # at least one ticker has a strike or side
+    author_stats: DiscordAuthorStats | None = None  # null until the author has any plays
 
 
 class DiscordMessagesResponse(BaseModel):
@@ -212,6 +230,11 @@ async def get_messages(
     # Pull current play state (P&L etc.) for every (message, ticker).
     plays_state = await _load_plays_state(pool, base)
 
+    # Author trust stats — one batch query covering every distinct author
+    # in the response. Authors with no plays yet get None.
+    author_ids = {int(msg.author_id) for msg, _ in base}
+    author_stats_by_id = await _load_author_stats(pool, author_ids)
+
     # Score each (message, ticker) pair, using the discord_alert_scores
     # cache when fresh (<10min) and recomputing otherwise.
     scores_by_msg: dict[int, list[DiscordTickerScore]] = {}
@@ -249,7 +272,8 @@ async def get_messages(
             out.append(ts)
         scores_by_msg[int(msg.message_id)] = out
 
-    # Finalize messages: attach scores + composite confluence + has_parsed_play.
+    # Finalize messages: attach scores + composite confluence + has_parsed_play
+    # + author stats.
     messages: list[DiscordMessage] = []
     for msg, _t in base:
         msg.scores = scores_by_msg[int(msg.message_id)]
@@ -264,6 +288,7 @@ async def get_messages(
         else:
             msg.confluence = 0
             msg.has_parsed_play = False
+        msg.author_stats = author_stats_by_id.get(int(msg.author_id))
         messages.append(msg)
 
     total_row = await pool.fetchrow("SELECT COUNT(*) AS n FROM discord_messages")
@@ -462,6 +487,230 @@ async def delete_source(source_id: int) -> None:
         raise HTTPException(status_code=404, detail="source_not_found")
 
 
+class DiscordNotificationRule(BaseModel):
+    id: int
+    name: str
+    min_confluence: int
+    tickers: list[str]              # empty list = any ticker
+    channel: str                    # 'ntfy' | 'discord_webhook'
+    target: str                     # URL
+    enabled: bool
+    created_at: datetime
+
+
+class DiscordNotificationRuleCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=128)
+    min_confluence: int = Field(ge=1, le=4, default=3)
+    tickers: list[str] = []
+    channel: str = Field(pattern=r"^(ntfy|discord_webhook)$")
+    target: str = Field(min_length=8, max_length=2048)
+
+
+class DiscordNotificationRulesResponse(BaseModel):
+    rules: list[DiscordNotificationRule]
+
+
+@router.get("/notifications/rules", response_model=DiscordNotificationRulesResponse)
+async def list_notification_rules() -> DiscordNotificationRulesResponse:
+    pool = get_pool()
+    rows = await pool.fetch(
+        """
+        SELECT id, name, min_confluence, tickers, channel, target, enabled, created_at
+        FROM discord_notification_rules
+        ORDER BY id ASC
+        """
+    )
+    rules = [
+        DiscordNotificationRule(
+            id=r["id"],
+            name=r["name"],
+            min_confluence=r["min_confluence"],
+            tickers=list(r["tickers"] or []),
+            channel=r["channel"],
+            target=r["target"],
+            enabled=r["enabled"],
+            created_at=r["created_at"],
+        )
+        for r in rows
+    ]
+    return DiscordNotificationRulesResponse(rules=rules)
+
+
+@router.post("/notifications/rules", response_model=DiscordNotificationRule, status_code=201)
+async def add_notification_rule(
+    body: DiscordNotificationRuleCreate,
+) -> DiscordNotificationRule:
+    pool = get_pool()
+    tickers_upper = [t.strip().upper() for t in body.tickers if t.strip()]
+    row = await pool.fetchrow(
+        """
+        INSERT INTO discord_notification_rules
+            (name, min_confluence, tickers, channel, target)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id, name, min_confluence, tickers, channel, target, enabled, created_at
+        """,
+        body.name,
+        body.min_confluence,
+        tickers_upper or None,
+        body.channel,
+        body.target,
+    )
+    return DiscordNotificationRule(
+        id=row["id"],
+        name=row["name"],
+        min_confluence=row["min_confluence"],
+        tickers=list(row["tickers"] or []),
+        channel=row["channel"],
+        target=row["target"],
+        enabled=row["enabled"],
+        created_at=row["created_at"],
+    )
+
+
+@router.delete("/notifications/rules/{rule_id}", status_code=204)
+async def delete_notification_rule(rule_id: int) -> None:
+    pool = get_pool()
+    result = await pool.execute(
+        "DELETE FROM discord_notification_rules WHERE id = $1", rule_id
+    )
+    if result == "DELETE 0":
+        raise HTTPException(status_code=404, detail="rule_not_found")
+
+
+@router.get("/stream")
+async def stream_messages(
+    since_id: Annotated[int | None, Query(description="Last message_id the client has seen.")] = None,
+):
+    """SSE stream of newly-captured Discord messages.
+
+    The client opens this endpoint once and the server emits a JSON payload
+    (matching ``DiscordMessage``, minus scoring) for every new
+    ``discord_messages`` row whose ``message_id`` is greater than the
+    largest ID the client has acknowledged. A keepalive comment is sent
+    every 15s so reverse proxies don't time out the connection.
+
+    This is a tail-poll over Postgres (2-second cadence) rather than
+    LISTEN/NOTIFY — simpler, no extra schema, and the staleness ceiling is
+    well below the user's perception threshold for a 'live' feed. Scoring
+    is intentionally NOT computed here; the client refreshes the main
+    ``/messages`` view in the background to pick up enriched fields.
+    """
+    import asyncio
+    import json as _json
+    pool = get_pool()
+
+    async def _gen():
+        last_id = since_id or 0
+        if last_id == 0:
+            row = await pool.fetchrow("SELECT COALESCE(MAX(message_id), 0) AS m FROM discord_messages")
+            last_id = int(row["m"] or 0)
+        heartbeat_every = 15
+        last_heartbeat = 0
+        try:
+            while True:
+                rows = await pool.fetch(
+                    """
+                    SELECT message_id, guild_id, guild_name, channel_id, channel_name,
+                           thread_id, thread_name, author_id, author_name, author_is_bot,
+                           content, attachment_urls, posted_at
+                    FROM discord_messages
+                    WHERE message_id > $1
+                    ORDER BY message_id ASC
+                    LIMIT 50
+                    """,
+                    last_id,
+                )
+                for r in rows:
+                    payload = {
+                        "message_id": str(r["message_id"]),
+                        "guild_id": str(r["guild_id"]),
+                        "guild_name": r["guild_name"],
+                        "channel_id": str(r["channel_id"]),
+                        "channel_name": r["channel_name"],
+                        "thread_id": str(r["thread_id"]) if r["thread_id"] is not None else None,
+                        "thread_name": r["thread_name"],
+                        "author_id": str(r["author_id"]),
+                        "author_name": r["author_name"],
+                        "author_is_bot": r["author_is_bot"],
+                        "content": r["content"],
+                        "attachment_urls": _coerce_urls(r["attachment_urls"]),
+                        "posted_at": r["posted_at"].isoformat(),
+                    }
+                    yield f"event: message\ndata: {_json.dumps(payload)}\n\n"
+                    last_id = int(r["message_id"])
+                # Heartbeat so reverse proxies don't drop the connection.
+                last_heartbeat += 2
+                if last_heartbeat >= heartbeat_every:
+                    yield ": keepalive\n\n"
+                    last_heartbeat = 0
+                await asyncio.sleep(2)
+        except asyncio.CancelledError:
+            return
+
+    return StreamingResponse(_gen(), media_type="text/event-stream")
+
+
+@router.get("/authors", response_model=DiscordAuthorsResponse)
+async def list_authors(
+    lookback_days: Annotated[int, Query(ge=1, le=365)] = 90,
+    min_resolved: Annotated[int, Query(ge=0, le=200)] = 5,
+) -> DiscordAuthorsResponse:
+    """Leaderboard of Discord authors by trust score, computed from
+    parsed plays. Only authors with at least ``min_resolved`` plays whose
+    expiry has passed get a win_rate; below the threshold we still surface
+    total_plays so you can see who's active but not yet measurable.
+
+    Direction-adjusted P&L is the underlying-move proxy from the
+    score_discord_plays worker — not actual option PnL.
+    """
+    pool = get_pool()
+    rows = await pool.fetch(
+        """
+        SELECT
+            m.author_id,
+            m.author_name,
+            COUNT(*) AS total_plays,
+            COUNT(*) FILTER (
+                WHERE p.status IN ('win_itm', 'loss_otm')
+            ) AS resolved_plays,
+            COUNT(*) FILTER (WHERE p.status = 'win_itm') AS wins,
+            COUNT(*) FILTER (WHERE p.status = 'loss_otm') AS losses,
+            AVG(p.pnl_pct_underlying) FILTER (
+                WHERE p.status IN ('win_itm', 'loss_otm')
+            ) AS avg_pnl_pct
+        FROM discord_messages m
+        JOIN discord_alert_plays p ON p.message_id = m.message_id
+        WHERE m.posted_at > now() - ($1::int || ' days')::interval
+        GROUP BY m.author_id, m.author_name
+        ORDER BY
+            COUNT(*) FILTER (WHERE p.status = 'win_itm')::float
+                / NULLIF(COUNT(*) FILTER (WHERE p.status IN ('win_itm', 'loss_otm')), 0)
+                DESC NULLS LAST,
+            COUNT(*) DESC
+        """,
+        lookback_days,
+    )
+    authors: list[DiscordAuthorStats] = []
+    for r in rows:
+        resolved = int(r["resolved_plays"] or 0)
+        wins = int(r["wins"] or 0)
+        win_rate = (wins / resolved) if resolved >= min_resolved else None
+        authors.append(
+            DiscordAuthorStats(
+                author_id=str(r["author_id"]),
+                author_name=r["author_name"],
+                total_plays=int(r["total_plays"] or 0),
+                resolved_plays=resolved,
+                wins=wins,
+                losses=int(r["losses"] or 0),
+                win_rate=win_rate,
+                avg_pnl_pct=float(r["avg_pnl_pct"]) if r["avg_pnl_pct"] is not None else None,
+                lookback_days=lookback_days,
+            )
+        )
+    return DiscordAuthorsResponse(authors=authors)
+
+
 # ---------- watchlist + first-mover + plays helpers ----------
 
 
@@ -538,6 +787,58 @@ async def _persist_parsed_plays(pool, base) -> None:
         )
     except Exception:
         log.exception("persist_parsed_plays failed (count=%d)", len(rows_to_insert))
+
+
+async def _load_author_stats(
+    pool, author_ids: set[int], lookback_days: int = 90, min_resolved: int = 5
+) -> dict[int, DiscordAuthorStats]:
+    """For each author_id in the result set, compute rolling-window trust
+    stats from discord_alert_plays. One query, returns {} when no plays
+    exist yet (e.g., before the price worker has run). Authors below the
+    ``min_resolved`` threshold get a stats object with ``win_rate=None``
+    so the UI can render 'N plays · ?' instead of fake precision."""
+    if not author_ids:
+        return {}
+    rows = await pool.fetch(
+        """
+        SELECT
+            m.author_id,
+            m.author_name,
+            COUNT(*) AS total_plays,
+            COUNT(*) FILTER (
+                WHERE p.status IN ('win_itm', 'loss_otm')
+            ) AS resolved_plays,
+            COUNT(*) FILTER (WHERE p.status = 'win_itm') AS wins,
+            COUNT(*) FILTER (WHERE p.status = 'loss_otm') AS losses,
+            AVG(p.pnl_pct_underlying) FILTER (
+                WHERE p.status IN ('win_itm', 'loss_otm')
+            ) AS avg_pnl_pct
+        FROM discord_messages m
+        JOIN discord_alert_plays p ON p.message_id = m.message_id
+        WHERE m.author_id = ANY($1::BIGINT[])
+          AND m.posted_at > now() - ($2::int || ' days')::interval
+        GROUP BY m.author_id, m.author_name
+        """,
+        list(author_ids),
+        lookback_days,
+    )
+    out: dict[int, DiscordAuthorStats] = {}
+    for r in rows:
+        resolved = int(r["resolved_plays"] or 0)
+        wins = int(r["wins"] or 0)
+        win_rate = (wins / resolved) if resolved >= min_resolved else None
+        out[int(r["author_id"])] = DiscordAuthorStats(
+            author_id=str(r["author_id"]),
+            author_name=r["author_name"],
+            total_plays=int(r["total_plays"] or 0),
+            resolved_plays=resolved,
+            wins=wins,
+            losses=int(r["losses"] or 0),
+            win_rate=win_rate,
+            avg_pnl_pct=float(r["avg_pnl_pct"]) if r["avg_pnl_pct"] is not None else None,
+            lookback_days=lookback_days,
+        )
+    return out
 
 
 async def _load_plays_state(pool, base) -> dict[tuple[int, str], dict]:
