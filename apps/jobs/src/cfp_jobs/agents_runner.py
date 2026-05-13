@@ -385,7 +385,7 @@ def _load_flow_context(database_url: str, ticker: str, sector: str) -> dict:
               CASE
                 WHEN bool_or(is_officer)            THEN 'Officer'
                 WHEN bool_or(is_director)           THEN 'Director'
-                WHEN bool_or(is_ten_percent_owner)  THEN '10% Owner'
+                WHEN bool_or(is_ten_percent_owner)  THEN '10%% Owner'
                 ELSE 'Insider'
               END                                                        AS title,
               CASE WHEN transaction_code = 'P' THEN 'buy' ELSE 'sell' END AS side,
