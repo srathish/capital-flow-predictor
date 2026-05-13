@@ -15,6 +15,7 @@ const tabs = [
   { href: "/gex", label: "GEX" },
   { href: "/screener", label: "Screener" },
   { href: "/watchlist", label: "Watchlist" },
+  { href: "/discord", label: "Discord Alerts" },
 ];
 
 export function Nav() {

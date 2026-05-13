@@ -1,0 +1,39 @@
+# Railway service config for the read-only Discord listener.
+#
+# This is the THIRD service in the Bellwether project on Railway:
+#   1. capital-flow-predictor-api          (FastAPI)            — infra/railway.toml
+#   2. capital-flow-predictor-gex          (Node poller)        — apps/gex/railway.toml
+#   3. capital-flow-predictor-discord      (Discord listener)   — this file
+#
+# Setup (one-time, via the Railway dashboard):
+#   1. In the existing project, click "+ New Service" → "GitHub repo"
+#   2. Pick this repo + main branch
+#   3. Settings → Source: Root Directory = / (the Dockerfile path is relative)
+#   4. Settings → Build: Dockerfile Path = apps/discord_listener/Dockerfile
+#   5. Settings → Variables:
+#        DATABASE_URL          (link to the shared Postgres plugin)
+#        DISCORD_USER_TOKEN    (your Discord user token — keep this secret)
+#        USE_SOURCE_ALLOWLIST  true   # start true, populate discord_sources first
+#        LOG_LEVEL             INFO
+#   6. NO public networking — this service never accepts inbound HTTP.
+#   7. NO volume needed — all state lives in Postgres.
+#
+# IMPORTANT — self-bot risk:
+#   The DISCORD_USER_TOKEN gives full account access. Anyone with this token
+#   can read every chat, every DM, and post as you. Treat it like a password.
+#   If you ever suspect leakage, reset your Discord password (rotates the
+#   token) and update the Railway variable.
+#
+#   Using a user token to read messages violates Discord ToS. Read-only,
+#   single-connection, no automation use is rarely enforced against, but the
+#   account *can* be banned. Consider using a secondary account that's only
+#   a member of the alert servers — minimal blast radius if it gets flagged.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/discord_listener/Dockerfile"
+
+[deploy]
+# Not an HTTP service — Railway treats process-alive as liveness.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

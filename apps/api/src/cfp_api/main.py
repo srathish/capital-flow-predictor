@@ -21,6 +21,7 @@ from cfp_api.routes import (
     assistant,
     backtest,
     chat,
+    discord,
     flow,
     gex,
     health,
@@ -104,6 +105,7 @@ app.include_router(replay.router, dependencies=PROTECTED)
 # and the daemon needs it to long-poll the reauth queue. Same surface as
 # everything else.
 app.include_router(gex.router, dependencies=PROTECTED)
+app.include_router(discord.router, dependencies=PROTECTED)
 # Health stays open — used by load balancers and the FE landing page.
 app.include_router(health.router)
 

@@ -8,6 +8,9 @@ import type {
   ChatMessage,
   ChatStreamEvent,
   CustomWatchlistResponse,
+  DiscordMessagesResponse,
+  DiscordSource,
+  DiscordSourcesResponse,
   ExpandedSectorResponse,
   CalibrationResponse,
   FlowAggregateResponse,
@@ -418,6 +421,48 @@ export const api = {
       runTs,
       signal
     );
+  },
+  discordMessages(params: {
+    limit?: number;
+    since?: string;
+    guildName?: string;
+    channelName?: string;
+    q?: string;
+  } = {}): Promise<DiscordMessagesResponse> {
+    const sp = new URLSearchParams();
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    if (params.since) sp.set("since", params.since);
+    if (params.guildName) sp.set("guild_name", params.guildName);
+    if (params.channelName) sp.set("channel_name", params.channelName);
+    if (params.q) sp.set("q", params.q);
+    const qs = sp.toString();
+    return getJson<DiscordMessagesResponse>(`/v1/discord/messages${qs ? `?${qs}` : ""}`);
+  },
+  discordSources(): Promise<DiscordSourcesResponse> {
+    return getJson<DiscordSourcesResponse>(`/v1/discord/sources`);
+  },
+  discordAddSource(body: {
+    guild_name: string;
+    channel_name: string;
+    label?: string | null;
+    include_threads?: boolean;
+  }): Promise<DiscordSource> {
+    return fetch(`${baseUrl()}/v1/discord/sources`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      body: JSON.stringify(body),
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as DiscordSource;
+    });
+  },
+  discordDeleteSource(id: number): Promise<void> {
+    return fetch(`${baseUrl()}/v1/discord/sources/${id}`, {
+      method: "DELETE",
+      headers: { ...authHeaders() },
+    }).then((res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+    });
   },
 };
 

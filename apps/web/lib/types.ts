@@ -931,3 +931,38 @@ export type PersonaComparisonResponse = {
   confidence_delta: number;
   summary: string;
 };
+
+export type DiscordMessage = {
+  message_id: string;
+  guild_id: string;
+  guild_name: string;
+  channel_id: string;
+  channel_name: string;
+  thread_id: string | null;
+  thread_name: string | null;
+  author_id: string;
+  author_name: string;
+  author_is_bot: boolean;
+  content: string;
+  attachment_urls: string[];
+  posted_at: string;
+};
+
+export type DiscordMessagesResponse = {
+  messages: DiscordMessage[];
+  total: number;
+};
+
+export type DiscordSource = {
+  id: number;
+  guild_name: string;
+  channel_name: string;
+  label: string | null;
+  include_threads: boolean;
+  enabled: boolean;
+  created_at: string;
+};
+
+export type DiscordSourcesResponse = {
+  sources: DiscordSource[];
+};

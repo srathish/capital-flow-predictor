@@ -1,0 +1,28 @@
+[project]
+name = "cfp-discord-listener"
+version = "0.1.0"
+description = "Read-only Discord user-account listener — mirrors plays from joined channels into Postgres for the Discord Alerts tab."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    # discord.py-self is the user-account fork of discord.py. We only ever
+    # *read* — no send, no edit, no react — to keep self-bot exposure as low
+    # as possible. Pin to a known-good version; the API is stable.
+    "discord.py-self>=2.0.1",
+    "asyncpg>=0.30",
+    "pydantic-settings>=2.6",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.7",
+    "mypy>=1.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/discord_listener"]
