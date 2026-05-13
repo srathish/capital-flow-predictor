@@ -14,6 +14,7 @@ from langgraph.graph import END, START, StateGraph
 from cfp_agents.analysts import (
     FlowAnalyst,
     FundamentalsAnalyst,
+    GexAnalyst,
     NewsAnalyst,
     SentimentAnalyst,
     TechnicalsAnalyst,
@@ -45,6 +46,7 @@ def build_analyst_graph() -> object:
         SentimentAnalyst(),
         NewsAnalyst(),
         FlowAnalyst(),
+        GexAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)
@@ -63,6 +65,7 @@ def build_persona_graph() -> object:
         SentimentAnalyst(),
         NewsAnalyst(),
         FlowAnalyst(),
+        GexAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)
@@ -96,6 +99,7 @@ def build_full_graph() -> object:
         SentimentAnalyst(),
         NewsAnalyst(),
         FlowAnalyst(),
+        GexAnalyst(),
     ]
     for a in analysts:
         graph.add_node(a.name, a)

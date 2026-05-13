@@ -2,6 +2,7 @@
 
 from cfp_agents.analysts.flow import FlowAnalyst
 from cfp_agents.analysts.fundamentals import FundamentalsAnalyst
+from cfp_agents.analysts.gex import GexAnalyst
 from cfp_agents.analysts.news import NewsAnalyst
 from cfp_agents.analysts.sentiment import SentimentAnalyst
 from cfp_agents.analysts.technicals import TechnicalsAnalyst
@@ -9,6 +10,7 @@ from cfp_agents.analysts.technicals import TechnicalsAnalyst
 __all__ = [
     "FlowAnalyst",
     "FundamentalsAnalyst",
+    "GexAnalyst",
     "NewsAnalyst",
     "SentimentAnalyst",
     "TechnicalsAnalyst",
