@@ -256,7 +256,7 @@ def test_full_graph_runs_analysts_and_personas() -> None:
 
     analyst_names = {s.agent for s in result["analyst_signals"]}
     persona_names = {s.agent for s in result["persona_signals"]}
-    assert analyst_names == {"technicals", "fundamentals", "sentiment", "news", "flow"}
+    assert analyst_names == {"technicals", "fundamentals", "sentiment", "news", "flow", "gex"}
     assert persona_names == {
         "buffett", "burry", "druckenmiller", "taleb", "soros", "simons",
         "klarman", "greenblatt", "minervini", "cathie_wood", "damodaran", "lynch", "ackman",

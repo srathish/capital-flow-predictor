@@ -107,11 +107,14 @@ def test_risk_sizing_avoid_returns_zero() -> None:
 
 
 def test_risk_sizing_long_high_confidence() -> None:
+    """Half-Kelly sizing with conf 0.8 + 2:1 R:R + chop regime default
+    should land at a positive non-zero weight, capped at MAX_PER_POSITION."""
     state = _state_with_trader("long", 0.8)
     weight, breakdown = deterministic_target_weight(state)
-    expected = 0.8 * MAX_PER_POSITION  # vote aligned, no vol scale (no prices)
-    assert abs(weight - expected) < 1e-9
-    assert breakdown["vote_aligned"] is True
+    assert 0 < weight <= MAX_PER_POSITION
+    # Breakdown should expose the Kelly components rather than the legacy fields
+    assert "kelly_raw" in breakdown
+    assert breakdown["kelly_raw"] > 0  # 0.8 conf, 2:1 R:R → positive Kelly
 
 
 def test_risk_sizing_high_vol_halves_weight() -> None:
@@ -127,22 +130,29 @@ def test_risk_sizing_high_vol_halves_weight() -> None:
 
 
 def test_risk_sizing_disagreeing_vote_halves_weight() -> None:
-    """If agents are mostly bearish but trader said long, weight gets halved."""
-    trader_signal = AgentSignal(
-        agent="trader", signal="bullish", confidence=0.8,
-        rationale="long", payload={"direction": "long"},
-    )
-    state = {
-        "ticker": "FOO",
-        "trader_decision": trader_signal,
-        "analyst_signals": [_signal("a", "bearish", 0.7), _signal("b", "bearish", 0.6)],
-        "persona_signals": [_signal("c", "bearish", 0.5)],
-        "prices": None,
-    }
-    weight, breakdown = deterministic_target_weight(state)
-    assert breakdown["vote_aligned"] is False
-    expected = 0.8 * MAX_PER_POSITION * 1.0 * 0.5  # base * vol_scale * disagreement penalty
-    assert abs(weight - expected) < 1e-9
+    """If agents are mostly bearish but trader said long, weight gets halved
+    relative to the same setup with aligned votes."""
+    def _weight_for(votes: list[tuple[str, str, float]]) -> tuple[float, dict]:
+        trader_signal = AgentSignal(
+            agent="trader", signal="bullish", confidence=0.8,
+            rationale="long", payload={"direction": "long"},
+        )
+        return deterministic_target_weight({
+            "ticker": "FOO",
+            "trader_decision": trader_signal,
+            "analyst_signals": [_signal(n, s, c) for n, s, c in votes[:2]],
+            "persona_signals": [_signal(n, s, c) for n, s, c in votes[2:]],
+            "prices": None,
+        })
+
+    aligned, b_aligned = _weight_for([("a", "bullish", 0.7), ("b", "bullish", 0.6), ("c", "bullish", 0.5)])
+    disagreeing, b_disagreeing = _weight_for([("a", "bearish", 0.7), ("b", "bearish", 0.6), ("c", "bearish", 0.5)])
+
+    assert b_aligned["vote_aligned"] is True
+    assert b_disagreeing["vote_aligned"] is False
+    # The disagreement haircut is a 0.5x multiplier, so disagreeing should be
+    # roughly half the aligned weight (other components are identical).
+    assert disagreeing <= aligned / 2 + 1e-9
 
 
 # ---------- Synthesizer mappings (Trader / Risk / PM) ----------
@@ -304,8 +314,8 @@ def test_full_graph_runs_through_synthesis_layer() -> None:
         graph = build_full_graph()
         result = graph.invoke(state)
 
-    # 5 analysts run on real data (technicals, fundamentals, sentiment, news, flow)
-    assert len(result["analyst_signals"]) == 5
+    # 6 analysts run on real data (technicals, fundamentals, sentiment, news, flow, gex)
+    assert len(result["analyst_signals"]) == 6
     # 13 personas run via mock
     assert len(result["persona_signals"]) == 13
     # Synthesis stage outputs land in their dedicated state keys

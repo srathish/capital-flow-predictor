@@ -134,6 +134,33 @@ class DarkPoolCtx(_Frozen):
 # ---------- positioning (short data + dealer greeks) ----------
 
 
+class SkylitExpiryView(_Frozen):
+    """One expiration's worth of structural snapshot from Skylit / Heatseeker.
+
+    Term-structure matters: an 0DTE snapshot showing positive GEX with king
+    above spot reads as "mean-revert pin to king today" — but the same shape
+    on a LEAP expiry reads as "real long-dated accumulation, expect the
+    underlying to climb over months." The GexAnalyst reasons across views;
+    consumers that don't care can still read the primary `skylit_*` fields
+    on PositioningCtx for the nearest expiry.
+    """
+
+    expiration: str                       # YYYY-MM-DD
+    expiration_index: int | None = None   # 0 = nearest, ascending
+    num_strikes: int = 0
+    total_abs_gamma: float | None = None
+    signed_total_gamma: float | None = None
+    regime_score: float | None = None     # in [-1, +1]
+    king_strike: float | None = None
+    king_gamma: float | None = None
+    floor_strike: float | None = None
+    floor_significance: float | None = None
+    ceiling_strike: float | None = None
+    ceiling_significance: float | None = None
+    air_pockets: list[dict] = Field(default_factory=list)
+    liquidity_vacuums: list[dict] = Field(default_factory=list)
+
+
 class PositioningCtx(_Frozen):
     short_shares_available: int | None = None
     fee_rate: float | None = None        # %
@@ -160,6 +187,12 @@ class PositioningCtx(_Frozen):
     skylit_liquidity_vacuums: list[dict] | None = None
     skylit_expiration: str | None = None
     skylit_fetched_at_ms: int | None = None
+
+    # Multi-expiration term structure (0DTE → weekly → LEAP). Empty list when
+    # the bridge ran in single-snapshot mode or the ticker isn't covered.
+    # Index 0 is the nearest expiry and mirrors the primary `skylit_*` fields
+    # above; later entries widen out toward LEAPs.
+    skylit_expiry_views: list[SkylitExpiryView] = Field(default_factory=list)
 
     # ---- 0DTE Trinity (option 3) — only populated for SPY/QQQ/SPX/SPXW ----
     trinity_classification: str | None = None        # high_confidence_directional, ...

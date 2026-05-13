@@ -50,8 +50,8 @@ def test_positive_gex_king_above_spot_signals_bullish_drift() -> None:
     sig = GexAnalyst().analyze(_state(bundle))
     assert sig.signal == "bullish"
     assert sig.confidence > 0.3
-    assert sig.payload["regime_concern"] == "low"
-    assert "magnet drift up" in sig.rationale
+    assert sig.payload["primary_regime_concern"] == "low"
+    assert "magnet up" in sig.rationale
 
 
 def test_positive_gex_king_below_spot_signals_bearish_drift() -> None:
@@ -79,10 +79,10 @@ def test_negative_gex_regime_flags_high_concern_and_halves_score() -> None:
         skylit_ceiling_strike=105.0,
     )
     sig = GexAnalyst().analyze(_state(bundle))
-    assert sig.payload["regime_concern"] == "high"
+    assert sig.payload["primary_regime_concern"] == "high"
     # Halved score → likely lands in neutral band
     assert sig.signal == "neutral"
-    assert "trending regime" in sig.rationale
+    assert "trending" in sig.rationale
 
 
 def test_air_pockets_above_only_adds_bullish_tilt() -> None:
@@ -92,8 +92,7 @@ def test_air_pockets_above_only_adds_bullish_tilt() -> None:
         skylit_air_pockets=[{"low": 102.0, "high": 105.0, "span": 3.0}],
     )
     sig = GexAnalyst().analyze(_state(bundle))
-    assert sig.payload["n_air_pockets_above"] == 1
-    assert sig.payload["n_air_pockets_below"] == 0
+    assert sig.payload["primary_directional_score"] > 0
     assert "upside acceleration risk" in sig.rationale
 
 
@@ -105,5 +104,64 @@ def test_expiration_surfaced_in_rationale_when_present() -> None:
         skylit_expiration="2027-01-15",
     )
     sig = GexAnalyst().analyze(_state(bundle))
-    assert sig.payload["expiration"] == "2027-01-15"
+    assert sig.payload["primary_expiration"] == "2027-01-15"
     assert "2027-01-15" in sig.rationale
+
+
+def test_term_structure_leap_agrees_with_near_boosts_confidence() -> None:
+    """Near + LEAP both bullish → confidence is higher than near alone."""
+    near_only = _bundle(
+        skylit_spot=100.0,
+        skylit_regime_score=0.40,
+        skylit_king_strike=102.0,
+    )
+    with_leap_agreed = _bundle(
+        skylit_spot=100.0,
+        skylit_regime_score=0.40,
+        skylit_king_strike=102.0,
+        skylit_expiry_views=[
+            {
+                "expiration": "2026-05-15", "expiration_index": 0,
+                "regime_score": 0.40, "king_strike": 102.0,
+                "air_pockets": [], "liquidity_vacuums": [],
+            },
+            {
+                "expiration": "2027-01-15", "expiration_index": 8,
+                "regime_score": 0.35, "king_strike": 103.0,
+                "air_pockets": [], "liquidity_vacuums": [],
+            },
+        ],
+    )
+    a = GexAnalyst().analyze(_state(near_only))
+    b = GexAnalyst().analyze(_state(with_leap_agreed))
+    assert a.signal == "bullish"
+    assert b.signal == "bullish"
+    # LEAP agreement should bump confidence by the alignment bonus.
+    assert b.confidence > a.confidence
+    assert b.payload["leap_expiration"] == "2027-01-15"
+
+
+def test_term_structure_leap_disagrees_with_near_flags_caveat() -> None:
+    """Near bullish + LEAP bearish → caveat surfaced, signal still follows near."""
+    bundle = _bundle(
+        skylit_spot=100.0,
+        skylit_regime_score=0.40,
+        skylit_king_strike=102.0,                       # near: bullish magnet
+        skylit_expiry_views=[
+            {
+                "expiration": "2026-05-15", "expiration_index": 0,
+                "regime_score": 0.40, "king_strike": 102.0,
+                "air_pockets": [], "liquidity_vacuums": [],
+            },
+            {
+                "expiration": "2027-01-15", "expiration_index": 8,
+                "regime_score": 0.40, "king_strike": 96.0,  # LEAP: bearish magnet
+                "air_pockets": [], "liquidity_vacuums": [],
+            },
+        ],
+    )
+    sig = GexAnalyst().analyze(_state(bundle))
+    assert sig.signal == "bullish"  # near wins direction
+    assert sig.payload["term_structure_caveat"] is not None
+    assert "disagree" in sig.payload["term_structure_caveat"]
+    assert sig.payload["n_expiry_views"] == 2

@@ -107,6 +107,8 @@ function normalize(ticker, raw) {
     log.warn(`${ticker}: no Strikes array, derived ${strikes.length} from spot at step ${step}`);
   }
 
+  // Primary view: nearest expiration (gammaRows[i][0]). Preserves legacy callers
+  // that read `snapshot.strikes` and `snapshot.expiration` unchanged.
   const nodes = [];
   for (let i = 0; i < gammaRows.length; i++) {
     const row = gammaRows[i];
@@ -115,12 +117,32 @@ function normalize(ticker, raw) {
     nodes.push({ strike: strikes[i], gamma });
   }
 
+  // Multi-expiration view: every expiration in raw.Expirations gets its own
+  // strike → gamma map. Consumers can pick any horizon (0DTE, weekly, LEAP)
+  // and run the same surface/structure derivation against it.
+  const allExpirations = [];
+  for (let ei = 0; ei < expirations.length; ei++) {
+    const expNodes = [];
+    for (let si = 0; si < gammaRows.length; si++) {
+      const row = gammaRows[si];
+      const gamma = (row && row[ei]) || 0;
+      if (strikes[si] == null) continue;
+      expNodes.push({ strike: strikes[si], gamma });
+    }
+    allExpirations.push({
+      expiration: expirations[ei],
+      expirationIndex: ei,
+      strikes: expNodes,
+    });
+  }
+
   return {
     ticker,
     fetchedAtMs: Date.now(),
     spot,
     expiration,
     strikes: nodes,
+    allExpirations,
     apiVelocity: raw._velocity || null,
   };
 }

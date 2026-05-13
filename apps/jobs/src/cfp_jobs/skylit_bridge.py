@@ -38,7 +38,7 @@ DEFAULT_GEXESTER_DIR = Path.home() / "gexester vexster"
 DEFAULT_TIMEOUT_S = 25.0
 _STRUCTURE_TTL_S = 300.0  # 5-min in-process cache; agent runs may touch a ticker repeatedly
 
-_structure_cache: dict[str, tuple[float, dict | None]] = {}
+_structure_cache: dict[tuple[str, bool], tuple[float, dict | None]] = {}
 _trinity_cache: tuple[float, dict | None] | None = None
 
 
@@ -97,16 +97,26 @@ def _run_node_cli(script_rel: str, args: list[str]) -> dict | None:
     return data if isinstance(data, dict) and data else None
 
 
-def fetch_structure(ticker: str) -> dict | None:
-    """Fresh structural snapshot for `ticker`. 5-min in-process cache."""
+def fetch_structure(ticker: str, *, all_expirations: bool = True) -> dict | None:
+    """Fresh structural snapshot for `ticker`. 5-min in-process cache.
+
+    With ``all_expirations=True`` (default), the Node script returns the
+    primary near-expiry shape plus an `expiry_views` array spanning every
+    expiration the Heatseeker feed exposes (0DTE → weekly → LEAP). The
+    GexAnalyst uses this to reason about term structure.
+    """
     key = ticker.upper()
+    cache_key = (key, bool(all_expirations))
     now = time.time()
-    cached = _structure_cache.get(key)
+    cached = _structure_cache.get(cache_key)
     if cached and (now - cached[0]) < _STRUCTURE_TTL_S:
         return cached[1]
 
-    data = _run_node_cli("scripts/structure-snapshot.js", [f"--ticker={key}"])
-    _structure_cache[key] = (now, data)
+    args = [f"--ticker={key}"]
+    if all_expirations:
+        args.append("--all-expirations")
+    data = _run_node_cli("scripts/structure-snapshot.js", args)
+    _structure_cache[cache_key] = (now, data)
     return data
 
 
@@ -147,6 +157,34 @@ def apply_structure_to_positioning(pos: dict, structure: dict | None) -> None:
     pos["skylit_liquidity_vacuums"] = structure.get("liquidity_vacuums") or None
     pos["skylit_expiration"] = structure.get("expiration")
     pos["skylit_fetched_at_ms"] = structure.get("fetched_at_ms")
+
+    # Multi-expiration term-structure views. Each entry maps cleanly onto
+    # cfp_shared.SkylitExpiryView; the bundle builder pydantic-validates.
+    expiry_views_raw = structure.get("expiry_views") or []
+    views: list[dict] = []
+    for v in expiry_views_raw:
+        if not isinstance(v, dict) or not v.get("expiration"):
+            continue
+        king_v = v.get("king") or {}
+        floor_v = v.get("floor") or {}
+        ceiling_v = v.get("ceiling") or {}
+        views.append({
+            "expiration": v["expiration"],
+            "expiration_index": v.get("expiration_index"),
+            "num_strikes": v.get("num_strikes") or 0,
+            "total_abs_gamma": v.get("total_abs_gamma"),
+            "signed_total_gamma": v.get("signed_total_gamma"),
+            "regime_score": v.get("regime_score"),
+            "king_strike": king_v.get("strike"),
+            "king_gamma": king_v.get("gamma"),
+            "floor_strike": floor_v.get("strike"),
+            "floor_significance": floor_v.get("relative_significance"),
+            "ceiling_strike": ceiling_v.get("strike"),
+            "ceiling_significance": ceiling_v.get("relative_significance"),
+            "air_pockets": v.get("air_pockets") or [],
+            "liquidity_vacuums": v.get("liquidity_vacuums") or [],
+        })
+    pos["skylit_expiry_views"] = views
 
 
 _INDEX_CLASS = {"SPY", "QQQ", "SPX", "SPXW", "IWM", "DIA"}

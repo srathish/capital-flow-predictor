@@ -162,8 +162,8 @@ def test_graph_runs_all_analysts_in_parallel() -> None:
     result = graph.invoke(state)
     signals = result["analyst_signals"]
     agents = {s.agent for s in signals}
-    # 5 analysts: technicals + fundamentals + sentiment (stub) + news + flow
-    assert agents == {"technicals", "fundamentals", "sentiment", "news", "flow"}
+    # 6 analysts: technicals + fundamentals + sentiment (stub) + news + flow + gex
+    assert agents == {"technicals", "fundamentals", "sentiment", "news", "flow", "gex"}
     by_agent = {s.agent: s for s in signals}
     # Technicals has real bullish data, sentiment is a stub, news/flow have
     # no bundle attached so they emit "no data" stubs at confidence 0.
