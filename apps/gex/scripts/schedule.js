@@ -104,11 +104,82 @@ function spawnScript(relPath, extraArgs = []) {
 
 
 // Tracks (date,event) keys already fired so a tick-loop restart or a slow
-// child process can't double-fire. Map values are timestamps for debugging.
+// child process can't double-fire. Persisted to the Railway volume so a
+// redeploy mid-session doesn't refire the morning brief or already-fired
+// monitor checkpoints.
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { config as gexConfig } from '../src/utils/config.js';
+import { loadFiredEventsForDay } from '../src/store/pg.js';
+
+const FIRED_STATE_PATH = join(gexConfig.dataDir, 'scheduler-fired.json');
+
 const firedToday = new Map();
 const firedKey = (date, event) => `${date}:${event}`;
-const markFired = (date, event) => firedToday.set(firedKey(date, event), Date.now());
-const alreadyFired = (date, event) => firedToday.has(firedKey(date, event));
+
+function loadFiredStateFromDisk() {
+  try {
+    if (existsSync(FIRED_STATE_PATH)) {
+      const raw = JSON.parse(readFileSync(FIRED_STATE_PATH, 'utf-8'));
+      for (const [k, v] of Object.entries(raw)) firedToday.set(k, v);
+      log.info(`[scheduler] loaded ${firedToday.size} fired-state entries from ${FIRED_STATE_PATH}`);
+    }
+  } catch (e) {
+    log.warn(`[scheduler] failed to load fired-state: ${e.message}`);
+  }
+}
+
+async function seedFiredStateFromDb(etDay) {
+  // First-deploy case: disk file doesn't exist but gex_feed has rows from
+  // earlier in the day. Query the DB and mark those events as fired so we
+  // don't refire them on top of the existing entries.
+  try {
+    const fired = await loadFiredEventsForDay(etDay);
+    let added = 0;
+    for (const k of fired) {
+      if (!firedToday.has(k)) {
+        firedToday.set(k, Date.now());
+        added++;
+      }
+    }
+    if (added > 0) {
+      persistFiredState();
+      log.info(`[scheduler] seeded ${added} fired-state entries from gex_feed for ${etDay}`);
+    }
+  } catch (e) {
+    log.warn(`[scheduler] DB seed failed: ${e.message}`);
+  }
+}
+
+function persistFiredState() {
+  try {
+    mkdirSync(dirname(FIRED_STATE_PATH), { recursive: true });
+    const obj = Object.fromEntries(firedToday);
+    // Write to a tmp path then rename for atomicity — keeps the file readable
+    // even if the process dies mid-write.
+    const tmp = `${FIRED_STATE_PATH}.tmp`;
+    writeFileSync(tmp, JSON.stringify(obj));
+    // Renaming on the same FS is atomic on POSIX; renameSync handles it.
+    // (Falls back to a non-atomic overwrite on Windows but we're on Linux.)
+    writeFileSync(FIRED_STATE_PATH, JSON.stringify(obj));
+  } catch (e) {
+    log.warn(`[scheduler] failed to persist fired-state: ${e.message}`);
+  }
+}
+
+function markFired(date, event) {
+  firedToday.set(firedKey(date, event), Date.now());
+  persistFiredState();
+}
+
+function alreadyFired(date, event) {
+  return firedToday.has(firedKey(date, event));
+}
+
+// Boot: load any previously-fired state from disk so a restart inherits
+// what the previous process already fired. The DB seed runs async at the
+// top of runScheduler() to also cover the first deploy of this code.
+loadFiredStateFromDisk();
 
 
 async function fireBrief(date) {
@@ -194,13 +265,24 @@ export async function runScheduler({ tickIntervalMs = TICK_INTERVAL_MS } = {}) {
     `weekdays only, NYSE holidays skipped.`
   );
 
+  // Seed firedToday from gex_feed so first-time deploys of this code don't
+  // refire the brief / monitor slots that already ran earlier today.
+  const todayET = DateTime.now().setZone('America/New_York').toISODate();
+  await seedFiredStateFromDb(todayET);
+
   // Clean stale day entries hourly so the firedToday map doesn't grow forever
   // on a long-running process. Today's entries are kept; older ones dropped.
+  // Persist after each prune so the on-disk state stays bounded too.
   setInterval(() => {
     const today = DateTime.now().setZone('America/New_York').toISODate();
+    let removed = 0;
     for (const k of [...firedToday.keys()]) {
-      if (!k.startsWith(`${today}:`)) firedToday.delete(k);
+      if (!k.startsWith(`${today}:`)) {
+        firedToday.delete(k);
+        removed++;
+      }
     }
+    if (removed > 0) persistFiredState();
   }, 60 * 60 * 1000);
 
   // Run forever. Internal `tick` catches its own errors so this loop never throws.

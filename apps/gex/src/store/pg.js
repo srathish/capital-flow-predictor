@@ -205,6 +205,46 @@ export async function writeSkylitStructure({ ticker, fetchedAt, spot, expiration
  * Graceful shutdown — let connections drain. Called from src/index.js SIGINT
  * handler so a Railway redeploy doesn't leave dangling pool connections.
  */
+/**
+ * Read back the set of (date, event) pairs that already produced a row in
+ * gex_feed for the given ET trading day. Used by schedule.js on boot to
+ * avoid refiring the brief or already-fired monitor slots after a restart.
+ *
+ * Returns a list of strings like ["2026-05-13:brief", "2026-05-13:monitor:09:31"].
+ * The slot for monitor is parsed from the embed title "📈 YYYY-MM-DD · HH:MM ET".
+ */
+export async function loadFiredEventsForDay(etDay) {
+  const pool = getPool();
+  if (!pool) return [];
+  try {
+    const rows = await pool.query(
+      `SELECT source, title FROM gex_feed
+       WHERE source IN ('brief', 'monitor')
+         AND title LIKE '%' || $1 || '%'
+       ORDER BY created_at DESC
+       LIMIT 200`,
+      [etDay],
+    );
+    const fired = new Set();
+    for (const r of rows.rows) {
+      if (r.source === 'brief') {
+        fired.add(`${etDay}:brief`);
+      } else if (r.source === 'monitor') {
+        // Title shape: "📈 2026-05-13 · 09:31 ET"
+        const m = (r.title || '').match(/(\d{4}-\d{2}-\d{2})\s*[·\.]\s*(\d{2}:\d{2})\s*ET/);
+        if (m && m[1] === etDay) {
+          fired.add(`${etDay}:monitor:${m[2]}`);
+        }
+      }
+    }
+    return [...fired];
+  } catch (e) {
+    log.warn(`loadFiredEventsForDay failed: ${e.message}`);
+    return [];
+  }
+}
+
+
 export async function closePg() {
   if (_pool) {
     try { await _pool.end(); } catch (e) { log.warn(`pg pool close: ${e.message}`); }
