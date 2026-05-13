@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     health_stale_hours_signals: int = 48      # agent runs; once-daily cadence
     health_stale_hours_news: int = 12
 
+    # Unusual Whales key — read by the /v1/flow/aggregate/{ticker} lazy
+    # refresh so opening a ticker page on /flow triggers a UW ingest without
+    # needing to run the ensemble or the hourly cron first. Empty disables
+    # lazy refresh (endpoint still serves whatever is in Postgres).
+    unusual_whales_api_key: str = ""
+
     @property
     def cors_origins(self) -> list[str]:
         if self.cors_origins_raw.strip() == "*":

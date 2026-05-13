@@ -18,6 +18,7 @@ GET /v1/flow/unusual
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import UTC, datetime, timedelta
 from typing import Literal
@@ -26,8 +27,82 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
+from cfp_api.settings import settings
 
 log = logging.getLogger(__name__)
+
+
+# Tickers currently being refreshed in-flight. Prevents fan-out when several
+# clients hit /flow/{ticker} at the same time. Single-process API instance is
+# the common case on Railway; if we scale to >1 we'll move this to a DB lock.
+_REFRESH_IN_FLIGHT: set[str] = set()
+
+
+def _is_rth() -> bool:
+    """Rough US RTH check in UTC: weekdays 13:30-20:00 UTC (= 09:30-16:00 ET
+    standard time). The lazy-refresh staleness threshold is tighter inside
+    RTH because flow is moving fast; outside RTH a single overnight refresh
+    is plenty."""
+    now = datetime.now(UTC)
+    if now.weekday() >= 5:
+        return False
+    minutes_since_midnight = now.hour * 60 + now.minute
+    return 13 * 60 + 30 <= minutes_since_midnight < 20 * 60
+
+
+async def _maybe_refresh_flow_async(
+    ticker: str,
+    latest_alert_at: datetime | None,
+    force: bool = False,
+) -> bool:
+    """Kick off a background UW refresh for `ticker` if data is stale.
+
+    Returns True if a refresh was queued (or already in-flight), False if
+    we decided the existing data is fresh enough — or if UW credentials
+    aren't set.
+
+    Staleness rule:
+      * during US RTH: refresh if latest alert is >30 min old
+      * outside RTH:   refresh if latest alert is >12h old or missing
+      * `force=True`:  always refresh (used by ?refresh=now)
+
+    Concurrency: a per-process set guards against multiple in-flight ingests
+    on the same ticker. We don't await the ingest — it runs in a thread so
+    the API can return immediately and the next page-load sees fresh data.
+    """
+    uw_key = (settings.unusual_whales_api_key or "").strip()
+    if not uw_key:
+        return False
+
+    if not force:
+        threshold = timedelta(minutes=30) if _is_rth() else timedelta(hours=12)
+        if latest_alert_at is not None and (datetime.now(UTC) - latest_alert_at) < threshold:
+            return False
+
+    sym = ticker.upper()
+    if sym in _REFRESH_IN_FLIGHT:
+        return True
+    _REFRESH_IN_FLIGHT.add(sym)
+
+    db_url = settings.database_url
+
+    def _run_sync() -> None:
+        # Import inside the thread so we don't pull psycopg/cfp_jobs onto the
+        # async event loop's import path at startup.
+        from cfp_jobs.ingestion import unusualwhales as uw
+        try:
+            uw.ingest_ticker(db_url, uw_key, sym)
+        except Exception as e:  # noqa: BLE001
+            log.warning("lazy flow refresh for %s failed: %s", sym, e)
+
+    async def _runner() -> None:
+        try:
+            await asyncio.to_thread(_run_sync)
+        finally:
+            _REFRESH_IN_FLIGHT.discard(sym)
+
+    asyncio.create_task(_runner())
+    return True
 
 router = APIRouter(prefix="/v1/flow", tags=["flow"])
 
@@ -598,6 +673,9 @@ class FlowAggregateResponse(BaseModel):
     oi_growth_window_days: int               # the window we summed daily deltas over
     top_strikes: list[TopStrike]
     top_trades: list[TopTradeAgg]
+    # True when this request triggered a background UW ingest (or one was
+    # already in flight). The UI can poll/re-fetch to pick up the fresh data.
+    refresh_queued: bool = False
 
 
 @router.get("/aggregate/{ticker}", response_model=FlowAggregateResponse)
@@ -619,6 +697,14 @@ async def flow_aggregate(
         description=(
             "Window for summing daily OI deltas to identify which strikes have "
             "had positions added or removed. Default 30d."
+        ),
+    ),
+    refresh: Literal["auto", "now", "off"] = Query(
+        "auto",
+        description=(
+            "auto = refresh if data is stale (30m RTH / 12h off-hours); "
+            "now = force refresh in the background; "
+            "off = serve whatever is in Postgres."
         ),
     ),
 ) -> FlowAggregateResponse:
@@ -762,13 +848,28 @@ async def flow_aggregate(
             sym, oi_window,
         )
 
+    # Decide whether to kick off a background UW refresh. Force the refresh
+    # when refresh=now or when we have zero alerts on file; otherwise apply
+    # the auto-staleness rule (30m RTH / 12h off-hours).
+    if refresh == "off":
+        refresh_queued = False
+    else:
+        latest_alert_at = agg["newest"] if (agg is not None and (agg["n"] or 0) > 0) else None
+        force_refresh = refresh == "now" or latest_alert_at is None
+        refresh_queued = await _maybe_refresh_flow_async(sym, latest_alert_at, force=force_refresh)
+
     if agg is None or (agg["n"] or 0) == 0:
         # Return an empty-but-well-formed response so the FE can render
-        # "no flow in window" without a special error path.
+        # "no flow in window" without a special error path. If we kicked off
+        # a refresh above the UI can re-fetch in a few seconds.
         return FlowAggregateResponse(
             ticker=sym, days=days,
             oldest_alert_ts=None, newest_alert_ts=None,
-            coverage_summary=f"No UW flow alerts ingested for {sym}.",
+            coverage_summary=(
+                f"No UW flow alerts ingested for {sym} yet — refresh queued, retry in ~20s."
+                if refresh_queued
+                else f"No UW flow alerts ingested for {sym}."
+            ),
             n_alerts=0,
             total_premium=0.0, total_call_premium=0.0, total_put_premium=0.0,
             net_call_premium=0.0, net_put_premium=0.0,
@@ -779,6 +880,7 @@ async def flow_aggregate(
             expiry_buckets=[], expiry_headline="No expiry-tagged alerts available.",
             oi_growth_strikes=[], oi_growth_window_days=oi_window,
             top_strikes=[], top_trades=[],
+            refresh_queued=refresh_queued,
         )
 
     total_prem = float(agg["total_prem"] or 0.0)
@@ -938,6 +1040,7 @@ async def flow_aggregate(
         oi_growth_window_days=oi_window,
         top_strikes=top_strikes,
         top_trades=top_trades,
+        refresh_queued=refresh_queued,
     )
 
 
