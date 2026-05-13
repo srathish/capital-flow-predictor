@@ -42,6 +42,9 @@ on:
     - cron: "0 13 * * 1-5"
     # 06:00 ET (= 10:00 UTC) weekdays — catalyst-triggered ensemble re-runs.
     - cron: "0 10 * * 1-5"
+    # Every 10 min during RTH, offset 5 min from market-tide to avoid collision.
+    # Skylit GEX structure snapshots for SPY/QQQ/SPX persisted to Postgres.
+    - cron: "5,15,25,35,45,55 13-20 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -63,6 +66,7 @@ on:
           - flow-volatility
           - morning-brief
           - ensemble-rerun-stale
+          - gex-snapshot
 
 jobs:
   reddit-catalysts:
@@ -205,6 +209,35 @@ jobs:
       - name: Re-run ensemble on stale + catalyst-flagged tickers
         working-directory: apps/jobs
         run: uv run cfp-jobs ensemble-rerun-stale --max-tickers 30
+
+  gex-snapshot:
+    # Skylit / Heatseeker GEX structure for SPY/QQQ/SPX persisted to Postgres
+    # every 10 min during RTH. The Python skylit_bridge reads the latest row
+    # per ticker (15-min freshness window) — no Node runtime in the API
+    # container. Auth lives in the skylit_credentials table on Postgres so
+    # this job only needs DATABASE_URL to reach the credentials + write
+    # results.
+    if: startsWith(github.event.schedule, '5,15,25,35,45,55') || github.event.inputs.job == 'gex-snapshot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # Optional fallbacks if Postgres skylit_credentials is empty (cold
+      # cluster) — local-dev style auth via env vars.
+      CLERK_SESSION_ID: ${{ secrets.CLERK_SESSION_ID }}
+      CLERK_CLIENT_COOKIE: ${{ secrets.CLERK_CLIENT_COOKIE }}
+      HEATSEEKER_JWT: ${{ secrets.HEATSEEKER_JWT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install apps/gex deps
+        working-directory: apps/gex
+        run: npm ci
+      - name: Fetch + persist SPY/QQQ/SPX structure snapshots
+        working-directory: apps/gex
+        run: node scripts/persist-snapshots.js --tickers SPY,QQQ,SPX
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the

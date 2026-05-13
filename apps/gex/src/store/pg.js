@@ -165,6 +165,43 @@ export async function writeSkylitStatus({ method, jwtTtlSeconds, cookieRotatedAt
 }
 
 /**
+ * Append one row to skylit_structures. The Python skylit_bridge reads the
+ * most recent row per ticker via:
+ *   SELECT structure FROM skylit_structures
+ *   WHERE ticker = $1 AND fetched_at > NOW() - INTERVAL '15 minutes'
+ *   ORDER BY fetched_at DESC LIMIT 1
+ *
+ * `structure` is the full payload from scripts/structure-snapshot.js — the
+ * top-level surface fields plus the `expiry_views` array. Stored as JSONB so
+ * we don't have to flatten the term-structure shape into columns.
+ */
+export async function writeSkylitStructure({ ticker, fetchedAt, spot, expiration, structure }) {
+  const pool = getPool();
+  if (!pool) return { ok: false, error: 'no DATABASE_URL' };
+  try {
+    await pool.query(
+      `INSERT INTO skylit_structures (ticker, fetched_at, spot, expiration, structure)
+       VALUES ($1, $2, $3, $4, $5::jsonb)
+       ON CONFLICT (ticker, fetched_at) DO UPDATE SET
+         spot = EXCLUDED.spot,
+         expiration = EXCLUDED.expiration,
+         structure = EXCLUDED.structure`,
+      [
+        ticker,
+        fetchedAt instanceof Date ? fetchedAt : new Date(fetchedAt || Date.now()),
+        spot ?? null,
+        expiration ?? null,
+        JSON.stringify(structure),
+      ],
+    );
+    return { ok: true };
+  } catch (e) {
+    log.warn(`writeSkylitStructure failed for ${ticker}: ${e.message}`);
+    return { ok: false, error: e.message };
+  }
+}
+
+/**
  * Graceful shutdown — let connections drain. Called from src/index.js SIGINT
  * handler so a Railway redeploy doesn't leave dangling pool connections.
  */

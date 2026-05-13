@@ -100,10 +100,17 @@ def _run_node_cli(script_rel: str, args: list[str]) -> dict | None:
 def fetch_structure(ticker: str, *, all_expirations: bool = True) -> dict | None:
     """Fresh structural snapshot for `ticker`. 5-min in-process cache.
 
-    With ``all_expirations=True`` (default), the Node script returns the
-    primary near-expiry shape plus an `expiry_views` array spanning every
-    expiration the Heatseeker feed exposes (0DTE → weekly → LEAP). The
-    GexAnalyst uses this to reason about term structure.
+    Lookup order:
+      1. Postgres ``skylit_structures`` table (written by the apps/gex Node
+         scanner — running on Railway as the determined-quietude service OR
+         via the GitHub Actions ``gex-snapshot`` cron). Latest row within a
+         15-min freshness window wins. This is the **only path that works on
+         the API Railway container** since Node isn't installed there.
+      2. Fall back to shelling out to ``scripts/structure-snapshot.js`` if
+         Node is available locally (dev convenience). Silent skip if not.
+
+    Returns None when neither source has data — GexAnalyst handles that as
+    "no Skylit GEX coverage" without fabricating a signal.
     """
     key = ticker.upper()
     cache_key = (key, bool(all_expirations))
@@ -112,12 +119,57 @@ def fetch_structure(ticker: str, *, all_expirations: bool = True) -> dict | None
     if cached and (now - cached[0]) < _STRUCTURE_TTL_S:
         return cached[1]
 
+    # ---- 1. Try Postgres first (production path) ----
+    db_data = _fetch_structure_from_db(key)
+    if db_data is not None:
+        _structure_cache[cache_key] = (now, db_data)
+        return db_data
+
+    # ---- 2. Fall back to Node CLI (local dev path; no-op in API container) ----
     args = [f"--ticker={key}"]
     if all_expirations:
         args.append("--all-expirations")
     data = _run_node_cli("scripts/structure-snapshot.js", args)
     _structure_cache[cache_key] = (now, data)
     return data
+
+
+_DB_FRESHNESS_MIN = 15  # row must be within last N minutes to be useful
+
+
+def _fetch_structure_from_db(ticker: str) -> dict | None:
+    """Read the most recent structure JSON for `ticker` from skylit_structures.
+
+    Returns the row's `structure` payload (same shape as scripts/structure-
+    snapshot.js --all-expirations output) when fresh; None otherwise.
+    """
+    database_url = os.environ.get("DATABASE_URL")
+    if not database_url:
+        return None
+    try:
+        import psycopg
+
+        with psycopg.connect(database_url, connect_timeout=5) as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT structure FROM skylit_structures
+                WHERE ticker = %s
+                  AND fetched_at > NOW() - (%s || ' minutes')::interval
+                ORDER BY fetched_at DESC LIMIT 1
+                """,
+                (ticker, str(_DB_FRESHNESS_MIN)),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            payload = row[0]
+            # psycopg returns jsonb as a dict already; defensive parse just in case.
+            if isinstance(payload, str):
+                payload = json.loads(payload)
+            return payload if isinstance(payload, dict) else None
+    except Exception as e:  # noqa: BLE001 — never fail a run on a Skylit lookup
+        log.debug("skylit DB lookup failed for %s: %s", ticker, e)
+        return None
 
 
 def fetch_trinity(max_age_min: int = 30) -> dict | None:
