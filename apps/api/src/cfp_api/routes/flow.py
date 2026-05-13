@@ -1030,8 +1030,14 @@ async def suggest_plays(
                 GROUP BY option_symbol, type_letter, exp_yymmdd, strike_padded
             ),
             alerts_agg AS (
+                -- Carry strike/expiry/option_type directly from uw_flow_alerts so
+                -- contracts that only have flow data (no oi_change snapshot yet)
+                -- still surface as candidates.
                 SELECT
                     option_chain AS option_symbol,
+                    MAX(option_type)::text AS option_type,
+                    MAX(expiry) AS expiry,
+                    MAX(strike) AS strike,
                     COUNT(*)::int AS alerts_count,
                     SUM(total_premium)::float AS alerts_premium,
                     -- weighted ask-side aggression: sum(ask_pct * prem) / sum(prem)
@@ -1049,18 +1055,26 @@ async def suggest_plays(
                 GROUP BY option_chain
             )
             SELECT
-                oi.option_symbol,
-                oi.option_type, oi.expiry, oi.strike,
-                oi.oi_delta, oi.streak, oi.current_oi,
+                COALESCE(oi.option_symbol, a.option_symbol) AS option_symbol,
+                COALESCE(oi.option_type, a.option_type) AS option_type,
+                COALESCE(oi.expiry, a.expiry) AS expiry,
+                COALESCE(oi.strike, a.strike) AS strike,
+                COALESCE(oi.oi_delta, 0)::bigint AS oi_delta,
+                oi.streak,
+                COALESCE(oi.current_oi, 0)::bigint AS current_oi,
                 COALESCE(a.alerts_count, 0)::int AS alerts_count,
                 COALESCE(a.alerts_premium, 0)::float AS alerts_premium,
                 a.avg_ask_side_pct,
                 a.largest_ticket_ask_pct,
                 COALESCE(a.largest_ticket_premium, 0)::float AS largest_ticket_premium
             FROM oi_agg oi
-            LEFT JOIN alerts_agg a USING (option_symbol)
-            WHERE oi.oi_delta > 0  -- accumulation only (suggestions, not unwinds)
-              AND oi.expiry > CURRENT_DATE  -- skip expired
+            FULL OUTER JOIN alerts_agg a ON oi.option_symbol = a.option_symbol
+            -- Surface a contract if EITHER side has positive evidence:
+            --   * OI accumulating (existing path)
+            --   * Flow alerts with non-trivial premium (new fallback — catches
+            --     big single tickets that haven't had an oi_change snapshot yet)
+            WHERE (COALESCE(oi.oi_delta, 0) > 0 OR COALESCE(a.alerts_premium, 0) >= 250000)
+              AND COALESCE(oi.expiry, a.expiry) > CURRENT_DATE
             """,
             sym,
         )
@@ -1176,6 +1190,12 @@ async def suggest_plays(
         if ensemble_aligned:
             score += 10.0  # ensemble bonus
 
+        # Flow-only candidate: the OI snapshot for this contract hasn't been
+        # ingested yet, but the flow alerts on it are strong. Treat the absence
+        # as a data gap (informational), not a negative signal. Max conviction
+        # caps naturally at ~50 because the OI components zero out.
+        flow_only = (oi_delta == 0 and streak == 0 and n_alerts > 0)
+
         # Build the "why" list — exactly what the UI shows as evidence chips
         why: list[str] = []
         if streak >= 3:
@@ -1192,6 +1212,11 @@ async def suggest_plays(
             why.append(f"${alert_prem / 1e6:.1f}M in flow-alert premium across {n_alerts} alerts")
         if ensemble_aligned:
             why.append(f"{aligned_votes}/{total_voters} ensemble agents agree ({aligned_target})")
+        if flow_only:
+            caveats.append(
+                "OI snapshot not yet ingested for this contract — score reflects flow "
+                "alerts only. Will firm up once daily OI delta data lands."
+            )
         if not why:
             why.append("Sustained OI accumulation only — weak supporting evidence")
 
