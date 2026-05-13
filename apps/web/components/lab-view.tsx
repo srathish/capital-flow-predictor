@@ -64,37 +64,85 @@ function CalibrationLine({ data }: { data: CalibrationResponse | null }) {
   );
 }
 
+function ageHours(iso: string | null): number | null {
+  if (!iso) return null;
+  const ts = new Date(iso).getTime();
+  if (Number.isNaN(ts)) return null;
+  return (Date.now() - ts) / 3600_000;
+}
+
+function ageBadge(hours: number | null): { text: string; cls: string } {
+  if (hours === null) return { text: "—", cls: "text-muted-foreground" };
+  if (hours < 24) return { text: `${hours.toFixed(0)}h`, cls: "text-green-300" };
+  if (hours < 48) return { text: `${hours.toFixed(0)}h`, cls: "text-amber-300" };
+  const days = (hours / 24).toFixed(0);
+  return { text: `${days}d`, cls: "text-rose-300" };
+}
+
 function OpportunityScreener() {
   const [items, setItems] = useState<StockScreenItem[] | null>(null);
   const [calib, setCalib] = useState<CalibrationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastFetch, setLastFetch] = useState<Date | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [rerunBusy, setRerunBusy] = useState<Set<string>>(new Set());
+
+  async function fetchAll(silent = false) {
+    if (!silent) setRefreshing(true);
+    try {
+      const [res, cal] = await Promise.all([
+        api.screenStocks({
+          signal: "long",
+          minConfidence: 0.5,
+          limit: 25,
+          sort: "opportunity",
+          lookbackDays: 60,
+        }),
+        api.screenerCalibration({ days: 90, horizon: 10 }).catch(() => null),
+      ]);
+      setItems(res.items);
+      setCalib(cal);
+      setLastFetch(new Date());
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "load failed");
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const [res, cal] = await Promise.all([
-          api.screenStocks({
-            signal: "long",
-            minConfidence: 0.5,
-            limit: 25,
-            sort: "opportunity",
-            lookbackDays: 60,
-          }),
-          api.screenerCalibration({ days: 90, horizon: 10 }).catch(() => null),
-        ]);
-        if (!cancelled) {
-          setItems(res.items);
-          setCalib(cal);
-        }
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "load failed");
-      }
-    })();
+    fetchAll();
+    // Poll every 60s while the tab is open. Browser pauses requestAnimationFrame
+    // on background tabs; setInterval continues but the fetches will be cheap.
+    const id = setInterval(() => fetchAll(true), 60_000);
+    const onFocus = () => fetchAll(true);
+    window.addEventListener("focus", onFocus);
     return () => {
-      cancelled = true;
+      clearInterval(id);
+      window.removeEventListener("focus", onFocus);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function rerun(ticker: string, sector: string | null) {
+    setRerunBusy((s) => new Set(s).add(ticker));
+    try {
+      await api.runEnsemble(ticker, sector ?? undefined);
+      // Let the run land (typical 30-90s) then refetch — until then the row's
+      // age column will still show the old value. Could poll the run-status
+      // endpoint, but a single delayed refetch is simpler.
+      setTimeout(() => fetchAll(true), 60_000);
+    } catch (e) {
+      setError(`re-run ${ticker} failed: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setRerunBusy((s) => {
+        const n = new Set(s);
+        n.delete(ticker);
+        return n;
+      });
+    }
+  }
 
   return (
     <div className="rounded-lg border border-border bg-card p-4">
@@ -102,6 +150,12 @@ function OpportunityScreener() {
         <h3 className="text-base font-medium">Opportunity score · top 25 (long, conf ≥ 0.50)</h3>
         <span className="text-xs text-muted-foreground">
           0–100 composite · conviction + IV rank + liquidity + sector + earnings
+          {lastFetch && (
+            <span className="ml-2 text-[10px]">
+              · refreshes every 60s · last {lastFetch.toLocaleTimeString()}
+              {refreshing && " · …"}
+            </span>
+          )}
         </span>
       </div>
       <div className="mb-3 rounded border border-border/40 bg-muted/20 p-2">
@@ -128,11 +182,16 @@ function OpportunityScreener() {
                 <th className="px-2 py-1 text-right">OI</th>
                 <th className="px-2 py-1 text-right">Sector</th>
                 <th className="px-2 py-1 text-right">Earn</th>
+                <th className="px-2 py-1 text-right">Age</th>
+                <th className="px-2 py-1 text-right">Re-run</th>
               </tr>
             </thead>
             <tbody>
               {items.map((it, i) => {
                 const b = it.opportunity_breakdown ?? {};
+                const age = ageHours(it.run_ts);
+                const badge = ageBadge(age);
+                const busy = rerunBusy.has(it.ticker);
                 return (
                   <tr key={it.ticker} className="border-t border-border/40">
                     <td className="px-2 py-1 text-muted-foreground">{i + 1}</td>
@@ -148,6 +207,18 @@ function OpportunityScreener() {
                     <td className="px-2 py-1 text-right">{b.liquidity?.toFixed(1) ?? "—"}</td>
                     <td className="px-2 py-1 text-right">{b.sector_strength?.toFixed(1) ?? "—"}</td>
                     <td className="px-2 py-1 text-right">{b.earnings_window?.toFixed(1) ?? "—"}</td>
+                    <td className={`px-2 py-1 text-right font-mono ${badge.cls}`}>{badge.text}</td>
+                    <td className="px-2 py-1 text-right">
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => rerun(it.ticker, it.sector)}
+                        className="rounded border border-border/60 px-1.5 py-0.5 text-[10px] text-muted-foreground hover:text-foreground disabled:opacity-50"
+                        title="Kick off a fresh ensemble run for this ticker"
+                      >
+                        {busy ? "…" : "↻"}
+                      </button>
+                    </td>
                   </tr>
                 );
               })}

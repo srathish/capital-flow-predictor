@@ -551,6 +551,7 @@ async def screen_stocks(
                 composite_score=float(r["composite_score"] or 0.0),
                 opportunity_score=opp_score,
                 opportunity_breakdown=opp_breakdown,
+                run_ts=r["pm_run_ts"],
                 rationale=r["rationale"],
                 has_agent_verdict=has_verdict,
             )

@@ -713,6 +713,7 @@ export type StockScreenItem = {
   composite_score: number;
   opportunity_score: number | null;
   opportunity_breakdown: Record<string, number> | null;
+  run_ts: string | null;
   rationale: string | null;
   has_agent_verdict: boolean;
 };

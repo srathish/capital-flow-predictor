@@ -136,6 +136,9 @@ class StockScreenItem(BaseModel):
     # Breakdown lives in `opportunity_breakdown` so the UI can show "why" tooltips.
     opportunity_score: float | None = None
     opportunity_breakdown: dict[str, float] | None = None
+    # Latest PM run_ts for this ticker. None when ticker came from Finviz with no
+    # agent verdict. UI uses this to render a freshness badge / age_hours.
+    run_ts: datetime | None = None
     rationale: str | None = None
     has_agent_verdict: bool = True  # False when ticker came from Finviz with no recent PM run
 

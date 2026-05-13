@@ -40,6 +40,8 @@ on:
     - cron: "0 7 * * 0"
     # 09:00 ET (= 13:00 UTC) weekdays — pre-market brief.
     - cron: "0 13 * * 1-5"
+    # 06:00 ET (= 10:00 UTC) weekdays — catalyst-triggered ensemble re-runs.
+    - cron: "0 10 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -60,6 +62,7 @@ on:
           - flow-universe
           - flow-volatility
           - morning-brief
+          - ensemble-rerun-stale
 
 jobs:
   reddit-catalysts:
@@ -175,6 +178,33 @@ jobs:
       - name: Build + post pre-market brief
         working-directory: apps/jobs
         run: uv run cfp-jobs morning-brief
+
+  ensemble-rerun-stale:
+    # Catalyst-triggered ensemble re-runs. Picks tickers from custom watchlists +
+    # big flow + insider buys + earnings tomorrow + stale PM signals. Cap of
+    # 30 per run keeps Anthropic spend bounded (~$4.50/day Sonnet, ~$0.50 Kimi).
+    # Runs 06:00 ET (10:00 UTC) weekdays so the screener is fresh at market open.
+    if: github.event.schedule == '0 10 * * 1-5' || github.event.inputs.job == 'ensemble-rerun-stale'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      MOONSHOT_API_KEY: ${{ secrets.MOONSHOT_API_KEY }}
+      LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+      FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Re-run ensemble on stale + catalyst-flagged tickers
+        working-directory: apps/jobs
+        run: uv run cfp-jobs ensemble-rerun-stale --max-tickers 30
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the

@@ -28,6 +28,7 @@ from rich.table import Table  # noqa: E402
 from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
+from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
 from cfp_jobs import train as train_mod  # noqa: E402
 from cfp_jobs import watchlist as watchlist_mod  # noqa: E402
 from cfp_jobs.db import to_psycopg_url  # noqa: E402
@@ -842,6 +843,35 @@ def status() -> None:
     for tbl, rows, latest, keys in results:
         table.add_row(tbl, f"{rows:,}", str(latest or "—"), str(keys))
     console.print(table)
+
+
+@app.command("ensemble-rerun-stale")
+def ensemble_rerun_stale_cmd(
+    max_tickers: int = typer.Option(30, help="Cap on how many tickers to re-analyze."),
+    flow_premium: float = typer.Option(1_000_000.0, help="Min $ premium for flow-alert inclusion."),
+    stale_hours: int = typer.Option(48, help="Re-include tickers whose latest PM run is older than this."),
+    dry_run: bool = typer.Option(False, help="Pick candidates and print, but do not run the ensemble."),
+) -> None:
+    """Catalyst-triggered ensemble re-runs.
+
+    Picks tickers worth analyzing today (custom watchlist + big flow + insider
+    buys + earnings tomorrow + stale PM signals), dedups, caps, and runs the
+    ensemble on each. Designed for the daily 06:00 ET cron — cheap enough
+    that the screener stays fresh without scanning a fixed universe.
+    """
+    summary = rerun_stale_mod.run(
+        settings.database_url,
+        max_tickers=max_tickers,
+        flow_premium_threshold=flow_premium,
+        stale_hours=stale_hours,
+        dry_run=dry_run,
+    )
+    console.print(f"sources: {summary['sources']}")
+    console.print(f"queue ({len(summary['queue'])}): {[q['ticker'] for q in summary['queue']]}")
+    if not dry_run:
+        console.print(f"ran ok: {len(summary['ran'])}  failed: {len(summary['failed'])}")
+        for f in summary["failed"]:
+            console.print(f"  ✗ {f['ticker']}: {f['error']}")
 
 
 @app.command("morning-brief")
