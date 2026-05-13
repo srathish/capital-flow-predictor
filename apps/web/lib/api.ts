@@ -11,6 +11,7 @@ import type {
   ExpandedSectorResponse,
   CalibrationResponse,
   FlowAggregateResponse,
+  FlowSuggestedPlaysResponse,
   PersonaComparisonResponse,
   ReplayResponse,
   FlowParams,
@@ -289,6 +290,11 @@ export const api = {
     // Server defaults to days=730 (~"all data we have"). No window param needed.
     return getJson<FlowAggregateResponse>(
       `/v1/flow/aggregate/${encodeURIComponent(ticker)}`,
+    );
+  },
+  flowSuggestPlays(ticker: string, n = 3): Promise<FlowSuggestedPlaysResponse> {
+    return getJson<FlowSuggestedPlaysResponse>(
+      `/v1/flow/aggregate/${encodeURIComponent(ticker)}/suggest?n=${n}`,
     );
   },
   screenerCalibration(params: { days?: number; horizon?: 5 | 10 | 20 | 60 } = {}): Promise<CalibrationResponse> {

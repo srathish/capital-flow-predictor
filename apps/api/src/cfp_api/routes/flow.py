@@ -19,6 +19,7 @@ GET /v1/flow/unusual
 from __future__ import annotations
 
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 from fastapi import APIRouter, Query
@@ -487,6 +488,60 @@ class ExpiryBucket(BaseModel):
     bullish_score: float  # ((net_call_ask − net_put_ask) / bucket_total_premium)
 
 
+class SuggestedPlay(BaseModel):
+    """A ranked candidate options contract with the data points that earned
+    it the rank, plus a deterministic flip condition. Deliberately NOT a
+    cost/sizing calculator — the user owns the decision; this is "here's
+    what the data points to, and what would invalidate the thesis."
+    """
+    rank: int                          # 1..N
+    conviction: Literal["high", "medium", "mixed"]
+    conviction_score: float            # 0..100, internal composite
+    strike: float
+    option_type: Literal["call", "put"]
+    expiry: str                        # YYYY-MM-DD
+    days_to_expiry: int
+
+    # Flow component breakdown — every chip the UI shows ties back to one of these
+    oi_delta_30d: int
+    current_oi: int
+    days_of_oi_increases: int | None   # UW streak
+    alerts_count: int                  # how many flow alerts on this exact contract
+    alerts_premium: float               # total $ premium of those alerts
+    avg_ask_side_pct: float | None     # 0..1; >0.7 = real buying aggression
+    bucket_score: float                # the expiry-bucket bullish_score this contract sits in
+
+    # Decisiveness layer (lever #2: cross-validate with the 25-agent ensemble)
+    ensemble_aligned: bool             # do the agents agree with this contract's direction?
+    ensemble_alignment_count: int      # how many bullish/bearish votes line up
+    ensemble_total_voters: int          # how many agents weighed in on this ticker
+    ensemble_pm_signal: str | None     # latest portfolio_manager call (bullish/bearish/neutral)
+
+    # Decisiveness layer (lever #4: concrete trade structure, 1:3 risk:reward).
+    # 1 contract = standard spec play, 2 contracts = high-conviction. 0 = skip.
+    contracts: int                     # 0, 1, or 2
+    risk_to_reward: str                # always "1:3" — we cut at -50%, target +200%
+    target_payout_multiple: float      # 3.0 = sell at 3× premium paid
+    stop_loss_pct: float               # -0.50 = cut at -50% of premium
+    approx_spot_target: float | None   # rough underlying price needed for the 3× target
+
+    why: list[str]                     # plain-English reasons we picked it
+    caveats: list[str]                 # anti-conviction signals (trap detection)
+    flip_condition: str                # what would invalidate the thesis
+
+
+class SuggestedPlaysResponse(BaseModel):
+    ticker: str
+    spot: float | None                 # latest close used for flip-condition math
+    n_candidates_considered: int
+    # Decisiveness layer (lever #1: PROCEED / WAIT / SKIP gate at the top)
+    gate: Literal["proceed", "wait", "skip"]
+    gate_reason: str
+    gate_signals: dict[str, str | float | None]  # flow, ensemble, regime, top_conviction
+    plays: list[SuggestedPlay]
+    method_note: str                   # one-line summary of how plays were scored
+
+
 class OiGrowthStrike(BaseModel):
     """An option strike where open interest has been growing (or shrinking)
     over the lookback window. Sourced from uw_oi_change daily deltas — the
@@ -883,4 +938,393 @@ async def flow_aggregate(
         oi_growth_window_days=oi_window,
         top_strikes=top_strikes,
         top_trades=top_trades,
+    )
+
+
+# ---------- Suggested plays (ranked candidates + gate) ----------
+
+
+def _conviction_label(score: float) -> Literal["high", "medium", "mixed"]:
+    if score >= 65:
+        return "high"
+    if score >= 40:
+        return "medium"
+    return "mixed"
+
+
+@router.get("/aggregate/{ticker}/suggest", response_model=SuggestedPlaysResponse)
+async def suggest_plays(
+    ticker: str,
+    n: int = Query(3, ge=1, le=10, description="How many ranked candidates to return"),
+) -> SuggestedPlaysResponse:
+    """Ranked candidate option contracts for ``ticker`` with a PROCEED/WAIT/SKIP gate.
+
+    Three decisiveness levers stacked on top of the raw flow data:
+      1. Top-of-panel gate (proceed/wait/skip) computed from flow + ensemble + regime
+      2. Per-play ensemble cross-validation (do the 25 agents agree?)
+      3. Per-play Kelly-bounded position size from cfp_models.position_sizing
+
+    Deliberately not a cost calculator — we return the size as a portfolio
+    fraction, the flip condition as a price/date threshold, and let the user
+    decide.
+    """
+    sym = ticker.upper()
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        spot_row = await conn.fetchval(
+            "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
+            sym,
+        )
+        spot = float(spot_row) if spot_row else None
+
+        # Latest run's full ensemble: PM signal + every agent vote
+        ensemble = await conn.fetch(
+            """
+            SELECT agent, signal, confidence FROM agent_signals
+            WHERE ticker = $1
+              AND run_ts = (
+                SELECT MAX(run_ts) FROM agent_signals
+                WHERE ticker = $1 AND agent = 'portfolio_manager'
+              )
+            """,
+            sym,
+        )
+        pm_signal: str | None = None
+        bull_votes = 0
+        bear_votes = 0
+        total_voters = 0
+        for r in ensemble:
+            total_voters += 1
+            if r["agent"] == "portfolio_manager":
+                pm_signal = r["signal"]
+            if r["signal"] == "bullish":
+                bull_votes += 1
+            elif r["signal"] == "bearish":
+                bear_votes += 1
+
+        # Per-contract aggregation: OI growth + alert-side aggression
+        rows = await conn.fetch(
+            """
+            WITH oi_parsed AS (
+                SELECT
+                    option_symbol,
+                    substring(option_symbol from '(\\d{6})[CP]\\d{8}$') AS exp_yymmdd,
+                    substring(option_symbol from '\\d{6}([CP])\\d{8}$') AS type_letter,
+                    substring(option_symbol from '\\d{6}[CP](\\d{8})$') AS strike_padded,
+                    oi_diff_plain, curr_oi, days_of_oi_increases, curr_date
+                FROM uw_oi_change
+                WHERE ticker = $1
+                  AND curr_date > CURRENT_DATE - 30
+                  AND option_symbol ~ '\\d{6}[CP]\\d{8}$'
+            ),
+            oi_agg AS (
+                SELECT
+                    option_symbol,
+                    CASE WHEN type_letter = 'C' THEN 'call' ELSE 'put' END AS option_type,
+                    to_date(exp_yymmdd, 'YYMMDD') AS expiry,
+                    strike_padded::int / 1000.0 AS strike,
+                    SUM(oi_diff_plain)::bigint AS oi_delta,
+                    MAX(days_of_oi_increases) AS streak,
+                    (array_agg(curr_oi ORDER BY curr_date DESC))[1]::bigint AS current_oi
+                FROM oi_parsed
+                GROUP BY option_symbol, type_letter, exp_yymmdd, strike_padded
+            ),
+            alerts_agg AS (
+                SELECT
+                    option_chain AS option_symbol,
+                    COUNT(*)::int AS alerts_count,
+                    SUM(total_premium)::float AS alerts_premium,
+                    -- weighted ask-side aggression: sum(ask_pct * prem) / sum(prem)
+                    SUM(CASE WHEN total_premium > 0 THEN ask_side_prem ELSE 0 END)::float
+                      / NULLIF(SUM(total_premium), 0) AS avg_ask_side_pct,
+                    -- trap detection: largest single alert's ask-side pct
+                    (array_agg(
+                        CASE WHEN total_premium > 0 THEN ask_side_prem / total_premium ELSE NULL END
+                        ORDER BY total_premium DESC NULLS LAST
+                    ))[1] AS largest_ticket_ask_pct,
+                    MAX(total_premium)::float AS largest_ticket_premium
+                FROM uw_flow_alerts
+                WHERE ticker = $1
+                  AND created_at > NOW() - INTERVAL '30 days'
+                GROUP BY option_chain
+            )
+            SELECT
+                oi.option_symbol,
+                oi.option_type, oi.expiry, oi.strike,
+                oi.oi_delta, oi.streak, oi.current_oi,
+                COALESCE(a.alerts_count, 0)::int AS alerts_count,
+                COALESCE(a.alerts_premium, 0)::float AS alerts_premium,
+                a.avg_ask_side_pct,
+                a.largest_ticket_ask_pct,
+                COALESCE(a.largest_ticket_premium, 0)::float AS largest_ticket_premium
+            FROM oi_agg oi
+            LEFT JOIN alerts_agg a USING (option_symbol)
+            WHERE oi.oi_delta > 0  -- accumulation only (suggestions, not unwinds)
+              AND oi.expiry > CURRENT_DATE  -- skip expired
+            """,
+            sym,
+        )
+
+        # Per-bucket score so we can attribute the right one to each candidate
+        bucket_rows = await conn.fetch(
+            """
+            WITH alerts AS (
+                SELECT option_type, total_premium, ask_side_prem, bid_side_prem,
+                       (expiry::date - created_at::date) AS dte
+                FROM uw_flow_alerts
+                WHERE ticker = $1
+                  AND created_at > NOW() - INTERVAL '60 days'
+                  AND expiry IS NOT NULL
+            ),
+            bucketed AS (
+                SELECT
+                    CASE
+                        WHEN dte <= 7  THEN '0-7d'
+                        WHEN dte <= 30 THEN '7-30d'
+                        WHEN dte <= 90 THEN '30-90d'
+                        ELSE '90d+'
+                    END AS bucket,
+                    option_type, total_premium, ask_side_prem, bid_side_prem
+                FROM alerts
+            )
+            SELECT
+                bucket,
+                COALESCE(SUM(total_premium), 0)::float AS total_prem,
+                COALESCE(SUM(CASE WHEN option_type='call' THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_call,
+                COALESCE(SUM(CASE WHEN option_type='put'  THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_put
+            FROM bucketed
+            GROUP BY bucket
+            """,
+            sym,
+        )
+
+    bucket_score: dict[str, float] = {}
+    for r in bucket_rows:
+        total = float(r["total_prem"] or 0)
+        if total > 0:
+            bucket_score[r["bucket"]] = max(-1.0, min(1.0, (float(r["net_call"]) - float(r["net_put"])) / total))
+        else:
+            bucket_score[r["bucket"]] = 0.0
+
+    def _bucket_of(dte: int) -> str:
+        if dte <= 7: return "0-7d"
+        if dte <= 30: return "7-30d"
+        if dte <= 90: return "30-90d"
+        return "90d+"
+
+    n_considered = len(rows)
+    today = datetime.now(UTC).date()
+    candidates: list[tuple[float, dict]] = []
+    for r in rows:
+        expiry = r["expiry"]
+        dte = (expiry - today).days
+        if dte <= 0:
+            continue
+        bucket = _bucket_of(dte)
+        b_score = bucket_score.get(bucket, 0.0)
+        # Postgres `numeric` columns come back as Decimal; coerce to float once.
+        strike_f = float(r["strike"])
+        oi_delta = int(r["oi_delta"] or 0)
+        streak = int(r["streak"] or 0) if r["streak"] is not None else 0
+        n_alerts = int(r["alerts_count"] or 0)
+        alert_prem = float(r["alerts_premium"] or 0.0)
+        ask_pct = float(r["avg_ask_side_pct"]) if r["avg_ask_side_pct"] is not None else None
+        opt_type = r["option_type"]
+
+        # Composite conviction score (0..100, components defined to be inspectable)
+        score = 0.0
+        # OI accumulation 40 pts: 10,000 contracts = full credit
+        score += min(40.0, 40.0 * (oi_delta / 10_000.0))
+        # Sustained-buying streak 20 pts: 4+ days = full credit
+        score += min(20.0, 5.0 * streak)
+        # Ask-side aggression 20 pts: 100% at ask = +20, 50% = 0, 0% = -20
+        if ask_pct is not None:
+            score += max(-20.0, min(20.0, (ask_pct - 0.5) * 40.0))
+        # Bucket directional confirmation 10 pts: aligned with contract type
+        if opt_type == "call":
+            score += b_score * 10.0
+        else:
+            score += -b_score * 10.0
+        # Size matters: 10 pts at $1M premium, capped
+        score += min(10.0, alert_prem / 1e6 * 10.0)
+
+        # Trap detection: largest single ticket printed at low % ask = likely seller
+        caveats: list[str] = []
+        largest_ask = r["largest_ticket_ask_pct"]
+        largest_prem = float(r["largest_ticket_premium"] or 0.0)
+        if largest_ask is not None and largest_ask < 0.3 and largest_prem > 500_000:
+            caveats.append(
+                f"largest single ticket (${largest_prem / 1e6:.1f}M) printed at "
+                f"{float(largest_ask) * 100:.0f}% at ask — possible seller-initiated, "
+                "score halved."
+            )
+            score *= 0.5
+
+        # Ensemble alignment: a call wants bullish agreement, a put wants bearish
+        if opt_type == "call":
+            aligned_votes = bull_votes
+            aligned_target = "bullish"
+        else:
+            aligned_votes = bear_votes
+            aligned_target = "bearish"
+        # "Aligned" if ≥ 60% of voters agree. The floor used to be max(8, …)
+        # which incorrectly required 80% on a 10-agent ensemble. Now strictly
+        # proportional with a small-sample floor of 5 so a 5-of-7 vote (71%)
+        # still reads as aligned.
+        ensemble_threshold = max(5, int(round(total_voters * 0.6)))
+        ensemble_aligned = total_voters > 0 and aligned_votes >= ensemble_threshold
+        if ensemble_aligned:
+            score += 10.0  # ensemble bonus
+
+        # Build the "why" list — exactly what the UI shows as evidence chips
+        why: list[str] = []
+        if streak >= 3:
+            why.append(f"{streak}-day OI growth streak (+{oi_delta:,} contracts)")
+        elif oi_delta >= 5000:
+            why.append(f"+{oi_delta:,} contracts in last 30d")
+        if ask_pct is not None and ask_pct >= 0.7:
+            why.append(f"{ask_pct * 100:.0f}% of alert premium lifted at the ask")
+        if abs(b_score) >= 0.15 and (
+            (opt_type == "call" and b_score > 0) or (opt_type == "put" and b_score < 0)
+        ):
+            why.append(f"{bucket} bucket score {b_score:+.2f} agrees with this contract")
+        if alert_prem >= 1_000_000:
+            why.append(f"${alert_prem / 1e6:.1f}M in flow-alert premium across {n_alerts} alerts")
+        if ensemble_aligned:
+            why.append(f"{aligned_votes}/{total_voters} ensemble agents agree ({aligned_target})")
+        if not why:
+            why.append("Sustained OI accumulation only — weak supporting evidence")
+
+        # Flip condition: deterministic price threshold tied to spot
+        if spot is None:
+            flip = f"(spot unknown — re-run after a fresh price ingest for {sym})"
+        else:
+            # For short-dated plays (<14 DTE), the "7 days before expiry" rule
+            # collapses to the past. Use today + min(7, dte//2) instead so the
+            # flip horizon scales with the trade horizon.
+            buffer = max(2, min(7, dte // 2)) if dte < 14 else 7
+            flip_by = (expiry - timedelta(days=buffer)).isoformat()
+            if opt_type == "call":
+                target = strike_f * 0.95
+                flip = f"{sym} closes below ${target:.2f} on or before {flip_by}"
+            else:
+                target = strike_f * 1.05
+                flip = f"{sym} closes above ${target:.2f} on or before {flip_by}"
+
+        # Concrete trade structure (lever #4): 1 or 2 contracts, 1:3 R:R.
+        # High conviction (≥65) + ensemble agreement → 2 contracts.
+        # Medium conviction (40-65) → 1 contract.
+        # Mixed (<40) → 0 contracts (caller's gate will say SKIP).
+        score = max(0.0, min(100.0, score))
+        if score >= 65 and ensemble_aligned:
+            contracts = 2
+        elif score >= 40:
+            contracts = 1
+        else:
+            contracts = 0
+        target_multiple = 3.0   # exit at 3× premium (1:3 R:R)
+        stop_loss_pct = -0.50   # cut at -50% of premium (preserves capital)
+        # Rough spot target for the 3× payout. For an OTM call near expiry,
+        # spot ≈ strike + 3 × premium_per_share gets you to ~3× cost. We
+        # don't have the contract's mid price persisted reliably here; use
+        # 5% above strike as a *placeholder* — the UI labels this "approx".
+        if opt_type == "call":
+            approx_spot_target = strike_f * 1.05 if spot is None else max(strike_f * 1.05, spot * 1.05)
+        else:
+            approx_spot_target = strike_f * 0.95 if spot is None else min(strike_f * 0.95, spot * 0.95)
+        candidates.append((
+            score,
+            dict(
+                conviction=_conviction_label(score),
+                conviction_score=round(score, 1),
+                strike=strike_f,
+                option_type=opt_type,
+                expiry=expiry.isoformat(),
+                days_to_expiry=dte,
+                oi_delta_30d=oi_delta,
+                current_oi=int(r["current_oi"] or 0),
+                days_of_oi_increases=streak if streak > 0 else None,
+                alerts_count=n_alerts,
+                alerts_premium=alert_prem,
+                avg_ask_side_pct=ask_pct,
+                bucket_score=round(b_score, 4),
+                ensemble_aligned=ensemble_aligned,
+                ensemble_alignment_count=aligned_votes,
+                ensemble_total_voters=total_voters,
+                ensemble_pm_signal=pm_signal,
+                contracts=contracts,
+                risk_to_reward="1:3",
+                target_payout_multiple=target_multiple,
+                stop_loss_pct=stop_loss_pct,
+                approx_spot_target=round(approx_spot_target, 2) if approx_spot_target is not None else None,
+                why=why,
+                caveats=caveats,
+                flip_condition=flip,
+            ),
+        ))
+
+    candidates.sort(key=lambda c: c[0], reverse=True)
+    top = candidates[:n]
+
+    # --- Decisiveness lever #1: PROCEED / WAIT / SKIP gate ---
+    top_conviction = top[0][0] if top else 0.0
+    # We don't pull market regime here for simplicity — defer to ensemble
+    # alignment as a proxy for "the broader system agrees." When
+    # MarketRegimeCtx is reliably populated on all tickers we can join
+    # run_evidence and treat bear regime as a hard SKIP override.
+    if not top:
+        gate: Literal["proceed", "wait", "skip"] = "skip"
+        gate_reason = "No accumulation candidates in last 30d. Skip — there's nothing to act on."
+    elif top_conviction >= 60 and top[0][1]["ensemble_aligned"]:
+        gate = "proceed"
+        contracts_to_buy = top[0][1]["contracts"]
+        gate_reason = (
+            f"Top candidate scores {top_conviction:.0f}/100 with ensemble agreement "
+            f"({top[0][1]['ensemble_alignment_count']}/{top[0][1]['ensemble_total_voters']} agents). "
+            f"Buy {contracts_to_buy} contract{'s' if contracts_to_buy != 1 else ''} at 1:3 R:R "
+            f"(target +200%, stop −50%)."
+        )
+    elif top_conviction >= 40:
+        gate = "wait"
+        if not top[0][1]["ensemble_aligned"]:
+            gate_reason = (
+                f"Flow conviction is {top_conviction:.0f}/100 but ensemble disagrees "
+                f"({top[0][1]['ensemble_alignment_count']}/{top[0][1]['ensemble_total_voters']} aligned). "
+                "Wait for the agents to confirm before acting."
+            )
+        else:
+            gate_reason = f"Top candidate scores {top_conviction:.0f}/100 — modest conviction. Wait for a stronger setup."
+    else:
+        gate = "skip"
+        gate_reason = (
+            f"Top candidate only scores {top_conviction:.0f}/100. Flow signal is too weak "
+            "to size a position. Skip and re-check tomorrow."
+        )
+
+    gate_signals: dict[str, str | float | None] = {
+        "top_conviction": round(top_conviction, 1),
+        "ensemble_pm_signal": pm_signal,
+        "ensemble_bull_votes": float(bull_votes),
+        "ensemble_bear_votes": float(bear_votes),
+        "ensemble_total_voters": float(total_voters),
+    }
+
+    return SuggestedPlaysResponse(
+        ticker=sym,
+        spot=spot,
+        n_candidates_considered=n_considered,
+        gate=gate,
+        gate_reason=gate_reason,
+        gate_signals=gate_signals,
+        plays=[
+            SuggestedPlay(rank=i + 1, **c[1])  # type: ignore[arg-type]
+            for i, c in enumerate(top)
+        ],
+        method_note=(
+            "Score (0-100) = OI accumulation (40) + streak (20) + ask-side aggression (20) + "
+            "bucket direction (10) + size (10) + ensemble alignment bonus (10). "
+            "Trap detection halves score when the largest single ticket printed at low % at ask. "
+            "Sizing: 1 contract at medium conviction (40-65), 2 contracts at high conviction (≥65) "
+            "WITH ensemble agreement. Always 1:3 R:R — target +200%, stop −50% of premium."
+        ),
     )

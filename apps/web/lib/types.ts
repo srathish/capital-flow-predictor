@@ -768,6 +768,46 @@ export type FlowTopTrade = {
   option_chain: string | null;
 };
 
+export type FlowSuggestedPlay = {
+  rank: number;
+  conviction: "high" | "medium" | "mixed";
+  conviction_score: number;
+  strike: number;
+  option_type: "call" | "put";
+  expiry: string;
+  days_to_expiry: number;
+  oi_delta_30d: number;
+  current_oi: number;
+  days_of_oi_increases: number | null;
+  alerts_count: number;
+  alerts_premium: number;
+  avg_ask_side_pct: number | null;
+  bucket_score: number;
+  ensemble_aligned: boolean;
+  ensemble_alignment_count: number;
+  ensemble_total_voters: number;
+  ensemble_pm_signal: string | null;
+  contracts: number;
+  risk_to_reward: string;
+  target_payout_multiple: number;
+  stop_loss_pct: number;
+  approx_spot_target: number | null;
+  why: string[];
+  caveats: string[];
+  flip_condition: string;
+};
+
+export type FlowSuggestedPlaysResponse = {
+  ticker: string;
+  spot: number | null;
+  n_candidates_considered: number;
+  gate: "proceed" | "wait" | "skip";
+  gate_reason: string;
+  gate_signals: Record<string, string | number | null>;
+  plays: FlowSuggestedPlay[];
+  method_note: string;
+};
+
 export type FlowOiGrowthStrike = {
   strike: number;
   option_type: "call" | "put";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
-import type { FlowAggregateResponse } from "@/lib/types";
+import type { FlowAggregateResponse, FlowSuggestedPlaysResponse } from "@/lib/types";
 
 // Per-ticker UW flow aggregator. Pulls every alert we've ingested for the
 // ticker (no time-window dropdown — the server defaults to days=730 which
@@ -27,15 +27,21 @@ function fmtUsd(n: number, digits = 2): string {
 export function FlowAggregatePanel() {
   const [ticker, setTicker] = useState("NVDA");
   const [data, setData] = useState<FlowAggregateResponse | null>(null);
+  const [suggest, setSuggest] = useState<FlowSuggestedPlaysResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function go() {
     setLoading(true);
     setError(null);
+    const sym = ticker.trim().toUpperCase();
     try {
-      const res = await api.flowAggregate(ticker.trim().toUpperCase());
-      setData(res);
+      const [agg, sug] = await Promise.all([
+        api.flowAggregate(sym),
+        api.flowSuggestPlays(sym, 3).catch(() => null),
+      ]);
+      setData(agg);
+      setSuggest(sug);
     } catch (e) {
       setError(e instanceof Error ? e.message : "load failed");
     } finally {
@@ -96,6 +102,8 @@ export function FlowAggregatePanel() {
             </div>
             <p className="text-xs">{data.verdict_reason}</p>
           </div>
+
+          {suggest && <SuggestedPlaysBlock data={suggest} />}
 
           <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
             <div className="rounded border border-border/50 p-2">
@@ -349,6 +357,134 @@ export function FlowAggregatePanel() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+
+// ---------- Suggested Plays (PROCEED/WAIT/SKIP gate + ranked candidates) ----------
+
+
+function SuggestedPlaysBlock({ data }: { data: FlowSuggestedPlaysResponse }) {
+  const gateCls =
+    data.gate === "proceed"
+      ? "border-green-600 bg-green-950/50 text-green-200"
+      : data.gate === "skip"
+        ? "border-rose-700 bg-rose-950/50 text-rose-200"
+        : "border-amber-600 bg-amber-950/40 text-amber-200";
+  const gateLabel = data.gate.toUpperCase();
+
+  return (
+    <div className="space-y-3">
+      {/* Top-of-section verdict gate */}
+      <div className={`rounded border px-3 py-2 ${gateCls}`}>
+        <div className="mb-1 flex items-center justify-between">
+          <span className="text-xs font-semibold uppercase tracking-wider">
+            Suggested action · {gateLabel}
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wide">
+            spot {data.spot ? `$${data.spot.toFixed(2)}` : "—"} · {data.n_candidates_considered} candidates considered
+          </span>
+        </div>
+        <p className="text-xs">{data.gate_reason}</p>
+      </div>
+
+      {data.plays.length > 0 && (
+        <div className="space-y-2">
+          {data.plays.map((p) => {
+            const convictionCls =
+              p.conviction === "high"
+                ? "bg-green-900/40 text-green-200 border-green-700"
+                : p.conviction === "medium"
+                  ? "bg-amber-900/30 text-amber-200 border-amber-700/60"
+                  : "bg-muted/40 text-muted-foreground border-border";
+            const sideCls = p.option_type === "call" ? "text-green-300" : "text-rose-300";
+            return (
+              <div
+                key={`${p.rank}-${p.strike}-${p.option_type}-${p.expiry}`}
+                className="rounded border border-border/60 p-3"
+              >
+                <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-base font-semibold">
+                      #{p.rank} · ${p.strike.toFixed(2)}{" "}
+                      <span className={`uppercase ${sideCls}`}>{p.option_type}</span>{" "}
+                      <span className="font-mono text-xs text-muted-foreground">
+                        exp {p.expiry} ({p.days_to_expiry}d)
+                      </span>
+                    </span>
+                  </div>
+                  <span
+                    className={`rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${convictionCls}`}
+                  >
+                    {p.conviction} · {p.conviction_score.toFixed(0)}/100
+                  </span>
+                </div>
+
+                {/* Trade structure line — the actionable summary */}
+                <div className="mb-2 grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">Contracts</div>
+                    <div className="font-mono text-sm">{p.contracts}</div>
+                  </div>
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">R:R</div>
+                    <div className="font-mono text-sm">{p.risk_to_reward}</div>
+                  </div>
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">Target / stop</div>
+                    <div className="font-mono text-sm">
+                      +{((p.target_payout_multiple - 1) * 100).toFixed(0)}% / {(p.stop_loss_pct * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">Spot target (approx)</div>
+                    <div className="font-mono text-sm">
+                      {p.approx_spot_target !== null ? `$${p.approx_spot_target.toFixed(2)}` : "—"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Evidence chips */}
+                <ul className="mb-2 space-y-0.5 text-xs">
+                  {p.why.map((w, i) => (
+                    <li key={i} className="text-foreground">
+                      • {w}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Caveats (trap detection) */}
+                {p.caveats.length > 0 && (
+                  <ul className="mb-2 space-y-0.5 rounded border border-rose-700/40 bg-rose-950/30 p-2 text-[11px]">
+                    {p.caveats.map((c, i) => (
+                      <li key={i} className="text-rose-200">⚠ {c}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Ensemble row + flip */}
+                <div className="grid gap-1 text-[11px] text-muted-foreground sm:grid-cols-2">
+                  <div>
+                    Ensemble:{" "}
+                    <span className={p.ensemble_aligned ? "text-green-300" : "text-amber-300"}>
+                      {p.ensemble_alignment_count}/{p.ensemble_total_voters} agents agree
+                    </span>
+                    {p.ensemble_pm_signal && (
+                      <span> · PM {p.ensemble_pm_signal}</span>
+                    )}
+                  </div>
+                  <div>
+                    Invalidation: <span className="text-foreground">{p.flip_condition}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <p className="text-[10px] text-muted-foreground">{data.method_note}</p>
     </div>
   );
 }
