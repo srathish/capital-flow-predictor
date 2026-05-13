@@ -39,11 +39,18 @@ from cfp_api.settings import settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import asyncio
+    from cfp_api import discord_background
+
     configure_logging(settings.log_level)
     await apply_pending_migrations(settings.database_url)
     await init_pool(settings.database_url)
-    yield
-    await close_pool()
+    bg_tasks = discord_background.start(asyncio.get_running_loop())
+    try:
+        yield
+    finally:
+        await discord_background.stop(bg_tasks)
+        await close_pool()
 
 
 app = FastAPI(
