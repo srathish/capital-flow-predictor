@@ -239,7 +239,9 @@ jobs:
         run: npm install --omit=dev --no-audit --no-fund
       - name: Fetch + persist SPY/QQQ/SPX structure snapshots
         working-directory: apps/gex
-        run: node scripts/persist-snapshots.js --tickers SPY,QQQ,SPX
+        # apps/gex scripts use `--flag=value` (equals); space-separated form
+        # gets parsed as `--tickers=true` by the regex parser in the script.
+        run: node scripts/persist-snapshots.js --tickers=SPY,QQQ,SPX
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the
