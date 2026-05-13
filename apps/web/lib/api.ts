@@ -8,6 +8,7 @@ import type {
   ChatMessage,
   ChatStreamEvent,
   CustomWatchlistResponse,
+  DiscordInventoryResponse,
   DiscordMessagesResponse,
   DiscordSource,
   DiscordSourcesResponse,
@@ -440,6 +441,9 @@ export const api = {
   },
   discordSources(): Promise<DiscordSourcesResponse> {
     return getJson<DiscordSourcesResponse>(`/v1/discord/sources`);
+  },
+  discordInventory(): Promise<DiscordInventoryResponse> {
+    return getJson<DiscordInventoryResponse>(`/v1/discord/inventory`);
   },
   discordAddSource(body: {
     guild_name: string;

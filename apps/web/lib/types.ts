@@ -966,3 +966,20 @@ export type DiscordSource = {
 export type DiscordSourcesResponse = {
   sources: DiscordSource[];
 };
+
+export type DiscordInventoryChannel = {
+  channel_id: string;
+  channel_name: string;
+  is_thread: boolean;
+};
+
+export type DiscordInventoryGuild = {
+  guild_id: string;
+  guild_name: string;
+  channels: DiscordInventoryChannel[];
+};
+
+export type DiscordInventoryResponse = {
+  guilds: DiscordInventoryGuild[];
+  refreshed_at: string | null;
+};

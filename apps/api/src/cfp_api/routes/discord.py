@@ -72,6 +72,23 @@ class DiscordSourceCreate(BaseModel):
     include_threads: bool = True
 
 
+class InventoryChannel(BaseModel):
+    channel_id: str
+    channel_name: str
+    is_thread: bool
+
+
+class InventoryGuild(BaseModel):
+    guild_id: str
+    guild_name: str
+    channels: list[InventoryChannel]
+
+
+class DiscordInventoryResponse(BaseModel):
+    guilds: list[InventoryGuild]
+    refreshed_at: datetime | None
+
+
 # ---------- routes ----------
 
 
@@ -140,6 +157,49 @@ async def get_messages(
 
     total_row = await pool.fetchrow("SELECT COUNT(*) AS n FROM discord_messages")
     return DiscordMessagesResponse(messages=messages, total=total_row["n"] if total_row else 0)
+
+
+@router.get("/inventory", response_model=DiscordInventoryResponse)
+async def get_inventory() -> DiscordInventoryResponse:
+    """Servers + channels the listener can currently see.
+
+    Written by apps/discord_listener on connect and on guild/channel events.
+    Empty until the listener has connected at least once. Used by the
+    /discord/sources UI to render cascading dropdowns instead of free-text.
+    """
+    pool = get_pool()
+    rows = await pool.fetch(
+        """
+        SELECT guild_id, guild_name, channel_id, channel_name, is_thread, refreshed_at
+        FROM discord_inventory
+        ORDER BY guild_name, is_thread, channel_name
+        """
+    )
+
+    by_guild: dict[int, InventoryGuild] = {}
+    refreshed_at: datetime | None = None
+    for r in rows:
+        if refreshed_at is None or r["refreshed_at"] > refreshed_at:
+            refreshed_at = r["refreshed_at"]
+        g = by_guild.get(r["guild_id"])
+        if g is None:
+            g = InventoryGuild(
+                guild_id=str(r["guild_id"]),
+                guild_name=r["guild_name"],
+                channels=[],
+            )
+            by_guild[r["guild_id"]] = g
+        g.channels.append(
+            InventoryChannel(
+                channel_id=str(r["channel_id"]),
+                channel_name=r["channel_name"],
+                is_thread=r["is_thread"],
+            )
+        )
+
+    return DiscordInventoryResponse(
+        guilds=list(by_guild.values()), refreshed_at=refreshed_at
+    )
 
 
 @router.get("/sources", response_model=DiscordSourcesResponse)

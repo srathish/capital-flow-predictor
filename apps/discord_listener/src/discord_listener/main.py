@@ -62,6 +62,47 @@ async def _load_allowlist(pool: asyncpg.Pool) -> set[tuple[str, str]]:
     return {(r["guild_name"].lower(), r["channel_name"].lower()) for r in rows}
 
 
+async def _snapshot_inventory(pool: asyncpg.Pool, client: "Listener") -> int:
+    """Replace the inventory rows with every text channel/thread the account
+    can currently see. Returns the count written.
+
+    Done as DELETE + COPY-like INSERT inside a transaction so the dashboard
+    never sees a partial state. Voice channels and categories are skipped.
+    """
+    rows: list[tuple[int, int, str, str, int | None, bool]] = []
+    for guild in client.guilds:
+        for ch in guild.channels:
+            # discord.TextChannel + discord.Thread are the message-bearing types.
+            # We rely on type names rather than isinstance imports to keep this
+            # tolerant of discord.py-self adding new channel types.
+            ctype = type(ch).__name__
+            if ctype == "TextChannel":
+                rows.append((ch.id, guild.id, guild.name, ch.name, None, False))
+        for thread in getattr(guild, "threads", []) or []:
+            parent_id = thread.parent.id if thread.parent else None
+            rows.append((thread.id, guild.id, guild.name, thread.name, parent_id, True))
+
+    async with pool.acquire() as conn, conn.transaction():
+        await conn.execute("DELETE FROM discord_inventory")
+        if rows:
+            await conn.executemany(
+                """
+                INSERT INTO discord_inventory
+                    (channel_id, guild_id, guild_name, channel_name, parent_channel_id, is_thread)
+                VALUES ($1, $2, $3, $4, $5, $6)
+                ON CONFLICT (channel_id) DO UPDATE SET
+                    guild_id = EXCLUDED.guild_id,
+                    guild_name = EXCLUDED.guild_name,
+                    channel_name = EXCLUDED.channel_name,
+                    parent_channel_id = EXCLUDED.parent_channel_id,
+                    is_thread = EXCLUDED.is_thread,
+                    refreshed_at = now()
+                """,
+                rows,
+            )
+    return len(rows)
+
+
 _INSERT_SQL = """
 INSERT INTO discord_messages (
     message_id, guild_id, guild_name,
@@ -167,6 +208,11 @@ class Listener(discord.Client):
 
     async def on_ready(self) -> None:
         await self._maybe_refresh_allowlist()
+        try:
+            n = await _snapshot_inventory(self._pool, self)
+            log.info("inventory snapshot: %d text channels/threads", n)
+        except Exception:
+            log.exception("inventory snapshot failed")
         log.info(
             "discord_listener ready as %s — %d guilds, %d sources in allowlist (mode=%s)",
             self.user,
@@ -174,6 +220,33 @@ class Listener(discord.Client):
             len(self._allowlist),
             "allowlist" if settings.use_source_allowlist else "all-channels",
         )
+
+    async def on_guild_join(self, _guild) -> None:
+        await self._refresh_inventory()
+
+    async def on_guild_remove(self, _guild) -> None:
+        await self._refresh_inventory()
+
+    async def on_guild_channel_create(self, _channel) -> None:
+        await self._refresh_inventory()
+
+    async def on_guild_channel_update(self, _before, _after) -> None:
+        await self._refresh_inventory()
+
+    async def on_guild_channel_delete(self, _channel) -> None:
+        await self._refresh_inventory()
+
+    async def on_thread_create(self, _thread) -> None:
+        await self._refresh_inventory()
+
+    async def on_thread_delete(self, _thread) -> None:
+        await self._refresh_inventory()
+
+    async def _refresh_inventory(self) -> None:
+        try:
+            await _snapshot_inventory(self._pool, self)
+        except Exception:
+            log.exception("inventory refresh failed")
 
     async def on_message(self, msg: discord.Message) -> None:
         try:
