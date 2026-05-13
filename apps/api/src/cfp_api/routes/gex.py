@@ -527,3 +527,116 @@ async def recent_reauths(limit: int = Query(10, ge=1, le=50)) -> list[ReauthRequ
             limit,
         )
     return [ReauthRequestItem(**dict(r)) for r in rows]
+
+
+# ---------- /v1/gex/structure — live heatmap state ----------
+#
+# The determined-quietude Node poller writes one row per (ticker, fetched_at)
+# every ~30s to skylit_structures, plus the CI gex-snapshot cron tops it up
+# every 10 min. This endpoint serves the *latest* row per requested ticker
+# so the /gex dashboard can render a constantly-updating heatmap without
+# subscribing to SSE.
+
+
+class GexNode(BaseModel):
+    strike: float | None = None
+    gamma: float | None = None
+    sign: str | None = None
+    relative_significance: float | None = None
+    distance_from_spot: float | None = None
+
+
+class GexExpiryView(BaseModel):
+    expiration: str
+    expiration_index: int | None = None
+    num_strikes: int = 0
+    total_abs_gamma: float | None = None
+    signed_total_gamma: float | None = None
+    regime_score: float | None = None
+    king: GexNode | None = None
+    floor: GexNode | None = None
+    ceiling: GexNode | None = None
+    air_pockets: list[dict] = Field(default_factory=list)
+    liquidity_vacuums: list[dict] = Field(default_factory=list)
+
+
+class GexStructureState(BaseModel):
+    ticker: str
+    fetched_at: datetime | None = None
+    age_seconds: float | None = None
+    spot: float | None = None
+    expiration: str | None = None
+    regime_score: float | None = None
+    signed_total_gamma: float | None = None
+    king: GexNode | None = None
+    floor: GexNode | None = None
+    ceiling: GexNode | None = None
+    air_pockets: list[dict] = Field(default_factory=list)
+    liquidity_vacuums: list[dict] = Field(default_factory=list)
+    n_expiry_views: int = 0
+    expiry_views: list[GexExpiryView] = Field(default_factory=list)
+
+
+class GexStructureResponse(BaseModel):
+    requested_tickers: list[str]
+    states: list[GexStructureState]
+
+
+@router.get("/v1/gex/structure", response_model=GexStructureResponse)
+async def gex_structure(
+    tickers: str = Query(
+        default="SPY,QQQ,SPXW",
+        description="Comma-separated tickers. Default = the index trio.",
+    ),
+    max_age_minutes: int = Query(default=15, ge=1, le=1440),
+) -> GexStructureResponse:
+    """Latest Skylit structural snapshot per ticker. Empty result when the
+    most recent row for a ticker is older than ``max_age_minutes``."""
+    requested = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    if not requested:
+        raise HTTPException(status_code=400, detail="provide at least one ticker")
+
+    pool = get_pool()
+    states: list[GexStructureState] = []
+    async with pool.acquire() as conn:
+        for t in requested:
+            row = await conn.fetchrow(
+                """
+                SELECT ticker, fetched_at, spot, expiration, structure
+                FROM skylit_structures
+                WHERE ticker = $1
+                  AND fetched_at > NOW() - ($2 || ' minutes')::interval
+                ORDER BY fetched_at DESC LIMIT 1
+                """,
+                t, str(max_age_minutes),
+            )
+            if row is None:
+                # Empty placeholder so the UI can render "no data yet" cards
+                # in a consistent shape.
+                states.append(GexStructureState(ticker=t))
+                continue
+            structure = row["structure"]
+            if isinstance(structure, str):
+                structure = json.loads(structure)
+            fetched_at = row["fetched_at"]
+            age = (datetime.now(UTC) - fetched_at).total_seconds() if fetched_at else None
+            expiry_views = [
+                GexExpiryView(**ev) for ev in (structure.get("expiry_views") or [])
+            ]
+            states.append(GexStructureState(
+                ticker=t,
+                fetched_at=fetched_at,
+                age_seconds=age,
+                spot=row["spot"] if row["spot"] is not None else structure.get("spot"),
+                expiration=row["expiration"] or structure.get("expiration"),
+                regime_score=structure.get("regime_score"),
+                signed_total_gamma=structure.get("signed_total_gamma"),
+                king=GexNode(**structure["king"]) if structure.get("king") else None,
+                floor=GexNode(**structure["floor"]) if structure.get("floor") else None,
+                ceiling=GexNode(**structure["ceiling"]) if structure.get("ceiling") else None,
+                air_pockets=structure.get("air_pockets") or [],
+                liquidity_vacuums=structure.get("liquidity_vacuums") or [],
+                n_expiry_views=len(expiry_views),
+                expiry_views=expiry_views,
+            ))
+    return GexStructureResponse(requested_tickers=requested, states=states)

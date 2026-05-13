@@ -31,6 +31,7 @@ import { classifyTrinity } from '../domain/trinity.js';
 import { evaluateSetup } from '../domain/synthesis.js';
 import { getStmts, txn, openDb } from '../store/db.js';
 import { writeEvent } from '../store/jsonl-events.js';
+import { writeSkylitStructure } from '../store/pg.js';
 import { config, thresholds } from '../utils/config.js';
 import { tradingDayET } from '../utils/time.js';
 import { createLogger } from '../utils/logger.js';
@@ -146,6 +147,13 @@ export function processSnapshot({ ticker, tradingDay, snap }) {
   txn(() =>
     processLifecycle({ ticker, spot: snap.spot, nodes: surface.nodes, tsMs, tradingDay })
   )();
+
+  // Throttled write to Postgres skylit_structures so the live GEX dashboard
+  // tab can show a constantly-updating heatmap for SPY/QQQ/SPXW. We poll
+  // every ~5s but only persist every 30s per ticker — that's plenty of
+  // freshness for the UI without exploding the table (~360 rows/day/ticker
+  // during RTH instead of 2,400).
+  persistSkylitStructureThrottled({ ticker, snap, surface, structure });
 
   // Build lookups for downstream layers.
   const lifecycleRows = stmts.listLifecycleForTickerDay.all(ticker, tradingDay);
@@ -283,4 +291,83 @@ export function processSnapshot({ ticker, tradingDay, snap }) {
     decision: decision.accepted ? 'would_enter' : 'reject',
     plan: decision.plan,
   };
+}
+
+
+// ---- skylit_structures live dashboard write -------------------------------
+
+const SKYLIT_PERSIST_THROTTLE_MS = 30_000;
+const _lastSkylitWriteMs = new Map();  // ticker -> ms timestamp of last write
+
+function _nodeForStorage(n) {
+  return n
+    ? {
+        strike: n.strike,
+        gamma: n.gamma,
+        sign: n.sign,
+        relative_significance: n.relativeSignificance,
+        distance_from_spot: n.distanceFromSpot,
+      }
+    : null;
+}
+
+function persistSkylitStructureThrottled({ ticker, snap, surface, structure }) {
+  const now = Date.now();
+  const last = _lastSkylitWriteMs.get(ticker) || 0;
+  if (now - last < SKYLIT_PERSIST_THROTTLE_MS) return;
+  _lastSkylitWriteMs.set(ticker, now);
+
+  // Build the full structure payload matching scripts/persist-snapshots.js
+  // shape so the Python skylit_bridge + GexAnalyst consume it identically.
+  const payload = {
+    ticker,
+    fetched_at_ms: snap.fetchedAtMs,
+    spot: snap.spot,
+    expiration: snap.expiration,
+    num_strikes: surface.nodes.length,
+    total_abs_gamma: surface.totalAbs,
+    signed_total_gamma: surface.signedTotal,
+    regime_score: surface.regimeScore,
+    king: surface.kingStrike != null
+      ? { strike: surface.kingStrike, gamma: surface.kingGamma }
+      : null,
+    floor: _nodeForStorage(structure.floor),
+    ceiling: _nodeForStorage(structure.ceiling),
+    gatekeepers: (structure.gatekeepers || []).map(_nodeForStorage),
+    air_pockets: structure.airPockets || [],
+    liquidity_vacuums: structure.liquidityVacuums || [],
+  };
+
+  // Multi-expiration term-structure (when fetchSnapshot returned allExpirations).
+  if (Array.isArray(snap.allExpirations)) {
+    payload.expiry_views = snap.allExpirations.map((view) => {
+      const vSurface = computeSurface(view.strikes, snap.spot);
+      const vStructure = deriveStructure({ nodes: vSurface.nodes, spot: snap.spot });
+      return {
+        expiration: view.expiration,
+        expiration_index: view.expirationIndex,
+        num_strikes: vSurface.nodes.length,
+        total_abs_gamma: vSurface.totalAbs,
+        signed_total_gamma: vSurface.signedTotal,
+        regime_score: vSurface.regimeScore,
+        king: vSurface.kingStrike != null
+          ? { strike: vSurface.kingStrike, gamma: vSurface.kingGamma }
+          : null,
+        floor: _nodeForStorage(vStructure.floor),
+        ceiling: _nodeForStorage(vStructure.ceiling),
+        air_pockets: vStructure.airPockets || [],
+        liquidity_vacuums: vStructure.liquidityVacuums || [],
+      };
+    });
+  }
+
+  writeSkylitStructure({
+    ticker,
+    fetchedAt: snap.fetchedAtMs,
+    spot: snap.spot,
+    expiration: snap.expiration,
+    structure: payload,
+  }).catch((err) => {
+    log.debug(`writeSkylitStructure failed for ${ticker}: ${err.message}`);
+  });
 }

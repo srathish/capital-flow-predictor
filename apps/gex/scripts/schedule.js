@@ -112,9 +112,13 @@ const alreadyFired = (date, event) => firedToday.has(firedKey(date, event));
 
 
 async function fireBrief(date) {
-  log.info(`[brief] firing for ${date} (--at-open)`);
+  log.info(`[brief] firing for ${date} (--at-open --discord)`);
   try {
-    await spawnScript('scripts/morning-brief.js', [`--date=${date}`, '--at-open']);
+    // --discord: mirror the Discord embed into gex_feed via webhook.postEmbed
+    // (also POSTs to Discord if DISCORD_WEBHOOK_URL is set). Without this flag
+    // the script runs the full analysis but doesn't surface anywhere — was
+    // the root cause of the empty GEX tab on quiet sessions.
+    await spawnScript('scripts/morning-brief.js', [`--date=${date}`, '--at-open', '--discord']);
     log.info(`[brief] OK ${date}`);
   } catch (e) {
     log.error(`[brief] failed ${date}: ${e.message}`);
@@ -123,9 +127,9 @@ async function fireBrief(date) {
 
 
 async function fireMonitor(date, slot) {
-  log.info(`[monitor] firing for ${date} (slot ${slot} ET)`);
+  log.info(`[monitor] firing for ${date} (slot ${slot} ET --discord)`);
   try {
-    await spawnScript('scripts/intraday-monitor.js', [`--date=${date}`]);
+    await spawnScript('scripts/intraday-monitor.js', [`--date=${date}`, '--discord']);
     log.info(`[monitor] OK ${date} slot=${slot}`);
   } catch (e) {
     log.error(`[monitor] failed ${date} slot=${slot}: ${e.message}`);
