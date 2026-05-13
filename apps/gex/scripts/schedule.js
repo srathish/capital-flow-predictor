@@ -28,10 +28,13 @@
  */
 
 import { spawn } from 'child_process';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { DateTime } from 'luxon';
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
 import { createLogger } from '../src/utils/logger.js';
+import { config as gexConfig } from '../src/utils/config.js';
+import { loadFiredEventsForDay } from '../src/store/pg.js';
 
 const log = createLogger('Scheduler');
 
@@ -107,10 +110,6 @@ function spawnScript(relPath, extraArgs = []) {
 // child process can't double-fire. Persisted to the Railway volume so a
 // redeploy mid-session doesn't refire the morning brief or already-fired
 // monitor checkpoints.
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { config as gexConfig } from '../src/utils/config.js';
-import { loadFiredEventsForDay } from '../src/store/pg.js';
 
 const FIRED_STATE_PATH = join(gexConfig.dataDir, 'scheduler-fired.json');
 
