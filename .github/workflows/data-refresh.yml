@@ -237,11 +237,14 @@ jobs:
         # and only 4 runtime deps. --omit=dev skips test/lint extras.
         working-directory: apps/gex
         run: npm install --omit=dev --no-audit --no-fund
-      - name: Fetch + persist SPY/QQQ/SPX structure snapshots
+      - name: Fetch + persist SPY/QQQ/SPXW structure snapshots
         working-directory: apps/gex
         # apps/gex scripts use `--flag=value` (equals); space-separated form
         # gets parsed as `--tickers=true` by the regex parser in the script.
-        run: node scripts/persist-snapshots.js --tickers=SPY,QQQ,SPX
+        # SPXW (not SPX): Heatseeker streams the weekly-options symbol which
+        # carries the real dealer GEX positioning. The cash SPX index isn't
+        # on Skylit's tape. The determined-quietude env uses SPXW too.
+        run: node scripts/persist-snapshots.js --tickers=SPY,QQQ,SPXW
 
   features-build:
     # Daily feature rebuild. Reads prices_daily + macro_daily, writes the
