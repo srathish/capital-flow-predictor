@@ -10,6 +10,7 @@ import type {
   CustomWatchlistResponse,
   ExpandedSectorResponse,
   CalibrationResponse,
+  FlowAggregateResponse,
   PersonaComparisonResponse,
   ReplayResponse,
   FlowParams,
@@ -282,6 +283,11 @@ export const api = {
   agentsReplay(ticker: string, isoDate: string): Promise<ReplayResponse> {
     return getJson<ReplayResponse>(
       `/v1/agents/${encodeURIComponent(ticker)}/replay?date=${encodeURIComponent(isoDate)}`,
+    );
+  },
+  flowAggregate(ticker: string, days = 90): Promise<FlowAggregateResponse> {
+    return getJson<FlowAggregateResponse>(
+      `/v1/flow/aggregate/${encodeURIComponent(ticker)}?days=${days}`,
     );
   },
   screenerCalibration(params: { days?: number; horizon?: 5 | 10 | 20 | 60 } = {}): Promise<CalibrationResponse> {

@@ -749,6 +749,58 @@ export type FinvizPresetsResponse = {
   presets: FinvizPreset[];
 };
 
+export type FlowTopStrike = {
+  strike: number;
+  option_type: "call" | "put";
+  total_premium: number;
+  alert_count: number;
+  largest_expiry: string | null;
+};
+
+export type FlowTopTrade = {
+  ts: string;
+  option_type: "call" | "put";
+  strike: number;
+  expiry: string | null;
+  total_premium: number;
+  ask_side_pct: number | null;
+  alert: string | null;
+  option_chain: string | null;
+};
+
+export type FlowExpiryBucket = {
+  label: string;
+  days_min: number;
+  days_max: number | null;
+  n_alerts: number;
+  call_premium: number;
+  put_premium: number;
+  net_call_ask: number;
+  net_put_ask: number;
+  bullish_score: number;
+};
+
+export type FlowAggregateResponse = {
+  ticker: string;
+  days: number;
+  n_alerts: number;
+  total_premium: number;
+  total_call_premium: number;
+  total_put_premium: number;
+  net_call_premium: number;
+  net_put_premium: number;
+  bullish_score: number;
+  verdict: "bullish" | "bearish" | "mixed";
+  verdict_reason: string;
+  avg_ticket_size: number;
+  leap_call_premium: number;
+  leap_put_premium: number;
+  expiry_buckets: FlowExpiryBucket[];
+  expiry_headline: string;
+  top_strikes: FlowTopStrike[];
+  top_trades: FlowTopTrade[];
+};
+
 export type CalibrationBucket = {
   label: string;
   lo: number;

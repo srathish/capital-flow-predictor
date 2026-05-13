@@ -464,3 +464,319 @@ def _severity(kind: str, r) -> float:
     if kind == "oi_explosion":
         return min(1.0, float(r["volume_oi_ratio"] or 0) / 25)
     return 0.5
+
+
+# ---------- per-ticker flow aggregate ----------
+
+
+class ExpiryBucket(BaseModel):
+    """Premium binned by days-to-expiry at the time of the alert.
+
+    Lets the UI answer questions like "where is the bullish money concentrated
+    in time?" — e.g., "$8M of calls bought 30-90d out" is a much stronger
+    signal than "$8M of 0DTE call premium" (which often just means scalpers).
+    """
+    label: str          # "0-7d", "7-30d", "30-90d", "90d+"
+    days_min: int
+    days_max: int | None  # None for the open-ended bucket
+    n_alerts: int
+    call_premium: float
+    put_premium: float
+    net_call_ask: float   # call ask − bid (positive = lifting offers)
+    net_put_ask: float
+    bullish_score: float  # ((net_call_ask − net_put_ask) / bucket_total_premium)
+
+
+class TopStrike(BaseModel):
+    strike: float
+    option_type: Literal["call", "put"]
+    total_premium: float
+    alert_count: int
+    largest_expiry: str | None  # furthest expiry seen on this strike (LEAP signal)
+
+
+class TopTradeAgg(BaseModel):
+    ts: str
+    option_type: Literal["call", "put"]
+    strike: float
+    expiry: str | None
+    total_premium: float
+    ask_side_pct: float | None  # ask_side_prem / total_premium — aggression
+    alert: str | None
+    option_chain: str | None
+
+
+class FlowAggregateResponse(BaseModel):
+    ticker: str
+    days: int
+    n_alerts: int
+    total_premium: float
+    total_call_premium: float
+    total_put_premium: float
+    net_call_premium: float  # call ask-side − call bid-side
+    net_put_premium: float   # put ask-side − put bid-side
+    bullish_score: float     # in [-1, 1] (call_ask_aggression - put_ask_aggression), premium-weighted
+    verdict: Literal["bullish", "bearish", "mixed"]
+    verdict_reason: str      # one-line plain-English summary
+    avg_ticket_size: float
+    leap_call_premium: float  # expiry > +90d
+    leap_put_premium: float
+    expiry_buckets: list[ExpiryBucket]
+    expiry_headline: str  # one-line "where is the money concentrated in time?"
+    top_strikes: list[TopStrike]
+    top_trades: list[TopTradeAgg]
+
+
+@router.get("/aggregate/{ticker}", response_model=FlowAggregateResponse)
+async def flow_aggregate(
+    ticker: str,
+    days: int = Query(90, ge=1, le=365, description="Lookback window in days"),
+) -> FlowAggregateResponse:
+    """All UW flow for one ticker, aggregated. Returns the bull/bear lean
+    + the strike with the most dollars done + the largest single tickets.
+
+    Bullish score: (net_call_premium − net_put_premium) / total_premium.
+      net_*_premium = ask_side_prem − bid_side_prem on the leg (positive when
+      institutions are lifting offers = bullish for that direction).
+
+    Bullish/bearish verdict thresholds:
+      bullish_score >  0.15 → bullish
+      bullish_score < -0.15 → bearish
+      otherwise           → mixed
+    """
+    sym = ticker.upper()
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        agg = await conn.fetchrow(
+            """
+            SELECT
+              COUNT(*)::int AS n,
+              COALESCE(SUM(total_premium), 0)::float AS total_prem,
+              COALESCE(SUM(CASE WHEN option_type='call' THEN total_premium ELSE 0 END), 0)::float AS call_prem,
+              COALESCE(SUM(CASE WHEN option_type='put'  THEN total_premium ELSE 0 END), 0)::float AS put_prem,
+              COALESCE(SUM(CASE WHEN option_type='call' THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_call,
+              COALESCE(SUM(CASE WHEN option_type='put'  THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_put,
+              COALESCE(SUM(CASE WHEN option_type='call' AND expiry > CURRENT_DATE + INTERVAL '90 days'
+                                THEN total_premium ELSE 0 END), 0)::float AS leap_call,
+              COALESCE(SUM(CASE WHEN option_type='put'  AND expiry > CURRENT_DATE + INTERVAL '90 days'
+                                THEN total_premium ELSE 0 END), 0)::float AS leap_put
+            FROM uw_flow_alerts
+            WHERE ticker = $1
+              AND created_at > NOW() - ($2 || ' days')::interval
+            """,
+            sym, str(days),
+        )
+        # Top strikes by dollar premium
+        strike_rows = await conn.fetch(
+            """
+            SELECT strike, option_type,
+                   SUM(total_premium)::float AS premium,
+                   COUNT(*)::int AS alert_count,
+                   MAX(expiry) AS furthest_expiry
+            FROM uw_flow_alerts
+            WHERE ticker = $1
+              AND created_at > NOW() - ($2 || ' days')::interval
+              AND total_premium IS NOT NULL
+            GROUP BY strike, option_type
+            ORDER BY premium DESC NULLS LAST
+            LIMIT 8
+            """,
+            sym, str(days),
+        )
+        # Expiry buckets — bin alerts by days-to-expiry at the time of the alert.
+        bucket_rows = await conn.fetch(
+            """
+            WITH alerts AS (
+                SELECT
+                    option_type,
+                    total_premium,
+                    ask_side_prem,
+                    bid_side_prem,
+                    (expiry::date - created_at::date) AS dte
+                FROM uw_flow_alerts
+                WHERE ticker = $1
+                  AND created_at > NOW() - ($2 || ' days')::interval
+                  AND expiry IS NOT NULL
+            ),
+            bucketed AS (
+                SELECT
+                    CASE
+                        WHEN dte <= 7  THEN '0-7d'
+                        WHEN dte <= 30 THEN '7-30d'
+                        WHEN dte <= 90 THEN '30-90d'
+                        ELSE '90d+'
+                    END AS bucket,
+                    option_type, total_premium, ask_side_prem, bid_side_prem
+                FROM alerts
+            )
+            SELECT
+                bucket,
+                COUNT(*)::int AS n,
+                COALESCE(SUM(CASE WHEN option_type='call' THEN total_premium ELSE 0 END), 0)::float AS call_prem,
+                COALESCE(SUM(CASE WHEN option_type='put'  THEN total_premium ELSE 0 END), 0)::float AS put_prem,
+                COALESCE(SUM(CASE WHEN option_type='call' THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_call,
+                COALESCE(SUM(CASE WHEN option_type='put'  THEN ask_side_prem - bid_side_prem ELSE 0 END), 0)::float AS net_put
+            FROM bucketed
+            GROUP BY bucket
+            """,
+            sym, str(days),
+        )
+        # Top single trades
+        trade_rows = await conn.fetch(
+            """
+            SELECT created_at, option_type, strike, expiry, total_premium,
+                   ask_side_prem, bid_side_prem, alert_rule, option_chain
+            FROM uw_flow_alerts
+            WHERE ticker = $1
+              AND created_at > NOW() - ($2 || ' days')::interval
+            ORDER BY total_premium DESC NULLS LAST
+            LIMIT 8
+            """,
+            sym, str(days),
+        )
+
+    if agg is None or (agg["n"] or 0) == 0:
+        # Return an empty-but-well-formed response so the FE can render
+        # "no flow in window" without a special error path.
+        return FlowAggregateResponse(
+            ticker=sym, days=days, n_alerts=0,
+            total_premium=0.0, total_call_premium=0.0, total_put_premium=0.0,
+            net_call_premium=0.0, net_put_premium=0.0,
+            bullish_score=0.0, verdict="mixed",
+            verdict_reason=f"No flow alerts in the last {days}d.",
+            avg_ticket_size=0.0,
+            leap_call_premium=0.0, leap_put_premium=0.0,
+            expiry_buckets=[], expiry_headline=f"No flow alerts in the last {days}d.",
+            top_strikes=[], top_trades=[],
+        )
+
+    total_prem = float(agg["total_prem"] or 0.0)
+    net_call = float(agg["net_call"] or 0.0)
+    net_put = float(agg["net_put"] or 0.0)
+    score = ((net_call - net_put) / total_prem) if total_prem > 0 else 0.0
+    score = max(-1.0, min(1.0, score))
+
+    if score > 0.15:
+        verdict: Literal["bullish", "bearish", "mixed"] = "bullish"
+        reason = (
+            f"Net call ask-side premium of ${net_call / 1e6:.1f}M exceeds net "
+            f"put by ${(net_call - net_put) / 1e6:.1f}M ({score:+.2f} score) — "
+            f"institutions are lifting offers on calls."
+        )
+    elif score < -0.15:
+        verdict = "bearish"
+        reason = (
+            f"Net put ask-side premium of ${net_put / 1e6:.1f}M exceeds net "
+            f"call by ${(net_put - net_call) / 1e6:.1f}M ({score:+.2f} score) — "
+            f"institutions are lifting offers on puts."
+        )
+    else:
+        verdict = "mixed"
+        reason = (
+            f"Net call vs net put within ±15% of total premium "
+            f"(score {score:+.2f}) — no clear directional lean."
+        )
+
+    n = int(agg["n"] or 0)
+    avg_ticket = (total_prem / n) if n else 0.0
+
+    # Expiry-bucket breakdown — answers "where is the bullish money concentrated in time?"
+    bucket_spec: list[tuple[str, int, int | None]] = [
+        ("0-7d", 0, 7),
+        ("7-30d", 8, 30),
+        ("30-90d", 31, 90),
+        ("90d+", 91, None),
+    ]
+    bucket_map = {r["bucket"]: r for r in bucket_rows}
+    expiry_buckets: list[ExpiryBucket] = []
+    for label, dmin, dmax in bucket_spec:
+        r = bucket_map.get(label)
+        if r is None:
+            expiry_buckets.append(ExpiryBucket(
+                label=label, days_min=dmin, days_max=dmax,
+                n_alerts=0, call_premium=0.0, put_premium=0.0,
+                net_call_ask=0.0, net_put_ask=0.0, bullish_score=0.0,
+            ))
+            continue
+        call_p = float(r["call_prem"] or 0.0)
+        put_p = float(r["put_prem"] or 0.0)
+        net_c = float(r["net_call"] or 0.0)
+        net_p = float(r["net_put"] or 0.0)
+        b_total = call_p + put_p
+        b_score = ((net_c - net_p) / b_total) if b_total > 0 else 0.0
+        expiry_buckets.append(ExpiryBucket(
+            label=label, days_min=dmin, days_max=dmax,
+            n_alerts=int(r["n"] or 0),
+            call_premium=call_p, put_premium=put_p,
+            net_call_ask=net_c, net_put_ask=net_p,
+            bullish_score=max(-1.0, min(1.0, b_score)),
+        ))
+
+    # Headline: which bucket has the most directional premium, and which side?
+    def _fmt_usd(n: float) -> str:
+        if abs(n) >= 1e9: return f"${n / 1e9:.2f}B"
+        if abs(n) >= 1e6: return f"${n / 1e6:.2f}M"
+        if abs(n) >= 1e3: return f"${n / 1e3:.1f}K"
+        return f"${n:.0f}"
+
+    def _bucket_directional_dollars(b: ExpiryBucket) -> float:
+        # The side with the most premium in the bucket dominates the headline.
+        return max(b.call_premium, b.put_premium)
+    visible = [b for b in expiry_buckets if b.n_alerts > 0]
+    if visible:
+        leader = max(visible, key=_bucket_directional_dollars)
+        side = "calls" if leader.call_premium >= leader.put_premium else "puts"
+        side_prem = leader.call_premium if side == "calls" else leader.put_premium
+        expiry_headline = (
+            f"Most money is in {leader.label} {side} "
+            f"({_fmt_usd(side_prem)} across {leader.n_alerts} alerts)."
+        )
+    else:
+        expiry_headline = "No expiry-tagged alerts in the window."
+
+    top_strikes = [
+        TopStrike(
+            strike=float(r["strike"]),
+            option_type=r["option_type"],
+            total_premium=float(r["premium"]),
+            alert_count=int(r["alert_count"]),
+            largest_expiry=r["furthest_expiry"].isoformat() if r["furthest_expiry"] else None,
+        )
+        for r in strike_rows
+    ]
+    top_trades = []
+    for r in trade_rows:
+        prem = float(r["total_premium"] or 0)
+        ask = float(r["ask_side_prem"] or 0)
+        ask_pct = (ask / prem) if prem > 0 else None
+        top_trades.append(
+            TopTradeAgg(
+                ts=r["created_at"].isoformat() if r["created_at"] else "",
+                option_type=r["option_type"],
+                strike=float(r["strike"]) if r["strike"] is not None else 0.0,
+                expiry=r["expiry"].isoformat() if r["expiry"] else None,
+                total_premium=prem,
+                ask_side_pct=ask_pct,
+                alert=r["alert_rule"],
+                option_chain=r["option_chain"],
+            )
+        )
+
+    return FlowAggregateResponse(
+        ticker=sym, days=days, n_alerts=n,
+        total_premium=total_prem,
+        total_call_premium=float(agg["call_prem"] or 0.0),
+        total_put_premium=float(agg["put_prem"] or 0.0),
+        net_call_premium=net_call,
+        net_put_premium=net_put,
+        bullish_score=score,
+        verdict=verdict,
+        verdict_reason=reason,
+        avg_ticket_size=avg_ticket,
+        leap_call_premium=float(agg["leap_call"] or 0.0),
+        leap_put_premium=float(agg["leap_put"] or 0.0),
+        expiry_buckets=expiry_buckets,
+        expiry_headline=expiry_headline,
+        top_strikes=top_strikes,
+        top_trades=top_trades,
+    )
