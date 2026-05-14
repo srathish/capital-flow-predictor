@@ -103,6 +103,61 @@ function relativeTime(iso: string | null): string {
   return `${d}d ago`;
 }
 
+// Parse the *event* time (vs the post time) out of gexester titles like:
+//   "📈 2026-05-14 · 10:01 ET"
+//   "🚨 SPXW · PUTS entered @ 7444.25 · 24:01 ET"
+//   "📊 🔔 9:31 ET — OPEN BRIEF — 2026-05-14"
+// Returns null when nothing parseable is in the title; caller falls back to
+// item.ts. Handles gexester's occasional "24:XX" anomaly (midnight rollover
+// bug) by mapping it to 00:XX the next day.
+function parseEventTimeFromTitle(
+  title: string | null,
+  postedAtIso: string,
+): Date | null {
+  if (!title) return null;
+  // Pull "HH:MM ET" — allow 1 or 2 digit hours, accept "ET" with optional spaces.
+  const timeMatch = title.match(/\b(\d{1,2}):(\d{2})\s*ET\b/);
+  if (!timeMatch) return null;
+  let hour = parseInt(timeMatch[1], 10);
+  const min = parseInt(timeMatch[2], 10);
+  let rollover = 0;
+  if (hour >= 24) {
+    // 24:XX → 00:XX the next day. Gexester occasionally emits this around
+    // the trading-day boundary; preserve the intended meaning.
+    rollover = Math.floor(hour / 24);
+    hour = hour % 24;
+  }
+  // Pull a date string "YYYY-MM-DD" if present; else use the post date in ET.
+  const dateMatch = title.match(/(\d{4})-(\d{2})-(\d{2})/);
+  let etDate: string;
+  if (dateMatch) {
+    etDate = `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`;
+  } else {
+    etDate = etTradingDay(postedAtIso);
+  }
+  // Build target as ET via two-step DST-aware probe (same trick as
+  // nextBrief931Et). EDT = -04:00, EST = -05:00.
+  const hh = String(hour).padStart(2, "0");
+  const mm = String(min).padStart(2, "0");
+  let target = new Date(`${etDate}T${hh}:${mm}:00-04:00`);
+  const checkFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    hour12: false,
+  });
+  const probeHour = parseInt(
+    checkFmt.formatToParts(target).find((p) => p.type === "hour")?.value || "0",
+    10,
+  );
+  if (probeHour !== hour) {
+    target = new Date(`${etDate}T${hh}:${mm}:00-05:00`);
+  }
+  if (rollover > 0) {
+    target = new Date(target.getTime() + rollover * 24 * 3600 * 1000);
+  }
+  return target;
+}
+
 function colorBar(color: number | null): string {
   // Discord stores 0xRRGGBB as an integer. Map to a CSS hex; null = neutral.
   if (color === null) return "#6b7280";
@@ -425,6 +480,26 @@ function GroupedFeed({ items }: { items: FeedItem[] }) {
 }
 
 function FeedCard({ item }: { item: FeedItem }) {
+  // Prefer the event time parsed from the title (e.g. "10:01 ET") over the
+  // POST time, since gexester sometimes catches up after an outage and dumps
+  // a backlog with item.ts ≈ now even though the events themselves are old.
+  // Without this, the "ago" badge lies about how fresh the market data is.
+  const eventTime = parseEventTimeFromTitle(item.title, item.ts);
+  const postTime = new Date(item.ts);
+  const displayTimeIso = eventTime
+    ? eventTime.toISOString()
+    : item.ts;
+  // If the event and post are >2min apart, the data was backlogged — show a
+  // small "caught up" indicator so the user knows there was a gap.
+  const lagMs = eventTime ? postTime.getTime() - eventTime.getTime() : 0;
+  const wasBacklogged = Math.abs(lagMs) > 2 * 60 * 1000;
+  const tooltip = eventTime
+    ? `Event ${eventTime.toLocaleString()} ET\nPosted ${postTime.toLocaleString()}` +
+      (wasBacklogged
+        ? `\n(backlog: posted ${Math.round(lagMs / 60000)}m after event)`
+        : "")
+    : item.ts;
+
   return (
     <article className="overflow-hidden rounded-xl border bg-card shadow-sm">
       <div className="flex">
@@ -433,7 +508,17 @@ function FeedCard({ item }: { item: FeedItem }) {
         <div className="flex-1 p-4">
           <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             {item.title && <h3 className="text-sm font-semibold">{item.title}</h3>}
-            <span className="text-xs text-muted-foreground" title={item.ts}>{relativeTime(item.ts)}</span>
+            <span className="text-xs text-muted-foreground" title={tooltip}>
+              {relativeTime(displayTimeIso)}
+            </span>
+            {wasBacklogged && (
+              <span
+                className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-500"
+                title={`Event happened ${Math.round(lagMs / 60000)}m before this row landed in the API — gexester likely caught up after an outage.`}
+              >
+                catch-up
+              </span>
+            )}
             <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{SOURCE_LABEL[item.source]}</span>
             {item.tickers.map(t => (
               <span key={t} className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-mono text-primary">{t}</span>
