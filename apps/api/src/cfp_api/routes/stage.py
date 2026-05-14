@@ -68,6 +68,16 @@ class StageTarget(BaseModel):
     days: StageTargetDays
 
 
+class StageRead(BaseModel):
+    """Plain-English summary of the setup. Generated deterministically from
+    phase + score + targets; no LLM in the loop."""
+
+    setup_type: str
+    rarity: Literal["rare", "uncommon", "common", "n/a"]
+    sizing_hint: Literal["skip", "small", "standard", "size_up"]
+    read: str
+
+
 class StageTargets(BaseModel):
     adr_pct: float
     adr_dollars: float
@@ -99,6 +109,7 @@ class StageTickerResult(BaseModel):
     fired_today: StageFiredToday
     danger: StageDanger
     targets: StageTargets | None = None
+    read: StageRead | None = None
     error: str | None = None
 
 
@@ -151,6 +162,7 @@ def _empty_result(ticker: str, why: str) -> StageTickerResult:
         fired_today=StageFiredToday(bcs_breakout=False, hfs_breakout=False, breakdown_warn=False),
         danger=StageDanger(stage4=False, bear_stack=False),
         targets=None,
+        read=None,
         error=why,
     )
 

@@ -273,6 +273,136 @@ def _compute_targets(
     }
 
 
+# ----------------------------------------------------------------------------
+# Plain-English read — one-glance "what is this and how do I trade it" output.
+# Generated deterministically from phase + score + targets, no LLM. Keeps the
+# guidance honest and reproducible.
+# ----------------------------------------------------------------------------
+
+
+SizingHint = Literal["skip", "small", "standard", "size_up"]
+
+
+def _compose_read(
+    *,
+    phase: Phase,
+    bcs_score: int,
+    hfs_score: int,
+    active_ready: bool,
+    ticker_hint: str | None,
+    trigger_level: float | None,
+    pullback_pct: float | None,
+    pct_from_high: float,
+    targets: dict | None,
+) -> dict:
+    """Return {setup_type, rarity, sizing_hint, read} as plain English.
+
+    Mental model encoded:
+      BASE setups are rare but produce larger, longer moves (Stage 1→2 launches).
+      HANDLE setups are common, faster, with tighter expected upside.
+      CAUTION / DANGER kill the long thesis regardless of other factors.
+    """
+    t1_gain = targets["targets"]["t1"]["gain_pct"] if targets else None
+    t3_gain = targets["targets"]["t3"]["gain_pct"] if targets else None
+    trig_str = f"${trigger_level:.2f}" if trigger_level is not None else "the trigger"
+
+    if phase == "DANGER":
+        return {
+            "setup_type": "Stage 4 / inverted stack",
+            "rarity": "n/a",
+            "sizing_hint": "skip",
+            "read": (
+                "Confirmed downtrend — avoid from the long side regardless of news "
+                "or valuation. Wait for the green tint to reappear before scanning "
+                "for an entry."
+            ),
+        }
+
+    if phase == "CAUTION":
+        return {
+            "setup_type": "Trend weakening",
+            "rarity": "n/a",
+            "sizing_hint": "skip",
+            "read": (
+                "Stock has lost the 50 EMA with the 21 EMA rolling. Not yet Stage 4 "
+                "but no setup either. Don't initiate longs; existing positions "
+                "should watch for a breakdown WARN."
+            ),
+        }
+
+    if phase == "NEUTRAL":
+        return {
+            "setup_type": "No setup",
+            "rarity": "n/a",
+            "sizing_hint": "skip",
+            "read": "No actionable setup right now. Low priority — keep moving.",
+        }
+
+    if phase == "BASE":
+        if active_ready:
+            move_phrase = (
+                f"Targets project +{t1_gain:.0f}% to T1 in 2-3wk and +{t3_gain:.0f}% "
+                f"to T3 over 8-12wk."
+                if t1_gain is not None and t3_gain is not None
+                else "Targets project a multi-month move."
+            )
+            return {
+                "setup_type": "Base launch (BCS armed)",
+                "rarity": "rare",
+                "sizing_hint": "size_up",
+                "read": (
+                    f"Rare setup — Stage 1→2 launch candidate. Stock has gone dormant "
+                    f"({pct_from_high:.0f}% off 52w high, ATR contracted, EMAs tight). "
+                    f"If {trig_str} breaks on volume, this is the bigger-payoff setup "
+                    f"type — larger, longer moves than a typical handle continuation. "
+                    f"{move_phrase} Justifies above-average conviction sizing."
+                ),
+            }
+        return {
+            "setup_type": "Base forming (BCS)",
+            "rarity": "rare",
+            "sizing_hint": "small",
+            "read": (
+                f"Not yet armed — {bcs_score}/5 base conditions met. Worth a price "
+                f"alert at {trig_str}; if score climbs to 4/5 and the trigger breaks, "
+                f"this becomes a high-conviction long. Don't pre-position."
+            ),
+        }
+
+    # HANDLE
+    if active_ready:
+        move_phrase = (
+            f"Targets +{t1_gain:.0f}% to T1 in 2-3wk."
+            if t1_gain is not None
+            else "Targets in the 2-3 week window."
+        )
+        pull_phrase = (
+            f" {pullback_pct:.0f}% pullback from the 30-bar swing, holding 50 EMA."
+            if pullback_pct is not None
+            else ""
+        )
+        return {
+            "setup_type": "Handle continuation (HFS armed)",
+            "rarity": "common",
+            "sizing_hint": "standard",
+            "read": (
+                f"Continuation setup, not a base launch — stock is mid-trend taking "
+                f"a breather.{pull_phrase} Break of {trig_str} on >1.5× volume "
+                f"confirms. These resolve fast with tighter upside than a base — "
+                f"{move_phrase} Standard sizing; the thesis lives or dies on the break."
+            ),
+        }
+    return {
+        "setup_type": "Handle forming (HFS)",
+        "rarity": "common",
+        "sizing_hint": "small",
+        "read": (
+            f"Forming — {hfs_score}/5. Needs the handle to tighten further before "
+            f"it qualifies. Watch the trigger at {trig_str}; don't size up until 4/5."
+        ),
+    }
+
+
 def _extract_ohlcv(bars: Sequence[StageBar]) -> tuple[np.ndarray, ...]:
     o = np.array([b["open"] for b in bars], dtype=np.float64)
     h = np.array([b["high"] for b in bars], dtype=np.float64)
@@ -463,6 +593,18 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         i=i,
     )
 
+    read = _compose_read(
+        phase=phase,
+        bcs_score=bcs_score,
+        hfs_score=hfs_score,
+        active_ready=active_ready,
+        ticker_hint=None,
+        trigger_level=trigger_level,
+        pullback_pct=float(pullback_pct) if not np.isnan(pullback_pct) else None,
+        pct_from_high=float(pct_from_high),
+        targets=targets,
+    )
+
     return {
         "date": last["date"],
         "close": round(close_i, 4),
@@ -474,6 +616,7 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         "trigger_level": round(trigger_level, 4) if trigger_level is not None else None,
         "distance_pct": round(distance_pct, 4) if distance_pct is not None else None,
         "targets": targets,
+        "read": read,
         "conditions": {
             "stage2_trend": bool(stage2),
             "volume_dry_up": bool(dry_up),
@@ -701,5 +844,11 @@ def _empty_result(bars: Sequence[StageBar]) -> dict:
         },
         "danger": {"stage4": False, "bear_stack": False},
         "targets": None,
+        "read": {
+            "setup_type": "Insufficient history",
+            "rarity": "n/a",
+            "sizing_hint": "skip",
+            "read": "Not enough bars yet to compute the indicator. Wait for more history.",
+        },
         "insufficient_history": True,
     }

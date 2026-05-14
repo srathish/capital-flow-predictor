@@ -7,7 +7,9 @@ import { api } from "@/lib/api";
 import type {
   StageConditions,
   StagePhase,
+  StageRead,
   StageScanParams,
+  StageSizingHint,
   StageTargets,
   StageTickerResult,
 } from "@/lib/types";
@@ -287,6 +289,17 @@ function ScannerRow({
           </span>
         </td>
         <td className={cn("px-3 py-2 text-right font-mono text-xs", item.active_ready ? "text-primary" : "text-muted-foreground")}>
+          {/* Prefix the score with the contributing side (HFS vs BCS) so the
+              user knows which set of conditions the score refers to. */}
+          <span className="mr-1 text-[10px] uppercase tracking-wide opacity-60">
+            {item.phase === "BASE"
+              ? "BCS"
+              : item.phase === "HANDLE"
+                ? "HFS"
+                : item.bcs_score >= item.hfs_score
+                  ? "BCS"
+                  : "HFS"}
+          </span>
           {item.active_score}/5
         </td>
         <td className="px-3 py-2 text-right font-mono text-xs">{fmtPrice(item.close)}</td>
@@ -340,19 +353,37 @@ function ConditionsGrid({ item }: { item: StageTickerResult }) {
       </div>
     );
   }
+  // Which side of the analyzer is "live" for this row. The score in the
+  // table column comes from this side; the other side is shown dimmed so
+  // it's clear which conditions the score refers to.
+  const activeSide: "BCS" | "HFS" =
+    item.phase === "BASE"
+      ? "BCS"
+      : item.phase === "HANDLE"
+        ? "HFS"
+        : item.bcs_score >= item.hfs_score
+          ? "BCS"
+          : "HFS";
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {item.read ? (
+        <div className="md:col-span-2">
+          <ReadCallout read={item.read} />
+        </div>
+      ) : null}
       <ConditionsBlock
         title={`BCS  ·  ${item.bcs_score}/5`}
         accent="text-signal-bullish"
         labels={BCS_LABELS}
         conditions={item.conditions}
+        dimmed={activeSide !== "BCS"}
       />
       <ConditionsBlock
         title={`HFS  ·  ${item.hfs_score}/5`}
         accent="text-sky-400"
         labels={HFS_LABELS}
         conditions={item.conditions}
+        dimmed={activeSide !== "HFS"}
       />
       {(item.pullback_pct != null || item.pct_from_52w_high != null) && (
         <div className="text-[11px] text-muted-foreground">
@@ -507,16 +538,19 @@ function ConditionsBlock({
   accent,
   labels,
   conditions,
+  dimmed = false,
 }: {
   title: string;
   accent: string;
   labels: { key: keyof StageConditions; label: string }[];
   conditions: StageConditions;
+  dimmed?: boolean;
 }) {
   return (
-    <div>
+    <div className={dimmed ? "opacity-50" : undefined}>
       <div className={cn("mb-1.5 text-[10px] font-semibold uppercase tracking-wide", accent)}>
         {title}
+        {dimmed ? <span className="ml-1.5 text-muted-foreground/70">(not active)</span> : null}
       </div>
       <ul className="space-y-1 text-xs">
         {labels.map(({ key, label }) => {
@@ -536,6 +570,50 @@ function ConditionsBlock({
           );
         })}
       </ul>
+    </div>
+  );
+}
+
+const SIZING_STYLES: Record<StageSizingHint, { label: string; chip: string }> = {
+  size_up: {
+    label: "Size up · rare setup",
+    chip: "bg-signal-bullish/20 text-signal-bullish",
+  },
+  standard: {
+    label: "Standard sizing",
+    chip: "bg-primary/15 text-primary",
+  },
+  small: { label: "Small / watch", chip: "bg-amber-500/15 text-amber-400" },
+  skip: { label: "Skip from long side", chip: "bg-signal-bearish/15 text-signal-bearish" },
+};
+
+const RARITY_STYLES: Record<StageRead["rarity"], string> = {
+  rare: "text-signal-bullish",
+  uncommon: "text-primary",
+  common: "text-muted-foreground",
+  "n/a": "text-muted-foreground",
+};
+
+function ReadCallout({ read }: { read: StageRead }) {
+  const sizing = SIZING_STYLES[read.sizing_hint];
+  return (
+    <div className="rounded-md border border-border/50 bg-card/40 p-3">
+      <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide">
+        <span className="text-muted-foreground">Setup</span>
+        <span className="font-semibold text-foreground">{read.setup_type}</span>
+        <span className={cn("font-semibold", RARITY_STYLES[read.rarity])}>
+          · {read.rarity}
+        </span>
+        <span
+          className={cn(
+            "ml-auto rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide",
+            sizing.chip,
+          )}
+        >
+          {sizing.label}
+        </span>
+      </div>
+      <p className="text-xs leading-relaxed text-foreground/90">{read.read}</p>
     </div>
   );
 }

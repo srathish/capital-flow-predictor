@@ -766,6 +766,17 @@ export type StageFiredToday = {
 
 export type StageDanger = { stage4: boolean; bear_stack: boolean };
 
+export type StageSizingHint = "skip" | "small" | "standard" | "size_up";
+
+// Plain-English read of the setup — short paragraph + sizing posture so the
+// user knows at a glance how to treat this row.
+export type StageRead = {
+  setup_type: string;
+  rarity: "rare" | "uncommon" | "common" | "n/a";
+  sizing_hint: StageSizingHint;
+  read: string;
+};
+
 // Target projections — statistical, not predictions. Measured move added to
 // the breakout trigger at 1.0x / 1.618x / 2.0x. Time estimates use ADR_20
 // with a directional efficiency band (0.25–0.5). See stage_logic.py.
@@ -813,6 +824,7 @@ export type StageTickerResult = {
   fired_today: StageFiredToday;
   danger: StageDanger;
   targets: StageTargets | null;
+  read: StageRead | null;
   error: string | null;
 };
 
