@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "@/lib/api";
 import type {
+  FlowSuggestedPlay,
   StageConditions,
   StagePhase,
   StageRead,
@@ -371,6 +372,13 @@ function ConditionsGrid({ item }: { item: StageTickerResult }) {
           <ReadCallout read={item.read} />
         </div>
       ) : null}
+      {/* Flow confluence — only fetch when the scanner thinks a long-side
+          trade is on the table (sizing_hint != skip). For DANGER/CAUTION
+          rows we still show whether whales are loading calls anyway, as
+          a "reversal in progress?" signal. */}
+      <div className="md:col-span-2">
+        <FlowConfluence item={item} />
+      </div>
       <ConditionsBlock
         title={`BCS  ·  ${item.bcs_score}/5`}
         accent="text-signal-bullish"
@@ -593,6 +601,198 @@ const RARITY_STYLES: Record<StageRead["rarity"], string> = {
   common: "text-muted-foreground",
   "n/a": "text-muted-foreground",
 };
+
+// ---------------------------------------------------------------------------
+// Flow confluence — lazy-fetches /v1/flow/aggregate/{ticker}/suggest and shows
+// the top 3 ranked option contracts plus a confluence verdict (do the scanner
+// and the options-flow tape agree?). Only runs when a row is expanded.
+// ---------------------------------------------------------------------------
+
+type Confluence = "aligned" | "conflict" | "mixed" | "no_data";
+
+const CONFLUENCE_STYLES: Record<Confluence, { label: string; chip: string }> = {
+  aligned: {
+    label: "✓ Flow confirms",
+    chip: "bg-signal-bullish/20 text-signal-bullish",
+  },
+  conflict: {
+    label: "⚠ Flow disagrees",
+    chip: "bg-signal-bearish/20 text-signal-bearish",
+  },
+  mixed: { label: "~ Mixed flow", chip: "bg-amber-500/15 text-amber-400" },
+  no_data: { label: "no flow data", chip: "bg-foreground/10 text-muted-foreground" },
+};
+
+const GATE_STYLES: Record<"proceed" | "wait" | "skip", string> = {
+  proceed: "text-signal-bullish",
+  wait: "text-amber-400",
+  skip: "text-signal-bearish",
+};
+
+function FlowConfluence({ item }: { item: StageTickerResult }) {
+  // What direction does the scanner imply? Long for BASE/HANDLE armed setups;
+  // explicitly "short" for DANGER (avoid longs / consider short hedges); skip
+  // otherwise. We never recommend shorts directly — the scanner is a long-
+  // setup detector — but flow on a DANGER row that's loading calls is useful
+  // ("reversal forming?").
+  const setupDirection: "long" | "short" | "none" =
+    item.phase === "BASE" || item.phase === "HANDLE"
+      ? "long"
+      : item.phase === "DANGER"
+        ? "short"
+        : "none";
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["stage-flow-plays", item.ticker],
+    queryFn: () => api.flowSuggestPlays(item.ticker, 3),
+    staleTime: 2 * 60_000, // flow moves slowly within a couple minutes
+    retry: 1,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="rounded-md border border-border/50 bg-card/40 p-3">
+        <Skeleton className="h-16 w-full" />
+      </div>
+    );
+  }
+  if (isError || !data) {
+    return (
+      <div className="rounded-md border border-border/50 bg-card/40 p-3 text-[11px] text-muted-foreground">
+        Flow data unavailable for {item.ticker}. (No unusual-options coverage
+        for this name, or the flow service errored.)
+      </div>
+    );
+  }
+  if (data.plays.length === 0) {
+    return (
+      <div className="rounded-md border border-border/50 bg-card/40 p-3 text-[11px] text-muted-foreground">
+        No qualifying option plays found in the flow tape for {item.ticker}.
+        Either the chain is illiquid or no recent unusual activity.
+      </div>
+    );
+  }
+
+  // Compute confluence. The flow side has its own "gate" (proceed/wait/skip)
+  // plus a top-play option_type (call → bullish, put → bearish). Aligned means
+  // the scanner's direction matches both the gate and the dominant option type.
+  const topPlay = data.plays[0];
+  const flowImpliedDir: "long" | "short" = topPlay.option_type === "call" ? "long" : "short";
+  let confluence: Confluence;
+  if (setupDirection === "none") {
+    confluence = "no_data";
+  } else if (data.gate === "skip") {
+    confluence = "conflict";
+  } else if (data.gate === "wait") {
+    confluence = "mixed";
+  } else if (setupDirection === flowImpliedDir) {
+    confluence = "aligned";
+  } else {
+    confluence = "conflict";
+  }
+
+  const cs = CONFLUENCE_STYLES[confluence];
+
+  return (
+    <div className="rounded-md border border-border/50 bg-card/40 p-3">
+      <div className="mb-2 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-wide">
+        <span className="text-muted-foreground">Flow tape</span>
+        <span className={cn("rounded-full px-2 py-0.5 font-medium", cs.chip)}>
+          {cs.label}
+        </span>
+        <span className="text-muted-foreground">
+          · gate{" "}
+          <span className={cn("font-semibold", GATE_STYLES[data.gate])}>
+            {data.gate.toUpperCase()}
+          </span>
+        </span>
+        <span className="ml-auto text-muted-foreground">
+          {data.n_candidates_considered} candidates ·{" "}
+          {data.spot != null ? `spot $${data.spot.toFixed(2)}` : "spot —"}
+        </span>
+      </div>
+
+      {data.gate_reason && (
+        <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">
+          {data.gate_reason}
+        </p>
+      )}
+
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="border-b text-left text-[10px] uppercase tracking-wide text-muted-foreground">
+            <th className="py-1.5">Contract</th>
+            <th className="py-1.5">Exp</th>
+            <th className="py-1.5 text-right">DTE</th>
+            <th className="py-1.5 text-right">Conviction</th>
+            <th className="py-1.5 text-right">Tgt mult</th>
+            <th className="py-1.5">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.plays.map((p) => (
+            <FlowPlayRow key={`${p.strike}-${p.expiry}-${p.option_type}`} play={p} />
+          ))}
+        </tbody>
+      </table>
+
+      <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
+        Suggested by the flow engine, ranked by conviction. Gate combines
+        flow + ensemble agreement + regime. "Aligned" means the scanner's
+        chart read and the option tape agree on direction — disagreement is
+        worth pausing on, not necessarily fading.
+      </p>
+    </div>
+  );
+}
+
+function FlowPlayRow({ play }: { play: FlowSuggestedPlay }) {
+  const tone =
+    play.option_type === "call" ? "text-signal-bullish" : "text-signal-bearish";
+  const convictionTone =
+    play.conviction === "high"
+      ? "text-signal-bullish"
+      : play.conviction === "medium"
+        ? "text-amber-400"
+        : "text-muted-foreground";
+  return (
+    <tr className="border-b last:border-0 align-top">
+      <td className="py-1.5 font-mono">
+        <span className={cn("font-semibold", tone)}>
+          {play.strike.toFixed(play.strike < 10 ? 2 : 0)}
+          {play.option_type === "call" ? "C" : "P"}
+        </span>
+        {play.ensemble_aligned && (
+          <span
+            className="ml-1.5 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-primary"
+            title={`${play.ensemble_alignment_count}/${play.ensemble_total_voters} agents agree`}
+          >
+            agents
+          </span>
+        )}
+      </td>
+      <td className="py-1.5 text-muted-foreground">{play.expiry}</td>
+      <td className="py-1.5 text-right font-mono text-muted-foreground">
+        {play.days_to_expiry}d
+      </td>
+      <td className={cn("py-1.5 text-right font-mono", convictionTone)}>
+        {play.conviction}
+      </td>
+      <td className="py-1.5 text-right font-mono text-foreground">
+        {play.target_payout_multiple.toFixed(1)}×
+      </td>
+      <td className="py-1.5 text-[10px] text-muted-foreground">
+        {play.why.length > 0 ? (
+          <span className="line-clamp-2" title={play.why.join(" · ")}>
+            {play.why[0]}
+          </span>
+        ) : (
+          "—"
+        )}
+      </td>
+    </tr>
+  );
+}
 
 function ReadCallout({ read }: { read: StageRead }) {
   const sizing = SIZING_STYLES[read.sizing_hint];
