@@ -766,6 +766,36 @@ export type StageFiredToday = {
 
 export type StageDanger = { stage4: boolean; bear_stack: boolean };
 
+// Target projections — statistical, not predictions. Measured move added to
+// the breakout trigger at 1.0x / 1.618x / 2.0x. Time estimates use ADR_20
+// with a directional efficiency band (0.25–0.5). See stage_logic.py.
+export type StageTargetDays = {
+  optimistic: number | null;
+  expected: number | null;
+  conservative: number | null;
+};
+
+export type StageTarget = {
+  price: number;
+  gain_pct: number;
+  adr_multiple: number;
+  days: StageTargetDays;
+};
+
+export type StageTargets = {
+  adr_pct: number;
+  adr_dollars: number;
+  base_low: number;
+  base_low_lookback_bars: number;
+  extension_target: number;
+  extension_gain_pct: number;
+  stop_price: number;
+  stop_pct: number;
+  stop_logic: string;
+  rr_to_t1: number | null;
+  targets: Record<"t1" | "t2" | "t3", StageTarget>;
+};
+
 export type StageTickerResult = {
   ticker: string;
   date: string | null;
@@ -782,6 +812,7 @@ export type StageTickerResult = {
   conditions: StageConditions;
   fired_today: StageFiredToday;
   danger: StageDanger;
+  targets: StageTargets | null;
   error: string | null;
 };
 

@@ -8,6 +8,7 @@ import type {
   StageConditions,
   StagePhase,
   StageScanParams,
+  StageTargets,
   StageTickerResult,
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -378,6 +379,125 @@ function ConditionsGrid({ item }: { item: StageTickerResult }) {
           ⚠ {item.danger.stage4 ? "Stage 4 (below falling 200 EMA)" : "Bear stack (8 &lt; 21 &lt; 50 &lt; 200)"}
         </div>
       )}
+      {item.targets ? (
+        <div className="md:col-span-2">
+          <TargetsTable item={item} targets={item.targets} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function TargetsTable({
+  item,
+  targets,
+}: {
+  item: StageTickerResult;
+  targets: StageTargets;
+}) {
+  const rows: { key: "t1" | "t2" | "t3"; label: string; window: string }[] = [
+    { key: "t1", label: "T1", window: "2–3 weeks" },
+    { key: "t2", label: "T2", window: "4–6 weeks" },
+    { key: "t3", label: "T3", window: "8–12 weeks" },
+  ];
+  return (
+    <div className="rounded-md border border-border/50 bg-card/40 p-3">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+        <span>Targets + stop</span>
+        <span className="font-mono text-foreground/80">
+          ADR <span className="text-foreground">{targets.adr_pct.toFixed(1)}%</span>{" "}
+          (~${targets.adr_dollars.toFixed(2)}/day)
+          {targets.rr_to_t1 != null && (
+            <>
+              {" · "}R:R to T1{" "}
+              <span className={targets.rr_to_t1 >= 2 ? "text-signal-bullish" : "text-amber-400"}>
+                {targets.rr_to_t1.toFixed(2)}
+              </span>
+            </>
+          )}
+        </span>
+      </div>
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="border-b text-left text-[10px] uppercase tracking-wide text-muted-foreground">
+            <th className="py-1.5">Tier</th>
+            <th className="py-1.5 text-right">Price</th>
+            <th className="py-1.5 text-right">Gain</th>
+            <th className="py-1.5 text-right">Time</th>
+            <th className="py-1.5 text-right">Days est.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(({ key, label, window }) => {
+            const t = targets.targets[key];
+            const daysExp = t.days.expected;
+            const daysOpt = t.days.optimistic;
+            const daysCon = t.days.conservative;
+            const daysRange =
+              daysOpt != null && daysCon != null ? `${daysOpt}–${daysCon}d` : "—";
+            return (
+              <tr key={key} className="border-b last:border-0">
+                <td className="py-1.5 font-mono text-foreground/80">
+                  {label}{" "}
+                  <span className="text-[10px] text-muted-foreground">
+                    ({t.adr_multiple.toFixed(0)}× ADR)
+                  </span>
+                </td>
+                <td className="py-1.5 text-right font-mono text-foreground">
+                  ${t.price.toFixed(2)}
+                </td>
+                <td className="py-1.5 text-right font-mono text-signal-bullish">
+                  +{t.gain_pct.toFixed(1)}%
+                </td>
+                <td className="py-1.5 text-right text-muted-foreground">{window}</td>
+                <td className="py-1.5 text-right font-mono text-muted-foreground">
+                  <span className="text-foreground">~{daysExp ?? "—"}d</span>{" "}
+                  <span className="text-[10px]">({daysRange})</span>
+                </td>
+              </tr>
+            );
+          })}
+          {/* Stop row */}
+          <tr className="border-b last:border-0 bg-signal-bearish/[0.04]">
+            <td className="py-1.5 font-mono text-signal-bearish">STOP</td>
+            <td className="py-1.5 text-right font-mono text-signal-bearish">
+              ${targets.stop_price.toFixed(2)}
+            </td>
+            <td className="py-1.5 text-right font-mono text-signal-bearish">
+              -{targets.stop_pct.toFixed(1)}%
+            </td>
+            <td
+              colSpan={2}
+              className="py-1.5 text-right text-[10px] text-muted-foreground"
+            >
+              {targets.stop_logic}
+            </td>
+          </tr>
+          {/* Extension reference (textbook measured move) */}
+          <tr>
+            <td className="py-1.5 font-mono text-muted-foreground">EXT.</td>
+            <td className="py-1.5 text-right font-mono text-muted-foreground">
+              ${targets.extension_target.toFixed(2)}
+            </td>
+            <td className="py-1.5 text-right font-mono text-muted-foreground">
+              +{targets.extension_gain_pct.toFixed(1)}%
+            </td>
+            <td
+              colSpan={2}
+              className="py-1.5 text-right text-[10px] text-muted-foreground"
+            >
+              textbook measured-move (full base depth, aspirational)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
+        T1/T2/T3 are ADR-based: 2× / 4× / 7× the 20-bar daily range above the
+        trigger. Times assume ~0.20–0.30 ADR/day captured toward target. Stop
+        defined by setup type (base support for BCS, swing low for HFS).
+        Breakouts fail; treat as sizing input, not forecast. Anchored to{" "}
+        {item.ticker} close ${item.close?.toFixed(2)} on {item.date}.
+      </div>
     </div>
   );
 }

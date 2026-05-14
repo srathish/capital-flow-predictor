@@ -145,6 +145,134 @@ def lowest(values: np.ndarray, length: int) -> np.ndarray:
 # ----------------------------------------------------------------------------
 
 
+# ----------------------------------------------------------------------------
+# Target projection + stop loss.
+#
+# IMPORTANT: these are statistical projections, not forecasts. The breakout
+# may fail; the target may be hit faster or slower than expected. They exist
+# to size positions and set alerts, not to promise outcomes.
+#
+# Methodology:
+#   T1, T2, T3 are ADR-based — trigger plus N daily-ranges. This matches how
+#   discretionary swing traders actually exit (textbook "measured move" /
+#   base-depth targets are aspirational and rarely get hit before the trade
+#   reverses). N is tuned so:
+#
+#     T1 = trigger + 2 × ADR_$    ~ 2–3 weeks at 0.20 ADR/day capture
+#     T2 = trigger + 4 × ADR_$    ~ 4–6 weeks
+#     T3 = trigger + 7 × ADR_$    ~ 8–12 weeks
+#
+#   For reference we also emit `extension_target` — the textbook measured-
+#   move target (trigger + base_depth). Useful upper bound for "if the trend
+#   really works" planning, but not a recommended exit.
+#
+#   Stop loss:
+#     BASE   — close below max(base_low * 0.92, ema50)
+#              (8% buffer under the base, but never below 50 EMA)
+#     HANDLE — close below the handle's recent swing low (lowest of last
+#              10 bars * 0.98)
+# ----------------------------------------------------------------------------
+
+
+def _compute_targets(
+    *,
+    phase: Phase,
+    trigger_level: float | None,
+    close: float,
+    h: np.ndarray,
+    l: np.ndarray,
+    ema50_now: float,
+    i: int,
+) -> dict | None:
+    """Return targets, stop, and ADR for BASE/HANDLE setups, or None."""
+    if trigger_level is None:
+        return None
+    if phase == "BASE":
+        depth_lookback = 60
+    elif phase == "HANDLE":
+        depth_lookback = 30
+    else:
+        return None
+    if i - depth_lookback + 1 < 0:
+        return None
+
+    base_low = float(np.min(l[i - depth_lookback + 1 : i + 1]))
+    if base_low <= 0 or trigger_level <= base_low:
+        return None
+    extension_distance = trigger_level - base_low  # textbook measured move
+
+    # ADR_20 — average daily range as percent of close, over last 20 bars.
+    if i - 19 < 0:
+        return None
+    ranges = (h[i - 19 : i + 1] - l[i - 19 : i + 1]) / np.where(
+        l[i - 19 : i + 1] > 0, l[i - 19 : i + 1], 1.0
+    )
+    adr_pct = float(np.mean(ranges) * 100.0)
+    if adr_pct <= 0:
+        return None
+    adr_dollars = adr_pct / 100.0 * close
+
+    def _days(target_price: float) -> dict:
+        gain_pct = (target_price - close) / close * 100.0
+        # Directional efficiency band. Headline ("expected") uses 0.20 — that
+        # matches how discretionary swing traders frame timeframes ("T1 in
+        # 2-3 weeks" for ~2 ADRs above the trigger). Optimistic doubles that;
+        # conservative halves it.
+        return {
+            "optimistic": max(1, round(gain_pct / (adr_pct * 0.40))),
+            "expected": max(1, round(gain_pct / (adr_pct * 0.20))),
+            "conservative": max(1, round(gain_pct / (adr_pct * 0.10))),
+        }
+
+    # ADR multipliers tuned to land T1 in ~2-3 weeks for a stock running at
+    # typical 0.20-0.30 ADR/day capture. High-ADR names (IREN, CIFR) will
+    # have larger absolute targets and the same relative time frames.
+    tiers = [("t1", 2.0), ("t2", 4.0), ("t3", 7.0)]
+    targets: dict = {}
+    for name, mult in tiers:
+        price = trigger_level + adr_dollars * mult
+        gain = (price - close) / close * 100.0
+        targets[name] = {
+            "price": round(price, 2),
+            "gain_pct": round(gain, 2),
+            "adr_multiple": mult,
+            "days": _days(price),
+        }
+
+    # Stop loss
+    if phase == "BASE":
+        stop_price = max(base_low * 0.92, ema50_now if not np.isnan(ema50_now) else 0.0)
+        stop_logic = "below base × 0.92 (or 50 EMA, whichever is higher)"
+    else:  # HANDLE
+        # The handle itself is a tight 5-bar consolidation — stop just below
+        # its low, not 10 bars back which catches the deeper pullback into
+        # the handle and produces stops 20-30% wide on volatile names.
+        recent_swing_low = float(np.min(l[max(0, i - 4) : i + 1]))
+        stop_price = recent_swing_low * 0.98
+        stop_logic = "below 5-bar handle low × 0.98"
+
+    stop_pct = (close - stop_price) / close * 100.0
+
+    # Risk/reward to T1 — a useful sanity check before sizing.
+    risk = close - stop_price
+    reward_t1 = targets["t1"]["price"] - close
+    rr_t1 = reward_t1 / risk if risk > 0 else None
+
+    return {
+        "adr_pct": round(adr_pct, 2),
+        "adr_dollars": round(adr_dollars, 2),
+        "base_low": round(base_low, 2),
+        "base_low_lookback_bars": depth_lookback,
+        "extension_target": round(trigger_level + extension_distance, 2),
+        "extension_gain_pct": round((trigger_level + extension_distance - close) / close * 100.0, 2),
+        "stop_price": round(stop_price, 2),
+        "stop_pct": round(stop_pct, 2),
+        "stop_logic": stop_logic,
+        "rr_to_t1": round(rr_t1, 2) if rr_t1 is not None else None,
+        "targets": targets,
+    }
+
+
 def _extract_ohlcv(bars: Sequence[StageBar]) -> tuple[np.ndarray, ...]:
     o = np.array([b["open"] for b in bars], dtype=np.float64)
     h = np.array([b["high"] for b in bars], dtype=np.float64)
@@ -325,6 +453,16 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         l=l,
     )
 
+    targets = _compute_targets(
+        phase=phase,
+        trigger_level=trigger_level,
+        close=close_i,
+        h=h,
+        l=l,
+        ema50_now=ema50_i,
+        i=i,
+    )
+
     return {
         "date": last["date"],
         "close": round(close_i, 4),
@@ -335,6 +473,7 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         "active_ready": active_ready,
         "trigger_level": round(trigger_level, 4) if trigger_level is not None else None,
         "distance_pct": round(distance_pct, 4) if distance_pct is not None else None,
+        "targets": targets,
         "conditions": {
             "stage2_trend": bool(stage2),
             "volume_dry_up": bool(dry_up),
@@ -561,5 +700,6 @@ def _empty_result(bars: Sequence[StageBar]) -> dict:
             "breakdown_warn": False,
         },
         "danger": {"stage4": False, "bear_stack": False},
+        "targets": None,
         "insufficient_history": True,
     }

@@ -52,6 +52,36 @@ class StageDanger(BaseModel):
     bear_stack: bool
 
 
+class StageTargetDays(BaseModel):
+    """Estimated trading days to reach a target. Bracket reflects efficiency
+    band (optimistic = 0.5 ADR captured per day; conservative = 0.25)."""
+
+    optimistic: int | None
+    expected: int | None
+    conservative: int | None
+
+
+class StageTarget(BaseModel):
+    price: float
+    gain_pct: float
+    adr_multiple: float
+    days: StageTargetDays
+
+
+class StageTargets(BaseModel):
+    adr_pct: float
+    adr_dollars: float
+    base_low: float
+    base_low_lookback_bars: int
+    extension_target: float
+    extension_gain_pct: float
+    stop_price: float
+    stop_pct: float
+    stop_logic: str
+    rr_to_t1: float | None
+    targets: dict[str, StageTarget]
+
+
 class StageTickerResult(BaseModel):
     ticker: str
     date: str | None
@@ -68,6 +98,7 @@ class StageTickerResult(BaseModel):
     conditions: StageConditions
     fired_today: StageFiredToday
     danger: StageDanger
+    targets: StageTargets | None = None
     error: str | None = None
 
 
@@ -119,6 +150,7 @@ def _empty_result(ticker: str, why: str) -> StageTickerResult:
         ),
         fired_today=StageFiredToday(bcs_breakout=False, hfs_breakout=False, breakdown_warn=False),
         danger=StageDanger(stage4=False, bear_stack=False),
+        targets=None,
         error=why,
     )
 
