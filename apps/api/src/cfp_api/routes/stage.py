@@ -216,10 +216,22 @@ async def scan(
         symbols = [t.strip().upper() for t in tickers.split(",") if t.strip()]
         universe_label = "custom"
     else:
+        if universe.lower().strip() not in stage_universes.UNIVERSES:
+            raise HTTPException(status_code=400, detail=f"unknown universe: {universe}")
         symbols = stage_universes.resolve(universe)
         universe_label = universe
         if not symbols:
-            raise HTTPException(status_code=400, detail=f"unknown universe: {universe}")
+            # Universe is known but the loader returned empty — usually the
+            # Wikipedia scrape failing for sp500. Surface that distinctly so
+            # the UI can tell the user "try again" vs "fix your query".
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    f"universe '{universe}' is currently unavailable. "
+                    "If this is sp500/all, the constituent list scrape "
+                    "failed — retry in a moment."
+                ),
+            )
 
     requested = len(symbols)
 

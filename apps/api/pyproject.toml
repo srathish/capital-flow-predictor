@@ -17,6 +17,10 @@ dependencies = [
     # the data source for the scanner; pandas + lxml come in transitively.
     "numpy>=1.26",
     "yfinance>=0.2.40",
+    # pandas.read_html (used to scrape the S&P 500 list from Wikipedia) needs
+    # an HTML parser — lxml is the fastest. Without it the sp500 universe
+    # silently returns an empty list and the scanner 400s.
+    "lxml>=5.0",
     # Workspace deps so the API can run agent ensembles synchronously on demand.
     # Pulls LangGraph + openai/anthropic + xgboost (~300MB to image size).
     "cfp-jobs",

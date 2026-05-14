@@ -4,14 +4,20 @@
 quantum + semis + megacaps). It's the default because it's small enough to
 scan in seconds and covers what the user actually trades.
 
-`sp500` is loaded lazily on demand from Wikipedia via pandas; cached for the
-process lifetime so we don't re-scrape per request.
+`sp500` is served from a vendored static list (`stage_sp500_static.py`).
+Wikipedia's HTML scraper blocks pandas' default User-Agent now, and the
+list churns slowly enough that runtime scraping isn't worth the fragility.
+Set `STAGE_SP500_FROM_WIKIPEDIA=1` to opt back into the scrape with a
+browser User-Agent.
 """
 
 from __future__ import annotations
 
 import logging
+import os
 import threading
+
+from .stage_sp500_static import SP500_TICKERS
 
 logger = logging.getLogger(__name__)
 
@@ -40,32 +46,42 @@ _sp500_lock = threading.Lock()
 
 
 def sp500() -> list[str]:
-    """Lazy-load the S&P 500 constituent list from Wikipedia. We use pandas'
-    `read_html` because it's already a transitive dep of yfinance; no need to
-    add another scraping library."""
+    """Return the S&P 500 constituent list.
+
+    Default: vendored static list (deterministic, no network). Set
+    `STAGE_SP500_FROM_WIKIPEDIA=1` to fetch from Wikipedia at runtime with
+    a browser User-Agent — useful if you want fresh data and accept the
+    occasional 403/timeout."""
+    if os.environ.get("STAGE_SP500_FROM_WIKIPEDIA") != "1":
+        return list(SP500_TICKERS)
+
     global _sp500_cache
-    if _sp500_cache is not None:
+    if _sp500_cache:
         return _sp500_cache
     with _sp500_lock:
-        if _sp500_cache is not None:
+        if _sp500_cache:
             return _sp500_cache
         try:
+            import urllib.request  # noqa: PLC0415
             import pandas as pd  # noqa: PLC0415
 
-            tables = pd.read_html(
-                "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+            # Wikipedia blocks pandas' default UA; send a real one.
+            req = urllib.request.Request(
+                "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+                headers={"User-Agent": "Mozilla/5.0 (compatible; cfp-scanner/1.0)"},
             )
-            df = tables[0]
-            symbols = [
-                # Wikipedia uses BRK.B; Yahoo wants BRK-B. Same for BF.B.
-                str(s).strip().replace(".", "-")
-                for s in df["Symbol"].tolist()
-            ]
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                html = resp.read().decode("utf-8")
+            df = pd.read_html(html)[0]
+            symbols = [str(s).strip().replace(".", "-") for s in df["Symbol"].tolist()]
             _sp500_cache = symbols
         except Exception as exc:  # noqa: BLE001
-            logger.warning("Failed to load S&P 500 list, returning empty: %s", exc)
-            _sp500_cache = []
-    return _sp500_cache
+            logger.warning(
+                "Wikipedia S&P 500 scrape failed (%s); falling back to vendored list.",
+                exc,
+            )
+            return list(SP500_TICKERS)
+    return _sp500_cache or list(SP500_TICKERS)
 
 
 UNIVERSES = {
