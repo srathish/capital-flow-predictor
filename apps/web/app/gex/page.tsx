@@ -269,17 +269,139 @@ function FeedDaySection({
   );
 }
 
+// Next 09:31 ET brief, computed live. Returns the Date object so consumers
+// can format it however they want. Skips weekends — Sat → Mon, Sun → Mon.
+// Holidays are NOT honored (no NYSE calendar locally); the banner just
+// shows "waiting for next brief" without claiming an exact day.
+function nextBrief931Et(now: Date = new Date()): Date {
+  // Construct "today 09:31 America/New_York" in absolute UTC terms by going
+  // through Intl. Easier than manual DST math.
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  const parts = fmt.formatToParts(now);
+  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
+  const etDate = `${get("year")}-${get("month")}-${get("day")}`;
+  // Build the candidate as ET 09:31 today. Naive parse with the ET offset
+  // would mishandle DST around the transition. Use the same Intl machinery
+  // to project: take today's ET date, find what UTC instant maps to 09:31 ET.
+  const candidate = new Date(`${etDate}T09:31:00-04:00`);
+  // Verify the candidate actually IS 09:31 ET — adjust for DST if not.
+  const checkFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  const checkParts = checkFmt.formatToParts(candidate);
+  const checkHour = parseInt(checkParts.find((p) => p.type === "hour")?.value || "0", 10);
+  let target = candidate;
+  if (checkHour !== 9) {
+    // Off by one — DST in effect, retry with -05:00
+    target = new Date(`${etDate}T09:31:00-05:00`);
+  }
+  // If 09:31 ET has already passed today, advance to next weekday.
+  if (target.getTime() <= now.getTime()) {
+    target = new Date(target.getTime());
+    do {
+      target.setUTCDate(target.getUTCDate() + 1);
+    } while (target.getUTCDay() === 0 || target.getUTCDay() === 6);
+  } else {
+    // 09:31 ET today is in the future — but today might still be a weekend.
+    while (target.getUTCDay() === 0 || target.getUTCDay() === 6) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+  }
+  return target;
+}
+
+function formatCountdown(ms: number): string {
+  if (ms <= 0) return "any moment now";
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${sec}s`;
+  return `${sec}s`;
+}
+
+function BriefCountdown() {
+  // Tick every 15s — the brief itself only fires once per trading day, so
+  // sub-second precision isn't useful and would needlessly re-render.
+  const [now, setNow] = React.useState(() => new Date());
+  React.useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 15_000);
+    return () => clearInterval(t);
+  }, []);
+  const target = nextBrief931Et(now);
+  const ms = target.getTime() - now.getTime();
+  // Friendly day label for the target — "today", "tomorrow", or weekday.
+  const todayEt = etTradingDay(now.toISOString());
+  const targetEt = etTradingDay(target.toISOString());
+  const dayWord =
+    targetEt === todayEt
+      ? "today"
+      : (() => {
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          return targetEt === etTradingDay(tomorrow.toISOString())
+            ? "tomorrow"
+            : new Intl.DateTimeFormat("en-US", {
+                timeZone: "America/New_York",
+                weekday: "long",
+              }).format(target);
+        })();
+  const targetTimeLabel = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(target);
+
+  return (
+    <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="text-sm font-semibold text-foreground">
+          Waiting for the {dayWord} morning brief
+        </h2>
+        <span className="font-mono text-xs text-muted-foreground">
+          fires at <span className="text-foreground">{targetTimeLabel} ET</span>
+        </span>
+      </div>
+      <p className="mt-1.5 text-xs text-muted-foreground">
+        gexester pushes the day's GEX-structured plan{" "}
+        <span className="font-mono text-foreground">in {formatCountdown(ms)}</span>.
+        The card will appear here automatically — no refresh needed.
+      </p>
+    </div>
+  );
+}
+
 function GroupedFeed({ items }: { items: FeedItem[] }) {
   const groups = React.useMemo(() => groupFeedByDay(items), [items]);
-  if (groups.length === 0) return null;
-  // Today (newest group) always expanded; everything else collapsed so the
-  // tab opens clean each morning regardless of how much history accumulates.
-  const [today, ...older] = groups;
+  // Always anchor on the *real* ET trading day, not just whatever's newest in
+  // the feed. Before the 09:31 brief fires, the freshest entries will be
+  // yesterday's — without this we'd auto-expand yesterday as if it were today.
+  const todayKey = etTradingDay(new Date().toISOString());
+  const todayGroup = groups.find((g) => g.day === todayKey);
+  const older = groups.filter((g) => g.day !== todayKey);
   const olderTotal = older.reduce((n, g) => n + g.items.length, 0);
+  const todayIsEmpty = !todayGroup || todayGroup.items.length === 0;
 
   return (
     <div className="space-y-3">
-      <FeedDaySection label={today.label} items={today.items} defaultOpen />
+      {todayIsEmpty ? (
+        <BriefCountdown />
+      ) : (
+        <FeedDaySection label="Today" items={todayGroup!.items} defaultOpen />
+      )}
       {older.length > 0 && (
         <details className="rounded-xl border bg-card/40 p-3">
           <summary className="cursor-pointer select-none text-xs text-muted-foreground hover:text-foreground">
@@ -467,24 +589,20 @@ export default function GexPage() {
         </div>
       )}
 
-      {feed.length === 0 && !feedError && (
-        <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground">
-          {status?.health === "red" ? (
-            <>skylit auth is broken — fix it before market open.</>
-          ) : status?.health === "yellow" ? (
-            <>
-              The gex service hasn&apos;t reported in a while. Check the Railway
-              service logs.
-            </>
-          ) : (
-            <>
-              Morning briefs auto-fire at <span className="font-mono">09:31 ET</span>{" "}
-              on NYSE trading days. Intraday updates post here when something
-              material changes for SPY / QQQ / SPXW — king node flip, regime
-              cross, floor or ceiling break, structural divergence. Nothing
-              has fired today yet; sit tight.
-            </>
-          )}
+      {/* Auth/service-health errors get a banner above the feed so the
+          countdown doesn't lie about a brief that won't actually fire. The
+          empty-feed case itself is handled inside GroupedFeed via the
+          BriefCountdown component. */}
+      {!feedError && status?.health === "red" && (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-400">
+          skylit auth is broken — the brief won&apos;t fire until you re-auth.
+          Click <strong>Re-auth skylit</strong> above before market open.
+        </div>
+      )}
+      {!feedError && status?.health === "yellow" && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400">
+          The gex service hasn&apos;t reported in a while. The brief may be
+          delayed — check the Railway service logs.
         </div>
       )}
 
