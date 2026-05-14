@@ -12,6 +12,11 @@ dependencies = [
     "asyncpg>=0.30",
     "greenlet>=3.0",
     "httpx>=0.27",
+    # STAGE Scanner: TV indicator port. numpy is already transitive via xgboost,
+    # listing it here so stage_logic isn't relying on an accident. yfinance is
+    # the data source for the scanner; pandas + lxml come in transitively.
+    "numpy>=1.26",
+    "yfinance>=0.2.40",
     # Workspace deps so the API can run agent ensembles synchronously on demand.
     # Pulls LangGraph + openai/anthropic + xgboost (~300MB to image size).
     "cfp-jobs",
@@ -38,3 +43,6 @@ packages = ["src/cfp_api"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "network: tests that hit yfinance or other external services (deselect with -m 'not network')",
+]

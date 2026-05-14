@@ -739,6 +739,67 @@ export type ScreenerParams = {
   sort?: "composite" | "opportunity" | "confidence" | "iv_rank" | "open_interest";
 };
 
+// --- /v1/stage (STAGE Scanner: BCS/HFS port of the TradingView indicator) ----
+
+export type StagePhase = "BASE" | "HANDLE" | "NEUTRAL" | "CAUTION" | "DANGER";
+
+export type StageConditions = {
+  // BCS
+  stage2_trend: boolean;
+  volume_dry_up: boolean;
+  atr_contracted: boolean;
+  ema_tight: boolean;
+  in_base_zone: boolean;
+  // HFS
+  uptrend_active: boolean;
+  in_pullback_zone: boolean;
+  holding_ema50: boolean;
+  range_tight: boolean;
+  vol_dry_in_handle: boolean;
+};
+
+export type StageFiredToday = {
+  bcs_breakout: boolean;
+  hfs_breakout: boolean;
+  breakdown_warn: boolean;
+};
+
+export type StageDanger = { stage4: boolean; bear_stack: boolean };
+
+export type StageTickerResult = {
+  ticker: string;
+  date: string | null;
+  close: number | null;
+  phase: StagePhase;
+  bcs_score: number;
+  hfs_score: number;
+  active_score: number;
+  active_ready: boolean;
+  trigger_level: number | null;
+  distance_pct: number | null;
+  pullback_pct: number | null;
+  pct_from_52w_high: number | null;
+  conditions: StageConditions;
+  fired_today: StageFiredToday;
+  danger: StageDanger;
+  error: string | null;
+};
+
+export type StageScanResponse = {
+  universe: string;
+  requested: number;
+  scanned: number;
+  skipped: number;
+  items: StageTickerResult[];
+};
+
+export type StageScanParams = {
+  universe?: "focus" | "sp500" | "all";
+  tickers?: string;
+  onlyArmed?: boolean;
+  limit?: number;
+};
+
 export type FinvizPreset = {
   key: string;
   label: string;

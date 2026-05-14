@@ -36,6 +36,9 @@ import type {
   WhalesParams,
   WhalesResponse,
   ScreenerParams,
+  StageScanParams,
+  StageScanResponse,
+  StageTickerResult,
   StockScreenResponse,
   FinvizPresetsResponse,
   RankingsResponse,
@@ -287,6 +290,18 @@ export const api = {
     if (params.sort) sp.set("sort", params.sort);
     const qs = sp.toString();
     return getJson<StockScreenResponse>(`/v1/stocks/screen${qs ? `?${qs}` : ""}`);
+  },
+  stageScan(params: StageScanParams = {}): Promise<StageScanResponse> {
+    const sp = new URLSearchParams();
+    if (params.universe) sp.set("universe", params.universe);
+    if (params.tickers) sp.set("tickers", params.tickers);
+    if (params.onlyArmed) sp.set("only_armed", "true");
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    const qs = sp.toString();
+    return getJson<StageScanResponse>(`/v1/stage/scan${qs ? `?${qs}` : ""}`);
+  },
+  stageTicker(ticker: string): Promise<StageTickerResult> {
+    return getJson<StageTickerResult>(`/v1/stage/${encodeURIComponent(ticker.toUpperCase())}`);
   },
   agentsReplay(ticker: string, isoDate: string): Promise<ReplayResponse> {
     return getJson<ReplayResponse>(
