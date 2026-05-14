@@ -88,11 +88,44 @@ function fmtPrice(v: number | null | undefined): string {
   return v.toFixed(2);
 }
 
+type SortKey =
+  | "default"
+  | "ticker"
+  | "phase"
+  | "score"
+  | "close"
+  | "trigger"
+  | "distance"
+  | "date";
+type SortDir = "asc" | "desc";
+
+// Sensible default direction the first time a column is clicked. Distance
+// goes asc (closest to trigger first); scores/prices/dates go desc.
+const DEFAULT_DIR: Record<Exclude<SortKey, "default">, SortDir> = {
+  ticker: "asc",
+  phase: "asc",
+  score: "desc",
+  close: "desc",
+  trigger: "desc",
+  distance: "asc",
+  date: "desc",
+};
+
+const PHASE_SORT_RANK: Record<StagePhase, number> = {
+  BASE: 0,
+  HANDLE: 1,
+  NEUTRAL: 2,
+  CAUTION: 3,
+  DANGER: 4,
+};
+
 export function ScannerView() {
   const [universe, setUniverse] = useState<NonNullable<StageScanParams["universe"]>>("focus");
   const [onlyArmed, setOnlyArmed] = useState(false);
   const [customTickers, setCustomTickers] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
 
   const params: StageScanParams = {
     universe: customTickers.trim() ? undefined : universe,
@@ -110,8 +143,60 @@ export function ScannerView() {
     staleTime: 60_000,
   });
 
-  const items = data?.items ?? [];
-  const armedCount = items.filter((i) => i.active_ready).length;
+  const rawItems = data?.items ?? [];
+  const armedCount = rawItems.filter((i) => i.active_ready).length;
+
+  // Apply the user's chosen sort on top of the server's default ranking.
+  // Nulls always sink to the end regardless of direction — the user almost
+  // never wants to see "—" rows at the top of a price/distance sort.
+  const items = sortKey === "default" ? rawItems : [...rawItems].sort((a, b) => {
+    const sign = sortDir === "asc" ? 1 : -1;
+    const nullsLast = (av: number | string | null, bv: number | string | null) => {
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return null; // continue normal comparison
+    };
+    let av: number | string | null;
+    let bv: number | string | null;
+    switch (sortKey) {
+      case "ticker":
+        av = a.ticker; bv = b.ticker; break;
+      case "phase":
+        av = PHASE_SORT_RANK[a.phase]; bv = PHASE_SORT_RANK[b.phase]; break;
+      case "score":
+        av = a.active_score; bv = b.active_score; break;
+      case "close":
+        av = a.close; bv = b.close; break;
+      case "trigger":
+        av = a.trigger_level; bv = b.trigger_level; break;
+      case "distance":
+        // Use absolute distance so "closest to trigger" sorts cleanly
+        // regardless of whether the trigger is above or below close.
+        av = a.distance_pct != null ? Math.abs(a.distance_pct) : null;
+        bv = b.distance_pct != null ? Math.abs(b.distance_pct) : null;
+        break;
+      case "date":
+        av = a.date; bv = b.date; break;
+      default:
+        return 0;
+    }
+    const nl = nullsLast(av, bv);
+    if (nl != null) return nl;
+    if (typeof av === "string" && typeof bv === "string") {
+      return av.localeCompare(bv) * sign;
+    }
+    return ((av as number) - (bv as number)) * sign;
+  });
+
+  const onSort = (key: Exclude<SortKey, "default">) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir(DEFAULT_DIR[key]);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
@@ -214,14 +299,14 @@ export function ScannerView() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
-                  <th className="px-3 py-2">Ticker</th>
-                  <th className="px-3 py-2">Phase</th>
-                  <th className="px-3 py-2 text-right">Score</th>
-                  <th className="px-3 py-2 text-right">Close</th>
-                  <th className="px-3 py-2 text-right">Trigger</th>
-                  <th className="px-3 py-2 text-right">Distance</th>
+                  <SortableTh label="Ticker" k="ticker" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+                  <SortableTh label="Phase" k="phase" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+                  <SortableTh label="Score" k="score" sortKey={sortKey} sortDir={sortDir} onSort={onSort} align="right" />
+                  <SortableTh label="Close" k="close" sortKey={sortKey} sortDir={sortDir} onSort={onSort} align="right" />
+                  <SortableTh label="Trigger" k="trigger" sortKey={sortKey} sortDir={sortDir} onSort={onSort} align="right" />
+                  <SortableTh label="Distance" k="distance" sortKey={sortKey} sortDir={sortDir} onSort={onSort} align="right" />
                   <th className="px-3 py-2">Today</th>
-                  <th className="px-3 py-2 text-right text-[10px]">As of</th>
+                  <SortableTh label="As of" k="date" sortKey={sortKey} sortDir={sortDir} onSort={onSort} align="right" small />
                 </tr>
               </thead>
               <tbody>
@@ -241,6 +326,53 @@ export function ScannerView() {
         </Card>
       )}
     </div>
+  );
+}
+
+function SortableTh({
+  label,
+  k,
+  sortKey,
+  sortDir,
+  onSort,
+  align,
+  small,
+}: {
+  label: string;
+  k: Exclude<SortKey, "default">;
+  sortKey: SortKey;
+  sortDir: SortDir;
+  onSort: (k: Exclude<SortKey, "default">) => void;
+  align?: "right";
+  small?: boolean;
+}) {
+  const active = sortKey === k;
+  // Caret is the indicator — up = asc, down = desc. Subtle when inactive
+  // so the column header doesn't look noisy on first load.
+  const caret = active ? (sortDir === "asc" ? "↑" : "↓") : "↕";
+  return (
+    <th
+      className={cn(
+        "px-3 py-2 select-none",
+        align === "right" ? "text-right" : "",
+        small ? "text-[10px]" : "",
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(k)}
+        className={cn(
+          "inline-flex items-center gap-1 transition-colors",
+          align === "right" ? "flex-row-reverse" : "",
+          active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        <span>{label}</span>
+        <span className={cn("text-[10px]", active ? "opacity-100" : "opacity-30")}>
+          {caret}
+        </span>
+      </button>
+    </th>
   );
 }
 
