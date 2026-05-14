@@ -642,9 +642,13 @@ function FlowConfluence({ item }: { item: StageTickerResult }) {
         ? "short"
         : "none";
 
+  // Pull more candidates than we show — we'll filter to ones whose DTE
+  // matches the scanner's time horizon. Short-dated options on liquid names
+  // are dominated by dealer hedging + theta plays + earnings insurance and
+  // don't reliably signal direction.
   const { data, isLoading, isError } = useQuery({
     queryKey: ["stage-flow-plays", item.ticker],
-    queryFn: () => api.flowSuggestPlays(item.ticker, 3),
+    queryFn: () => api.flowSuggestPlays(item.ticker, 10),
     staleTime: 2 * 60_000, // flow moves slowly within a couple minutes
     retry: 1,
   });
@@ -673,25 +677,40 @@ function FlowConfluence({ item }: { item: StageTickerResult }) {
     );
   }
 
-  // Compute confluence. The flow side has its own "gate" (proceed/wait/skip)
-  // plus a top-play option_type (call → bullish, put → bearish). Aligned means
-  // the scanner's direction matches both the gate and the dominant option type.
-  const topPlay = data.plays[0];
-  const flowImpliedDir: "long" | "short" = topPlay.option_type === "call" ? "long" : "short";
+  // Time-horizon filter. Scanner's T1 typically lands 2-3 weeks out, so we
+  // want flow with DTE ≥ 14. Plays inside that window are mostly hedging /
+  // theta / earnings insurance and don't reliably signal direction.
+  const MIN_DTE = 14;
+  const desiredType: "call" | "put" = setupDirection === "short" ? "put" : "call";
+  const aligned = data.plays.filter(
+    (p) => p.days_to_expiry >= MIN_DTE && p.option_type === desiredType,
+  );
+  const longDatedOpposite = data.plays.filter(
+    (p) => p.days_to_expiry >= MIN_DTE && p.option_type !== desiredType,
+  );
+  const shortDated = data.plays.filter((p) => p.days_to_expiry < MIN_DTE);
+
+  // Confluence reasoning:
+  //   - No directional setup → no_data
+  //   - Aligned long-dated plays exist + ≥ longDatedOpposite → aligned
+  //   - Long-dated opposite-direction dominates → conflict (real directional bet)
+  //   - Only short-dated plays exist → mixed (hedging noise, can't tell)
+  //   - Nothing → no_data
   let confluence: Confluence;
   if (setupDirection === "none") {
     confluence = "no_data";
-  } else if (data.gate === "skip") {
-    confluence = "conflict";
-  } else if (data.gate === "wait") {
-    confluence = "mixed";
-  } else if (setupDirection === flowImpliedDir) {
+  } else if (aligned.length === 0 && longDatedOpposite.length === 0) {
+    // No long-dated directional flow at all — just short-dated noise.
+    confluence = shortDated.length > 0 ? "mixed" : "no_data";
+  } else if (aligned.length >= longDatedOpposite.length) {
     confluence = "aligned";
   } else {
     confluence = "conflict";
   }
 
   const cs = CONFLUENCE_STYLES[confluence];
+  const displayPlays = aligned.length > 0 ? aligned.slice(0, 3) : data.plays.slice(0, 3);
+  const isShowingNoise = aligned.length === 0 && data.plays.length > 0;
 
   return (
     <div className="rounded-md border border-border/50 bg-card/40 p-3">
@@ -718,6 +737,34 @@ function FlowConfluence({ item }: { item: StageTickerResult }) {
         </p>
       )}
 
+      {/* Show what got filtered so the user knows what we're looking at */}
+      <div className="mb-2 flex flex-wrap items-center gap-3 text-[10px] uppercase tracking-wide text-muted-foreground">
+        <span>
+          Showing:{" "}
+          <span className="text-foreground">
+            {isShowingNoise
+              ? `all ${displayPlays.length} (no long-dated directional flow)`
+              : `${displayPlays.length} long-dated ${desiredType}s, DTE ≥ ${MIN_DTE}`}
+          </span>
+        </span>
+        {shortDated.length > 0 && !isShowingNoise && (
+          <span title="Short-dated options on liquid names are dominated by dealer hedging, earnings insurance, and theta plays — not directional bets.">
+            Hidden:{" "}
+            <span className="text-foreground">{shortDated.length} short-dated</span>{" "}
+            (likely hedging)
+          </span>
+        )}
+        {longDatedOpposite.length > 0 && (
+          <span>
+            Counter-flow:{" "}
+            <span className="text-foreground">
+              {longDatedOpposite.length} long-dated{" "}
+              {desiredType === "call" ? "puts" : "calls"}
+            </span>
+          </span>
+        )}
+      </div>
+
       <table className="w-full text-xs">
         <thead>
           <tr className="border-b text-left text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -730,17 +777,29 @@ function FlowConfluence({ item }: { item: StageTickerResult }) {
           </tr>
         </thead>
         <tbody>
-          {data.plays.map((p) => (
+          {displayPlays.map((p) => (
             <FlowPlayRow key={`${p.strike}-${p.expiry}-${p.option_type}`} play={p} />
           ))}
         </tbody>
       </table>
 
+      {isShowingNoise && (
+        <p className="mt-2 text-[10px] leading-relaxed text-amber-400/90">
+          ⚠ No directional flow in the scanner's 2-3 week+ horizon. The plays
+          above are all short-dated — usually dealer hedging or event
+          insurance, not directional positioning. The chart says{" "}
+          {setupDirection === "long" ? "long" : "short"}; the tape isn't
+          confirming yet. Wait for longer-dated{" "}
+          {desiredType}s to build before sizing up.
+        </p>
+      )}
+
       <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
-        Suggested by the flow engine, ranked by conviction. Gate combines
-        flow + ensemble agreement + regime. "Aligned" means the scanner's
-        chart read and the option tape agree on direction — disagreement is
-        worth pausing on, not necessarily fading.
+        Filtered to plays aligned with the scanner's time horizon (DTE ≥{" "}
+        {MIN_DTE}) and direction. Short-dated puts on uptrending names are
+        usually hedging the underlying position, not bearish bets — they don't
+        contradict a bullish chart read. Confluence is computed on the
+        long-dated set.
       </p>
     </div>
   );
