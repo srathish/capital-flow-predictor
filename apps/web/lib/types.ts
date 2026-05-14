@@ -768,6 +768,20 @@ export type StageDanger = { stage4: boolean; bear_stack: boolean };
 
 export type StageSizingHint = "skip" | "small" | "standard" | "size_up";
 
+// Recommended option contract sized to the scanner's targets — independent
+// of what's actually trading in the flow tape (that's the cross-reference).
+export type StageRecommendedPlay = {
+  kind: "aggressive_call" | "call_debit_spread" | "leap_conviction";
+  label: string;
+  option_type: "call" | "put";
+  strike: number | null;
+  long_strike: number | null;
+  short_strike: number | null;
+  expiry: string;
+  days_to_expiry: number;
+  rationale: string;
+};
+
 // Plain-English read of the setup — short paragraph + sizing posture so the
 // user knows at a glance how to treat this row.
 export type StageRead = {
@@ -824,6 +838,7 @@ export type StageTickerResult = {
   fired_today: StageFiredToday;
   danger: StageDanger;
   targets: StageTargets | null;
+  recommended_plays: StageRecommendedPlay[];
   read: StageRead | null;
   error: string | null;
 };

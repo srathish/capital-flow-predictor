@@ -68,6 +68,22 @@ class StageTarget(BaseModel):
     days: StageTargetDays
 
 
+class StageRecommendedPlay(BaseModel):
+    """A specific option contract suggestion, sized to the scanner's targets
+    and time horizons. Independent of what's in the flow tape — that's the
+    cross-reference. `long_strike`/`short_strike` are only set for spreads."""
+
+    kind: Literal["aggressive_call", "call_debit_spread", "leap_conviction"]
+    label: str
+    option_type: Literal["call", "put"]
+    strike: float | None
+    long_strike: float | None
+    short_strike: float | None
+    expiry: str
+    days_to_expiry: int
+    rationale: str
+
+
 class StageRead(BaseModel):
     """Plain-English summary of the setup. Generated deterministically from
     phase + score + targets; no LLM in the loop."""
@@ -109,6 +125,7 @@ class StageTickerResult(BaseModel):
     fired_today: StageFiredToday
     danger: StageDanger
     targets: StageTargets | None = None
+    recommended_plays: list[StageRecommendedPlay] = []
     read: StageRead | None = None
     error: str | None = None
 
@@ -162,6 +179,7 @@ def _empty_result(ticker: str, why: str) -> StageTickerResult:
         fired_today=StageFiredToday(bcs_breakout=False, hfs_breakout=False, breakdown_warn=False),
         danger=StageDanger(stage4=False, bear_stack=False),
         targets=None,
+        recommended_plays=[],
         read=None,
         error=why,
     )

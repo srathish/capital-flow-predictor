@@ -6,15 +6,17 @@ import { useState } from "react";
 import { api } from "@/lib/api";
 import type {
   FlowSuggestedPlay,
+  FlowTopStrike,
   StageConditions,
   StagePhase,
   StageRead,
+  StageRecommendedPlay,
   StageScanParams,
   StageSizingHint,
   StageTargets,
   StageTickerResult,
 } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { addTradingDays, cn, formatShortDate } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -372,6 +374,14 @@ function ConditionsGrid({ item }: { item: StageTickerResult }) {
           <ReadCallout read={item.read} />
         </div>
       ) : null}
+      {/* Recommended contracts — strike + expiry picked from STAGE targets,
+          independent of the flow tape. The flow section below is the
+          cross-reference (does smart money agree these are the right strikes?). */}
+      {item.recommended_plays && item.recommended_plays.length > 0 ? (
+        <div className="md:col-span-2">
+          <RecommendedPlays item={item} />
+        </div>
+      ) : null}
       {/* Flow confluence — only fetch when the scanner thinks a long-side
           trade is on the table (sizing_hint != skip). For DANGER/CAUTION
           rows we still show whether whales are loading calls anyway, as
@@ -474,6 +484,10 @@ function TargetsTable({
             const daysCon = t.days.conservative;
             const daysRange =
               daysOpt != null && daysCon != null ? `${daysOpt}–${daysCon}d` : "—";
+            // Calendar dates: project trading-day counts forward from the bar
+            // anchor so users see "Jul 20" not just "~41d".
+            const expDate =
+              daysExp != null ? addTradingDays(item.date, daysExp) : null;
             return (
               <tr key={key} className="border-b last:border-0">
                 <td className="py-1.5 font-mono text-foreground/80">
@@ -492,6 +506,11 @@ function TargetsTable({
                 <td className="py-1.5 text-right font-mono text-muted-foreground">
                   <span className="text-foreground">~{daysExp ?? "—"}d</span>{" "}
                   <span className="text-[10px]">({daysRange})</span>
+                  {expDate && (
+                    <span className="ml-1.5 text-[10px] text-foreground/70">
+                      · {formatShortDate(expDate)}
+                    </span>
+                  )}
                 </td>
               </tr>
             );
@@ -601,6 +620,116 @@ const RARITY_STYLES: Record<StageRead["rarity"], string> = {
   common: "text-muted-foreground",
   "n/a": "text-muted-foreground",
 };
+
+// ---------------------------------------------------------------------------
+// Recommended contracts — picks strike + expiry from the scanner's targets
+// (independent of the flow tape). Cross-references with flow.top_strikes
+// to mark contracts where smart money is already positioned at the same
+// strike — that's the killer signal: "chart says here, options tape agrees".
+// ---------------------------------------------------------------------------
+
+function strikeIsInFlow(
+  strike: number | null,
+  optionType: "call" | "put",
+  topStrikes: FlowTopStrike[] | undefined,
+): FlowTopStrike | null {
+  if (strike == null || !topStrikes) return null;
+  // Match within $1 for low-priced names, within 1% for higher. Strikes are
+  // discrete so exact-match would miss when our rounding differs from theirs.
+  const tolerance = Math.max(1, strike * 0.01);
+  return (
+    topStrikes.find(
+      (s) =>
+        s.option_type === optionType &&
+        Math.abs(s.strike - strike) <= tolerance,
+    ) ?? null
+  );
+}
+
+function RecommendedPlays({ item }: { item: StageTickerResult }) {
+  // Lazy-fetch the flow aggregate so we can cross-reference strikes. Skips
+  // when sizing_hint is "skip" — no point validating contracts the read says
+  // not to buy.
+  const enabled = item.read?.sizing_hint !== "skip";
+  const { data: aggregate } = useQuery({
+    queryKey: ["stage-flow-aggregate", item.ticker],
+    queryFn: () => api.flowAggregate(item.ticker),
+    enabled,
+    staleTime: 2 * 60_000,
+    retry: 1,
+  });
+
+  return (
+    <div className="rounded-md border border-border/50 bg-card/40 p-3">
+      <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+        <span>Recommended contracts</span>
+        <span className="text-foreground/70">
+          picked from STAGE targets, validated against flow strikes
+        </span>
+      </div>
+      <ul className="space-y-2">
+        {item.recommended_plays.map((p) => {
+          const matchStrike =
+            p.kind === "call_debit_spread" ? p.long_strike : p.strike;
+          const flowMatch = strikeIsInFlow(
+            matchStrike,
+            p.option_type,
+            aggregate?.top_strikes,
+          );
+          return (
+            <RecommendedPlayRow key={p.kind} play={p} flowMatch={flowMatch} />
+          );
+        })}
+      </ul>
+      <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
+        Aggressive = single OTM call expiring past T2. Spread = caps upside at
+        T2 in exchange for lower cost + less IV exposure. LEAP = January 3rd-
+        Friday expiry, more time + less theta if the trade chops first. The{" "}
+        <span className="text-primary">✓ flow agrees</span> badge marks
+        strikes where institutions are already positioned according to the
+        options tape.
+      </p>
+    </div>
+  );
+}
+
+function RecommendedPlayRow({
+  play,
+  flowMatch,
+}: {
+  play: StageRecommendedPlay;
+  flowMatch: FlowTopStrike | null;
+}) {
+  return (
+    <li className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-l-2 border-primary/30 pl-3 text-xs">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="font-mono font-semibold text-foreground">
+            {play.label}
+          </span>
+          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-primary">
+            {play.kind === "aggressive_call"
+              ? "Aggressive"
+              : play.kind === "call_debit_spread"
+                ? "Spread"
+                : "LEAP"}
+          </span>
+          {flowMatch ? (
+            <span
+              className="rounded-full bg-signal-bullish/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-signal-bullish"
+              title={`Flow tape: ${flowMatch.alert_count} alerts, $${(flowMatch.total_premium / 1000).toFixed(0)}K premium at strike $${flowMatch.strike}`}
+            >
+              ✓ flow agrees
+            </span>
+          ) : null}
+        </div>
+        <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+          {play.rationale}
+        </p>
+      </div>
+    </li>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Flow confluence — lazy-fetches /v1/flow/aggregate/{ticker}/suggest and shows

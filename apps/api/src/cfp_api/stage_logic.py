@@ -274,6 +274,154 @@ def _compute_targets(
 
 
 # ----------------------------------------------------------------------------
+# Recommended option contracts — picks strike + expiry based on the setup's
+# T1/T2/T3 time horizons, not based on where current volume is concentrated.
+# This is "what to trade", not "what is trading" (the flow tape answers the
+# latter). The two get cross-referenced in the UI.
+#
+# Three contracts per setup:
+#   1. Aggressive: single OTM call, expiry just past T2 (4-6 weeks out)
+#      Captures the T1→T2 leg without near-term theta drag.
+#   2. Spread:     debit call spread, long at trigger / short at T2 target,
+#      same expiry as aggressive. Caps upside but cuts cost meaningfully.
+#   3. LEAP:       Jan of the following year, strike near T2 price.
+#      Long enough runway that the trade can chop without being killed.
+# ----------------------------------------------------------------------------
+
+
+from datetime import date, timedelta
+
+
+def _next_third_friday(from_date: date, min_dte: int) -> date:
+    """Return the next monthly options expiration — 3rd Friday of a month — at
+    least `min_dte` days from `from_date`. Walks month by month."""
+    target = from_date + timedelta(days=min_dte)
+    month, year = target.month, target.year
+    for _ in range(18):  # up to 18 months out (covers LEAPs)
+        # Find 3rd Friday of (month, year)
+        first = date(year, month, 1)
+        # Friday = 4 in Python weekday()
+        offset = (4 - first.weekday()) % 7
+        third_friday = first + timedelta(days=offset + 14)
+        if third_friday >= target:
+            return third_friday
+        month += 1
+        if month > 12:
+            month = 1
+            year += 1
+    # Fallback — shouldn't happen for any realistic min_dte.
+    return target
+
+
+def _round_strike(price: float) -> float:
+    """Round to standard strike increment based on underlying price band.
+    Liquid mega-caps (AMZN, NVDA, MSFT) have $5 strikes well into the
+    hundreds, so we don't switch to $10 increments until $500."""
+    if price < 5:
+        return round(price * 2) / 2  # $0.50 steps
+    if price < 25:
+        return float(round(price))   # $1 steps
+    if price < 500:
+        return float(round(price / 5) * 5)  # $5 steps
+    return float(round(price / 10) * 10)    # $10 steps
+
+
+def _compute_recommended_plays(
+    *,
+    phase: Phase,
+    trigger_level: float | None,
+    targets: dict | None,
+    today: date | None = None,
+) -> list[dict]:
+    """Return 3 contract suggestions calibrated to the scanner's targets and
+    time horizons. Empty list if not a long-side setup."""
+    if phase not in ("BASE", "HANDLE") or trigger_level is None or targets is None:
+        return []
+    today = today or date.today()
+    t2 = targets["targets"]["t2"]["price"]
+    t3 = targets["targets"]["t3"]["price"]
+
+    # Aggressive: monthly expiry ~60 days out (lands past T2's 4-6 week window),
+    # strike just above the trigger so it costs less but still tracks.
+    agg_expiry = _next_third_friday(today, 56)
+    agg_strike = _round_strike(trigger_level * 1.02)
+
+    # Debit spread: same expiry, long near trigger / short near T2. Cheaper
+    # than the naked call; T2 cap is fine because that's where the scanner's
+    # mid-tier target lives anyway.
+    spr_long = _round_strike(trigger_level * 1.01)
+    spr_short = _round_strike(t2)
+    if spr_short <= spr_long:
+        spr_short = _round_strike(spr_long + (agg_strike - spr_long) + 5)
+
+    # LEAP: ~8-12 months out, strike near T2. Min DTE 230 nudges past the
+    # December monthly into January (the canonical LEAP cycle). Gives the
+    # trade time to chop and re-base if T1 fails the first time.
+    leap_expiry = _next_third_friday(today, 230)
+    leap_strike = _round_strike(t2 if phase == "HANDLE" else (t2 + t3) / 2)
+
+    def _fmt_expiry(d: date) -> str:
+        # "Jul 17 2026" — short and unambiguous.
+        return d.strftime("%b %d %Y").replace(" 0", " ")
+
+    def _fmt_strike(s: float) -> str:
+        return f"${s:g}"
+
+    return [
+        {
+            "kind": "aggressive_call",
+            "label": f"{_fmt_expiry(agg_expiry)} {_fmt_strike(agg_strike)}C",
+            "option_type": "call",
+            "strike": agg_strike,
+            "long_strike": None,
+            "short_strike": None,
+            "expiry": agg_expiry.isoformat(),
+            "days_to_expiry": (agg_expiry - today).days,
+            "rationale": (
+                f"Single OTM call expiring past T2. Captures the T1→T2 leg "
+                f"({(agg_expiry - today).days}d to expiry) without short-dated "
+                f"theta drag. Higher cost, no upside cap."
+            ),
+        },
+        {
+            "kind": "call_debit_spread",
+            "label": (
+                f"{_fmt_expiry(agg_expiry)} "
+                f"{_fmt_strike(spr_long)}/{_fmt_strike(spr_short)} call debit spread"
+            ),
+            "option_type": "call",
+            "strike": None,
+            "long_strike": spr_long,
+            "short_strike": spr_short,
+            "expiry": agg_expiry.isoformat(),
+            "days_to_expiry": (agg_expiry - today).days,
+            "rationale": (
+                f"Long {_fmt_strike(spr_long)} / short {_fmt_strike(spr_short)} "
+                f"caps upside at T2 (~{_fmt_strike(spr_short)}) but cuts the cost "
+                f"and the IV exposure significantly. Best when IV is elevated or "
+                f"the move size is uncertain."
+            ),
+        },
+        {
+            "kind": "leap_conviction",
+            "label": f"{_fmt_expiry(leap_expiry)} {_fmt_strike(leap_strike)}C",
+            "option_type": "call",
+            "strike": leap_strike,
+            "long_strike": None,
+            "short_strike": None,
+            "expiry": leap_expiry.isoformat(),
+            "days_to_expiry": (leap_expiry - today).days,
+            "rationale": (
+                f"LEAP-style {_fmt_strike(leap_strike)} call with "
+                f"{(leap_expiry - today).days}d runway. For when you believe the "
+                f"thesis but want time for the trade to chop and re-base before "
+                f"committing. Lower theta, lower gamma — slower payoff."
+            ),
+        },
+    ]
+
+
+# ----------------------------------------------------------------------------
 # Plain-English read — one-glance "what is this and how do I trade it" output.
 # Generated deterministically from phase + score + targets, no LLM. Keeps the
 # guidance honest and reproducible.
@@ -593,6 +741,12 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         i=i,
     )
 
+    recommended_plays = _compute_recommended_plays(
+        phase=phase,
+        trigger_level=trigger_level,
+        targets=targets,
+    )
+
     read = _compose_read(
         phase=phase,
         bcs_score=bcs_score,
@@ -616,6 +770,7 @@ def analyze(bars: Sequence[StageBar], params: StageParams | None = None) -> dict
         "trigger_level": round(trigger_level, 4) if trigger_level is not None else None,
         "distance_pct": round(distance_pct, 4) if distance_pct is not None else None,
         "targets": targets,
+        "recommended_plays": recommended_plays,
         "read": read,
         "conditions": {
             "stage2_trend": bool(stage2),
@@ -844,6 +999,7 @@ def _empty_result(bars: Sequence[StageBar]) -> dict:
         },
         "danger": {"stage4": False, "bear_stack": False},
         "targets": None,
+        "recommended_plays": [],
         "read": {
             "setup_type": "Insufficient history",
             "rarity": "n/a",
