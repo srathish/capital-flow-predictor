@@ -87,24 +87,48 @@ def _load_fundamentals(conn: psycopg.Connection, ticker: str) -> pd.DataFrame:
 
 
 def _ensure_prices(database_url: str, ticker: str) -> pd.DataFrame:
-    """Load prices from DB; if empty, pull a year via yfinance and upsert.
+    """Load prices from DB, refreshing from yfinance when the cache is stale.
 
     The constituent-stock universe is much wider than our predictor universe,
-    so most agent-targeted tickers won't have prices_daily rows yet.
+    so most agent-targeted tickers won't have prices_daily rows yet. Even when
+    rows exist, the latest bar can be days old — the ensemble would then run
+    against stale closes, which is the bug we're guarding against here.
     """
-    with connect(database_url) as conn:
-        prices = _load_prices(conn, ticker)
-    if not prices.empty:
-        return prices
-
-    log.info("agents: no prices for %s in DB; pulling 1y via yfinance", ticker)
-
     from cfp_jobs.ingestion import prices as prices_ingest
 
-    start = datetime.now(UTC) - timedelta(days=400)
-    prices_ingest.ingest(database_url, [ticker], start=start)
     with connect(database_url) as conn:
         prices = _load_prices(conn, ticker)
+
+    now = datetime.now(UTC)
+    needs_full_pull = prices.empty
+    needs_tail_refresh = False
+    if not needs_full_pull:
+        latest_ts = pd.to_datetime(prices["ts"].iloc[-1], utc=True)
+        # yfinance updates the current-day bar intraday and finalizes after
+        # close. Refresh if the newest bar is more than ~1h old so successive
+        # ensemble runs during the session pick up live closes.
+        if (now - latest_ts.to_pydatetime()) > timedelta(hours=1):
+            needs_tail_refresh = True
+
+    if needs_full_pull:
+        log.info("agents: no prices for %s in DB; pulling 1y via yfinance", ticker)
+        start = now - timedelta(days=400)
+        prices_ingest.ingest(database_url, [ticker], start=start)
+    elif needs_tail_refresh:
+        log.info(
+            "agents: prices for %s stale (latest=%s); refreshing tail via yfinance",
+            ticker,
+            prices["ts"].iloc[-1],
+        )
+        start = now - timedelta(days=30)
+        try:
+            prices_ingest.ingest(database_url, [ticker], start=start)
+        except Exception as e:
+            log.warning("price tail refresh failed for %s: %s", ticker, e)
+
+    if needs_full_pull or needs_tail_refresh:
+        with connect(database_url) as conn:
+            prices = _load_prices(conn, ticker)
     return prices
 
 
