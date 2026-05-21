@@ -109,6 +109,34 @@ export async function saveSkylitCredentials({ clientCookie, clientUat, sessionId
 }
 
 /**
+ * Return the set of `gex_feed.title` values already posted today for the
+ * given source (e.g. 'monitor'). Used by intraday-monitor.js to skip
+ * checkpoints it already wrote on a previous tick — otherwise every
+ * 30-min scheduler firing would re-post every prior checkpoint of the
+ * session, surfacing as a flood of "catch-up" badges in the UI.
+ *
+ * etDay must be a `YYYY-MM-DD` string in NYSE trading-day calendar; we
+ * match it inside the title (which the monitor stamps as "📈 YYYY-MM-DD · HH:MM ET").
+ */
+export async function loadPostedTitlesForDay(etDay, source) {
+  const pool = getPool();
+  if (!pool) return new Set();
+  try {
+    const { rows } = await pool.query(
+      `SELECT DISTINCT title FROM gex_feed
+       WHERE source = $1
+         AND title LIKE $2
+         AND ts >= NOW() - INTERVAL '36 hours'`,
+      [source, `%${etDay}%`],
+    );
+    return new Set(rows.map(r => r.title).filter(Boolean));
+  } catch (e) {
+    log.warn(`loadPostedTitlesForDay failed: ${e.message}`);
+    return new Set();
+  }
+}
+
+/**
  * Mirror one Discord embed into gex_feed. This is the new path for what
  * webhook.mirrorToBellwether used to do over HTTP — direct INSERT, no auth
  * dance. Best-effort: rejections are logged at the call site, never thrown.

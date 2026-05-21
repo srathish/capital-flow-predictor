@@ -452,6 +452,7 @@ function buildTradeTriggers(b, character, allNodes) {
   }
 
   // 3. LONG break — break of barney/ceiling with velocity toward upside target ABOVE
+  let upBreakAdded = false;
   if (b.barneyAbove && b.barneyAbove.strike > b.spot) {
     const tgt = targetAbove(b.barneyAbove.strike, 0.05);
     if (tgt) {
@@ -463,6 +464,30 @@ function buildTradeTriggers(b, character, allNodes) {
           condition: `spot breaks ${b.barneyAbove.strike} with velocity (5m+15m growing)`,
           action: 'BUY CALLS on the break',
           target: `${tgt.strike}`, stop: b.barneyAbove.strike.toFixed(2),
+          rr: (reward / risk).toFixed(1),
+        });
+        upBreakAdded = true;
+      }
+    }
+  }
+
+  // 3b. LONG break fallback — no barney resistance above, use the pika ceiling
+  // instead. Breaking above a major pika ceiling unwinds dealer long-gamma
+  // and often runs into the next significant node. Less clean than the barney
+  // path (no obvious resistance flip), but still a concrete plan instead of
+  // "no clean upside break" — which was leaving the operator without an
+  // upside target on quiet-structure days.
+  if (!upBreakAdded && b.pikaCeiling && b.pikaCeiling.strike > b.spot) {
+    const tgt = targetAbove(b.pikaCeiling.strike, 0.03);
+    if (tgt) {
+      const reward = tgt.strike - b.pikaCeiling.strike;
+      const risk = 2 * zone;
+      if (reward > 0) {
+        triggers.push({
+          side: 'LONG', icon: '🟢',
+          condition: `spot breaks ${b.pikaCeiling.strike} (ceiling break — no barney above)`,
+          action: 'BUY CALLS on the break',
+          target: `${tgt.strike}`, stop: b.pikaCeiling.strike.toFixed(2),
           rr: (reward / risk).toFixed(1),
         });
       }

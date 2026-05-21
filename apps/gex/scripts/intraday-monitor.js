@@ -20,6 +20,7 @@ import Database from 'better-sqlite3';
 import { join } from 'path';
 import { config } from '../src/utils/config.js';
 import { postEmbed, COLORS } from '../src/discord/webhook.js';
+import { loadPostedTitlesForDay } from '../src/store/pg.js';
 
 const args = {};
 for (const a of process.argv.slice(2)) {
@@ -602,9 +603,24 @@ async function checkAndEmitPlanEvents(ticker, curState) {
   }
 }
 
+// Posted-title dedup set. Each scheduler firing spawns this script with no
+// "slot" hint, so the script walks every checkpoint from open → now and would
+// re-post the same titles every 30 min — every prior checkpoint then surfaced
+// as a "catch-up" badge in the UI feed. Skip checkpoints whose title is
+// already in gex_feed for today.
+const postedMonitorTitles = await loadPostedTitlesForDay(args.date, 'monitor');
+if (postedMonitorTitles.size > 0) {
+  console.log(`[skip-dedup] ${postedMonitorTitles.size} monitor titles already posted for ${args.date}`);
+}
+
 // Per-checkpoint Discord post buffer — accumulated then posted at end of checkpoint
 async function postCheckpointToDiscord(cp, perTickerData) {
   if (!args.discord) return;
+  const title = `📈 ${args.date} · ${fmtTime(cp)}`;
+  if (postedMonitorTitles.has(title)) {
+    console.log(`[skip-dedup] ${title} already in gex_feed — not re-posting`);
+    return;
+  }
   const fields = [];
   let anyMaterial = false;
   for (const t of TICKERS) {
@@ -641,11 +657,12 @@ async function postCheckpointToDiscord(cp, perTickerData) {
   try {
     await postEmbed({
       source: 'monitor',
-      title: `📈 ${args.date} · ${fmtTime(cp)}`,
+      title,
       fields,
       color: COLORS.default,
       footer: 'gexester-vexster · 30-min update',
     });
+    postedMonitorTitles.add(title);
     // Replay mode fires posts in rapid succession — Discord rate limit is ~5 req/2s.
     // 1s delay is safely under in replay; in live mode, 30-min spacing makes this irrelevant.
     await new Promise(r => setTimeout(r, 1100));
