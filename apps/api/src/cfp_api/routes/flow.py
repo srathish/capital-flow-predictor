@@ -1277,19 +1277,27 @@ async def suggest_plays(
             )
             score *= 0.5
 
-        # Ensemble alignment: a call wants bullish agreement, a put wants bearish
+        # Ensemble alignment: a call wants bullish agreement, a put wants bearish.
+        # Compare *directional voters only* — neutral agents abstain. Previously
+        # the threshold was 60% of all voters, but ~10 of our 26 agents routinely
+        # emit "neutral" (risk_manager on quiet days, news/sentiment without a
+        # catalyst, etc.). With neutrals stuck in the denominator, even a
+        # unanimous directional lean would barely clear 60% and the gate would
+        # falsely read as disagreement.
         if opt_type == "call":
             aligned_votes = bull_votes
+            opposing_votes = bear_votes
             aligned_target = "bullish"
         else:
             aligned_votes = bear_votes
+            opposing_votes = bull_votes
             aligned_target = "bearish"
-        # "Aligned" if ≥ 60% of voters agree. The floor used to be max(8, …)
-        # which incorrectly required 80% on a 10-agent ensemble. Now strictly
-        # proportional with a small-sample floor of 5 so a 5-of-7 vote (71%)
-        # still reads as aligned.
-        ensemble_threshold = max(5, int(round(total_voters * 0.6)))
-        ensemble_aligned = total_voters > 0 and aligned_votes >= ensemble_threshold
+        directional_voters = bull_votes + bear_votes
+        ensemble_aligned = (
+            directional_voters >= 5
+            and aligned_votes > opposing_votes
+            and aligned_votes >= int(round(directional_voters * 0.6))
+        )
         if ensemble_aligned:
             score += 10.0  # ensemble bonus
 
@@ -1314,7 +1322,10 @@ async def suggest_plays(
         if alert_prem >= 1_000_000:
             why.append(f"${alert_prem / 1e6:.1f}M in flow-alert premium across {n_alerts} alerts")
         if ensemble_aligned:
-            why.append(f"{aligned_votes}/{total_voters} ensemble agents agree ({aligned_target})")
+            why.append(
+                f"{aligned_votes}/{directional_voters} directional agents agree "
+                f"({aligned_target}); {total_voters - directional_voters} neutral"
+            )
         if flow_only:
             caveats.append(
                 "OI snapshot not yet ingested for this contract — score reflects flow "
@@ -1378,6 +1389,8 @@ async def suggest_plays(
                 bucket_score=round(b_score, 4),
                 ensemble_aligned=ensemble_aligned,
                 ensemble_alignment_count=aligned_votes,
+                ensemble_opposing_count=opposing_votes,
+                ensemble_directional_voters=directional_voters,
                 ensemble_total_voters=total_voters,
                 ensemble_pm_signal=pm_signal,
                 contracts=contracts,
@@ -1406,19 +1419,27 @@ async def suggest_plays(
     elif top_conviction >= 60 and top[0][1]["ensemble_aligned"]:
         gate = "proceed"
         contracts_to_buy = top[0][1]["contracts"]
+        aligned = top[0][1]["ensemble_alignment_count"]
+        directional = top[0][1]["ensemble_directional_voters"]
+        neutral = top[0][1]["ensemble_total_voters"] - directional
         gate_reason = (
             f"Top candidate scores {top_conviction:.0f}/100 with ensemble agreement "
-            f"({top[0][1]['ensemble_alignment_count']}/{top[0][1]['ensemble_total_voters']} agents). "
+            f"({aligned}/{directional} directional agents agree, {neutral} neutral). "
             f"Buy {contracts_to_buy} contract{'s' if contracts_to_buy != 1 else ''} at 1:3 R:R "
             f"(target +200%, stop −50%)."
         )
     elif top_conviction >= 40:
         gate = "wait"
         if not top[0][1]["ensemble_aligned"]:
+            aligned = top[0][1]["ensemble_alignment_count"]
+            opposing = top[0][1]["ensemble_opposing_count"]
+            directional = top[0][1]["ensemble_directional_voters"]
+            neutral = top[0][1]["ensemble_total_voters"] - directional
+            target = "bullish" if top[0][1]["option_type"] == "call" else "bearish"
             gate_reason = (
-                f"Flow conviction is {top_conviction:.0f}/100 but ensemble disagrees "
-                f"({top[0][1]['ensemble_alignment_count']}/{top[0][1]['ensemble_total_voters']} aligned). "
-                "Wait for the agents to confirm before acting."
+                f"Flow conviction is {top_conviction:.0f}/100 but the ensemble isn't there yet: "
+                f"{aligned} {target} vs {opposing} opposing across {directional} directional "
+                f"agents ({neutral} neutral). Wait for the agents to confirm before acting."
             )
         else:
             gate_reason = f"Top candidate scores {top_conviction:.0f}/100 — modest conviction. Wait for a stronger setup."

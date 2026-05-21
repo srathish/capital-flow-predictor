@@ -468,7 +468,10 @@ function SuggestedPlaysBlock({ data }: { data: FlowSuggestedPlaysResponse }) {
                   <div>
                     Ensemble:{" "}
                     <span className={p.ensemble_aligned ? "text-green-300" : "text-amber-300"}>
-                      {p.ensemble_alignment_count}/{p.ensemble_total_voters} agents agree
+                      {p.ensemble_alignment_count}/{p.ensemble_directional_voters} directional agree
+                      {p.ensemble_total_voters > p.ensemble_directional_voters && (
+                        <span className="text-muted-foreground"> ({p.ensemble_total_voters - p.ensemble_directional_voters} neutral)</span>
+                      )}
                     </span>
                     {p.ensemble_pm_signal && (
                       <span> · PM {p.ensemble_pm_signal}</span>

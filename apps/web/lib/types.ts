@@ -904,6 +904,8 @@ export type FlowSuggestedPlay = {
   bucket_score: number;
   ensemble_aligned: boolean;
   ensemble_alignment_count: number;
+  ensemble_opposing_count: number;
+  ensemble_directional_voters: number;
   ensemble_total_voters: number;
   ensemble_pm_signal: string | null;
   contracts: number;

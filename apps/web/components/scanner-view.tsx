@@ -1085,7 +1085,7 @@ function FlowPlayRow({ play }: { play: FlowSuggestedPlay }) {
         {play.ensemble_aligned && (
           <span
             className="ml-1.5 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-primary"
-            title={`${play.ensemble_alignment_count}/${play.ensemble_total_voters} agents agree`}
+            title={`${play.ensemble_alignment_count}/${play.ensemble_directional_voters} directional agents agree (${play.ensemble_total_voters - play.ensemble_directional_voters} neutral)`}
           >
             agents
           </span>
