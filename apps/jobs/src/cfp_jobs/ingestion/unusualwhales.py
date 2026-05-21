@@ -236,6 +236,57 @@ class UwClient:
             params["date"] = target_date.isoformat()
         return self._get("/market/market-tide", params=params) or []
 
+    # ---------- explosive-options endpoints (Phase 1) ----------
+    # These power the /explosive tab: catalyst-aware unusual-options scanner.
+
+    def contract_screener(self, limit: int = 200) -> list[dict]:
+        """UW's "Hottest Chains" — pre-ranked unusual option contracts market-wide.
+
+        This is THE primary feed for the explosive tab. Returns top contracts by
+        unusual activity score (volume vs OI, premium, IV expansion, etc.)."""
+        return self._get("/screeners/contract-screener", params={"limit": limit}) or []
+
+    def flow_per_strike(self, ticker: str, target_date: date | None = None) -> list[dict]:
+        """Flow grouped by strike across all expiries for a ticker.
+
+        Tells us WHERE the buying clusters — the "3 adjacent OTM strikes" signal
+        becomes a single GET."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get(f"/stock/{ticker}/flow-per-strike", params=params) or []
+
+    def flow_per_expiry(self, ticker: str, target_date: date | None = None) -> list[dict]:
+        """Flow grouped by expiration date. Smart money targets specific weeklies."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get(f"/stock/{ticker}/flow-per-expiry", params=params) or []
+
+    def iv_term_structure(self, ticker: str) -> list[dict]:
+        """IV by expiry. Front-month spike vs back = market pricing imminent move."""
+        return self._get(f"/stock/{ticker}/implied-volatility-term-structure") or []
+
+    def max_pain(self, ticker: str) -> list[dict]:
+        """Max-pain strike per expiry — where dealers want price to pin."""
+        return self._get(f"/stock/{ticker}/max-pain") or []
+
+    def short_screener(self, limit: int = 200) -> list[dict]:
+        """Market-wide high short-interest screen (squeeze candidates)."""
+        return self._get("/screeners/short-screener", params={"limit": limit}) or []
+
+    def failures_to_deliver(self, ticker: str, limit: int = 50) -> list[dict]:
+        """FTD per-settlement-date. FTD spikes often precede squeezes."""
+        return self._get(f"/shorts/{ticker}/failures-to-deliver", params={"limit": limit}) or []
+
+    def fda_calendar(self) -> list[dict]:
+        """FDA PDUFA / AdCom / approval calendar. Biotech catalyst feed."""
+        return self._get("/market/fda-calendar") or []
+
+    def ipo_calendar(self) -> list[dict]:
+        """Upcoming and recent IPOs."""
+        return self._get("/intel/ipo-calendar") or []
+
     def close(self) -> None:
         self._client.close()
 

@@ -22,6 +22,7 @@ from cfp_api.routes import (
     backtest,
     chat,
     discord,
+    explosive,
     flow,
     gex,
     health,
@@ -111,6 +112,9 @@ app.include_router(replay.router, dependencies=PROTECTED)
 # STAGE Scanner — BCS/HFS detection ported from the TradingView Pine Script.
 # yfinance-backed, so the only deploy-time cost is the extra dep.
 app.include_router(stage.router, dependencies=PROTECTED)
+# Explosive options tab: catalyst-aware unusual-options scanner.
+# Reads explosive_scores written by `cfp-jobs explosive-score`.
+app.include_router(explosive.router, dependencies=PROTECTED)
 # gexester-vexster integration: feed mirror + skylit auth status + reauth queue.
 # Mounted under PROTECTED so gexester needs the API key to write status/feed,
 # and the daemon needs it to long-poll the reauth queue. Same surface as

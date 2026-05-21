@@ -13,6 +13,7 @@ const tabs = [
   { href: "/catalysts", label: "Catalysts" },
   { href: "/flow", label: "Flow" },
   { href: "/gex", label: "GEX" },
+  { href: "/explosive", label: "Explosive" },
   { href: "/screener", label: "Screener" },
   { href: "/scanner", label: "Scanner" },
   { href: "/watchlist", label: "Watchlist" },

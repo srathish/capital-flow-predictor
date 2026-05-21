@@ -29,9 +29,11 @@ from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
+from cfp_jobs import score_explosive as score_explosive_mod  # noqa: E402
 from cfp_jobs import train as train_mod  # noqa: E402
 from cfp_jobs import watchlist as watchlist_mod  # noqa: E402
 from cfp_jobs.db import to_psycopg_url  # noqa: E402
+from cfp_jobs.ingestion import explosive as explosive_mod  # noqa: E402
 from cfp_jobs.settings import settings  # noqa: E402
 
 app = typer.Typer(
@@ -991,6 +993,45 @@ def morning_brief_cmd(
     console.print(f"morning-brief: {n} entries across all sections")
     if target:
         console.print(f"  posted: {brief.get('_post_status')}")
+
+
+@app.command("explosive-ingest")
+def explosive_ingest_cmd(
+    max_tickers: int = typer.Option(
+        80,
+        help="Cap on per-ticker pulls per run; keeps UW request budget healthy",
+    ),
+) -> None:
+    """Refresh all UW endpoints feeding the /explosive tab:
+      1. Market screeners (contract_screener, short_screener, FDA, IPO)
+      2. Catalyst universe (contract_screener ∪ FDA ∪ IPO ∪ earnings-next-10d)
+      3. Per-ticker flow/IV/max-pain/FTD for everyone in the universe
+
+    Each per-ticker pull is 5 calls. With universe ≈80 and screeners = 4 calls,
+    a run uses ~404 UW calls — well inside the 20K/day budget. Run every ~15min
+    during RTH."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    out = explosive_mod.ingest_explosive_universe(
+        settings.database_url,
+        settings.unusual_whales_api_key,
+        max_tickers=max_tickers,
+    )
+    console.print(
+        f"[green]explosive-ingest:[/green] universe={out.get('universe_size', 0)} "
+        f"screeners={out.get('phase', {}).get('screeners')}"
+    )
+
+
+@app.command("explosive-score")
+def explosive_score_cmd() -> None:
+    """Compute and persist explosive_scores from the tables refreshed by
+    `cfp-jobs explosive-ingest`. Run immediately after ingestion."""
+    out = score_explosive_mod.score_all(settings.database_url)
+    console.print(f"[green]explosive-score:[/green] {out.get('count')} tickers scored")
+    for entry in out.get("top", []):
+        console.print(f"  {entry['ticker']:6s}  {entry['score']:>5.1f}")
 
 
 if __name__ == "__main__":

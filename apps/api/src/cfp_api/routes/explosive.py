@@ -1,0 +1,160 @@
+"""Explosive options feed.
+
+GET /v1/explosive
+  Latest snapshot's ranked feed — tickers most likely to see a 1→100x options
+  move based on flow concentration + IV term structure + squeeze setup +
+  catalyst proximity + cheap optionality. See score_explosive.py for the
+  composite formula.
+
+GET /v1/explosive/{ticker}
+  Latest score + signals for a single ticker.
+
+The actual scoring runs in cfp-jobs (cfp-jobs explosive-ingest && cfp-jobs
+explosive-score). This route is read-only against explosive_scores.
+"""
+
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Any
+
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
+
+from cfp_api.db import get_pool
+
+
+router = APIRouter(tags=["explosive"])
+
+
+class ExplosiveSubScores(BaseModel):
+    flow_concentration: float
+    iv_term: float
+    squeeze: float
+    catalyst: float
+    cheap_optionality: float
+    gex_bonus: float
+
+
+class ExplosiveItem(BaseModel):
+    ticker: str
+    score: float
+    catalyst_type: str | None = None
+    catalyst_date: date | None = None
+    catalyst_label: str | None = None
+    days_to_catalyst: int | None = None
+    underlying_price: float | None = None
+    top_option_symbol: str | None = None
+    top_option_type: str | None = None
+    top_strike: float | None = None
+    top_expiry: date | None = None
+    top_last_price: float | None = None
+    top_volume: int | None = None
+    top_open_interest: int | None = None
+    top_premium: float | None = None
+    sub_scores: ExplosiveSubScores
+    signals: dict[str, str]
+
+
+class ExplosiveFeedResponse(BaseModel):
+    snapshot_ts: datetime | None
+    count: int
+    items: list[ExplosiveItem]
+
+
+def _row_to_item(row: Any) -> ExplosiveItem:
+    return ExplosiveItem(
+        ticker=row["ticker"],
+        score=float(row["score"]),
+        catalyst_type=row["catalyst_type"],
+        catalyst_date=row["catalyst_date"],
+        catalyst_label=row["catalyst_label"],
+        days_to_catalyst=row["days_to_catalyst"],
+        underlying_price=row["underlying_price"],
+        top_option_symbol=row["top_option_symbol"],
+        top_option_type=row["top_option_type"],
+        top_strike=row["top_strike"],
+        top_expiry=row["top_expiry"],
+        top_last_price=row["top_last_price"],
+        top_volume=row["top_volume"],
+        top_open_interest=row["top_open_interest"],
+        top_premium=row["top_premium"],
+        sub_scores=ExplosiveSubScores(
+            flow_concentration=row["flow_concentration_score"] or 0.0,
+            iv_term=row["iv_term_score"] or 0.0,
+            squeeze=row["squeeze_score"] or 0.0,
+            catalyst=row["catalyst_score"] or 0.0,
+            cheap_optionality=row["cheap_optionality_score"] or 0.0,
+            gex_bonus=row["gex_bonus_score"] or 0.0,
+        ),
+        signals=row["signals"] or {},
+    )
+
+
+@router.get("/v1/explosive", response_model=ExplosiveFeedResponse)
+async def list_explosive(
+    limit: int = Query(50, ge=1, le=200),
+    min_score: float = Query(0.0, ge=0.0, le=100.0),
+    catalyst_type: str | None = Query(None, description="Filter: earnings|fda|ipo"),
+) -> ExplosiveFeedResponse:
+    """Latest snapshot of the ranked explosive-options feed."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        latest_ts = await conn.fetchval("SELECT MAX(snapshot_ts) FROM explosive_scores")
+        if latest_ts is None:
+            return ExplosiveFeedResponse(snapshot_ts=None, count=0, items=[])
+        clauses = ["snapshot_ts = $1", "score >= $2"]
+        params: list[Any] = [latest_ts, min_score]
+        if catalyst_type:
+            params.append(catalyst_type)
+            clauses.append(f"catalyst_type = ${len(params)}")
+        params.append(limit)
+        sql = f"""
+            SELECT
+                ticker, score,
+                catalyst_type, catalyst_date, catalyst_label, days_to_catalyst,
+                underlying_price,
+                top_option_symbol, top_option_type, top_strike, top_expiry,
+                top_last_price, top_volume, top_open_interest, top_premium,
+                flow_concentration_score, iv_term_score, squeeze_score,
+                catalyst_score, cheap_optionality_score, gex_bonus_score,
+                signals
+            FROM explosive_scores
+            WHERE {' AND '.join(clauses)}
+            ORDER BY score DESC, ticker ASC
+            LIMIT ${len(params)}
+        """
+        rows = await conn.fetch(sql, *params)
+    return ExplosiveFeedResponse(
+        snapshot_ts=latest_ts,
+        count=len(rows),
+        items=[_row_to_item(r) for r in rows],
+    )
+
+
+@router.get("/v1/explosive/{ticker}", response_model=ExplosiveItem)
+async def get_explosive_ticker(ticker: str) -> ExplosiveItem:
+    """Latest explosive-score for one ticker."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT
+                ticker, score,
+                catalyst_type, catalyst_date, catalyst_label, days_to_catalyst,
+                underlying_price,
+                top_option_symbol, top_option_type, top_strike, top_expiry,
+                top_last_price, top_volume, top_open_interest, top_premium,
+                flow_concentration_score, iv_term_score, squeeze_score,
+                catalyst_score, cheap_optionality_score, gex_bonus_score,
+                signals
+            FROM explosive_scores
+            WHERE ticker = $1
+            ORDER BY snapshot_ts DESC
+            LIMIT 1
+            """,
+            ticker.upper(),
+        )
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"no explosive score for {ticker}")
+    return _row_to_item(row)
