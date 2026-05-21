@@ -287,6 +287,102 @@ class UwClient:
         """Upcoming and recent IPOs."""
         return self._get("/intel/ipo-calendar") or []
 
+    # ---------- explosive-options Phase 2 (confirmation signals) ----------
+
+    def nope(self, ticker: str) -> dict | list[dict] | None:
+        """UW's Net Options Premium Expirations indicator — proprietary signal.
+        Extreme NOPE = market positioning is one-sided. Returned shape varies;
+        we store whatever the endpoint gives us in payload."""
+        return self._get(f"/stock/{ticker}/nope")
+
+    def historical_risk_reversal_skew(self, ticker: str) -> list[dict]:
+        """25-delta call_iv minus put_iv over time (per DTE bucket).
+        Skew flipping bullish ahead of a catalyst = real demand for upside."""
+        return self._get(f"/stock/{ticker}/historical-risk-reversal-skew") or []
+
+    def realized_volatility(self, ticker: str) -> list[dict]:
+        """Historical RV across windows (10d/20d/30d). Compared to IV to spot
+        cheap optionality (IV << RV) or rich vol (IV >> RV → catalyst priced)."""
+        return self._get(f"/stock/{ticker}/realized-volatility") or []
+
+    def volume_profile(self, option_symbol: str) -> list[dict]:
+        """Trade distribution at price levels for one option contract — the
+        'magnet strike' signal. Identifies where the smart money built its
+        position by aggregating fills at each underlying price."""
+        return self._get(f"/option-contract/{option_symbol}/volume-profile") or []
+
+    def insider_ticker_flow(self, ticker: str) -> dict | list[dict] | None:
+        """Net insider buy/sell flow for a ticker (last N days). Insider
+        accumulation alongside an unusual-flow signal = real confirmation."""
+        return self._get("/insiders/ticker-flow", params={"ticker": ticker})
+
+    # ---------- flow-tab additions (see migration 0025) ---------------------
+    # The 5 endpoints below are net-new for the /flow tab. Paths locked
+    # against /api/openapi on 2026-05-21. The flow tab also soft-reads from
+    # the explosive tab's per-ticker tables (uw_flow_per_strike,
+    # uw_flow_per_expiry, uw_max_pain) — owned by migration 0024.
+
+    def market_movers(self) -> dict | None:
+        """Top gainers / losers / most-active. UW wraps it as
+        {"data": {"top_gainers": [...], "top_losers": [...], "most_active": [...]}}.
+        We need the bucket names, so we return the dict (not the unwrapped list)."""
+        body = self._get("/market/movers")
+        if isinstance(body, list):
+            # _get unwrapped {"data": [...]}; movers wraps a dict so this
+            # path shouldn't fire, but be defensive.
+            return None
+        return body if isinstance(body, dict) else None
+
+    def sector_tide(self, sector: str, target_date: date | None = None) -> list[dict]:
+        """Per-sector net call/put premium tape (per-minute rows). Same shape
+        as /market/market-tide but bucketed by S&P sector."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get(f"/market/{sector}/sector-tide", params=params) or []
+
+    def correlations(
+        self,
+        tickers: list[str],
+        interval: str | None = None,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[dict]:
+        """Pairwise correlations across a basket of `tickers`. UW returns
+        one row per ordered pair (fst, snd) with correlation + window dates."""
+        params: dict[str, Any] = {"tickers": ",".join(tickers)}
+        if interval:
+            params["interval"] = interval
+        if start_date:
+            params["start_date"] = start_date.isoformat()
+        if end_date:
+            params["end_date"] = end_date.isoformat()
+        return self._get("/market/correlations", params=params) or []
+
+    def iv_rank_history(
+        self,
+        ticker: str,
+        target_date: date | None = None,
+        timespan: str | None = None,
+    ) -> list[dict]:
+        """Daily IV30 (volatility) + 1y IV-rank time series for a ticker.
+        Endpoint: /api/stock/{ticker}/iv-rank — distinct from /volatility/stats
+        (which is just the current scalar)."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        if timespan:
+            params["timespan"] = timespan
+        return self._get(f"/stock/{ticker}/iv-rank", params=params) or []
+
+    def earnings_estimates(self, ticker: str) -> dict | None:
+        """Forward EPS + revenue consensus per upcoming report.
+        UW wraps it as {"data": {"ticker": "...", "estimates": [...]}}."""
+        body = self._get(f"/companies/{ticker}/earnings-estimates")
+        if isinstance(body, list):
+            return {"estimates": body}
+        return body if isinstance(body, dict) else None
+
     def close(self) -> None:
         self._client.close()
 

@@ -480,6 +480,204 @@ def _upsert_ipo_calendar(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
     return n
 
 
+# ---------- Phase 2: confirmation-signal upserts ----------
+
+
+def _upsert_nope(
+    conn: psycopg.Connection,
+    ticker: str,
+    snapshot_date: date,
+    payload: Any,
+) -> int:
+    """NOPE returns either a dict (single value) or a list of recent values.
+    We store the latest snapshot only — keyed (snapshot_date, ticker)."""
+    if payload is None:
+        return 0
+    row = payload if isinstance(payload, dict) else (payload[0] if payload else None)
+    if not row:
+        return 0
+    sql = """
+        INSERT INTO uw_nope (snapshot_date, ticker, nope, nope_z, underlying_price, payload)
+        VALUES (%(snapshot_date)s, %(ticker)s, %(nope)s, %(nope_z)s, %(underlying_price)s, %(payload)s)
+        ON CONFLICT (snapshot_date, ticker) DO UPDATE SET
+            nope = EXCLUDED.nope,
+            nope_z = EXCLUDED.nope_z,
+            underlying_price = EXCLUDED.underlying_price,
+            payload = EXCLUDED.payload
+    """
+    params = {
+        "snapshot_date": snapshot_date,
+        "ticker": ticker,
+        "nope": _to_float(row.get("nope") or row.get("value")),
+        "nope_z": _to_float(row.get("nope_z") or row.get("z_score")),
+        "underlying_price": _to_float(row.get("underlying_price") or row.get("price")),
+        "payload": Jsonb(row),
+    }
+    with conn.cursor() as cur:
+        cur.execute(sql, params)
+        return cur.rowcount
+
+
+def _upsert_risk_reversal_skew(
+    conn: psycopg.Connection,
+    ticker: str,
+    snapshot_date: date,
+    rows: Iterable[dict],
+) -> int:
+    sql = """
+        INSERT INTO uw_risk_reversal_skew (
+            snapshot_date, ticker, dte, skew, call_iv, put_iv, payload
+        ) VALUES (
+            %(snapshot_date)s, %(ticker)s, %(dte)s, %(skew)s, %(call_iv)s, %(put_iv)s, %(payload)s
+        ) ON CONFLICT (snapshot_date, ticker, dte) DO UPDATE SET
+            skew = EXCLUDED.skew,
+            call_iv = EXCLUDED.call_iv,
+            put_iv = EXCLUDED.put_iv,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            dte = _to_int(r.get("dte") or r.get("days_to_expiration"))
+            if dte is None:
+                continue
+            params = {
+                "snapshot_date": snapshot_date,
+                "ticker": ticker,
+                "dte": dte,
+                "skew": _to_float(r.get("skew") or r.get("risk_reversal")),
+                "call_iv": _to_float(r.get("call_iv") or r.get("call_implied_volatility")),
+                "put_iv": _to_float(r.get("put_iv") or r.get("put_implied_volatility")),
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def _upsert_realized_volatility(
+    conn: psycopg.Connection,
+    ticker: str,
+    snapshot_date: date,
+    rows: Iterable[dict],
+) -> int:
+    sql = """
+        INSERT INTO uw_realized_volatility (
+            snapshot_date, ticker, rv_window_days, realized_volatility, payload
+        ) VALUES (
+            %(snapshot_date)s, %(ticker)s, %(rv_window_days)s, %(realized_volatility)s, %(payload)s
+        ) ON CONFLICT (snapshot_date, ticker, rv_window_days) DO UPDATE SET
+            realized_volatility = EXCLUDED.realized_volatility,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            window = _to_int(r.get("window") or r.get("window_days") or r.get("days"))
+            if window is None:
+                continue
+            params = {
+                "snapshot_date": snapshot_date,
+                "ticker": ticker,
+                "rv_window_days": window,
+                "realized_volatility": _to_float(
+                    r.get("realized_volatility") or r.get("rv") or r.get("value")
+                ),
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def _upsert_volume_profile(
+    conn: psycopg.Connection,
+    option_symbol: str,
+    snapshot_date: date,
+    rows: Iterable[dict],
+) -> int:
+    ticker, _expiry, _opt_type, _strike = _occ_parse(option_symbol)
+    sql = """
+        INSERT INTO uw_volume_profile (
+            snapshot_date, option_symbol, ticker, price_level, volume, premium, payload
+        ) VALUES (
+            %(snapshot_date)s, %(option_symbol)s, %(ticker)s, %(price_level)s, %(volume)s, %(premium)s, %(payload)s
+        ) ON CONFLICT (snapshot_date, option_symbol, price_level) DO UPDATE SET
+            volume = EXCLUDED.volume,
+            premium = EXCLUDED.premium,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            price_level = _to_float(r.get("price_level") or r.get("price") or r.get("level"))
+            if price_level is None:
+                continue
+            params = {
+                "snapshot_date": snapshot_date,
+                "option_symbol": option_symbol,
+                "ticker": ticker,
+                "price_level": price_level,
+                "volume": _to_int(r.get("volume")),
+                "premium": _to_float(r.get("premium")),
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def _upsert_insider_ticker_flow(
+    conn: psycopg.Connection,
+    ticker: str,
+    snapshot_date: date,
+    payload: Any,
+) -> int:
+    """Flow endpoint may return a single dict or one row per lookback window.
+    We persist whatever shape we get."""
+    if payload is None:
+        return 0
+    rows = payload if isinstance(payload, list) else [payload]
+    sql = """
+        INSERT INTO uw_insider_ticker_flow (
+            snapshot_date, ticker, lookback_days,
+            net_buy_value, buy_count, sell_count, buy_value, sell_value, payload
+        ) VALUES (
+            %(snapshot_date)s, %(ticker)s, %(lookback_days)s,
+            %(net_buy_value)s, %(buy_count)s, %(sell_count)s, %(buy_value)s, %(sell_value)s, %(payload)s
+        ) ON CONFLICT (snapshot_date, ticker, lookback_days) DO UPDATE SET
+            net_buy_value = EXCLUDED.net_buy_value,
+            buy_count = EXCLUDED.buy_count,
+            sell_count = EXCLUDED.sell_count,
+            buy_value = EXCLUDED.buy_value,
+            sell_value = EXCLUDED.sell_value,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            lookback = _to_int(r.get("lookback_days") or r.get("window") or r.get("days")) or 30
+            buy_val = _to_float(r.get("buy_value") or r.get("total_buy_value"))
+            sell_val = _to_float(r.get("sell_value") or r.get("total_sell_value"))
+            net = _to_float(r.get("net_buy_value") or r.get("net_value"))
+            if net is None and (buy_val is not None or sell_val is not None):
+                net = (buy_val or 0.0) - (sell_val or 0.0)
+            params = {
+                "snapshot_date": snapshot_date,
+                "ticker": ticker,
+                "lookback_days": lookback,
+                "net_buy_value": net,
+                "buy_count": _to_int(r.get("buy_count")),
+                "sell_count": _to_int(r.get("sell_count")),
+                "buy_value": buy_val,
+                "sell_value": sell_val,
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
 # ---------- top-level ingest entry points (CLI) ----------
 
 
@@ -539,10 +737,15 @@ def ingest_per_ticker_explosive(
             "iv_term":          lambda: uw.iv_term_structure(ticker),
             "max_pain":         lambda: uw.max_pain(ticker),
             "ftd":              lambda: uw.failures_to_deliver(ticker),
+            # Phase 2 confirmation signals
+            "nope":             lambda: uw.nope(ticker),
+            "rrs":              lambda: uw.historical_risk_reversal_skew(ticker),
+            "rv":               lambda: uw.realized_volatility(ticker),
+            "insider_flow":     lambda: uw.insider_ticker_flow(ticker),
         }
         results: dict[str, Any] = {}
         errors: dict[str, Exception] = {}
-        with ThreadPoolExecutor(max_workers=5, thread_name_prefix=f"uw-{ticker}") as ex:
+        with ThreadPoolExecutor(max_workers=9, thread_name_prefix=f"uw-{ticker}") as ex:
             future_to_key = {ex.submit(fn): key for key, fn in fetchers.items()}
             for fut in as_completed(future_to_key):
                 key = future_to_key[fut]
@@ -553,10 +756,14 @@ def ingest_per_ticker_explosive(
 
         upserters = {
             "flow_per_strike":  lambda p: _upsert_flow_per_strike(conn, ticker, today, p),
-            "flow_per_expiry":  lambda p: _upsert_flow_per_expiry(conn, ticker, today, p),
+            "flow_per_expiry": lambda p: _upsert_flow_per_expiry(conn, ticker, today, p),
             "iv_term":          lambda p: _upsert_iv_term_structure(conn, ticker, today, p),
             "max_pain":         lambda p: _upsert_max_pain(conn, ticker, today, p),
             "ftd":              lambda p: _upsert_failures_to_deliver(conn, ticker, p),
+            "nope":             lambda p: _upsert_nope(conn, ticker, today, p),
+            "rrs":              lambda p: _upsert_risk_reversal_skew(conn, ticker, today, p),
+            "rv":               lambda p: _upsert_realized_volatility(conn, ticker, today, p),
+            "insider_flow":     lambda p: _upsert_insider_ticker_flow(conn, ticker, today, p),
         }
         for key, payload in results.items():
             try:
@@ -631,19 +838,66 @@ def resolve_explosive_universe(
     return sorted(t.upper() for t in universe if t)
 
 
+def ingest_volume_profiles(
+    database_url: str,
+    api_key: str,
+    limit: int = 40,
+) -> dict[str, int]:
+    """Pull volume_profile for the top contracts in the latest contract_screener
+    snapshot. Runs after `ingest_market_screeners` so the screener table is
+    fresh. Skips contracts already profiled today (cheap idempotency)."""
+    today = datetime.now(UTC).date()
+    counts: dict[str, int] = {}
+    with connect(database_url) as conn, conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT option_symbol
+            FROM uw_contract_screener
+            WHERE snapshot_ts = (SELECT MAX(snapshot_ts) FROM uw_contract_screener)
+              AND option_type = 'call'
+              AND option_symbol NOT IN (
+                SELECT DISTINCT option_symbol
+                FROM uw_volume_profile
+                WHERE snapshot_date = %s
+              )
+            ORDER BY COALESCE(ask_side_prem, total_premium, 0) DESC
+            LIMIT %s
+            """,
+            (today, limit),
+        )
+        symbols = [row[0] for row in cur.fetchall() if row[0]]
+    if not symbols:
+        return counts
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        for sym in symbols:
+            try:
+                with conn.transaction():
+                    counts[sym] = _upsert_volume_profile(conn, sym, today, uw.volume_profile(sym))
+            except Exception as e:
+                log.warning("volume_profile failed for %s: %s", sym, e)
+                counts[sym] = 0
+        conn.commit()
+    return counts
+
+
 def ingest_explosive_universe(
     database_url: str,
     api_key: str,
     max_tickers: int = 80,
+    volume_profile_limit: int = 40,
 ) -> dict[str, Any]:
     """One-shot pipeline:
        1. Refresh market screeners (contract_screener, short_screener, FDA, IPO)
-       2. Resolve catalyst universe
-       3. Pull per-ticker flow/IV/max-pain/FTD for each name
+       2. Pull volume_profile for the top contracts that just landed
+       3. Resolve catalyst universe (post-screener)
+       4. Pull per-ticker flow/IV/max-pain/FTD + Phase 2 confirmation signals
 
     Returns a summary dict with counts. Called from `cfp-jobs explosive-ingest`."""
     summary: dict[str, Any] = {"phase": {}}
     summary["phase"]["screeners"] = ingest_market_screeners(database_url, api_key)
+    summary["phase"]["volume_profile"] = {
+        "contracts": len(ingest_volume_profiles(database_url, api_key, limit=volume_profile_limit))
+    }
     universe = resolve_explosive_universe(database_url)[:max_tickers]
     summary["universe_size"] = len(universe)
     per_ticker: dict[str, dict[str, int]] = {}

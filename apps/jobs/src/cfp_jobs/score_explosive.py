@@ -34,13 +34,21 @@ log = logging.getLogger(__name__)
 
 
 # Tunables — these get recalibrated as forward data accumulates.
+# Phase 2 layers 5 confirmation signals: NOPE extremity, risk-reversal skew
+# flip, IV vs RV divergence, volume-profile magnet, and insider net buying.
 WEIGHTS = {
-    "flow_concentration": 0.28,
-    "iv_term":            0.15,
-    "squeeze":            0.15,
-    "catalyst":           0.22,
-    "cheap_optionality":  0.15,
-    "gex_bonus":          0.05,
+    "flow_concentration": 0.22,
+    "iv_term":            0.12,
+    "squeeze":            0.12,
+    "catalyst":           0.20,
+    "cheap_optionality":  0.12,
+    "gex_bonus":          0.04,
+    # Phase 2
+    "iv_vs_rv":           0.05,
+    "skew_flip":          0.05,
+    "nope":               0.04,
+    "insider_buy":        0.02,
+    "volume_profile":     0.02,
 }
 
 # A name needs at least this much aggregate OTM call premium today to be considered.
@@ -82,6 +90,16 @@ class TickerSignals:
     short_percent_float: float | None = None
     utilization: float | None = None
     recent_ftd_quantity: int | None = None
+    # Phase 2: confirmation signals
+    nope_value: float | None = None
+    nope_z: float | None = None
+    skew_now: float | None = None
+    skew_30d_ago: float | None = None
+    iv_30d: float | None = None
+    rv_30d: float | None = None
+    insider_net_buy_30d: float | None = None
+    volume_profile_top_price: float | None = None
+    volume_profile_top_share: float | None = None
     # rationale strings shown in UI
     reasons: dict[str, str] = field(default_factory=dict)
 
@@ -92,6 +110,12 @@ class TickerSignals:
     catalyst_score: float = 0.0
     cheap_optionality_score: float = 0.0
     gex_bonus_score: float = 0.0
+    # Phase 2
+    iv_vs_rv_score: float = 0.0
+    skew_flip_score: float = 0.0
+    nope_score: float = 0.0
+    insider_buy_score: float = 0.0
+    volume_profile_score: float = 0.0
 
 
 def _money(v: float | None) -> str:
@@ -356,6 +380,142 @@ def _underlying_price(conn: psycopg.Connection, ticker: str) -> float | None:
     return None
 
 
+def _load_nope(conn: psycopg.Connection, ticker: str) -> tuple[float | None, float | None]:
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT nope, nope_z FROM uw_nope WHERE ticker = %s ORDER BY snapshot_date DESC LIMIT 1",
+            (ticker,),
+        )
+        row = cur.fetchone()
+    if not row:
+        return None, None
+    return (
+        float(row[0]) if row[0] is not None else None,
+        float(row[1]) if row[1] is not None else None,
+    )
+
+
+def _load_skew_flip(
+    conn: psycopg.Connection,
+    ticker: str,
+    today: date,
+) -> tuple[float | None, float | None]:
+    """Returns (today's 30dte skew, 30 days ago's 30dte skew). Positive change
+    = call demand rising vs put demand → bullish skew flip."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT skew FROM uw_risk_reversal_skew
+            WHERE ticker = %s AND dte BETWEEN 20 AND 45
+            ORDER BY snapshot_date DESC LIMIT 1
+            """,
+            (ticker,),
+        )
+        row = cur.fetchone()
+        now_skew = float(row[0]) if row and row[0] is not None else None
+        cur.execute(
+            """
+            SELECT skew FROM uw_risk_reversal_skew
+            WHERE ticker = %s AND dte BETWEEN 20 AND 45
+              AND snapshot_date <= %s
+            ORDER BY snapshot_date DESC LIMIT 1
+            """,
+            (ticker, today - timedelta(days=14)),
+        )
+        row = cur.fetchone()
+        baseline_skew = float(row[0]) if row and row[0] is not None else None
+    return now_skew, baseline_skew
+
+
+def _load_iv_vs_rv(
+    conn: psycopg.Connection,
+    ticker: str,
+) -> tuple[float | None, float | None]:
+    """Returns (iv_30d, rv_30d). IV expensive vs RV = market pricing imminent move."""
+    iv = None
+    with conn.cursor() as cur:
+        # Pull 30d-ish IV from term structure (closest to dte=30)
+        cur.execute(
+            """
+            SELECT iv FROM uw_iv_term_structure
+            WHERE ticker = %s AND dte BETWEEN 20 AND 45 AND iv IS NOT NULL
+            ORDER BY snapshot_date DESC, dte ASC LIMIT 1
+            """,
+            (ticker,),
+        )
+        row = cur.fetchone()
+        if row and row[0] is not None:
+            iv = float(row[0])
+        cur.execute(
+            """
+            SELECT realized_volatility FROM uw_realized_volatility
+            WHERE ticker = %s AND rv_window_days = 30 AND realized_volatility IS NOT NULL
+            ORDER BY snapshot_date DESC LIMIT 1
+            """,
+            (ticker,),
+        )
+        row = cur.fetchone()
+        rv = float(row[0]) if row and row[0] is not None else None
+    return iv, rv
+
+
+def _load_insider_flow(conn: psycopg.Connection, ticker: str) -> float | None:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT net_buy_value FROM uw_insider_ticker_flow
+            WHERE ticker = %s AND lookback_days = 30
+            ORDER BY snapshot_date DESC LIMIT 1
+            """,
+            (ticker,),
+        )
+        row = cur.fetchone()
+        if row and row[0] is not None:
+            return float(row[0])
+        # fall back to any lookback window
+        cur.execute(
+            """
+            SELECT net_buy_value FROM uw_insider_ticker_flow
+            WHERE ticker = %s
+            ORDER BY snapshot_date DESC, lookback_days ASC LIMIT 1
+            """,
+            (ticker,),
+        )
+        row = cur.fetchone()
+        if row and row[0] is not None:
+            return float(row[0])
+    return None
+
+
+def _load_volume_profile(
+    conn: psycopg.Connection,
+    option_symbol: str | None,
+) -> tuple[float | None, float | None]:
+    """For the ticker's top OTM contract, find the price level with the most
+    volume — the "magnet strike" where smart money built the position.
+    Returns (top_price_level, share_of_total_volume_at_top)."""
+    if not option_symbol:
+        return None, None
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT price_level, volume FROM uw_volume_profile
+            WHERE option_symbol = %s AND volume IS NOT NULL
+            ORDER BY snapshot_date DESC, volume DESC
+            """,
+            (option_symbol,),
+        )
+        rows = cur.fetchall()
+    if not rows:
+        return None, None
+    total = sum(int(r[1] or 0) for r in rows)
+    if total <= 0:
+        return None, None
+    top_price = float(rows[0][0])
+    top_share = float(rows[0][1]) / total
+    return top_price, top_share
+
+
 def _load_top_contract(
     conn: psycopg.Connection,
     ticker: str,
@@ -504,6 +664,88 @@ def _score_cheap_optionality(sig: TickerSignals) -> None:
         )
 
 
+def _score_iv_vs_rv(sig: TickerSignals) -> None:
+    """0-100 from IV/RV ratio. >1.5 (IV pricing big move) = 100; ≤1.0 = 0.
+    A high ratio confirms the market is actively pricing volatility."""
+    if sig.iv_30d is None or sig.rv_30d is None or sig.rv_30d <= 0:
+        sig.iv_vs_rv_score = 0.0
+        return
+    ratio = sig.iv_30d / sig.rv_30d
+    # ratio 1.0 → 0, 1.25 → 50, 1.5+ → 100
+    sig.iv_vs_rv_score = _clip((ratio - 1.0) * 200.0)
+    if sig.iv_vs_rv_score > 5:
+        sig.reasons["iv_vs_rv"] = f"IV/RV {ratio:.2f}× — market pricing move"
+
+
+def _score_skew_flip(sig: TickerSignals) -> None:
+    """0-100 from how much 30dte skew has shifted bullish in last ~14d.
+    skew_now - skew_baseline > 0 = call demand rising vs put demand."""
+    if sig.skew_now is None or sig.skew_30d_ago is None:
+        sig.skew_flip_score = 0.0
+        return
+    delta = sig.skew_now - sig.skew_30d_ago
+    # +0% → 0, +5% → 50, +10%+ → 100. (skew measured as call_iv - put_iv)
+    sig.skew_flip_score = _clip(delta * 1000.0)
+    if sig.skew_flip_score > 5:
+        sig.reasons["skew_flip"] = (
+            f"skew shifted {delta*100:+.1f}pp bullish vs 14d ago"
+        )
+
+
+def _score_nope(sig: TickerSignals) -> None:
+    """Extreme NOPE = positioning concentrated. |z| ≥ 2 = 100, |z| ≥ 1 = 50."""
+    if sig.nope_z is not None:
+        sig.nope_score = _clip(abs(sig.nope_z) * 50.0)
+        if sig.nope_score > 10:
+            sig.reasons["nope"] = f"NOPE z={sig.nope_z:+.2f}"
+    elif sig.nope_value is not None:
+        # No z-score: use absolute magnitude as a weak proxy
+        mag = abs(sig.nope_value)
+        sig.nope_score = _clip(mag * 50.0)
+        if sig.nope_score > 10:
+            sig.reasons["nope"] = f"NOPE {sig.nope_value:+.2f}"
+    else:
+        sig.nope_score = 0.0
+
+
+def _score_insider_buy(sig: TickerSignals) -> None:
+    """Insider net buying (last 30d) as confirmation.
+    $100K = 30, $1M = 70, $5M+ = 100. Selling → 0."""
+    if sig.insider_net_buy_30d is None or sig.insider_net_buy_30d <= 0:
+        sig.insider_buy_score = 0.0
+        return
+    v = sig.insider_net_buy_30d
+    if v < 1e4:
+        sig.insider_buy_score = 0.0
+    elif v < 1e5:
+        sig.insider_buy_score = 30.0 * (v / 1e5)
+    elif v < 1e6:
+        sig.insider_buy_score = 30 + 40 * math.log10(v / 1e5)
+    else:
+        sig.insider_buy_score = _clip(70 + 30 * math.log10(v / 1e6))
+    if sig.insider_buy_score > 10:
+        sig.reasons["insider_buy"] = f"insider net buy {_money(v)} / 30d"
+
+
+def _score_volume_profile(sig: TickerSignals) -> None:
+    """Magnet strike concentration: share of volume at single price level.
+    ≥60% = 100, 30% = 50, <15% = 0."""
+    if sig.volume_profile_top_share is None:
+        sig.volume_profile_score = 0.0
+        return
+    s = sig.volume_profile_top_share
+    if s < 0.15:
+        sig.volume_profile_score = 0.0
+    elif s < 0.60:
+        sig.volume_profile_score = _clip((s - 0.15) * 222.0)
+    else:
+        sig.volume_profile_score = 100.0
+    if sig.volume_profile_score > 20 and sig.volume_profile_top_price is not None:
+        sig.reasons["volume_profile"] = (
+            f"magnet @ ${sig.volume_profile_top_price:.2f} ({_pct(s)} of fills)"
+        )
+
+
 def _score_gex_bonus(conn: psycopg.Connection, sig: TickerSignals) -> None:
     """Bonus for tickers in GEX coverage with dealer short gamma at/near the
     OTM cluster. If gex tables don't exist or ticker isn't covered → 0.
@@ -562,6 +804,15 @@ def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> Tick
     # squeeze
     sig.short_percent_float, sig.utilization, sig.recent_ftd_quantity = _load_squeeze(conn, ticker, today)
 
+    # Phase 2 confirmation signals
+    sig.nope_value, sig.nope_z = _load_nope(conn, ticker)
+    sig.skew_now, sig.skew_30d_ago = _load_skew_flip(conn, ticker, today)
+    sig.iv_30d, sig.rv_30d = _load_iv_vs_rv(conn, ticker)
+    sig.insider_net_buy_30d = _load_insider_flow(conn, ticker)
+    sig.volume_profile_top_price, sig.volume_profile_top_share = _load_volume_profile(
+        conn, sig.top_option_symbol
+    )
+
     # score
     _score_flow_concentration(sig)
     _score_iv_term(sig)
@@ -569,6 +820,11 @@ def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> Tick
     _score_catalyst(sig)
     _score_cheap_optionality(sig)
     _score_gex_bonus(conn, sig)
+    _score_iv_vs_rv(sig)
+    _score_skew_flip(sig)
+    _score_nope(sig)
+    _score_insider_buy(sig)
+    _score_volume_profile(sig)
     return sig
 
 
@@ -580,6 +836,11 @@ def _composite(sig: TickerSignals) -> float:
         + WEIGHTS["catalyst"]           * sig.catalyst_score
         + WEIGHTS["cheap_optionality"]  * sig.cheap_optionality_score
         + WEIGHTS["gex_bonus"]          * sig.gex_bonus_score
+        + WEIGHTS["iv_vs_rv"]           * sig.iv_vs_rv_score
+        + WEIGHTS["skew_flip"]          * sig.skew_flip_score
+        + WEIGHTS["nope"]               * sig.nope_score
+        + WEIGHTS["insider_buy"]        * sig.insider_buy_score
+        + WEIGHTS["volume_profile"]     * sig.volume_profile_score
     )
 
 
@@ -598,6 +859,8 @@ def _upsert_score(
             top_last_price, top_volume, top_open_interest, top_premium,
             flow_concentration_score, iv_term_score, squeeze_score,
             catalyst_score, cheap_optionality_score, gex_bonus_score,
+            iv_vs_rv_score, skew_flip_score, nope_score,
+            insider_buy_score, volume_profile_score,
             signals
         ) VALUES (
             %(snapshot_ts)s, %(ticker)s, %(score)s,
@@ -607,6 +870,8 @@ def _upsert_score(
             %(top_last_price)s, %(top_volume)s, %(top_open_interest)s, %(top_premium)s,
             %(flow_concentration_score)s, %(iv_term_score)s, %(squeeze_score)s,
             %(catalyst_score)s, %(cheap_optionality_score)s, %(gex_bonus_score)s,
+            %(iv_vs_rv_score)s, %(skew_flip_score)s, %(nope_score)s,
+            %(insider_buy_score)s, %(volume_profile_score)s,
             %(signals)s
         ) ON CONFLICT (snapshot_ts, ticker) DO UPDATE SET
             score = EXCLUDED.score,
@@ -635,6 +900,11 @@ def _upsert_score(
         "catalyst_score": sig.catalyst_score,
         "cheap_optionality_score": sig.cheap_optionality_score,
         "gex_bonus_score": sig.gex_bonus_score,
+        "iv_vs_rv_score": sig.iv_vs_rv_score,
+        "skew_flip_score": sig.skew_flip_score,
+        "nope_score": sig.nope_score,
+        "insider_buy_score": sig.insider_buy_score,
+        "volume_profile_score": sig.volume_profile_score,
         "signals": Jsonb(sig.reasons),
     }
     with conn.cursor() as cur:

@@ -17,6 +17,12 @@ type ExplosiveSubScores = {
   catalyst: number;
   cheap_optionality: number;
   gex_bonus: number;
+  // Phase 2 confirmation signals
+  iv_vs_rv?: number;
+  skew_flip?: number;
+  nope?: number;
+  insider_buy?: number;
+  volume_profile?: number;
 };
 
 type ExplosiveItem = {
