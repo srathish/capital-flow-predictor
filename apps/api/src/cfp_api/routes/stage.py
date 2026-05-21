@@ -138,10 +138,17 @@ class StageScanResponse(BaseModel):
     items: list[StageTickerResult]
 
 
-def _analyze_ticker(ticker: str, bars: list) -> StageTickerResult:
-    """Run analyze() and adapt the dict into the response model."""
+def _analyze_ticker(
+    ticker: str, bars: list, reason: str | None = None
+) -> StageTickerResult:
+    """Run analyze() and adapt the dict into the response model.
+
+    `reason` is the classification from stage_data when bars came back empty
+    — surfaces 'not_found' / 'rate_limited' / 'insufficient_history' to the
+    UI instead of a generic 'no_data' for everything.
+    """
     if not bars:
-        return _empty_result(ticker, "no_data")
+        return _empty_result(ticker, reason or "no_data")
     try:
         r = stage_logic.analyze(bars)
     except Exception as exc:  # noqa: BLE001
@@ -239,7 +246,9 @@ async def scan(
     # the event loop while fetching 500 tickers.
     bars_by_ticker = await asyncio.to_thread(stage_data.fetch_bars_batch, symbols)
 
-    results = [_analyze_ticker(t, bars_by_ticker.get(t, [])) for t in symbols]
+    results = [
+        _analyze_ticker(t, *bars_by_ticker.get(t, ([], "no_data"))) for t in symbols
+    ]
 
     if only_armed:
         results = [r for r in results if r.active_ready]
@@ -261,5 +270,5 @@ async def scan(
 async def get_ticker(ticker: str) -> StageTickerResult:
     """Full STAGE dashboard for one ticker — what the TV indicator shows."""
     ticker = ticker.upper().strip()
-    bars = await asyncio.to_thread(stage_data.fetch_bars, ticker)
-    return _analyze_ticker(ticker, bars)
+    bars, reason = await asyncio.to_thread(stage_data.fetch_bars, ticker)
+    return _analyze_ticker(ticker, bars, reason)

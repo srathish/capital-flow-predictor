@@ -480,11 +480,27 @@ function ScannerRow({
   );
 }
 
+function humanizeStageError(error: string): string {
+  switch (error) {
+    case "not_found":
+      return "ticker not recognized by Yahoo — check the symbol (non-US listings need a suffix like .TO, .L)";
+    case "rate_limited":
+      return "Yahoo rate-limited the fetch — wait a minute and refresh";
+    case "insufficient_history":
+      return "symbol exists but has too little price history to analyze (new IPO or recent halt?)";
+    case "no_data":
+      return "no data available from Yahoo";
+    default:
+      return error;
+  }
+}
+
+
 function ConditionsGrid({ item }: { item: StageTickerResult }) {
   if (item.error) {
     return (
       <div className="text-xs text-signal-bearish">
-        {item.ticker}: {item.error}
+        {item.ticker}: {humanizeStageError(item.error)}
       </div>
     );
   }

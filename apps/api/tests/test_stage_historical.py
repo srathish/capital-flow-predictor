@@ -181,8 +181,8 @@ def test_historical_signal_fires_in_window(event: HistoricalEvent) -> None:
     today = date.today()
     target = date.fromisoformat(event.expected_date)
     days_back = (today - target).days + 400
-    bars = stage_data.fetch_bars(event.ticker, lookback_days=days_back)
-    assert bars, f"yfinance returned no bars for {event.ticker}"
+    bars, reason = stage_data.fetch_bars(event.ticker, lookback_days=days_back)
+    assert bars, f"yfinance returned no bars for {event.ticker} (reason={reason})"
 
     center = _index_of_date(bars, event.expected_date)
     if center is None:
