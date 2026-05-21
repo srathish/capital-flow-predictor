@@ -339,6 +339,38 @@ uv run --package cfp-jobs cfp-jobs run-agents NVDA
 uv run --package cfp-jobs cfp-jobs build-watchlist
 ```
 
+### Local options analysis (`lc` / local-chat)
+
+Self-contained CLI in `local-chat/` that pulls Unusual Whales data,
+computes positioning metrics in Python, and (optionally) hands the
+finished numbers to an LLM. Needs `UNUSUAL_WHALES_API_KEY` set; LLM
+keys only required for `lc analyze` without `--no-llm`.
+
+```bash
+# Install once
+uv sync --package local-chat
+
+# Full positioning read (flow + GEX + OI), LLM-interpreted
+uv run --package local-chat lc analyze IREN
+
+# Just dump computed inputs as JSON — no LLM, good for piping/slicing
+uv run --package local-chat lc analyze IREN --no-llm --json > /tmp/iren.json
+
+# Single-concern views (no LLM)
+uv run --package local-chat lc flow  IREN          # net call/put $, sweeps, top contracts
+uv run --package local-chat lc gex   IREN          # dealer gamma, regime, flip level, walls
+uv run --package local-chat lc oi    IREN          # largest strikes, fastest growth
+uv run --package local-chat lc info  IREN          # everything UW has, markdown
+
+# Verify a specific contract (opening longs vs sold-to-open?)
+uv run --package local-chat lc verify IREN 110 call 2028-01-21
+```
+
+The built-in rollups bucket expiries into weekly / front_month / leap.
+For an expiry-specific slice (e.g. "just the Jan 2028 calls") pull the
+`--no-llm --json` dump and filter in Python — the assembled
+`PositioningInput` carries the full per-contract chain.
+
 ### Skylit (Heatseeker) login refresh
 
 skylit.ai sits behind Clerk + Discord OAuth. Discord blocks programmatic
