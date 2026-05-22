@@ -536,6 +536,10 @@ export type CohortPairSpread = {
   std_spread: number;
   z: number;
   pctile: number | null;
+  eg_beta: number | null;
+  eg_adf_t: number | null;
+  coint_5pct: boolean | null;
+  coint_10pct: boolean | null;
 };
 export type CohortMember = {
   ticker: string;
@@ -543,6 +547,9 @@ export type CohortMember = {
   rel_vs_median: number | null;
   is_leader: boolean;
   is_laggard: boolean;
+  earnings_date: string | null;
+  earnings_offset_days: number | null;
+  earnings_session: string | null;
 };
 export type CohortSummary = {
   key: string;
@@ -553,8 +560,11 @@ export type CohortSummary = {
   last_close_ts: string | null;
   max_abs_z: number | null;
   max_abs_z_pair: [string, string] | null;
+  max_abs_z_coint: boolean | null;
   leader: string | null;
   laggard: string | null;
+  leader_earnings_offset_days: number | null;
+  laggard_earnings_offset_days: number | null;
 };
 export type CohortDetail = {
   key: string;

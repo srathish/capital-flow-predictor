@@ -22,6 +22,69 @@ const fmtPct = (v: number | null | undefined) =>
 const fmtZ = (v: number | null | undefined) =>
   v === null || v === undefined ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
 
+function EarningsBadge({ offsetDays }: { offsetDays: number | null }) {
+  // Earnings annotation only — never a suppression. Pre-earnings can be the
+  // catalyst that triggers a laggard catch-up; post-earnings means the lag
+  // was fundamentally confirmed. Label both clearly so the operator decides.
+  if (offsetDays === null) return null;
+  const label = offsetDays === 0 ? "ER TODAY" : offsetDays > 0 ? `ER T-${offsetDays}` : `ER ${offsetDays}d`;
+  const tone = offsetDays >= 0 ? "border-amber-500/40 text-amber-400" : "border-sky-500/40 text-sky-400";
+  const title = offsetDays >= 0
+    ? `Reports in ${offsetDays} day(s) — catalyst risk AND potential catch-up trigger`
+    : `Reported ${Math.abs(offsetDays)} day(s) ago — lag may be fundamental`;
+  return (
+    <span
+      title={title}
+      className={cn("ml-1 rounded border px-1 text-[9px] uppercase tracking-wide", tone)}
+    >
+      {label}
+    </span>
+  );
+}
+
+function CointBadge({
+  five,
+  ten,
+}: {
+  five: boolean | null | undefined;
+  ten: boolean | null | undefined;
+}) {
+  // null = not enough data; false/false = no evidence of cointegration;
+  // 10pct only = weak; 5pct = strong. A non-cointegrated stretched pair is
+  // mostly noise — the spread doesn't actually mean-revert.
+  if (five) {
+    return (
+      <span
+        title="Engle-Granger cointegrated at 5% — spread reliably mean-reverts"
+        className="rounded border border-signal-bullish/40 px-1 text-[9px] uppercase tracking-wide text-signal-bullish"
+      >
+        COINT
+      </span>
+    );
+  }
+  if (ten) {
+    return (
+      <span
+        title="Engle-Granger cointegrated at 10% — weaker mean-reversion evidence"
+        className="rounded border border-amber-500/40 px-1 text-[9px] uppercase tracking-wide text-amber-400"
+      >
+        COINT 10%
+      </span>
+    );
+  }
+  if (five === false && ten === false) {
+    return (
+      <span
+        title="Not cointegrated — spread doesn't reliably mean-revert; treat |z| as noise"
+        className="rounded border border-border px-1 text-[9px] uppercase tracking-wide text-muted-foreground"
+      >
+        NO COINT
+      </span>
+    );
+  }
+  return null;
+}
+
 export function CohortsView() {
   const [windowDays, setWindowDays] = useState<number>(60);
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -127,10 +190,11 @@ function CohortRow({
             <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
               Top pair
             </div>
-            <div className="text-xs num">
+            <div className="flex items-baseline justify-end gap-1 text-xs num">
               {cohort.max_abs_z_pair
                 ? `${cohort.max_abs_z_pair[0]} / ${cohort.max_abs_z_pair[1]}`
                 : "—"}
+              <CointBadge five={cohort.max_abs_z_coint} ten={null} />
             </div>
           </div>
           <div className="text-right">
@@ -143,10 +207,16 @@ function CohortRow({
             <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
               Leader / Laggard
             </div>
-            <div className="text-xs num">
-              <span className="text-signal-bullish">{cohort.leader ?? "—"}</span>
+            <div className="flex items-baseline justify-end gap-1 text-xs num">
+              <span className="text-signal-bullish">
+                {cohort.leader ?? "—"}
+                <EarningsBadge offsetDays={cohort.leader_earnings_offset_days} />
+              </span>
               <span className="text-muted-foreground"> / </span>
-              <span className="text-signal-bearish">{cohort.laggard ?? "—"}</span>
+              <span className="text-signal-bearish">
+                {cohort.laggard ?? "—"}
+                <EarningsBadge offsetDays={cohort.laggard_earnings_offset_days} />
+              </span>
             </div>
           </div>
         </button>
@@ -211,6 +281,7 @@ function CohortDetailContent({ detail }: { detail: CohortDetail }) {
                 {m.is_laggard && (
                   <span className="text-[9px] uppercase text-signal-bearish">laggard</span>
                 )}
+                <EarningsBadge offsetDays={m.earnings_offset_days} />
               </span>
               <span className="flex items-baseline gap-3 num">
                 <span
@@ -241,41 +312,47 @@ function CohortDetailContent({ detail }: { detail: CohortDetail }) {
               <thead>
                 <tr className="border-b border-border text-[10px] uppercase tracking-wide text-muted-foreground">
                   <th className="px-2 py-1 text-left">Pair</th>
+                  <th className="px-2 py-1 text-left">Coint</th>
                   <th className="px-2 py-1 text-right">n</th>
                   <th className="px-2 py-1 text-right">z</th>
                   <th className="px-2 py-1 text-right">Pctile</th>
-                  <th className="px-2 py-1 text-right">Spread</th>
-                  <th className="px-2 py-1 text-right">Mean</th>
-                  <th className="px-2 py-1 text-right">σ</th>
+                  <th className="px-2 py-1 text-right">ADF t</th>
+                  <th className="px-2 py-1 text-right">β</th>
                 </tr>
               </thead>
               <tbody>
                 {detail.pairs.map((p) => {
-                  const flagged = Math.abs(p.z) >= 1.5;
+                  // Decision-quality = stretched AND cointegrated. Highlight
+                  // only when both conditions hold; a flagged-but-not-coint pair
+                  // is just noise dressed up as a signal.
+                  const stretched = Math.abs(p.z) >= 1.5;
+                  const decisionGrade = stretched && p.coint_5pct === true;
                   return (
                     <tr
                       key={`${p.leg_a}-${p.leg_b}`}
                       className={cn(
                         "border-b border-border/40 last:border-0",
-                        flagged && "bg-signal-bearish/5"
+                        decisionGrade && "bg-signal-bearish/5"
                       )}
                     >
                       <td className="px-2 py-1 font-medium">
                         {p.leg_a} / {p.leg_b}
                       </td>
+                      <td className="px-2 py-1">
+                        <CointBadge five={p.coint_5pct} ten={p.coint_10pct} />
+                      </td>
                       <td className="px-2 py-1 text-right num text-muted-foreground">{p.n_obs}</td>
-                      <td className={cn("px-2 py-1 text-right num", flagged && "font-semibold")}>
+                      <td className={cn("px-2 py-1 text-right num", stretched && "font-semibold")}>
                         {fmtZ(p.z)}
                       </td>
                       <td className="px-2 py-1 text-right num text-muted-foreground">
                         {p.pctile === null ? "—" : `${(p.pctile * 100).toFixed(0)}%`}
                       </td>
-                      <td className="px-2 py-1 text-right num">{p.last_spread.toFixed(4)}</td>
                       <td className="px-2 py-1 text-right num text-muted-foreground">
-                        {p.mean_spread.toFixed(4)}
+                        {p.eg_adf_t === null ? "—" : p.eg_adf_t.toFixed(2)}
                       </td>
                       <td className="px-2 py-1 text-right num text-muted-foreground">
-                        {p.std_spread.toFixed(4)}
+                        {p.eg_beta === null ? "—" : p.eg_beta.toFixed(2)}
                       </td>
                     </tr>
                   );

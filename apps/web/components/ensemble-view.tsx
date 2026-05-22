@@ -8,6 +8,7 @@ import type { AgentKind, AgentSignalEntry, AgentsForTickerResponse } from "@/lib
 import { formatDate, formatNum } from "@/lib/utils";
 import { AgentCard } from "@/components/agent-card";
 import { ChatPanel } from "@/components/chat-panel";
+import { CohortSignalsCard } from "@/components/cohort-signals-card";
 import { PriceChart } from "@/components/price-chart";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -255,6 +256,12 @@ export function EnsembleView({ ticker }: { ticker: string }) {
           </div>
         </div>
       </div>
+
+      {/* Cohort signals — answers "why am I looking at this ticker?" by surfacing
+          the sub-industry peer context (leader/laggard/member, stretched pair,
+          cointegration, earnings annotation). Self-suppresses when ticker isn't
+          in any cohort. */}
+      <CohortSignalsCard ticker={upper} />
 
       {runError && (
         <Card className="border-signal-bearish/30 bg-signal-bearish/5">
