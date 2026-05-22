@@ -421,8 +421,10 @@ export default function ExplosivePage() {
     refetchOnWindowFocus: false,
   });
 
-  // Bypass the GHA cron entirely — fires score_explosive in-process on the
-  // API container and refetches when it returns. Cooldown-gated server-side.
+  // Bypass the GHA cron entirely — POST kicks score_explosive as a
+  // background task on the API (Railway proxies 30s sync requests, so
+  // we can't block), then we poll /rescore/status every 2s until
+  // in_progress flips to false. Cooldown-gated server-side.
   async function triggerRescore() {
     setRescoring(true);
     setRescoreError(null);
@@ -431,10 +433,23 @@ export default function ExplosivePage() {
       const r = await api.explosiveRescore();
       if (r.status === "cooldown") {
         setRescoreCooldown(Math.ceil(r.cooldown_remaining ?? 0));
-      } else {
-        setRescoreCooldown(60);
+        setRescoring(false);
+        return;
       }
-      await refetch();
+      // Status will be 'started' or 'already_running' — either way, poll
+      // until the task finishes. Server-side guard prevents duplicate runs.
+      const deadline = Date.now() + 5 * 60_000; // 5-minute safety stop
+      while (Date.now() < deadline) {
+        await new Promise((res) => setTimeout(res, 2000));
+        const s = await api.explosiveRescoreStatus();
+        if (!s.in_progress) {
+          if (s.last_error) setRescoreError(s.last_error);
+          setRescoreCooldown(Math.ceil(s.cooldown_remaining ?? 60));
+          await refetch();
+          return;
+        }
+      }
+      setRescoreError("rescore timed out after 5 min");
     } catch (e) {
       setRescoreError((e as Error)?.message ?? "rescore failed");
     } finally {

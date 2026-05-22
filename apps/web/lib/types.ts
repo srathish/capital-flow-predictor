@@ -1435,7 +1435,9 @@ export type HaltsResponse = {
   items: HaltItem[];
 };
 
-// /v1/admin/explosive/rescore — manual scoring trigger.
+// /v1/admin/explosive/rescore — fire-and-forget manual scoring trigger.
+// POST returns 202 immediately; UI polls /rescore/status until done.
+
 export type RescoreTopItem = {
   ticker: string;
   stages?: number;
@@ -1443,18 +1445,24 @@ export type RescoreTopItem = {
 };
 
 export type RescoreResponse = {
-  status: "completed" | "cooldown";
+  status: "started" | "cooldown" | "already_running";
+  cooldown_remaining: number | null;
+  poll_url: string | null;
+};
+
+export type RescoreLastResult = {
   snapshot_ts: string | null;
   count: number | null;
   top: RescoreTopItem[];
   elapsed_seconds: number | null;
-  cooldown_remaining: number | null;
 };
 
 export type RescoreStatusResponse = {
   in_progress: boolean;
   cooldown_remaining: number;
   last_finish_ts: number | null;
+  last_result: RescoreLastResult | null;
+  last_error: string | null;
 };
 
 // Cross-tab confluence — see apps/api/.../routes/confluence.py
