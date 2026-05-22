@@ -115,6 +115,7 @@ AnomalyKind = Literal[
     "iv_expansion",
     "oi_explosion",
     "daily_skew",
+    "short_squeeze_setup",
 ]
 
 
@@ -169,6 +170,11 @@ _OI_RATIO = 5.0
 _OI_RATIO_PREMIUM = 100_000
 _SKEW_RATIO = 4.0
 _SKEW_MIN_PREM = 2_000_000
+# short_squeeze_setup: high SI + bullish call sweep on the same name.
+# Independent "positioning" lens — structural fact about the float, not flow.
+_SQ_PCT_FLOAT = 0.20      # ≥20% of float short
+_SQ_DAYS_TO_COVER = 5.0   # ≥5 days to cover at recent volume
+_SQ_MIN_PREM = 250_000    # only meaningful if the call leg is sizeable
 
 
 @router.get("/unusual", response_model=FlowResponse)
@@ -243,6 +249,18 @@ async def get_unusual_flow(
         WHERE volume_oi_ratio IS NOT NULL
           AND volume_oi_ratio >= $9
           AND total_premium >= $10
+    ),
+    short_squeeze AS (
+        SELECT 'short_squeeze_setup'::text AS kind, b.*
+        FROM base b
+        JOIN uw_short_screener s
+          ON s.ticker = b.ticker
+         AND s.snapshot_date = (SELECT MAX(snapshot_date) FROM uw_short_screener)
+        WHERE b.option_type = 'call'
+          AND b.has_sweep = true
+          AND b.total_premium >= $13
+          AND s.short_percent_float >= $11
+          AND s.days_to_cover >= $12
     )
     SELECT * FROM mega_sweep
     UNION ALL SELECT * FROM block_buy
@@ -250,6 +268,7 @@ async def get_unusual_flow(
     UNION ALL SELECT * FROM repeated_hits
     UNION ALL SELECT * FROM iv_expansion
     UNION ALL SELECT * FROM oi_explosion
+    UNION ALL SELECT * FROM short_squeeze
     """
 
     skew_sql = """
@@ -285,7 +304,27 @@ async def get_unusual_flow(
             _IV_JUMP,
             _OI_RATIO,
             _OI_RATIO_PREMIUM,
+            _SQ_PCT_FLOAT,
+            _SQ_DAYS_TO_COVER,
+            _SQ_MIN_PREM,
         )
+        # Latest short_screener snapshot keyed by ticker — used to compute
+        # severity for short_squeeze_setup rows (the CTE already filters; this
+        # is just the metric lookup). One query, small result set.
+        sq_lookup_sql = """
+            SELECT ticker, short_percent_float, days_to_cover, utilization
+            FROM uw_short_screener
+            WHERE snapshot_date = (SELECT MAX(snapshot_date) FROM uw_short_screener)
+        """
+        sq_rows = await conn.fetch(sq_lookup_sql)
+        sq_by_ticker: dict[str, dict] = {
+            r["ticker"]: {
+                "pct": _f(r["short_percent_float"]),
+                "dtc": _f(r["days_to_cover"]),
+                "util": _f(r["utilization"]),
+            }
+            for r in sq_rows
+        }
         skew_rows = await conn.fetch(skew_sql, ticker_filter, _SKEW_MIN_PREM, _SKEW_RATIO)
         ts_row = await conn.fetchrow("SELECT NOW() AT TIME ZONE 'UTC' AS now")
 
@@ -295,12 +334,17 @@ async def get_unusual_flow(
         prem = float(r["total_premium"]) if r["total_premium"] is not None else 0.0
         ask = float(r["ask_side_prem"]) if r["ask_side_prem"] is not None else None
         ask_pct = (ask / prem) if (ask is not None and prem > 0) else None
+        sq_meta = (
+            sq_by_ticker.get(r["ticker"])
+            if r["kind"] == "short_squeeze_setup"
+            else None
+        )
         events.append(
             FlowEvent(
                 ts=r["created_at"].isoformat(),
                 ticker=r["ticker"],
                 kind=r["kind"],
-                headline=_headline_for(r),
+                headline=_headline_for(r, sq_meta=sq_meta),
                 premium=prem,
                 option_type=r["option_type"],
                 expiry=r["expiry"].isoformat() if r["expiry"] else None,
@@ -308,7 +352,7 @@ async def get_unusual_flow(
                 underlying_price=(
                     float(r["underlying_price"]) if r["underlying_price"] is not None else None
                 ),
-                severity=_severity(r["kind"], r),
+                severity=_severity(r["kind"], r, sq_meta=sq_meta),
                 iv_end=float(r["iv_end"]) if r["iv_end"] is not None else None,
                 iv_start=float(r["iv_start"]) if r["iv_start"] is not None else None,
                 ask_side_pct=ask_pct,
@@ -408,7 +452,7 @@ async def get_unusual_flow(
     )
 
 
-def _headline_for(r) -> str:  # asyncpg.Record
+def _headline_for(r, sq_meta: dict | None = None) -> str:  # asyncpg.Record
     """Plain-English sentence for a flow-alert row."""
     kind = r["kind"]
     side = (r["option_type"] or "").upper()
@@ -437,6 +481,13 @@ def _headline_for(r) -> str:  # asyncpg.Record
     if kind == "oi_explosion":
         ratio = float(r["volume_oi_ratio"] or 0)
         return f"vol/OI {ratio:.1f}× · {prem_str} {side} {strike_str} {expiry_str}"
+    if kind == "short_squeeze_setup":
+        pct = (sq_meta or {}).get("pct") or 0.0
+        dtc = (sq_meta or {}).get("dtc") or 0.0
+        return (
+            f"squeeze setup · SI {pct*100:.0f}% / {dtc:.1f}d cover · "
+            f"{prem_str} {side} {strike_str} {expiry_str}"
+        )
     return f"{prem_str} {side} {strike_str} {expiry_str}"
 
 
@@ -564,7 +615,7 @@ def _f(v) -> float | None:
     return float(v) if v is not None else None
 
 
-def _severity(kind: str, r) -> float:
+def _severity(kind: str, r, sq_meta: dict | None = None) -> float:
     """Cheap 0..1 score so the UI can sort + color rows.
 
     Each detector saturates at a different dollar size — a $5M sweep is
@@ -584,6 +635,18 @@ def _severity(kind: str, r) -> float:
         return min(1.0, jump / 0.40)
     if kind == "oi_explosion":
         return min(1.0, float(r["volume_oi_ratio"] or 0) / 25)
+    if kind == "short_squeeze_setup":
+        # Composite: SI/float saturates at 50%, days-to-cover at 20d.
+        # Borrow utilization ≥90 bumps another 0.15 — tight borrow makes
+        # the squeeze mechanically easier to trigger.
+        meta = sq_meta or {}
+        pct = float(meta.get("pct") or 0.0)
+        dtc = float(meta.get("dtc") or 0.0)
+        util = float(meta.get("util") or 0.0)
+        base = min(1.0, pct / 0.50 + dtc / 20.0)
+        if util >= 90:
+            base = min(1.0, base + 0.15)
+        return base
     return 0.5
 
 

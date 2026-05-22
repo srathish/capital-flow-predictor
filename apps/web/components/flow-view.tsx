@@ -18,7 +18,7 @@ const CLUSTER_WINDOW_MS = 30 * 60 * 1000;
 // repeated_hits + oi_explosion on the same chain are the same phenomenon
 // detected twice — not two independent signals. Real confluence means
 // the size lens, the concentration lens, and the vol lens all agree.
-type AnomalyCategory = "size" | "concentration" | "vol" | "daily";
+type AnomalyCategory = "size" | "concentration" | "vol" | "daily" | "positioning";
 const KIND_CATEGORY: Record<FlowAnomalyKind, AnomalyCategory> = {
   mega_sweep: "size",
   block_buy: "size",
@@ -27,6 +27,10 @@ const KIND_CATEGORY: Record<FlowAnomalyKind, AnomalyCategory> = {
   oi_explosion: "concentration",
   iv_expansion: "vol",
   daily_skew: "daily",
+  // short_squeeze_setup is a structural fact about the float, independent of
+  // flow lenses — bullish call sweep landing on a heavily-shorted name is a
+  // qualitatively different signal from "the sweep was big."
+  short_squeeze_setup: "positioning",
 };
 
 type ClusterItem = {
@@ -108,6 +112,12 @@ const KIND_META: Record<FlowAnomalyKind | "all", KindMeta> = {
     blurb: "Daily net call vs put premium is lopsided beyond 4×.",
     cls: "bg-purple-500/15 text-purple-400",
   },
+  short_squeeze_setup: {
+    label: "Squeeze",
+    blurb:
+      "High short interest + bullish call sweep on the same name — heavily-shorted float meeting fresh upside flow.",
+    cls: "bg-emerald-500/15 text-emerald-400",
+  },
 };
 
 const KIND_ORDER: (FlowAnomalyKind | "all")[] = [
@@ -119,6 +129,7 @@ const KIND_ORDER: (FlowAnomalyKind | "all")[] = [
   "iv_expansion",
   "oi_explosion",
   "daily_skew",
+  "short_squeeze_setup",
 ];
 
 function formatMoney(v: number | null | undefined): string {
