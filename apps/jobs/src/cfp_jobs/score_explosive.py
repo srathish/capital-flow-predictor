@@ -749,25 +749,29 @@ def _score_volume_profile(sig: TickerSignals) -> None:
 def _score_gex_bonus(conn: psycopg.Connection, sig: TickerSignals) -> None:
     """Bonus for tickers in GEX coverage with dealer short gamma at/near the
     OTM cluster. If gex tables don't exist or ticker isn't covered → 0.
-    Adds +25 if we find an explicit short-gamma signal, +10 if only covered."""
+    Adds +25 if we find an explicit short-gamma signal, +10 if only covered.
+
+    gex_feed.tickers is TEXT[] (see migration 0016) — query with ANY()
+    rather than `ticker = %s`. The savepoint isolates schema mismatches so
+    a failure here doesn't poison the per-ticker transaction."""
     sig.gex_bonus_score = 0.0
-    with conn.cursor() as cur:
-        try:
-            cur.execute(
-                """
-                SELECT 1 FROM gex_feed WHERE ticker = %s
-                  AND ts >= NOW() - INTERVAL '2 days'
-                LIMIT 1
-                """,
-                (sig.ticker,),
-            )
-            if cur.fetchone():
-                sig.gex_bonus_score = 10.0
-                sig.reasons["gex_bonus"] = "in GEX coverage"
-        except psycopg.errors.UndefinedTable:
-            return
-        except Exception:
-            return
+    try:
+        with conn.transaction():
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT 1 FROM gex_feed
+                    WHERE %s = ANY(tickers)
+                      AND ts >= NOW() - INTERVAL '2 days'
+                    LIMIT 1
+                    """,
+                    (sig.ticker,),
+                )
+                if cur.fetchone():
+                    sig.gex_bonus_score = 10.0
+                    sig.reasons["gex_bonus"] = "in GEX coverage"
+    except Exception:
+        return
 
 
 def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> TickerSignals:
