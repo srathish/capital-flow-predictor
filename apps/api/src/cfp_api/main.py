@@ -23,6 +23,7 @@ from cfp_api.routes import (
     catalysts,
     chat,
     cohorts,
+    confluence,
     delphi,
     discord,
     explosive,
@@ -125,6 +126,9 @@ app.include_router(stage.router, dependencies=PROTECTED)
 # Reads explosive_scores written by `cfp-jobs explosive-score`.
 app.include_router(explosive.router, dependencies=PROTECTED)
 app.include_router(delphi.router, dependencies=PROTECTED)
+# Cross-tab confluence — lazy aggregate over Explosive + Delphi + Whale +
+# Reddit + Flow. Scanner fans out to /v1/confluence/batch on each refresh.
+app.include_router(confluence.router, dependencies=PROTECTED)
 # gexester-vexster integration: feed mirror + skylit auth status + reauth queue.
 # Mounted under PROTECTED so gexester needs the API key to write status/feed,
 # and the daemon needs it to long-poll the reauth queue. Same surface as
