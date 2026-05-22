@@ -25,7 +25,6 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
@@ -369,17 +368,79 @@ async def batch(req: BatchRequest, refresh: bool = Query(False)) -> BatchRespons
     return BatchResponse(generated_at=datetime.now(timezone.utc), rows=rows)
 
 
+async def _seed_universe(conn, max_total: int = 100) -> list[str]:
+    """Build the seed list the /confluence page warms its leaderboard with.
+
+    Pulls top scorers across the upstream tables — these are the tickers
+    most likely to fire on multiple confluence sources. Deduped, capped.
+    """
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def _add(rows, key="ticker"):
+        for r in rows:
+            t = r[key]
+            if t and t not in seen:
+                seen.add(t)
+                out.append(t)
+
+    explosive_rows = await conn.fetch(
+        """
+        WITH latest AS (
+            SELECT ticker, score,
+                   ROW_NUMBER() OVER (PARTITION BY ticker ORDER BY snapshot_ts DESC) AS rn
+            FROM explosive_scores
+        )
+        SELECT ticker FROM latest WHERE rn = 1
+        ORDER BY score DESC NULLS LAST LIMIT 50
+        """
+    )
+    _add(explosive_rows)
+
+    delphi_rows = await conn.fetch(
+        """
+        SELECT DISTINCT ticker FROM delphi_predictions
+        WHERE created_at >= NOW() - INTERVAL '12 hours'
+        ORDER BY ticker
+        LIMIT 50
+        """
+    )
+    _add(delphi_rows)
+
+    whale_rows = await conn.fetch(
+        """
+        SELECT DISTINCT ticker FROM whale_conviction_signals
+        WHERE window_end >= NOW() - INTERVAL '4 hours'
+          AND score >= 60
+        ORDER BY ticker
+        LIMIT 30
+        """
+    )
+    _add(whale_rows)
+
+    return out[:max_total]
+
+
 @router.get("/active", response_model=BatchResponse)
 async def active(
     min_sources: int = Query(2, ge=1, le=6),
     limit: int = Query(50, ge=1, le=200),
+    seed: bool = Query(False, description="When true, recompute confluence over a seed universe first."),
 ) -> BatchResponse:
-    """Currently-hot tickers (cached only — does not trigger recomputation).
+    """Currently-hot tickers.
 
-    Use for a leaderboard / sidebar; if you need fresh data for a specific
-    ticker, hit /v1/confluence/{ticker} which lazily refreshes.
+    Default reads the cache only — fast, no extra DB work. With `seed=true`,
+    first pulls the seed universe (top explosive + delphi + whale), runs
+    confluence aggregation across it, then returns the leaderboard. The
+    /confluence page uses seed=true on mount + plain reads on subsequent polls.
     """
     pool = get_pool()
+    if seed:
+        async with pool.acquire() as conn:
+            tickers = await _seed_universe(conn)
+        if tickers:
+            await _resolve_confluence(tickers, force_refresh=False)
+
     async with pool.acquire() as conn:
         rows = await conn.fetch(
             """

@@ -1434,3 +1434,32 @@ export type HaltsResponse = {
   count: number;
   items: HaltItem[];
 };
+
+// Cross-tab confluence — see apps/api/.../routes/confluence.py
+export type ConfluenceSourceName =
+  | "explosive"
+  | "delphi"
+  | "whale"
+  | "reddit_mentions"
+  | "reddit_catalysts"
+  | "flow";
+
+export type ConfluenceSource = {
+  name: ConfluenceSourceName;
+  score: number | null;
+  detail: string;
+};
+
+export type ConfluenceRow = {
+  ticker: string;
+  computed_at: string;
+  n_sources: number;
+  max_source_score: number | null;
+  sources: ConfluenceSource[];
+  summary: string | null;
+};
+
+export type ConfluenceBatchResponse = {
+  generated_at: string;
+  rows: ConfluenceRow[];
+};

@@ -8,14 +8,15 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const tabs = [
   { href: "/", label: "Sectors" },
+  { href: "/confluence", label: "Confluence" },
   { href: "/reddit", label: "Reddit + Catalysts" },
   { href: "/flow", label: "Flow" },
-  { href: "/gex", label: "GEX" },
-  { href: "/explosive", label: "Explosive" },
-  { href: "/screener", label: "Screener" },
-  { href: "/scanner", label: "Scanner" },
+  { href: "/explosive", label: "Hot Options" },
+  { href: "/screener", label: "Stocks" },
+  { href: "/scanner", label: "Setups" },
   { href: "/delphi", label: "Delphi" },
   { href: "/discord", label: "Discord Alerts" },
+  { href: "/gex", label: "Heatseeker" },
 ];
 
 export function Nav() {

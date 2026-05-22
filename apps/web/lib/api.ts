@@ -10,6 +10,8 @@ import type {
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
+  ConfluenceBatchResponse,
+  ConfluenceRow,
   CustomWatchlistResponse,
   DiscordAuthorsResponse,
   DiscordInventoryResponse,
@@ -583,6 +585,24 @@ export const api = {
     }).then((res) => {
       if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
     });
+  },
+
+  confluenceActive(opts?: {
+    minSources?: number;
+    limit?: number;
+    seed?: boolean;
+  }): Promise<ConfluenceBatchResponse> {
+    const sp = new URLSearchParams();
+    if (opts?.minSources != null) sp.set("min_sources", String(opts.minSources));
+    if (opts?.limit != null) sp.set("limit", String(opts.limit));
+    if (opts?.seed) sp.set("seed", "true");
+    const qs = sp.toString();
+    return getJson<ConfluenceBatchResponse>(`/v1/confluence/active${qs ? `?${qs}` : ""}`);
+  },
+
+  confluenceForTicker(ticker: string, refresh = false): Promise<ConfluenceRow> {
+    const qs = refresh ? "?refresh=true" : "";
+    return getJson<ConfluenceRow>(`/v1/confluence/${encodeURIComponent(ticker)}${qs}`);
   },
 };
 
