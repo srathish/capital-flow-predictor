@@ -56,6 +56,12 @@ on:
     - cron: "3,18,33,48 13-20 * * 1-5"
     - cron: "7,22,37,52 13-20 * * 1-5"
     - cron: "12 14-20 * * 1-5"
+    # Daily 22:00 UTC (~18:00 ET, after US close + yfinance settle) — refresh
+    # prices_daily + macro_daily across the full universe (sector ETFs +
+    # thematic ETFs + benchmarks + cross-asset + cohort members). This is
+    # what powers the sector heatmap and the Cohorts tab; without it the
+    # data ages a day at a time.
+    - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
       job:
@@ -82,6 +88,8 @@ on:
           - explosive-ingest
           - explosive-score
           - explosive-drilldown
+          - prices-daily
+          - prices-backfill
 
 jobs:
   reddit-catalysts:
@@ -450,6 +458,52 @@ jobs:
       - name: Compute + persist explosive_scores
         working-directory: apps/jobs
         run: uv run cfp-jobs explosive-score
+
+  prices-daily:
+    # Daily prices + macro refresh — the foundation everything sector- and
+    # cohort-related reads from. Runs 22:00 UTC (~18:00 ET) after the US
+    # close + yfinance settle window. Universe is whatever
+    # all_yfinance_symbols() returns: sector ETFs + thematic ETFs + benchmarks
+    # + cross-asset + cohort members (deduped).
+    if: github.event.schedule == '0 22 * * *' || github.event.inputs.job == 'prices-daily'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Incremental prices + macro refresh (last 7 days)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs daily --lookback-days 7
+
+  prices-backfill:
+    # One-off historical backfill — manual trigger only. Use after adding
+    # new tickers to the universe (e.g. cohort expansion) or recovering
+    # from extended downtime. Pulls 5y per ticker, ~150K rows total.
+    if: github.event.inputs.job == 'prices-backfill'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Full 5y backfill across universe
+        working-directory: apps/jobs
+        run: uv run cfp-jobs backfill --years 5
 
   explosive-drilldown:
     # Backfills per-contract OHLC history + peer correlations for the top

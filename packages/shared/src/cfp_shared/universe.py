@@ -38,7 +38,14 @@ PREDICTION_TARGETS: list[str] = SECTORS + THEMES
 def all_yfinance_symbols() -> list[str]:
     """Every Yahoo-fetched symbol: prediction targets + benchmarks + cross-asset."""
     flat_cross = [s for group in CROSS_ASSET.values() for s in group]
-    return PREDICTION_TARGETS + BENCHMARKS + flat_cross
+    # Include sub-industry cohort members (memory semis, refiners, regional
+    # banks, etc.) so the daily yfinance pull covers everything the Cohorts
+    # tab needs. Lazy import avoids an inter-package import-time cycle.
+    from cfp_shared.cohorts import all_cohort_members
+    base = PREDICTION_TARGETS + BENCHMARKS + flat_cross
+    base_set = set(base)
+    extra = sorted(s for s in all_cohort_members() if s not in base_set)
+    return base + extra
 
 
 # FRED macro series (DESIGN.md §6.1 implies these; Phase 1 baseline set)
