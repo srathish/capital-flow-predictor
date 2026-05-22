@@ -66,8 +66,12 @@ on:
     #     so no rate-limit collision).
     #   delphi-rank uses :07/:22/:37/:52, 4 min after the screener writes,
     #     same offset pattern as explosive-score.
+    #   uw-gex-ingest runs hourly at :05 during RTH — populates the GEX
+    #     walls table (uw_greek_exposure_strike) Delphi reads for
+    #     GEX_WALL_ABOVE / GEX_WALL_BELOW reason codes.
     #   delphi-evaluate runs daily at 23:00 UTC, after the 22:00 prices_daily
     #     refresh so it can score closed horizons against the freshest bars.
+    - cron: "5 13-20 * * 1-5"
     - cron: "0 23 * * 1-5"
   workflow_dispatch:
     inputs:
@@ -97,6 +101,7 @@ on:
           - prices-daily
           - prices-backfill
           - uw-screeners-ingest
+          - uw-gex-ingest
           - delphi-rank
           - delphi-evaluate
 
@@ -542,6 +547,33 @@ jobs:
       - name: Refresh market-layer UW endpoints (screener_stocks, OI change, dark pool, news)
         working-directory: apps/jobs
         run: uv run cfp-jobs uw-screeners-ingest
+
+  uw-gex-ingest:
+    # Per-ticker GEX walls + greek-flow ingest. Populates
+    # uw_greek_exposure_strike — the table Delphi reads to detect
+    # GEX_WALL_ABOVE / GEX_WALL_BELOW reason codes and to anchor
+    # target ranges to gamma magnets. Runs hourly at :05 during RTH so
+    # the next delphi-rank (at :07/:22/:37/:52) sees fresh walls.
+    # Universe = same explosive watchlist used elsewhere (~50-80 tickers),
+    # so the daily UW budget impact is ~7 hours × 80 tickers × 4 calls
+    # = ~2.2k calls/day — well inside the standard tier's daily cap.
+    if: startsWith(github.event.schedule, '5 13-20') || github.event.inputs.job == 'uw-gex-ingest'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Pull per-ticker GEX strike + expiry + flow for the universe
+        working-directory: apps/jobs
+        run: uv run cfp-jobs uw-gex-ingest
 
   delphi-rank:
     # Layer-1 rules ranker — reads the freshest uw_screener_stocks snapshot
