@@ -1,12 +1,15 @@
 """Watchlist orchestrator (Phase 4e).
 
 Pipeline:
-  1. Read top-N sector predictions from the latest xgb_v1 run (configurable horizon)
-  2. For each top sector, pull top-K constituents from sector_holdings
+  1. Rank sector ETFs by realized N-day return (default 20d) from prices_daily,
+     take the top N as "the sectors that are actually moving right now".
+     (Previously read top-N XGB predictions; switched after the predictions
+     table proved to be a single-run artifact.)
+  2. For each top sector, pull top-K constituents from sector_holdings.
   3. For each (sector, ticker), run the full agent ensemble
-     (4 analysts + 13 personas + Trader + Risk + PM)
+     (4 analysts + 13 personas + Trader + Risk + PM).
   4. Take the Portfolio Manager's final decision and write a watchlists row
-     ranked within the sector by (confidence * target_weight)
+     ranked within the sector by (confidence * target_weight).
 
 Cost & latency (Moonshot Haiku-class): ~$0.015 + ~38s per ticker.
 With defaults (top 3 sectors * top 5 names = 15 tickers): ~10 min, ~$0.22/run.
@@ -26,71 +29,42 @@ from cfp_jobs.db import connect, to_psycopg_url, upsert_watchlist
 log = logging.getLogger(__name__)
 
 
-def _load_top_sectors(
+def _load_top_sectors_by_return(
     conn: psycopg.Connection,
     *,
-    horizon: int,
-    model: str,
+    window: int,
     n_top: int,
 ) -> list[str]:
-    """Top-N sectors from the latest run of the given model + horizon."""
+    """Top-N sector ETFs by realized N-day return ending today, ranked desc.
+
+    Reads prices_daily for the 11 SPDR sector ETFs, computes the trailing
+    `window`-day return, and returns the top N symbols. Replaces the old
+    XGB-predictions-table reader after that pipeline proved inert.
+    """
+    from cfp_shared import SECTORS
+
     sql = """
-        WITH latest AS (
-            SELECT MAX(run_ts) AS run_ts
-            FROM predictions
-            WHERE horizon_d = %s AND model = %s
+        WITH ranked AS (
+            SELECT symbol, ts::date AS d, close,
+                   ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY ts DESC) AS day_rank
+            FROM prices_daily
+            WHERE symbol = ANY(%s) AND close IS NOT NULL
         )
-        SELECT p.symbol
-        FROM predictions p, latest
-        WHERE p.run_ts = latest.run_ts
-          AND p.horizon_d = %s
-          AND p.model = %s
-        ORDER BY p.target_ts DESC, p.rank ASC
-        LIMIT %s
+        SELECT a.symbol, a.close AS c_now, b.close AS c_back
+        FROM ranked a
+        LEFT JOIN ranked b ON b.symbol = a.symbol AND b.day_rank = %s + 1
+        WHERE a.day_rank = 1
     """
     with conn.cursor() as cur:
-        cur.execute(sql, (horizon, model, horizon, model, n_top))
+        cur.execute(sql, (list(SECTORS), window))
         rows = cur.fetchall()
-    if not rows:
-        return []
-    # The query above returns top-ranked predictions across the latest run.
-    # For each row, the symbol is a candidate sector. Dedup preserving order.
-    seen: set[str] = set()
-    sectors: list[str] = []
-    for (sym,) in rows:
-        if sym not in seen:
-            seen.add(sym)
-            sectors.append(sym)
-        if len(sectors) >= n_top:
-            break
-    return sectors
-
-
-def _load_top_sectors_for_latest_target_ts(
-    conn: psycopg.Connection,
-    *,
-    horizon: int,
-    model: str,
-    n_top: int,
-) -> list[str]:
-    """Cleaner version: top-N by rank for the most recent target_ts in the latest run."""
-    sql = """
-        SELECT symbol, rank
-        FROM predictions
-        WHERE (run_ts, target_ts) = (
-            SELECT run_ts, MAX(target_ts) FROM predictions
-            WHERE run_ts = (SELECT MAX(run_ts) FROM predictions WHERE horizon_d = %s AND model = %s)
-              AND horizon_d = %s AND model = %s
-            GROUP BY run_ts
-        )
-        AND horizon_d = %s AND model = %s
-        ORDER BY rank ASC
-        LIMIT %s
-    """
-    with conn.cursor() as cur:
-        cur.execute(sql, (horizon, model, horizon, model, horizon, model, n_top))
-        rows = cur.fetchall()
-    return [sym for (sym, _rank) in rows]
+    rets: list[tuple[str, float]] = []
+    for sym, c_now, c_back in rows:
+        if c_now is None or c_back is None or float(c_back) <= 0:
+            continue
+        rets.append((sym, float(c_now) / float(c_back) - 1.0))
+    rets.sort(key=lambda x: -x[1])
+    return [sym for sym, _ in rets[:n_top]]
 
 
 def _load_constituents(
@@ -170,19 +144,25 @@ def build_watchlist(
     *,
     n_top_sectors: int = 3,
     k_per_sector: int = 5,
-    horizon: int = 10,
-    model: str = "xgb_v1",
+    horizon: int = 20,
+    model: str = "ignored",
 ) -> dict:
-    """Build a watchlist run end-to-end. Returns summary stats."""
+    """Build a watchlist run end-to-end. Returns summary stats.
+
+    `horizon` here is the realized-return window used to pick the hot sectors
+    (default 20 trading days). `model` is accepted-and-ignored for backwards
+    compat with callers that used to pass `xgb_v1`.
+    """
+    _ = model
     run_ts = datetime.now(UTC)
 
     with connect(database_url) as conn:
-        sectors = _load_top_sectors_for_latest_target_ts(
-            conn, horizon=horizon, model=model, n_top=n_top_sectors
+        sectors = _load_top_sectors_by_return(
+            conn, window=horizon, n_top=n_top_sectors
         )
 
     if not sectors:
-        log.warning("watchlist: no predictions found for horizon=%d model=%s", horizon, model)
+        log.warning("watchlist: no sector return data for window=%dd", horizon)
         return {"run_ts": run_ts.isoformat(), "n_sectors": 0, "n_tickers": 0, "n_rows": 0}
 
     log.info("watchlist: top %d sectors = %s", n_top_sectors, sectors)

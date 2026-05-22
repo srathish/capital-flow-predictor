@@ -36,8 +36,6 @@ on:
     - cron: "30 6 * * *"
     # Daily at 07:30 UTC — train + emit Reddit-features ML predictions
     - cron: "30 7 * * *"
-    # Weekly Sunday 07:00 UTC — retrain XGB ranker on latest features (Alpha158 + originals)
-    - cron: "0 7 * * 0"
     # 09:00 ET (= 13:00 UTC) weekdays — pre-market brief.
     - cron: "0 13 * * 1-5"
     # 06:00 ET (= 10:00 UTC) weekdays — catalyst-triggered ensemble re-runs.
@@ -76,7 +74,6 @@ on:
           - reddit-backfill-outcomes
           - eval-agents
           - features-build
-          - train-baseline
           - market-tide
           - whale-conviction
           - flow-universe
@@ -308,24 +305,6 @@ jobs:
       - name: Rebuild full daily feature panel (cross-asset + sector + alpha158)
         working-directory: apps/jobs
         run: uv run cfp-jobs features-daily
-
-  train-baseline:
-    # Weekly XGB retrain. Walk-forward over the panel built by features-build,
-    # writes predictions back to the predictions table. Runs after Sunday's
-    # feature rebuild so the model trains on the freshest data.
-    if: github.event.schedule == '0 7 * * 0' || github.event.inputs.job == 'train-baseline'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
-      - run: uv python install 3.11
-      - run: uv sync --all-packages
-      - name: Walk-forward train + persist predictions
-        working-directory: apps/jobs
-        run: uv run cfp-jobs train-baseline
 
   market-tide:
     # Intraday tape direction. UW returns ~1-min buckets for the current

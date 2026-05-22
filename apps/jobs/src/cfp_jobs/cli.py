@@ -30,7 +30,6 @@ from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
 from cfp_jobs import score_explosive as score_explosive_mod  # noqa: E402
-from cfp_jobs import train as train_mod  # noqa: E402
 from cfp_jobs import watchlist as watchlist_mod  # noqa: E402
 from cfp_jobs.db import to_psycopg_url  # noqa: E402
 from cfp_jobs.ingestion import explosive as explosive_mod  # noqa: E402
@@ -136,67 +135,13 @@ def features_breadth_cmd() -> None:
     console.print(f"[green]breadth:[/green] {n:,} rows")
 
 
-@app.command("train-baseline")
-def train_baseline_cmd(
-    horizons: str = typer.Option("5,10,20", help="Comma-separated horizons in days"),
-) -> None:
-    """Walk-forward XGBoost rank baseline (DESIGN.md §7.1, §7.4)."""
-    h_tuple = tuple(int(x) for x in horizons.split(","))
-    result = train_mod.train_baseline(settings.database_url, horizons=h_tuple)
-
-    table = Table(title="Walk-forward OOS metrics")
-    table.add_column("Horizon")
-    table.add_column("AUC", justify="right")
-    table.add_column("IC", justify="right")
-    table.add_column("Sharpe", justify="right")
-    table.add_column("Hit@1", justify="right")
-    table.add_column("Folds", justify="right")
-    table.add_column("Test rows", justify="right")
-    for h, m in sorted(result["horizons"].items()):
-        table.add_row(
-            f"{h}d",
-            f"{m['auc']:.3f}",
-            f"{m['ic']:.3f}",
-            f"{m['sharpe']:.2f}",
-            f"{m['hit_rate']:.2f}",
-            str(m["n_folds"]),
-            f"{m['n_test_rows']:,}",
-        )
-    console.print(table)
-    console.print(f"[green]predictions:[/green] {result['n_predictions']:,} rows")
-
-    live = result.get("live_forecast") or {}
-    if live:
-        live_table = Table(title="Live forward forecast (target = asof + horizon BD)")
-        live_table.add_column("Horizon")
-        live_table.add_column("Asof (last feature ts)")
-        live_table.add_column("Symbols", justify="right")
-        live_table.add_column("Dropped", justify="right")
-        live_table.add_column("Seeds", justify="right")
-        live_table.add_column("Mean conf", justify="right")
-        live_table.add_column("Mean σ(score)", justify="right")
-        for h, info in sorted(live.items()):
-            live_table.add_row(
-                f"{h}d",
-                str(info["asof"]),
-                str(info["n_symbols"]),
-                str(info.get("n_dropped", 0)),
-                str(info.get("n_seeds", "—")),
-                f"{info.get('mean_conf', float('nan')):.2f}",
-                f"{info.get('mean_score_std', float('nan')):.3f}",
-            )
-        console.print(live_table)
-    else:
-        console.print("[yellow]live forecast:[/yellow] not produced (see logs)")
-
-
-@app.command()
-def evaluate(
-    horizon: int = typer.Option(10, help="Horizon to evaluate"),
-) -> None:
-    """Recompute metrics from the latest predictions in the DB (no retraining)."""
-    out = train_mod.evaluate_latest(settings.database_url, horizon=horizon)
-    console.print(out)
+    # train-baseline + evaluate CLI commands removed: the XGB sector-rotation
+    # pipeline they served was retired after a 90-day audit showed it had
+    # produced exactly one prediction snapshot ever. The whole pipeline (train
+    # job, predictions table, /v1/rankings, /v1/sectors/scorecard,
+    # /v1/sectors/forward-call) is gone. The sector heatmap, network graph,
+    # assistant tools, and watchlist orchestrator all rank by realized return
+    # now — honest, no model.
 
 
 @app.command("watchlist-build")
