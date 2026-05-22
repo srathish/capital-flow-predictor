@@ -923,9 +923,12 @@ def score_all(database_url: str) -> dict[str, Any]:
         log.info("explosive scoring: %d tickers in universe", len(universe))
         for ticker in universe:
             try:
-                sig = _compute_signals(conn, ticker, today)
-                score = _composite(sig)
+                # Wrap the *entire* per-ticker block in a savepoint so that
+                # any SELECT failure rolls back cleanly instead of leaving
+                # the outer transaction in INERROR for the next iteration.
                 with conn.transaction():
+                    sig = _compute_signals(conn, ticker, today)
+                    score = _composite(sig)
                     _upsert_score(conn, now, sig, score)
                 written += 1
                 top_preview.append((ticker, score))
