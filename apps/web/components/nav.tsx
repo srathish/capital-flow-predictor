@@ -8,8 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const tabs = [
   { href: "/", label: "Sectors" },
-  { href: "/reddit", label: "Reddit" },
-  { href: "/catalysts", label: "Catalysts" },
+  { href: "/reddit", label: "Reddit + Catalysts" },
   { href: "/flow", label: "Flow" },
   { href: "/gex", label: "GEX" },
   { href: "/explosive", label: "Explosive" },
