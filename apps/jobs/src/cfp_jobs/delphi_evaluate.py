@@ -13,15 +13,16 @@ Without it, Delphi is just a fancy scanner. With it, you can answer:
 Wire-up: ``cfp-jobs delphi-evaluate`` runs hourly. Idempotent — predictions
 that already have a row in delphi_outcomes are skipped.
 
-Note: this stub uses ticker_daily_bars as the price source (whatever the rest
-of Bellwether feeds back-tests from). If that table name differs in your
-environment, swap PRICE_TABLE below — the rest of the logic doesn't change.
+Price source: ``prices_daily(ts, symbol, open, high, low, close, volume, source)``
+from migration 0001. The PK includes ``source`` so multiple feeds (yfinance,
+fmp, polygon) can coexist for the same bar; we aggregate MAX/MIN/last across
+sources, matching the pattern used in routes/reddit.py.
 """
 
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
 
 import psycopg
@@ -32,8 +33,8 @@ log = logging.getLogger(__name__)
 
 
 # Source for actual high/low/close between created_at and horizon_ends_at.
-# Adjust if Bellwether uses a different daily-bars table.
-PRICE_TABLE = "ticker_daily_bars"
+# Migration 0001 defines this as the canonical OHLCV table.
+PRICE_TABLE = "prices_daily"
 
 
 def _due_predictions(conn: psycopg.Connection, *, max_batch: int) -> list[dict[str, Any]]:
@@ -74,16 +75,25 @@ def _due_predictions(conn: psycopg.Connection, *, max_batch: int) -> list[dict[s
 def _price_window(
     conn: psycopg.Connection, ticker: str, start: datetime, end: datetime
 ) -> tuple[float, float, float] | None:
-    """Return (actual_high, actual_low, actual_close) across the window."""
+    """Return (actual_high, actual_low, actual_close) across the window.
+
+    Aggregates across all sources for the same (ts, symbol) — prices_daily's
+    PK is (ts, symbol, source), so yfinance/fmp/polygon rows for the same
+    bar coexist. MAX(high) / MIN(low) is robust to that; for close we want
+    the last observation, so we order by (ts, source) DESC.
+    """
     try:
         row = conn.execute(
             f"""
             SELECT MAX(high), MIN(low),
-                   (ARRAY_AGG(close ORDER BY ts DESC))[1] AS last_close
+                   (ARRAY_AGG(close ORDER BY ts DESC, source DESC))[1] AS last_close
             FROM {PRICE_TABLE}
-            WHERE ticker = %s
+            WHERE symbol = %s
               AND ts >= %s
               AND ts <= %s
+              AND high IS NOT NULL
+              AND low IS NOT NULL
+              AND close IS NOT NULL
             """,
             (ticker, start, end),
         ).fetchone()
