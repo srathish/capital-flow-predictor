@@ -19,6 +19,8 @@ import type {
   DiscordSource,
   DiscordSourcesResponse,
   ExpandedSectorResponse,
+  GlobalNewsResponse,
+  HaltsResponse,
   CalibrationResponse,
   FlowAggregateResponse,
   FlowCorrelationsResponse,
@@ -356,6 +358,20 @@ export const api = {
   },
   flowMovers(limit = 20): Promise<FlowMoversResponse> {
     return getJson<FlowMoversResponse>(`/v1/flow/movers?limit=${limit}`);
+  },
+  newsGlobal(opts: { lookbackMinutes?: number; limit?: number; ticker?: string } = {}): Promise<GlobalNewsResponse> {
+    const sp = new URLSearchParams();
+    if (opts.lookbackMinutes) sp.set("lookback_minutes", String(opts.lookbackMinutes));
+    if (opts.limit) sp.set("limit", String(opts.limit));
+    if (opts.ticker) sp.set("ticker", opts.ticker.toUpperCase());
+    return getJson<GlobalNewsResponse>(`/v1/news/global?${sp}`);
+  },
+  haltsRecent(opts: { lookbackMinutes?: number; limit?: number; activeOnly?: boolean } = {}): Promise<HaltsResponse> {
+    const sp = new URLSearchParams();
+    if (opts.lookbackMinutes) sp.set("lookback_minutes", String(opts.lookbackMinutes));
+    if (opts.limit) sp.set("limit", String(opts.limit));
+    if (opts.activeOnly) sp.set("active_only", "true");
+    return getJson<HaltsResponse>(`/v1/halts/recent?${sp}`);
   },
   flowSectorTide(sector: string, lookbackHours = 6): Promise<FlowSectorTideResponse> {
     return getJson<FlowSectorTideResponse>(

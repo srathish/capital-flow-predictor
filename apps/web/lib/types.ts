@@ -1402,3 +1402,35 @@ export type DiscordInventoryResponse = {
   guilds: DiscordInventoryGuild[];
   refreshed_at: string | null;
 };
+
+// ---------- Phase C live feeds (uw_socket-fed) ----------
+
+export type GlobalNewsItem = {
+  published_at: string;
+  article_id: string;
+  headline: string | null;
+  source: string | null;
+  url: string | null;
+  tickers: string[];
+  sentiment: number | null;
+};
+
+export type GlobalNewsResponse = {
+  count: number;
+  items: GlobalNewsItem[];
+};
+
+export type HaltItem = {
+  ts: string;
+  ticker: string;
+  halt_code: string | null;
+  halt_reason: string | null;
+  market: string | null;
+  resumption_ts: string | null;
+  is_active: boolean;
+};
+
+export type HaltsResponse = {
+  count: number;
+  items: HaltItem[];
+};

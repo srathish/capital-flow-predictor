@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FlowMoversPanel } from "@/components/flow-movers-panel";
 import { WhaleBetsPanel } from "@/components/whale-bets-panel";
 import { TickerDossierSheet } from "@/components/ticker-dossier-sheet";
+import { HaltsStrip } from "@/components/halts-strip";
+import { NewsStrip } from "@/components/news-strip";
 
 const REFETCH_MS = 30_000;
 const CLUSTER_WINDOW_MS = 30 * 60 * 1000;
@@ -370,6 +372,10 @@ export function FlowView() {
           )}
         </div>
       </header>
+
+      {/* Phase C live event injectors — both auto-hide when empty. */}
+      <HaltsStrip openDossier={openDossier} />
+      <NewsStrip openDossier={openDossier} />
 
       <WhaleBetsPanel />
 
