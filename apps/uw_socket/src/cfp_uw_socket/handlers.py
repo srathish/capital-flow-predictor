@@ -268,7 +268,7 @@ TRADING_HALTS_SQL = """
     ) VALUES (
         %(ts)s, %(ticker)s, %(halt_code)s, %(halt_reason)s, %(market)s,
         %(resumption_ts)s, %(resumption_quote_ts)s, %(resumption_trade_ts)s, %(payload)s
-    ) ON CONFLICT (ts, ticker, COALESCE(halt_code, '')) DO UPDATE SET
+    ) ON CONFLICT (ts, ticker, halt_code) DO UPDATE SET
         resumption_ts       = EXCLUDED.resumption_ts,
         resumption_quote_ts = EXCLUDED.resumption_quote_ts,
         resumption_trade_ts = EXCLUDED.resumption_trade_ts,
@@ -289,7 +289,9 @@ def handle_trading_halt(raw: Any) -> tuple[str, dict[str, Any]] | None:
     params = {
         "ts": ts,
         "ticker": ticker,
-        "halt_code": e.get("halt_code") or e.get("code"),
+        # halt_code is in the PK and NOT NULL — coerce missing to '' to match
+        # the table's "no code provided" sentinel.
+        "halt_code": (e.get("halt_code") or e.get("code") or ""),
         "halt_reason": e.get("reason") or e.get("halt_reason"),
         "market": e.get("market") or e.get("exchange"),
         "resumption_ts": _ts(e.get("resumption_ts") or e.get("resume_time")),

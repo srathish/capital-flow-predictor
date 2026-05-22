@@ -74,14 +74,17 @@ CREATE INDEX IF NOT EXISTS idx_gex_intraday_ticker_ts
 CREATE TABLE IF NOT EXISTS uw_trading_halts (
     ts                  TIMESTAMPTZ NOT NULL,
     ticker              TEXT NOT NULL,
-    halt_code           TEXT,                       -- 'LUDP' | 'T1' | 'M' | 'H10' | ...
-    halt_reason         TEXT,                       -- human-readable
-    market              TEXT,                       -- 'NYSE' | 'NASDAQ' | 'ARCA'
-    resumption_ts       TIMESTAMPTZ,                -- NULL until resume event arrives
+    -- PK can't wrap a column in COALESCE (Postgres only accepts column
+    -- names in a primary key), so halt_code is NOT NULL with '' as the
+    -- sentinel for "no halt code provided" and goes into the PK directly.
+    halt_code           TEXT NOT NULL DEFAULT '',   -- 'LUDP' | 'T1' | 'M' | 'H10' | '' for unknown
+    halt_reason         TEXT,
+    market              TEXT,
+    resumption_ts       TIMESTAMPTZ,
     resumption_quote_ts TIMESTAMPTZ,
     resumption_trade_ts TIMESTAMPTZ,
     payload             JSONB,
-    PRIMARY KEY (ts, ticker, COALESCE(halt_code, ''))
+    PRIMARY KEY (ts, ticker, halt_code)
 );
 CREATE INDEX IF NOT EXISTS idx_trading_halts_ts
     ON uw_trading_halts (ts DESC);
