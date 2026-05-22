@@ -1,5 +1,5 @@
-import { SectorHeatmap } from "@/components/sector-heatmap";
+import { SectorsAndNetwork } from "@/components/sectors-and-network";
 
 export default function HomePage() {
-  return <SectorHeatmap />;
+  return <SectorsAndNetwork />;
 }

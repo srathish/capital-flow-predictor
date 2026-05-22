@@ -1,5 +1,5 @@
-import { NetworkView } from "@/components/network-view";
+import { redirect } from "next/navigation";
 
 export default function NetworkPage() {
-  return <NetworkView />;
+  redirect("/");
 }
