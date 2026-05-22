@@ -35,10 +35,12 @@ CREATE TABLE IF NOT EXISTS uw_spot_gex_intraday (
 CREATE INDEX IF NOT EXISTS idx_spot_gex_ticker_ts
     ON uw_spot_gex_intraday (ticker, ts DESC);
 
--- Cross-ticker scan: "which names have biggest GEX swings in the last hour"
+-- Cross-ticker scan: "which names have biggest GEX swings recently".
+-- Plain index, no partial predicate — NOW() isn't IMMUTABLE so Postgres rejects
+-- it in index predicates, and a frozen-at-INSERT predicate wouldn't shed old
+-- rows anyway. ORDER BY ts DESC LIMIT N reads the tail of this index directly.
 CREATE INDEX IF NOT EXISTS idx_spot_gex_recent
-    ON uw_spot_gex_intraday (ts DESC)
-    WHERE ts > NOW() - INTERVAL '6 hours';
+    ON uw_spot_gex_intraday (ts DESC);
 
 -- Add intraday-GEX sub-score column on explosive_scores. Captures whether
 -- the ticker is in a short-gamma / unstable regime (per-ticker, not just
