@@ -22,7 +22,7 @@ const TOP_N = 10;
 type SourceMix = {
   reddit: number; // 0..1, normalized
   catalyst: number; // 0..1, normalized
-  news: number; // 0..1, stage 2
+  news: number; // 0..1, normalized
 };
 
 type LeaderboardEntry = {
@@ -276,7 +276,7 @@ function buildLeaderboard(
 }
 
 function SourceDots({ sources }: { sources: SourceMix }) {
-  // Reddit | Catalyst | News (stage 2). Opacity encodes contribution share.
+  // Reddit | Catalyst | News. Opacity encodes contribution share.
   const dot = (key: keyof SourceMix, label: string, color: string) => {
     const v = sources[key];
     return (
