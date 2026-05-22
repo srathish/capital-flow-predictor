@@ -53,5 +53,15 @@ CREATE TABLE IF NOT EXISTS uw_correlations (
     payload             JSONB,
     PRIMARY KEY (snapshot_date, ticker_a, ticker_b)
 );
-CREATE INDEX IF NOT EXISTS idx_uw_correlations_a
-    ON uw_correlations (ticker_a, snapshot_date DESC, correlation DESC);
+-- 0027 renames ticker_a/ticker_b -> fst_ticker/snd_ticker. On re-runs after
+-- 0027 has applied, the columns referenced below no longer exist, so guard
+-- index creation by column presence. The post-0027 index name matches
+-- idx_uw_correlations_fst (created in 0027) — we no-op here in that case.
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+               WHERE table_name = 'uw_correlations' AND column_name = 'ticker_a') THEN
+        CREATE INDEX IF NOT EXISTS idx_uw_correlations_a
+            ON uw_correlations (ticker_a, snapshot_date DESC, correlation DESC);
+    END IF;
+END $$;
