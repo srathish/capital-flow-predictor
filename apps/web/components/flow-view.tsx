@@ -506,30 +506,6 @@ export function FlowView() {
         })}
       </div>
 
-      {/* Top tickers strip */}
-      {topTickers.length > 0 && (
-        <Card className="mb-4">
-          <CardContent className="flex flex-wrap items-center gap-2 py-3">
-            <span className="text-xs uppercase tracking-wide text-muted-foreground">
-              hot tickers
-            </span>
-            {topTickers.map((t) => (
-              <button
-                key={t.ticker}
-                type="button"
-                onClick={() => openDossier(t.ticker)}
-                className="group flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs hover:border-primary/60"
-              >
-                <span className="font-semibold text-foreground">{t.ticker}</span>
-                <span className="text-muted-foreground">
-                  {formatMoney(t.premium)} · {t.count}
-                </span>
-              </button>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
       {/* Events table */}
       {isLoading ? (
         <div className="space-y-2">
