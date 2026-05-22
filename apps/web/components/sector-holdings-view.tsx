@@ -172,6 +172,35 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
     return { d1: make("return_1d"), d5: make("return_5d") };
   }, [data]);
 
+  // Laggards = constituents whose 20D return trails the sector median by the
+  // largest margin. Computed against the *median*, not the mean, so a few
+  // megacap outliers don't drag the bar. Surfaces the catch-up candidates the
+  // sector → cohort → laggard funnel exists to find.
+  const laggards = useMemo(() => {
+    if (!data || data.median_return_20d === null || data.median_return_20d === undefined) {
+      return null;
+    }
+    const median20 = data.median_return_20d;
+    const rows = data.holdings
+      .map((h) => {
+        if (h.return_20d === null || h.return_20d === undefined) return null;
+        return { h, ret20: h.return_20d, lag: h.return_20d - median20 };
+      })
+      .filter((x): x is { h: HoldingEntry; ret20: number; lag: number } => x !== null);
+    if (rows.length === 0) return null;
+    // Cross-sectional dispersion → z-score so "how unusual is this lag" is
+    // comparable across sectors. σ = stdev of constituent 20D returns.
+    const mean = rows.reduce((a, r) => a + r.ret20, 0) / rows.length;
+    const variance = rows.reduce((a, r) => a + (r.ret20 - mean) ** 2, 0) / Math.max(rows.length - 1, 1);
+    const sigma = Math.sqrt(variance);
+    const scored = rows.map((r) => ({ ...r, z: sigma > 0 ? r.lag / sigma : 0 }));
+    // Bottom decile, clamped to [3, 8] so small sectors still surface
+    // something useful and big sectors don't drown the panel.
+    const n = Math.max(3, Math.min(8, Math.round(scored.length * 0.1)));
+    const sorted = [...scored].sort((a, b) => a.lag - b.lag).slice(0, n);
+    return { rows: sorted, sigma, median20, n_total: scored.length };
+  }, [data]);
+
   if (isLoading) {
     return <Skeleton className="h-96 w-full" />;
   }
@@ -251,6 +280,9 @@ export function SectorHoldingsView({ etf }: { etf: string }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Laggards vs sector median — catch-up candidates within the sector. */}
+      {laggards && <LaggardsCard {...laggards} />}
 
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -432,6 +464,71 @@ function MoverList({ rows, sign }: { rows: MoverRow[]; sign: "up" | "down" }) {
         );
       })}
     </div>
+  );
+}
+
+type LaggardRow = { h: HoldingEntry; ret20: number; lag: number; z: number };
+
+function LaggardsCard({
+  rows,
+  sigma,
+  median20,
+  n_total,
+}: {
+  rows: LaggardRow[];
+  sigma: number;
+  median20: number;
+  n_total: number;
+}) {
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <div className="mb-3 flex items-baseline justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+              Laggards (vs sector median 20D)
+            </div>
+            <div className="text-[11px] text-muted-foreground/80">
+              Bottom-decile names by 20D return minus sector median. Catch-up candidates — verify the
+              lag isn&apos;t fundamental (recent earnings, downgrade) before acting.
+            </div>
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            median 20D {fmtPct(median20)} · σ {fmtPct(sigma)} · {n_total} holdings
+          </div>
+        </div>
+        <div className="grid gap-1 sm:grid-cols-2">
+          {rows.map((r) => {
+            // |z| ≥ 1.5 → unusual enough to highlight as a real outlier rather
+            // than ordinary dispersion noise.
+            const flagged = r.z <= -1.5;
+            return (
+              <Link
+                key={r.h.ticker}
+                href={`/agents/${encodeURIComponent(r.h.ticker)}`}
+                className={cn(
+                  "flex items-baseline justify-between gap-2 rounded px-2 py-1 text-xs hover:bg-muted/30",
+                  flagged && "border border-signal-bearish/40 bg-signal-bearish/5"
+                )}
+              >
+                <span className="flex items-baseline gap-2">
+                  <span className="font-medium">{r.h.ticker}</span>
+                  {r.h.short_name && (
+                    <span className="text-[10px] text-muted-foreground">{r.h.short_name}</span>
+                  )}
+                </span>
+                <span className="flex items-baseline gap-2 num">
+                  <span className="text-signal-bearish">{fmtPct(r.lag)}</span>
+                  <span className="text-[10px] text-muted-foreground">
+                    20D {fmtPct(r.ret20)} · z {r.z.toFixed(1)}
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
