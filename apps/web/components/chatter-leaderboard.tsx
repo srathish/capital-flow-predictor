@@ -13,7 +13,7 @@ import {
   classifyKeywords,
   type CatalystCategoryId,
 } from "@/lib/catalyst-categories";
-import type { CatalystPost, RedditMentionRow } from "@/lib/types";
+import type { CatalystPost, NewsItem, RedditMentionRow } from "@/lib/types";
 
 const LEADERBOARD_HOURS = 48;
 const REFETCH_MS = 60_000;
@@ -47,6 +47,8 @@ type LeaderboardEntry = {
   // Powers the click-through drawer; carries the full per-event evidence.
   events: CatalystPost[];
   mentionsRow: RedditMentionRow | null;
+  news: NewsItem[]; // ranked by source-side composite score, descending
+  newsSourcesUsed: string[]; // distinct source names for transparency
 };
 
 function formatPct(p: number | null | undefined, digits = 1): string {
@@ -75,6 +77,8 @@ function pickWhyTag(
   predSignal: LeaderboardEntry["predSignal"],
   catalystPosts: number,
   topKeywords: string[],
+  topNewsHeadline: string | null,
+  newsCount: number,
 ): string {
   if (topCategory && catalystPosts > 0) {
     const cat = CATALYST_CATEGORIES[topCategory];
@@ -84,8 +88,16 @@ function pickWhyTag(
     return cat.label;
   }
   if (spike != null && spike >= 2) return `Mention spike ${spike.toFixed(1)}×`;
+  if (topNewsHeadline) {
+    const trimmed =
+      topNewsHeadline.length > 70
+        ? `${topNewsHeadline.slice(0, 67)}…`
+        : topNewsHeadline;
+    return trimmed;
+  }
   if (predSignal === "buy") return "Model BUY";
   if (predSignal === "fade") return "Model FADE";
+  if (newsCount > 0) return `${newsCount} news item${newsCount === 1 ? "" : "s"}`;
   if (catalystPosts > 0) return "Catalyst chatter";
   return "Reddit chatter";
 }
@@ -93,6 +105,7 @@ function pickWhyTag(
 function buildLeaderboard(
   catalysts: CatalystPost[],
   mentions: RedditMentionRow[],
+  newsByTicker: Record<string, NewsItem[]> = {},
 ): LeaderboardEntry[] {
   // Per-ticker catalyst aggregates.
   type CatAgg = {
@@ -138,6 +151,7 @@ function buildLeaderboard(
   const allTickers = new Set<string>([
     ...catByTicker.keys(),
     ...mentionsByTicker.keys(),
+    ...Object.keys(newsByTicker),
   ]);
 
   const rows: LeaderboardEntry[] = [];
@@ -157,9 +171,21 @@ function buildLeaderboard(
         ? Math.max(0, predScore)
         : 0;
 
+    // News contribution: sum of backend-computed per-item scores (already
+    // recency × source × sentiment). Caps at 5 to avoid runaway when a
+    // ticker is in 20+ feeds simultaneously.
+    const tickerNews = newsByTicker[ticker] ?? [];
+    const newsSignal = Math.min(
+      5,
+      tickerNews.reduce((acc, n) => acc + (n.score ?? 0), 0),
+    );
+
     // Raw composite — relative ranking, not an absolute scale.
     const raw =
-      catalystSignal * 1.5 + mentionsSignal * 0.8 + predContribution * 0.6;
+      catalystSignal * 1.5 +
+      mentionsSignal * 0.8 +
+      predContribution * 0.6 +
+      newsSignal * 1.2;
     if (raw <= 0) continue;
 
     let topCategory: CatalystCategoryId | null = null;
@@ -178,18 +204,28 @@ function buildLeaderboard(
         .map(([k]) => k);
     }
 
-    const totalSrc = catalystSignal + mentionsSignal + predContribution + 1e-9;
+    const totalSrc =
+      catalystSignal + mentionsSignal + predContribution + newsSignal + 1e-9;
     const sources: SourceMix = {
       catalyst: catalystSignal / totalSrc,
       reddit: (mentionsSignal + predContribution) / totalSrc,
-      news: 0, // wired in stage 2
+      news: newsSignal / totalSrc,
     };
 
-    const newestHours = cat
-      ? cat.newest
-      : m
-        ? 0 // mentions snapshot is "today"
+    const newsNewestHours =
+      tickerNews.length > 0
+        ? Math.min(...tickerNews.map((n) => n.hours_old))
         : Infinity;
+    const candidates: number[] = [];
+    if (cat) candidates.push(cat.newest);
+    if (m) candidates.push(0); // mentions snapshot is "today"
+    if (Number.isFinite(newsNewestHours)) candidates.push(newsNewestHours);
+    const newestHours =
+      candidates.length > 0 ? Math.min(...candidates) : Infinity;
+
+    const newsSourcesUsed = Array.from(
+      new Set(tickerNews.map((n) => n.source)),
+    ).sort();
 
     const events = cat
       ? [...cat.events].sort((a, b) => b.catalyst_score - a.catalyst_score)
@@ -208,6 +244,8 @@ function buildLeaderboard(
         predSignal,
         cat?.posts ?? 0,
         topKeywords,
+        tickerNews[0]?.title ?? null,
+        tickerNews.length,
       ),
       mentionsToday,
       mentionsLast6h: m?.mentions_last_6h ?? 0,
@@ -221,6 +259,8 @@ function buildLeaderboard(
       predReturn20d: m?.pred_return_20d_pct ?? null,
       events,
       mentionsRow: m ?? null,
+      news: tickerNews,
+      newsSourcesUsed,
     });
   }
 
@@ -344,9 +384,13 @@ function HeroCard({
                 }
               />
               <Metric
-                label="Freshness"
-                value={`${freshnessLabel(entry.newestHoursOld)} ago`}
-                hint={null}
+                label="News headlines"
+                value={entry.news.length > 0 ? String(entry.news.length) : "—"}
+                hint={
+                  entry.newsSourcesUsed.length > 0
+                    ? `${entry.newsSourcesUsed.length} src · ${freshnessLabel(entry.newestHoursOld)} ago`
+                    : `${freshnessLabel(entry.newestHoursOld)} ago`
+                }
               />
               <Metric
                 label="5d price"
@@ -460,7 +504,7 @@ function RankCard({
         >
           {entry.whyTag}
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-1 text-[10px]">
+        <div className="mt-2 grid grid-cols-3 gap-1 text-[10px]">
           <div>
             <span className="text-muted-foreground">mentions </span>
             <span className="num font-semibold">
@@ -472,10 +516,16 @@ function RankCard({
               </span>
             )}
           </div>
-          <div className="text-right">
-            <span className="text-muted-foreground">catalysts </span>
+          <div className="text-center">
+            <span className="text-muted-foreground">cat </span>
             <span className="num font-semibold">
               {entry.catalystPosts > 0 ? entry.catalystPosts : "—"}
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-muted-foreground">news </span>
+            <span className="num font-semibold">
+              {entry.news.length > 0 ? entry.news.length : "—"}
             </span>
           </div>
         </div>
@@ -499,6 +549,26 @@ function RankCard({
   );
 }
 
+const NEWS_SOURCE_LABEL: Record<string, string> = {
+  fmp: "FMP",
+  polygon: "Polygon",
+  yfinance: "Yahoo Finance",
+  "yahoo-rss": "Yahoo RSS",
+  "google-rss": "Google News",
+  "seeking-alpha": "Seeking Alpha",
+};
+
+function sourceLabel(s: string): string {
+  return NEWS_SOURCE_LABEL[s] ?? s;
+}
+
+function freshNewsLabel(h: number): string {
+  if (!Number.isFinite(h)) return "—";
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))}m ago`;
+  if (h < 24) return `${Math.round(h)}h ago`;
+  return `${Math.round(h / 24)}d ago`;
+}
+
 function TickerEvidenceDrawer({
   entry,
   onClose,
@@ -519,6 +589,20 @@ function TickerEvidenceDrawer({
       document.body.style.overflow = prev;
     };
   }, [onClose]);
+
+  // On-demand: pull the full per-ticker news set (up to 30) so the drawer
+  // shows more depth than the leaderboard preview (8). Falls back to the
+  // leaderboard preview while in flight.
+  const fullNewsQuery = useQuery({
+    queryKey: ["news-ticker-drawer", entry.ticker],
+    queryFn: () => api.newsForTicker(entry.ticker, 30),
+    retry: false,
+    staleTime: 5 * 60_000,
+  });
+
+  const news = fullNewsQuery.data?.items ?? entry.news;
+  const sourcesUsed =
+    fullNewsQuery.data?.sources_used ?? entry.newsSourcesUsed;
 
   const events = entry.events;
   const m = entry.mentionsRow;
@@ -607,17 +691,101 @@ function TickerEvidenceDrawer({
           />
         </div>
 
-        {/* Events list, ranked by confidence (catalyst_score desc) */}
-        <div className="flex-1 overflow-y-auto p-5">
-          <div className="mb-3 flex items-baseline justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Evidence — ranked by confidence
-            </h3>
-            <span className="text-[10px] text-muted-foreground">
-              {events.length} event{events.length === 1 ? "" : "s"} (last{" "}
-              {LEADERBOARD_HOURS}h)
-            </span>
+        {/* Evidence body — news first, then reddit catalyst posts */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+          {/* News headlines */}
+          <div>
+            <div className="mb-3 flex items-baseline justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                News — ranked by confidence
+              </h3>
+              <span className="text-[10px] text-muted-foreground">
+                {news.length} headline{news.length === 1 ? "" : "s"}
+                {sourcesUsed.length > 0 && (
+                  <>
+                    {" "}
+                    · {sourcesUsed.map(sourceLabel).join(" · ")}
+                  </>
+                )}
+                {fullNewsQuery.isLoading && (
+                  <span className="ml-1 text-primary">loading…</span>
+                )}
+              </span>
+            </div>
+            {news.length === 0 && !fullNewsQuery.isLoading ? (
+              <Card>
+                <CardContent className="p-4 text-sm text-muted-foreground">
+                  No news headlines found across FMP, Polygon, yfinance, Yahoo,
+                  Google News, or Seeking Alpha. Either too obscure a ticker
+                  or all sources are dry right now.
+                </CardContent>
+              </Card>
+            ) : (
+              <ul className="space-y-2">
+                {news.map((n, idx) => (
+                  <li key={`${n.url}-${idx}`}>
+                    <Card>
+                      <CardContent className="p-3">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <a
+                            href={n.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm font-semibold leading-snug hover:text-primary"
+                          >
+                            {n.title}
+                          </a>
+                          <span
+                            className="num shrink-0 text-[11px] text-primary"
+                            title="Confidence = recency × source-weight × sentiment magnitude"
+                          >
+                            {n.score.toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground">
+                          <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 font-semibold text-emerald-400">
+                            {sourceLabel(n.source)}
+                          </span>
+                          {n.publisher && <span>{n.publisher}</span>}
+                          <span>{freshNewsLabel(n.hours_old)}</span>
+                          {n.sentiment != null && Math.abs(n.sentiment) > 0.05 && (
+                            <span
+                              className={cn(
+                                n.sentiment > 0
+                                  ? "text-signal-bullish"
+                                  : "text-signal-bearish",
+                              )}
+                              title="Source-reported sentiment"
+                            >
+                              {n.sentiment > 0 ? "▲" : "▼"}{" "}
+                              {Math.abs(n.sentiment).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                        {n.summary && (
+                          <p className="mt-1.5 line-clamp-2 text-[11px] text-muted-foreground">
+                            {n.summary}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+
+          {/* Reddit catalyst posts */}
+          <div>
+            <div className="mb-3 flex items-baseline justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Reddit catalyst posts — ranked by confidence
+              </h3>
+              <span className="text-[10px] text-muted-foreground">
+                {events.length} post{events.length === 1 ? "" : "s"} (last{" "}
+                {LEADERBOARD_HOURS}h)
+              </span>
+            </div>
           {events.length === 0 ? (
             <Card>
               <CardContent className="p-4 text-sm text-muted-foreground">
@@ -698,6 +866,7 @@ function TickerEvidenceDrawer({
               })}
             </ul>
           )}
+          </div>
         </div>
 
         {/* Footer link to full ticker page */}
@@ -739,14 +908,45 @@ export function ChatterLeaderboard() {
     refetchOnWindowFocus: true,
   });
 
-  const entries = useMemo<LeaderboardEntry[]>(() => {
+  // First-pass ranking from reddit + catalysts only — renders immediately.
+  const preliminary = useMemo<LeaderboardEntry[]>(() => {
     const catalysts = catalystsQuery.data?.posts ?? [];
     const mentions = mentionsQuery.data?.rows ?? [];
     if (catalysts.length === 0 && mentions.length === 0) return [];
     return buildLeaderboard(catalysts, mentions);
   }, [catalystsQuery.data, mentionsQuery.data]);
 
+  // Top tickers we want news for. Slight buffer (15) so news can shuffle the
+  // top-10 order without losing candidates.
+  const newsTickers = useMemo(
+    () => preliminary.slice(0, 15).map((e) => e.ticker),
+    [preliminary],
+  );
+
+  const newsQuery = useQuery({
+    queryKey: ["chatter-leaderboard-news", newsTickers.join(",")],
+    queryFn: () => api.newsRecent(newsTickers, 8),
+    enabled: newsTickers.length > 0,
+    retry: false,
+    staleTime: 5 * 60_000, // news cached server-side for 10 min; client mirror
+    refetchOnWindowFocus: false,
+  });
+
+  // Final ranking incorporates news once it lands. Falls back to preliminary
+  // while news is in-flight so the UI never goes blank.
+  const entries = useMemo<LeaderboardEntry[]>(() => {
+    const catalysts = catalystsQuery.data?.posts ?? [];
+    const mentions = mentionsQuery.data?.rows ?? [];
+    if (catalysts.length === 0 && mentions.length === 0) return [];
+    return buildLeaderboard(
+      catalysts,
+      mentions,
+      newsQuery.data?.items_by_ticker ?? {},
+    );
+  }, [catalystsQuery.data, mentionsQuery.data, newsQuery.data]);
+
   const isLoading = catalystsQuery.isLoading || mentionsQuery.isLoading;
+  const newsLoading = newsQuery.isLoading && newsTickers.length > 0;
   const error = catalystsQuery.error || mentionsQuery.error;
   const selectedEntry = selectedTicker
     ? entries.find((e) => e.ticker === selectedTicker) ?? null
@@ -767,6 +967,9 @@ export function ChatterLeaderboard() {
         </div>
         <div className="text-[11px] text-muted-foreground">
           {LEADERBOARD_HOURS}h window · refresh 60s
+          {newsLoading && (
+            <span className="ml-2 text-primary">· loading news…</span>
+          )}
         </div>
       </div>
 

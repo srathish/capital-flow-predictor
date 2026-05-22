@@ -31,6 +31,7 @@ from cfp_api.routes import (
     institutional,
     intraday_gex,
     network,
+    news,
     rankings,
     reddit,
     replay,
@@ -131,6 +132,10 @@ app.include_router(gex.router, dependencies=PROTECTED)
 # Catalyst calendar: earnings (pre/post), dividends, splits, analyst events,
 # economic calendar. Feeds the /explosive scoring + per-ticker drilldown.
 app.include_router(catalysts.router, dependencies=PROTECTED)
+# Multi-source news aggregator (FMP + Polygon + yfinance + Yahoo/Google/SA
+# RSS). Lazy: fetched on demand, cached 10 min in-process. Powers the
+# chatter leaderboard composite + per-ticker evidence drawer on /reddit.
+app.include_router(news.router, dependencies=PROTECTED)
 # Intraday 1-min spot-GEX series per ticker (migration 0029). Complements
 # the apps/gex Heatseeker monitor for non-SPY/QQQ/SPX names.
 app.include_router(intraday_gex.router, dependencies=PROTECTED)

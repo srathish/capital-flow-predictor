@@ -487,6 +487,41 @@ export type CatalystTrackRecordResponse = {
   categories: CategoryTrackRecord[];
 };
 
+// /v1/news/ticker/{ticker} and /v1/news/recent — multi-source news aggregator
+export type NewsSource =
+  | "fmp"
+  | "polygon"
+  | "yfinance"
+  | "yahoo-rss"
+  | "google-rss"
+  | "seeking-alpha";
+
+export type NewsItem = {
+  source: NewsSource | string;
+  ticker: string;
+  title: string;
+  url: string;
+  publisher: string | null;
+  published_at: string;
+  summary: string | null;
+  image_url: string | null;
+  sentiment: number | null;
+  hours_old: number;
+  score: number;
+};
+
+export type TickerNewsResponse = {
+  ticker: string;
+  n_items: number;
+  sources_used: string[];
+  items: NewsItem[];
+};
+
+export type RecentNewsResponse = {
+  n_tickers: number;
+  items_by_ticker: Record<string, NewsItem[]>;
+};
+
 // Chat (SSE)
 export type ChatMessage = {
   role: "user" | "assistant";

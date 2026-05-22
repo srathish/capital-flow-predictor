@@ -33,12 +33,14 @@ import type {
   HoldingsSort,
   LeadLagResponse,
   NetworkResponse,
+  RecentNewsResponse,
   RedditBacktestSlice,
   RedditMentionsParams,
   RedditMentionsResponse,
   RedditRuleStats,
   RedditPredictResponse,
   RedditScorecardResponse,
+  TickerNewsResponse,
   WhalesParams,
   WhalesResponse,
   ScreenerParams,
@@ -227,6 +229,22 @@ export const api = {
     return getJson<CatalystTrackRecordResponse>(
       `/v1/reddit/catalyst-track-record${qs ? `?${qs}` : ""}`,
     );
+  },
+  newsForTicker(ticker: string, limit = 30): Promise<TickerNewsResponse> {
+    const sp = new URLSearchParams({ limit: String(limit) });
+    return getJson<TickerNewsResponse>(
+      `/v1/news/ticker/${encodeURIComponent(ticker)}?${sp}`,
+    );
+  },
+  newsRecent(tickers: string[], limit = 8): Promise<RecentNewsResponse> {
+    if (tickers.length === 0) {
+      return Promise.resolve({ n_tickers: 0, items_by_ticker: {} });
+    }
+    const sp = new URLSearchParams({
+      tickers: tickers.slice(0, 25).join(","),
+      limit: String(limit),
+    });
+    return getJson<RecentNewsResponse>(`/v1/news/recent?${sp}`);
   },
   correlationNetwork(params: {
     window?: number;
