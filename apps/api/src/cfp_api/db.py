@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import json
 
 import asyncpg
 from sqlalchemy import text
@@ -23,6 +24,24 @@ def to_asyncpg_url(url: str) -> str:
     return url
 
 
+async def _register_json_codecs(conn: asyncpg.Connection) -> None:
+    """Decode jsonb/json → Python dict/list on read, encode dict/list → JSON on write.
+
+    Without this, asyncpg returns JSONB columns as raw strings, and Pydantic
+    models declaring `dict[...]` fields fail validation with type=dict_type.
+    The /explosive route's `signals` column hit this; any future JSONB column
+    would have the same problem.
+    """
+    for typename in ("jsonb", "json"):
+        await conn.set_type_codec(
+            typename,
+            encoder=json.dumps,
+            decoder=json.loads,
+            schema="pg_catalog",
+            format="text",
+        )
+
+
 async def init_pool(database_url: str, *, min_size: int = 1, max_size: int = 10) -> asyncpg.Pool:
     global _pool
     if _pool is not None:
@@ -31,6 +50,7 @@ async def init_pool(database_url: str, *, min_size: int = 1, max_size: int = 10)
         to_asyncpg_url(database_url),
         min_size=min_size,
         max_size=max_size,
+        init=_register_json_codecs,
     )
     return _pool
 
