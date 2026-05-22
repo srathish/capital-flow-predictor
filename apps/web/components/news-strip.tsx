@@ -34,7 +34,13 @@ export function NewsStrip({ openDossier }: { openDossier?: (t: string) => void }
     refetchInterval: REFETCH_MS,
     refetchOnWindowFocus: false,
   });
-  const items = data?.items ?? [];
+  // On /flow we only want flow-relevant news — headlines tagged with at
+  // least one ticker. Untagged macro/political chatter (Fed speeches, House
+  // investigations, etc.) belongs on /reddit Catalysts, not here.
+  const items = useMemo(
+    () => (data?.items ?? []).filter((n) => (n.tickers?.length ?? 0) > 0),
+    [data],
+  );
   const visible = useMemo(() => (expanded ? items : items.slice(0, 5)), [items, expanded]);
   if (items.length === 0) return null;
 

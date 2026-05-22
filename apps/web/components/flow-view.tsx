@@ -373,6 +373,36 @@ export function FlowView() {
         </div>
       </header>
 
+      {/* Top tickers — most-bid names in the current window, ranked by total
+          premium. Pills update as the filters (lookback / size / kind) change
+          since they're computed from the same `events` list as the feed below. */}
+      {topTickers.length > 0 && (
+        <Card className="mb-3">
+          <CardContent className="flex flex-wrap items-center gap-2 py-3">
+            <span className="text-xs uppercase tracking-wide text-muted-foreground">
+              top flow tickers
+            </span>
+            {topTickers.map((t, i) => (
+              <button
+                key={t.ticker}
+                type="button"
+                onClick={() => openDossier(t.ticker)}
+                className="group flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs hover:border-primary/60"
+                title={`#${i + 1} by total premium`}
+              >
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  {i + 1}
+                </span>
+                <span className="font-semibold text-foreground">{t.ticker}</span>
+                <span className="text-muted-foreground">
+                  {formatMoney(t.premium)} · {t.count}
+                </span>
+              </button>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Phase C live event injectors — both auto-hide when empty. */}
       <HaltsStrip openDossier={openDossier} />
       <NewsStrip openDossier={openDossier} />
