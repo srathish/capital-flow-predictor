@@ -333,9 +333,9 @@ async def _resolve_confluence(
                 """
                 SELECT * FROM confluence_signals
                 WHERE ticker = ANY($1::text[])
-                  AND computed_at >= NOW() - $2::interval
+                  AND computed_at >= NOW() - $2
                 """,
-                tickers, f"{int(CACHE_TTL.total_seconds())} seconds",
+                tickers, CACHE_TTL,
             )
             cached = {r["ticker"]: _row_to_model(dict(r)) for r in cached_rows}
             stale = [t for t in tickers if t not in cached]
