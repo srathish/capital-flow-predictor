@@ -1,0 +1,38 @@
+# Railway service config for the UW WebSocket subscriber.
+#
+# Fourth service in the Bellwether project on Railway:
+#   1. capital-flow-predictor-api         (FastAPI)            — infra/railway.toml
+#   2. capital-flow-predictor-gex         (Node poller)        — apps/gex/railway.toml
+#   3. capital-flow-predictor-discord     (Discord listener)   — apps/discord_listener/railway.toml
+#   4. capital-flow-predictor-uw-socket   (WebSocket subscriber) — this file
+#
+# Setup (one-time, via the Railway dashboard):
+#   1. In the existing project, click "+ New Service" → "GitHub repo"
+#   2. Pick this repo + main branch
+#   3. Settings → Source: Root Directory = / (Dockerfile path is repo-relative)
+#   4. Settings → Build: Dockerfile Path = apps/uw_socket/Dockerfile
+#   5. Settings → Variables:
+#        DATABASE_URL            (link to the shared Postgres plugin)
+#        UNUSUAL_WHALES_API_KEY  (same key the API + jobs use)
+#        UW_SOCKET_CHANNELS      flow_alerts,option_trades,gex,market_tide,trading_halts
+#        UW_SOCKET_URL           wss://api.unusualwhales.com/socket    (default; override if UW changes hosts)
+#        UW_NEWS_POLL_SECONDS    60     (news isn't on WS; poll every Nm)
+#        LOG_LEVEL               INFO
+#   6. NO public networking — this service never accepts inbound HTTP.
+#   7. NO volume — all state lives in Postgres.
+#
+# Tier note: WebSocket channels may be gated by UW subscription tier. The
+# subscriber treats per-channel failures as soft errors and keeps the others
+# running. Channels can be enabled/disabled via UW_SOCKET_CHANNELS without
+# code changes.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/uw_socket/Dockerfile"
+
+[deploy]
+# Long-running async process; Railway uses process-alive as the liveness
+# signal. Reconnect loops are inside the app, but if the whole process
+# crashes Railway restarts it (with backoff via maxRetries).
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
