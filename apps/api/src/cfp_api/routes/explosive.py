@@ -40,6 +40,11 @@ class ExplosiveSubScores(BaseModel):
     nope: float = 0.0
     insider_buy: float = 0.0
     volume_profile: float = 0.0
+    # Phase 3 confirmation signals (nullable on legacy rows pre-migrations 0028-0030)
+    earnings_window: float = 0.0
+    analyst: float = 0.0
+    institutional: float = 0.0
+    spot_gex: float = 0.0
 
 
 class ExplosiveItem(BaseModel):
@@ -97,6 +102,10 @@ def _row_to_item(row: Any) -> ExplosiveItem:
             nope=row.get("nope_score") or 0.0,
             insider_buy=row.get("insider_buy_score") or 0.0,
             volume_profile=row.get("volume_profile_score") or 0.0,
+            earnings_window=row.get("earnings_window_score") or 0.0,
+            analyst=row.get("analyst_score") or 0.0,
+            institutional=row.get("institutional_score") or 0.0,
+            spot_gex=row.get("spot_gex_score") or 0.0,
         ),
         signals=row["signals"] or {},
     )
@@ -130,7 +139,7 @@ async def list_explosive(
                 flow_concentration_score, iv_term_score, squeeze_score,
                 catalyst_score, cheap_optionality_score, gex_bonus_score,
                 iv_vs_rv_score, skew_flip_score, nope_score,
-                insider_buy_score, volume_profile_score,
+                insider_buy_score, volume_profile_score, earnings_window_score, analyst_score, institutional_score, spot_gex_score,
                 signals
             FROM explosive_scores
             WHERE {' AND '.join(clauses)}
@@ -222,7 +231,7 @@ async def get_explosive_detail(ticker: str) -> ExplosiveDetailResponse:
                 flow_concentration_score, iv_term_score, squeeze_score,
                 catalyst_score, cheap_optionality_score, gex_bonus_score,
                 iv_vs_rv_score, skew_flip_score, nope_score,
-                insider_buy_score, volume_profile_score,
+                insider_buy_score, volume_profile_score, earnings_window_score, analyst_score, institutional_score, spot_gex_score,
                 signals
             FROM explosive_scores
             WHERE ticker = $1
@@ -384,7 +393,7 @@ async def get_explosive_ticker(ticker: str) -> ExplosiveItem:
                 flow_concentration_score, iv_term_score, squeeze_score,
                 catalyst_score, cheap_optionality_score, gex_bonus_score,
                 iv_vs_rv_score, skew_flip_score, nope_score,
-                insider_buy_score, volume_profile_score,
+                insider_buy_score, volume_profile_score, earnings_window_score, analyst_score, institutional_score, spot_gex_score,
                 signals
             FROM explosive_scores
             WHERE ticker = $1

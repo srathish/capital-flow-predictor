@@ -20,12 +20,15 @@ from cfp_api.routes import (
     agents,
     assistant,
     backtest,
+    catalysts,
     chat,
     discord,
     explosive,
     flow,
     gex,
     health,
+    institutional,
+    intraday_gex,
     network,
     rankings,
     reddit,
@@ -123,6 +126,15 @@ app.include_router(explosive.router, dependencies=PROTECTED)
 # and the daemon needs it to long-poll the reauth queue. Same surface as
 # everything else.
 app.include_router(gex.router, dependencies=PROTECTED)
+# Catalyst calendar: earnings (pre/post), dividends, splits, analyst events,
+# economic calendar. Feeds the /explosive scoring + per-ticker drilldown.
+app.include_router(catalysts.router, dependencies=PROTECTED)
+# Intraday 1-min spot-GEX series per ticker (migration 0029). Complements
+# the apps/gex Heatseeker monitor for non-SPY/QQQ/SPX names.
+app.include_router(intraday_gex.router, dependencies=PROTECTED)
+# Institutional flow & ownership rollups (migration 0030). Smart-money
+# confirmation layer for the /explosive scanner; standalone screener too.
+app.include_router(institutional.router, dependencies=PROTECTED)
 app.include_router(discord.router, dependencies=PROTECTED)
 # SSE stream uses query-param auth (EventSource can't set headers) — it
 # does its own validation against settings.api_keys_raw inside the handler.

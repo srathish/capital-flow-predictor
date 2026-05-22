@@ -383,6 +383,150 @@ class UwClient:
             return {"estimates": body}
         return body if isinstance(body, dict) else None
 
+    # ---------- explosive Phase 3 drilldown (migration 0026) ---------------
+    # The 4 endpoints below are net-new for the per-ticker /explosive/{ticker}
+    # detail page. They were referenced by ingestion/explosive.py in commit
+    # ddd7a5d but the client methods themselves were missed in that commit.
+
+    def option_contract_history(self, option_symbol: str) -> list[dict]:
+        """Daily OHLC + IV + OI history for a single option contract.
+        Backbone of the per-contract chart on the drilldown page."""
+        return self._get(f"/option-contract/{option_symbol}/history") or []
+
+    def option_contract_intraday(self, option_symbol: str) -> list[dict]:
+        """Minute-level data for a single option contract (today's session)."""
+        return self._get(f"/option-contract/{option_symbol}/intraday") or []
+
+    def full_tape(
+        self,
+        ticker: str | None = None,
+        target_date: date | None = None,
+        limit: int = 200,
+    ) -> list[dict]:
+        """Full options trade tape, optionally filtered by ticker and date."""
+        params: dict[str, Any] = {"limit": limit}
+        if ticker:
+            params["ticker"] = ticker
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get("/option-trades/full-tape", params=params) or []
+
+    def top_net_impact(self, limit: int = 50) -> list[dict]:
+        """Market-wide tickers ranked by net dealer hedging pressure."""
+        return self._get("/market/top-net-impact", params={"limit": limit}) or []
+
+    # ---------- catalyst feeds (migration 0028) ----------------------------
+    # Adds the *upcoming* / market-wide catalyst calendar that powers the
+    # explosive scanner's earnings/analyst/macro confirmation signals.
+
+    def earnings_afterhours(self, target_date: date | None = None) -> list[dict]:
+        """Companies reporting after-hours on `target_date` (today if omitted).
+        UW returns the natural watchlist for tomorrow-morning gap plays."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get("/earnings/afterhours", params=params) or []
+
+    def earnings_premarket(self, target_date: date | None = None) -> list[dict]:
+        """Companies reporting pre-market on `target_date`."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get("/earnings/premarket", params=params) or []
+
+    def dividends(self, ticker: str) -> list[dict]:
+        """Per-ticker dividend history + upcoming ex-dates."""
+        return self._get(f"/companies/{ticker}/dividends") or []
+
+    def stock_splits(self, ticker: str) -> list[dict]:
+        """Per-ticker split history + upcoming splits."""
+        return self._get(f"/companies/{ticker}/stock-splits") or []
+
+    def analyst_ratings(
+        self,
+        ticker: str | None = None,
+        limit: int = 200,
+        start_date: date | None = None,
+    ) -> list[dict]:
+        """Analyst upgrades / downgrades / price-target changes. Without
+        `ticker`, returns the market-wide feed; with `ticker`, filters to one
+        symbol. Use start_date to incremental-ingest."""
+        params: dict[str, Any] = {"limit": limit}
+        if ticker:
+            params["ticker"] = ticker
+        if start_date:
+            params["start_date"] = start_date.isoformat()
+        return self._get("/screener/analyst-ratings", params=params) or []
+
+    def economic_calendar(
+        self,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> list[dict]:
+        """Fed events, CPI, NFP, etc. Macro catalysts that move broad tape."""
+        params: dict[str, Any] = {}
+        if start_date:
+            params["start_date"] = start_date.isoformat()
+        if end_date:
+            params["end_date"] = end_date.isoformat()
+        return self._get("/market/economic-calendar", params=params) or []
+
+    # ---------- intraday spot-GEX (migration 0029) -------------------------
+
+    def spot_exposures_one_minute(
+        self,
+        ticker: str,
+        target_date: date | None = None,
+    ) -> list[dict]:
+        """1-minute resolution spot-GEX series for a ticker. Returns one row
+        per minute with total / call / put gamma, delta, charm, vanna and the
+        per-strike breakdown UW computes. THE upgrade for the gex monitor and
+        the per-ticker GEX signal the explosive scanner has been missing."""
+        params: dict[str, Any] = {"interval": "1m"}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get(f"/stock/{ticker}/spot-exposures", params=params) or []
+
+    # ---------- institutional flow (migration 0030) ------------------------
+
+    def institution_activity(
+        self,
+        ticker: str | None = None,
+        limit: int = 200,
+        start_date: date | None = None,
+    ) -> list[dict]:
+        """Recent institutional position changes (13F-driven). Without
+        `ticker`, returns the firehose; with `ticker`, only events touching
+        that symbol."""
+        params: dict[str, Any] = {"limit": limit}
+        if ticker:
+            params["ticker"] = ticker
+        if start_date:
+            params["start_date"] = start_date.isoformat()
+        return self._get("/institution/activity", params=params) or []
+
+    def institution_holdings(self, name: str) -> list[dict]:
+        """Full position list for one institution as of latest filing."""
+        return self._get(f"/institution/{name}/holdings") or []
+
+    def institution_latest_filings(self, limit: int = 100) -> list[dict]:
+        """Most-recent 13F filings across all institutions — pointer rows."""
+        return self._get("/institution/latest-filings", params={"limit": limit}) or []
+
+    def stock_ownership(self, ticker: str) -> dict | list[dict] | None:
+        """Per-ticker ownership rollup: institutional %, insider %, top
+        holders, etc. UW returns either a dict or a list depending on
+        whether it includes the historical timeseries."""
+        return self._get(f"/stock/{ticker}/ownership")
+
+    def market_insider_buy_sells(self) -> list[dict]:
+        """Market-wide insider buy/sell rollup across standard windows."""
+        return self._get("/market/insider-buy-sells") or []
+
+    def stock_insider_buy_sells(self, ticker: str) -> list[dict]:
+        """Per-ticker insider buy/sell rollup across standard windows."""
+        return self._get(f"/stock/{ticker}/insider-buy-sells") or []
+
     def close(self) -> None:
         self._client.close()
 
