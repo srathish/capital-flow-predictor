@@ -49,6 +49,13 @@ on:
     # plan calls against actual SPY/QQQ/SPXW intraday tape. Runs after 1-min
     # bars settle on yfinance. Re-runs any pending plans from the last 7 days.
     - cron: "30 3 * * 2-6"
+    # Explosive options tab pipeline (Mon-Fri RTH):
+    #   ingest at :03, :18, :33, :48 — UW screeners + per-ticker pulls
+    #   score  at :07, :22, :37, :52 — composite ranking written to DB
+    #   drilldown at :12 once an hour — per-contract history + correlations
+    - cron: "3,18,33,48 13-20 * * 1-5"
+    - cron: "7,22,37,52 13-20 * * 1-5"
+    - cron: "12 14-20 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -72,6 +79,9 @@ on:
           - ensemble-rerun-stale
           - gex-snapshot
           - score-gex-plans
+          - explosive-ingest
+          - explosive-score
+          - explosive-drilldown
 
 jobs:
   reddit-catalysts:
@@ -394,3 +404,71 @@ jobs:
       - name: Snapshot IV regime per ticker
         working-directory: apps/jobs
         run: uv run cfp-jobs flow-volatility
+
+  explosive-ingest:
+    # Refreshes the explosive-options tab data stack: contract_screener,
+    # short_screener, FDA + IPO calendars, top_net_impact, volume_profile
+    # for top contracts, and per-ticker flow_per_strike / flow_per_expiry /
+    # iv_term / max_pain / FTD / NOPE / skew / RV / insider flow.
+    # Runs every 15 min during RTH at :03 / :18 / :33 / :48 (offset from
+    # other UW jobs to spread the per-minute rate across the budget).
+    if: startsWith(github.event.schedule, '3,18,33,48') || github.event.inputs.job == 'explosive-ingest'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied (0024, 0025, 0026)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Ingest explosive-tab universe
+        working-directory: apps/jobs
+        run: uv run cfp-jobs explosive-ingest --max-tickers 80
+
+  explosive-score:
+    # Reads the tables explosive-ingest just refreshed and writes a new
+    # explosive_scores snapshot the /explosive API reads. Runs 4 min after
+    # each ingest (:07 / :22 / :37 / :52) to give per-ticker pulls time.
+    if: startsWith(github.event.schedule, '7,22,37,52') || github.event.inputs.job == 'explosive-score'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Compute + persist explosive_scores
+        working-directory: apps/jobs
+        run: uv run cfp-jobs explosive-score
+
+  explosive-drilldown:
+    # Backfills per-contract OHLC history + peer correlations for the top
+    # scored tickers. Powers the /explosive/{ticker} detail page. Hourly
+    # at :12 during RTH (after the :07 score run lands).
+    if: startsWith(github.event.schedule, '12 14-20') || github.event.inputs.job == 'explosive-drilldown'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Refresh top-contract history + peer correlations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs explosive-drilldown
