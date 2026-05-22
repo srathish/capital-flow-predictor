@@ -31,6 +31,16 @@ type ExplosiveSubScores = {
   volume_profile?: number;
 };
 
+type FunnelStages = {
+  stage1_passed: boolean;
+  stage2_passed: boolean;
+  stage3_passed: boolean;
+  stage4_passed: boolean;
+  stage5_passed: boolean;
+  stages_passed: number;
+  reasons: Record<string, string>;
+};
+
 type ExplosiveItem = {
   ticker: string;
   score: number;
@@ -48,8 +58,53 @@ type ExplosiveItem = {
   top_open_interest: number | null;
   top_premium: number | null;
   sub_scores: ExplosiveSubScores;
+  stages?: FunnelStages;
   signals: Record<string, string>;
 };
+
+const STAGE_LABELS: { key: keyof FunnelStages; label: string }[] = [
+  { key: "stage1_passed", label: "screener" },
+  { key: "stage2_passed", label: "flow" },
+  { key: "stage3_passed", label: "positioning" },
+  { key: "stage4_passed", label: "catalyst" },
+  { key: "stage5_passed", label: "squeeze" },
+];
+
+function FunnelStageRow({ stages }: { stages: FunnelStages | undefined }) {
+  if (!stages) return null;
+  const n = stages.stages_passed ?? 0;
+  const flame = n >= 5 ? "🔥 " : n >= 4 ? "⚡ " : "";
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
+      {STAGE_LABELS.map(({ key, label }) => {
+        const ok = Boolean(stages[key]);
+        const reasonKey = label;
+        const why = stages.reasons?.[reasonKey];
+        return (
+          <span
+            key={key}
+            title={why ?? (ok ? "passed" : "did not pass")}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full px-2 py-0.5",
+              ok ? "bg-emerald-500/15 text-emerald-300" : "bg-muted/60 text-muted-foreground",
+            )}
+          >
+            {ok ? "✓" : "—"} {label}
+          </span>
+        );
+      })}
+      <span
+        className={cn(
+          "ml-1 font-medium",
+          n >= 5 ? "text-amber-300" : n >= 4 ? "text-primary" : n >= 3 ? "text-emerald-300" : "text-muted-foreground",
+        )}
+      >
+        {flame}
+        {n} / 5 stages
+      </span>
+    </div>
+  );
+}
 
 type ExplosiveFeedResponse = {
   snapshot_ts: string | null;
@@ -316,6 +371,11 @@ function SetupCard({ item, onOpen }: { item: ExplosiveItem; onOpen: (t: string) 
         {/* Confirmation chips */}
         <div className="mt-3">
           <ConfirmationChips sub={item.sub_scores} />
+        </div>
+
+        {/* Funnel stages (Phase B): visible 5-stage pass/fail */}
+        <div className="mt-3">
+          <FunnelStageRow stages={item.stages} />
         </div>
 
         {/* Signals (engine evidence) */}

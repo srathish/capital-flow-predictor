@@ -1251,6 +1251,107 @@ def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> Tick
     return sig
 
 
+# ---------- Phase B: cascading funnel stage evaluators ----------
+#
+# Each stage answers a yes/no question. Pass = the signal layer agrees,
+# fail = it doesn't. The Board ranks by (stages_passed DESC, score DESC)
+# so cards visibly stack: 5/5 = thesis fully loaded, 3/5 = watch only.
+# Thresholds are intentionally permissive on first pass — easier to tighten
+# after seeing real distribution than to widen after surfacing nothing.
+
+
+def _stage1_screener(sig: TickerSignals) -> tuple[bool, str]:
+    """Stage 1 — Screener seed. Universe loader has already filtered to
+    tickers that showed up in at least one UW screener / catalyst feed in
+    the last 24h, so by the time we're here this is always TRUE. We still
+    record the reason so the UI can show "where did this come from."
+    """
+    return True, "in UW universe seed"
+
+
+def _stage2_flow(sig: TickerSignals) -> tuple[bool, str]:
+    """Stage 2 — Flow confirmation. Needs sustained one-sided premium
+    pressure on OTM calls, not just one alert."""
+    if sig.total_otm_call_prem >= 1_000_000 and sig.strike_concentration_pct >= 0.3:
+        return True, f"${sig.total_otm_call_prem/1e6:.1f}M call premium, {sig.strike_concentration_pct*100:.0f}% on top strike"
+    if sig.total_otm_call_prem >= 5_000_000:
+        return True, f"${sig.total_otm_call_prem/1e6:.1f}M call premium (size dominates)"
+    if sig.flow_concentration_score >= 60:
+        return True, f"flow_concentration_score {sig.flow_concentration_score:.0f}/100"
+    return False, "no sustained one-sided call premium"
+
+
+def _stage3_positioning(sig: TickerSignals) -> tuple[bool, str]:
+    """Stage 3 — Positioning. Squeeze fuel: dealer short gamma, IV term
+    inversion, or strong per-ticker GEX context."""
+    reasons: list[str] = []
+    if sig.spot_gamma_short:
+        reasons.append("dealer short gamma")
+    if sig.iv_term_inversion >= 0.05:
+        reasons.append(f"IV term inverted +{sig.iv_term_inversion*100:.0f}%")
+    if sig.gex_bonus_score >= 30:
+        reasons.append(f"GEX context score {sig.gex_bonus_score:.0f}")
+    if sig.spot_gex_score >= 30:
+        reasons.append(f"intraday GEX score {sig.spot_gex_score:.0f}")
+    if reasons:
+        return True, " · ".join(reasons)
+    return False, "no positioning fuel (no short gamma, no IV inversion, no GEX edge)"
+
+
+def _stage4_catalyst(sig: TickerSignals) -> tuple[bool, str]:
+    """Stage 4 — Catalyst. Needs a forcing function: catalyst in ≤14d, or
+    flow so large it's a thesis on its own ($5M+)."""
+    if sig.days_to_catalyst is not None and sig.days_to_catalyst <= 14:
+        label = sig.catalyst_label or sig.catalyst_type or "catalyst"
+        return True, f"{label} in {sig.days_to_catalyst}d"
+    if sig.total_otm_call_prem >= 5_000_000:
+        return True, f"exceptional flow ${sig.total_otm_call_prem/1e6:.1f}M (no catalyst needed)"
+    return False, "no catalyst in 14d and flow not large enough to stand alone"
+
+
+def _stage5_squeeze(sig: TickerSignals) -> tuple[bool, str]:
+    """Stage 5 — Squeeze (BONUS, not gate). Short interest + FTD or high
+    utilization = combustible mix on top of everything else."""
+    has_si = sig.short_percent_float is not None and sig.short_percent_float >= 0.10
+    has_ftd = sig.recent_ftd_quantity is not None and sig.recent_ftd_quantity > 0
+    high_util = sig.utilization is not None and sig.utilization >= 0.7
+    if has_si and (has_ftd or high_util):
+        parts = [f"SI/float {sig.short_percent_float*100:.1f}%"]
+        if has_ftd:
+            parts.append(f"FTD {sig.recent_ftd_quantity:,}")
+        if high_util:
+            parts.append(f"util {sig.utilization*100:.0f}%")
+        return True, " · ".join(parts)
+    return False, "no squeeze fuel (low SI or no FTD/utilization)"
+
+
+STAGES: list[tuple[str, Any]] = [
+    ("stage1_passed", _stage1_screener),
+    ("stage2_passed", _stage2_flow),
+    ("stage3_passed", _stage3_positioning),
+    ("stage4_passed", _stage4_catalyst),
+    ("stage5_passed", _stage5_squeeze),
+]
+
+
+def _evaluate_stages(sig: TickerSignals) -> dict[str, Any]:
+    """Run all 5 stage evaluators against a signals bundle. Returns a dict
+    with the boolean flags, total count, and per-stage reasoning string.
+    """
+    out: dict[str, Any] = {}
+    reasons: dict[str, str] = {}
+    passed = 0
+    for key, fn in STAGES:
+        ok, why = fn(sig)
+        out[key] = ok
+        reasons[key.replace("_passed", "")] = why
+        if ok:
+            passed += 1
+    out["stages_passed"] = passed
+    out["stage_reasons"] = reasons
+    return out
+
+
 def _composite(sig: TickerSignals) -> float:
     return _clip(
         WEIGHTS["flow_concentration"] * sig.flow_concentration_score
@@ -1277,6 +1378,7 @@ def _upsert_score(
     snapshot_ts: datetime,
     sig: TickerSignals,
     score: float,
+    stages: dict[str, Any],
 ) -> None:
     sql = """
         INSERT INTO explosive_scores (
@@ -1290,6 +1392,8 @@ def _upsert_score(
             iv_vs_rv_score, skew_flip_score, nope_score,
             insider_buy_score, volume_profile_score,
             earnings_window_score, analyst_score, institutional_score, spot_gex_score,
+            stage1_passed, stage2_passed, stage3_passed, stage4_passed, stage5_passed,
+            stages_passed, stage_reasons,
             signals
         ) VALUES (
             %(snapshot_ts)s, %(ticker)s, %(score)s,
@@ -1302,6 +1406,8 @@ def _upsert_score(
             %(iv_vs_rv_score)s, %(skew_flip_score)s, %(nope_score)s,
             %(insider_buy_score)s, %(volume_profile_score)s,
             %(earnings_window_score)s, %(analyst_score)s, %(institutional_score)s, %(spot_gex_score)s,
+            %(stage1_passed)s, %(stage2_passed)s, %(stage3_passed)s, %(stage4_passed)s, %(stage5_passed)s,
+            %(stages_passed)s, %(stage_reasons)s,
             %(signals)s
         ) ON CONFLICT (snapshot_ts, ticker) DO UPDATE SET
             score = EXCLUDED.score,
@@ -1309,7 +1415,14 @@ def _upsert_score(
             earnings_window_score = EXCLUDED.earnings_window_score,
             analyst_score = EXCLUDED.analyst_score,
             institutional_score = EXCLUDED.institutional_score,
-            spot_gex_score = EXCLUDED.spot_gex_score
+            spot_gex_score = EXCLUDED.spot_gex_score,
+            stage1_passed = EXCLUDED.stage1_passed,
+            stage2_passed = EXCLUDED.stage2_passed,
+            stage3_passed = EXCLUDED.stage3_passed,
+            stage4_passed = EXCLUDED.stage4_passed,
+            stage5_passed = EXCLUDED.stage5_passed,
+            stages_passed = EXCLUDED.stages_passed,
+            stage_reasons = EXCLUDED.stage_reasons
     """
     params = {
         "snapshot_ts": snapshot_ts,
@@ -1343,6 +1456,13 @@ def _upsert_score(
         "analyst_score": sig.analyst_score,
         "institutional_score": sig.institutional_score,
         "spot_gex_score": sig.spot_gex_score,
+        "stage1_passed": bool(stages.get("stage1_passed", False)),
+        "stage2_passed": bool(stages.get("stage2_passed", False)),
+        "stage3_passed": bool(stages.get("stage3_passed", False)),
+        "stage4_passed": bool(stages.get("stage4_passed", False)),
+        "stage5_passed": bool(stages.get("stage5_passed", False)),
+        "stages_passed": int(stages.get("stages_passed", 0)),
+        "stage_reasons": Jsonb(stages.get("stage_reasons", {})),
         "signals": Jsonb(sig.reasons),
     }
     with conn.cursor() as cur:
@@ -1355,7 +1475,9 @@ def score_all(database_url: str) -> dict[str, Any]:
     now = datetime.now(UTC)
     today = now.date()
     written = 0
-    top_preview: list[tuple[str, float]] = []
+    # (ticker, stages_passed, score) — preview is sorted by stages first,
+    # then score, mirroring how /v1/explosive will rank the Board.
+    top_preview: list[tuple[str, int, float]] = []
     with connect(database_url) as conn:
         universe = _load_universe(conn, today)
         log.info("explosive scoring: %d tickers in universe", len(universe))
@@ -1367,18 +1489,22 @@ def score_all(database_url: str) -> dict[str, Any]:
                 with conn.transaction():
                     sig = _compute_signals(conn, ticker, today)
                     score = _composite(sig)
-                    _upsert_score(conn, now, sig, score)
+                    stages = _evaluate_stages(sig)
+                    _upsert_score(conn, now, sig, score, stages)
                 written += 1
-                top_preview.append((ticker, score))
+                top_preview.append((ticker, int(stages.get("stages_passed", 0)), score))
             except Exception as e:
                 log.warning("scoring failed for %s: %s", ticker, e, exc_info=True)
         # No explicit conn.commit(): psycopg3's `with psycopg.connect(...)`
         # already wraps the body in a transaction and commits on clean exit;
         # an explicit commit here raises "Explicit commit() forbidden within
         # a Transaction context."
-    top_preview.sort(key=lambda x: x[1], reverse=True)
+    top_preview.sort(key=lambda x: (x[1], x[2]), reverse=True)
     return {
         "snapshot_ts": now.isoformat(),
         "count": written,
-        "top": [{"ticker": t, "score": round(s, 1)} for t, s in top_preview[:10]],
+        "top": [
+            {"ticker": t, "stages": st, "score": round(s, 1)}
+            for t, st, s in top_preview[:10]
+        ],
     }

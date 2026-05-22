@@ -47,6 +47,19 @@ class ExplosiveSubScores(BaseModel):
     spot_gex: float = 0.0
 
 
+class FunnelStages(BaseModel):
+    """Phase B — cascading funnel pass/fail per stage. Defaults degrade
+    pre-migration-0034 rows to "Stage 1 only" so the Board still renders.
+    """
+    stage1_passed: bool = True
+    stage2_passed: bool = False
+    stage3_passed: bool = False
+    stage4_passed: bool = False
+    stage5_passed: bool = False
+    stages_passed: int = 1
+    reasons: dict[str, str] = {}
+
+
 class ExplosiveItem(BaseModel):
     ticker: str
     score: float
@@ -64,6 +77,7 @@ class ExplosiveItem(BaseModel):
     top_open_interest: int | None = None
     top_premium: float | None = None
     sub_scores: ExplosiveSubScores
+    stages: FunnelStages = FunnelStages()
     signals: dict[str, str]
 
 
@@ -107,6 +121,15 @@ def _row_to_item(row: Any) -> ExplosiveItem:
             institutional=row.get("institutional_score") or 0.0,
             spot_gex=row.get("spot_gex_score") or 0.0,
         ),
+        stages=FunnelStages(
+            stage1_passed=bool(row.get("stage1_passed") if row.get("stage1_passed") is not None else True),
+            stage2_passed=bool(row.get("stage2_passed") or False),
+            stage3_passed=bool(row.get("stage3_passed") or False),
+            stage4_passed=bool(row.get("stage4_passed") or False),
+            stage5_passed=bool(row.get("stage5_passed") or False),
+            stages_passed=int(row.get("stages_passed") if row.get("stages_passed") is not None else 1),
+            reasons=row.get("stage_reasons") or {},
+        ),
         signals=row["signals"] or {},
     )
 
@@ -140,10 +163,12 @@ async def list_explosive(
                 catalyst_score, cheap_optionality_score, gex_bonus_score,
                 iv_vs_rv_score, skew_flip_score, nope_score,
                 insider_buy_score, volume_profile_score, earnings_window_score, analyst_score, institutional_score, spot_gex_score,
+                stage1_passed, stage2_passed, stage3_passed, stage4_passed, stage5_passed,
+                stages_passed, stage_reasons,
                 signals
             FROM explosive_scores
             WHERE {' AND '.join(clauses)}
-            ORDER BY score DESC, ticker ASC
+            ORDER BY stages_passed DESC, score DESC, ticker ASC
             LIMIT ${len(params)}
         """
         rows = await conn.fetch(sql, *params)
