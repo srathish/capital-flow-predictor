@@ -23,6 +23,13 @@ from cfp_shared.evidence import (
     TopTrade,
     VolSurfaceCtx,
 )
+from cfp_shared.cohorts import (
+    COHORTS,
+    COHORTS_BY_KEY,
+    Cohort,
+    all_cohort_members,
+    cohorts_containing,
+)
 from cfp_shared.universe import (
     BENCHMARKS,
     CROSS_ASSET,
@@ -35,11 +42,16 @@ from cfp_shared.universe import (
 
 __all__ = [
     "BENCHMARKS",
+    "COHORTS",
+    "COHORTS_BY_KEY",
     "CROSS_ASSET",
+    "Cohort",
     "FRED_SERIES",
     "PREDICTION_TARGETS",
     "SECTORS",
     "THEMES",
+    "all_cohort_members",
+    "cohorts_containing",
     "CatalystCtx",
     "CongressTrade",
     "DarkPoolCtx",

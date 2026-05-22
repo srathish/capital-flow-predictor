@@ -4,6 +4,9 @@ import type {
   AgentsTimelineResponse,
   CatalystsResponse,
   CatalystTrackRecordResponse,
+  CohortDetail,
+  CohortListResponse,
+  CohortsByTickerResponse,
   ChartDataResponse,
   ChatMessage,
   ChatStreamEvent,
@@ -145,6 +148,20 @@ export const api = {
     if (params?.model) sp.set("model", params.model);
     const qs = sp.toString();
     return getJson<SectorForwardCallResponse>(`/v1/sectors/forward-call${qs ? `?${qs}` : ""}`);
+  },
+  cohorts(windowDays?: number): Promise<CohortListResponse> {
+    const qs = windowDays !== undefined ? `?window_days=${windowDays}` : "";
+    return getJson<CohortListResponse>(`/v1/cohorts${qs}`);
+  },
+  cohortDetail(key: string, windowDays?: number): Promise<CohortDetail> {
+    const qs = windowDays !== undefined ? `?window_days=${windowDays}` : "";
+    return getJson<CohortDetail>(`/v1/cohorts/${encodeURIComponent(key)}${qs}`);
+  },
+  cohortsByTicker(ticker: string, windowDays?: number): Promise<CohortsByTickerResponse> {
+    const qs = windowDays !== undefined ? `?window_days=${windowDays}` : "";
+    return getJson<CohortsByTickerResponse>(
+      `/v1/cohorts/by-ticker/${encodeURIComponent(ticker)}${qs}`
+    );
   },
   sectorRrg(params?: { tailWeeks?: number; benchmark?: string; nWindow?: number }): Promise<SectorRrgResponse> {
     const sp = new URLSearchParams();

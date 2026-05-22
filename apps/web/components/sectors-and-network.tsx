@@ -4,11 +4,13 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { SectorHeatmap } from "@/components/sector-heatmap";
 import { NetworkView } from "@/components/network-view";
+import { CohortsView } from "@/components/cohorts-view";
 
-type View = "heatmap" | "network";
+type View = "heatmap" | "cohorts" | "network";
 
 const VIEWS: { value: View; label: string }[] = [
   { value: "heatmap", label: "Heatmap" },
+  { value: "cohorts", label: "Cohorts" },
   { value: "network", label: "Network" },
 ];
 
@@ -38,7 +40,9 @@ export function SectorsAndNetwork() {
         })}
       </div>
 
-      {view === "heatmap" ? <SectorHeatmap /> : <NetworkView />}
+      {view === "heatmap" && <SectorHeatmap />}
+      {view === "cohorts" && <CohortsView />}
+      {view === "network" && <NetworkView />}
     </div>
   );
 }

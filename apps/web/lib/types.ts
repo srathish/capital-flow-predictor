@@ -526,6 +526,54 @@ export type SectorsResponse = {
   sectors: SectorEntry[];
 };
 
+// /v1/cohorts — sub-industry cohort spread analysis
+export type CohortPairSpread = {
+  leg_a: string;
+  leg_b: string;
+  n_obs: number;
+  last_spread: number;
+  mean_spread: number;
+  std_spread: number;
+  z: number;
+  pctile: number | null;
+};
+export type CohortMember = {
+  ticker: string;
+  ret_window: number | null;
+  rel_vs_median: number | null;
+  is_leader: boolean;
+  is_laggard: boolean;
+};
+export type CohortSummary = {
+  key: string;
+  label: string;
+  description: string;
+  members: string[];
+  n_members: number;
+  last_close_ts: string | null;
+  max_abs_z: number | null;
+  max_abs_z_pair: [string, string] | null;
+  leader: string | null;
+  laggard: string | null;
+};
+export type CohortDetail = {
+  key: string;
+  label: string;
+  description: string;
+  window_days: number;
+  last_close_ts: string | null;
+  members: CohortMember[];
+  pairs: CohortPairSpread[];
+};
+export type CohortListResponse = {
+  window_days: number;
+  cohorts: CohortSummary[];
+};
+export type CohortsByTickerResponse = {
+  ticker: string;
+  cohorts: CohortSummary[];
+};
+
 // /v1/sectors/scorecard
 export type ScorecardBaseline = {
   hit_rate: number | null;

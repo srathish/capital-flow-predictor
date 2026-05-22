@@ -22,6 +22,7 @@ from cfp_api.routes import (
     backtest,
     catalysts,
     chat,
+    cohorts,
     discord,
     explosive,
     flow,
@@ -108,6 +109,7 @@ app.include_router(agents.router, dependencies=PROTECTED)
 app.include_router(chat.router, dependencies=PROTECTED)
 app.include_router(scorecard.router, dependencies=PROTECTED)
 app.include_router(sectors.router, dependencies=PROTECTED)
+app.include_router(cohorts.router, dependencies=PROTECTED)
 app.include_router(network.router, dependencies=PROTECTED)
 app.include_router(reddit.router, dependencies=PROTECTED)
 app.include_router(flow.router, dependencies=PROTECTED)
