@@ -294,7 +294,7 @@ function SourceDots({ sources }: { sources: SourceMix }) {
     <span className="inline-flex items-center gap-1">
       {dot("reddit", "Reddit chatter", "bg-orange-500")}
       {dot("catalyst", "Catalyst posts", "bg-primary")}
-      {dot("news", "News (coming soon)", "bg-emerald-500")}
+      {dot("news", "News feeds (FMP, Polygon, Yahoo RSS, Google RSS, Seeking Alpha, yfinance)", "bg-emerald-500")}
     </span>
   );
 }
@@ -961,8 +961,9 @@ export function ChatterLeaderboard() {
           </h1>
           <p className="text-sm text-muted-foreground">
             Top {TOP_N} tickers right now across Reddit chatter, catalyst posts,
-            and (soon) news feeds. Click any card to see every event behind the
-            score, ranked by confidence.
+            and a 6-source news aggregator (FMP, Polygon, Yahoo RSS, Google RSS,
+            Seeking Alpha, yfinance). Click any card to see every event behind
+            the score, ranked by confidence.
           </p>
         </div>
         <div className="text-[11px] text-muted-foreground">
