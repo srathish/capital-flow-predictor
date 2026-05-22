@@ -60,6 +60,15 @@ on:
     # what powers the sector heatmap and the Cohorts tab; without it the
     # data ages a day at a time.
     - cron: "0 22 * * *"
+    # Delphi (market-foresight tab) — runs on top of the UW funnel:
+    #   uw-screeners-ingest reuses the explosive-ingest :03/:18/:33/:48 slot
+    #     (different UW endpoints — stock screener vs contract screener —
+    #     so no rate-limit collision).
+    #   delphi-rank uses :07/:22/:37/:52, 4 min after the screener writes,
+    #     same offset pattern as explosive-score.
+    #   delphi-evaluate runs daily at 23:00 UTC, after the 22:00 prices_daily
+    #     refresh so it can score closed horizons against the freshest bars.
+    - cron: "0 23 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -87,6 +96,9 @@ on:
           - explosive-drilldown
           - prices-daily
           - prices-backfill
+          - uw-screeners-ingest
+          - delphi-rank
+          - delphi-evaluate
 
 jobs:
   reddit-catalysts:
@@ -505,3 +517,74 @@ jobs:
       - name: Refresh top-contract history + peer correlations
         working-directory: apps/jobs
         run: uv run cfp-jobs explosive-drilldown
+
+  uw-screeners-ingest:
+    # Stock-screener + market OI + lit/dark-pool snapshots. This is what
+    # keeps uw_screener_stocks.last_price fresh — the price column the
+    # Delphi ranker reads. Without this job, Delphi would re-score the same
+    # stale prices forever. Shares the :03/:18/:33/:48 RTH slot with
+    # explosive-ingest, which hits different UW endpoints so rate-limit
+    # collision is not a concern.
+    if: startsWith(github.event.schedule, '3,18,33,48') || github.event.inputs.job == 'uw-screeners-ingest'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Refresh market-layer UW endpoints (screener_stocks, OI change, dark pool, news)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs uw-screeners-ingest
+
+  delphi-rank:
+    # Layer-1 rules ranker — reads the freshest uw_screener_stocks snapshot
+    # (written 4 min earlier by uw-screeners-ingest) + uw_greek_exposure_strike
+    # walls, applies the reachability filter, writes ranked predictions to
+    # delphi_predictions. Predictions are frozen — outcomes get filled by
+    # delphi-evaluate once horizons close.
+    if: startsWith(github.event.schedule, '7,22,37,52') || github.event.inputs.job == 'delphi-rank'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Rank candidates + persist Delphi predictions
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-rank --candidate-limit 50
+
+  delphi-evaluate:
+    # Closes the memory loop. For every prediction whose horizon has expired,
+    # pulls actual high/low/close from prices_daily and writes delphi_outcomes
+    # (win / loss / invalidated / breakeven). Runs daily at 23:00 UTC, an
+    # hour after the 22:00 prices_daily refresh so the freshest EOD bars
+    # are in. Idempotent — already-scored predictions are skipped.
+    if: github.event.schedule == '0 23 * * 1-5' || github.event.inputs.job == 'delphi-evaluate'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Score expired predictions against actual price action
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-evaluate --max-batch 500
