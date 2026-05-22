@@ -13,9 +13,12 @@ from __future__ import annotations
 
 import logging
 
+from datetime import datetime
+
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
+from cfp_api.db import get_pool
 from cfp_api.news_aggregator import (
     classify_headline,
     fetch_news_for_ticker,
@@ -206,3 +209,70 @@ async def news_catalysts(
         sources_used=sorted(sources_used),
         items=items,
     )
+
+
+# ---------- Phase C: UW global news feed (poller-fed) ----------
+
+
+class GlobalNewsItem(BaseModel):
+    published_at: datetime
+    article_id: str
+    headline: str | None
+    source: str | None
+    url: str | None
+    tickers: list[str]
+    sentiment: float | None
+
+
+class GlobalNewsResponse(BaseModel):
+    count: int
+    items: list[GlobalNewsItem]
+
+
+@router.get("/global", response_model=GlobalNewsResponse)
+async def global_news(
+    lookback_minutes: int = Query(180, ge=1, le=1440),
+    limit: int = Query(50, ge=1, le=200),
+    ticker: str | None = Query(
+        None,
+        description="Optional ticker filter — matches the tickers[] array UW extracted",
+    ),
+) -> GlobalNewsResponse:
+    """Recent UW global news headlines (uw_news_global), populated every
+    60s by the uw_socket service. Powers the breaking-news strip on /flow
+    and surfaces tickers we haven't pre-registered (M&A leaks, surprise
+    FDA, halts coverage).
+    """
+    pool = get_pool()
+    sql = """
+        SELECT published_at, article_id, headline, source, url,
+               COALESCE(tickers, ARRAY[]::TEXT[]) AS tickers, sentiment
+        FROM uw_news_global
+        WHERE published_at >= NOW() - ($1::INTEGER || ' minutes')::INTERVAL
+    """
+    params: list = [lookback_minutes]
+    if ticker:
+        sql += " AND $2 = ANY(tickers)"
+        params.append(ticker.upper())
+    sql += " ORDER BY published_at DESC LIMIT $" + str(len(params) + 1)
+    params.append(limit)
+    async with pool.acquire() as conn:
+        try:
+            rows = await conn.fetch(sql, *params)
+        except Exception as e:
+            # Table not yet created (pre-migration deploy) or empty result.
+            log.warning("global_news query failed: %s", e)
+            return GlobalNewsResponse(count=0, items=[])
+    items = [
+        GlobalNewsItem(
+            published_at=r["published_at"],
+            article_id=r["article_id"],
+            headline=r["headline"],
+            source=r["source"],
+            url=r["url"],
+            tickers=list(r["tickers"] or []),
+            sentiment=r["sentiment"],
+        )
+        for r in rows
+    ]
+    return GlobalNewsResponse(count=len(items), items=items)

@@ -23,10 +23,12 @@ from cfp_api.routes import (
     catalysts,
     chat,
     cohorts,
+    delphi,
     discord,
     explosive,
     flow,
     gex,
+    halts,
     health,
     institutional,
     intraday_gex,
@@ -122,6 +124,7 @@ app.include_router(stage.router, dependencies=PROTECTED)
 # Explosive options tab: catalyst-aware unusual-options scanner.
 # Reads explosive_scores written by `cfp-jobs explosive-score`.
 app.include_router(explosive.router, dependencies=PROTECTED)
+app.include_router(delphi.router, dependencies=PROTECTED)
 # gexester-vexster integration: feed mirror + skylit auth status + reauth queue.
 # Mounted under PROTECTED so gexester needs the API key to write status/feed,
 # and the daemon needs it to long-poll the reauth queue. Same surface as
@@ -134,6 +137,8 @@ app.include_router(catalysts.router, dependencies=PROTECTED)
 # RSS). Lazy: fetched on demand, cached 10 min in-process. Powers the
 # chatter leaderboard composite + per-ticker evidence drawer on /reddit.
 app.include_router(news.router, dependencies=PROTECTED)
+# Phase C: live trading halts feed (uw_trading_halts, populated by uw_socket).
+app.include_router(halts.router, dependencies=PROTECTED)
 # Intraday 1-min spot-GEX series per ticker (migration 0029). Complements
 # the apps/gex Heatseeker monitor for non-SPY/QQQ/SPX names.
 app.include_router(intraday_gex.router, dependencies=PROTECTED)
