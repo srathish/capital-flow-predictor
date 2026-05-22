@@ -34,6 +34,9 @@ from cfp_jobs import train as train_mod  # noqa: E402
 from cfp_jobs import watchlist as watchlist_mod  # noqa: E402
 from cfp_jobs.db import to_psycopg_url  # noqa: E402
 from cfp_jobs.ingestion import explosive as explosive_mod  # noqa: E402
+from cfp_jobs.ingestion import catalysts as catalysts_mod  # noqa: E402
+from cfp_jobs.ingestion import gex_spot as gex_spot_mod  # noqa: E402
+from cfp_jobs.ingestion import institutional as institutional_mod  # noqa: E402
 from cfp_jobs.settings import settings  # noqa: E402
 
 app = typer.Typer(
@@ -1056,6 +1059,106 @@ def explosive_drilldown_cmd(
         f"[green]explosive-drilldown:[/green] history contracts={len(hist_counts)} "
         f"correlations rows={corr_n}"
     )
+
+
+# ---------- catalysts / spot-GEX / institutional (migrations 0028-0030) ----
+
+
+def _explosive_universe() -> list[str]:
+    """Resolve the per-ticker pull list. Same catalyst-aware watchlist the
+    explosive scanner already uses, so we keep one universe definition."""
+    return explosive_mod.resolve_explosive_universe(settings.database_url)
+
+
+@app.command("catalysts-ingest")
+def catalysts_ingest_cmd(
+    days_ahead: int = typer.Option(7, help="Calendar window for earnings + economic"),
+    skip_per_ticker: bool = typer.Option(
+        False, help="Skip per-ticker dividends/splits (slower)"
+    ),
+) -> None:
+    """Pull UW catalyst feeds: earnings pre/post calendar, analyst ratings,
+    economic calendar (market-wide) + dividends/splits per universe ticker."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    mkt = catalysts_mod.ingest_market_catalysts(
+        settings.database_url, settings.unusual_whales_api_key, days_ahead=days_ahead
+    )
+    console.print(
+        f"[green]catalysts (market):[/green] earnings_pre={mkt['earnings_pre']} "
+        f"earnings_post={mkt['earnings_post']} analyst={mkt['analyst_ratings']} "
+        f"econ={mkt['economic']}"
+    )
+    if not skip_per_ticker:
+        universe = _explosive_universe()
+        if universe:
+            pt = catalysts_mod.ingest_per_ticker_catalysts(
+                settings.database_url, settings.unusual_whales_api_key, universe
+            )
+            console.print(
+                f"[green]catalysts (per-ticker):[/green] tickers={pt['tickers']} "
+                f"dividends={pt['dividends']} splits={pt['splits']}"
+            )
+
+
+@app.command("spot-gex-ingest")
+def spot_gex_ingest_cmd(
+    tickers: str = typer.Option(
+        "",
+        help="Comma-separated tickers; if empty, uses the explosive universe",
+    ),
+) -> None:
+    """Pull 1-minute spot-GEX series from UW for each ticker.
+    Persists to uw_spot_gex_intraday."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    if tickers:
+        universe = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    else:
+        universe = _explosive_universe()
+    if not universe:
+        console.print("[yellow]spot-gex-ingest:[/yellow] no tickers")
+        return
+    out = gex_spot_mod.ingest_spot_gex_intraday(
+        settings.database_url, settings.unusual_whales_api_key, universe
+    )
+    console.print(
+        f"[green]spot-gex:[/green] tickers={out['tickers']} rows={out['rows']} "
+        f"failed={out['failed']}"
+    )
+
+
+@app.command("institutional-ingest")
+def institutional_ingest_cmd(
+    skip_per_ticker: bool = typer.Option(
+        False, help="Skip per-ticker ownership / insider buy-sell pulls"
+    ),
+) -> None:
+    """Pull UW institutional feeds: activity firehose, latest 13F filings,
+    market-wide insider buy/sells (market-wide) + per-ticker ownership +
+    insider buy/sell aggregates for the explosive universe."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    mkt = institutional_mod.ingest_market_institutional(
+        settings.database_url, settings.unusual_whales_api_key
+    )
+    console.print(
+        f"[green]institutional (market):[/green] activity={mkt['activity']} "
+        f"latest_filings={mkt['latest_filings']} market_insider={mkt['market_insider']}"
+    )
+    if not skip_per_ticker:
+        universe = _explosive_universe()
+        if universe:
+            pt = institutional_mod.ingest_per_ticker_institutional(
+                settings.database_url, settings.unusual_whales_api_key, universe
+            )
+            console.print(
+                f"[green]institutional (per-ticker):[/green] tickers={pt['tickers']} "
+                f"ownership={pt['ownership']} stock_insider={pt['stock_insider']}"
+            )
 
 
 if __name__ == "__main__":

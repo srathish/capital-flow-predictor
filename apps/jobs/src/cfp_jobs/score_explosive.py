@@ -37,18 +37,23 @@ log = logging.getLogger(__name__)
 # Phase 2 layers 5 confirmation signals: NOPE extremity, risk-reversal skew
 # flip, IV vs RV divergence, volume-profile magnet, and insider net buying.
 WEIGHTS = {
-    "flow_concentration": 0.22,
-    "iv_term":            0.12,
-    "squeeze":            0.12,
-    "catalyst":           0.20,
-    "cheap_optionality":  0.12,
-    "gex_bonus":          0.04,
+    "flow_concentration": 0.18,
+    "iv_term":            0.10,
+    "squeeze":            0.10,
+    "catalyst":           0.16,
+    "cheap_optionality":  0.10,
+    "gex_bonus":          0.02,
     # Phase 2
-    "iv_vs_rv":           0.05,
-    "skew_flip":          0.05,
-    "nope":               0.04,
+    "iv_vs_rv":           0.04,
+    "skew_flip":          0.04,
+    "nope":               0.03,
     "insider_buy":        0.02,
     "volume_profile":     0.02,
+    # Phase 3 — catalyst calendar + smart-money + per-ticker GEX (migrations 0028-0030)
+    "earnings_window":    0.06,    # refines catalyst with the *upcoming* earnings cal
+    "analyst":            0.04,    # recent upgrade + price-target raise
+    "institutional":      0.05,    # 13F adds + ownership + insider multi-buyer
+    "spot_gex":           0.04,    # per-ticker short-gamma at OTM cluster
 }
 
 # A name needs at least this much aggregate OTM call premium today to be considered.
@@ -100,6 +105,21 @@ class TickerSignals:
     insider_net_buy_30d: float | None = None
     volume_profile_top_price: float | None = None
     volume_profile_top_share: float | None = None
+    # Phase 3 inputs (catalyst calendar, analyst, institutional, spot-GEX)
+    next_earnings_date: date | None = None
+    next_earnings_session: str | None = None
+    next_earnings_expected_move_pct: float | None = None
+    analyst_upgrade_count_14d: int = 0
+    analyst_downgrade_count_14d: int = 0
+    analyst_max_pt_raise_pct: float | None = None
+    inst_net_buy_value_30d: float | None = None
+    inst_net_buyer_count_30d: int = 0
+    inst_ownership_pct: float | None = None
+    inst_insider_buy_count_30d: int | None = None
+    inst_insider_sell_count_30d: int | None = None
+    spot_gamma_latest: float | None = None
+    spot_gamma_short: bool = False
+    spot_gamma_swing_pct: float | None = None     # (max-min)/|max| over last hour
     # rationale strings shown in UI
     reasons: dict[str, str] = field(default_factory=dict)
 
@@ -116,6 +136,11 @@ class TickerSignals:
     nope_score: float = 0.0
     insider_buy_score: float = 0.0
     volume_profile_score: float = 0.0
+    # Phase 3
+    earnings_window_score: float = 0.0
+    analyst_score: float = 0.0
+    institutional_score: float = 0.0
+    spot_gex_score: float = 0.0
 
 
 def _money(v: float | None) -> str:
@@ -545,6 +570,184 @@ def _load_top_contract(
                 float(row[4]) if row[4] is not None else None)
 
 
+# ---------- Phase 3 loaders (catalyst calendar / analyst / institutional / spot-GEX) -----
+
+
+def _load_next_earnings(
+    conn: psycopg.Connection,
+    ticker: str,
+    today: date,
+) -> tuple[date | None, str | None, float | None]:
+    """Closest upcoming row in uw_earnings_calendar_daily (refines the
+    existing catalyst signal — that one reads uw_earnings which is historical;
+    this one reads the actual upcoming calendar with session + expected
+    move). Returns (report_date, session, expected_move_pct)."""
+    horizon = today + timedelta(days=14)
+    with conn.cursor() as cur:
+        try:
+            cur.execute(
+                """
+                SELECT report_date, session, expected_move_pct
+                FROM uw_earnings_calendar_daily
+                WHERE ticker = %s AND report_date BETWEEN %s AND %s
+                ORDER BY report_date ASC, session ASC
+                LIMIT 1
+                """,
+                (ticker, today, horizon),
+            )
+            row = cur.fetchone()
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            return None, None, None
+    if not row:
+        return None, None, None
+    return row[0], row[1], float(row[2]) if row[2] is not None else None
+
+
+def _load_analyst_activity(
+    conn: psycopg.Connection,
+    ticker: str,
+    today: date,
+) -> tuple[int, int, float | None]:
+    """Returns (upgrade_count_14d, downgrade_count_14d, max_pt_raise_pct).
+    PT-raise % is computed as max((pt_new - pt_prior)/pt_prior) over events
+    in the window where both prior and new are present and pt_new > pt_prior."""
+    since = today - timedelta(days=14)
+    up = dn = 0
+    max_raise: float | None = None
+    with conn.cursor() as cur:
+        try:
+            cur.execute(
+                """
+                SELECT action, price_target_prior, price_target_new
+                FROM uw_analyst_ratings
+                WHERE ticker = %s AND event_date >= %s
+                """,
+                (ticker, since),
+            )
+            rows = cur.fetchall()
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            return 0, 0, None
+    for action, pt_prior, pt_new in rows:
+        a = (action or "").lower()
+        if "upgrade" in a or "initiated" in a:
+            up += 1
+        elif "downgrade" in a:
+            dn += 1
+        if pt_prior is not None and pt_new is not None and pt_prior > 0 and pt_new > pt_prior:
+            r = (float(pt_new) - float(pt_prior)) / float(pt_prior)
+            max_raise = r if max_raise is None or r > max_raise else max_raise
+    return up, dn, max_raise
+
+
+def _load_institutional(
+    conn: psycopg.Connection,
+    ticker: str,
+    today: date,
+) -> tuple[float | None, int, float | None, int | None, int | None]:
+    """Returns:
+       (inst_net_buy_value_30d, inst_net_buyer_count_30d, inst_ownership_pct,
+        insider_buy_count_30d, insider_sell_count_30d)
+    Net buy aggregates uw_institution_activity filed in last 30d with
+    action in ('buy', 'new', 'increased')."""
+    since = today - timedelta(days=30)
+    net_value: float | None = None
+    buyer_count = 0
+    own: float | None = None
+    insider_buy: int | None = None
+    insider_sell: int | None = None
+    with conn.cursor() as cur:
+        try:
+            cur.execute(
+                """
+                SELECT COALESCE(SUM(value_usd), 0) AS net_value,
+                       COUNT(DISTINCT institution_name) AS buyer_count
+                FROM uw_institution_activity
+                WHERE ticker = %s AND filing_date >= %s
+                  AND action IN ('buy', 'new', 'increased')
+                """,
+                (ticker, since),
+            )
+            row = cur.fetchone()
+            if row:
+                net_value = float(row[0]) if row[0] is not None else None
+                buyer_count = int(row[1] or 0)
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            pass
+        try:
+            cur.execute(
+                """
+                SELECT institutional_pct FROM uw_stock_ownership
+                WHERE ticker = %s ORDER BY snapshot_date DESC LIMIT 1
+                """,
+                (ticker,),
+            )
+            row = cur.fetchone()
+            if row and row[0] is not None:
+                own = float(row[0])
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            pass
+        try:
+            cur.execute(
+                """
+                SELECT buy_count, sell_count FROM uw_stock_insider_buy_sells
+                WHERE ticker = %s AND window_days = 30
+                ORDER BY snapshot_date DESC LIMIT 1
+                """,
+                (ticker,),
+            )
+            row = cur.fetchone()
+            if row:
+                insider_buy = int(row[0]) if row[0] is not None else None
+                insider_sell = int(row[1]) if row[1] is not None else None
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            pass
+    return net_value, buyer_count, own, insider_buy, insider_sell
+
+
+def _load_spot_gex(
+    conn: psycopg.Connection,
+    ticker: str,
+) -> tuple[float | None, bool, float | None]:
+    """Latest 1-min spot-GEX bar + last-hour gamma swing.
+    Returns (latest_total_gamma, dealer_short_gamma, last_hour_swing_pct)."""
+    latest: float | None = None
+    is_short = False
+    swing: float | None = None
+    with conn.cursor() as cur:
+        try:
+            cur.execute(
+                """
+                SELECT total_gamma FROM uw_spot_gex_intraday
+                WHERE ticker = %s ORDER BY ts DESC LIMIT 1
+                """,
+                (ticker,),
+            )
+            row = cur.fetchone()
+            if row and row[0] is not None:
+                latest = float(row[0])
+                is_short = latest < 0
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            return None, False, None
+        try:
+            cur.execute(
+                """
+                SELECT MAX(total_gamma), MIN(total_gamma)
+                FROM uw_spot_gex_intraday
+                WHERE ticker = %s AND ts >= NOW() - INTERVAL '1 hour'
+                """,
+                (ticker,),
+            )
+            row = cur.fetchone()
+            if row and row[0] is not None and row[1] is not None:
+                mx, mn = float(row[0]), float(row[1])
+                denom = max(abs(mx), abs(mn))
+                if denom > 0:
+                    swing = (mx - mn) / denom
+        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+            pass
+    return latest, is_short, swing
+
+
 # ---------- scoring ----------
 
 
@@ -746,6 +949,138 @@ def _score_volume_profile(sig: TickerSignals) -> None:
         )
 
 
+def _score_earnings_window(sig: TickerSignals, today: date) -> None:
+    """Refines catalyst_score using the actual upcoming earnings calendar
+    (uw_earnings_calendar_daily) rather than the historical uw_earnings table.
+    Peak score 1-3 days before report; tighter falloff after that."""
+    if not sig.next_earnings_date:
+        sig.earnings_window_score = 0.0
+        return
+    dte = (sig.next_earnings_date - today).days
+    if dte < 0:
+        sig.earnings_window_score = 0.0
+        return
+    if 1 <= dte <= 3:
+        base = 100.0
+    elif dte == 0:
+        # If the session is "post" we still have an entry into the report;
+        # if it's "pre" the move has already happened intraday.
+        base = 70.0 if (sig.next_earnings_session or "").lower() in ("post", "amc") else 30.0
+    elif dte <= 7:
+        base = 80 - (dte - 3) * 10.0
+    elif dte <= 14:
+        base = 30 - (dte - 7) * 3.0
+    else:
+        base = 0.0
+    # Expected-move boost — when UW publishes the straddle-implied move, a
+    # large expected move means real implied vol is being priced in
+    if sig.next_earnings_expected_move_pct is not None:
+        em = abs(sig.next_earnings_expected_move_pct)
+        # +0pp at 0%, +20pp at 10%, +40pp at 20% (capped)
+        boost = min(40.0, em * 2.0 * 100.0)  # em is fractional, e.g. 0.10
+        base = _clip(base + boost)
+    sig.earnings_window_score = _clip(base)
+    if sig.earnings_window_score > 5:
+        bits = [f"earnings in {dte}d"]
+        if sig.next_earnings_session:
+            bits.append(sig.next_earnings_session.upper())
+        if sig.next_earnings_expected_move_pct is not None:
+            bits.append(f"implied ±{sig.next_earnings_expected_move_pct*100:.1f}%")
+        sig.reasons["earnings_window"] = ", ".join(bits)
+
+
+def _score_analyst(sig: TickerSignals) -> None:
+    """Analyst confirmation: recent upgrades + price-target raises.
+    Downgrades cancel out one upgrade each (small penalty)."""
+    net_up = sig.analyst_upgrade_count_14d - sig.analyst_downgrade_count_14d
+    if net_up <= 0 and (sig.analyst_max_pt_raise_pct or 0) <= 0:
+        sig.analyst_score = 0.0
+        return
+    s = 0.0
+    if net_up >= 1:
+        s += 30.0
+    if net_up >= 2:
+        s += 30.0
+    if net_up >= 3:
+        s += 20.0
+    # Price target raise (% increase, fractional)
+    pt = sig.analyst_max_pt_raise_pct or 0.0
+    if pt > 0:
+        # +0pp at 0%, +30pp at 15%, +50pp at 30%+
+        s += min(50.0, pt * 100.0 * 1.67)
+    sig.analyst_score = _clip(s)
+    if sig.analyst_score > 5:
+        bits = []
+        if net_up > 0:
+            bits.append(f"{net_up} net upgrade(s) 14d")
+        if pt > 0:
+            bits.append(f"PT raise {pt*100:.0f}%")
+        sig.reasons["analyst"] = ", ".join(bits)
+
+
+def _score_institutional(sig: TickerSignals) -> None:
+    """Smart-money confirmation: net 13F adds + multi-buyer breadth +
+    insider-side agreement. Each component contributes additively."""
+    s = 0.0
+    parts: list[str] = []
+    if sig.inst_net_buy_value_30d is not None and sig.inst_net_buy_value_30d > 0:
+        v = sig.inst_net_buy_value_30d
+        if v >= 5e7:
+            s += 60.0
+        elif v >= 1e7:
+            s += 40.0
+        elif v >= 1e6:
+            s += 20.0 + 20.0 * math.log10(v / 1e6)
+        else:
+            s += 10.0
+        parts.append(f"13F net buy {_money(v)}/30d")
+    if sig.inst_net_buyer_count_30d >= 5:
+        s += 20.0
+        parts.append(f"{sig.inst_net_buyer_count_30d} buyers")
+    elif sig.inst_net_buyer_count_30d >= 2:
+        s += 10.0
+    # Insider-side agreement — if institutions are buying AND insiders are too
+    if sig.inst_insider_buy_count_30d and sig.inst_insider_sell_count_30d is not None:
+        if sig.inst_insider_buy_count_30d > sig.inst_insider_sell_count_30d:
+            s += 15.0
+            parts.append(
+                f"insiders {sig.inst_insider_buy_count_30d}B/{sig.inst_insider_sell_count_30d}S"
+            )
+    # Concentrated ownership — both ways. <30% = too retail-driven, >80% = no
+    # room for accumulation. Reward 40-70% sweet spot.
+    if sig.inst_ownership_pct is not None:
+        own = sig.inst_ownership_pct
+        if 0.40 <= own <= 0.70:
+            s += 5.0
+    sig.institutional_score = _clip(s)
+    if parts:
+        sig.reasons["institutional"] = ", ".join(parts)
+
+
+def _score_spot_gex(sig: TickerSignals) -> None:
+    """Per-ticker spot-GEX confirmation. Short dealer gamma at OTM = unstable
+    regime; intraday gamma swings = hedging activity that amplifies underlying
+    moves. Different from gex_bonus_score (which is just 'in coverage')."""
+    if sig.spot_gamma_latest is None:
+        sig.spot_gex_score = 0.0
+        return
+    s = 0.0
+    if sig.spot_gamma_short:
+        # Negative gamma → dealers chase moves = larger expected swings
+        s += 60.0
+    if sig.spot_gamma_swing_pct is not None and sig.spot_gamma_swing_pct > 0:
+        # Bigger 1h swing → more hedging activity. 50%+ swing = full credit
+        s += min(40.0, sig.spot_gamma_swing_pct * 80.0)
+    sig.spot_gex_score = _clip(s)
+    if sig.spot_gex_score > 10:
+        bits = []
+        if sig.spot_gamma_short:
+            bits.append("dealer short γ")
+        if sig.spot_gamma_swing_pct and sig.spot_gamma_swing_pct > 0.1:
+            bits.append(f"1h γ swing {sig.spot_gamma_swing_pct*100:.0f}%")
+        sig.reasons["spot_gex"] = ", ".join(bits)
+
+
 def _score_gex_bonus(conn: psycopg.Connection, sig: TickerSignals) -> None:
     """Bonus for tickers in GEX coverage with dealer short gamma at/near the
     OTM cluster. If gex tables don't exist or ticker isn't covered → 0.
@@ -817,6 +1152,30 @@ def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> Tick
         conn, sig.top_option_symbol
     )
 
+    # Phase 3 inputs (catalyst calendar, analyst, institutional, spot-GEX)
+    (
+        sig.next_earnings_date,
+        sig.next_earnings_session,
+        sig.next_earnings_expected_move_pct,
+    ) = _load_next_earnings(conn, ticker, today)
+    (
+        sig.analyst_upgrade_count_14d,
+        sig.analyst_downgrade_count_14d,
+        sig.analyst_max_pt_raise_pct,
+    ) = _load_analyst_activity(conn, ticker, today)
+    (
+        sig.inst_net_buy_value_30d,
+        sig.inst_net_buyer_count_30d,
+        sig.inst_ownership_pct,
+        sig.inst_insider_buy_count_30d,
+        sig.inst_insider_sell_count_30d,
+    ) = _load_institutional(conn, ticker, today)
+    (
+        sig.spot_gamma_latest,
+        sig.spot_gamma_short,
+        sig.spot_gamma_swing_pct,
+    ) = _load_spot_gex(conn, ticker)
+
     # score
     _score_flow_concentration(sig)
     _score_iv_term(sig)
@@ -829,6 +1188,11 @@ def _compute_signals(conn: psycopg.Connection, ticker: str, today: date) -> Tick
     _score_nope(sig)
     _score_insider_buy(sig)
     _score_volume_profile(sig)
+    # Phase 3
+    _score_earnings_window(sig, today)
+    _score_analyst(sig)
+    _score_institutional(sig)
+    _score_spot_gex(sig)
     return sig
 
 
@@ -845,6 +1209,11 @@ def _composite(sig: TickerSignals) -> float:
         + WEIGHTS["nope"]               * sig.nope_score
         + WEIGHTS["insider_buy"]        * sig.insider_buy_score
         + WEIGHTS["volume_profile"]     * sig.volume_profile_score
+        # Phase 3
+        + WEIGHTS["earnings_window"]    * sig.earnings_window_score
+        + WEIGHTS["analyst"]            * sig.analyst_score
+        + WEIGHTS["institutional"]      * sig.institutional_score
+        + WEIGHTS["spot_gex"]           * sig.spot_gex_score
     )
 
 
@@ -865,6 +1234,7 @@ def _upsert_score(
             catalyst_score, cheap_optionality_score, gex_bonus_score,
             iv_vs_rv_score, skew_flip_score, nope_score,
             insider_buy_score, volume_profile_score,
+            earnings_window_score, analyst_score, institutional_score, spot_gex_score,
             signals
         ) VALUES (
             %(snapshot_ts)s, %(ticker)s, %(score)s,
@@ -876,10 +1246,15 @@ def _upsert_score(
             %(catalyst_score)s, %(cheap_optionality_score)s, %(gex_bonus_score)s,
             %(iv_vs_rv_score)s, %(skew_flip_score)s, %(nope_score)s,
             %(insider_buy_score)s, %(volume_profile_score)s,
+            %(earnings_window_score)s, %(analyst_score)s, %(institutional_score)s, %(spot_gex_score)s,
             %(signals)s
         ) ON CONFLICT (snapshot_ts, ticker) DO UPDATE SET
             score = EXCLUDED.score,
-            signals = EXCLUDED.signals
+            signals = EXCLUDED.signals,
+            earnings_window_score = EXCLUDED.earnings_window_score,
+            analyst_score = EXCLUDED.analyst_score,
+            institutional_score = EXCLUDED.institutional_score,
+            spot_gex_score = EXCLUDED.spot_gex_score
     """
     params = {
         "snapshot_ts": snapshot_ts,
@@ -909,6 +1284,10 @@ def _upsert_score(
         "nope_score": sig.nope_score,
         "insider_buy_score": sig.insider_buy_score,
         "volume_profile_score": sig.volume_profile_score,
+        "earnings_window_score": sig.earnings_window_score,
+        "analyst_score": sig.analyst_score,
+        "institutional_score": sig.institutional_score,
+        "spot_gex_score": sig.spot_gex_score,
         "signals": Jsonb(sig.reasons),
     }
     with conn.cursor() as cur:
