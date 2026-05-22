@@ -1,22 +1,25 @@
-"""UW WebSocket subscriber — Phase C.
+"""UW WebSocket subscriber — Phase C (revised to match UW's actual protocol).
 
-Holds one outbound WebSocket per channel + one async task that polls
-/news/headlines on UW_NEWS_POLL_SECONDS interval (UW doesn't expose news
-on WebSocket).
+UW exposes a *single* WebSocket connection that multiplexes channels via
+JSON-encoded JOIN messages. Per UW docs (e.g. socket/trading_halts):
 
-Per-channel loop:
-  * Connect to wss://api.unusualwhales.com/socket/<channel> with Bearer auth
-  * For each inbound message: dispatch through the channel's handler
-  * Handler returns (SQL, params) or None; main writes via the pool
-  * On disconnect: exponential backoff (1s → 60s), then reconnect
-  * Each channel is independent — one failing doesn't take the others down
+  Connect to:  wss://api.unusualwhales.com/socket?token=<API_TOKEN>
 
-Per-table batching: option_trades can be high volume, so we accumulate
-rows for FLUSH_INTERVAL seconds (or FLUSH_BATCH rows, whichever first)
-then bulk INSERT. The other channels write individually.
+  After connect, send one JOIN message per channel you want to subscribe to:
 
-Shutdown is on SIGTERM/SIGINT: signals cancel the gather; outstanding
-batches flush; pool closes.
+      {"channel": "trading_halts", "msg_type": "join"}
+
+  Inbound messages are JSON arrays of the form:
+
+      ["channel_name", {<payload>}]
+
+  Reconnect on disconnect; the server doesn't replay missed messages.
+
+Channel subscriptions are configured via UW_SOCKET_CHANNELS (default:
+flow_alerts,option_trades,gex,market_tide,trading_halts).
+
+A separate task periodically polls /news/headlines for global news (no
+WebSocket channel exposed for news).
 """
 
 from __future__ import annotations
@@ -26,7 +29,7 @@ import json
 import logging
 import signal
 from contextlib import suppress
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing import Any
 
 import asyncpg
@@ -44,54 +47,14 @@ logging.basicConfig(
 log = logging.getLogger("uw_socket")
 
 
-# ---------- bounded retry/backoff ----------
-
-
-async def _backoff(attempt: int) -> None:
-    """Exponential backoff capped at 60s."""
-    delay = min(60, 2 ** min(attempt, 6))
-    await asyncio.sleep(delay)
-
-
-# ---------- per-channel subscriber ----------
-
-
-# Channels that are high-volume — batch writes instead of single inserts.
-BATCHED_CHANNELS = {"option_trades"}
-FLUSH_INTERVAL = 2.0   # seconds
-FLUSH_BATCH = 200       # rows
-
-
-async def _flush(pool: asyncpg.Pool, sql: str, batch: list[dict]) -> None:
-    """Bulk-write a single SQL template with N parameter sets. asyncpg can't
-    do executemany() with named %(...)s parameters efficiently, so we
-    iterate inside one transaction (still single round trip per row, but
-    one connection acquire)."""
-    if not batch:
-        return
-    # asyncpg uses $1/$2 numbered params, not %(...)s — but the underlying
-    # pool acquires raw connections that can run psycopg-style placeholders
-    # if we translate. Simpler: rewrite the named template to numbered.
-    # However, this subscriber writes through asyncpg directly, so we keep
-    # the handlers' SQL in numbered form below in _exec(). Batching uses
-    # the same _exec() in a loop inside one acquire.
-    async with pool.acquire() as conn:
-        async with conn.transaction():
-            for params in batch:
-                await _exec_with_conn(conn, sql, params)
-
-
-async def _exec_with_conn(conn: asyncpg.Connection, sql_named: str, params: dict[str, Any]) -> None:
-    """Translate psycopg-named placeholders %(key)s → asyncpg $1/$2 ordered,
-    then execute. Keeping handlers in psycopg-style means they can be reused
-    by other (sync) code paths if we ever need to."""
-    sql_numbered, values = _named_to_numbered(sql_named, params)
-    await conn.execute(sql_numbered, *values)
+# ---------- Postgres write helpers ----------
+#
+# Handlers return SQL with psycopg-style named placeholders %(key)s so they
+# can be reused by sync code paths. asyncpg needs $1/$2 numbered placeholders
+# — we translate at exec time.
 
 
 def _named_to_numbered(sql: str, params: dict[str, Any]) -> tuple[str, list[Any]]:
-    """Replace %(name)s with $1, $2, ... in order of first occurrence;
-    return the rewritten SQL plus the values in matching order."""
     import re
     seen: dict[str, int] = {}
     values: list[Any] = []
@@ -103,81 +66,179 @@ def _named_to_numbered(sql: str, params: dict[str, Any]) -> tuple[str, list[Any]
             values.append(params.get(key))
         return f"${seen[key]}"
 
-    rewritten = re.sub(r"%\((\w+)\)s", sub, sql)
-    return rewritten, values
+    return re.sub(r"%\((\w+)\)s", sub, sql), values
 
 
-async def _exec(pool: asyncpg.Pool, sql_named: str, params: dict[str, Any]) -> None:
+async def _exec_with_conn(conn: asyncpg.Connection, sql_named: str, params: dict[str, Any]) -> None:
+    sql, values = _named_to_numbered(sql_named, params)
+    await conn.execute(sql, *values)
+
+
+async def _exec(pool: asyncpg.Pool, sql: str, params: dict[str, Any]) -> None:
     async with pool.acquire() as conn:
-        await _exec_with_conn(conn, sql_named, params)
+        await _exec_with_conn(conn, sql, params)
 
 
-async def _subscribe_channel(pool: asyncpg.Pool, channel: str) -> None:
-    """Long-running per-channel loop. Reconnects on disconnect with backoff.
-    A 403/404 typically means the channel isn't on the current UW tier;
-    we log and back off heavily rather than spin."""
-    handler = HANDLERS.get(channel)
-    if handler is None:
-        log.error("unknown channel %s; skipping", channel)
-        return
+# ---------- option_trades batcher ----------
+#
+# The option_trades channel is high-volume. We accumulate up to FLUSH_BATCH
+# rows or FLUSH_INTERVAL seconds, whichever first, then bulk-write inside
+# one acquired connection.
 
-    url = f"{settings.uw_socket_url.rstrip('/')}/{channel}"
-    headers = {"Authorization": f"Bearer {settings.unusual_whales_api_key}"}
+BATCHED_CHANNELS = {"option_trades"}
+FLUSH_INTERVAL = 2.0
+FLUSH_BATCH = 200
+
+
+class BatchBuffer:
+    """Per-channel buffer that flushes on size or time."""
+
+    def __init__(self) -> None:
+        self.sql: str | None = None
+        self.rows: list[dict[str, Any]] = []
+        self.last_flush = datetime.now(UTC)
+
+    def add(self, sql: str, params: dict[str, Any]) -> None:
+        self.sql = sql
+        self.rows.append(params)
+
+    def should_flush(self) -> bool:
+        if not self.rows:
+            return False
+        if len(self.rows) >= FLUSH_BATCH:
+            return True
+        return (datetime.now(UTC) - self.last_flush).total_seconds() >= FLUSH_INTERVAL
+
+    async def flush(self, pool: asyncpg.Pool) -> int:
+        if not self.rows or self.sql is None:
+            return 0
+        sql, rows = self.sql, self.rows
+        self.rows = []
+        self.last_flush = datetime.now(UTC)
+        async with pool.acquire() as conn:
+            async with conn.transaction():
+                for p in rows:
+                    await _exec_with_conn(conn, sql, p)
+        return len(rows)
+
+
+# ---------- single multiplexed subscriber ----------
+
+
+def _socket_url() -> str:
+    base = settings.uw_socket_url.rstrip("/")
+    # UW uses a query-param token, not a header. The base URL stays
+    # configurable so we can point at staging or a mock if needed.
+    sep = "&" if "?" in base else "?"
+    return f"{base}{sep}token={settings.unusual_whales_api_key}"
+
+
+async def _run_socket(pool: asyncpg.Pool, channels: list[str]) -> None:
+    """Connect once, JOIN N channels, route inbound messages to handlers.
+
+    On disconnect: exponential backoff up to 60s, then reconnect + re-JOIN.
+    """
+    buffers: dict[str, BatchBuffer] = {ch: BatchBuffer() for ch in BATCHED_CHANNELS}
     attempt = 0
-    batch_buf: list[dict] = []
-    batch_sql: str | None = None
-    last_flush = datetime.now(UTC)
-
     while True:
+        url = _socket_url()
         try:
-            log.info("[%s] connecting %s (attempt %d)", channel, url, attempt + 1)
+            log.info("connecting to UW socket (attempt %d) channels=%s", attempt + 1, channels)
             async with websockets.connect(
                 url,
-                additional_headers=headers,
                 ping_interval=20,
                 ping_timeout=20,
                 close_timeout=5,
+                max_size=4 * 1024 * 1024,
             ) as ws:
-                log.info("[%s] connected", channel)
+                log.info("socket connected")
                 attempt = 0
-                async for raw in ws:
-                    result = handler(raw)
-                    if result is None:
-                        continue
-                    sql, params = result
-                    if channel in BATCHED_CHANNELS:
-                        batch_sql = sql
-                        batch_buf.append(params)
-                        now = datetime.now(UTC)
-                        if (
-                            len(batch_buf) >= FLUSH_BATCH
-                            or (now - last_flush).total_seconds() >= FLUSH_INTERVAL
-                        ):
-                            await _flush(pool, batch_sql, batch_buf)
-                            batch_buf = []
-                            last_flush = now
-                    else:
-                        try:
-                            await _exec(pool, sql, params)
-                        except Exception as e:
-                            log.warning("[%s] insert failed: %s", channel, e)
-        except (ConnectionClosed, OSError) as e:
-            log.warning("[%s] disconnected: %s", channel, e)
+                # JOIN each channel.
+                for ch in channels:
+                    await ws.send(json.dumps({"channel": ch, "msg_type": "join"}))
+                    log.info("[%s] join sent", ch)
+
+                async def flush_timer() -> None:
+                    while True:
+                        await asyncio.sleep(FLUSH_INTERVAL / 2)
+                        for ch, buf in buffers.items():
+                            if buf.should_flush():
+                                try:
+                                    n = await buf.flush(pool)
+                                    if n:
+                                        log.debug("[%s] flushed %d rows", ch, n)
+                                except Exception as e:
+                                    log.warning("[%s] flush failed: %s", ch, e)
+
+                timer = asyncio.create_task(flush_timer())
+                try:
+                    async for raw in ws:
+                        await _dispatch(raw, pool, buffers)
+                finally:
+                    timer.cancel()
+                    with suppress(asyncio.CancelledError):
+                        await timer
+                    # Final flush before reconnect.
+                    for ch, buf in buffers.items():
+                        with suppress(Exception):
+                            await buf.flush(pool)
         except InvalidStatusCode as e:
-            log.error("[%s] handshake rejected (%s) — likely subscription tier; backing off hard", channel, e)
+            log.error("socket handshake rejected (%s) — likely subscription tier; backing off", e)
             await asyncio.sleep(300)
+        except (ConnectionClosed, OSError) as e:
+            log.warning("socket disconnected: %s", e)
         except asyncio.CancelledError:
-            if batch_buf and batch_sql:
+            for ch, buf in buffers.items():
                 with suppress(Exception):
-                    await _flush(pool, batch_sql, batch_buf)
+                    await buf.flush(pool)
             raise
         except Exception as e:
-            log.exception("[%s] unexpected error: %s", channel, e)
+            log.exception("socket unexpected error: %s", e)
         attempt += 1
-        await _backoff(attempt)
+        await asyncio.sleep(min(60, 2 ** min(attempt, 6)))
 
 
-# ---------- news poller (UW doesn't expose news on WS) ----------
+async def _dispatch(raw: Any, pool: asyncpg.Pool, buffers: dict[str, BatchBuffer]) -> None:
+    """Parse a UW socket message and route to the channel handler.
+
+    Expected shape:  ["channel_name", {<payload>}]
+    Also handle JOIN-ack / heartbeat envelopes that may come back as dicts.
+    """
+    try:
+        if isinstance(raw, (bytes, bytearray)):
+            raw = raw.decode("utf-8", errors="replace")
+        if isinstance(raw, str):
+            msg = json.loads(raw)
+        else:
+            msg = raw
+    except (ValueError, TypeError):
+        return
+
+    if isinstance(msg, list) and len(msg) >= 2 and isinstance(msg[0], str):
+        channel = msg[0]
+        payload = msg[1]
+        handler = HANDLERS.get(channel)
+        if handler is None:
+            return
+        result = handler(payload)
+        if result is None:
+            return
+        sql, params = result
+        if channel in BATCHED_CHANNELS:
+            buffers[channel].add(sql, params)
+        else:
+            try:
+                await _exec(pool, sql, params)
+            except Exception as e:
+                log.warning("[%s] insert failed: %s", channel, e)
+        return
+
+    # Non-tuple messages: ack / heartbeat / errors. Log at debug — useful
+    # while ramping but quickly overwhelming once it's running.
+    log.debug("non-tuple message: %s", str(msg)[:200])
+
+
+# ---------- HTTP news poller ----------
 
 
 NEWS_SQL = """
@@ -197,7 +258,7 @@ NEWS_SQL = """
 
 
 def _parse_news_row(item: dict) -> tuple[Any, ...] | None:
-    from cfp_uw_socket.handlers import _ts, _f
+    from cfp_uw_socket.handlers import _f, _ts
     published = _ts(item.get("published_at") or item.get("created_at") or item.get("ts"))
     article_id = str(
         item.get("id") or item.get("article_id") or item.get("url") or item.get("headline") or ""
@@ -224,7 +285,6 @@ def _parse_news_row(item: dict) -> tuple[Any, ...] | None:
 
 
 async def _poll_news(pool: asyncpg.Pool) -> None:
-    """Periodic poll of /news/headlines (no WebSocket for news)."""
     base = "https://api.unusualwhales.com/api"
     headers = {
         "Authorization": f"Bearer {settings.unusual_whales_api_key}",
@@ -272,10 +332,9 @@ async def _amain() -> None:
     )
     assert pool is not None
 
-    tasks = [
-        asyncio.create_task(_subscribe_channel(pool, ch), name=f"ws:{ch}")
-        for ch in settings.channels
-    ]
+    tasks: list[asyncio.Task] = []
+    if settings.channels:
+        tasks.append(asyncio.create_task(_run_socket(pool, settings.channels), name="ws"))
     if settings.uw_news_poll_seconds > 0:
         tasks.append(asyncio.create_task(_poll_news(pool), name="news_poll"))
 
@@ -291,12 +350,8 @@ async def _amain() -> None:
             loop.add_signal_handler(sig, _signal_handler)
 
     stopper = asyncio.create_task(stop.wait(), name="stopper")
-    done, pending = await asyncio.wait(
-        tasks + [stopper],
-        return_when=asyncio.FIRST_COMPLETED,
-    )
-    # Cancel everything still running.
-    for t in pending:
+    await asyncio.wait(tasks + [stopper], return_when=asyncio.FIRST_COMPLETED)
+    for t in tasks:
         t.cancel()
     for t in tasks:
         with suppress(asyncio.CancelledError, Exception):

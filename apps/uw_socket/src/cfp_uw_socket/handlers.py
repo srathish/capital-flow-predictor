@@ -277,24 +277,37 @@ TRADING_HALTS_SQL = """
 
 
 def handle_trading_halt(raw: Any) -> tuple[str, dict[str, Any]] | None:
+    """UW socket trading_halts payload (per docs):
+
+        {"ticker": "GME", "state": "halted"|"resumed"|"paused",
+         "reason": "LUDP"|"T1"|"", "time": "2026-04-27T14:31:02Z"}
+
+    We map both `halted` and `resumed` into the same row keyed by (ts,
+    ticker, reason). For a `resumed` event we set resumption_ts so the
+    Halts strip can show the halt as inactive.
+    """
     e = _envelope(raw)
     if not e:
         return None
     ticker = (e.get("ticker") or e.get("symbol") or "").upper()
     if not ticker:
         return None
-    ts = _ts(e.get("ts") or e.get("halt_time") or e.get("created_at"))
+    ts = _ts(e.get("time") or e.get("ts") or e.get("halt_time"))
     if ts is None:
         return None
+    state = (e.get("state") or "").lower()
+    is_resume = state in ("resumed", "resume")
+    # Pre-existing aliases preserved so older payloads still parse.
+    reason_code = e.get("reason") or e.get("halt_code") or e.get("code") or ""
     params = {
         "ts": ts,
         "ticker": ticker,
-        # halt_code is in the PK and NOT NULL — coerce missing to '' to match
-        # the table's "no code provided" sentinel.
-        "halt_code": (e.get("halt_code") or e.get("code") or ""),
-        "halt_reason": e.get("reason") or e.get("halt_reason"),
+        # halt_code is in the PK and NOT NULL — '' is the sentinel for
+        # "no reason code provided".
+        "halt_code": reason_code,
+        "halt_reason": state or e.get("halt_reason"),
         "market": e.get("market") or e.get("exchange"),
-        "resumption_ts": _ts(e.get("resumption_ts") or e.get("resume_time")),
+        "resumption_ts": ts if is_resume else _ts(e.get("resumption_ts") or e.get("resume_time")),
         "resumption_quote_ts": _ts(e.get("resumption_quote_ts")),
         "resumption_trade_ts": _ts(e.get("resumption_trade_ts")),
         "payload": json.dumps(e),
