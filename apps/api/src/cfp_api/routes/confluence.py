@@ -351,14 +351,11 @@ async def _resolve_confluence(
 
 
 # --- Routes -----------------------------------------------------------------
-
-
-@router.get("/{ticker}", response_model=ConfluenceRow)
-async def get_one(ticker: str, refresh: bool = Query(False)) -> ConfluenceRow:
-    rows = await _resolve_confluence([ticker], force_refresh=refresh)
-    if not rows:
-        raise HTTPException(status_code=404, detail="ticker not resolvable")
-    return rows[0]
+#
+# Order matters: static paths (`/batch`, `/active`) MUST be declared before
+# the `/{ticker}` catch-all, otherwise FastAPI matches `/active` as a ticker
+# named "ACTIVE". (Confirmed in prod — GET /confluence/active returned a
+# zero-source row for ticker="ACTIVE" before this reorder.)
 
 
 @router.post("/batch", response_model=BatchResponse)
@@ -457,3 +454,12 @@ async def active(
         generated_at=datetime.now(timezone.utc),
         rows=[_row_to_model(dict(r)) for r in rows],
     )
+
+
+# Catch-all goes LAST so /batch and /active match their static paths first.
+@router.get("/{ticker}", response_model=ConfluenceRow)
+async def get_one(ticker: str, refresh: bool = Query(False)) -> ConfluenceRow:
+    rows = await _resolve_confluence([ticker], force_refresh=refresh)
+    if not rows:
+        raise HTTPException(status_code=404, detail="ticker not resolvable")
+    return rows[0]
