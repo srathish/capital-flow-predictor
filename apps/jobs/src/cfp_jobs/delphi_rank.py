@@ -97,32 +97,73 @@ def _load_candidates(conn: psycopg.Connection, limit: int) -> list[Candidate]:
         return []
     snapshot_ts = row[0]
 
+    # Fall back to payload JSONB when last_price column is NULL. UW returns
+    # different price-field names depending on endpoint version (last_price,
+    # price, close, last, mark); the ingest only maps two of them, so price
+    # ends up NULL for some rows. COALESCE here is the cheapest fix without
+    # re-running the ingest.
     cur = conn.execute(
         """
-        SELECT ticker, last_price, iv_rank, sector,
+        SELECT ticker,
+               COALESCE(
+                   last_price,
+                   (payload->>'last_price')::float,
+                   (payload->>'price')::float,
+                   (payload->>'close')::float,
+                   (payload->>'last')::float,
+                   (payload->>'mark')::float
+               ) AS px,
+               iv_rank, sector,
                call_volume, put_volume, total_premium, rank
         FROM uw_screener_stocks
         WHERE snapshot_ts = %s
-          AND last_price IS NOT NULL
-          AND last_price > 1.0
         ORDER BY COALESCE(rank, 99999) ASC
         LIMIT %s
         """,
-        (snapshot_ts, limit),
+        (snapshot_ts, limit * 2),  # over-fetch so the price filter below has room
     )
-    return [
-        Candidate(
-            ticker=r[0],
-            last_price=float(r[1]),
-            iv_rank=float(r[2]) if r[2] is not None else None,
-            sector=r[3],
-            call_volume=int(r[4]) if r[4] is not None else None,
-            put_volume=int(r[5]) if r[5] is not None else None,
-            total_premium=float(r[6]) if r[6] is not None else None,
-            rank=int(r[7]) if r[7] is not None else None,
+    rows = cur.fetchall()
+    if not rows:
+        log.warning("delphi-rank: no rows at snapshot_ts=%s", snapshot_ts)
+        return []
+
+    # Diagnostic: when nothing passes the price filter, dump a sample so
+    # we can see which field names UW is actually using.
+    candidates: list[Candidate] = []
+    for r in rows:
+        if r[1] is None or float(r[1]) <= 1.0:
+            continue
+        candidates.append(
+            Candidate(
+                ticker=r[0],
+                last_price=float(r[1]),
+                iv_rank=float(r[2]) if r[2] is not None else None,
+                sector=r[3],
+                call_volume=int(r[4]) if r[4] is not None else None,
+                put_volume=int(r[5]) if r[5] is not None else None,
+                total_premium=float(r[6]) if r[6] is not None else None,
+                rank=int(r[7]) if r[7] is not None else None,
+            )
         )
-        for r in cur.fetchall()
-    ]
+        if len(candidates) >= limit:
+            break
+
+    if not candidates:
+        # Dump first payload key set so we know which UW field name to map.
+        sample = conn.execute(
+            "SELECT ticker, last_price, payload FROM uw_screener_stocks "
+            "WHERE snapshot_ts = %s LIMIT 1",
+            (snapshot_ts,),
+        ).fetchone()
+        if sample:
+            payload_keys = list(sample[2].keys()) if isinstance(sample[2], dict) else "non-dict"
+            log.warning(
+                "delphi-rank: 0 candidates from %d rows. sample ticker=%s last_price=%s "
+                "payload_keys=%s",
+                len(rows), sample[0], sample[1], payload_keys,
+            )
+
+    return candidates
 
 
 def _largest_gex_walls(
@@ -173,12 +214,13 @@ def _largest_gex_walls(
     )
 
 
-def _expected_move(price: float, iv_rank: float | None, horizon: str) -> float:
+def _expected_move(_price: float, iv_rank: float | None, horizon: str) -> float:
     """Rough expected move as a fraction of price.
 
     Uses IV rank as a stand-in for IV magnitude scaled by horizon. This is
     deliberately simple — once Delphi has IV30 + RV30, swap to the proper
-    sigma*sqrt(t) formulation.
+    sigma*sqrt(t) formulation. The `_price` slot is reserved for that
+    upgrade so the caller doesn't have to change.
     """
     # Baseline annual vol assumption when IV rank is missing.
     iv_proxy = 0.35 if iv_rank is None else max(0.15, min(1.0, iv_rank / 100.0 + 0.20))
