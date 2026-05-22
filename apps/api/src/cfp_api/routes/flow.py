@@ -116,6 +116,7 @@ AnomalyKind = Literal[
     "oi_explosion",
     "daily_skew",
     "short_squeeze_setup",
+    "dealer_gamma_flip",
 ]
 
 
@@ -175,6 +176,11 @@ _SKEW_MIN_PREM = 2_000_000
 _SQ_PCT_FLOAT = 0.20      # ≥20% of float short
 _SQ_DAYS_TO_COVER = 5.0   # ≥5 days to cover at recent volume
 _SQ_MIN_PREM = 250_000    # only meaningful if the call leg is sizeable
+# dealer_gamma_flip: signed dealer total_gamma crosses zero between two
+# adjacent intraday snapshots. Independent "structure" lens — dealer
+# hedging regime, not flow magnitude or vol level.
+_GAMMA_FLIP_MIN_SWING = 5_000_000_000     # $5B/pt swing floor
+_GAMMA_FLIP_SAT = 50_000_000_000          # $50B/pt swing saturates severity
 
 
 @router.get("/unusual", response_model=FlowResponse)
@@ -291,6 +297,35 @@ async def get_unusual_flow(
     LIMIT 80
     """
 
+    # Dealer gamma sign-flip detector. LAG within ticker over the lookback,
+    # filter to rows where (a) the previous reading was non-null, (b) the sign
+    # actually flipped, and (c) the magnitude of the swing clears the floor.
+    # DISTINCT ON keeps only the most recent flip per ticker — earlier flips
+    # in the window aren't actionable anymore.
+    gamma_flip_sql = """
+    WITH recent AS (
+        SELECT
+            ticker, ts, underlying_price, total_gamma,
+            LAG(total_gamma) OVER (PARTITION BY ticker ORDER BY ts) AS prev_gamma,
+            LAG(ts)          OVER (PARTITION BY ticker ORDER BY ts) AS prev_ts
+        FROM uw_spot_gex_intraday
+        WHERE ts >= NOW() - ($1 || ' hours')::interval
+          AND ($2::text IS NULL OR ticker = $2)
+    ),
+    flips AS (
+        SELECT *
+        FROM recent
+        WHERE prev_gamma IS NOT NULL
+          AND SIGN(total_gamma) <> SIGN(prev_gamma)
+          AND ABS(total_gamma - prev_gamma) >= $3
+    )
+    SELECT DISTINCT ON (ticker)
+        ticker, ts, underlying_price, total_gamma, prev_gamma, prev_ts
+    FROM flips
+    ORDER BY ticker, ts DESC
+    LIMIT 40
+    """
+
     async with pool.acquire() as conn:
         alert_rows = await conn.fetch(
             alert_sql,
@@ -326,6 +361,12 @@ async def get_unusual_flow(
             for r in sq_rows
         }
         skew_rows = await conn.fetch(skew_sql, ticker_filter, _SKEW_MIN_PREM, _SKEW_RATIO)
+        gamma_flip_rows = await conn.fetch(
+            gamma_flip_sql,
+            str(lookback_hours),
+            ticker_filter,
+            _GAMMA_FLIP_MIN_SWING,
+        )
         ts_row = await conn.fetchrow("SELECT NOW() AT TIME ZONE 'UTC' AS now")
 
     events: list[FlowEvent] = []
@@ -362,6 +403,42 @@ async def get_unusual_flow(
                 ),
                 alert_rule=r["alert_rule"],
                 option_chain=r["option_chain"],
+            )
+        )
+
+    for r in gamma_flip_rows:
+        curr = float(r["total_gamma"] or 0.0)
+        prev = float(r["prev_gamma"] or 0.0)
+        swing = abs(curr - prev)
+        # Direction convention: neg→pos = dealers now long gamma (stabilizing,
+        # bullish read). pos→neg = dealers now short gamma (destabilizing,
+        # bearish read). option_type drives heat-bar color downstream.
+        going_up = curr > prev
+        sev = min(1.0, swing / _GAMMA_FLIP_SAT)
+        arrow = "neg→pos" if going_up else "pos→neg"
+        regime = "dealers long gamma" if going_up else "dealers short gamma"
+        events.append(
+            FlowEvent(
+                ts=r["ts"].isoformat(),
+                ticker=r["ticker"],
+                kind="dealer_gamma_flip",
+                headline=(
+                    f"gamma flip {arrow} · {regime} · "
+                    f"Δ ${swing/1e9:.1f}B/pt"
+                ),
+                premium=None,
+                option_type="call" if going_up else "put",
+                expiry=None,
+                strike=None,
+                underlying_price=_f(r["underlying_price"]),
+                severity=sev,
+                iv_end=None,
+                iv_start=None,
+                ask_side_pct=None,
+                trade_count=None,
+                volume_oi_ratio=None,
+                alert_rule=None,
+                option_chain=None,
             )
         )
 
@@ -402,7 +479,13 @@ async def get_unusual_flow(
     if kind is not None:
         events = [e for e in events if e.kind == kind]
     if min_premium > 0:
-        events = [e for e in events if (e.premium or 0) >= min_premium]
+        # dealer_gamma_flip has no premium dimension — its "size" is measured
+        # in $B of gamma swing, not option premium. Exempt it from the filter
+        # so the size buttons can't accidentally hide structural signals.
+        events = [
+            e for e in events
+            if e.kind == "dealer_gamma_flip" or (e.premium or 0) >= min_premium
+        ]
 
     # Catalyst attachment: earliest upcoming earnings within 7d, per ticker.
     # Runs after filters (smaller IN list) and before sort so the 1.3× boost

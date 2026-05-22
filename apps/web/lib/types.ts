@@ -672,7 +672,8 @@ export type FlowAnomalyKind =
   | "iv_expansion"
   | "oi_explosion"
   | "daily_skew"
-  | "short_squeeze_setup";
+  | "short_squeeze_setup"
+  | "dealer_gamma_flip";
 
 export type FlowCatalyst = {
   kind: "earnings";

@@ -18,7 +18,13 @@ const CLUSTER_WINDOW_MS = 30 * 60 * 1000;
 // repeated_hits + oi_explosion on the same chain are the same phenomenon
 // detected twice — not two independent signals. Real confluence means
 // the size lens, the concentration lens, and the vol lens all agree.
-type AnomalyCategory = "size" | "concentration" | "vol" | "daily" | "positioning";
+type AnomalyCategory =
+  | "size"
+  | "concentration"
+  | "vol"
+  | "daily"
+  | "positioning"
+  | "structure";
 const KIND_CATEGORY: Record<FlowAnomalyKind, AnomalyCategory> = {
   mega_sweep: "size",
   block_buy: "size",
@@ -31,6 +37,11 @@ const KIND_CATEGORY: Record<FlowAnomalyKind, AnomalyCategory> = {
   // flow lenses — bullish call sweep landing on a heavily-shorted name is a
   // qualitatively different signal from "the sweep was big."
   short_squeeze_setup: "positioning",
+  // dealer_gamma_flip captures dealer hedging regime — orthogonal to vol
+  // expansion (you can have IV climb while dealers stay long-gamma, or vice
+  // versa). Lives in its own "structure" category so the confluence ranker
+  // doesn't conflate it with iv_expansion.
+  dealer_gamma_flip: "structure",
 };
 
 type ClusterItem = {
@@ -118,6 +129,12 @@ const KIND_META: Record<FlowAnomalyKind | "all", KindMeta> = {
       "High short interest + bullish call sweep on the same name — heavily-shorted float meeting fresh upside flow.",
     cls: "bg-emerald-500/15 text-emerald-400",
   },
+  dealer_gamma_flip: {
+    label: "Γ-flip",
+    blurb:
+      "Dealer total-gamma crossed zero between intraday snapshots — hedging regime change. neg→pos = stabilizing (dealers buy dips). pos→neg = destabilizing.",
+    cls: "bg-cyan-500/15 text-cyan-400",
+  },
 };
 
 const KIND_ORDER: (FlowAnomalyKind | "all")[] = [
@@ -130,6 +147,7 @@ const KIND_ORDER: (FlowAnomalyKind | "all")[] = [
   "oi_explosion",
   "daily_skew",
   "short_squeeze_setup",
+  "dealer_gamma_flip",
 ];
 
 function formatMoney(v: number | null | undefined): string {
