@@ -649,6 +649,36 @@ class TopTradeAgg(BaseModel):
     option_chain: str | None
 
 
+class MaxPainExpiry(BaseModel):
+    """Max-pain strike for one expiry (pulled from uw_max_pain — owned by the
+    explosive ingestion). The flow tab reads it soft: rendered when present,
+    silently omitted when the explosive ingest hasn't run for this ticker."""
+    expiry: str          # YYYY-MM-DD
+    max_pain_strike: float
+    distance_from_spot_pct: float | None  # (spot − max_pain) / spot, signed
+
+
+class IvRankSnapshot(BaseModel):
+    """Latest IV-rank chip — IV30 + where it sits in the trailing 1y range.
+    iv_rank_1y is normalized to 0..1; >0.7 = vol-is-rich, <0.3 = vol-is-cheap."""
+    snapshot_date: str
+    iv30: float | None
+    iv_rank_1y: float | None
+    iv_rank_1y_pct: float | None   # iv_rank_1y * 100 for display
+
+
+class UpcomingEarnings(BaseModel):
+    """The next analyst-consensus earnings report on the calendar (if UW has
+    it). Lets the flow tab surface 'unusual flow 3 days before earnings'
+    instead of treating the call/put bias in isolation."""
+    report_date: str
+    days_until: int
+    eps_estimate_average: float | None
+    eps_estimate_analyst_count: int | None
+    revenue_estimate_average: float | None
+    revenue_estimate_analyst_count: int | None
+
+
 class FlowAggregateResponse(BaseModel):
     ticker: str
     days: int                          # window applied (kept for the FE filter)
@@ -673,6 +703,10 @@ class FlowAggregateResponse(BaseModel):
     oi_growth_window_days: int               # the window we summed daily deltas over
     top_strikes: list[TopStrike]
     top_trades: list[TopTradeAgg]
+    # ---- New chips backed by migration 0027 + soft reads from 0024 ---------
+    iv_rank: IvRankSnapshot | None = None                 # /api/stock/{T}/iv-rank
+    upcoming_earnings: UpcomingEarnings | None = None     # /api/companies/{T}/earnings-estimates
+    max_pain: list[MaxPainExpiry] = []                    # soft-read from uw_max_pain
     # True when this request triggered a background UW ingest (or one was
     # already in flight). The UI can poll/re-fetch to pick up the fresh data.
     refresh_queued: bool = False
@@ -847,6 +881,59 @@ async def flow_aggregate(
             """,
             sym, oi_window,
         )
+        # ---- New chips (migration 0027 + soft read of explosive's 0024) ----
+        # IV-rank latest snapshot for the ticker
+        iv_rank_row = await conn.fetchrow(
+            """
+            SELECT snapshot_date, close, iv30, iv_rank_1y
+            FROM uw_iv_rank_history
+            WHERE ticker = $1
+            ORDER BY snapshot_date DESC
+            LIMIT 1
+            """,
+            sym,
+        )
+        # Next upcoming analyst-consensus earnings report
+        earnings_row = await conn.fetchrow(
+            """
+            SELECT report_date,
+                   eps_estimate_average, eps_estimate_analyst_count,
+                   revenue_estimate_average, revenue_estimate_analyst_count
+            FROM uw_earnings_estimates
+            WHERE ticker = $1
+              AND report_date >= CURRENT_DATE
+            ORDER BY report_date ASC
+            LIMIT 1
+            """,
+            sym,
+        )
+        # Max-pain — soft read from the explosive-owned uw_max_pain table.
+        # Wrapped in a try/except so the flow route never breaks even if the
+        # explosive migration hasn't been applied yet.
+        max_pain_rows: list = []
+        try:
+            max_pain_rows = await conn.fetch(
+                """
+                SELECT expiry, max_pain_strike
+                FROM uw_max_pain
+                WHERE ticker = $1
+                  AND snapshot_date = (
+                    SELECT MAX(snapshot_date) FROM uw_max_pain WHERE ticker = $1
+                  )
+                  AND expiry >= CURRENT_DATE
+                ORDER BY expiry ASC
+                LIMIT 6
+                """,
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("max_pain soft-read failed for %s: %s", sym, e)
+            max_pain_rows = []
+        # Spot for the max-pain distance chip (latest daily close).
+        spot_val = await conn.fetchval(
+            "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
+            sym,
+        )
 
     # Decide whether to kick off a background UW refresh. Force the refresh
     # when refresh=now or when we have zero alerts on file; otherwise apply
@@ -1006,6 +1093,52 @@ async def flow_aggregate(
     else:
         coverage_summary = f"{n} alerts in window."
 
+    # ---- Build the new chips from the rows we fetched earlier ---------------
+    iv_rank_chip: IvRankSnapshot | None = None
+    if iv_rank_row is not None:
+        rank_val = iv_rank_row["iv_rank_1y"]
+        iv_rank_chip = IvRankSnapshot(
+            snapshot_date=iv_rank_row["snapshot_date"].isoformat(),
+            iv30=float(iv_rank_row["iv30"]) if iv_rank_row["iv30"] is not None else None,
+            iv_rank_1y=float(rank_val) if rank_val is not None else None,
+            iv_rank_1y_pct=(float(rank_val) * 100.0) if rank_val is not None else None,
+        )
+
+    upcoming_earnings_chip: UpcomingEarnings | None = None
+    if earnings_row is not None:
+        rd = earnings_row["report_date"]
+        upcoming_earnings_chip = UpcomingEarnings(
+            report_date=rd.isoformat(),
+            days_until=(rd - datetime.now(UTC).date()).days,
+            eps_estimate_average=(
+                float(earnings_row["eps_estimate_average"])
+                if earnings_row["eps_estimate_average"] is not None else None
+            ),
+            eps_estimate_analyst_count=earnings_row["eps_estimate_analyst_count"],
+            revenue_estimate_average=(
+                float(earnings_row["revenue_estimate_average"])
+                if earnings_row["revenue_estimate_average"] is not None else None
+            ),
+            revenue_estimate_analyst_count=earnings_row["revenue_estimate_analyst_count"],
+        )
+
+    spot_for_mp: float | None = float(spot_val) if spot_val is not None else None
+    max_pain_chips: list[MaxPainExpiry] = []
+    for r in max_pain_rows:
+        strike_mp = float(r["max_pain_strike"]) if r["max_pain_strike"] is not None else None
+        if strike_mp is None:
+            continue
+        dist_pct: float | None = None
+        if spot_for_mp is not None and spot_for_mp > 0:
+            dist_pct = (spot_for_mp - strike_mp) / spot_for_mp
+        max_pain_chips.append(
+            MaxPainExpiry(
+                expiry=r["expiry"].isoformat(),
+                max_pain_strike=strike_mp,
+                distance_from_spot_pct=dist_pct,
+            )
+        )
+
     return FlowAggregateResponse(
         ticker=sym, days=days,
         oldest_alert_ts=oldest.isoformat() if oldest else None,
@@ -1040,6 +1173,9 @@ async def flow_aggregate(
         oi_growth_window_days=oi_window,
         top_strikes=top_strikes,
         top_trades=top_trades,
+        iv_rank=iv_rank_chip,
+        upcoming_earnings=upcoming_earnings_chip,
+        max_pain=max_pain_chips,
         refresh_queued=refresh_queued,
     )
 
@@ -1477,3 +1613,177 @@ async def suggest_plays(
             "WITH ensemble agreement. Always 1:3 R:R — target +200%, stop −50% of premium."
         ),
     )
+
+
+# ---------- New market-wide routes (migration 0027) ----------
+
+
+class Mover(BaseModel):
+    ticker: str
+    price: float | None
+    change: float | None
+    change_percent: float | None
+    volume: int | None
+
+
+class MoversResponse(BaseModel):
+    as_of: str
+    top_gainers: list[Mover]
+    top_losers: list[Mover]
+    most_active: list[Mover]
+
+
+@router.get("/movers", response_model=MoversResponse)
+async def get_movers(limit: int = Query(20, ge=1, le=100)) -> MoversResponse:
+    """Latest snapshot of top gainers / losers / most-active across the
+    market. Refreshed by `cfp-jobs market-movers` (every ~5min RTH)."""
+    pool = get_pool()
+    sql = """
+        WITH latest AS (
+            SELECT MAX(snapshot_ts) AS ts FROM uw_movers_snapshot
+        )
+        SELECT bucket, rank, ticker, price, change, change_percent, volume
+        FROM uw_movers_snapshot, latest
+        WHERE snapshot_ts = latest.ts AND rank <= $1
+        ORDER BY bucket, rank
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, limit)
+        ts_row = await conn.fetchrow("SELECT MAX(snapshot_ts) AS ts FROM uw_movers_snapshot")
+
+    buckets: dict[str, list[Mover]] = {"top_gainers": [], "top_losers": [], "most_active": []}
+    for r in rows:
+        b = r["bucket"]
+        if b not in buckets:
+            continue
+        buckets[b].append(
+            Mover(
+                ticker=r["ticker"],
+                price=_f(r["price"]),
+                change=_f(r["change"]),
+                change_percent=_f(r["change_percent"]),
+                volume=int(r["volume"]) if r["volume"] is not None else None,
+            )
+        )
+    as_of = ts_row["ts"].isoformat() if ts_row and ts_row["ts"] else datetime.now(UTC).isoformat()
+    return MoversResponse(
+        as_of=as_of,
+        top_gainers=buckets["top_gainers"],
+        top_losers=buckets["top_losers"],
+        most_active=buckets["most_active"],
+    )
+
+
+class SectorTidePoint(BaseModel):
+    ts: str
+    net_call_premium: float | None
+    net_put_premium: float | None
+    net_volume: int | None
+
+
+class SectorTideResponse(BaseModel):
+    sector: str
+    lookback_hours: int
+    net_call_premium_sum: float
+    net_put_premium_sum: float
+    lean: Literal["bull", "bear", "neutral"]
+    points: list[SectorTidePoint]
+
+
+@router.get("/sector-tide/{sector}", response_model=SectorTideResponse)
+async def get_sector_tide(
+    sector: str,
+    lookback_hours: int = Query(6, ge=1, le=168),
+) -> SectorTideResponse:
+    """Per-sector minute-by-minute tape. `sector` is the UW slug, e.g.
+    'Technology' or 'Energy' (see DEFAULT_SECTOR_SLUGS in cfp_jobs)."""
+    pool = get_pool()
+    sql = """
+        SELECT ts, net_call_premium, net_put_premium, net_volume
+        FROM uw_sector_tide
+        WHERE sector = $1
+          AND ts >= NOW() - ($2 || ' hours')::interval
+        ORDER BY ts ASC
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, sector, str(lookback_hours))
+
+    points = [
+        SectorTidePoint(
+            ts=r["ts"].isoformat(),
+            net_call_premium=_f(r["net_call_premium"]),
+            net_put_premium=_f(r["net_put_premium"]),
+            net_volume=int(r["net_volume"]) if r["net_volume"] is not None else None,
+        )
+        for r in rows
+    ]
+    call_sum = sum((p.net_call_premium or 0.0) for p in points)
+    put_sum = sum((p.net_put_premium or 0.0) for p in points)
+    diff = call_sum - put_sum
+    if abs(diff) < 5_000_000:
+        lean: Literal["bull", "bear", "neutral"] = "neutral"
+    else:
+        lean = "bull" if diff > 0 else "bear"
+    return SectorTideResponse(
+        sector=sector,
+        lookback_hours=lookback_hours,
+        net_call_premium_sum=call_sum,
+        net_put_premium_sum=put_sum,
+        lean=lean,
+        points=points,
+    )
+
+
+class CorrelationPair(BaseModel):
+    fst: str
+    snd: str
+    correlation: float | None
+    min_date: str | None
+    max_date: str | None
+    sample_rows: int | None
+
+
+class CorrelationsResponse(BaseModel):
+    snapshot_date: str | None
+    anchor: str
+    pairs: list[CorrelationPair]
+
+
+@router.get("/correlations/{ticker}", response_model=CorrelationsResponse)
+async def get_correlations(
+    ticker: str,
+    limit: int = Query(20, ge=1, le=100),
+) -> CorrelationsResponse:
+    """Latest pairwise correlations with `ticker` as the anchor (UW `fst`).
+    Sorted by absolute correlation descending so the strongest links surface
+    first regardless of sign."""
+    sym = ticker.upper()
+    pool = get_pool()
+    sql = """
+        WITH latest AS (
+            SELECT MAX(snapshot_date) AS d
+            FROM uw_correlations
+            WHERE fst_ticker = $1
+        )
+        SELECT fst_ticker, snd_ticker, correlation, min_date, max_date, sample_rows
+        FROM uw_correlations, latest
+        WHERE fst_ticker = $1
+          AND snapshot_date = latest.d
+        ORDER BY ABS(correlation) DESC NULLS LAST
+        LIMIT $2
+    """
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(sql, sym, limit)
+    snapshot_date = rows[0]["max_date"].isoformat() if rows and rows[0]["max_date"] else None
+    pairs = [
+        CorrelationPair(
+            fst=r["fst_ticker"],
+            snd=r["snd_ticker"],
+            correlation=_f(r["correlation"]),
+            min_date=r["min_date"].isoformat() if r["min_date"] else None,
+            max_date=r["max_date"].isoformat() if r["max_date"] else None,
+            sample_rows=int(r["sample_rows"]) if r["sample_rows"] is not None else None,
+        )
+        for r in rows
+    ]
+    return CorrelationsResponse(snapshot_date=snapshot_date, anchor=sym, pairs=pairs)

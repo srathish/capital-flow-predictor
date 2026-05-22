@@ -951,6 +951,28 @@ export type FlowExpiryBucket = {
   bullish_score: number;
 };
 
+export type FlowMaxPainExpiry = {
+  expiry: string;
+  max_pain_strike: number;
+  distance_from_spot_pct: number | null;
+};
+
+export type FlowIvRankSnapshot = {
+  snapshot_date: string;
+  iv30: number | null;
+  iv_rank_1y: number | null;
+  iv_rank_1y_pct: number | null;
+};
+
+export type FlowUpcomingEarnings = {
+  report_date: string;
+  days_until: number;
+  eps_estimate_average: number | null;
+  eps_estimate_analyst_count: number | null;
+  revenue_estimate_average: number | null;
+  revenue_estimate_analyst_count: number | null;
+};
+
 export type FlowAggregateResponse = {
   ticker: string;
   days: number;
@@ -975,6 +997,56 @@ export type FlowAggregateResponse = {
   oi_growth_window_days: number;
   top_strikes: FlowTopStrike[];
   top_trades: FlowTopTrade[];
+  iv_rank: FlowIvRankSnapshot | null;
+  upcoming_earnings: FlowUpcomingEarnings | null;
+  max_pain: FlowMaxPainExpiry[];
+  refresh_queued?: boolean;
+};
+
+export type FlowMover = {
+  ticker: string;
+  price: number | null;
+  change: number | null;
+  change_percent: number | null;
+  volume: number | null;
+};
+
+export type FlowMoversResponse = {
+  as_of: string;
+  top_gainers: FlowMover[];
+  top_losers: FlowMover[];
+  most_active: FlowMover[];
+};
+
+export type FlowSectorTidePoint = {
+  ts: string;
+  net_call_premium: number | null;
+  net_put_premium: number | null;
+  net_volume: number | null;
+};
+
+export type FlowSectorTideResponse = {
+  sector: string;
+  lookback_hours: number;
+  net_call_premium_sum: number;
+  net_put_premium_sum: number;
+  lean: "bull" | "bear" | "neutral";
+  points: FlowSectorTidePoint[];
+};
+
+export type FlowCorrelationPair = {
+  fst: string;
+  snd: string;
+  correlation: number | null;
+  min_date: string | null;
+  max_date: string | null;
+  sample_rows: number | null;
+};
+
+export type FlowCorrelationsResponse = {
+  snapshot_date: string | null;
+  anchor: string;
+  pairs: FlowCorrelationPair[];
 };
 
 export type CalibrationBucket = {

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FlowAggregatePanel } from "@/components/flow-aggregate-panel";
+import { FlowMoversPanel } from "@/components/flow-movers-panel";
 import { WhaleBetsPanel } from "@/components/whale-bets-panel";
 
 const REFETCH_MS = 30_000;
@@ -176,6 +177,10 @@ export function FlowView() {
       </header>
 
       <WhaleBetsPanel />
+
+      <div className="mb-4">
+        <FlowMoversPanel />
+      </div>
 
       <div className="mb-4">
         <FlowAggregatePanel />

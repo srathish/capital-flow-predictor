@@ -103,6 +103,74 @@ export function FlowAggregatePanel() {
             <p className="text-xs">{data.verdict_reason}</p>
           </div>
 
+          {(data.iv_rank || data.upcoming_earnings || (data.max_pain?.length ?? 0) > 0) && (
+            <div className="grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
+              {data.iv_rank && (
+                <div className="rounded border border-border/50 p-2">
+                  <div className="text-muted-foreground">IV regime · last {new Date(data.iv_rank.snapshot_date).toLocaleDateString()}</div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-mono text-base">
+                      {data.iv_rank.iv30 != null ? `IV30 ${(data.iv_rank.iv30 * 100).toFixed(0)}%` : "—"}
+                    </span>
+                    {data.iv_rank.iv_rank_1y_pct != null && (
+                      <span
+                        className={
+                          data.iv_rank.iv_rank_1y_pct >= 70
+                            ? "text-rose-300"
+                            : data.iv_rank.iv_rank_1y_pct <= 30
+                              ? "text-emerald-300"
+                              : "text-muted-foreground"
+                        }
+                      >
+                        rank {data.iv_rank.iv_rank_1y_pct.toFixed(0)}%
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {data.upcoming_earnings && (
+                <div className="rounded border border-border/50 p-2">
+                  <div className="text-muted-foreground">Next earnings</div>
+                  <div className="font-mono text-base">
+                    {new Date(data.upcoming_earnings.report_date).toLocaleDateString()}
+                    {" · "}
+                    <span className={data.upcoming_earnings.days_until <= 7 ? "text-amber-300" : ""}>
+                      {data.upcoming_earnings.days_until}d
+                    </span>
+                  </div>
+                  {data.upcoming_earnings.eps_estimate_average != null && (
+                    <div className="text-muted-foreground">
+                      EPS est ${data.upcoming_earnings.eps_estimate_average.toFixed(2)}
+                      {data.upcoming_earnings.eps_estimate_analyst_count
+                        ? ` · ${data.upcoming_earnings.eps_estimate_analyst_count} analysts`
+                        : ""}
+                    </div>
+                  )}
+                </div>
+              )}
+              {(data.max_pain?.length ?? 0) > 0 && (
+                <div className="rounded border border-border/50 p-2">
+                  <div className="text-muted-foreground">Max pain · next {Math.min(3, data.max_pain.length)} expiries</div>
+                  <div className="font-mono text-xs">
+                    {data.max_pain.slice(0, 3).map((mp) => {
+                      const dist = mp.distance_from_spot_pct;
+                      const distStr =
+                        dist != null
+                          ? ` (${dist >= 0 ? "+" : ""}${(dist * 100).toFixed(1)}%)`
+                          : "";
+                      return (
+                        <div key={mp.expiry}>
+                          {mp.expiry.slice(2)} · ${mp.max_pain_strike.toFixed(0)}
+                          <span className="text-muted-foreground">{distStr}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {suggest && <SuggestedPlaysBlock data={suggest} />}
 
           <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">

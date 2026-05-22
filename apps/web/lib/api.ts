@@ -18,6 +18,9 @@ import type {
   ExpandedSectorResponse,
   CalibrationResponse,
   FlowAggregateResponse,
+  FlowCorrelationsResponse,
+  FlowMoversResponse,
+  FlowSectorTideResponse,
   FlowSuggestedPlaysResponse,
   PersonaComparisonResponse,
   ReplayResponse,
@@ -317,6 +320,19 @@ export const api = {
   flowSuggestPlays(ticker: string, n = 3): Promise<FlowSuggestedPlaysResponse> {
     return getJson<FlowSuggestedPlaysResponse>(
       `/v1/flow/aggregate/${encodeURIComponent(ticker)}/suggest?n=${n}`,
+    );
+  },
+  flowMovers(limit = 20): Promise<FlowMoversResponse> {
+    return getJson<FlowMoversResponse>(`/v1/flow/movers?limit=${limit}`);
+  },
+  flowSectorTide(sector: string, lookbackHours = 6): Promise<FlowSectorTideResponse> {
+    return getJson<FlowSectorTideResponse>(
+      `/v1/flow/sector-tide/${encodeURIComponent(sector)}?lookback_hours=${lookbackHours}`,
+    );
+  },
+  flowCorrelations(ticker: string, limit = 20): Promise<FlowCorrelationsResponse> {
+    return getJson<FlowCorrelationsResponse>(
+      `/v1/flow/correlations/${encodeURIComponent(ticker.toUpperCase())}?limit=${limit}`,
     );
   },
   screenerCalibration(params: { days?: number; horizon?: 5 | 10 | 20 | 60 } = {}): Promise<CalibrationResponse> {

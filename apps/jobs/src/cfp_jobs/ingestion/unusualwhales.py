@@ -316,7 +316,7 @@ class UwClient:
         accumulation alongside an unusual-flow signal = real confirmation."""
         return self._get("/insiders/ticker-flow", params={"ticker": ticker})
 
-    # ---------- flow-tab additions (see migration 0025) ---------------------
+    # ---------- flow-tab additions (see migration 0027) ---------------------
     # The 5 endpoints below are net-new for the /flow tab. Paths locked
     # against /api/openapi on 2026-05-21. The flow tab also soft-reads from
     # the explosive tab's per-ticker tables (uw_flow_per_strike,
@@ -1488,3 +1488,340 @@ def ingest_congress(database_url: str, api_key: str, limit: int = 500) -> int:
         n = _upsert_congress(conn, rows)
         conn.commit()
     return n
+
+
+# ---------- flow-tab additions: upserts (see migration 0027) --------------
+
+
+def _upsert_movers(
+    conn: psycopg.Connection,
+    snapshot_ts: datetime,
+    body: dict | None,
+) -> int:
+    """UW returns {"data": {"top_gainers": [...], "top_losers": [...], "most_active": [...]}}.
+    We flatten to one row per (snapshot_ts, bucket, rank)."""
+    if not body:
+        return 0
+    data = body.get("data", body) if isinstance(body, dict) else {}
+    if not isinstance(data, dict):
+        return 0
+    sql = """
+        INSERT INTO uw_movers_snapshot (
+            snapshot_ts, bucket, rank, ticker, price, change, change_percent, volume
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s, %s
+        ) ON CONFLICT (snapshot_ts, bucket, rank) DO NOTHING
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for bucket in ("top_gainers", "top_losers", "most_active"):
+            rows = data.get(bucket) or []
+            if not isinstance(rows, list):
+                continue
+            for i, r in enumerate(rows, start=1):
+                if not isinstance(r, dict):
+                    continue
+                ticker = (r.get("ticker") or "").strip().upper()
+                if not ticker:
+                    continue
+                cur.execute(
+                    sql,
+                    (
+                        snapshot_ts, bucket, i, ticker,
+                        _to_float(r.get("price")),
+                        _to_float(r.get("change")),
+                        _to_float(r.get("change_percent")),
+                        _to_int(r.get("volume")),
+                    ),
+                )
+                n += cur.rowcount
+    return n
+
+
+def _upsert_sector_tide(
+    conn: psycopg.Connection,
+    sector: str,
+    rows: Iterable[dict],
+) -> int:
+    sql = """
+        INSERT INTO uw_sector_tide (ts, sector, net_call_premium, net_put_premium, net_volume)
+        VALUES (%s, %s, %s, %s, %s)
+        ON CONFLICT (ts, sector) DO UPDATE SET
+            net_call_premium = EXCLUDED.net_call_premium,
+            net_put_premium  = EXCLUDED.net_put_premium,
+            net_volume       = EXCLUDED.net_volume
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            ts = _to_ts(r.get("timestamp") or r.get("ts") or r.get("date"))
+            if ts is None:
+                continue
+            cur.execute(
+                sql,
+                (
+                    ts, sector,
+                    _to_float(r.get("net_call_premium")),
+                    _to_float(r.get("net_put_premium")),
+                    _to_int(r.get("net_volume")),
+                ),
+            )
+            n += cur.rowcount
+    return n
+
+
+def _upsert_correlations(conn: psycopg.Connection, rows: Iterable[dict]) -> int:
+    """UW returns one row per ordered pair: {fst, snd, correlation, min_date,
+    max_date, rows}. snapshot_date = max_date so we can keep a daily history."""
+    sql = """
+        INSERT INTO uw_correlations (
+            snapshot_date, fst_ticker, snd_ticker,
+            correlation, min_date, max_date, sample_rows, last_fetched
+        ) VALUES (
+            %s, %s, %s, %s, %s, %s, %s, NOW()
+        ) ON CONFLICT (snapshot_date, fst_ticker, snd_ticker) DO UPDATE SET
+            correlation  = EXCLUDED.correlation,
+            min_date     = EXCLUDED.min_date,
+            max_date     = EXCLUDED.max_date,
+            sample_rows  = EXCLUDED.sample_rows,
+            last_fetched = NOW()
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            fst = (r.get("fst") or "").strip().upper()
+            snd = (r.get("snd") or "").strip().upper()
+            max_d = _to_date(r.get("max_date"))
+            if not fst or not snd or max_d is None:
+                continue
+            cur.execute(
+                sql,
+                (
+                    max_d, fst, snd,
+                    _to_float(r.get("correlation")),
+                    _to_date(r.get("min_date")),
+                    max_d,
+                    _to_int(r.get("rows")),
+                ),
+            )
+            n += 1
+    return n
+
+
+def _upsert_iv_rank_history(
+    conn: psycopg.Connection,
+    ticker: str,
+    rows: Iterable[dict],
+) -> int:
+    """UW returns {date, close, volatility, iv_rank_1y, updated_at} per day.
+    We normalize iv_rank_1y to 0..1 (UW occasionally emits 0..100)."""
+    sql = """
+        INSERT INTO uw_iv_rank_history (
+            snapshot_date, ticker, close, iv30, iv_rank_1y, last_fetched
+        ) VALUES (
+            %s, %s, %s, %s, %s, NOW()
+        ) ON CONFLICT (snapshot_date, ticker) DO UPDATE SET
+            close        = EXCLUDED.close,
+            iv30         = EXCLUDED.iv30,
+            iv_rank_1y   = EXCLUDED.iv_rank_1y,
+            last_fetched = NOW()
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            d = _to_date(r.get("date"))
+            if d is None:
+                continue
+            iv_rank = _to_float(r.get("iv_rank_1y"))
+            if iv_rank is not None and iv_rank > 1.5:
+                iv_rank /= 100.0
+            cur.execute(
+                sql,
+                (
+                    d, ticker,
+                    _to_float(r.get("close")),
+                    _to_float(r.get("volatility")),
+                    iv_rank,
+                ),
+            )
+            n += 1
+    return n
+
+
+def _upsert_earnings_estimates(
+    conn: psycopg.Connection,
+    ticker: str,
+    body: dict | None,
+) -> int:
+    """UW returns {"data": {"ticker": "...", "estimates": [...]}}. Each
+    estimate row has `date` (report date) + horizon + EPS/revenue figures."""
+    if not body:
+        return 0
+    data = body.get("data") if isinstance(body, dict) and "data" in body else body
+    if not isinstance(data, dict):
+        return 0
+    estimates = data.get("estimates") or []
+    sql = """
+        INSERT INTO uw_earnings_estimates (
+            ticker, report_date, horizon,
+            eps_estimate_average, eps_estimate_high, eps_estimate_low,
+            eps_estimate_analyst_count,
+            revenue_estimate_average, revenue_estimate_high, revenue_estimate_low,
+            revenue_estimate_analyst_count,
+            payload, last_fetched
+        ) VALUES (
+            %(ticker)s, %(report_date)s, %(horizon)s,
+            %(eps_avg)s, %(eps_high)s, %(eps_low)s, %(eps_n)s,
+            %(rev_avg)s, %(rev_high)s, %(rev_low)s, %(rev_n)s,
+            %(payload)s, NOW()
+        ) ON CONFLICT (ticker, report_date) DO UPDATE SET
+            horizon                        = EXCLUDED.horizon,
+            eps_estimate_average           = EXCLUDED.eps_estimate_average,
+            eps_estimate_high              = EXCLUDED.eps_estimate_high,
+            eps_estimate_low               = EXCLUDED.eps_estimate_low,
+            eps_estimate_analyst_count     = EXCLUDED.eps_estimate_analyst_count,
+            revenue_estimate_average       = EXCLUDED.revenue_estimate_average,
+            revenue_estimate_high          = EXCLUDED.revenue_estimate_high,
+            revenue_estimate_low           = EXCLUDED.revenue_estimate_low,
+            revenue_estimate_analyst_count = EXCLUDED.revenue_estimate_analyst_count,
+            payload                        = EXCLUDED.payload,
+            last_fetched                   = NOW()
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in estimates:
+            if not isinstance(r, dict):
+                continue
+            rd = _to_date(r.get("date"))
+            if rd is None:
+                continue
+            cur.execute(
+                sql,
+                {
+                    "ticker": ticker,
+                    "report_date": rd,
+                    "horizon": r.get("horizon"),
+                    "eps_avg": _to_float(r.get("eps_estimate_average")),
+                    "eps_high": _to_float(r.get("eps_estimate_high")),
+                    "eps_low": _to_float(r.get("eps_estimate_low")),
+                    "eps_n": _to_int(r.get("eps_estimate_analyst_count")),
+                    "rev_avg": _to_float(r.get("revenue_estimate_average")),
+                    "rev_high": _to_float(r.get("revenue_estimate_high")),
+                    "rev_low": _to_float(r.get("revenue_estimate_low")),
+                    "rev_n": _to_int(r.get("revenue_estimate_analyst_count")),
+                    "payload": Jsonb(r),
+                },
+            )
+            n += 1
+    return n
+
+
+
+# ---------- flow-tab additions: ingest entrypoints (migration 0027) ------
+# Each entrypoint is independent so they can be scheduled at different cadences.
+
+
+def ingest_market_movers(database_url: str, api_key: str) -> int:
+    """Refresh the top gainers / losers / most-active snapshot. Run every
+    ~5min during RTH (cheap — one HTTP call)."""
+    snapshot_ts = datetime.now(UTC)
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        body = uw.market_movers()
+        n = _upsert_movers(conn, snapshot_ts, body)
+        conn.commit()
+    return n
+
+
+# Default sector list — UW's /market/{sector}/sector-tide accepts a sector
+# slug; these are the S&P 11 sectors with UW's slug formatting.
+DEFAULT_SECTOR_SLUGS: tuple[str, ...] = (
+    "Basic Materials",
+    "Communication Services",
+    "Consumer Cyclical",
+    "Consumer Defensive",
+    "Energy",
+    "Financial Services",
+    "Healthcare",
+    "Industrials",
+    "Real Estate",
+    "Technology",
+    "Utilities",
+)
+
+
+def ingest_sector_tide(
+    database_url: str,
+    api_key: str,
+    sectors: Iterable[str] | None = None,
+) -> dict[str, int]:
+    """Refresh per-sector net premium tape. UW returns one row per minute
+    so ~390 rows per sector per session. Run every ~5min during RTH."""
+    sector_list = list(sectors) if sectors else list(DEFAULT_SECTOR_SLUGS)
+    counts: dict[str, int] = {}
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        for sector in sector_list:
+            try:
+                rows = uw.sector_tide(sector)
+                counts[sector] = _upsert_sector_tide(conn, sector, rows)
+            except Exception as e:
+                log.warning("sector_tide failed for %s: %s", sector, e)
+                counts[sector] = 0
+        conn.commit()
+    return counts
+
+
+def ingest_correlations(
+    database_url: str,
+    api_key: str,
+    tickers: Iterable[str],
+    interval: str | None = None,
+) -> int:
+    """Pairwise correlations across `tickers`. UW returns N×(N-1) rows for
+    N tickers (both orderings). Run daily."""
+    ticker_list = [t.strip().upper() for t in tickers if t and t.strip()]
+    if len(ticker_list) < 2:
+        return 0
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.correlations(ticker_list, interval=interval)
+        n = _upsert_correlations(conn, rows)
+        conn.commit()
+    return n
+
+
+def ingest_iv_rank_history(
+    database_url: str,
+    api_key: str,
+    ticker: str,
+    timespan: str | None = None,
+) -> int:
+    """Backfill the IV-rank time series for one ticker. Run daily per ticker
+    we care about — UW returns one row per trading day."""
+    ticker = ticker.upper()
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.iv_rank_history(ticker, timespan=timespan)
+        n = _upsert_iv_rank_history(conn, ticker, rows)
+        conn.commit()
+    return n
+
+
+def ingest_earnings_estimates(
+    database_url: str,
+    api_key: str,
+    tickers: Iterable[str],
+) -> dict[str, int]:
+    """Forward EPS + revenue consensus per ticker. Run nightly. Skips on
+    tickers UW has no estimates for (small caps without analyst coverage)."""
+    counts: dict[str, int] = {}
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        for ticker in tickers:
+            sym = (ticker or "").strip().upper()
+            if not sym:
+                continue
+            try:
+                body = uw.earnings_estimates(sym)
+                counts[sym] = _upsert_earnings_estimates(conn, sym, body)
+            except Exception as e:
+                log.warning("earnings_estimates failed for %s: %s", sym, e)
+                counts[sym] = 0
+        conn.commit()
+    return counts
