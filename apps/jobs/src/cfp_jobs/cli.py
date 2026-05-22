@@ -27,6 +27,8 @@ from rich.console import Console  # noqa: E402
 from rich.table import Table  # noqa: E402
 
 from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
+from cfp_jobs import delphi_evaluate as delphi_evaluate_mod  # noqa: E402
+from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
@@ -1192,6 +1194,55 @@ def uw_gex_ingest_cmd(
         f"[green]uw-gex-ingest:[/green] tickers={len(symbols)} "
         f"strike={totals['strike']} expiry={totals['expiry']} "
         f"flow={totals['flow']} lit={totals['lit']}"
+    )
+
+
+@app.command("delphi-rank")
+def delphi_rank_cmd(
+    candidate_limit: int = typer.Option(
+        50,
+        help="Max candidates to pull from uw_screener_stocks; controls fan-out per run.",
+    ),
+) -> None:
+    """Run the Delphi ranker — Stage 3 of the funnel.
+
+    Consumes the latest uw_screener_stocks snapshot + uw_greek_exposure_strike
+    walls and writes one prediction per (ticker, signal_timeframe, horizon)
+    combination into delphi_predictions. Predictions are frozen; never
+    mutated after creation. Outcomes get filled by delphi-evaluate once the
+    horizon closes.
+    """
+    out = delphi_rank_mod.rank(
+        settings.database_url, candidate_limit=candidate_limit
+    )
+    console.print(
+        f"[green]delphi-rank:[/green] candidates={out.get('candidates', 0)} "
+        f"written={out.get('predictions_written', 0)} "
+        f"skipped={out.get('skipped_reachability', 0)} "
+        f"horizons={out.get('horizons', {})}"
+    )
+
+
+@app.command("delphi-evaluate")
+def delphi_evaluate_cmd(
+    max_batch: int = typer.Option(
+        500,
+        help="Max predictions to score in one run; cap protects DB during backlog catch-up.",
+    ),
+) -> None:
+    """Score every Delphi prediction whose horizon has closed.
+
+    Reads daily bars between created_at and horizon_ends_at, classifies the
+    outcome (win/loss/invalidated/breakeven), writes delphi_outcomes. Run
+    hourly — idempotent against already-scored predictions.
+    """
+    out = delphi_evaluate_mod.evaluate(settings.database_url, max_batch=max_batch)
+    console.print(
+        f"[green]delphi-evaluate:[/green] due={out.get('due', 0)} "
+        f"scored={out.get('scored', 0)} "
+        f"wins={out.get('wins', 0)} losses={out.get('losses', 0)} "
+        f"invalidated={out.get('invalidated', 0)} "
+        f"skipped_no_data={out.get('skipped_no_price_data', 0)}"
     )
 
 
