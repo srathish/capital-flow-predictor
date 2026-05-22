@@ -42,10 +42,10 @@ MACRO_OVERLAY_SYMBOLS: list[str] = [
 class NetworkNode(BaseModel):
     id: str                      # ticker, e.g. "XLK"
     name: str                    # display name (currently same as id)
-    rank: int | None             # XGB rank within the universe (1 = strongest)
-    score: float | None          # XGB raw score
+    rank: int | None             # rank by realized return over the window (1 = best)
+    score: float | None          # the realized return itself (e.g. 0.0123 = +1.23%)
     bucket: Literal["leader", "mid", "laggard", "unranked"]
-    return_window: float | None  # realized return over the corr window
+    return_window: float | None  # realized return over the corr window (same as score)
     avg_correlation: float       # average |r| to other nodes in graph (for sizing)
     kind: Literal["sector", "macro"] = "sector"
 
@@ -67,29 +67,26 @@ class NetworkResponse(BaseModel):
     as_of: datetime | None
 
 
-_VALID_HORIZONS = {5, 10, 20}
-
-
 @router.get("/correlation", response_model=NetworkResponse)
 async def get_correlation_network(
     window: int = Query(60, ge=20, le=252, description="Trading-days lookback for correlation"),
     min_correlation: float = Query(0.55, ge=0.0, le=1.0),
-    # FastAPI's Literal[5, 10, 20] doesn't coerce string query params to int —
-    # it rejects "20" because it's not literally the int 20. Take int + validate.
-    horizon: int = Query(10, description="XGB prediction horizon (5, 10, or 20)"),
-    model: str = Query("xgb_v1"),
+    horizon: int = Query(10, description="Legacy parameter, ignored."),
+    model: str = Query("ignored", description="Legacy parameter, ignored. Was xgb_v1 model selector."),
     as_of: date | None = Query(None, description="Anchor date for the rolling window (default = today)"),
     include_macros: bool = Query(False, description="Add macro tickers (VIX, TLT, dollar, gold, oil, HY, BTC) as nodes"),
 ) -> NetworkResponse:
-    if horizon not in _VALID_HORIZONS:
-        raise HTTPException(status_code=400, detail=f"horizon must be one of {sorted(_VALID_HORIZONS)}")
     """Pairwise correlation graph over the sector-ETF universe.
 
     Reads daily closes from prices_daily for the universe over the last
     `window` business days, computes log-return correlations, filters edges
-    by `min_correlation` (absolute value), and joins to the latest XGB
-    predictions to color nodes by rank bucket (top-3 leaders / mid / bottom-3
-    laggards). Average |r| per node feeds the FE's node sizing."""
+    by `min_correlation` (absolute value). Nodes are colored by **realized
+    return** bucket over the same window (top-3 leaders / mid / bottom-3
+    laggards) — previously joined to XGB predictions, replaced with the
+    honest return-momentum rank after the predictions table proved to be a
+    single-run artifact. Average |r| per node feeds the FE's node sizing.
+    """
+    _ = (horizon, model)  # accept-and-ignore for backwards compat
     pool = get_pool()
     universe = list(PREDICTION_TARGETS)
     macro_set: set[str] = set()
@@ -200,51 +197,16 @@ async def get_correlation_network(
         if mat[0, j] > 0:
             window_returns[sym] = float(mat[-1, j] / mat[0, j] - 1.0)
 
-    # XGB predictions for node coloring. Re-rank by score on the read side
-    # because the stored `rank` column is currently degenerate (all rows are
-    # rank=1; XGB training has a known bug to be fixed separately). Pick the
-    # latest (run_ts, target_ts) per symbol and rank by score descending.
-    pred_sql = """
-        WITH latest AS (
-            SELECT MAX(run_ts) AS run_ts FROM predictions
-            WHERE horizon_d = $1 AND model = $2
-        ),
-        latest_target AS (
-            SELECT MAX(target_ts) AS target_ts
-            FROM predictions, latest
-            WHERE predictions.run_ts = latest.run_ts
-              AND predictions.horizon_d = $1 AND predictions.model = $2
-        ),
-        scored AS (
-            SELECT DISTINCT ON (p.symbol) p.symbol, p.score
-            FROM predictions p, latest, latest_target
-            WHERE p.run_ts = latest.run_ts
-              AND p.target_ts = latest_target.target_ts
-              AND p.horizon_d = $1 AND p.model = $2
-            ORDER BY p.symbol, p.score DESC NULLS LAST
-        )
-        SELECT symbol, score,
-               RANK() OVER (ORDER BY score DESC NULLS LAST) AS rank
-        FROM scored
-    """
-    async with pool.acquire() as conn:
-        pred_rows = await conn.fetch(pred_sql, horizon, model)
-    pred_by_sym = {r["symbol"]: r for r in pred_rows}
-
-    # XGB ranks are currently degenerate (training bug). If the top decile
-    # of scores all tie, the rank-bucket assignment is uninformative — fall
-    # back to ranking by realized return over the window, which gives
-    # meaningful colors regardless of XGB state.
-    score_set = {float(r["score"]) for r in pred_rows if r["score"] is not None}
-    use_returns_fallback = len(score_set) <= max(3, len(pred_rows) // 4)
-
-    if use_returns_fallback and window_returns:
+    # Rank nodes by realized return over the window (the basis for bucket
+    # coloring). Previously joined the XGB predictions table; that's gone —
+    # return-momentum is what we display and it's what we color by.
+    if window_returns:
         sorted_by_ret = sorted(window_returns.items(), key=lambda kv: kv[1], reverse=True)
         ret_rank = {sym: i + 1 for i, (sym, _) in enumerate(sorted_by_ret)}
         n_ranked = len(ret_rank)
     else:
         ret_rank = {}
-        n_ranked = len(pred_rows)
+        n_ranked = 0
 
     leader_cutoff = 3
     laggard_cutoff = max(1, n_ranked - 3)
@@ -285,24 +247,17 @@ async def get_correlation_network(
     nodes: list[NetworkNode] = []
     for i, sym in enumerate(symbols_present):
         is_macro = sym in macro_set
-        p = None if is_macro else pred_by_sym.get(sym)
-        score = float(p["score"]) if p and p["score"] is not None else None
-        # Use return-rank fallback if XGB scores are degenerate; else trust
-        # the recomputed XGB rank. Macros are never ranked — they're context.
-        if is_macro:
-            rank = None
-        elif use_returns_fallback:
-            rank = ret_rank.get(sym)
-        else:
-            rank = int(p["rank"]) if p else None
+        # Macros are context, not ranked — they color as "unranked" regardless.
+        rank = None if is_macro else ret_rank.get(sym)
+        ret = window_returns.get(sym)
         avg_r = float(abs_sums[i] / abs_counts[i]) if abs_counts[i] > 0 else 0.0
         nodes.append(NetworkNode(
             id=sym,
             name=sym,
             rank=rank,
-            score=score,
+            score=ret,                       # surface realized return as the node score
             bucket="unranked" if is_macro else _bucket(rank),
-            return_window=window_returns.get(sym),
+            return_window=ret,
             avg_correlation=avg_r,
             kind="macro" if is_macro else "sector",
         ))
@@ -345,12 +300,18 @@ async def get_lead_lag(
     max_p: float = Query(0.05, ge=0.0, le=1.0, description="Max Granger p-value to include"),
     min_lag: int = Query(1, ge=1, le=20),
     max_lag: int = Query(10, ge=1, le=20),
-    horizon: int = Query(10, description="XGB horizon used to color nodes (5, 10, 20)"),
-    model: str = Query("xgb_v1"),
+    horizon: int = Query(10, description="Legacy parameter, ignored. Was XGB horizon."),
+    model: str = Query("ignored", description="Legacy parameter, ignored."),
+    color_window: int = Query(20, ge=5, le=120, description="Trading-day window for return-bucket coloring of nodes."),
 ) -> LeadLagResponse:
-    """Directed lead → follower edges from the latest Granger computation."""
-    if horizon not in _VALID_HORIZONS:
-        raise HTTPException(status_code=400, detail=f"horizon must be one of {sorted(_VALID_HORIZONS)}")
+    """Directed lead → follower edges from the latest Granger computation.
+
+    Nodes are colored by **realized return bucket** over the last `color_window`
+    trading days (top-3 leaders / mid / bottom-3 laggards). Was previously
+    joined to XGB predictions; replaced with return-momentum after the
+    predictions table proved to be a single-run artifact.
+    """
+    _ = (horizon, model)  # accept-and-ignore for backwards compat
     if min_lag > max_lag:
         raise HTTPException(status_code=400, detail="min_lag must be <= max_lag")
 
@@ -403,40 +364,48 @@ async def get_lead_lag(
         for r in best_per_pair.values()
     ]
 
-    # Node coloring — same XGB rank logic as /correlation, sans corr fallback.
-    pred_sql = """
-        WITH latest AS (
-            SELECT MAX(run_ts) AS run_ts FROM predictions
-            WHERE horizon_d = $1 AND model = $2
-        ),
-        latest_target AS (
-            SELECT MAX(target_ts) AS target_ts
-            FROM predictions, latest
-            WHERE predictions.run_ts = latest.run_ts
-              AND predictions.horizon_d = $1 AND predictions.model = $2
-        ),
-        scored AS (
-            SELECT DISTINCT ON (p.symbol) p.symbol, p.score
-            FROM predictions p, latest, latest_target
-            WHERE p.run_ts = latest.run_ts
-              AND p.target_ts = latest_target.target_ts
-              AND p.horizon_d = $1 AND p.model = $2
-            ORDER BY p.symbol, p.score DESC NULLS LAST
-        )
-        SELECT symbol, score,
-               RANK() OVER (ORDER BY score DESC NULLS LAST) AS rank
-        FROM scored
-    """
-    async with pool.acquire() as conn:
-        pred_rows = await conn.fetch(pred_sql, horizon, model)
-    pred_by_sym = {r["symbol"]: r for r in pred_rows}
+    # Node coloring: rank by realized return over `color_window` trading days.
+    # Quick prices_daily pull just for the symbols that appear in the DAG —
+    # we don't need the full corr matrix here, just one number per symbol.
+    out_deg: dict[str, int] = {}
+    in_deg: dict[str, int] = {}
+    for e in edges:
+        out_deg[e.source] = out_deg.get(e.source, 0) + 1
+        in_deg[e.target] = in_deg.get(e.target, 0) + 1
+    present = sorted(set(out_deg.keys()) | set(in_deg.keys()))
 
-    score_set = {float(r["score"]) for r in pred_rows if r["score"] is not None}
-    use_returns_fallback = len(score_set) <= max(3, len(pred_rows) // 4)
-    n_ranked = len(pred_rows)
-    if use_returns_fallback:
-        n_ranked = 0  # disable bucketing if XGB is degenerate; render as unranked
+    color_pad_days = str(int(color_window * 1.6) + 10)
+    color_rows = []
+    if present:
+        async with pool.acquire() as conn:
+            color_rows = await conn.fetch(
+                """
+                WITH ranked AS (
+                    SELECT symbol, ts::date AS d, close,
+                           ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY ts DESC) AS day_rank
+                    FROM prices_daily
+                    WHERE symbol = ANY($1::text[]) AND close IS NOT NULL
+                      AND ts >= NOW() - ($2 || ' days')::interval
+                )
+                SELECT a.symbol, a.close AS c_now, b.close AS c_back
+                FROM ranked a
+                LEFT JOIN ranked b ON b.symbol = a.symbol AND b.day_rank = $3 + 1
+                WHERE a.day_rank = 1
+                """,
+                present, color_pad_days, color_window,
+            )
 
+    window_returns: dict[str, float] = {}
+    for r in color_rows:
+        c_now = float(r["c_now"]) if r["c_now"] is not None else None
+        c_back = float(r["c_back"]) if r["c_back"] is not None else None
+        if c_now is not None and c_back is not None and c_back > 0:
+            window_returns[r["symbol"]] = c_now / c_back - 1.0
+    ret_rank = {
+        sym: i + 1
+        for i, (sym, _) in enumerate(sorted(window_returns.items(), key=lambda kv: -kv[1]))
+    }
+    n_ranked = len(ret_rank)
     leader_cutoff = 3
     laggard_cutoff = max(1, n_ranked - 3)
 
@@ -449,19 +418,10 @@ async def get_lead_lag(
             return "laggard"
         return "mid"
 
-    # Out-degree per node — leaders (high out-degree) get sized larger.
-    out_deg: dict[str, int] = {}
-    in_deg: dict[str, int] = {}
-    for e in edges:
-        out_deg[e.source] = out_deg.get(e.source, 0) + 1
-        in_deg[e.target] = in_deg.get(e.target, 0) + 1
-
-    present = set(out_deg.keys()) | set(in_deg.keys())
     nodes: list[NetworkNode] = []
-    for sym in sorted(present):
-        p = pred_by_sym.get(sym)
-        score = float(p["score"]) if p and p["score"] is not None else None
-        rank = int(p["rank"]) if p and not use_returns_fallback else None
+    for sym in present:
+        rank = ret_rank.get(sym)
+        ret = window_returns.get(sym)
         # Repurpose avg_correlation as a connectivity proxy so the FE sizing
         # logic still works without a new field — out-degree dominates.
         deg = out_deg.get(sym, 0) * 2 + in_deg.get(sym, 0)
@@ -469,9 +429,9 @@ async def get_lead_lag(
             id=sym,
             name=sym,
             rank=rank,
-            score=score,
+            score=ret,
             bucket=_bucket(rank),
-            return_window=None,
+            return_window=ret,
             avg_correlation=float(deg),
         ))
 

@@ -4,22 +4,6 @@ export type SignalKind = "bullish" | "bearish" | "neutral";
 export type WatchlistSignal = "long" | "short" | "avoid";
 export type AgentKind = "analyst" | "persona" | "synthesis" | "unknown";
 
-// /v1/rankings
-export type RankingItem = {
-  rank: number;
-  symbol: string;
-  score: number | null;
-  target_ts: string;
-};
-
-export type RankingsResponse = {
-  run_ts: string;
-  horizon_d: number;
-  model: string;
-  target_ts: string;
-  rankings: RankingItem[];
-};
-
 // /v1/watchlist
 export type WatchlistItem = {
   rank: number;
@@ -460,6 +444,39 @@ export type CatalystPost = {
   price_now: number | null;
   return_next_day_pct: number | null;
   return_since_post_pct: number | null;
+  // Source discriminant — undefined or "reddit" for reddit posts (the
+  // historical shape), "news" for items emitted by the news aggregator.
+  // News items leave the reddit-specific fields (upvotes, return_*) null.
+  source?: "reddit" | "news";
+  source_name?: string | null;   // for news: "fmp" | "polygon" | "yahoo-rss" | ...
+  publisher?: string | null;     // for news: e.g. "Reuters", "Bloomberg"
+  sentiment?: number | null;     // for news: -1..1 where source provides it
+  primary_category?: string | null; // pre-classified on the server for news
+};
+
+// /v1/news/catalysts — server-side merge counterpart for CatalystPost
+export type NewsCatalystItem = {
+  id: string;
+  created_at: string;
+  source: "news";
+  source_name: string;
+  publisher: string | null;
+  title: string;
+  permalink: string;
+  tickers: string[];
+  keywords: string[];
+  catalyst_score: number;
+  hours_old: number;
+  primary_category: string;
+  sentiment: number | null;
+  score_breakdown: CatalystScoreBreakdown;
+};
+
+export type NewsCatalystsResponse = {
+  n_total: number;
+  n_sources_used: number;
+  sources_used: string[];
+  items: NewsCatalystItem[];
 };
 
 export type CatalystsResponse = {

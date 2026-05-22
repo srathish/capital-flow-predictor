@@ -552,6 +552,141 @@ async def fetch_news_for_tickers(
     return dict(pairs)
 
 
+# ---------- catalyst classification ----------------------------------------
+#
+# Mirrors apps/web/lib/catalyst-categories.ts and reddit.py's
+# _CATALYST_CATEGORY_RULES. Keep all three in sync. Order matters: more
+# specific buckets first so "fda approval" lands in `regulatory` not
+# `partnership`.
+
+_CATALYST_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("regulatory", (
+        "fda", "approval", "approved", "clinical", "trial", "phase 3",
+        "phase 2", "phase iii", "phase ii", "recall", "doj", "antitrust",
+        "lawsuit", "sued", "settlement", "ftc", "sec", "investigation",
+        "subpoena",
+    )),
+    ("earnings", (
+        "earnings", "beat", "miss", "missed", "guidance", "guide", "guides",
+        "eps", "revenue", "raised guidance", "lowered guidance", "raises",
+        "lowered", "preannounce", "pre-announce",
+    )),
+    ("insider", (
+        "insider", "form 4", "13d", "13g", "ceo sell", "cfo sell", "ceo buy",
+        "insider buy", "insider sell",
+    )),
+    ("mna", (
+        "acquisition", "acquire", "acquires", "acquired", "merger", "merge",
+        "buyout", "takeover", "take private", "spinoff", "spin-off",
+    )),
+    ("partnership", (
+        "partnership", "partner", "partners", "deal", "contract", "awarded",
+        "supplier", "win", "wins",
+    )),
+    ("product", (
+        "launch", "launches", "release", "released", "unveil", "unveils",
+        "announce", "announces", "announced", "reveal", "reveals", "rollout",
+    )),
+    ("leak", (
+        "leak", "leaked", "rumor", "rumored", "scoop", "alleged", "report",
+        "reports", "sources say", "according to sources",
+    )),
+]
+
+
+def classify_headline(text: str) -> tuple[str, list[str]]:
+    """Scan a headline (title + optional summary) for catalyst keywords.
+
+    Returns (primary_category, matched_keywords_in_order). Uses substring
+    matching with word-boundary heuristics so "FDA" matches but "INFRARED"
+    doesn't fire `fda`. Empty list and "other" for headlines that don't fit
+    any bucket — these get filtered out before hitting the catalyst feed.
+    """
+    if not text:
+        return "other", []
+    lowered = text.lower()
+    matched_by_cat: dict[str, list[str]] = {}
+    for cat_id, tokens in _CATALYST_RULES:
+        for t in tokens:
+            # Word-ish boundary: require non-alphanum on both sides for short
+            # tokens, plain substring for multi-word ones (they're inherently
+            # specific enough).
+            if " " in t:
+                if t in lowered:
+                    matched_by_cat.setdefault(cat_id, []).append(t)
+            else:
+                # Cheap word-boundary check without regex compilation overhead.
+                idx = 0
+                while True:
+                    pos = lowered.find(t, idx)
+                    if pos < 0:
+                        break
+                    left_ok = pos == 0 or not lowered[pos - 1].isalnum()
+                    end = pos + len(t)
+                    right_ok = end == len(lowered) or not lowered[end].isalnum()
+                    if left_ok and right_ok:
+                        matched_by_cat.setdefault(cat_id, []).append(t)
+                        break
+                    idx = pos + 1
+    if not matched_by_cat:
+        return "other", []
+    # Pick the most-specific bucket = first category in _CATALYST_RULES that
+    # matched. Collect every matched keyword (across all buckets) for display.
+    primary = next(c for c, _ in _CATALYST_RULES if c in matched_by_cat)
+    all_keywords: list[str] = []
+    seen: set[str] = set()
+    for _, kws in matched_by_cat.items():
+        for k in kws:
+            if k not in seen:
+                seen.add(k)
+                all_keywords.append(k)
+    return primary, all_keywords
+
+
+def score_news_catalyst(
+    item: NewsItem,
+    matched_keywords: list[str],
+    n_tickers: int = 1,
+) -> tuple[float, dict[str, Any]]:
+    """Compute a catalyst_score on the same scale as Reddit posts.
+
+    Mirrors apps/jobs/.../reddit_rss.py:_catalyst_score:
+        base = min(log(1+n_t)*log(1+n_k)/3, 1)
+        recency = 1.0 (≤6h) → 0.2 (≥48h) linear
+        trust = source weight (proxy for author trust in Reddit case)
+    """
+    import math
+
+    n_kw = len(matched_keywords)
+    if n_kw == 0 or n_tickers == 0:
+        return 0.0, {"base": 0.0, "recency": 0.0, "trust": None,
+                     "n_tickers": n_tickers, "n_keywords": n_kw}
+    base = min(math.log(1 + n_tickers) * math.log(1 + n_kw) / 3.0, 1.0)
+    age_h = (datetime.now(timezone.utc) - item.published_at).total_seconds() / 3600.0
+    if age_h <= 6:
+        recency = 1.0
+    elif age_h >= 48:
+        recency = 0.2
+    else:
+        recency = 1.0 - 0.8 * (age_h - 6) / 42.0
+    # Source weight → trust proxy, clamped to the same 0.5..1.0 band as Reddit.
+    raw_trust = SOURCE_WEIGHT.get(item.source, 0.5)
+    trust = max(0.5, min(1.0, raw_trust))
+    # Sentiment magnitude as a small multiplier — both strong + and strong -
+    # signals are catalyst-worthy.
+    sent_boost = 1.0
+    if item.sentiment is not None:
+        sent_boost = 1.0 + min(0.5, abs(item.sentiment))
+    score = base * recency * trust * sent_boost
+    return score, {
+        "base": base,
+        "recency": recency,
+        "trust": trust,
+        "n_tickers": n_tickers,
+        "n_keywords": n_kw,
+    }
+
+
 @dataclass
 class TickerNewsAggregate:
     ticker: str

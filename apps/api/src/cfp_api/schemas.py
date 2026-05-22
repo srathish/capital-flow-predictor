@@ -12,24 +12,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-# ---------- /v1/rankings ----------
-
-
-class RankingItem(BaseModel):
-    rank: int
-    symbol: str
-    score: float | None = None
-    target_ts: datetime
-
-
-class RankingsResponse(BaseModel):
-    run_ts: datetime
-    horizon_d: int
-    model: str
-    target_ts: datetime
-    rankings: list[RankingItem]
-
-
 # ---------- /v1/watchlist + /v1/watchlist/{sector} ----------
 
 

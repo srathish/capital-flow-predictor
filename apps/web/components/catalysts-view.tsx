@@ -14,7 +14,11 @@ import {
   classifyKeywords,
   type CatalystCategoryId,
 } from "@/lib/catalyst-categories";
-import type { CatalystPost, CategoryTrackRecord } from "@/lib/types";
+import type {
+  CatalystPost,
+  CategoryTrackRecord,
+  NewsCatalystItem,
+} from "@/lib/types";
 
 const HOUR_OPTIONS = [
   { value: 6, label: "6h" },
@@ -125,6 +129,53 @@ function enrich(posts: CatalystPost[]): EnrichedPost[] {
     const c = classifyKeywords(p.keywords);
     return { ...p, primaryCategory: c.primary, allCategories: c.all };
   });
+}
+
+// Lift a news-side catalyst item into CatalystPost shape so it flows through
+// the existing render path. Reddit-only fields (upvotes, return_*) stay null;
+// the `source` discriminant ("news") lets the renderer swap the subreddit
+// chip for a publisher/source-name pill.
+function newsItemToCatalystPost(n: NewsCatalystItem): CatalystPost {
+  return {
+    id: n.id,
+    created_at: n.created_at,
+    subreddit: "", // sentinel — no r/ prefix for news rows
+    author: null,
+    title: n.title,
+    permalink: n.permalink,
+    tickers: n.tickers,
+    keywords: n.keywords,
+    catalyst_score: n.catalyst_score,
+    hours_old: n.hours_old,
+    upvotes: null,
+    num_comments: null,
+    score_breakdown: n.score_breakdown,
+    lead_ticker: n.tickers[0] ?? null,
+    price_at_post: null,
+    price_next_day: null,
+    price_now: null,
+    return_next_day_pct: null,
+    return_since_post_pct: null,
+    source: "news",
+    source_name: n.source_name,
+    publisher: n.publisher,
+    sentiment: n.sentiment,
+    primary_category: n.primary_category,
+  };
+}
+
+const NEWS_SOURCE_LABEL: Record<string, string> = {
+  fmp: "FMP",
+  polygon: "Polygon",
+  yfinance: "Yahoo Finance",
+  "yahoo-rss": "Yahoo RSS",
+  "google-rss": "Google News",
+  "seeking-alpha": "Seeking Alpha",
+};
+
+function newsSourceLabel(s: string | null | undefined): string {
+  if (!s) return "News";
+  return NEWS_SOURCE_LABEL[s] ?? s;
 }
 
 function clusterPosts(posts: EnrichedPost[]): Cluster[] {
@@ -243,6 +294,39 @@ export function CatalystsView() {
     refetchOnWindowFocus: false,
   });
 
+  // News-side catalyst feed: classify recent FMP/Polygon/Yahoo/Google/SA
+  // headlines into the same M&A / FDA / earnings taxonomy and merge into the
+  // posts list. Ticker scope = the tickers already appearing in the Reddit
+  // feed (so a popular catalyst on Reddit ALSO surfaces any news headlines
+  // hitting that name). Bounded to 25 tickers per backend call to keep the
+  // free-tier RSS/Polygon fan-out reasonable.
+  const redditTickers = useMemo(() => {
+    if (!data?.posts) return [] as string[];
+    const counts = new Map<string, number>();
+    for (const p of data.posts) {
+      for (const t of p.tickers) counts.set(t, (counts.get(t) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 25)
+      .map(([t]) => t);
+  }, [data]);
+
+  const { data: newsCatalysts } = useQuery({
+    queryKey: ["news-catalysts", hours, minScore, redditTickers.join(",")],
+    queryFn: () =>
+      api.newsCatalysts({
+        tickers: redditTickers,
+        hours,
+        minScore,
+        limit: 150,
+      }),
+    enabled: redditTickers.length > 0,
+    retry: false,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
   // Tick state for "updated Xs ago" label.
   const [, setTick] = useState(0);
   useEffect(() => {
@@ -250,16 +334,34 @@ export function CatalystsView() {
     return () => clearInterval(id);
   }, []);
 
-  const enriched = useMemo<EnrichedPost[]>(
-    () => (data ? enrich(data.posts) : []),
-    [data],
-  );
+  const enriched = useMemo<EnrichedPost[]>(() => {
+    const redditPosts = data?.posts ?? [];
+    const newsPosts = (newsCatalysts?.items ?? []).map(newsItemToCatalystPost);
+    // Ticker filter (input field) applies to news too — gate before merge so
+    // we don't show news for tickers the user has filtered out.
+    const filterT = tickerFilter.trim().toUpperCase();
+    const matchesFilter = (p: CatalystPost) =>
+      !filterT || p.tickers.some((t) => t.toUpperCase() === filterT);
+    return enrich(
+      [...redditPosts, ...newsPosts.filter(matchesFilter)],
+    );
+  }, [data, newsCatalysts, tickerFilter]);
 
   const subredditCounts = useMemo(() => {
     const m = new Map<string, number>();
-    for (const p of enriched) m.set(p.subreddit, (m.get(p.subreddit) ?? 0) + 1);
+    for (const p of enriched) {
+      // News items have empty subreddit — skip so they don't show up as
+      // "r/" in the mute chip strip.
+      if (!p.subreddit) continue;
+      m.set(p.subreddit, (m.get(p.subreddit) ?? 0) + 1);
+    }
     return Array.from(m.entries()).sort((a, b) => b[1] - a[1]);
   }, [enriched]);
+
+  const newsCount = useMemo(
+    () => enriched.filter((p) => p.source === "news").length,
+    [enriched],
+  );
 
   const filtered = useMemo(() => {
     return enriched.filter((p) => {
@@ -340,9 +442,15 @@ export function CatalystsView() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Catalysts</h1>
           <p className="text-sm text-muted-foreground">
-            Reddit posts where a known ticker co-occurs with a catalyst keyword.
-            Built to surface partnership / FDA / earnings / leak chatter before
-            it hits official news.
+            Reddit posts + news headlines (FMP, Polygon, Yahoo, Google,
+            Seeking Alpha) where a known ticker co-occurs with a catalyst
+            keyword. Surfaces partnership / FDA / earnings / leak signals
+            wherever they break first.
+            {newsCount > 0 && (
+              <span className="ml-1 text-emerald-400">
+                · {newsCount} news headline{newsCount === 1 ? "" : "s"} merged
+              </span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -651,8 +759,34 @@ export function CatalystsView() {
                     <span className={cn("rounded-full px-2 py-0.5 font-semibold", cat.swatch, cat.text)}>
                       {cat.label}
                     </span>
-                    <span className="rounded-full bg-muted px-2 py-0.5">r/{p.subreddit}</span>
-                    {p.author && <span className="hidden sm:inline">u/{p.author}</span>}
+                    {p.source === "news" ? (
+                      <>
+                        <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 font-semibold text-emerald-400">
+                          {newsSourceLabel(p.source_name)}
+                        </span>
+                        {p.publisher && (
+                          <span className="hidden sm:inline">{p.publisher}</span>
+                        )}
+                        {p.sentiment != null && Math.abs(p.sentiment) > 0.05 && (
+                          <span
+                            className={cn(
+                              p.sentiment > 0
+                                ? "text-signal-bullish"
+                                : "text-signal-bearish",
+                            )}
+                            title="Source-reported sentiment"
+                          >
+                            {p.sentiment > 0 ? "▲" : "▼"}{" "}
+                            {Math.abs(p.sentiment).toFixed(2)}
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <span className="rounded-full bg-muted px-2 py-0.5">r/{p.subreddit}</span>
+                        {p.author && <span className="hidden sm:inline">u/{p.author}</span>}
+                      </>
+                    )}
                     {p.tickers.length > 0 && (
                       <span className="flex flex-wrap items-center gap-1">
                         {p.tickers.map((t) => {

@@ -32,7 +32,6 @@ from cfp_api.routes import (
     intraday_gex,
     network,
     news,
-    rankings,
     reddit,
     replay,
     scorecard,
@@ -104,7 +103,6 @@ async def _unhandled(request: Request, exc: Exception):  # type: ignore[override
 # Auth applies to every /v1/* router. Health, root, /metrics, /healthz/db are open.
 PROTECTED = [Depends(require_api_key)]
 
-app.include_router(rankings.router, dependencies=PROTECTED)
 app.include_router(watchlist.router, dependencies=PROTECTED)
 app.include_router(agents.router, dependencies=PROTECTED)
 app.include_router(chat.router, dependencies=PROTECTED)

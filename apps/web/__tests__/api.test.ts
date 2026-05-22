@@ -40,22 +40,6 @@ describe("baseUrl", () => {
   });
 });
 
-describe("api.rankings", () => {
-  it("omits the query string when no params passed", async () => {
-    const calls = mockFetch({ horizon_d: 10, model: "xgb_v1", rankings: [] });
-    await api.rankings();
-    expect(calls[0].url).toBe("http://localhost:8000/v1/rankings");
-  });
-
-  it("assembles horizon + model + limit", async () => {
-    const calls = mockFetch({ horizon_d: 5, model: "xgb_v1", rankings: [] });
-    await api.rankings({ horizon: 5, model: "xgb_v1", limit: 20 });
-    expect(calls[0].url).toBe(
-      "http://localhost:8000/v1/rankings?horizon=5&model=xgb_v1&limit=20",
-    );
-  });
-});
-
 describe("api.sectorRrg", () => {
   it("sends tail_weeks + benchmark + n_window", async () => {
     const calls = mockFetch({ asOf: "2026-05-01", rrg: [] });
@@ -100,7 +84,7 @@ describe("error handling", () => {
     ) as typeof fetch;
     let caught: unknown;
     try {
-      await api.rankings();
+      await api.sectors();
     } catch (e) {
       caught = e;
     }

@@ -33,6 +33,7 @@ import type {
   HoldingsSort,
   LeadLagResponse,
   NetworkResponse,
+  NewsCatalystsResponse,
   RecentNewsResponse,
   RedditBacktestSlice,
   RedditMentionsParams,
@@ -49,7 +50,6 @@ import type {
   StageTickerResult,
   StockScreenResponse,
   FinvizPresetsResponse,
-  RankingsResponse,
   RunResponse,
   RunStatusResponse,
   SectorsResponse,
@@ -106,14 +106,6 @@ async function getJson<T>(path: string, init?: RequestInit): Promise<T> {
 export { ApiError };
 
 export const api = {
-  rankings(params?: { horizon?: number; model?: string; limit?: number }): Promise<RankingsResponse> {
-    const sp = new URLSearchParams();
-    if (params?.horizon !== undefined) sp.set("horizon", String(params.horizon));
-    if (params?.model) sp.set("model", params.model);
-    if (params?.limit !== undefined) sp.set("limit", String(params.limit));
-    const qs = sp.toString();
-    return getJson<RankingsResponse>(`/v1/rankings${qs ? `?${qs}` : ""}`);
-  },
   watchlist(): Promise<WatchlistResponse> {
     return getJson<WatchlistResponse>(`/v1/watchlist`);
   },
@@ -245,6 +237,28 @@ export const api = {
       limit: String(limit),
     });
     return getJson<RecentNewsResponse>(`/v1/news/recent?${sp}`);
+  },
+  newsCatalysts(params: {
+    tickers: string[];
+    hours?: number;
+    minScore?: number;
+    limit?: number;
+  }): Promise<NewsCatalystsResponse> {
+    if (params.tickers.length === 0) {
+      return Promise.resolve({
+        n_total: 0,
+        n_sources_used: 0,
+        sources_used: [],
+        items: [],
+      });
+    }
+    const sp = new URLSearchParams({
+      tickers: params.tickers.slice(0, 25).join(","),
+    });
+    if (params.hours !== undefined) sp.set("hours", String(params.hours));
+    if (params.minScore !== undefined) sp.set("min_score", String(params.minScore));
+    if (params.limit !== undefined) sp.set("limit", String(params.limit));
+    return getJson<NewsCatalystsResponse>(`/v1/news/catalysts?${sp}`);
   },
   correlationNetwork(params: {
     window?: number;

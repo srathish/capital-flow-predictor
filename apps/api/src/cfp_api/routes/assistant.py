@@ -5,7 +5,7 @@ POST /v1/assistant/chat   — SSE stream of text + tool_call + tool_result event
 Runs a Moonshot/OpenAI-compatible tool-calling loop. The assistant has access
 to a small set of tools that wrap the existing APIs:
 
-  - get_rankings(horizon)      — latest XGB sector ranks
+  - get_rankings(horizon)      — sector ETFs ranked by N-day realized return
   - get_sectors_heatmap()      — sector tile data with returns
   - get_agents_for_ticker(t)   — full 25-agent ensemble verdict for a ticker
   - get_catalysts(hours, ...)  — recent reddit catalyst posts
@@ -147,7 +147,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "get_rankings",
-            "description": "Latest XGB sector-ETF rankings. Returns rank, symbol, score for the prediction universe (~26 ETFs).",
+            "description": "Sector ETFs (11 SPDRs) ranked by their realized N-day return ending today. Returns rank, symbol, return percent.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -165,7 +165,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "get_sectors_heatmap",
-            "description": "Sector ETF heatmap with 1d/5d/20d returns and current XGB rank per sector.",
+            "description": "Sector ETF heatmap: last close + 1d/5d/20d returns per ETF, ranked by 1d return.",
             "parameters": {"type": "object", "properties": {}},
         },
     },
@@ -343,83 +343,118 @@ TOOLS = [
 
 
 async def _tool_get_rankings(args: dict[str, Any]) -> dict[str, Any]:
-    horizon = int(args.get("horizon", 10))
-    if horizon not in (5, 10, 20):
-        return {"error": f"horizon must be 5, 10, or 20 (got {horizon})"}
-    pool = get_pool()
-    # Each (run_ts, horizon) writes predictions for many target_ts (one per
-    # walk-forward fold's test window). The most recent prediction set is
-    # (latest run_ts, latest target_ts within that run) — without the second
-    # filter we'd return ~1000 rows, blowing past the LLM's context window
-    # on the follow-up summarization turn.
-    sql = """
-        WITH latest_run AS (
-            SELECT MAX(run_ts) AS run_ts FROM predictions WHERE horizon_d = $1
-        ),
-        latest_target AS (
-            SELECT MAX(target_ts) AS target_ts
-            FROM predictions, latest_run
-            WHERE horizon_d = $1 AND predictions.run_ts = latest_run.run_ts
-        )
-        SELECT p.symbol, p.score, p.rank, p.target_ts
-        FROM predictions p, latest_run, latest_target
-        WHERE p.horizon_d = $1
-          AND p.run_ts = latest_run.run_ts
-          AND p.target_ts = latest_target.target_ts
-        ORDER BY p.rank ASC
+    """Rank the 11 sector SPDRs by their realized N-day return ending today.
+
+    Was previously XGB-prediction-driven; switched to honest return-momentum
+    after a 90-day audit confirmed the predictions table had a single stale
+    run with no decision value.
     """
+    horizon = int(args.get("horizon", 1))
+    if horizon not in (1, 5, 10, 20):
+        return {"error": f"horizon must be 1, 5, 10, or 20 (got {horizon})"}
+    from cfp_shared import SECTORS
+
+    pool = get_pool()
     async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, horizon)
+        rows = await conn.fetch(
+            """
+            WITH ranked AS (
+                SELECT symbol, ts::date AS d, close,
+                       ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY ts DESC) AS day_rank
+                FROM prices_daily
+                WHERE symbol = ANY($1::text[]) AND close IS NOT NULL
+            )
+            SELECT a.symbol, a.close AS c_now, b.close AS c_back, a.d AS as_of
+            FROM ranked a
+            LEFT JOIN ranked b ON b.symbol = a.symbol AND b.day_rank = $2 + 1
+            WHERE a.day_rank = 1
+            """,
+            list(SECTORS), horizon,
+        )
+    entries = []
+    as_of = None
+    for r in rows:
+        as_of = r["as_of"]
+        c_now = float(r["c_now"]) if r["c_now"] is not None else None
+        c_back = float(r["c_back"]) if r["c_back"] is not None else None
+        if c_now is None or c_back is None or c_back <= 0:
+            continue
+        entries.append({"symbol": r["symbol"], "return": (c_now / c_back) - 1.0})
+    entries.sort(key=lambda x: -x["return"])
     return {
         "horizon_d": horizon,
-        "as_of": rows[0]["target_ts"].isoformat() if rows else None,
+        "as_of": as_of.isoformat() if as_of else None,
         "rankings": [
-            {"rank": r["rank"], "symbol": r["symbol"], "score": float(r["score"] or 0)}
-            for r in rows
+            {"rank": i + 1, "symbol": e["symbol"], "return_pct": round(e["return"] * 100, 3)}
+            for i, e in enumerate(entries)
         ],
     }
 
 
 async def _tool_get_sectors_heatmap(_args: dict[str, Any]) -> dict[str, Any]:
-    """Tile data: latest close + 1d/5d/20d returns + most-recent XGB rank per ETF."""
+    """Sector tile data: last close + 1d/5d/20d return per ETF, ranked by 1d return.
+
+    Was previously joined to XGB predictions; switched to pure-return ranking
+    after the predictions table proved to be a single-run artifact.
+    """
+    from cfp_shared import SECTORS
+
     pool = get_pool()
     async with pool.acquire() as conn:
+        # Walk back 30 calendar days per symbol so we have closes at offsets
+        # 0 / 1 / 5 / 20 even when those fall on weekends/holidays.
         rows = await conn.fetch(
             """
-            WITH latest_run AS (
-                SELECT MAX(run_ts) AS rt FROM predictions WHERE horizon_d = 10
-            ),
-            latest_target AS (
-                SELECT MAX(target_ts) AS tt FROM predictions p, latest_run l
-                WHERE p.run_ts = l.rt AND p.horizon_d = 10
-            ),
-            latest_pred AS (
-                SELECT p.symbol, p.rank, p.score
-                FROM predictions p, latest_run l, latest_target t
-                WHERE p.run_ts = l.rt AND p.target_ts = t.tt
-                  AND p.horizon_d = 10
-            ),
-            latest_close AS (
-                SELECT DISTINCT ON (symbol) symbol, ts, close
+            WITH ranked AS (
+                SELECT symbol, ts::date AS d, close,
+                       ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY ts DESC) AS day_rank
                 FROM prices_daily
-                ORDER BY symbol, ts DESC
+                WHERE symbol = ANY($1::text[]) AND close IS NOT NULL
             )
-            SELECT lc.symbol, lc.close, lp.rank, lp.score
-            FROM latest_close lc
-            LEFT JOIN latest_pred lp ON lp.symbol = lc.symbol
-            WHERE lp.rank IS NOT NULL
-            ORDER BY lp.rank
-            """
+            SELECT
+                r0.symbol,
+                r0.close   AS c0,
+                r1.close   AS c1,
+                r5.close   AS c5,
+                r20.close  AS c20,
+                r0.d       AS as_of
+            FROM ranked r0
+            LEFT JOIN ranked r1  ON r1.symbol  = r0.symbol AND r1.day_rank  = 2
+            LEFT JOIN ranked r5  ON r5.symbol  = r0.symbol AND r5.day_rank  = 6
+            LEFT JOIN ranked r20 ON r20.symbol = r0.symbol AND r20.day_rank = 21
+            WHERE r0.day_rank = 1
+            """,
+            list(SECTORS),
         )
+
+    def _ret(now: Any, back: Any) -> float | None:
+        if now is None or back is None or float(back) <= 0:
+            return None
+        return float(now) / float(back) - 1.0
+
+    enriched = []
+    for r in rows:
+        ret1 = _ret(r["c0"], r["c1"])
+        enriched.append({
+            "symbol": r["symbol"],
+            "last_close": float(r["c0"]) if r["c0"] is not None else None,
+            "return_1d": ret1,
+            "return_5d": _ret(r["c0"], r["c5"]),
+            "return_20d": _ret(r["c0"], r["c20"]),
+            "_sort": ret1 if ret1 is not None else -1e9,
+        })
+    enriched.sort(key=lambda x: -x["_sort"])
     return {
         "sectors": [
             {
-                "symbol": r["symbol"],
-                "rank": r["rank"],
-                "score": float(r["score"] or 0),
-                "last_close": float(r["close"] or 0),
+                "rank": i + 1,
+                "symbol": e["symbol"],
+                "last_close": e["last_close"],
+                "return_1d_pct": round(e["return_1d"] * 100, 3) if e["return_1d"] is not None else None,
+                "return_5d_pct": round(e["return_5d"] * 100, 3) if e["return_5d"] is not None else None,
+                "return_20d_pct": round(e["return_20d"] * 100, 3) if e["return_20d"] is not None else None,
             }
-            for r in rows
+            for i, e in enumerate(enriched)
         ],
     }
 
