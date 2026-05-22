@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { FlowAnomalyKind, FlowEvent } from "@/lib/types";
+import type { FlowAnomalyKind, FlowCatalyst, FlowEvent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -151,6 +151,29 @@ function sideTone(side: string | null): string {
   if (side === "call") return "text-signal-bullish";
   if (side === "put") return "text-signal-bearish";
   return "text-muted-foreground";
+}
+
+function CatalystBadge({ catalyst }: { catalyst: FlowCatalyst }) {
+  const when =
+    catalyst.days_until === 0
+      ? "today"
+      : catalyst.days_until === 1
+        ? "tmrw"
+        : `${catalyst.days_until}d`;
+  const session = catalyst.session && catalyst.session !== "unknown" ? ` ${catalyst.session}` : "";
+  const move =
+    catalyst.expected_move_pct != null
+      ? ` · ±${(catalyst.expected_move_pct * 100).toFixed(1)}%`
+      : "";
+  return (
+    <span
+      title={`Earnings ${catalyst.when}${session ? ` (${session.trim()})` : ""}${move ? ` · expected move${move.replace(" · ", " ")}` : ""}`}
+      className="ml-1 inline-flex items-center rounded-full bg-amber-500/15 px-1.5 py-0 text-[9px] font-medium uppercase tracking-wide text-amber-400"
+    >
+      ER {when}
+      {move}
+    </span>
+  );
 }
 
 export function FlowView() {
@@ -545,6 +568,7 @@ function FlowRow({
         >
           {event.ticker}
         </button>
+        {event.catalyst && <CatalystBadge catalyst={event.catalyst} />}
       </td>
       <td className="px-3 py-2">
         <span
@@ -604,6 +628,7 @@ function ClusterRow({
     totalPremium,
   } = item;
   const earliest = clusterEvents[clusterEvents.length - 1]?.ts ?? latestTs;
+  const catalyst = clusterEvents.find((e) => e.catalyst)?.catalyst ?? null;
   const spanMs = new Date(latestTs).getTime() - new Date(earliest).getTime();
   const spanMin = Math.max(1, Math.round(spanMs / 60_000));
 
@@ -647,6 +672,7 @@ function ClusterRow({
                 {flame}
                 {ticker}
               </span>
+              {catalyst && <CatalystBadge catalyst={catalyst} />}
               <span className="text-xs text-muted-foreground">
                 {distinctKinds} signals · {distinctCategories} lenses in {spanMin}m ·{" "}
                 {formatMoney(totalPremium)} · latest {formatRelative(latestTs)}

@@ -673,6 +673,14 @@ export type FlowAnomalyKind =
   | "oi_explosion"
   | "daily_skew";
 
+export type FlowCatalyst = {
+  kind: "earnings";
+  when: string;                 // YYYY-MM-DD
+  session: string | null;       // 'pre' | 'post' | 'amc' | 'bmo' | 'unknown'
+  days_until: number;           // 0 = today, 1 = tomorrow, …
+  expected_move_pct: number | null;
+};
+
 export type FlowEvent = {
   ts: string;
   ticker: string;
@@ -691,6 +699,7 @@ export type FlowEvent = {
   volume_oi_ratio: number | null;
   alert_rule: string | null;
   option_chain: string | null;
+  catalyst: FlowCatalyst | null;
 };
 
 export type FlowResponse = {

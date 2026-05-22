@@ -118,6 +118,17 @@ AnomalyKind = Literal[
 ]
 
 
+class Catalyst(BaseModel):
+    """Upcoming catalyst attached to a flow row as context, not as its own
+    anomaly. Confluence ranker ignores this — it's a row modifier, not a lens.
+    Severity gets a 1.3× boost (clipped to 1.0) when present."""
+    kind: Literal["earnings"]
+    when: str                      # YYYY-MM-DD of report_date
+    session: str | None            # 'pre' | 'post' | 'amc' | 'bmo' | 'unknown'
+    days_until: int                # 0 = today, 1 = tomorrow, …
+    expected_move_pct: float | None
+
+
 class FlowEvent(BaseModel):
     ts: str
     ticker: str
@@ -136,6 +147,7 @@ class FlowEvent(BaseModel):
     volume_oi_ratio: float | None
     alert_rule: str | None
     option_chain: str | None
+    catalyst: Catalyst | None = None
 
 
 class FlowResponse(BaseModel):
@@ -347,6 +359,39 @@ async def get_unusual_flow(
         events = [e for e in events if e.kind == kind]
     if min_premium > 0:
         events = [e for e in events if (e.premium or 0) >= min_premium]
+
+    # Catalyst attachment: earliest upcoming earnings within 7d, per ticker.
+    # Runs after filters (smaller IN list) and before sort so the 1.3× boost
+    # actually moves catalyst rows higher in the feed.
+    tickers = sorted({e.ticker for e in events})
+    if tickers:
+        catalyst_sql = """
+            SELECT DISTINCT ON (ticker)
+                ticker, report_date, session, expected_move_pct
+            FROM uw_earnings_calendar_daily
+            WHERE ticker = ANY($1::text[])
+              AND report_date >= CURRENT_DATE
+              AND report_date <= CURRENT_DATE + INTERVAL '7 days'
+            ORDER BY ticker, report_date ASC
+        """
+        async with pool.acquire() as conn:
+            cat_rows = await conn.fetch(catalyst_sql, tickers)
+        today = datetime.now(UTC).date()
+        catalyst_by_ticker: dict[str, Catalyst] = {}
+        for r in cat_rows:
+            catalyst_by_ticker[r["ticker"]] = Catalyst(
+                kind="earnings",
+                when=r["report_date"].isoformat(),
+                session=r["session"],
+                days_until=max(0, (r["report_date"] - today).days),
+                expected_move_pct=_f(r["expected_move_pct"]),
+            )
+        if catalyst_by_ticker:
+            for e in events:
+                cat = catalyst_by_ticker.get(e.ticker)
+                if cat is not None:
+                    e.catalyst = cat
+                    e.severity = min(1.0, e.severity * 1.3)
 
     events.sort(key=lambda e: (e.severity, e.premium or 0), reverse=True)
     events = events[:limit]
