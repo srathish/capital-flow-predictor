@@ -130,12 +130,16 @@ class CohortsByTickerResponse(BaseModel):
 
 async def _fetch_closes(
     members: tuple[str, ...], lookback_days: int
-) -> tuple[list[datetime], dict[str, list[float]]]:
+) -> tuple[list[datetime], dict[str, list[float]], list[str]]:
     """Pull aligned daily closes for each cohort member.
 
-    Returns (sorted_ts_list, {ticker: [close per ts]}). Only timestamps where
-    *every* member has a close are returned, so the per-pair arrays line up
-    without per-pair date-alignment work downstream.
+    Returns (sorted_ts_list, {ticker: [close per ts]}, missing_members).
+    Only timestamps where every *covered* member has a close are returned, so
+    per-pair arrays line up without per-pair date-alignment work downstream.
+
+    Members with zero rows in prices_daily are dropped from the result and
+    reported in `missing_members` — without this, one un-ingested ticker would
+    kill the entire cohort (set intersection on an empty set is empty).
 
     Uses the most recent `lookback_days * 1.6` calendar days to give some
     buffer for weekends/holidays so we land close to `lookback_days` trading
@@ -159,14 +163,16 @@ async def _fetch_closes(
             )
             per_ticker[sym] = {r["ts"]: float(r["close"]) for r in rows}
 
-    if not per_ticker:
-        return [], {}
+    missing = [sym for sym in members if not per_ticker.get(sym)]
+    covered = {sym: d for sym, d in per_ticker.items() if d}
+    if not covered:
+        return [], {}, list(missing)
 
-    # Intersect timestamps across all members so every pair is aligned.
-    common_ts = set.intersection(*(set(d.keys()) for d in per_ticker.values()))
+    # Intersect timestamps across covered members only.
+    common_ts = set.intersection(*(set(d.keys()) for d in covered.values()))
     sorted_ts = sorted(common_ts)
-    aligned = {sym: [per_ticker[sym][t] for t in sorted_ts] for sym in members}
-    return sorted_ts, aligned
+    aligned = {sym: [covered[sym][t] for t in sorted_ts] for sym in covered}
+    return sorted_ts, aligned, list(missing)
 
 
 def _engle_granger(
@@ -352,7 +358,7 @@ async def _summarize(
     `earnings` is optional; passing it in lets the caller batch a single
     earnings query for many cohorts instead of paying per-cohort overhead.
     """
-    ts, closes = await _fetch_closes(cohort.members, window_days)
+    ts, closes, _missing = await _fetch_closes(cohort.members, window_days)
     if not closes or not ts:
         return CohortSummary(
             key=cohort.key, label=cohort.label, description=cohort.description,
@@ -433,9 +439,14 @@ async def cohort_detail(
     cohort = COHORTS_BY_KEY.get(key)
     if cohort is None:
         raise HTTPException(status_code=404, detail=f"unknown cohort '{key}'")
-    ts, closes = await _fetch_closes(cohort.members, window_days)
+    ts, closes, missing = await _fetch_closes(cohort.members, window_days)
     if closes:
         members = _member_positions(closes)
+        # Add placeholder rows for any cohort members we don't have prices
+        # for, so the UI can show them with "no data" rather than silently
+        # dropping them and confusing the operator about cohort composition.
+        for m in missing:
+            members.append(CohortMember(ticker=m, ret_window=None, rel_vs_median=None))
     else:
         members = [
             CohortMember(ticker=m, ret_window=None, rel_vs_median=None)
