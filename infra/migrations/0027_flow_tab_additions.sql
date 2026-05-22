@@ -61,7 +61,30 @@ CREATE INDEX IF NOT EXISTS idx_uw_sector_tide_sector
 -- window. UW returns one row per ordered pair (fst, snd) with the
 -- correlation, the window bounds, and the row count.
 -- Endpoint: /api/market/correlations
+--
+-- IMPORTANT: This table was *also* defined by migration 0026 (drilldown phase)
+-- with columns ticker_a/ticker_b. To make both migration orders work, we:
+--   1. Rename those columns to fst_ticker/snd_ticker if the legacy names exist
+--   2. CREATE TABLE IF NOT EXISTS so fresh DBs get the right shape
+--   3. ADD COLUMN IF NOT EXISTS for the extra flow-tab fields
+-- All steps are idempotent — re-running the migration is a no-op.
 -- ----------------------------------------------------------------------------
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'uw_correlations' AND column_name = 'ticker_a'
+    ) THEN
+        ALTER TABLE uw_correlations RENAME COLUMN ticker_a TO fst_ticker;
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'uw_correlations' AND column_name = 'ticker_b'
+    ) THEN
+        ALTER TABLE uw_correlations RENAME COLUMN ticker_b TO snd_ticker;
+    END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS uw_correlations (
     snapshot_date       DATE NOT NULL,        -- max_date of the window
     fst_ticker          TEXT NOT NULL,
@@ -73,6 +96,14 @@ CREATE TABLE IF NOT EXISTS uw_correlations (
     last_fetched        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (snapshot_date, fst_ticker, snd_ticker)
 );
+
+-- Flow-tab-specific columns that 0026 didn't include (idempotent on both fresh
+-- and legacy schemas).
+ALTER TABLE uw_correlations ADD COLUMN IF NOT EXISTS min_date     DATE;
+ALTER TABLE uw_correlations ADD COLUMN IF NOT EXISTS max_date     DATE;
+ALTER TABLE uw_correlations ADD COLUMN IF NOT EXISTS sample_rows  INTEGER;
+ALTER TABLE uw_correlations ADD COLUMN IF NOT EXISTS last_fetched TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
 CREATE INDEX IF NOT EXISTS idx_uw_correlations_fst
     ON uw_correlations (fst_ticker, snapshot_date DESC);
 

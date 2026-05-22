@@ -778,31 +778,42 @@ def _upsert_correlations(
     snapshot_date: date,
     rows: Iterable[dict],
 ) -> int:
-    """UW correlations returns one row per (ticker_a, ticker_b) pair."""
+    """UW correlations returns one row per (fst, snd) ordered pair.
+
+    Schema lives in migration 0027 (flow-tab-additions). Columns:
+    (snapshot_date, fst_ticker, snd_ticker) PK + correlation + min_date +
+    max_date + sample_rows + last_fetched. We're the explosive tab and only
+    care about the pair + correlation; window_days from our payload is left
+    NULL since flow-tab schema doesn't have that column."""
     sql = """
         INSERT INTO uw_correlations (
-            snapshot_date, ticker_a, ticker_b, correlation, window_days, payload
+            snapshot_date, fst_ticker, snd_ticker, correlation,
+            min_date, max_date, sample_rows, last_fetched
         ) VALUES (
-            %(snapshot_date)s, %(ticker_a)s, %(ticker_b)s, %(correlation)s, %(window_days)s, %(payload)s
-        ) ON CONFLICT (snapshot_date, ticker_a, ticker_b) DO UPDATE SET
+            %(snapshot_date)s, %(fst_ticker)s, %(snd_ticker)s, %(correlation)s,
+            %(min_date)s, %(max_date)s, %(sample_rows)s, NOW()
+        ) ON CONFLICT (snapshot_date, fst_ticker, snd_ticker) DO UPDATE SET
             correlation = EXCLUDED.correlation,
-            window_days = EXCLUDED.window_days,
-            payload = EXCLUDED.payload
+            min_date = COALESCE(EXCLUDED.min_date, uw_correlations.min_date),
+            max_date = COALESCE(EXCLUDED.max_date, uw_correlations.max_date),
+            sample_rows = COALESCE(EXCLUDED.sample_rows, uw_correlations.sample_rows),
+            last_fetched = NOW()
     """
     n = 0
     with conn.cursor() as cur:
         for r in rows:
-            a = (r.get("ticker_a") or r.get("fst") or r.get("ticker") or "").upper()
-            b = (r.get("ticker_b") or r.get("snd") or r.get("peer") or "").upper()
+            a = (r.get("fst_ticker") or r.get("fst") or r.get("ticker_a") or r.get("ticker") or "").upper()
+            b = (r.get("snd_ticker") or r.get("snd") or r.get("ticker_b") or r.get("peer") or "").upper()
             if not a or not b or a == b:
                 continue
             params = {
                 "snapshot_date": snapshot_date,
-                "ticker_a": a,
-                "ticker_b": b,
+                "fst_ticker": a,
+                "snd_ticker": b,
                 "correlation": _to_float(r.get("correlation") or r.get("corr")),
-                "window_days": _to_int(r.get("window_days") or r.get("window")),
-                "payload": Jsonb(r),
+                "min_date": _to_date(r.get("min_date")),
+                "max_date": _to_date(r.get("max_date")),
+                "sample_rows": _to_int(r.get("sample_rows") or r.get("rows")),
             }
             cur.execute(sql, params)
             n += cur.rowcount

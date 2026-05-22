@@ -293,11 +293,11 @@ async def get_explosive_detail(ticker: str) -> ExplosiveDetailResponse:
 
         corr_rows = await conn.fetch(
             """
-            SELECT ticker_b AS peer, correlation
+            SELECT snd_ticker AS peer, correlation
             FROM uw_correlations
-            WHERE ticker_a = $1
+            WHERE fst_ticker = $1
               AND snapshot_date = (
-                SELECT MAX(snapshot_date) FROM uw_correlations WHERE ticker_a = $1
+                SELECT MAX(snapshot_date) FROM uw_correlations WHERE fst_ticker = $1
               )
             ORDER BY correlation DESC NULLS LAST
             LIMIT 10
