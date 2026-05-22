@@ -6,7 +6,7 @@ import math
 from datetime import UTC, date as date_t, datetime
 from typing import Literal
 
-from cfp_shared import PREDICTION_TARGETS, SECTORS
+from cfp_shared import PREDICTION_TARGETS
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
@@ -43,7 +43,10 @@ async def get_sectors(
     """
     pool = get_pool()
     _ = model  # accept-and-ignore so old clients passing model don't 422
-    sectors = list(SECTORS)
+    # Universe = 11 SPDR sector ETFs + 15 thematic ETFs (SMH/SOXX/ARKK/IBB/
+    # KRE/ITA/JETS/XBI/XOP/URA/URNM/REMX/WCLD/TAN/LIT). 26 symbols total —
+    # restored from the SECTORS-only narrowing in the initial Tier A rewrite.
+    sectors = list(PREDICTION_TARGETS)
     # Need enough history to compute `history` daily snapshots of N-day return.
     # Add ~60% calendar buffer for weekends/holidays.
     buffer_days = int((history + horizon + 5) * 1.6)
