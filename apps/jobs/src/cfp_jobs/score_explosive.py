@@ -933,7 +933,7 @@ def score_all(database_url: str) -> dict[str, Any]:
                 written += 1
                 top_preview.append((ticker, score))
             except Exception as e:
-                log.warning("scoring failed for %s: %s", ticker, e)
+                log.warning("scoring failed for %s: %s", ticker, e, exc_info=True)
         # No explicit conn.commit(): psycopg3's `with psycopg.connect(...)`
         # already wraps the body in a transaction and commits on clean exit;
         # an explicit commit here raises "Explicit commit() forbidden within
