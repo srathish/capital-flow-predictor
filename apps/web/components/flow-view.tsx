@@ -1,16 +1,15 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import type { FlowAnomalyKind, FlowEvent } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FlowAggregatePanel } from "@/components/flow-aggregate-panel";
 import { FlowMoversPanel } from "@/components/flow-movers-panel";
 import { WhaleBetsPanel } from "@/components/whale-bets-panel";
+import { TickerDossierSheet } from "@/components/ticker-dossier-sheet";
 
 const REFETCH_MS = 30_000;
 
@@ -126,6 +125,12 @@ export function FlowView() {
   const [minPremium, setMinPremium] = useState<number>(100_000);
   const [kind, setKind] = useState<FlowAnomalyKind | "all">("all");
   const [ticker, setTicker] = useState<string>("");
+  const [dossierTicker, setDossierTicker] = useState<string | null>(null);
+
+  function openDossier(t: string) {
+    const sym = t.trim().toUpperCase();
+    if (sym) setDossierTicker(sym);
+  }
 
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["flow", lookback, minPremium, kind, ticker],
@@ -182,10 +187,6 @@ export function FlowView() {
         <FlowMoversPanel />
       </div>
 
-      <div className="mb-4">
-        <FlowAggregatePanel />
-      </div>
-
       {/* Filter row 1: lookback + min premium + ticker filter */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
         <div className="flex items-center gap-1">
@@ -231,9 +232,20 @@ export function FlowView() {
         <input
           value={ticker}
           onChange={(e) => setTicker(e.target.value)}
-          placeholder="filter ticker"
-          className="h-7 w-32 rounded-full border border-border bg-card px-3 text-xs outline-none focus:border-primary/60"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") openDossier(ticker);
+          }}
+          placeholder="ticker — enter opens dossier"
+          className="h-7 w-56 rounded-full border border-border bg-card px-3 text-xs outline-none focus:border-primary/60"
         />
+        <button
+          onClick={() => openDossier(ticker)}
+          disabled={!ticker.trim()}
+          className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground hover:text-foreground disabled:opacity-40"
+          title="Open dossier slide-over for the ticker (Enter)"
+        >
+          dossier
+        </button>
 
         <button
           onClick={() => refetch()}
@@ -276,16 +288,17 @@ export function FlowView() {
               hot tickers
             </span>
             {topTickers.map((t) => (
-              <Link
+              <button
                 key={t.ticker}
-                href={`/agents/${encodeURIComponent(t.ticker)}`}
+                type="button"
+                onClick={() => openDossier(t.ticker)}
                 className="group flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs hover:border-primary/60"
               >
                 <span className="font-semibold text-foreground">{t.ticker}</span>
                 <span className="text-muted-foreground">
                   {formatMoney(t.premium)} · {t.count}
                 </span>
-              </Link>
+              </button>
             ))}
           </CardContent>
         </Card>
@@ -327,18 +340,34 @@ export function FlowView() {
               </thead>
               <tbody>
                 {events.map((e, i) => (
-                  <FlowRow key={`${e.ts}-${e.ticker}-${e.kind}-${i}`} event={e} />
+                  <FlowRow
+                    key={`${e.ts}-${e.ticker}-${e.kind}-${i}`}
+                    event={e}
+                    onTickerClick={openDossier}
+                  />
                 ))}
               </tbody>
             </table>
           </CardContent>
         </Card>
       )}
+
+      <TickerDossierSheet
+        ticker={dossierTicker}
+        open={dossierTicker !== null}
+        onClose={() => setDossierTicker(null)}
+      />
     </div>
   );
 }
 
-function FlowRow({ event }: { event: FlowEvent }) {
+function FlowRow({
+  event,
+  onTickerClick,
+}: {
+  event: FlowEvent;
+  onTickerClick: (ticker: string) => void;
+}) {
   const meta = KIND_META[event.kind];
   return (
     <tr className="border-b last:border-0 hover:bg-foreground/5">
@@ -346,12 +375,13 @@ function FlowRow({ event }: { event: FlowEvent }) {
         {formatRelative(event.ts)}
       </td>
       <td className="px-3 py-2">
-        <Link
-          href={`/agents/${encodeURIComponent(event.ticker)}`}
+        <button
+          type="button"
+          onClick={() => onTickerClick(event.ticker)}
           className="font-semibold text-foreground hover:text-primary"
         >
           {event.ticker}
-        </Link>
+        </button>
       </td>
       <td className="px-3 py-2">
         <span

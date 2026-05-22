@@ -49,13 +49,6 @@ export function FlowAggregatePanel() {
     }
   }
 
-  const verdictCls =
-    data?.verdict === "bullish"
-      ? "bg-green-900/30 text-green-300 border-green-700/60"
-      : data?.verdict === "bearish"
-        ? "bg-rose-900/30 text-rose-300 border-rose-700/60"
-        : "bg-muted/40 text-muted-foreground border-border";
-
   return (
     <div className="rounded-lg border border-border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
@@ -90,10 +83,33 @@ export function FlowAggregatePanel() {
         )}
       </div>
       {error && <p className="text-xs text-destructive">{error}</p>}
-      {data && (
-        <div className="space-y-3 text-sm">
-          {/* Verdict + headline metrics */}
-          <div className={`rounded border px-3 py-2 ${verdictCls}`}>
+      {data && <FlowAggregateBody data={data} suggest={suggest} />}
+    </div>
+  );
+}
+
+// Pure renderer — takes already-fetched aggregate + suggested-plays payloads
+// and produces the full panel UI. Shared between the standalone
+// FlowAggregatePanel (which owns the ticker input + fetch) and
+// TickerDossierSheet (slide-over Dossier that opens from any tape row).
+export function FlowAggregateBody({
+  data,
+  suggest,
+}: {
+  data: FlowAggregateResponse;
+  suggest: FlowSuggestedPlaysResponse | null;
+}) {
+  const verdictCls =
+    data.verdict === "bullish"
+      ? "bg-green-900/30 text-green-300 border-green-700/60"
+      : data.verdict === "bearish"
+        ? "bg-rose-900/30 text-rose-300 border-rose-700/60"
+        : "bg-muted/40 text-muted-foreground border-border";
+
+  return (
+    <div className="space-y-3 text-sm">
+      {/* Verdict + headline metrics */}
+      <div className={`rounded border px-3 py-2 ${verdictCls}`}>
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs uppercase tracking-wide">{data.verdict}</span>
               <span className="font-mono text-xs">
@@ -568,14 +584,12 @@ export function FlowAggregatePanel() {
             </div>
           )}
 
-          {data.n_alerts === 0 && (
-            <p className="text-xs text-muted-foreground">
-              No UW flow alerts ingested for {data.ticker} yet. Pull fresh data with{" "}
-              <code className="font-mono">cfp-jobs flow {data.ticker.toLowerCase()}</code>{" "}
-              and try again.
-            </p>
-          )}
-        </div>
+      {data.n_alerts === 0 && (
+        <p className="text-xs text-muted-foreground">
+          No UW flow alerts ingested for {data.ticker} yet. Pull fresh data with{" "}
+          <code className="font-mono">cfp-jobs flow {data.ticker.toLowerCase()}</code>{" "}
+          and try again.
+        </p>
       )}
     </div>
   );
