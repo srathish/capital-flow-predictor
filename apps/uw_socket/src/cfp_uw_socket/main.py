@@ -290,10 +290,15 @@ async def _poll_news(pool: asyncpg.Pool) -> None:
         "Authorization": f"Bearer {settings.unusual_whales_api_key}",
         "Accept": "application/json",
     }
+    # UW's news firehose is noisy — school appointments, foreign politics,
+    # corporate-action distributions. Pass major_only=true so UW filters
+    # to its "significant" tier at the source. We keep ticker-less items
+    # (macro/Fed/CPI headlines often have no tickers attached but matter).
+    news_params = {"limit": 100, "major_only": "true"}
     async with httpx.AsyncClient(timeout=20.0, headers=headers) as client:
         while True:
             try:
-                r = await client.get(f"{base}/news/headlines", params={"limit": 100})
+                r = await client.get(f"{base}/news/headlines", params=news_params)
                 if r.status_code == 200:
                     body = r.json()
                     rows = body.get("data") if isinstance(body, dict) and "data" in body else body
