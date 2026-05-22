@@ -21,7 +21,8 @@ load_dotenv()
 
 import psycopg  # noqa: E402
 import typer  # noqa: E402
-from cfp_shared.universe import FRED_SERIES, PREDICTION_TARGETS, all_yfinance_symbols  # noqa: E402
+from cfp_shared.universe import FRED_SERIES, PREDICTION_TARGETS  # noqa: E402
+from cfp_jobs.ingestion.ingest_universe import full_ingest_universe  # noqa: E402
 from rich.console import Console  # noqa: E402
 from rich.table import Table  # noqa: E402
 
@@ -63,9 +64,16 @@ def backfill(
     skip_prices: bool = typer.Option(False, "--skip-prices"),
     skip_macro: bool = typer.Option(False, "--skip-macro"),
 ) -> None:
-    """Backfill prices (yfinance) and macro (FRED) for the configured universe."""
+    """Backfill prices (yfinance) and macro (FRED) for the full universe.
+
+    Universe = static (sector ETFs + themes + benchmarks + cross-asset +
+    cohort members) ∪ every distinct ticker UW has in uw_etf_holdings.
+    The latter pulls in ETF constituents like AAPL, ABBV, and international
+    names like 3800.HK / SLR.MC / ENLT.TA so the holdings drill-down can
+    show real 5d/20d/60d returns for every row.
+    """
     start = datetime.now(UTC) - timedelta(days=365 * years)
-    symbols = all_yfinance_symbols()
+    symbols = full_ingest_universe(settings.database_url)
 
     console.print(
         f"[bold]Backfill {years}y[/bold]: "
@@ -86,9 +94,12 @@ def backfill(
 
 @app.command()
 def daily(lookback_days: int = typer.Option(7, help="Days of recent data to refresh")) -> None:
-    """Incremental ingest. Pulls last `lookback_days` to absorb late corrections."""
+    """Incremental ingest. Pulls last `lookback_days` to absorb late corrections.
+
+    Same expanded universe as `backfill` — static config ∪ uw_etf_holdings.
+    """
     start = datetime.now(UTC) - timedelta(days=lookback_days)
-    symbols = all_yfinance_symbols()
+    symbols = full_ingest_universe(settings.database_url)
 
     n_prices = ingestion.prices.ingest(settings.database_url, symbols, start)
     n_macro = ingestion.macro.ingest(
