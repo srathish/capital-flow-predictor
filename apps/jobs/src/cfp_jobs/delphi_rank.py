@@ -41,17 +41,42 @@ log = logging.getLogger(__name__)
 MODEL_VERSION = "v0.1-rules"
 
 
-# Gates for Layer 2 (adaptive reason-code weights) and Layer 3 (probability
-# calibration). Default OFF. When false, the learning tables can be writing
-# in the background without affecting the score. Flip to "true" on Railway
-# once delphi-learn has been running for ~1 week and the dashboard shows
-# real edge per reason code.
-def _flag(name: str) -> bool:
-    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
+# Gates for Layers 2 (adaptive reason-code weights) and 3 (probability
+# calibration). Default ON. The readers degrade gracefully when the learning
+# tables are empty — they return identity, so flipping the flag off only
+# matters when you want to pin the ranker to the raw rules-based output for
+# A/B comparison. Set DELPHI_USE_*=0 to disable.
+def _flag(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name)
+    if raw is None or not raw.strip():
+        return default
+    return raw.strip().lower() in ("1", "true", "yes", "on")
 
 
-USE_ADAPTIVE_WEIGHTS = _flag("DELPHI_USE_ADAPTIVE_WEIGHTS")
-USE_CALIBRATION = _flag("DELPHI_USE_CALIBRATION")
+USE_ADAPTIVE_WEIGHTS = _flag("DELPHI_USE_ADAPTIVE_WEIGHTS", default=True)
+USE_CALIBRATION = _flag("DELPHI_USE_CALIBRATION", default=True)
+USE_AGENT_ENSEMBLE = _flag("DELPHI_USE_AGENT_ENSEMBLE", default=True)
+
+# Sample-size floor before we trust a per-reason-code hit rate over the
+# baseline. Below this, fall back to the flat +0.04 nudge so a brand-new
+# reason code doesn't get yanked around by a 3-prediction sample.
+_REASON_CODE_MIN_SAMPLES = 20
+
+# Sample-size floor for the 25-agent ensemble agreement signal. The PM run
+# always has all 25 agents when it succeeds, so the only way we'd see fewer
+# is a partial run — better to ignore than over-weight.
+_AGENT_ENSEMBLE_MIN_VOTERS = 10
+
+# Maximum nudge agent-ensemble agreement can apply in either direction.
+# 0.15 means a unanimous bullish ensemble on a bullish bias adds ≤ +0.15;
+# a unanimously-disagreeing ensemble subtracts ≤ -0.15. Keeps a single layer
+# from dominating the final probability.
+_AGENT_ENSEMBLE_MAX_NUDGE = 0.15
+
+# Clamp the final probability after all three layers compose so we never
+# display 0% or 100% — both are operationally meaningless and a sign of a
+# misconfigured layer rather than real certainty.
+_PROB_MIN, _PROB_MAX = 0.20, 0.95
 
 # Default horizon mappings from the doc, section 3. Each entry maps a signal
 # timeframe to the forecast horizon(s) that timeframe is best suited to.
@@ -97,31 +122,71 @@ REACHABILITY: dict[str, float] = {
 # ----------------------------------------------------------------------------
 
 
-def _load_reason_code_modifiers(
+def _load_reason_code_hit_rates(
     conn: psycopg.Connection, signal_tf: str, horizon: str, regime: str
-) -> dict[str, float]:
-    """Return {reason_code: weight_modifier} for this segment.
+) -> dict[str, tuple[float, int]]:
+    """Return {reason_code: (target_hit_rate, sample_size)} for this segment.
 
-    Weight modifiers are bounded in [0.5, 1.5] by the writer. Missing reason
-    codes get 1.0 by absence — callers should default-get(rc, 1.0).
+    Reason codes with no row, NULL hit rate, or sample_size below the floor
+    are simply absent — callers should fall back to the rules-based default
+    when a code isn't in the dict.
     """
     if not USE_ADAPTIVE_WEIGHTS:
         return {}
     rows = conn.execute(
         """
-        SELECT reason_code, weight_modifier
+        SELECT reason_code, target_hit_rate, sample_size, regime
         FROM delphi_reason_code_performance
         WHERE signal_timeframe = %s
           AND forecast_horizon = %s
           AND regime IN (%s, 'any')
+          AND target_hit_rate IS NOT NULL
+          AND sample_size >= %s
+        ORDER BY (regime = %s) DESC, sample_size DESC
         """,
-        (signal_tf, horizon, regime),
+        (signal_tf, horizon, regime, _REASON_CODE_MIN_SAMPLES, regime),
     ).fetchall()
-    # Prefer regime-specific over 'any' when both exist.
-    out: dict[str, float] = {}
-    for rc, w in rows:
-        out.setdefault(rc, float(w) if w is not None else 1.0)
+    out: dict[str, tuple[float, int]] = {}
+    for rc, hit, n, _reg in rows:
+        # ORDER BY puts regime-specific first, so setdefault keeps the
+        # tighter segment when both 'any' and a real regime exist.
+        out.setdefault(rc, (float(hit), int(n)))
     return out
+
+
+def _agent_ensemble_agreement(
+    conn: psycopg.Connection, ticker: str, bias: str
+) -> tuple[float | None, int]:
+    """Share of the 25-agent ensemble that agrees with `bias`.
+
+    Returns (agreement, total_voters) where agreement is the fraction of
+    non-neutral voters that match `bias` (bullish/bearish), or None when
+    we don't have enough voters from the latest PM run to trust the signal.
+    """
+    if not USE_AGENT_ENSEMBLE:
+        return (None, 0)
+    rows = conn.execute(
+        """
+        SELECT signal
+        FROM agent_signals
+        WHERE ticker = %s
+          AND run_ts = (
+            SELECT MAX(run_ts) FROM agent_signals
+            WHERE ticker = %s AND agent = 'portfolio_manager'
+          )
+        """,
+        (ticker, ticker),
+    ).fetchall()
+    if not rows:
+        return (None, 0)
+    total = len(rows)
+    bull = sum(1 for (s,) in rows if s == "bullish")
+    bear = sum(1 for (s,) in rows if s == "bearish")
+    decisive = bull + bear  # neutral votes don't count toward agreement
+    if decisive < _AGENT_ENSEMBLE_MIN_VOTERS:
+        return (None, total)
+    matching = bull if bias == "bullish" else bear
+    return (matching / decisive, total)
 
 
 def _calibrate_probability(
@@ -497,55 +562,110 @@ def _upsert_prediction(conn: psycopg.Connection, p: dict[str, Any]) -> None:
 def _apply_learning_layers(
     conn: psycopg.Connection, pred: dict[str, Any]
 ) -> dict[str, Any]:
-    """Apply Layer 2 (reason-code weights) + Layer 3 (calibration) when gated on.
+    """Compose the three probability layers and write the result into `pred`.
 
-    Both gates default off — env flags USE_ADAPTIVE_WEIGHTS / USE_CALIBRATION
-    short-circuit the readers to identity, so flipping a flag is the only
-    behavior change. Predictions still get persisted with the raw probability
-    (delphi_predictions.probability is documented as raw); calibration only
-    influences the score the table is sorted by.
+    The rules-based probability that `_build_prediction` produces is a coarse
+    `0.50 + 0.04 * len(reason_codes)` placeholder — every two-code bullish row
+    ends up at the same number. This pass replaces it with a probability that
+    reflects what we've actually observed:
+
+      Layer 2  per-reason-code hit rates from delphi_reason_code_performance.
+               Codes with >= _REASON_CODE_MIN_SAMPLES samples contribute
+               (hit_rate - 0.50); codes without data fall back to +0.04 so
+               new reason codes still nudge the baseline.
+
+      Layer 3a 25-agent ensemble agreement from agent_signals. When the
+               latest PM run shows lopsided agreement with the bias, we
+               nudge probability up; when split, we shrink back toward 0.50.
+
+      Layer 3b calibration from delphi_calibration_buckets — replaces the
+               composed probability with the observed bucket hit rate when
+               the bucket has enough samples. Stays close to input when not.
+
+    The final probability is clamped to [_PROB_MIN, _PROB_MAX] and written
+    back into pred["probability"] (the column displayed on the Delphi tab).
+    The delphi_score's EV term is also recomputed against the new
+    probability so ranking stays consistent with what we display.
     """
-    if not (USE_ADAPTIVE_WEIGHTS or USE_CALIBRATION):
-        return pred
-
     regime = pred.get("regime") or "any"
     signal_tf = pred["signal_timeframe"]
     horizon = pred["forecast_horizon"]
+    ticker = pred["ticker"]
+    bias = pred["bias"]
     raw_prob = float(pred["probability"])
-    raw_score = float(pred["delphi_score"])
+    expected_return = float(pred["expected_return"])
+    downside_risk = float(pred["downside_risk"])
 
-    # Layer 3: calibrated probability nudges the EV term of the score.
-    cal_prob = _calibrate_probability(conn, raw_prob, horizon, regime)
-    if cal_prob != raw_prob:
-        # Recompute the EV component using calibrated probability, keep the
-        # reason-code bonuses already baked into the raw score.
-        ev_delta = (cal_prob - raw_prob) * float(pred["expected_return"]) * 800
-        raw_score = max(0.0, min(100.0, raw_score + ev_delta))
-        pred["features"] = {**(pred.get("features") or {}), "calibrated_probability": cal_prob}
+    features = dict(pred.get("features") or {})
+    features["raw_probability"] = raw_prob
 
-    # Layer 2: multiply score by geometric mean of reason-code modifiers, so a
-    # prediction stacked with high-edge reason codes ranks above one stacked
-    # with low-edge codes at otherwise equal raw score.
-    mods = _load_reason_code_modifiers(conn, signal_tf, horizon, regime)
+    # ---- Layer 2: per-reason-code hit rates ---------------------------------
     rcs = pred.get("reason_codes") or []
-    if mods and rcs:
-        applicable = [mods.get(rc, 1.0) for rc in rcs]
-        # Geometric mean — avoids one outlier dominating, stays in [0.5, 1.5].
-        prod = 1.0
-        for m in applicable:
-            prod *= m
-        geo = prod ** (1.0 / len(applicable))
-        raw_score = max(0.0, min(100.0, raw_score * geo))
-        pred["features"] = {
-            **(pred.get("features") or {}),
-            "reason_code_weight_geo": geo,
-        }
+    hit_rates = _load_reason_code_hit_rates(conn, signal_tf, horizon, regime) if rcs else {}
+    if rcs:
+        # Start from the deterministic anchor and rebuild the nudge using
+        # actual edge per code. Codes without enough samples still nudge
+        # +0.04 so we don't lose the baseline rules-based signal.
+        prob = 0.50
+        per_code: dict[str, float] = {}
+        for rc in rcs:
+            if rc in hit_rates:
+                hit, _n = hit_rates[rc]
+                delta = hit - 0.50
+            else:
+                delta = 0.04
+            prob += delta
+            per_code[rc] = round(delta, 4)
+        # Re-apply the IV-rank penalty the rules-based layer used to subtract.
+        iv_rank = (features.get("iv_rank") if isinstance(features.get("iv_rank"), (int, float)) else None)
+        if iv_rank is not None and iv_rank >= 80 and bias == "bullish":
+            prob -= 0.05
+        features["per_reason_code_delta"] = per_code
+    else:
+        prob = raw_prob
 
-    pred["delphi_score"] = raw_score
+    # ---- Layer 3a: 25-agent ensemble agreement ------------------------------
+    agreement, total_voters = _agent_ensemble_agreement(conn, ticker, bias)
+    if agreement is not None:
+        # Linear map: 50% agreement → 0 nudge, unanimous → ±_MAX_NUDGE.
+        nudge = max(
+            -_AGENT_ENSEMBLE_MAX_NUDGE,
+            min(_AGENT_ENSEMBLE_MAX_NUDGE, (agreement - 0.5) * 2 * _AGENT_ENSEMBLE_MAX_NUDGE),
+        )
+        prob += nudge
+        features["agent_ensemble_agreement"] = round(agreement, 3)
+        features["agent_ensemble_voters"] = total_voters
+        features["agent_ensemble_nudge"] = round(nudge, 4)
+
+    # ---- Layer 3b: calibration to observed bucket hit rate ------------------
+    pre_cal_prob = max(_PROB_MIN, min(_PROB_MAX, prob))
+    cal_prob = _calibrate_probability(conn, pre_cal_prob, horizon, regime)
+    if cal_prob != pre_cal_prob:
+        features["calibrated_probability"] = round(cal_prob, 4)
+    final_prob = max(_PROB_MIN, min(_PROB_MAX, cal_prob))
+
+    # Recompute the EV-score component using the final probability. Keep the
+    # reason-code bonuses (+8 GEX wall, +5 flow-dominant) that
+    # _build_prediction already baked in, and re-add them on top of the new
+    # EV term so the score stays consistent with the displayed probability.
+    ev_score = max(
+        0.0,
+        min(100.0, (final_prob * expected_return - (1 - final_prob) * downside_risk) * 800 + 50),
+    )
+    score = ev_score
+    if "GEX_WALL_ABOVE" in rcs or "GEX_WALL_BELOW" in rcs:
+        score += 8
+    if "CALL_FLOW_DOMINANT" in rcs or "PUT_FLOW_DOMINANT" in rcs:
+        score += 5
+    score = max(0.0, min(100.0, score))
+
+    pred["probability"] = final_prob
+    pred["delphi_score"] = score
+    pred["features"] = features
     pred["confidence"] = (
-        "high" if raw_score >= 80
-        else "medium-high" if raw_score >= 70
-        else "medium" if raw_score >= 55
+        "high" if score >= 80
+        else "medium-high" if score >= 70
+        else "medium" if score >= 55
         else "low"
     )
     return pred
