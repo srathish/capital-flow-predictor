@@ -1034,5 +1034,29 @@ def explosive_score_cmd() -> None:
         console.print(f"  {entry['ticker']:6s}  {entry['score']:>5.1f}")
 
 
+@app.command("explosive-drilldown")
+def explosive_drilldown_cmd(
+    history_limit: int = typer.Option(40, help="How many top contracts to backfill history for"),
+    correlations_limit: int = typer.Option(25, help="How many top tickers to fetch peer correlations for"),
+) -> None:
+    """Drilldown refresh: per-contract history for the top scored contracts +
+    peer correlations for the top tickers. Run AFTER `explosive-score` so the
+    "top contracts" are based on the latest ranking. Powers the per-ticker
+    detail page at /explosive/{ticker}."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    hist_counts = explosive_mod.ingest_top_contract_history(
+        settings.database_url, settings.unusual_whales_api_key, limit=history_limit
+    )
+    corr_n = explosive_mod.ingest_correlations_for_top(
+        settings.database_url, settings.unusual_whales_api_key, limit=correlations_limit
+    )
+    console.print(
+        f"[green]explosive-drilldown:[/green] history contracts={len(hist_counts)} "
+        f"correlations rows={corr_n}"
+    )
+
+
 if __name__ == "__main__":
     app()

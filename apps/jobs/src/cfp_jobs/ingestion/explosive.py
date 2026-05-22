@@ -678,6 +678,214 @@ def _upsert_insider_ticker_flow(
     return n
 
 
+# ---------- Phase 3: drilldown upserts ----------
+
+
+def _upsert_option_contract_history(
+    conn: psycopg.Connection,
+    option_symbol: str,
+    rows: Iterable[dict],
+) -> int:
+    parsed_ticker, _, _, _ = _occ_parse(option_symbol)
+    sql = """
+        INSERT INTO uw_option_contract_history (
+            trade_date, option_symbol, ticker,
+            open, high, low, close, volume, open_interest,
+            iv_open, iv_close, underlying_open, underlying_close, payload
+        ) VALUES (
+            %(trade_date)s, %(option_symbol)s, %(ticker)s,
+            %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(open_interest)s,
+            %(iv_open)s, %(iv_close)s, %(underlying_open)s, %(underlying_close)s, %(payload)s
+        ) ON CONFLICT (trade_date, option_symbol) DO UPDATE SET
+            open = EXCLUDED.open,
+            high = EXCLUDED.high,
+            low = EXCLUDED.low,
+            close = EXCLUDED.close,
+            volume = EXCLUDED.volume,
+            open_interest = EXCLUDED.open_interest,
+            iv_open = EXCLUDED.iv_open,
+            iv_close = EXCLUDED.iv_close,
+            underlying_open = EXCLUDED.underlying_open,
+            underlying_close = EXCLUDED.underlying_close,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            trade_date = _to_date(r.get("date") or r.get("trade_date"))
+            if trade_date is None:
+                continue
+            params = {
+                "trade_date": trade_date,
+                "option_symbol": option_symbol,
+                "ticker": parsed_ticker,
+                "open": _to_float(r.get("open")),
+                "high": _to_float(r.get("high")),
+                "low": _to_float(r.get("low")),
+                "close": _to_float(r.get("close")),
+                "volume": _to_int(r.get("volume")),
+                "open_interest": _to_int(r.get("open_interest") or r.get("oi")),
+                "iv_open": _to_float(r.get("iv_open")),
+                "iv_close": _to_float(r.get("iv_close") or r.get("iv")),
+                "underlying_open": _to_float(r.get("underlying_open") or r.get("stock_open")),
+                "underlying_close": _to_float(r.get("underlying_close") or r.get("stock_close")),
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def _upsert_top_net_impact(
+    conn: psycopg.Connection,
+    snapshot_ts: datetime,
+    rows: Iterable[dict],
+) -> int:
+    sql = """
+        INSERT INTO uw_top_net_impact (
+            snapshot_ts, ticker, net_delta, net_gamma, net_premium, rank, payload
+        ) VALUES (
+            %(snapshot_ts)s, %(ticker)s, %(net_delta)s, %(net_gamma)s, %(net_premium)s, %(rank)s, %(payload)s
+        ) ON CONFLICT (snapshot_ts, ticker) DO UPDATE SET
+            net_delta = EXCLUDED.net_delta,
+            net_gamma = EXCLUDED.net_gamma,
+            net_premium = EXCLUDED.net_premium,
+            rank = EXCLUDED.rank,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for idx, r in enumerate(rows, start=1):
+            ticker = (r.get("ticker") or r.get("symbol") or "").upper()
+            if not ticker:
+                continue
+            params = {
+                "snapshot_ts": snapshot_ts,
+                "ticker": ticker,
+                "net_delta": _to_float(r.get("net_delta")),
+                "net_gamma": _to_float(r.get("net_gamma")),
+                "net_premium": _to_float(r.get("net_premium")),
+                "rank": _to_int(r.get("rank")) or idx,
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def _upsert_correlations(
+    conn: psycopg.Connection,
+    snapshot_date: date,
+    rows: Iterable[dict],
+) -> int:
+    """UW correlations returns one row per (ticker_a, ticker_b) pair."""
+    sql = """
+        INSERT INTO uw_correlations (
+            snapshot_date, ticker_a, ticker_b, correlation, window_days, payload
+        ) VALUES (
+            %(snapshot_date)s, %(ticker_a)s, %(ticker_b)s, %(correlation)s, %(window_days)s, %(payload)s
+        ) ON CONFLICT (snapshot_date, ticker_a, ticker_b) DO UPDATE SET
+            correlation = EXCLUDED.correlation,
+            window_days = EXCLUDED.window_days,
+            payload = EXCLUDED.payload
+    """
+    n = 0
+    with conn.cursor() as cur:
+        for r in rows:
+            a = (r.get("ticker_a") or r.get("fst") or r.get("ticker") or "").upper()
+            b = (r.get("ticker_b") or r.get("snd") or r.get("peer") or "").upper()
+            if not a or not b or a == b:
+                continue
+            params = {
+                "snapshot_date": snapshot_date,
+                "ticker_a": a,
+                "ticker_b": b,
+                "correlation": _to_float(r.get("correlation") or r.get("corr")),
+                "window_days": _to_int(r.get("window_days") or r.get("window")),
+                "payload": Jsonb(r),
+            }
+            cur.execute(sql, params)
+            n += cur.rowcount
+    return n
+
+
+def ingest_top_net_impact(database_url: str, api_key: str) -> int:
+    """Refresh market-wide dealer-impact leaderboard. Run every ~15min RTH."""
+    now = datetime.now(UTC)
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.top_net_impact(limit=50)
+        n = _upsert_top_net_impact(conn, now, rows)
+        conn.commit()
+    return n
+
+
+def ingest_correlations_for_top(
+    database_url: str,
+    api_key: str,
+    limit: int = 25,
+) -> int:
+    """Pull pairwise correlations for the top scored tickers. UW's correlations
+    endpoint takes a basket and returns the full matrix in one call."""
+    today = datetime.now(UTC).date()
+    with connect(database_url) as conn, conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT ticker
+            FROM explosive_scores
+            WHERE snapshot_ts = (SELECT MAX(snapshot_ts) FROM explosive_scores)
+            ORDER BY score DESC
+            LIMIT %s
+            """,
+            (limit,),
+        )
+        tickers = [row[0] for row in cur.fetchall() if row[0]]
+    if len(tickers) < 2:
+        return 0
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        rows = uw.correlations(tickers)
+        with conn.transaction():
+            n = _upsert_correlations(conn, today, rows)
+        conn.commit()
+    return n
+
+
+def ingest_top_contract_history(
+    database_url: str,
+    api_key: str,
+    limit: int = 40,
+) -> dict[str, int]:
+    """Backfill daily OHLC history for the top contracts on the latest
+    explosive_scores snapshot. One UW call per contract."""
+    counts: dict[str, int] = {}
+    with connect(database_url) as conn, conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT top_option_symbol
+            FROM explosive_scores
+            WHERE snapshot_ts = (SELECT MAX(snapshot_ts) FROM explosive_scores)
+              AND top_option_symbol IS NOT NULL
+            ORDER BY score DESC
+            LIMIT %s
+            """,
+            (limit,),
+        )
+        symbols = [row[0] for row in cur.fetchall() if row[0]]
+    if not symbols:
+        return counts
+    with UwClient(api_key) as uw, connect(database_url) as conn:
+        for sym in symbols:
+            try:
+                with conn.transaction():
+                    counts[sym] = _upsert_option_contract_history(
+                        conn, sym, uw.option_contract_history(sym)
+                    )
+            except Exception as e:
+                log.warning("option_contract_history failed for %s: %s", sym, e)
+                counts[sym] = 0
+        conn.commit()
+    return counts
+
+
 # ---------- top-level ingest entry points (CLI) ----------
 
 
@@ -898,6 +1106,11 @@ def ingest_explosive_universe(
     summary["phase"]["volume_profile"] = {
         "contracts": len(ingest_volume_profiles(database_url, api_key, limit=volume_profile_limit))
     }
+    try:
+        summary["phase"]["top_net_impact"] = ingest_top_net_impact(database_url, api_key)
+    except Exception as e:
+        log.warning("top_net_impact ingest failed: %s", e)
+        summary["phase"]["top_net_impact"] = 0
     universe = resolve_explosive_universe(database_url)[:max_tickers]
     summary["universe_size"] = len(universe)
     per_ticker: dict[str, dict[str, int]] = {}

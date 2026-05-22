@@ -238,7 +238,7 @@ export default function ExplosivePage() {
                   {data.items.map((it) => (
                     <tr key={it.ticker} className="border-t border-border/60 hover:bg-muted/30">
                       <td className="px-3 py-2 font-semibold">
-                        <Link href={`/agents/${encodeURIComponent(it.ticker)}`} className="hover:text-primary">
+                        <Link href={`/explosive/${encodeURIComponent(it.ticker)}`} className="hover:text-primary">
                           {it.ticker}
                         </Link>
                       </td>

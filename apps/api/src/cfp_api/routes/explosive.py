@@ -145,6 +145,229 @@ async def list_explosive(
     )
 
 
+class ContractHistoryPoint(BaseModel):
+    trade_date: date
+    open: float | None = None
+    high: float | None = None
+    low: float | None = None
+    close: float | None = None
+    volume: int | None = None
+    open_interest: int | None = None
+    iv_close: float | None = None
+    underlying_close: float | None = None
+
+
+class FlowPerStrikePoint(BaseModel):
+    expiry: date
+    strike: float
+    call_premium: float | None = None
+    call_ask_premium: float | None = None
+    call_volume: int | None = None
+    call_oi: int | None = None
+
+
+class IvTermPoint(BaseModel):
+    expiry: date
+    dte: int | None = None
+    iv: float | None = None
+
+
+class MaxPainPoint(BaseModel):
+    expiry: date
+    max_pain_strike: float | None = None
+
+
+class CorrelationPeer(BaseModel):
+    ticker: str
+    correlation: float | None = None
+
+
+class TopNetImpactEntry(BaseModel):
+    rank: int | None = None
+    net_premium: float | None = None
+    net_delta: float | None = None
+    net_gamma: float | None = None
+
+
+class ExplosiveDetailResponse(BaseModel):
+    item: ExplosiveItem
+    contract_history: list[ContractHistoryPoint]
+    flow_per_strike: list[FlowPerStrikePoint]
+    iv_term: list[IvTermPoint]
+    max_pain: list[MaxPainPoint]
+    correlations: list[CorrelationPeer]
+    market_impact: TopNetImpactEntry | None = None
+
+
+@router.get("/v1/explosive/{ticker}/detail", response_model=ExplosiveDetailResponse)
+async def get_explosive_detail(ticker: str) -> ExplosiveDetailResponse:
+    """Per-ticker drilldown — bundles everything the detail page renders.
+
+    All data comes from cached tables refreshed by:
+      cfp-jobs explosive-ingest    (flow_per_strike, iv_term, max_pain)
+      cfp-jobs explosive-score     (the score row)
+      cfp-jobs explosive-drilldown (contract_history, correlations)
+    """
+    sym = ticker.upper()
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        score_row = await conn.fetchrow(
+            """
+            SELECT
+                ticker, score,
+                catalyst_type, catalyst_date, catalyst_label, days_to_catalyst,
+                underlying_price,
+                top_option_symbol, top_option_type, top_strike, top_expiry,
+                top_last_price, top_volume, top_open_interest, top_premium,
+                flow_concentration_score, iv_term_score, squeeze_score,
+                catalyst_score, cheap_optionality_score, gex_bonus_score,
+                iv_vs_rv_score, skew_flip_score, nope_score,
+                insider_buy_score, volume_profile_score,
+                signals
+            FROM explosive_scores
+            WHERE ticker = $1
+            ORDER BY snapshot_ts DESC
+            LIMIT 1
+            """,
+            sym,
+        )
+        if score_row is None:
+            raise HTTPException(status_code=404, detail=f"no explosive score for {ticker}")
+        item = _row_to_item(score_row)
+
+        top_symbol = score_row["top_option_symbol"]
+        history_rows = []
+        if top_symbol:
+            history_rows = await conn.fetch(
+                """
+                SELECT trade_date, open, high, low, close, volume,
+                       open_interest, iv_close, underlying_close
+                FROM uw_option_contract_history
+                WHERE option_symbol = $1
+                ORDER BY trade_date ASC
+                """,
+                top_symbol,
+            )
+
+        strike_rows = await conn.fetch(
+            """
+            SELECT expiry, strike, call_premium, call_ask_premium,
+                   call_volume, call_oi
+            FROM uw_flow_per_strike
+            WHERE ticker = $1
+              AND snapshot_date = (
+                SELECT MAX(snapshot_date) FROM uw_flow_per_strike WHERE ticker = $1
+              )
+            ORDER BY COALESCE(call_ask_premium, call_premium, 0) DESC
+            LIMIT 20
+            """,
+            sym,
+        )
+
+        iv_rows = await conn.fetch(
+            """
+            SELECT expiry, dte, iv
+            FROM uw_iv_term_structure
+            WHERE ticker = $1
+              AND snapshot_date = (
+                SELECT MAX(snapshot_date) FROM uw_iv_term_structure WHERE ticker = $1
+              )
+            ORDER BY dte ASC
+            """,
+            sym,
+        )
+
+        mp_rows = await conn.fetch(
+            """
+            SELECT expiry, max_pain_strike
+            FROM uw_max_pain
+            WHERE ticker = $1
+              AND snapshot_date = (
+                SELECT MAX(snapshot_date) FROM uw_max_pain WHERE ticker = $1
+              )
+            ORDER BY expiry ASC
+            LIMIT 8
+            """,
+            sym,
+        )
+
+        corr_rows = await conn.fetch(
+            """
+            SELECT ticker_b AS peer, correlation
+            FROM uw_correlations
+            WHERE ticker_a = $1
+              AND snapshot_date = (
+                SELECT MAX(snapshot_date) FROM uw_correlations WHERE ticker_a = $1
+              )
+            ORDER BY correlation DESC NULLS LAST
+            LIMIT 10
+            """,
+            sym,
+        )
+
+        impact_row = await conn.fetchrow(
+            """
+            SELECT rank, net_premium, net_delta, net_gamma
+            FROM uw_top_net_impact
+            WHERE ticker = $1
+            ORDER BY snapshot_ts DESC
+            LIMIT 1
+            """,
+            sym,
+        )
+
+    return ExplosiveDetailResponse(
+        item=item,
+        contract_history=[
+            ContractHistoryPoint(
+                trade_date=r["trade_date"],
+                open=r["open"],
+                high=r["high"],
+                low=r["low"],
+                close=r["close"],
+                volume=r["volume"],
+                open_interest=r["open_interest"],
+                iv_close=r["iv_close"],
+                underlying_close=r["underlying_close"],
+            )
+            for r in history_rows
+        ],
+        flow_per_strike=[
+            FlowPerStrikePoint(
+                expiry=r["expiry"],
+                strike=r["strike"],
+                call_premium=r["call_premium"],
+                call_ask_premium=r["call_ask_premium"],
+                call_volume=r["call_volume"],
+                call_oi=r["call_oi"],
+            )
+            for r in strike_rows
+        ],
+        iv_term=[
+            IvTermPoint(expiry=r["expiry"], dte=r["dte"], iv=r["iv"])
+            for r in iv_rows
+        ],
+        max_pain=[
+            MaxPainPoint(expiry=r["expiry"], max_pain_strike=r["max_pain_strike"])
+            for r in mp_rows
+        ],
+        correlations=[
+            CorrelationPeer(ticker=r["peer"], correlation=r["correlation"])
+            for r in corr_rows
+        ],
+        market_impact=(
+            TopNetImpactEntry(
+                rank=impact_row["rank"],
+                net_premium=impact_row["net_premium"],
+                net_delta=impact_row["net_delta"],
+                net_gamma=impact_row["net_gamma"],
+            )
+            if impact_row is not None
+            else None
+        ),
+    )
+
+
 @router.get("/v1/explosive/{ticker}", response_model=ExplosiveItem)
 async def get_explosive_ticker(ticker: str) -> ExplosiveItem:
     """Latest explosive-score for one ticker."""
