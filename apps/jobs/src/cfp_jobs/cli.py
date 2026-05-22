@@ -28,6 +28,8 @@ from rich.table import Table  # noqa: E402
 
 from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
 from cfp_jobs import delphi_evaluate as delphi_evaluate_mod  # noqa: E402
+from cfp_jobs import delphi_learn as delphi_learn_mod  # noqa: E402
+from cfp_jobs import delphi_ml_overlay as delphi_ml_overlay_mod  # noqa: E402
 from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
@@ -1221,6 +1223,36 @@ def delphi_rank_cmd(
         f"skipped={out.get('skipped_reachability', 0)} "
         f"horizons={out.get('horizons', {})}"
     )
+
+
+@app.command("delphi-learn")
+def delphi_learn_cmd() -> None:
+    """Roll up Delphi outcomes into the learning tables (Layers 2 + 3 + memory).
+
+    Reads (delphi_predictions JOIN delphi_outcomes), writes
+    delphi_reason_code_performance, delphi_calibration_buckets,
+    delphi_adaptive_weights, delphi_ticker_memory, delphi_model_performance.
+    Idempotent. Gated off from the ranker by default — flip
+    DELPHI_USE_ADAPTIVE_WEIGHTS / DELPHI_USE_CALIBRATION to "true" once the
+    dashboard shows real edge accumulated per segment.
+
+    Sample-size gates (override via env):
+      DELPHI_MIN_RC_SAMPLES (20), DELPHI_MIN_BUCKET_SAMPLES (30),
+      DELPHI_MIN_AW_SAMPLES (50).
+    """
+    out = delphi_learn_mod.learn(settings.database_url)
+    console.print(f"[green]delphi-learn:[/green] {out}")
+
+
+@app.command("delphi-ml-train")
+def delphi_ml_train_cmd() -> None:
+    """Layer 4 ML overlay — calibrating until enough outcomes accrue.
+
+    Logs current state and exits clean. Real training body lands when
+    delphi_outcomes count crosses DELPHI_ML_MIN_OUTCOMES (default 500).
+    """
+    out = delphi_ml_overlay_mod.train(settings.database_url)
+    console.print(f"[green]delphi-ml-train:[/green] {out}")
 
 
 @app.command("delphi-evaluate")

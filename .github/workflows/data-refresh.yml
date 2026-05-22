@@ -73,6 +73,14 @@ on:
     #     refresh so it can score closed horizons against the freshest bars.
     - cron: "5 13-20 * * 1-5"
     - cron: "0 23 * * 1-5"
+    # delphi-learn rolls up outcomes -> reason_code / calibration / adaptive
+    # weight / ticker_memory / model_performance tables. Runs 30 min after
+    # delphi-evaluate so the freshest outcomes are in. Idempotent + sample-
+    # size-gated so it's safe even before the first horizons close.
+    - cron: "30 23 * * 1-5"
+    # delphi-ml-train (Layer 4) — calibrating-mode stub until 500 outcomes
+    # accrue. Logs progress nightly so the runway is visible.
+    - cron: "45 23 * * 1-5"
   workflow_dispatch:
     inputs:
       job:
@@ -104,6 +112,8 @@ on:
           - uw-gex-ingest
           - delphi-rank
           - delphi-evaluate
+          - delphi-learn
+          - delphi-ml-train
 
 jobs:
   reddit-catalysts:
@@ -620,3 +630,47 @@ jobs:
       - name: Score expired predictions against actual price action
         working-directory: apps/jobs
         run: uv run cfp-jobs delphi-evaluate --max-batch 500
+
+  delphi-learn:
+    # Layers 2 + 3 + ticker memory + model performance. Reads
+    # (delphi_predictions JOIN delphi_outcomes), writes the five learning
+    # tables. Sample-size-gated — segments below threshold get neutral
+    # weights (1.0) so the ranker (when ungated) reads safe defaults.
+    # Runs 30 min after delphi-evaluate so outcomes are fresh.
+    if: github.event.schedule == '30 23 * * 1-5' || github.event.inputs.job == 'delphi-learn'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Roll up outcomes into Delphi learning tables
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-learn
+
+  delphi-ml-train:
+    # Layer 4 ML overlay — calibrating-mode stub until DELPHI_ML_MIN_OUTCOMES
+    # (default 500) is reached. Logs current runway nightly so the threshold
+    # crossing is visible.
+    if: github.event.schedule == '45 23 * * 1-5' || github.event.inputs.job == 'delphi-ml-train'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ensure migrations applied
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Layer-4 ML overlay (calibrating until threshold)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-ml-train

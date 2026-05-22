@@ -17,6 +17,7 @@ Read-only. Writes happen in cfp-jobs (delphi-rank, delphi-evaluate).
 
 from __future__ import annotations
 
+import os
 from datetime import datetime
 from typing import Literal
 
@@ -24,6 +25,10 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 from cfp_api.db import get_pool
+
+
+def _flag(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
 
 
 router = APIRouter(tags=["delphi"], prefix="/v1/delphi")
@@ -114,6 +119,69 @@ class MemoryStatsResponse(BaseModel):
     overall_hit_rate: float | None
     by_horizon: list[HorizonStat]
     top_reason_codes: list[ReasonCodeStat]
+
+
+class CalibrationBucket(BaseModel):
+    forecast_horizon: str
+    regime: str
+    probability_bucket: str
+    prediction_count: int
+    actual_hit_rate: float | None
+    calibration_gap: float | None
+    adjusted_probability: float | None
+
+
+class AdaptiveWeight(BaseModel):
+    signal_timeframe: str
+    forecast_horizon: str
+    regime: str
+    feature_group: str
+    current_weight: float
+    default_weight: float
+    sample_size: int
+    performance_score: float | None
+
+
+class TickerMemoryRow(BaseModel):
+    ticker: str
+    best_horizon: str | None
+    best_reason_codes: list[str]
+    weak_reason_codes: list[str]
+    prediction_count: int
+    average_hit_rate: float | None
+    average_return: float | None
+    data_quality_score: float
+
+
+class ModelPerformanceRow(BaseModel):
+    model_version: str
+    signal_timeframe: str
+    forecast_horizon: str
+    prediction_count: int
+    target_hit_rate: float | None
+    average_realized_return: float | None
+    profit_factor: float | None
+    brier_score: float | None
+    calibration_error: float | None
+
+
+class LearningStateResponse(BaseModel):
+    """What Layers 2-4 have learned so far.
+
+    Surfaces the four learning tables read-only so the UI can show the loop
+    closing before the ranker is actually wired up to consume them. Gates
+    (`use_adaptive_weights`, `use_calibration`) report whether the ranker is
+    currently reading these tables; both default off.
+    """
+    generated_at: datetime
+    use_adaptive_weights: bool
+    use_calibration: bool
+    ml_overlay_status: str
+    outcomes_total: int
+    calibration: list[CalibrationBucket]
+    adaptive_weights: list[AdaptiveWeight]
+    ticker_memory: list[TickerMemoryRow]
+    model_performance: list[ModelPerformanceRow]
 
 
 def _pred_row_to_model(row: dict) -> PredictionRow:
@@ -310,5 +378,119 @@ async def memory_stats() -> MemoryStatsResponse:
                 weight_modifier=r["weight_modifier"] or 1.0,
             )
             for r in top_codes
+        ],
+    )
+
+
+# -- /learning/state ---------------------------------------------------------
+
+
+@router.get("/learning/state", response_model=LearningStateResponse)
+async def learning_state(
+    horizon: str | None = Query(None, description="Filter calibration + adaptive_weight rows."),
+    ticker_limit: int = Query(25, ge=1, le=200),
+) -> LearningStateResponse:
+    """Read-only view of what Layers 2-4 have learned.
+
+    Surfaces delphi_calibration_buckets, delphi_adaptive_weights,
+    delphi_ticker_memory, delphi_model_performance. The `use_*` flags report
+    whether delphi-rank is currently consuming these tables (default off —
+    set DELPHI_USE_ADAPTIVE_WEIGHTS / DELPHI_USE_CALIBRATION on the jobs
+    runner to flip).
+    """
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        outcomes_total = await conn.fetchval("SELECT COUNT(*) FROM delphi_outcomes") or 0
+
+        cal_sql = "SELECT * FROM delphi_calibration_buckets"
+        cal_args: list = []
+        if horizon:
+            cal_sql += " WHERE forecast_horizon = $1"
+            cal_args.append(horizon)
+        cal_sql += " ORDER BY forecast_horizon, regime, probability_bucket"
+        cal_rows = await conn.fetch(cal_sql, *cal_args)
+
+        aw_sql = "SELECT * FROM delphi_adaptive_weights WHERE ticker = '*'"
+        aw_args: list = []
+        if horizon:
+            aw_sql += " AND forecast_horizon = $1"
+            aw_args.append(horizon)
+        aw_sql += " ORDER BY signal_timeframe, forecast_horizon, regime, feature_group"
+        aw_rows = await conn.fetch(aw_sql, *aw_args)
+
+        tm_rows = await conn.fetch(
+            """
+            SELECT * FROM delphi_ticker_memory
+            ORDER BY average_hit_rate DESC NULLS LAST, prediction_count DESC
+            LIMIT $1
+            """,
+            ticker_limit,
+        )
+        mp_rows = await conn.fetch(
+            """
+            SELECT * FROM delphi_model_performance
+            ORDER BY model_version, signal_timeframe, forecast_horizon
+            """
+        )
+
+    return LearningStateResponse(
+        generated_at=datetime.utcnow(),
+        use_adaptive_weights=_flag("DELPHI_USE_ADAPTIVE_WEIGHTS"),
+        use_calibration=_flag("DELPHI_USE_CALIBRATION"),
+        ml_overlay_status=(
+            "calibrating" if outcomes_total < 500 else "ready_for_training"
+        ),
+        outcomes_total=int(outcomes_total),
+        calibration=[
+            CalibrationBucket(
+                forecast_horizon=r["forecast_horizon"],
+                regime=r["regime"],
+                probability_bucket=r["probability_bucket"],
+                prediction_count=r["prediction_count"] or 0,
+                actual_hit_rate=r["actual_hit_rate"],
+                calibration_gap=r["calibration_gap"],
+                adjusted_probability=r["adjusted_probability"],
+            )
+            for r in cal_rows
+        ],
+        adaptive_weights=[
+            AdaptiveWeight(
+                signal_timeframe=r["signal_timeframe"],
+                forecast_horizon=r["forecast_horizon"],
+                regime=r["regime"],
+                feature_group=r["feature_group"],
+                current_weight=r["current_weight"],
+                default_weight=r["default_weight"],
+                sample_size=r["sample_size"] or 0,
+                performance_score=r["performance_score"],
+            )
+            for r in aw_rows
+        ],
+        ticker_memory=[
+            TickerMemoryRow(
+                ticker=r["ticker"],
+                best_horizon=r["best_horizon"],
+                best_reason_codes=list(r["best_reason_codes"] or []),
+                weak_reason_codes=list(r["weak_reason_codes"] or []),
+                prediction_count=r["prediction_count"] or 0,
+                average_hit_rate=r["average_hit_rate"],
+                average_return=r["average_return"],
+                data_quality_score=r["data_quality_score"] or 1.0,
+            )
+            for r in tm_rows
+        ],
+        model_performance=[
+            ModelPerformanceRow(
+                model_version=r["model_version"],
+                signal_timeframe=r["signal_timeframe"],
+                forecast_horizon=r["forecast_horizon"],
+                prediction_count=r["prediction_count"] or 0,
+                target_hit_rate=r["target_hit_rate"],
+                average_realized_return=r["average_realized_return"],
+                profit_factor=r["profit_factor"],
+                brier_score=r["brier_score"],
+                calibration_error=r["calibration_error"],
+            )
+            for r in mp_rows
         ],
     )

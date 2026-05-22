@@ -25,6 +25,7 @@ existing screeners-ingest job populates them).
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -38,6 +39,19 @@ log = logging.getLogger(__name__)
 
 
 MODEL_VERSION = "v0.1-rules"
+
+
+# Gates for Layer 2 (adaptive reason-code weights) and Layer 3 (probability
+# calibration). Default OFF. When false, the learning tables can be writing
+# in the background without affecting the score. Flip to "true" on Railway
+# once delphi-learn has been running for ~1 week and the dashboard shows
+# real edge per reason code.
+def _flag(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
+USE_ADAPTIVE_WEIGHTS = _flag("DELPHI_USE_ADAPTIVE_WEIGHTS")
+USE_CALIBRATION = _flag("DELPHI_USE_CALIBRATION")
 
 # Default horizon mappings from the doc, section 3. Each entry maps a signal
 # timeframe to the forecast horizon(s) that timeframe is best suited to.
@@ -73,6 +87,82 @@ REACHABILITY: dict[str, float] = {
     "6mo": 3.0,
     "12mo": 4.0,
 }
+
+
+# ----------------------------------------------------------------------------
+# Layer 2 + 3 readers — only invoked when the matching gate flag is true.
+# delphi_learn.py writes these tables daily; flipping the gate makes the
+# ranker consume them. Both readers return empty/identity on gate-off so the
+# call sites can stay uniform.
+# ----------------------------------------------------------------------------
+
+
+def _load_reason_code_modifiers(
+    conn: psycopg.Connection, signal_tf: str, horizon: str, regime: str
+) -> dict[str, float]:
+    """Return {reason_code: weight_modifier} for this segment.
+
+    Weight modifiers are bounded in [0.5, 1.5] by the writer. Missing reason
+    codes get 1.0 by absence — callers should default-get(rc, 1.0).
+    """
+    if not USE_ADAPTIVE_WEIGHTS:
+        return {}
+    rows = conn.execute(
+        """
+        SELECT reason_code, weight_modifier
+        FROM delphi_reason_code_performance
+        WHERE signal_timeframe = %s
+          AND forecast_horizon = %s
+          AND regime IN (%s, 'any')
+        """,
+        (signal_tf, horizon, regime),
+    ).fetchall()
+    # Prefer regime-specific over 'any' when both exist.
+    out: dict[str, float] = {}
+    for rc, w in rows:
+        out.setdefault(rc, float(w) if w is not None else 1.0)
+    return out
+
+
+def _calibrate_probability(
+    conn: psycopg.Connection, raw_prob: float, horizon: str, regime: str
+) -> float:
+    """Map raw probability to its observed bucket hit rate, when known.
+
+    Returns raw_prob unchanged when the gate is off, when no bucket exists,
+    or when the bucket has too few samples (writer left adjusted_probability
+    at the midpoint in that case, which is intentionally close to raw).
+    """
+    if not USE_CALIBRATION:
+        return raw_prob
+    row = conn.execute(
+        """
+        SELECT adjusted_probability, prediction_count
+        FROM delphi_calibration_buckets
+        WHERE forecast_horizon = %s
+          AND regime IN (%s, 'any')
+          AND %s >= CASE probability_bucket
+                       WHEN '50-55' THEN 0.50 WHEN '55-60' THEN 0.55
+                       WHEN '60-65' THEN 0.60 WHEN '65-70' THEN 0.65
+                       WHEN '70-75' THEN 0.70 WHEN '75-80' THEN 0.75
+                       WHEN '80-85' THEN 0.80 WHEN '85-90' THEN 0.85
+                       WHEN '90-95' THEN 0.90 WHEN '95-100' THEN 0.95
+                       ELSE 0 END
+          AND %s <  CASE probability_bucket
+                       WHEN '50-55' THEN 0.55 WHEN '55-60' THEN 0.60
+                       WHEN '60-65' THEN 0.65 WHEN '65-70' THEN 0.70
+                       WHEN '70-75' THEN 0.75 WHEN '75-80' THEN 0.80
+                       WHEN '80-85' THEN 0.85 WHEN '85-90' THEN 0.90
+                       WHEN '90-95' THEN 0.95 WHEN '95-100' THEN 1.01
+                       ELSE 1.01 END
+        ORDER BY (regime = %s) DESC, prediction_count DESC
+        LIMIT 1
+        """,
+        (horizon, regime, raw_prob, raw_prob, regime),
+    ).fetchone()
+    if not row or row[0] is None:
+        return raw_prob
+    return float(row[0])
 
 
 @dataclass
@@ -404,6 +494,63 @@ def _upsert_prediction(conn: psycopg.Connection, p: dict[str, Any]) -> None:
     )
 
 
+def _apply_learning_layers(
+    conn: psycopg.Connection, pred: dict[str, Any]
+) -> dict[str, Any]:
+    """Apply Layer 2 (reason-code weights) + Layer 3 (calibration) when gated on.
+
+    Both gates default off — env flags USE_ADAPTIVE_WEIGHTS / USE_CALIBRATION
+    short-circuit the readers to identity, so flipping a flag is the only
+    behavior change. Predictions still get persisted with the raw probability
+    (delphi_predictions.probability is documented as raw); calibration only
+    influences the score the table is sorted by.
+    """
+    if not (USE_ADAPTIVE_WEIGHTS or USE_CALIBRATION):
+        return pred
+
+    regime = pred.get("regime") or "any"
+    signal_tf = pred["signal_timeframe"]
+    horizon = pred["forecast_horizon"]
+    raw_prob = float(pred["probability"])
+    raw_score = float(pred["delphi_score"])
+
+    # Layer 3: calibrated probability nudges the EV term of the score.
+    cal_prob = _calibrate_probability(conn, raw_prob, horizon, regime)
+    if cal_prob != raw_prob:
+        # Recompute the EV component using calibrated probability, keep the
+        # reason-code bonuses already baked into the raw score.
+        ev_delta = (cal_prob - raw_prob) * float(pred["expected_return"]) * 800
+        raw_score = max(0.0, min(100.0, raw_score + ev_delta))
+        pred["features"] = {**(pred.get("features") or {}), "calibrated_probability": cal_prob}
+
+    # Layer 2: multiply score by geometric mean of reason-code modifiers, so a
+    # prediction stacked with high-edge reason codes ranks above one stacked
+    # with low-edge codes at otherwise equal raw score.
+    mods = _load_reason_code_modifiers(conn, signal_tf, horizon, regime)
+    rcs = pred.get("reason_codes") or []
+    if mods and rcs:
+        applicable = [mods.get(rc, 1.0) for rc in rcs]
+        # Geometric mean — avoids one outlier dominating, stays in [0.5, 1.5].
+        prod = 1.0
+        for m in applicable:
+            prod *= m
+        geo = prod ** (1.0 / len(applicable))
+        raw_score = max(0.0, min(100.0, raw_score * geo))
+        pred["features"] = {
+            **(pred.get("features") or {}),
+            "reason_code_weight_geo": geo,
+        }
+
+    pred["delphi_score"] = raw_score
+    pred["confidence"] = (
+        "high" if raw_score >= 80
+        else "medium-high" if raw_score >= 70
+        else "medium" if raw_score >= 55
+        else "low"
+    )
+    return pred
+
+
 def rank(database_url: str, *, candidate_limit: int = 50) -> dict[str, Any]:
     """Run the Delphi ranker end to end and return a summary dict."""
     written = 0
@@ -423,6 +570,7 @@ def rank(database_url: str, *, candidate_limit: int = 50) -> dict[str, Any]:
                     if pred is None:
                         skipped += 1
                         continue
+                    pred = _apply_learning_layers(conn, pred)
                     _upsert_prediction(conn, pred)
                     written += 1
                     horizons_seen[horizon] = horizons_seen.get(horizon, 0) + 1
