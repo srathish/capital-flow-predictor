@@ -440,16 +440,23 @@ function ScannerRow({
         <td className={cn("px-3 py-2 text-right font-mono text-xs", item.active_ready ? "text-primary" : "text-muted-foreground")}>
           {/* Prefix the score with the contributing side (HFS vs BCS) so the
               user knows which set of conditions the score refers to. */}
-          <span className="mr-1 text-[10px] uppercase tracking-wide opacity-60">
-            {item.phase === "BASE"
-              ? "BCS"
-              : item.phase === "HANDLE"
-                ? "HFS"
-                : item.bcs_score >= item.hfs_score
-                  ? "BCS"
-                  : "HFS"}
-          </span>
-          {item.active_score}/5
+          {(() => {
+            const side: "BCS" | "HFS" =
+              item.phase === "BASE"
+                ? "BCS"
+                : item.phase === "HANDLE"
+                  ? "HFS"
+                  : item.bcs_score >= item.hfs_score
+                    ? "BCS"
+                    : "HFS";
+            const max = side === "HFS" ? 6 : 5;
+            return (
+              <>
+                <span className="mr-1 text-[10px] uppercase tracking-wide opacity-60">{side}</span>
+                {item.active_score}/{max}
+              </>
+            );
+          })()}
         </td>
         <td className="px-3 py-2 text-right font-mono text-xs">{fmtPrice(item.close)}</td>
         <td className="px-3 py-2 text-right font-mono text-xs">
