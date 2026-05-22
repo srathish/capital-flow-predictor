@@ -329,13 +329,14 @@ async def _resolve_confluence(
             cached: dict[str, ConfluenceRow] = {}
             stale = list(tickers)
         else:
+            cutoff = datetime.now(timezone.utc) - CACHE_TTL
             cached_rows = await conn.fetch(
                 """
                 SELECT * FROM confluence_signals
                 WHERE ticker = ANY($1::text[])
-                  AND computed_at >= NOW() - $2
+                  AND computed_at >= $2
                 """,
-                tickers, CACHE_TTL,
+                tickers, cutoff,
             )
             cached = {r["ticker"]: _row_to_model(dict(r)) for r in cached_rows}
             stale = [t for t in tickers if t not in cached]
