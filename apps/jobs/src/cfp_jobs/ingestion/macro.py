@@ -53,8 +53,14 @@ def ingest(
     series: list[str],
     start: datetime,
 ) -> int:
+    # Soft-fail when the FRED key isn't configured. Was raising, which crashed
+    # the entire `cfp-jobs backfill` / `daily` run after the (much larger)
+    # prices step had already succeeded — the workflow showed "failed" even
+    # though the price data landed. Macro is optional; the rest of the system
+    # works without it.
     if not api_key:
-        raise RuntimeError("FRED_API_KEY not configured")
+        log.warning("FRED_API_KEY not configured — skipping macro ingest (%d series)", len(series))
+        return 0
 
     total = 0
     with connect(database_url) as conn:
