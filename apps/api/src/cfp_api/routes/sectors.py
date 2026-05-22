@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import math
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date as date_t, datetime, timedelta
 from typing import Any, Literal
 
-from cfp_shared import PREDICTION_TARGETS
+from cfp_shared import PREDICTION_TARGETS, SECTORS
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
@@ -18,89 +18,147 @@ router = APIRouter(prefix="/v1/sectors", tags=["sectors"])
 
 @router.get("", response_model=SectorsResponse)
 async def get_sectors(
-    horizon: int = Query(10, ge=1, le=60),
-    model: str = Query("xgb_v1"),
-    history: int = Query(30, ge=2, le=120, description="How many recent runs to include in rank_history."),
+    horizon: int = Query(1, ge=1, le=60, description="Days of return to rank by. 1=today, 5=this week, 20=this month."),
+    history: int = Query(30, ge=2, le=120, description="Trading days of rank/return trajectory."),
+    model: str = Query("ignored", description="Legacy parameter, ignored. Was xgb_v1 model selector."),
 ) -> SectorsResponse:
-    """Sectors with their latest rank, prior rank, confidence, and a rank-history sparkline."""
-    pool = get_pool()
+    """Sector ETFs ranked by their actual N-day return ending today.
 
-    # Pull the last `history` distinct run timestamps for this (horizon, model).
-    # Each run produces one row per symbol; we order ASC so the sparkline reads
-    # left→right oldest→newest on the client.
-    sql = """
-        WITH recent_runs AS (
-            SELECT DISTINCT run_ts
-            FROM predictions
-            WHERE horizon_d = $1 AND model = $2
-            ORDER BY run_ts DESC
-            LIMIT $3
-        ),
-        ranked AS (
-            SELECT p.symbol, p.rank, p.score, p.confidence, p.run_ts, p.target_ts,
-                   ROW_NUMBER() OVER (PARTITION BY p.symbol ORDER BY p.run_ts DESC) AS rn
-            FROM predictions p
-            JOIN recent_runs r ON r.run_ts = p.run_ts
-            WHERE p.horizon_d = $1 AND p.model = $2
-        ),
-        holdings_counts AS (
-            SELECT sector_etf, COUNT(*) AS n
-            FROM sector_holdings
-            GROUP BY sector_etf
-        ),
-        latest AS (
-            SELECT symbol, rank, score, confidence, run_ts
-            FROM ranked WHERE rn = 1
-        ),
-        prior AS (
-            SELECT symbol, rank AS prior_rank
-            FROM ranked WHERE rn = 2
-        ),
-        history_arr AS (
-            SELECT symbol,
-                   ARRAY_AGG(rank ORDER BY run_ts ASC) FILTER (WHERE rank IS NOT NULL) AS rank_history,
-                   ARRAY_AGG(score ORDER BY run_ts ASC) FILTER (WHERE score IS NOT NULL) AS score_history
-            FROM ranked
-            GROUP BY symbol
-        )
-        SELECT
-            COALESCE(l.symbol, h.sector_etf) AS symbol,
-            l.rank,
-            l.score,
-            l.confidence,
-            p.prior_rank,
-            ha.rank_history,
-            ha.score_history,
-            COALESCE(h.n, 0) AS n_constituents,
-            l.run_ts
-        FROM latest l
-        FULL OUTER JOIN holdings_counts h ON l.symbol = h.sector_etf
-        LEFT JOIN prior p ON p.symbol = l.symbol
-        LEFT JOIN history_arr ha ON ha.symbol = l.symbol
-        ORDER BY l.rank ASC NULLS LAST, symbol
+    Previously surfaced XGB rotation predictions from the `predictions` table.
+    Rotation prediction at our horizon isn't reliable, so we ripped out the
+    forecast layer and now compute pure realized return — "what's actually
+    hot right now" — from `prices_daily`.
+
+    The horizon param controls the lens (1d = today's tape, 5d = this week,
+    20d = trailing month). Response shape is preserved for backwards
+    compatibility with the heatmap UI:
+      - latest_rank        = rank by N-day return (1 = best)
+      - latest_score       = the N-day return itself (e.g. 0.0123 = +1.23%)
+      - confidence         = always None (no model, no confidence)
+      - prior_rank         = rank computed against yesterday's data
+      - rank_history       = daily ranks over last `history` trading days
+      - score_history      = N-day returns over the same window
+      - n_constituents     = unchanged, from sector_holdings
+      - run_ts             = latest close timestamp on the common date axis
     """
+    pool = get_pool()
+    _ = model  # accept-and-ignore so old clients passing model don't 422
+    sectors = list(SECTORS)
+    # Need enough history to compute `history` daily snapshots of N-day return.
+    # Add ~60% calendar buffer for weekends/holidays.
+    buffer_days = int((history + horizon + 5) * 1.6)
+
     async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, horizon, model, history)
+        rows = await conn.fetch(
+            """
+            SELECT symbol, ts::date AS d, close
+            FROM prices_daily
+            WHERE symbol = ANY($1::text[])
+              AND ts >= NOW() - ($2 || ' days')::interval
+              AND close IS NOT NULL
+            ORDER BY symbol, ts ASC
+            """,
+            sectors, str(buffer_days),
+        )
+        h_rows = await conn.fetch(
+            "SELECT sector_etf, COUNT(*) AS n FROM sector_holdings GROUP BY sector_etf"
+        )
 
-    run_ts = next((r["run_ts"] for r in rows if r["run_ts"] is not None), None)
+    holdings = {r["sector_etf"]: int(r["n"]) for r in h_rows}
+    by_sym: dict[str, list[tuple[date_t, float]]] = {}
+    for r in rows:
+        by_sym.setdefault(r["symbol"], []).append((r["d"], float(r["close"])))
 
-    return SectorsResponse(
-        run_ts=run_ts,
-        sectors=[
-            SectorEntry(
-                symbol=r["symbol"],
-                latest_rank=r["rank"],
-                latest_score=float(r["score"]) if r["score"] is not None else None,
-                confidence=float(r["confidence"]) if r["confidence"] is not None else None,
-                prior_rank=r["prior_rank"],
-                rank_history=[int(v) for v in (r["rank_history"] or [])],
-                score_history=[float(v) for v in (r["score_history"] or [])],
-                horizon_d=horizon if r["rank"] is not None else None,
-                n_constituents=int(r["n_constituents"] or 0),
-            )
-            for r in rows
-        ],
-    )
+    if not by_sym:
+        return SectorsResponse(
+            run_ts=None,
+            sectors=[
+                SectorEntry(
+                    symbol=sym, latest_rank=None, latest_score=None, confidence=None,
+                    prior_rank=None, rank_history=[], score_history=[],
+                    horizon_d=None, n_constituents=holdings.get(sym, 0),
+                )
+                for sym in sectors
+            ],
+        )
+
+    # Build a common date axis across sectors we have data for. Sectors with
+    # no data in the window get a placeholder entry at the end.
+    covered = {s: pts for s, pts in by_sym.items() if pts}
+    common_dates = sorted(set.intersection(*(set(d for d, _ in pts) for pts in covered.values())))
+    if len(common_dates) <= horizon:
+        # Not enough days to compute even one snapshot of N-day return.
+        return SectorsResponse(
+            run_ts=None,
+            sectors=[
+                SectorEntry(
+                    symbol=sym, latest_rank=None, latest_score=None, confidence=None,
+                    prior_rank=None, rank_history=[], score_history=[],
+                    horizon_d=None, n_constituents=holdings.get(sym, 0),
+                )
+                for sym in sectors
+            ],
+        )
+
+    closes_aligned: dict[str, list[float]] = {}
+    for sym, pts in covered.items():
+        day_map = dict(pts)
+        closes_aligned[sym] = [day_map[d] for d in common_dates]
+
+    # Walk every valid day t (those with t >= horizon), compute N-day return
+    # per sector, rank desc. Keep the last `history` snapshots so the UI gets
+    # both the latest rank/score and a trajectory for the sparkline.
+    n_days = len(common_dates)
+    snapshots: list[dict[str, float]] = []  # per t in valid range: {sym: ret}
+    for t in range(horizon, n_days):
+        rets: dict[str, float] = {}
+        for sym, closes in closes_aligned.items():
+            c_now = closes[t]
+            c_back = closes[t - horizon]
+            if c_back > 0:
+                rets[sym] = (c_now / c_back) - 1.0
+        snapshots.append(rets)
+    snapshots = snapshots[-history:]  # cap
+
+    # Per (snapshot, symbol) → rank
+    rank_history: dict[str, list[int]] = {s: [] for s in sectors}
+    score_history: dict[str, list[float]] = {s: [] for s in sectors}
+    for rets in snapshots:
+        ordered = sorted(rets.items(), key=lambda kv: -kv[1])
+        rank_map = {sym: i + 1 for i, (sym, _) in enumerate(ordered)}
+        for sym in sectors:
+            if sym in rank_map:
+                rank_history[sym].append(rank_map[sym])
+                score_history[sym].append(rets[sym])
+
+    last_date = common_dates[-1]
+    run_ts = datetime.combine(last_date, datetime.min.time(), tzinfo=UTC)
+
+    entries: list[SectorEntry] = []
+    for sym in sectors:
+        rh = rank_history[sym]
+        sh = score_history[sym]
+        if not rh:
+            entries.append(SectorEntry(
+                symbol=sym, latest_rank=None, latest_score=None, confidence=None,
+                prior_rank=None, rank_history=[], score_history=[],
+                horizon_d=None, n_constituents=holdings.get(sym, 0),
+            ))
+            continue
+        entries.append(SectorEntry(
+            symbol=sym,
+            latest_rank=rh[-1],
+            latest_score=sh[-1],
+            confidence=None,
+            prior_rank=rh[-2] if len(rh) >= 2 else None,
+            rank_history=rh,
+            score_history=sh,
+            horizon_d=horizon,
+            n_constituents=holdings.get(sym, 0),
+        ))
+    entries.sort(key=lambda e: (e.latest_rank is None, e.latest_rank or 999))
+
+    return SectorsResponse(run_ts=run_ts, sectors=entries)
 
 
 # ---------- /v1/sectors/scorecard ----------

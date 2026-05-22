@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { ForwardCallEntry, SectorEntry, SectorForwardCallResponse, SectorScorecardResponse } from "@/lib/types";
-import { cn, formatDate, formatNum } from "@/lib/utils";
+import type { SectorEntry } from "@/lib/types";
+import { cn, formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/sparkline";
@@ -61,16 +61,13 @@ function tileBg(tier: Tier | null): string {
   }
 }
 
-function captionFor(tier: Tier, score: number | null): string {
+function captionFor(tier: Tier): string {
   switch (tier) {
-    case "leader":
-      return score !== null && score > 0
-        ? "Leading the tape — model still favors this basket"
-        : "Top of the pack on relative strength";
-    case "strong":  return "Above the median — momentum intact";
-    case "neutral": return "Middle of the pack — no edge signaled";
-    case "weak":    return "Below the median — momentum fading";
-    case "laggard": return "Underperforming peers — model expects continued lag";
+    case "leader":  return "Leading the tape on actual return";
+    case "strong":  return "Above the median — outperforming peers";
+    case "neutral": return "Middle of the pack";
+    case "weak":    return "Below the median — underperforming peers";
+    case "laggard": return "Worst-performing sector in the window";
   }
 }
 
@@ -203,31 +200,25 @@ const REGIME_BADGE: Record<MarketRead["regime"], { label: string; cls: string }>
 // ────────────────────────────────────────────────────────────────────────────
 
 const HORIZON_OPTIONS: { value: number; label: string }[] = [
+  { value: 1,  label: "1d"  },
   { value: 5,  label: "5d"  },
   { value: 10, label: "10d" },
   { value: 20, label: "20d" },
 ];
 
+const HORIZON_PHRASE: Record<number, string> = {
+  1: "today's return",
+  5: "this week's return",
+  10: "trailing 10-day return",
+  20: "trailing month's return",
+};
+
 export function SectorHeatmap() {
-  const [horizon, setHorizon] = useState<number>(10);
+  const [horizon, setHorizon] = useState<number>(1);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["sectors", { horizon }],
     queryFn: () => api.sectors({ horizon, history: 30 }),
-  });
-
-  const { data: scorecard } = useQuery({
-    queryKey: ["sector-scorecard", { horizon }],
-    queryFn: () => api.sectorScorecard({ horizon, lookbackRuns: 30 }),
-    staleTime: 5 * 60 * 1000,
-    retry: false,
-  });
-
-  const { data: forwardCall } = useQuery({
-    queryKey: ["sector-forward-call", { horizon }],
-    queryFn: () => api.sectorForwardCall({ horizon }),
-    staleTime: 5 * 60 * 1000,
-    retry: false,
   });
 
   const { ranked, unranked, total, marketRead } = useMemo(() => {
@@ -267,16 +258,14 @@ export function SectorHeatmap() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Sector predictions</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Sector performance</h1>
           <p className="text-sm text-muted-foreground">
-            {horizon}-day relative-strength rankings from <code className="rounded bg-muted px-1">xgb_v1</code>.{" "}
-            {data.run_ts && <>Last run {formatDate(data.run_ts)}.</>}
+            Ranked by {HORIZON_PHRASE[horizon] ?? `${horizon}-day return`}.{" "}
+            {data.run_ts && <>Last close {formatDate(data.run_ts)}.</>}
           </p>
         </div>
         <HorizonTabs value={horizon} onChange={setHorizon} />
       </div>
-
-      {scorecard && <ScorecardStrip s={scorecard} />}
 
       {marketRead && <MarketReadCard read={marketRead} />}
 
@@ -296,8 +285,6 @@ export function SectorHeatmap() {
           </div>
         </div>
       )}
-
-      {forwardCall && <ForwardCallCard fc={forwardCall} scorecard={scorecard} />}
 
       <SectorRotationGraph />
     </div>
@@ -330,93 +317,6 @@ function HorizonTabs({ value, onChange }: { value: number; onChange: (v: number)
         );
       })}
     </div>
-  );
-}
-
-function ScorecardStrip({ s }: { s: SectorScorecardResponse }) {
-  const hit = s.hit_rate;
-  const spread = s.avg_spread;
-  const tone =
-    hit === null ? "neutral" :
-    hit >= 0.55 ? "bullish" :
-    hit <= 0.45 ? "bearish" : "neutral";
-  const toneCls =
-    tone === "bullish" ? "text-signal-bullish" :
-    tone === "bearish" ? "text-signal-bearish" :
-    "text-foreground";
-  const spreadCls =
-    spread === null ? "text-muted-foreground" :
-    spread > 0 ? "text-signal-bullish" :
-    spread < 0 ? "text-signal-bearish" : "text-muted-foreground";
-
-  // IC tone — anything > 0.05 is meaningful for a small-N ranker.
-  const ic = s.ic_mean;
-  const icCls =
-    ic === null ? "text-muted-foreground" :
-    ic > 0.05 ? "text-signal-bullish" :
-    ic < -0.05 ? "text-signal-bearish" : "text-foreground";
-
-  // Model vs naïve 20d-momentum baseline. If we can't beat the baseline,
-  // call it out — that's the whole point of running this comparison.
-  const b = s.baseline;
-  const hitDelta = (hit !== null && b.hit_rate !== null) ? hit - b.hit_rate : null;
-  const spreadDelta = (spread !== null && b.avg_spread !== null) ? spread - b.avg_spread : null;
-  const beatsBaseline =
-    hitDelta !== null && spreadDelta !== null && (hitDelta > 0.02 || spreadDelta > 0.002);
-  const deltaCls = beatsBaseline ? "text-signal-bullish" : (hitDelta !== null && hitDelta < 0 ? "text-signal-bearish" : "text-muted-foreground");
-
-  return (
-    <Card>
-      <CardContent className="grid grid-cols-2 gap-4 p-4 text-xs sm:grid-cols-5">
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Hit rate (top-3 &gt; bottom-3)</div>
-          <div className={cn("mt-1 text-lg font-semibold num", toneCls)}>
-            {hit === null ? "—" : `${(hit * 100).toFixed(0)}%`}
-          </div>
-          <div className="mt-0.5 text-[10px] text-muted-foreground">
-            Naïve mom: {b.hit_rate === null ? "—" : `${(b.hit_rate * 100).toFixed(0)}%`}
-          </div>
-        </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Avg spread (top − bottom)</div>
-          <div className={cn("mt-1 text-lg font-semibold num", spreadCls)}>
-            {spread === null ? "—" : `${spread > 0 ? "+" : ""}${(spread * 100).toFixed(2)}%`}
-          </div>
-          <div className="mt-0.5 text-[10px] text-muted-foreground">
-            Naïve mom: {b.avg_spread === null ? "—" : `${b.avg_spread > 0 ? "+" : ""}${(b.avg_spread * 100).toFixed(2)}%`}
-          </div>
-        </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Rank IC (mean ± σ)</div>
-          <div className={cn("mt-1 text-lg font-semibold num", icCls)}>
-            {ic === null ? "—" : `${ic > 0 ? "+" : ""}${ic.toFixed(3)}`}
-          </div>
-          <div className="mt-0.5 text-[10px] text-muted-foreground">
-            {s.ic_stdev === null ? "σ —" : `σ ${s.ic_stdev.toFixed(3)}`}
-            {s.ic_t_stat !== null && <> · t={s.ic_t_stat.toFixed(2)}</>}
-          </div>
-        </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">vs 20d momentum</div>
-          <div className={cn("mt-1 text-sm font-semibold num", deltaCls)}>
-            {hitDelta === null ? "—" : `${hitDelta >= 0 ? "+" : ""}${(hitDelta * 100).toFixed(0)}pp hit`}
-          </div>
-          <div className="mt-0.5 text-[10px] text-muted-foreground">
-            {spreadDelta === null ? "" : `${spreadDelta >= 0 ? "+" : ""}${(spreadDelta * 100).toFixed(2)}% spread`}
-          </div>
-        </div>
-        <div>
-          <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Runs evaluated</div>
-          <div className="mt-1 text-sm num">
-            {s.n_runs_evaluated} <span className="text-muted-foreground">/ {s.n_runs_total}</span>
-          </div>
-          <div className="mt-0.5 text-[10px] text-muted-foreground">
-            top-3 {s.avg_top3_return === null ? "—" : `${(s.avg_top3_return * 100).toFixed(1)}%`} /
-            bot-3 {s.avg_bottom3_return === null ? "—" : `${(s.avg_bottom3_return * 100).toFixed(1)}%`}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 }
 
@@ -516,25 +416,6 @@ function rankDelta(s: SectorEntry): { value: number | null; arrow: string; cls: 
   return { value: 0, arrow: "•", cls: "text-muted-foreground", tip: "Unchanged since the prior run" };
 }
 
-function ConfidenceChip({ value }: { value: number | null }) {
-  if (value === null || !Number.isFinite(value)) return null;
-  const v = Math.max(0, Math.min(1, value));
-  const level: "low" | "med" | "high" = v < 0.34 ? "low" : v < 0.67 ? "med" : "high";
-  const cls = {
-    low:  "bg-muted/60 text-muted-foreground",
-    med:  "bg-amber-500/15 text-amber-400",
-    high: "bg-signal-bullish/15 text-signal-bullish",
-  }[level];
-  return (
-    <span
-      className={cn("rounded-sm px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-border", cls)}
-      title={`Model confidence ${v.toFixed(2)}`}
-    >
-      conf {v.toFixed(2)}
-    </span>
-  );
-}
-
 function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
   const tier = s.latest_rank !== null ? tierFor(s.latest_rank, totalRanked) : null;
   const meta = metaFor(s.symbol);
@@ -563,8 +444,18 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
         </CardHeader>
         <CardContent className="p-3 pt-0 text-xs text-muted-foreground">
           <div className="flex items-center justify-between">
-            <span>score</span>
-            <span className="num">{formatNum(s.latest_score, 4)}</span>
+            <span>return</span>
+            <span
+              className={cn(
+                "num font-semibold",
+                s.latest_score !== null && s.latest_score > 0 && "text-signal-bullish",
+                s.latest_score !== null && s.latest_score < 0 && "text-signal-bearish"
+              )}
+            >
+              {s.latest_score === null
+                ? "—"
+                : `${s.latest_score >= 0 ? "+" : ""}${(s.latest_score * 100).toFixed(2)}%`}
+            </span>
           </div>
           <div className="flex items-center justify-between">
             <span>holdings</span>
@@ -593,15 +484,9 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
             );
           })()}
 
-          {s.confidence !== null && (
-            <div className="mt-2">
-              <ConfidenceChip value={s.confidence} />
-            </div>
-          )}
-
           {tier && (
             <p className="mt-2 line-clamp-2 leading-snug text-foreground/80">
-              {captionFor(tier, s.latest_score)}
+              {captionFor(tier)}
             </p>
           )}
         </CardContent>
@@ -610,197 +495,3 @@ function Tile({ s, totalRanked }: { s: SectorEntry; totalRanked: number }) {
   );
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Forward call card — bottom-of-tab narrative ("for the next ~N days, the
-// model thinks X, Y, Z keep leading…") with cross-horizon disagreement and
-// stability anchor. Reads from /v1/sectors/forward-call + existing scorecard.
-// ────────────────────────────────────────────────────────────────────────────
-
-function horizonPhrase(d: number): string {
-  if (d <= 6)  return `next week`;
-  if (d <= 14) return `next ~2 weeks`;
-  return `next ~${Math.round(d / 5)} weeks`;
-}
-
-const CONVICTION_LABEL: Record<SectorForwardCallResponse["conviction"], { tag: string; cls: string }> = {
-  high:   { tag: "high conviction",   cls: "bg-signal-bullish/15 text-signal-bullish ring-signal-bullish/30" },
-  medium: { tag: "medium conviction", cls: "bg-muted/40 text-foreground ring-border" },
-  low:    { tag: "low conviction",    cls: "bg-muted/40 text-muted-foreground ring-border" },
-};
-
-function ensembleAgreementTone(v: number): { label: string; cls: string } {
-  if (v >= 0.85) return { label: "agree",  cls: "bg-signal-bullish/15 text-signal-bullish ring-signal-bullish/30" };
-  if (v >= 0.6)  return { label: "mixed",  cls: "bg-amber-500/15 text-amber-700 dark:text-amber-300 ring-amber-500/30" };
-  return            { label: "split",  cls: "bg-signal-bearish/15 text-signal-bearish ring-signal-bearish/30" };
-}
-
-function EnsembleAgreementChip({ value }: { value: number }) {
-  const tone = ensembleAgreementTone(value);
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1",
-        tone.cls,
-      )}
-      title={`Cross-seed rank stability: ${(value * 100).toFixed(0)}%. 1.0 = every seed ranked this sector at the same position.`}
-    >
-      <span className="font-mono">{(value * 100).toFixed(0)}%</span>
-      <span className="opacity-75">{tone.label}</span>
-    </span>
-  );
-}
-
-function ForwardCallRow({ e }: { e: ForwardCallEntry }) {
-  const meta = metaFor(e.symbol);
-  return (
-    <div className="flex items-center justify-between gap-2 rounded border border-border/50 bg-background/40 px-2 py-1 text-xs">
-      <div className="flex min-w-0 items-center gap-2">
-        <span className="font-mono text-[10px] text-muted-foreground">#{e.rank}</span>
-        <span className="font-medium">{e.symbol}</span>
-        <span className="truncate text-muted-foreground">{meta.name}</span>
-      </div>
-      {e.confidence !== null && <EnsembleAgreementChip value={e.confidence} />}
-    </div>
-  );
-}
-
-function ForwardCallCard({
-  fc,
-  scorecard,
-}: {
-  fc: SectorForwardCallResponse;
-  scorecard: SectorScorecardResponse | undefined;
-}) {
-  if (fc.top.length === 0) {
-    return (
-      <Card>
-        <CardContent className="p-4 text-sm text-muted-foreground">
-          No forward call yet — wait for the next prediction run.
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const topNames = fc.top.map((e) => `${e.symbol} (${metaFor(e.symbol).name})`).join(", ");
-  const botNames = fc.bottom.map((e) => `${e.symbol} (${metaFor(e.symbol).name})`).join(", ");
-  const window = horizonPhrase(fc.horizon_d);
-  const conv = CONVICTION_LABEL[fc.conviction];
-
-  // Aggregate ensemble confidence across top + bottom. Null when none of the
-  // returned rows came from a live forecast (e.g. only historical folds present).
-  const confValues = [...fc.top, ...fc.bottom]
-    .map((e) => e.confidence)
-    .filter((v): v is number => v !== null);
-  const meanConf = confValues.length
-    ? confValues.reduce((a, b) => a + b, 0) / confValues.length
-    : null;
-  const isLive = meanConf !== null;
-
-  const leadLine = `Over the ${window}, the model expects ${topNames} to keep leading and ${botNames} to keep lagging.`;
-
-  const spreadLine =
-    fc.score_spread === null
-      ? ""
-      : fc.score_spread >= 0.12
-        ? `Top-vs-bottom score gap is ${fc.score_spread.toFixed(3)} — wide, the call is decisive.`
-        : fc.score_spread >= 0.05
-          ? `Top-vs-bottom score gap is ${fc.score_spread.toFixed(3)} — modest edge.`
-          : `Top-vs-bottom score gap is only ${fc.score_spread.toFixed(3)} — the pack is tight, treat rank order as soft.`;
-
-  const stabilityLine =
-    fc.stability_runs >= 2
-      ? `Top-3 set has held for ${fc.stability_runs} consecutive runs — the model has been saying this for a while.`
-      : `Top-3 set just shifted this run — fresh call, not yet confirmed.`;
-
-  const hitLine =
-    scorecard && scorecard.hit_rate !== null
-      ? `Recent calibration at this horizon: ${(scorecard.hit_rate * 100).toFixed(0)}% top-3-beats-bottom-3 hit rate over the last ${scorecard.n_runs_evaluated} runs.`
-      : `Calibration history isn't available yet for this horizon.`;
-
-  const disagreeLines = fc.disagreements.map((d) => {
-    const name = metaFor(d.symbol).name;
-    const verdict =
-      d.delta > 0
-        ? `the ${d.other_horizon_d}d model is more bullish on ${d.symbol} (${name}): ranks it #${d.other_rank} vs #${d.active_rank} here`
-        : `the ${d.other_horizon_d}d model is more bearish on ${d.symbol} (${name}): ranks it #${d.other_rank} vs #${d.active_rank} here`;
-    return verdict;
-  });
-
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle className="text-base">Forward call · {fc.horizon_d}d</CardTitle>
-          <div className="flex items-center gap-2">
-            {meanConf !== null && <EnsembleAgreementChip value={meanConf} />}
-            <span
-              className={cn(
-                "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1",
-                conv.cls,
-              )}
-            >
-              {conv.tag}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3 text-sm leading-relaxed">
-        <p className="text-foreground">{leadLine}</p>
-        <p className="text-muted-foreground">
-          {[spreadLine, stabilityLine, hitLine].filter(Boolean).join(" ")}
-        </p>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Top — expected leaders
-            </div>
-            <div className="space-y-1">
-              {fc.top.map((e) => <ForwardCallRow key={e.symbol} e={e} />)}
-            </div>
-          </div>
-          <div>
-            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Bottom — expected laggards
-            </div>
-            <div className="space-y-1">
-              {fc.bottom.map((e) => <ForwardCallRow key={e.symbol} e={e} />)}
-            </div>
-          </div>
-        </div>
-
-        {isLive && (
-          <p className="text-[11px] text-muted-foreground">
-            Confidence shows how tightly a 5-seed model ensemble agreed on each sector's
-            rank — 100% = every seed picked the same position; lower means the seeds split.
-          </p>
-        )}
-
-        {disagreeLines.length > 0 && (
-          <div className="rounded-md border border-border bg-muted/30 p-3">
-            <div className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-              Cross-horizon disagreement
-            </div>
-            <ul className="space-y-1 text-xs text-foreground/85">
-              {disagreeLines.map((line, i) => (
-                <li key={i}>· {line}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {fc.stale_days !== null && fc.stale_days >= 7 && (
-          <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-700 dark:text-amber-300">
-            ⚠ Stale forecast — last trained {fc.stale_days} day{fc.stale_days === 1 ? "" : "s"} ago
-            {fc.run_ts && <> on {formatDate(fc.run_ts)}</>}. Re-run training for a current call.
-          </div>
-        )}
-        <p className="text-[11px] text-muted-foreground">
-          This is the model's view, not advice.{" "}
-          {fc.run_ts && <>Predicted {formatDate(fc.run_ts)}. </>}
-          {fc.target_ts && <>Projects to {formatDate(fc.target_ts)}.</>}
-        </p>
-      </CardContent>
-    </Card>
-  );
-}
