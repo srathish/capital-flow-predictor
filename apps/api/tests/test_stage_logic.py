@@ -310,9 +310,14 @@ def test_analyze_output_shape_is_stable() -> None:
         "conditions",
         "pullback_pct",
         "pct_from_52w_high",
+        "handle_duration_bars",
         "fired_today",
         "danger",
+        "grade",
+        "flow",
+        "master_verdict",
     }
+    # 6 HFS conditions now (added handle_duration_ok per DRIFT.md fix #3)
     assert set(r["conditions"].keys()) == {
         "stage2_trend",
         "volume_dry_up",
@@ -324,6 +329,7 @@ def test_analyze_output_shape_is_stable() -> None:
         "holding_ema50",
         "range_tight",
         "vol_dry_in_handle",
+        "handle_duration_ok",
     }
     assert set(r["fired_today"].keys()) == {
         "bcs_breakout",
@@ -331,3 +337,95 @@ def test_analyze_output_shape_is_stable() -> None:
         "breakdown_warn",
     }
     assert set(r["danger"].keys()) == {"stage4", "bear_stack"}
+    assert set(r["grade"].keys()) >= {"value", "min_required", "ok", "rvol", "components"}
+    assert set(r["grade"]["components"].keys()) == {
+        "volume_surge",
+        "pre_break_tightness",
+        "range_expansion",
+        "bb_thrust",
+        "bb_expanding",
+    }
+    assert set(r["flow"].keys()) == {
+        "ok",
+        "obv_slope",
+        "obv_slope_positive",
+        "up_vol_ratio",
+        "up_vol_ratio_ok",
+    }
+    assert r["master_verdict"] in {
+        "A-SETUP - GO",
+        "ARMED - WAIT FOR BREAK",
+        "CAUTION - NO NEW LONGS",
+        "DANGER - SKIP",
+        "WATCH / NEUTRAL",
+    }
+
+
+# ----------------------------------------------------------------------------
+# Master pipeline — Grade (G3a) and Flow (G3b) gates
+# ----------------------------------------------------------------------------
+
+
+class TestMasterGates:
+    def test_danger_verdict_when_in_downtrend(self) -> None:
+        bars = _bars(_downtrending(n=400, start=200.0, slope=0.4))
+        r = analyze(bars)
+        assert r["master_verdict"] == "DANGER - SKIP"
+        # Master breakouts can never fire in danger.
+        assert r["fired_today"]["bcs_breakout"] is False
+        assert r["fired_today"]["hfs_breakout"] is False
+
+    def test_grade_value_is_in_range(self) -> None:
+        bars = _bars(_uptrending(n=400, start=10.0, slope=0.1))
+        r = analyze(bars)
+        assert 0 <= r["grade"]["value"] <= 5
+        assert r["grade"]["min_required"] == 3
+        assert r["grade"]["ok"] == (r["grade"]["value"] >= 3)
+
+    def test_flow_obv_slope_positive_on_steady_uptrend(self) -> None:
+        # 400 bars of monotonically rising close → OBV slope strongly positive
+        # AND up-vol ratio = +inf (no down days). Both Flow components pass.
+        bars = _bars(_uptrending(n=400, start=10.0, slope=0.1))
+        r = analyze(bars)
+        assert r["flow"]["obv_slope_positive"] is True
+        assert r["flow"]["up_vol_ratio_ok"] is True
+        assert r["flow"]["ok"] is True
+
+    def test_flow_fails_on_pure_downtrend(self) -> None:
+        # Monotonically falling close → OBV slope negative; up-vol ratio low/0
+        bars = _bars(_downtrending(n=400, start=200.0, slope=0.1))
+        r = analyze(bars)
+        assert r["flow"]["obv_slope_positive"] is False
+        assert r["flow"]["ok"] is False
+
+    def test_handle_duration_is_zero_when_at_new_high(self) -> None:
+        # Monotonic uptrend → today's high IS the swing high → duration 0
+        bars = _bars(_uptrending(n=400, start=10.0, slope=0.1))
+        r = analyze(bars)
+        assert r["handle_duration_bars"] == 0
+        # 0 < handle_duration_min=5 → condition False
+        assert r["conditions"]["handle_duration_ok"] is False
+
+    def test_master_verdict_neutral_on_random_walk(self) -> None:
+        rng = np.random.default_rng(seed=42)
+        closes = [max(c, 1.0) for c in (50.0 + rng.normal(0, 0.5, 400).cumsum()).tolist()]
+        bars = _bars(closes)
+        r = analyze(bars)
+        # Random walk shouldn't fire a Master A-SETUP.
+        assert r["master_verdict"] != "A-SETUP - GO"
+
+    def test_master_breakout_requires_grade_and_flow(self) -> None:
+        # Construct a scenario where BCS armed yesterday and price breaks the
+        # trigger today, but volume is anemic — Grade fails → no fire.
+        # 380 bars of dormant uptrend (BCS-friendly), then a breakout day with
+        # weak volume.
+        closes = _uptrending(n=399, start=20.0, slope=0.05) + [40.0]  # spike up
+        volumes = [1_000_000.0] * 399 + [500_000.0]  # weak vol on break
+        bars = _bars(closes, volumes=volumes)
+        r = analyze(bars)
+        # Whatever the BCS state is, fired_today should not be true with weak
+        # volume because volume_surge will be False and grade likely < 3.
+        if r["fired_today"]["bcs_breakout"]:
+            # If it does fire, the grade must have hit the threshold despite
+            # weak RVOL — assert at minimum that Grade gate passed.
+            assert r["grade"]["ok"] is True

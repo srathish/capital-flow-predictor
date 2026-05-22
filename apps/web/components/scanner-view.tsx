@@ -75,7 +75,18 @@ const HFS_LABELS: { key: keyof StageConditions; label: string }[] = [
   { key: "holding_ema50", label: "Holding 50 EMA" },
   { key: "range_tight", label: "Range Tight" },
   { key: "vol_dry_in_handle", label: "Vol Dry (handle)" },
+  // 6th HFS condition added per STAGE_DRIFT.md fix #3 (handle duration).
+  { key: "handle_duration_ok", label: "Handle Duration 5-15" },
 ];
+
+// Master verdict chip styling — five mutually exclusive states.
+const VERDICT_STYLES: Record<string, string> = {
+  "A-SETUP - GO": "bg-signal-bullish/25 text-signal-bullish ring-1 ring-signal-bullish/40",
+  "ARMED - WAIT FOR BREAK": "bg-sky-500/15 text-sky-300",
+  "CAUTION - NO NEW LONGS": "bg-amber-500/15 text-amber-300",
+  "DANGER - SKIP": "bg-signal-bearish/15 text-signal-bearish",
+  "WATCH / NEUTRAL": "bg-foreground/10 text-muted-foreground",
+};
 
 function fmtPctSigned(v: number | null | undefined): string {
   if (v == null) return "—";
@@ -386,14 +397,14 @@ function ScannerRow({
   onToggle: () => void;
 }) {
   const ps = PHASE_STYLES[item.phase];
-  const fired =
-    item.fired_today.bcs_breakout
-      ? { label: "BASE GO", chip: "bg-signal-bullish/20 text-signal-bullish" }
-      : item.fired_today.hfs_breakout
-        ? { label: "HANDLE GO", chip: "bg-sky-500/20 text-sky-400" }
-        : item.fired_today.breakdown_warn
-          ? { label: "WARN", chip: "bg-signal-bearish/20 text-signal-bearish" }
-          : null;
+  // Master verdict drives the row's status chip. Breakdown WARN still wins
+  // when there's no positive verdict (because the verdict ladder doesn't
+  // express it — it's an exit signal, not an entry one).
+  const verdictChip = VERDICT_STYLES[item.master_verdict] ?? VERDICT_STYLES["WATCH / NEUTRAL"];
+  const showWarn =
+    item.fired_today.breakdown_warn &&
+    item.master_verdict !== "A-SETUP - GO" &&
+    item.master_verdict !== "DANGER - SKIP";
 
   return (
     <>
@@ -452,18 +463,21 @@ function ScannerRow({
           {fmtPctSigned(item.distance_pct)}
         </td>
         <td className="px-3 py-2">
-          {fired ? (
+          <div className="flex flex-wrap gap-1">
             <span
               className={cn(
                 "rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-                fired.chip,
+                verdictChip,
               )}
             >
-              {fired.label}
+              {item.master_verdict}
             </span>
-          ) : (
-            <span className="text-[10px] text-muted-foreground">—</span>
-          )}
+            {showWarn ? (
+              <span className="rounded-full bg-signal-bearish/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-signal-bearish">
+                WARN
+              </span>
+            ) : null}
+          </div>
         </td>
         <td className="px-3 py-2 text-right text-[10px] text-muted-foreground">
           {item.date ?? "—"}
@@ -545,12 +559,19 @@ function ConditionsGrid({ item }: { item: StageTickerResult }) {
         dimmed={activeSide !== "BCS"}
       />
       <ConditionsBlock
-        title={`HFS  ·  ${item.hfs_score}/5`}
+        title={`HFS  ·  ${item.hfs_score}/6`}
         accent="text-sky-400"
         labels={HFS_LABELS}
         conditions={item.conditions}
         dimmed={activeSide !== "HFS"}
       />
+      {/* Master gates G3a Grade + G3b Flow. Always show, even when not armed,
+          so users can see how close the quality is. See STAGE_DRIFT.md. */}
+      {item.grade || item.flow ? (
+        <div className="md:col-span-2">
+          <MasterGatesBlock item={item} />
+        </div>
+      ) : null}
       {(item.pullback_pct != null || item.pct_from_52w_high != null) && (
         <div className="text-[11px] text-muted-foreground">
           {item.pct_from_52w_high != null && (
@@ -745,6 +766,80 @@ function ConditionsBlock({
           );
         })}
       </ul>
+    </div>
+  );
+}
+
+// Master gates G3a Grade (breakout quality, 0-5) and G3b Flow (pre-breakout
+// accumulation). See STAGE_DRIFT.md for why these diverge from the TV Pine.
+function MasterGatesBlock({ item }: { item: StageTickerResult }) {
+  const grade = item.grade;
+  const flow = item.flow;
+  const gradeOk = grade?.ok ?? false;
+  const flowOk = flow?.ok ?? false;
+
+  const gradeRow = (label: string, pass: boolean) => (
+    <li key={label} className="flex items-center justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span className={cn("font-mono", pass ? "text-signal-bullish" : "text-signal-bearish")}>
+        {pass ? "✓" : "✗"}
+      </span>
+    </li>
+  );
+
+  return (
+    <div className="grid grid-cols-1 gap-4 rounded-md bg-foreground/[0.03] p-3 md:grid-cols-2">
+      <div>
+        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide">
+          <span className="text-primary">
+            G3a · Grade {grade ? `${grade.value}/5` : "—"}
+          </span>
+          <span className={cn("font-mono", gradeOk ? "text-signal-bullish" : "text-muted-foreground")}>
+            {gradeOk ? "PASS" : `< ${grade?.min_required ?? 3}`}
+          </span>
+        </div>
+        {grade ? (
+          <ul className="space-y-1 text-xs">
+            {gradeRow("Volume Surge (RVOL repaint-fix)", grade.components.volume_surge)}
+            {gradeRow("Pre-Break Tightness", grade.components.pre_break_tightness)}
+            {gradeRow("Range Expansion", grade.components.range_expansion)}
+            {gradeRow("BB %B Thrust", grade.components.bb_thrust)}
+            {gradeRow("BB Width Expanding", grade.components.bb_expanding)}
+            <li className="mt-1 flex items-center justify-between border-t border-foreground/10 pt-1 text-[10px] text-muted-foreground">
+              <span>RVOL</span>
+              <span className="font-mono text-foreground">{grade.rvol.toFixed(2)}×</span>
+            </li>
+          </ul>
+        ) : (
+          <div className="text-xs text-muted-foreground">No grade computed.</div>
+        )}
+      </div>
+      <div>
+        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide">
+          <span className="text-primary">G3b · Flow (pre-breakout accumulation)</span>
+          <span className={cn("font-mono", flowOk ? "text-signal-bullish" : "text-muted-foreground")}>
+            {flowOk ? "PASS" : "FAIL"}
+          </span>
+        </div>
+        {flow ? (
+          <ul className="space-y-1 text-xs">
+            {gradeRow("OBV Slope > 0 (20-bar window)", flow.obv_slope_positive)}
+            {gradeRow("Up-Vol Ratio ≥ 1.2", flow.up_vol_ratio_ok)}
+            <li className="mt-1 flex items-center justify-between border-t border-foreground/10 pt-1 text-[10px] text-muted-foreground">
+              <span>OBV slope</span>
+              <span className="font-mono text-foreground">{flow.obv_slope.toFixed(3)}</span>
+            </li>
+            <li className="flex items-center justify-between text-[10px] text-muted-foreground">
+              <span>Up-vol ratio</span>
+              <span className="font-mono text-foreground">
+                {flow.up_vol_ratio == null ? "—" : `${flow.up_vol_ratio.toFixed(2)}×`}
+              </span>
+            </li>
+          </ul>
+        ) : (
+          <div className="text-xs text-muted-foreground">No flow computed.</div>
+        )}
+      </div>
     </div>
   );
 }

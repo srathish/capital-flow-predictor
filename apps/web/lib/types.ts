@@ -636,46 +636,6 @@ export type CohortsByTickerResponse = {
   cohorts: CohortSummary[];
 };
 
-// /v1/sectors/scorecard
-export type ScorecardBaseline = {
-  hit_rate: number | null;
-  avg_top3_return: number | null;
-  avg_bottom3_return: number | null;
-  avg_spread: number | null;
-};
-
-// /v1/sectors/forward-call
-export type ForwardCallEntry = {
-  symbol: string;
-  rank: number;
-  score: number | null;
-  // 0..1 cross-seed rank stability from the live-forecast ensemble.
-  // null when the row came from a historical walk-forward fold (no ensemble).
-  confidence: number | null;
-};
-
-export type HorizonDisagreement = {
-  symbol: string;
-  active_rank: number;
-  other_horizon_d: number;
-  other_rank: number;
-  delta: number;
-};
-
-export type SectorForwardCallResponse = {
-  horizon_d: number;
-  model: string;
-  run_ts: string | null;
-  target_ts: string | null;
-  stale_days: number | null;
-  top: ForwardCallEntry[];
-  bottom: ForwardCallEntry[];
-  score_spread: number | null;
-  conviction: "high" | "medium" | "low";
-  stability_runs: number;
-  disagreements: HorizonDisagreement[];
-};
-
 // /v1/sectors/rrg — Relative Rotation Graph
 export type RrgQuadrant = "leading" | "weakening" | "lagging" | "improving";
 
@@ -700,22 +660,6 @@ export type SectorRrgResponse = {
   n_window: number;
   sectors: RrgSector[];
   asof: string | null;
-};
-
-export type SectorScorecardResponse = {
-  horizon_d: number;
-  model: string;
-  n_runs_evaluated: number;
-  n_runs_total: number;
-  hit_rate: number | null;
-  avg_top3_return: number | null;
-  avg_bottom3_return: number | null;
-  avg_spread: number | null;
-  ic_mean: number | null;
-  ic_stdev: number | null;
-  ic_t_stat: number | null;
-  baseline: ScorecardBaseline;
-  last_evaluated_run: string | null;
 };
 
 // --- Unusual options flow feed ---------------------------------------------
@@ -849,25 +793,28 @@ export type ScreenerParams = {
   sort?: "composite" | "opportunity" | "confidence" | "iv_rank" | "open_interest";
 };
 
-// --- /v1/stage (STAGE Scanner: BCS/HFS port of the TradingView indicator) ----
+// --- /v1/stage (STAGE Scanner: Master pipeline port — see STAGE_DRIFT.md) ----
 
 export type StagePhase = "BASE" | "HANDLE" | "NEUTRAL" | "CAUTION" | "DANGER";
 
 export type StageConditions = {
-  // BCS
+  // BCS (5)
   stage2_trend: boolean;
   volume_dry_up: boolean;
   atr_contracted: boolean;
   ema_tight: boolean;
   in_base_zone: boolean;
-  // HFS
+  // HFS (6 — added handle_duration_ok per DRIFT.md fix #3)
   uptrend_active: boolean;
   in_pullback_zone: boolean;
   holding_ema50: boolean;
   range_tight: boolean;
   vol_dry_in_handle: boolean;
+  handle_duration_ok: boolean;
 };
 
+// Master-gated breakout flags — TRUE iff ALL gates passed today.
+// (Not the raw trigger-break test any more — includes G3a Grade and G3b Flow.)
 export type StageFiredToday = {
   bcs_breakout: boolean;
   hfs_breakout: boolean;
@@ -875,6 +822,40 @@ export type StageFiredToday = {
 };
 
 export type StageDanger = { stage4: boolean; bear_stack: boolean };
+
+// G3a — breakout quality (0-5) and its 5 components.
+export type StageGradeComponents = {
+  volume_surge: boolean;
+  pre_break_tightness: boolean; // DRIFT.md fix #2 — replaces TV's strongBar
+  range_expansion: boolean;
+  bb_thrust: boolean;
+  bb_expanding: boolean;
+};
+
+export type StageGrade = {
+  value: number;
+  min_required: number;
+  ok: boolean;
+  rvol: number; // repaint-fixed: volume[i] / vol_ma[i-1]
+  components: StageGradeComponents;
+};
+
+// G3b — pre-breakout accumulation gate (DRIFT.md fix #1).
+// Both components look BACKWARD over the prior flow_len bars, NOT the breakout bar.
+export type StageFlow = {
+  ok: boolean;
+  obv_slope: number;
+  obv_slope_positive: boolean;
+  up_vol_ratio: number | null; // 999 sentinel for +inf
+  up_vol_ratio_ok: boolean;
+};
+
+export type StageMasterVerdict =
+  | "A-SETUP - GO"
+  | "ARMED - WAIT FOR BREAK"
+  | "CAUTION - NO NEW LONGS"
+  | "DANGER - SKIP"
+  | "WATCH / NEUTRAL";
 
 export type StageSizingHint = "skip" | "small" | "standard" | "size_up";
 
@@ -937,19 +918,23 @@ export type StageTickerResult = {
   close: number | null;
   phase: StagePhase;
   bcs_score: number;
-  hfs_score: number;
+  hfs_score: number; // now scored 0-6 (added handle_duration_ok)
   active_score: number;
   active_ready: boolean;
   trigger_level: number | null;
   distance_pct: number | null;
   pullback_pct: number | null;
   pct_from_52w_high: number | null;
+  handle_duration_bars: number | null;
   conditions: StageConditions;
   fired_today: StageFiredToday;
   danger: StageDanger;
   targets: StageTargets | null;
   recommended_plays: StageRecommendedPlay[];
   read: StageRead | null;
+  grade: StageGrade | null;
+  flow: StageFlow | null;
+  master_verdict: StageMasterVerdict;
   error: string | null;
 };
 

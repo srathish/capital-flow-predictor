@@ -39,9 +39,18 @@ class StageConditions(BaseModel):
     holding_ema50: bool
     range_tight: bool
     vol_dry_in_handle: bool
+    # 6th HFS condition (DRIFT.md fix #3) — handle duration in [5,15] bars
+    handle_duration_ok: bool
 
 
 class StageFiredToday(BaseModel):
+    """Master-gated breakout flags. True iff ALL gates passed today.
+
+    bcs_breakout / hfs_breakout are NOT pure trigger-break flags any more —
+    they include G3a (Grade ≥ min_grade) and G3b (pre-breakout accumulation).
+    They are the indicator's "A-SETUP GO" markers.
+    """
+
     bcs_breakout: bool
     hfs_breakout: bool
     breakdown_warn: bool
@@ -50,6 +59,53 @@ class StageFiredToday(BaseModel):
 class StageDanger(BaseModel):
     stage4: bool
     bear_stack: bool
+
+
+class StageGradeComponents(BaseModel):
+    volume_surge: bool
+    pre_break_tightness: bool  # DRIFT.md fix #2 — replaces TV's strongBar
+    range_expansion: bool
+    bb_thrust: bool
+    bb_expanding: bool
+
+
+class StageGrade(BaseModel):
+    """G3a — breakout quality on the most recent bar, 0-5.
+
+    `ok` = value >= min_required. `rvol` is the repaint-fixed RVOL
+    (volume[i] / vol_ma[i-1]).
+    """
+
+    value: int
+    min_required: int
+    ok: bool
+    rvol: float
+    components: StageGradeComponents
+
+
+class StageFlow(BaseModel):
+    """G3b — pre-breakout accumulation gate (DRIFT.md fix #1).
+
+    Both components look BACKWARD from the current bar over the prior
+    `flow_len` bars. NOT a same-bar money-flow reading. `ok` = both pass.
+    `up_vol_ratio` may be null if the window had no clear up/down days,
+    or 999.0 as a sentinel for +inf (all up, no down).
+    """
+
+    ok: bool
+    obv_slope: float
+    obv_slope_positive: bool
+    up_vol_ratio: float | None
+    up_vol_ratio_ok: bool
+
+
+StageMasterVerdict = Literal[
+    "A-SETUP - GO",
+    "ARMED - WAIT FOR BREAK",
+    "CAUTION - NO NEW LONGS",
+    "DANGER - SKIP",
+    "WATCH / NEUTRAL",
+]
 
 
 class StageTargetDays(BaseModel):
@@ -114,19 +170,23 @@ class StageTickerResult(BaseModel):
     close: float | None
     phase: Phase
     bcs_score: int
-    hfs_score: int
+    hfs_score: int  # now scored 0-6 (added handle_duration_ok)
     active_score: int
     active_ready: bool
     trigger_level: float | None
     distance_pct: float | None
     pullback_pct: float | None
     pct_from_52w_high: float | None
+    handle_duration_bars: int | None = None
     conditions: StageConditions
     fired_today: StageFiredToday
     danger: StageDanger
     targets: StageTargets | None = None
     recommended_plays: list[StageRecommendedPlay] = []
     read: StageRead | None = None
+    grade: StageGrade | None = None
+    flow: StageFlow | None = None
+    master_verdict: StageMasterVerdict = "WATCH / NEUTRAL"
     error: str | None = None
 
 
@@ -182,12 +242,16 @@ def _empty_result(ticker: str, why: str) -> StageTickerResult:
             holding_ema50=False,
             range_tight=False,
             vol_dry_in_handle=False,
+            handle_duration_ok=False,
         ),
         fired_today=StageFiredToday(bcs_breakout=False, hfs_breakout=False, breakdown_warn=False),
         danger=StageDanger(stage4=False, bear_stack=False),
         targets=None,
         recommended_plays=[],
         read=None,
+        grade=None,
+        flow=None,
+        master_verdict="WATCH / NEUTRAL",
         error=why,
     )
 
