@@ -12,6 +12,23 @@ import { WhaleBetsPanel } from "@/components/whale-bets-panel";
 import { TickerDossierSheet } from "@/components/ticker-dossier-sheet";
 
 const REFETCH_MS = 30_000;
+const CLUSTER_WINDOW_MS = 30 * 60 * 1000;
+
+type ClusterItem = {
+  type: "cluster";
+  ticker: string;
+  events: FlowEvent[];
+  distinctKinds: number;
+  latestTs: string;
+  totalPremium: number;
+  sortScore: number;
+};
+type SingleItem = {
+  type: "single";
+  event: FlowEvent;
+  sortScore: number;
+};
+type FeedItem = ClusterItem | SingleItem;
 
 const LOOKBACK_OPTIONS = [
   { value: 4, label: "4h" },
@@ -147,6 +164,94 @@ export function FlowView() {
 
   const events = data?.events ?? [];
   const counts = data?.count_by_kind ?? {};
+
+  // Confluence ranking: tickers with ≥2 distinct anomaly kinds inside a
+  // 30-minute window form a cluster card. Everything else stays as a
+  // single-event row. Sort weight = confluence × 100 + recency × 10 +
+  // premium_score × 5. Big single-ticket events (≥$10M / ≥$50M) get a
+  // synthetic confluence bonus so a $20M lone sweep still rides high.
+  const feedItems = useMemo<FeedItem[]>(() => {
+    if (!data) return [];
+    const asOfMs = new Date(data.as_of).getTime() || Date.now();
+    const windowMs = Math.max(1, data.lookback_hours ?? 24) * 60 * 60 * 1000;
+
+    const byTicker = new Map<string, FlowEvent[]>();
+    for (const e of events) {
+      const arr = byTicker.get(e.ticker) ?? [];
+      arr.push(e);
+      byTicker.set(e.ticker, arr);
+    }
+
+    const recencyScore = (ts: string) => {
+      const age = asOfMs - new Date(ts).getTime();
+      return Math.max(0, Math.min(1, 1 - age / windowMs));
+    };
+    const premiumScore = (p: number | null) => {
+      if (!p || p <= 0) return 0;
+      return Math.log10(Math.max(p / 100_000, 1));
+    };
+    const singleConfluence = (premium: number | null) => {
+      const p = premium ?? 0;
+      if (p >= 50_000_000) return 3;
+      if (p >= 10_000_000) return 2;
+      return 1;
+    };
+
+    const items: FeedItem[] = [];
+    for (const [ticker, evs] of byTicker.entries()) {
+      const sorted = [...evs].sort(
+        (a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime(),
+      );
+      const latestTs = sorted[0].ts;
+      const latestMs = new Date(latestTs).getTime();
+      const inWindow = sorted.filter(
+        (e) => latestMs - new Date(e.ts).getTime() <= CLUSTER_WINDOW_MS,
+      );
+      const older = sorted.filter(
+        (e) => latestMs - new Date(e.ts).getTime() > CLUSTER_WINDOW_MS,
+      );
+      const distinctKinds = new Set(inWindow.map((e) => e.kind)).size;
+
+      if (distinctKinds >= 2) {
+        const totalPremium = inWindow.reduce((s, e) => s + (e.premium ?? 0), 0);
+        const sortScore =
+          distinctKinds * 100 +
+          recencyScore(latestTs) * 10 +
+          premiumScore(totalPremium) * 5;
+        items.push({
+          type: "cluster",
+          ticker,
+          events: inWindow,
+          distinctKinds,
+          latestTs,
+          totalPremium,
+          sortScore,
+        });
+        for (const e of older) {
+          const conf = singleConfluence(e.premium);
+          items.push({
+            type: "single",
+            event: e,
+            sortScore: conf * 100 + recencyScore(e.ts) * 10 + premiumScore(e.premium) * 5,
+          });
+        }
+      } else {
+        for (const e of sorted) {
+          const conf = singleConfluence(e.premium);
+          items.push({
+            type: "single",
+            event: e,
+            sortScore: conf * 100 + recencyScore(e.ts) * 10 + premiumScore(e.premium) * 5,
+          });
+        }
+      }
+    }
+
+    items.sort((a, b) => b.sortScore - a.sortScore);
+    return items;
+  }, [events, data]);
+
+  const clusterCount = feedItems.filter((i) => i.type === "cluster").length;
 
   const topTickers = useMemo(() => {
     const byTicker: Record<string, { count: number; premium: number }> = {};
@@ -327,6 +432,12 @@ export function FlowView() {
       ) : (
         <Card>
           <CardContent className="p-0">
+            {clusterCount > 0 && (
+              <div className="border-b border-border/60 px-3 py-2 text-[10px] uppercase tracking-wide text-muted-foreground">
+                {clusterCount} confluence {clusterCount === 1 ? "cluster" : "clusters"} ·
+                ranked by signals × recency × size
+              </div>
+            )}
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
@@ -339,13 +450,21 @@ export function FlowView() {
                 </tr>
               </thead>
               <tbody>
-                {events.map((e, i) => (
-                  <FlowRow
-                    key={`${e.ts}-${e.ticker}-${e.kind}-${i}`}
-                    event={e}
-                    onTickerClick={openDossier}
-                  />
-                ))}
+                {feedItems.map((item, idx) =>
+                  item.type === "cluster" ? (
+                    <ClusterRow
+                      key={`cluster-${item.ticker}-${item.latestTs}-${idx}`}
+                      item={item}
+                      onTickerClick={openDossier}
+                    />
+                  ) : (
+                    <FlowRow
+                      key={`single-${item.event.ts}-${item.event.ticker}-${item.event.kind}-${idx}`}
+                      event={item.event}
+                      onTickerClick={openDossier}
+                    />
+                  ),
+                )}
               </tbody>
             </table>
           </CardContent>
@@ -411,6 +530,95 @@ function FlowRow({
             )}
             style={{ width: severityBar(event.severity) }}
           />
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// Cluster row — 2+ distinct anomaly kinds on the same ticker within
+// CLUSTER_WINDOW_MS. Renders as a single full-width tr (colSpan=6) with
+// a header line and the contributing signals nested below. Visual weight
+// scales with distinctKinds: 5+ glows, 3-4 highlights, 2 stays muted.
+function ClusterRow({
+  item,
+  onTickerClick,
+}: {
+  item: ClusterItem;
+  onTickerClick: (ticker: string) => void;
+}) {
+  const { ticker, events: clusterEvents, distinctKinds, latestTs, totalPremium } = item;
+  const earliest = clusterEvents[clusterEvents.length - 1]?.ts ?? latestTs;
+  const spanMs = new Date(latestTs).getTime() - new Date(earliest).getTime();
+  const spanMin = Math.max(1, Math.round(spanMs / 60_000));
+
+  const tone =
+    distinctKinds >= 5
+      ? "border-l-4 border-l-amber-400/80 bg-amber-500/[0.06]"
+      : distinctKinds >= 3
+        ? "border-l-4 border-l-primary/70 bg-primary/[0.05]"
+        : "border-l-4 border-l-foreground/30 bg-foreground/[0.02]";
+
+  const flame = distinctKinds >= 5 ? "🔥 " : distinctKinds >= 3 ? "⚡ " : "";
+
+  return (
+    <tr className={cn("border-b last:border-0", tone)}>
+      <td colSpan={6} className="px-3 py-2">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <button
+                type="button"
+                onClick={() => onTickerClick(ticker)}
+                className="font-semibold text-foreground hover:text-primary"
+              >
+                {flame}
+                {ticker}
+              </button>
+              <span className="text-xs text-muted-foreground">
+                {distinctKinds} signals in {spanMin}m · {formatMoney(totalPremium)} total ·
+                latest {formatRelative(latestTs)}
+              </span>
+            </div>
+            <ul className="mt-1 space-y-0.5 text-xs">
+              {clusterEvents.slice(0, 5).map((e, i) => {
+                const meta = KIND_META[e.kind];
+                return (
+                  <li
+                    key={`${e.ts}-${e.kind}-${i}`}
+                    className="flex flex-wrap items-baseline gap-x-2 text-muted-foreground"
+                  >
+                    <span className="text-foreground/40">└</span>
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0 text-[9px] font-medium uppercase tracking-wide",
+                        meta.cls,
+                      )}
+                    >
+                      {meta.label}
+                    </span>
+                    <span className={cn("flex-1", sideTone(e.option_type))}>{e.headline}</span>
+                    <span className="font-mono text-[10px]">{formatMoney(e.premium)}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {formatRelative(e.ts)}
+                    </span>
+                  </li>
+                );
+              })}
+              {clusterEvents.length > 5 && (
+                <li className="text-[10px] text-muted-foreground">
+                  + {clusterEvents.length - 5} more
+                </li>
+              )}
+            </ul>
+          </div>
+          <button
+            type="button"
+            onClick={() => onTickerClick(ticker)}
+            className="whitespace-nowrap rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground hover:border-primary/60 hover:text-foreground"
+          >
+            Dossier ▸
+          </button>
         </div>
       </td>
     </tr>
