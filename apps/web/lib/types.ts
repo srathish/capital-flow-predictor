@@ -1435,6 +1435,28 @@ export type HaltsResponse = {
   items: HaltItem[];
 };
 
+// /v1/admin/explosive/rescore — manual scoring trigger.
+export type RescoreTopItem = {
+  ticker: string;
+  stages?: number;
+  score: number;
+};
+
+export type RescoreResponse = {
+  status: "completed" | "cooldown";
+  snapshot_ts: string | null;
+  count: number | null;
+  top: RescoreTopItem[];
+  elapsed_seconds: number | null;
+  cooldown_remaining: number | null;
+};
+
+export type RescoreStatusResponse = {
+  in_progress: boolean;
+  cooldown_remaining: number;
+  last_finish_ts: number | null;
+};
+
 // Cross-tab confluence — see apps/api/.../routes/confluence.py
 export type ConfluenceSourceName =
   | "explosive"

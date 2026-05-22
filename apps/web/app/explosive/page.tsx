@@ -410,6 +410,9 @@ export default function ExplosivePage() {
   const [filter, setFilter] = useState<CatalystFilter>("all");
   const [minScore, setMinScore] = useState(0);
   const [dossierTicker, setDossierTicker] = useState<string | null>(null);
+  const [rescoring, setRescoring] = useState(false);
+  const [rescoreError, setRescoreError] = useState<string | null>(null);
+  const [rescoreCooldown, setRescoreCooldown] = useState(0);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["explosive", filter, minScore],
@@ -417,6 +420,27 @@ export default function ExplosivePage() {
     refetchInterval: REFETCH_MS,
     refetchOnWindowFocus: false,
   });
+
+  // Bypass the GHA cron entirely — fires score_explosive in-process on the
+  // API container and refetches when it returns. Cooldown-gated server-side.
+  async function triggerRescore() {
+    setRescoring(true);
+    setRescoreError(null);
+    try {
+      const { api } = await import("@/lib/api");
+      const r = await api.explosiveRescore();
+      if (r.status === "cooldown") {
+        setRescoreCooldown(Math.ceil(r.cooldown_remaining ?? 0));
+      } else {
+        setRescoreCooldown(60);
+      }
+      await refetch();
+    } catch (e) {
+      setRescoreError((e as Error)?.message ?? "rescore failed");
+    } finally {
+      setRescoring(false);
+    }
+  }
 
   const bucketed = useMemo(() => {
     const out = new Map<BucketKey, ExplosiveItem[]>();
@@ -439,18 +463,46 @@ export default function ExplosivePage() {
             4/5 confirmations 🔥 with a catalyst in ≤7d and sub-$1 optionality =
             the 1→100x template.
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Snapshot: {data?.snapshot_ts ? `${formatRelative(data.snapshot_ts)} (${new Date(data.snapshot_ts).toLocaleString()})` : "—"} · {data?.count ?? 0} setups
+          <p
+            className={cn(
+              "mt-1 text-xs",
+              (() => {
+                if (!data?.snapshot_ts) return "text-muted-foreground";
+                const ageH = (Date.now() - new Date(data.snapshot_ts).getTime()) / 3_600_000;
+                if (ageH >= 12) return "text-rose-400";
+                if (ageH >= 2) return "text-amber-400";
+                return "text-muted-foreground";
+              })(),
+            )}
+          >
+            Snapshot:{" "}
+            {data?.snapshot_ts
+              ? `${formatRelative(data.snapshot_ts)} (${new Date(data.snapshot_ts).toLocaleString()})`
+              : "—"}{" "}
+            · {data?.count ?? 0} setups
           </p>
         </div>
-        <button
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="h-9 rounded-full border border-border bg-card px-4 text-sm hover:border-primary/60 disabled:opacity-50"
-        >
-          {isFetching ? "Refreshing…" : "Refresh"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={triggerRescore}
+            disabled={rescoring || isFetching}
+            title="Run scoring in-process on the API. Bypasses the GHA cron. 60s cooldown."
+            className="h-9 rounded-full border border-primary/40 bg-primary/10 px-4 text-sm text-primary hover:border-primary disabled:opacity-50"
+          >
+            {rescoring ? "Rescoring… ~30-90s" : rescoreCooldown > 0 ? `Cooldown ${rescoreCooldown}s` : "Rescore now"}
+          </button>
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="h-9 rounded-full border border-border bg-card px-4 text-sm hover:border-primary/60 disabled:opacity-50"
+          >
+            {isFetching ? "Refreshing…" : "Refresh"}
+          </button>
+        </div>
       </div>
+      {rescoreError && (
+        <p className="mb-3 text-xs text-rose-400">Rescore failed: {rescoreError}</p>
+      )}
 
       {/* Filter row */}
       <div className="mb-4 flex flex-wrap items-center gap-2">

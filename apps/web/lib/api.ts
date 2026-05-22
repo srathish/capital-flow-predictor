@@ -23,6 +23,8 @@ import type {
   ExpandedSectorResponse,
   GlobalNewsResponse,
   HaltsResponse,
+  RescoreResponse,
+  RescoreStatusResponse,
   CalibrationResponse,
   FlowAggregateResponse,
   FlowCorrelationsResponse,
@@ -374,6 +376,18 @@ export const api = {
     if (opts.limit) sp.set("limit", String(opts.limit));
     if (opts.activeOnly) sp.set("active_only", "true");
     return getJson<HaltsResponse>(`/v1/halts/recent?${sp}`);
+  },
+  explosiveRescore(): Promise<RescoreResponse> {
+    return fetch(`${baseUrl()}/v1/admin/explosive/rescore`, {
+      method: "POST",
+      headers: { Accept: "application/json", ...authHeaders() },
+    }).then(async (r) => {
+      if (!r.ok) throw new ApiError(r.status, `${r.status} ${r.statusText}`);
+      return (await r.json()) as RescoreResponse;
+    });
+  },
+  explosiveRescoreStatus(): Promise<RescoreStatusResponse> {
+    return getJson<RescoreStatusResponse>(`/v1/admin/explosive/rescore/status`);
   },
   flowSectorTide(sector: string, lookbackHours = 6): Promise<FlowSectorTideResponse> {
     return getJson<FlowSectorTideResponse>(

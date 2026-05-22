@@ -17,6 +17,7 @@ from cfp_api.metrics import (
 )
 from cfp_api.migrations import apply_pending_migrations
 from cfp_api.routes import (
+    admin_explosive,
     agents,
     assistant,
     backtest,
@@ -125,6 +126,8 @@ app.include_router(stage.router, dependencies=PROTECTED)
 # Explosive options tab: catalyst-aware unusual-options scanner.
 # Reads explosive_scores written by `cfp-jobs explosive-score`.
 app.include_router(explosive.router, dependencies=PROTECTED)
+# Manual rescore trigger — runs score_explosive in-process, bypasses GHA cron.
+app.include_router(admin_explosive.router, dependencies=PROTECTED)
 app.include_router(delphi.router, dependencies=PROTECTED)
 # Cross-tab confluence — lazy aggregate over Explosive + Delphi + Whale +
 # Reddit + Flow. Scanner fans out to /v1/confluence/batch on each refresh.
