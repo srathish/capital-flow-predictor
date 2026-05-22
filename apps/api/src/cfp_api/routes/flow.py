@@ -698,6 +698,46 @@ def _f(v) -> float | None:
     return float(v) if v is not None else None
 
 
+async def _fresh_spot(conn, ticker: str) -> float | None:
+    """Latest underlying spot for `ticker`, preferring intraday sources.
+
+    Why: dossier callers (max-pain distance, flip thresholds, 3× targets) need
+    a price that reflects the current tape — `prices_daily.close` lags by up
+    to a full session and makes the dossier look wrong intraday. We try the
+    intraday GEX snapshot (updated every few minutes), then UW's contract
+    screener (carries underlying_price on every row), then fall back to the
+    daily close so the field is never null when daily data exists.
+    """
+    row = await conn.fetchval(
+        """
+        SELECT underlying_price FROM uw_spot_gex_intraday
+        WHERE ticker = $1 AND underlying_price IS NOT NULL
+        ORDER BY ts DESC LIMIT 1
+        """,
+        ticker,
+    )
+    if row is not None:
+        return float(row)
+    try:
+        row = await conn.fetchval(
+            """
+            SELECT underlying_price FROM uw_contract_screener
+            WHERE ticker = $1 AND underlying_price IS NOT NULL
+            ORDER BY snapshot_ts DESC LIMIT 1
+            """,
+            ticker,
+        )
+        if row is not None:
+            return float(row)
+    except Exception as e:  # noqa: BLE001
+        log.debug("contract_screener spot read failed for %s: %s", ticker, e)
+    row = await conn.fetchval(
+        "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
+        ticker,
+    )
+    return float(row) if row is not None else None
+
+
 def _severity(kind: str, r, sq_meta: dict | None = None) -> float:
     """Cheap 0..1 score so the UI can sort + color rows.
 
@@ -1199,11 +1239,9 @@ async def flow_aggregate(
         except Exception as e:  # noqa: BLE001
             log.debug("max_pain soft-read failed for %s: %s", sym, e)
             max_pain_rows = []
-        # Spot for the max-pain distance chip (latest daily close).
-        spot_val = await conn.fetchval(
-            "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
-            sym,
-        )
+        # Spot for the max-pain distance chip. Prefers intraday sources so
+        # the chip reflects the live tape, not yesterday's close.
+        spot_val = await _fresh_spot(conn, sym)
         # ---- Soft reads for advanced chips (explosive-owned + scheduler) ----
         # Each wrapped so a missing table / no data degrades gracefully.
         ticker_sector: str | None = None
@@ -1714,11 +1752,7 @@ async def suggest_plays(
     sym = ticker.upper()
     pool = get_pool()
     async with pool.acquire() as conn:
-        spot_row = await conn.fetchval(
-            "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
-            sym,
-        )
-        spot = float(spot_row) if spot_row else None
+        spot = await _fresh_spot(conn, sym)
 
         # Latest run's full ensemble: PM signal + every agent vote
         ensemble = await conn.fetch(
