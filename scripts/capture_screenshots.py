@@ -60,10 +60,10 @@ async def main() -> int:
         )
         page = await context.new_page()
 
-        # 1. Home / sector heatmap.
+        # 1. Home / Sectors (heatmap view by default).
         await shoot(page, f"{BASE}/", "01-sector-heatmap")
 
-        # 2. Sector detail (constituent holdings).
+        # 2. Sector detail (constituent holdings + laggards panel).
         await page.goto(f"{BASE}/", wait_until="networkidle")
         await page.wait_for_selector("a[href^='/sectors/']", timeout=8000)
         sector_href = await page.eval_on_selector(
@@ -72,31 +72,30 @@ async def main() -> int:
         if sector_href:
             await shoot(page, BASE + sector_href, "02-sector-holdings")
 
-        # Pick a ticker from that sector page for the agents view.
-        ticker = None
-        try:
-            await page.wait_for_selector("a[href^='/agents/']", timeout=8000)
-            ticker_href = await page.eval_on_selector(
-                "a[href^='/agents/']", "a => a.getAttribute('href')"
-            )
-            if ticker_href:
-                ticker = ticker_href.rstrip("/").split("/")[-1]
-        except Exception:
-            pass
-
         # 3. Agents ensemble view — use a ticker that has signals.
         await shoot(page, f"{BASE}/agents/NVDA", "03-agents-nvda", settle_ms=3000)
 
-        # 4. Watchlist.
-        await shoot(page, f"{BASE}/watchlist", "04-watchlist")
+        # 4. Screener (replaces old Watchlist).
+        await shoot(page, f"{BASE}/screener", "04-watchlist")
 
-        # 5. Network (correlation).
-        await shoot(page, f"{BASE}/network", "05-network", settle_ms=3000)
+        # 5. Chatter board — reddit + catalysts + news, stacked.
+        await shoot(page, f"{BASE}/reddit", "04-chatter")
 
-        # 6. Catalysts.
-        await shoot(page, f"{BASE}/catalysts", "06-catalysts")
+        # 6. (legacy) Network view — captured by switching the Sectors pill
+        #    to the network sub-view. Kept under 05-network so older
+        #    snapshots in DESIGN.md don't break.
+        await page.goto(f"{BASE}/", wait_until="networkidle")
+        try:
+            await page.get_by_role("button", name="Network").click(timeout=4000)
+            await page.wait_for_timeout(2500)
+            out = OUT / "05-network.png"
+            await page.screenshot(path=str(out), full_page=True)
+            print(f"→ 05-network                     /  (Network sub-view)")
+        except Exception:
+            print("   (Network sub-view not reachable, skipping)")
 
-        # 7. Reddit chatter.
+        # 7. Reddit chatter (same page, top-of-board crop). Keep filename
+        #    so README links don't 404 if not yet swapped to 04-chatter.
         await shoot(page, f"{BASE}/reddit", "07-reddit")
 
         # 8. Flow — unusual options activity.
@@ -104,6 +103,15 @@ async def main() -> int:
 
         # 9. Lab — opportunity score + calibration + freshness.
         await shoot(page, f"{BASE}/lab", "09-lab", settle_ms=2500)
+
+        # 10. Explosive — catalyst-aware Board.
+        await shoot(page, f"{BASE}/explosive", "10-explosive", settle_ms=2500)
+
+        # 11. Scanner — TradingView indicator port.
+        await shoot(page, f"{BASE}/scanner", "11-scanner", settle_ms=2500)
+
+        # 12. Discord Alerts.
+        await shoot(page, f"{BASE}/discord", "12-discord", settle_ms=2500)
 
         await browser.close()
     return 0

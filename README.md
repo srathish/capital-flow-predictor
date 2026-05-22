@@ -17,33 +17,45 @@ Full design and roadmap: [docs/DESIGN.md](docs/DESIGN.md).
 
 ## What's in the app
 
-The web app is a Next.js 15 dashboard with six top-level tabs plus a
-drill-in Agents view, each backed by its own FastAPI route and (where
-applicable) a background ingestion job. A page-aware assistant dock is
-mounted on every page.
+The web app is a Next.js 15 dashboard with eight top-level tabs plus a
+secret Lab tab and a drill-in Agents view. Each tab is backed by its own
+FastAPI route and (where applicable) a background ingestion job. A
+page-aware assistant dock is mounted on every page.
 
-### Sectors — XGB rotation board
+Top nav, in order:
+**Sectors · Reddit + Catalysts · Flow · GEX · Explosive · Screener · Scanner · Discord Alerts**.
 
-The home page ranks all 26 sector & thematic ETFs by the latest XGB
-prediction, color-coded by theme (secular growth, cyclical, defensive,
-rate-sensitive, …) and annotated with rank deltas, sparklines, and a
-**plain-English market read** explaining *why* the ranking looks the way
-it does — including a **forward-call narrative card** and **1D / 5D top
-contributors and detractors** per sector. The ranker exposes a scorecard
-(IC vs. naive baseline) so you can see how the model is doing out of
-sample; recent rotation features include macro-sensitivity exposures and
-constituent breadth.
+### Sectors — heatmap, cohorts, network (one tab)
+
+The home page now consolidates three views behind a pill toggle:
+
+- **Heatmap** — all 26 sector & thematic ETFs ranked by trailing return,
+  color-coded by theme (secular growth, cyclical, defensive,
+  rate-sensitive, …) and annotated with rank deltas, sparklines, and a
+  **plain-English market read** explaining *why* the ranking looks the
+  way it does, plus a **forward-call narrative card** and **1D / 5D top
+  contributors and detractors** per sector.
+- **Cohorts** — sub-industry pair-spread z-scores with Engle-Granger
+  cointegration flags and earnings-window annotations. Stacks alongside
+  a laggards-vs-sector-median panel on each sector drill-down.
+- **Network** — force-directed graph over the 26 sector ETFs in two
+  modes: **Correlation** (pairwise Pearson r over a rolling window, MST
+  overlay) and **Lead-lag** (Granger-causality DAG). Plus time slider
+  for correlation history, macro overlay (DGS10, VIX, DXY, …),
+  watchlist ring, and shock mode (rates / VIX / oil stress).
 
 Click any tile to drill into the sector's constituents:
 
 ![Sector holdings](docs/screenshots/02-sector-holdings.png)
 
-Sortable on weight, model score, 1d / 5d / 20d / 60d returns, and percent
-off the 52-week high. Inline price chart at the top.
+Sortable on weight, 1d / 5d / 20d / 60d returns, and percent off the
+52-week high. Inline price chart at the top, laggards-vs-median panel
+beneath.
 
 ### Agents — the 25-agent ensemble
 
-Click any ticker to run (or fetch the cached run of) the full ensemble:
+Click any ticker (from any tab) to run (or fetch the cached run of) the
+full ensemble:
 
 ![Agents ensemble](docs/screenshots/03-agents-nvda.png)
 
@@ -61,87 +73,46 @@ avoid call.
 Beyond the rule-based analysts, the personas receive **structured
 evidence** drawn from Unusual Whales (flow, dark pool, **insider
 asymmetry** — buy-vs-sell value tilt with cluster detection, ETF
-holdings), the **skylit.ai / Heatseeker structural snapshot + 0DTE
-Trinity** signals, the Reddit catalyst feed (**post bodies included**,
-not just titles — the sentiment analyst now counts catalyst-feed posts
-toward Reddit evidence and emits a **news sentiment rollup** with the
-top three headlines per ticker), and the latest XGB rotation rank for
-the underlying sector.
+holdings, catalysts, spot-GEX 1m, institutional flow), the **skylit.ai
+/ Heatseeker structural snapshot + 0DTE Trinity** signals, the Reddit
+catalyst feed (**post bodies included**, not just titles), a **news
+sentiment rollup** with the top three headlines per ticker from the
+6-source news aggregator, and the latest sector rotation context.
 
 You can talk to the synthesizer or any individual persona in their voice
 via SSE-streamed chat at the bottom of the page.
 
-### Watchlist — final PM verdicts by sector
+### Reddit + Catalysts — chatter board (one tab)
 
-![Watchlist](docs/screenshots/04-watchlist.png)
+The old Reddit and Catalysts tabs are now stacked into a single
+**chatter board**:
 
-Top constituents per top-ranked sector with the Portfolio Manager's
-verdict, confidence, allocation %, and expandable reasoning chain. Built by
-the `cfp-jobs build-watchlist` job.
+![Chatter board](docs/screenshots/04-chatter.png)
 
-### Network — correlation + lead-lag
+- **Chatter leaderboard** — the headline view. Top tickers across the
+  last 48h ranked by a composite of Reddit mention velocity, catalyst
+  posts, news hits, and price drift. Each row carries a one-line
+  *why-it's-here* tag, source-mix bar (Reddit / Catalyst / News), a
+  7-day mention sparkline, a tri-state predictor verdict (buy / fade /
+  watch / neutral), and click-through to a **per-ticker evidence
+  drawer** with the underlying posts, news items, and price reaction.
+- **Catalysts feed** — collapsible section underneath. Every flagged
+  catalyst event (partnership / FDA / earnings beat / insider /
+  acquisition / …) from r/stocks, r/investing, r/wallstreetbets,
+  r/options, plus the 6-source news aggregator. Sortable, filterable,
+  with a 30-day per-category track record (hit rate + avg forward
+  return per type).
+- **Reddit chatter table** — collapsible section for the full
+  predictive view: Apewisdom enrichment per ticker (sentiment bull
+  share, mention momentum, audience skew, contrarian + stealth-setup
+  flags) plus the `xgb_reddit_v1` ML predictor with scorecard
+  (precision @ top-K, lift vs. baseline) and per-subreddit edge.
 
-![Network graph](docs/screenshots/05-network.png)
-
-Force-directed graph over the 26 sector ETFs with two modes:
-
-- **Correlation** — pairwise Pearson r over a rolling window (60d default),
-  with an optional MST overlay to surface the backbone of the market.
-- **Lead-lag** — directed Granger-causality DAG showing which sectors lead
-  which on a chosen horizon. Surfaces *"leader moved → watch follower"*
-  triggers.
-
-Plus: a **time slider** to scrub correlation history, a **macro overlay**
-projecting macro series (DGS10, VIX, DXY, …) onto the graph, a
-**watchlist ring** highlighting sectors with active PM verdicts, and a
-**shock mode** that re-runs the graph under a chosen stress (rates up,
-VIX up, oil up). Hover to isolate a node, click to drill into the
-sector, shift-click to expand its top constituents (with their pairwise
-correlations), drag to pin.
-
-### Catalysts — Reddit posts that matter
-
-![Catalysts feed](docs/screenshots/06-catalysts.png)
-
-Catalyst-keyword feed pulled from r/stocks, r/investing, r/wallstreetbets,
-and r/options. Posts are classified (partnership / FDA / earnings beat /
-insider / acquisition / …), aggregated by ticker, clustered by composite
-score, and persisted. Filter by hour window (6h–7d), confidence threshold,
-sort by newest / top score / cluster size / engagement / biggest mover.
-
-A **30-day per-category track record** panel sits above the feed: hit
-rate and average forward return per catalyst type over the trailing 30
-days, so you can tell at a glance which categories are paying off and
-which are noise.
-
-### Reddit chatter — Apewisdom + enrichment + ML predictor
-
-![Reddit chatter](docs/screenshots/07-reddit.png)
-
-Top-mentioned tickers from the latest Apewisdom snapshot, enriched with:
-
-- sentiment bull share (from catalyst-keyword posts, last 7d)
-- price change 1d / 5d
-- momentum score (slope of last-7d mention count)
-- audience skew (WSB vs. r/investing)
-- catalyst post count + freshness tone
-- sparkline + per-subreddit breakdown
-- contrarian + stealth-setup flags
-- **composite 20d score** + rule-based bull/bear signals with
-  backtested win rates
-- **xgb_reddit_v1** — an ML predictor over the enrichment features.
-  Per-ticker prediction + scorecard (precision @ top-K, lift vs.
-  baseline) backfilled nightly against realized 5d returns, with a
-  `subreddit_edge` feature pulled from per-sub historical IC.
-
-A drawer opens the underlying Reddit thread; a backtest tab aggregates
-"do mention spikes lead price moves?" by spike-bucket.
-
-> **Heads-up:** the Reddit tab depends on migrations `0009_reddit_mentions.sql`
-> + `0010_reddit_posts.sql` (and `0011_reddit_predictions.sql` +
-> `0013_reddit_outcomes.sql` for the ML scorecard) plus the `apewisdom`
-> and `reddit_rss` ingestion jobs. If you see "failed to fetch", run
-> `make migrate` then `make daily`.
+> **Heads-up:** depends on migrations `0009_reddit_mentions.sql`,
+> `0010_reddit_posts.sql`, `0011_reddit_predictions.sql`,
+> `0013_reddit_outcomes.sql`, and `0028–0030` (catalysts + news) plus
+> the `apewisdom`, `reddit_rss`, and `news_aggregator` ingestion jobs.
+> If you see "failed to fetch", run `make migrate` then `make daily`.
 
 ### Flow — unusual options activity
 
@@ -161,14 +132,22 @@ tickers as options-trade candidates by combining flow conviction (from
 the `whale_conviction` table, migration `0014`) with the XGB sector
 signal and momentum/volatility features.
 
-**Per-ticker flow aggregate.** Punch in any symbol and the panel rolls
-up every alert we've ingested for it (default lookback 730d):
+**Per-ticker flow aggregate (Dossier).** Punch in any symbol — or
+click any row on the Pulse tape — and a **dossier slide-over** rolls up
+every alert we've ingested for it (default lookback 730d):
 call-premium share, ask aggression %, sweep %, premium concentration in
 the top expiry, **expiry-bucket breakdown** (0–7d / 8–30d / 31–90d /
 90d+), and **OI growth by strike** so you can see where new positioning
 is actually being built versus where it's just churn. A verdict header
 classifies the print as bullish flow / bearish flow / mixed with a
-plain-English reason.
+plain-English reason. Five **advanced-signal chips** sit on top: IV
+rank, max-pain pull, earnings proximity, skew flip, and NOPE.
+
+**Pulse tape with confluence clustering.** The main tape clusters
+related alerts on the same ticker into a single row and ranks the tape
+by **confluence score** (alerts that other signals — flow, news,
+catalysts, GEX — agree with float to the top). The clustering also
+collapses noise so you see one row per setup instead of ten near-dupes.
 
 **Suggested Plays — PROCEED / WAIT / SKIP.** On top of the aggregate,
 `/v1/flow/suggest-plays/{ticker}` emits a decisive gate plus a ranked
@@ -179,6 +158,74 @@ up.
 
 Backfill is run manually via `cfp-jobs flow-backfill <TICKER>` (uses a
 paginated UW client to walk historical alerts).
+
+### Explosive — catalyst-aware unusual-options Board
+
+![Explosive Board](docs/screenshots/10-explosive.png)
+
+A daily-ish scored shortlist of **catalyst-aware setups** rendered as
+thesis cards (not a table). Each card stands alone as a "would I trade
+this?" decision: a **catalyst countdown** (earnings / FDA / IPO),
+composite score with a sub-score sparkbar (flow concentration · IV term
+· squeeze · catalyst · cheap optionality · GEX bonus), Phase-2
+confirmation chips (IV-vs-RV, skew flip, NOPE, insider buying, volume
+profile), a **suggested trade structure** with a specific top contract,
+and click-through to the same dossier slide-over the Flow tape uses.
+
+Filter by catalyst type (earnings / FDA / IPO / all). Pipeline runs
+nightly via `cfp-jobs explosive-refresh`; per-ticker drilldowns at
+`/explosive/<ticker>` show the underlying sub-score derivation.
+
+### Screener — sector screen + My Watchlist (one tab)
+
+![Screener](docs/screenshots/04-watchlist.png)
+
+The old Watchlist tab was folded into Screener with a view toggle:
+
+- **Server screen** — `/v1/stocks/screen` ranker. Filter by signal
+  direction (long / short / any), confidence floor (50% / 60% / 70%),
+  lookback (2w–3m), earnings exclusion window, IV-rank floor, and
+  sector. Combines flow conviction (`whale_conviction`), rotation
+  context, and momentum / volatility features.
+- **My Watchlist** — sidebar of tickers you've pinned manually, with
+  the same enrichment cells (sector, last price, model verdict, alloc
+  %, expandable reasoning chain). Add or remove from any agent page.
+
+### Scanner — stage scan for S&P 500 (TradingView indicator port)
+
+![Scanner](docs/screenshots/11-scanner.png)
+
+A port of the **Master pipeline** TradingView indicator, scanning all
+S&P 500 names every refresh. Each ticker gets a **phase**
+(BASE / HANDLE / NEUTRAL / CAUTION / DANGER) with colors matched
+cell-for-cell to the indicator's background tints — keep TV open and
+compare. 10 stage conditions are broken out as color-coded chips so you
+can see exactly which rules pass; a **Grade gate** and **Flow gate**
+filter the list. Sortable on Ticker / Phase / Score / Close / Trigger /
+Distance / As-of. The repaint fix means rows only flip phase when the
+underlying bar closes, never intraday on the same bar.
+
+Per-row drilldown shows the **recommended contracts** + calendar dates
+in a targets table. Custom-ticker scans (outside S&P 500) also explain
+*why* a scan returned no data when applicable. Reads the vendored S&P
+500 list from `infra/seeds/sp500.csv` (Wikipedia 403s pandas now).
+
+### Discord Alerts — third-party server ingestion
+
+![Discord Alerts](docs/screenshots/12-discord.png)
+
+Live feed from the **Discord listener** service. Messages from
+allow-listed servers and channels are pulled in, ticker-extracted, and
+scored against our own signals (flow, GEX, catalysts) to produce a
+**confluence score** — how much our stack agrees with the alert.
+Grouped by `server → channel`, sorted by top confluence then recency.
+Toggle to hide chat banter (messages with no extracted ticker and no
+attachment).
+
+Per-author stats: hit rate, avg confluence on past alerts, and
+forward-return tracking on the tickers they've called. The listener
+itself lives in [apps/discord_listener/](apps/discord_listener/) and
+runs as a separate Railway service.
 
 ### Lab — opportunity score, calibration, ensemble freshness
 
@@ -249,31 +296,36 @@ against what you're looking at.
 
 ```
 apps/
-  api/        # FastAPI inference + chat service (Railway)
-  jobs/       # Ingestion, training, ensemble runner, watchlist builder, skylit-watch daemon
-  web/        # Next.js 15 + React 19 + Tailwind + lightweight-charts (Vercel)
-  gex/        # Node.js Heatseeker SSE poller + 09:31 ET scheduler + intraday monitor (Railway, separate service)
+  api/              # FastAPI inference + chat service (Railway)
+  jobs/             # Ingestion, ensemble runner, screener/scanner/explosive refresh, skylit-watch daemon
+  web/              # Next.js 15 + React 19 + Tailwind + lightweight-charts (Vercel)
+  gex/              # Node.js Heatseeker SSE poller + 09:31 ET scheduler + intraday monitor (Railway, separate service)
+  discord_listener/ # Allow-listed Discord channel ingest (Railway, separate service)
 packages/
   shared/     # Pydantic schemas
   features/   # Feature engineering (Alpha158, Granger, sector flows)
   models/     # XGBoost training + inference
   agents/     # 25-agent ensemble (LangGraph state machine)
   skills/     # Claude skill bundles
+local-chat/   # Standalone `lc` CLI — UW-only positioning pipeline, Claude Code companion
 infra/
-  migrations/ # SQL migrations (0001..0017)
+  migrations/ # SQL migrations (0001..0032)
   railway.toml      # API service config
-                    # Note: apps/gex has its own railway.toml — second service in the same project
+                    # Note: apps/gex and apps/discord_listener each have their own railway.toml — three services in the same project
 docs/
   DESIGN.md
   screenshots/
 ```
 
 **Data layer:** Postgres + TimescaleDB (`prices_daily`, `macro_daily`,
-`features_daily`, `predictions`, `lead_lag_matrix`, `sector_holdings`,
+`features_daily`, `lead_lag_matrix`, `sector_holdings`,
 `fundamentals`, `agent_signals`, `watchlists`, `uw_*` for Unusual
-Whales, `uw_etf_holdings`, `reddit_mentions`, `reddit_posts`,
-`reddit_predictions`, `reddit_outcomes`, `etf_breadth_snapshots`,
-`whale_conviction`, `run_evidence`, `agent_eval`, `stock_universe`).
+Whales, `uw_etf_holdings`, `uw_catalysts`, `uw_spot_gex_1m`,
+`uw_institutional_flow`, `reddit_mentions`, `reddit_posts`,
+`reddit_predictions`, `reddit_outcomes`, `news_items`,
+`etf_breadth_snapshots`, `whale_conviction`, `run_evidence`,
+`agent_eval`, `stock_universe`, `scanner_results`, `explosive_board`,
+`discord_messages`).
 
 **Agent ensemble:** LangGraph DAG —
 `analysts → personas → debate → researchers → trader → risk_manager → portfolio_manager`.
@@ -339,12 +391,28 @@ uv run --package cfp-jobs cfp-jobs run-agents NVDA
 uv run --package cfp-jobs cfp-jobs build-watchlist
 ```
 
-### Local options analysis (`lc` / local-chat)
+### `lc` — local-chat options pipeline (Claude Code companion)
 
-Self-contained CLI in `local-chat/` that pulls Unusual Whales data,
-computes positioning metrics in Python, and (optionally) hands the
-finished numbers to an LLM. Needs `UNUSUAL_WHALES_API_KEY` set; LLM
-keys only required for `lc analyze` without `--no-llm`.
+`lc` is a **separate pipeline** from the web app: a self-contained CLI
+in `local-chat/` that pulls Unusual Whales data, computes positioning
+metrics in Python, and (optionally) hands the finished numbers to an
+LLM. Nothing in it depends on the Bellwether database, the FastAPI
+service, or the Next.js dashboard — you can run it in any repo
+checkout against just `UNUSUAL_WHALES_API_KEY`. LLM keys are only
+required for `lc analyze` without `--no-llm`.
+
+It's specifically designed to **pair with Claude Code**: every command
+prints structured markdown to stdout (or `--json` for machine
+ingestion), so you can run it inside a Claude Code conversation and
+the model can read the output directly without any tool plumbing.
+The intended workflow is:
+
+> *"Run `uv run lc analyze IREN --no-llm` and tell me whether the Jan
+> 2028 calls look like real positioning or sold premium."*
+
+Claude Code executes the command via its shell tool, reads the
+deterministic numbers, and reasons from there — the LLM never touches
+the raw UW chain, only the pre-computed `PositioningInput`.
 
 ```bash
 # Install once
@@ -353,10 +421,11 @@ uv sync --package local-chat
 # Full positioning read (flow + GEX + OI), LLM-interpreted
 uv run --package local-chat lc analyze IREN
 
-# Just dump computed inputs as JSON — no LLM, good for piping/slicing
+# Just dump computed inputs — feed this to Claude Code as evidence
+uv run --package local-chat lc analyze IREN --no-llm
 uv run --package local-chat lc analyze IREN --no-llm --json > /tmp/iren.json
 
-# Single-concern views (no LLM)
+# Single-concern views (no LLM, Claude-Code-friendly)
 uv run --package local-chat lc flow  IREN          # net call/put $, sweeps, top contracts
 uv run --package local-chat lc gex   IREN          # dealer gamma, regime, flip level, walls
 uv run --package local-chat lc oi    IREN          # largest strikes, fastest growth
@@ -370,6 +439,17 @@ The built-in rollups bucket expiries into weekly / front_month / leap.
 For an expiry-specific slice (e.g. "just the Jan 2028 calls") pull the
 `--no-llm --json` dump and filter in Python — the assembled
 `PositioningInput` carries the full per-contract chain.
+
+**Prompt patterns that work well inside Claude Code:**
+
+| Ask | What Claude Code runs |
+|-----|-----------------------|
+| *"Give me the positioning read on IREN."* | `lc analyze IREN --no-llm` |
+| *"Is the IREN $110 call Jan-28 real positioning or sold premium?"* | `lc verify IREN 110 call 2028-01-21` |
+| *"Where's the GEX flip on SPY and what walls matter today?"* | `lc gex SPY` |
+| *"What strikes are growing fastest on PLTR over the last 30 days?"* | `lc oi PLTR --lookback 30` |
+| *"Compare flow on SOFI vs HOOD."* | Two `lc flow` calls + reasoning |
+| *"Dump everything UW has on RKLB into a file I can grep."* | `lc info RKLB --json > rklb.json` |
 
 ### Skylit (Heatseeker) login refresh
 
@@ -417,7 +497,9 @@ still works for fully-local dev where Postgres isn't in play.
 uv run python scripts/capture_screenshots.py
 ```
 
-Writes 9 PNGs into `docs/screenshots/`.
+Writes ~12 PNGs into `docs/screenshots/` (one per top-level tab plus
+the Sectors → Network sub-view, the Agents drill-in, and the secret
+Lab tab).
 
 ---
 
