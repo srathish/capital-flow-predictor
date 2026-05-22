@@ -1005,17 +1005,43 @@ def resolve_explosive_universe(
     database_url: str,
     days_ahead: int = 10,
     contract_screener_limit: int = 60,
+    screener_stocks_limit: int = 200,
 ) -> list[str]:
-    """Resolve the catalyst-aware watchlist:
-       contract_screener_tickers ∪ FDA(next N days) ∪ IPO(next N days)
-       ∪ earnings(next N days from uw_earnings).
-    De-duplicated, uppercased. Caller pulls per-ticker data for each."""
+    """Resolve the explosive-tab watchlist:
+       uw_screener_stocks (24h)               -- Phase A primary seed
+       ∪ contract_screener (latest snapshot)
+       ∪ FDA(next N days)
+       ∪ IPO(next N days)
+       ∪ uw_earnings_calendar_daily(next N days)   -- UW's authoritative
+                                                    upcoming-earnings feed
+       ∪ uw_earnings (legacy backstop)
+
+    De-duplicated, uppercased. Caller pulls per-ticker data for each.
+    Each source wrapped in try/except so a missing table (pre-migration
+    deploy) degrades gracefully to the remaining sources.
+    """
     today = datetime.now(UTC).date()
     horizon = today + timedelta(days=days_ahead)
     universe: set[str] = set()
     with connect(database_url) as conn, conn.cursor() as cur:
-        # most recent contract_screener snapshot
-        cur.execute(
+        def _safe(sql: str, params: tuple = ()) -> None:
+            try:
+                cur.execute(sql, params)
+                universe.update(row[0] for row in cur.fetchall() if row[0])
+            except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+                conn.rollback()
+        # Phase A primary seed — UW's pre-ranked stock screener. Last 24h.
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_screener_stocks
+            WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
+            ORDER BY ticker
+            LIMIT %s
+            """,
+            (screener_stocks_limit,),
+        )
+        # Contract screener — latest snapshot.
+        _safe(
             """
             SELECT DISTINCT ticker
             FROM uw_contract_screener
@@ -1025,35 +1051,33 @@ def resolve_explosive_universe(
             """,
             (contract_screener_limit,),
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        # FDA catalysts in horizon
-        cur.execute(
+        # FDA catalysts in horizon.
+        _safe(
             "SELECT DISTINCT ticker FROM uw_fda_calendar WHERE catalyst_date BETWEEN %s AND %s",
             (today, horizon),
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        # IPOs in horizon
-        cur.execute(
+        # IPOs in horizon.
+        _safe(
             "SELECT DISTINCT ticker FROM uw_ipo_calendar WHERE ipo_date BETWEEN %s AND %s",
             (today, horizon),
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        # Earnings in horizon (uses existing uw_earnings table from migration 0005)
-        try:
-            cur.execute(
-                """
-                SELECT DISTINCT ticker
-                FROM uw_earnings
-                WHERE report_date BETWEEN %s AND %s
-                """,
-                (today, horizon),
-            )
-            universe.update(row[0] for row in cur.fetchall() if row[0])
-        except psycopg.errors.UndefinedTable:
-            pass
-        except psycopg.errors.UndefinedColumn:
-            # column name might differ; soft-fail
-            pass
+        # Upcoming earnings (UW daily calendar, migration 0028).
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_earnings_calendar_daily
+            WHERE report_date BETWEEN %s AND %s
+            """,
+            (today, horizon),
+        )
+        # Legacy earnings backstop.
+        _safe(
+            """
+            SELECT DISTINCT ticker
+            FROM uw_earnings
+            WHERE report_date BETWEEN %s AND %s
+            """,
+            (today, horizon),
+        )
     return sorted(t.upper() for t in universe if t)
 
 
