@@ -214,9 +214,12 @@ export function ScannerView() {
       <header className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">Scanner</h1>
         <p className="text-sm text-muted-foreground">
-          BCS + HFS detection — Python port of the TradingView{" "}
-          <code className="text-xs">Stage Scanner</code> indicator. Phase, score, and
-          trigger should match TV cell-for-cell. Disagreements are bugs.
+          Four-gate Master pipeline — BCS / HFS setup + Grade (breakout quality 0–5) +
+          Flow (pre-breakout accumulation). Python port of the TradingView{" "}
+          <code className="text-xs">Stage + Confluence Master</code> indicator with
+          four strengthening divergences (see <code className="text-xs">STAGE_DRIFT.md</code>):
+          pre-breakout flow gate, pre-break tightness in Grade, handle duration check,
+          deterministic phase tie-break.
         </p>
         <div className="ml-auto text-xs text-muted-foreground">
           {data ? (
