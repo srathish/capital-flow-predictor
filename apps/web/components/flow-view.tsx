@@ -14,11 +14,27 @@ import { TickerDossierSheet } from "@/components/ticker-dossier-sheet";
 const REFETCH_MS = 30_000;
 const CLUSTER_WINDOW_MS = 30 * 60 * 1000;
 
+// Confluence is *cross-category* agreement, not just count of kinds.
+// repeated_hits + oi_explosion on the same chain are the same phenomenon
+// detected twice — not two independent signals. Real confluence means
+// the size lens, the concentration lens, and the vol lens all agree.
+type AnomalyCategory = "size" | "concentration" | "vol" | "daily";
+const KIND_CATEGORY: Record<FlowAnomalyKind, AnomalyCategory> = {
+  mega_sweep: "size",
+  block_buy: "size",
+  ask_aggression: "size",
+  repeated_hits: "concentration",
+  oi_explosion: "concentration",
+  iv_expansion: "vol",
+  daily_skew: "daily",
+};
+
 type ClusterItem = {
   type: "cluster";
   ticker: string;
   events: FlowEvent[];
   distinctKinds: number;
+  distinctCategories: number;
   latestTs: string;
   totalPremium: number;
   sortScore: number;
@@ -143,10 +159,20 @@ export function FlowView() {
   const [kind, setKind] = useState<FlowAnomalyKind | "all">("all");
   const [ticker, setTicker] = useState<string>("");
   const [dossierTicker, setDossierTicker] = useState<string | null>(null);
+  const [expandedClusters, setExpandedClusters] = useState<Set<string>>(new Set());
 
   function openDossier(t: string) {
     const sym = t.trim().toUpperCase();
     if (sym) setDossierTicker(sym);
+  }
+
+  function toggleCluster(key: string) {
+    setExpandedClusters((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   }
 
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
@@ -211,11 +237,17 @@ export function FlowView() {
         (e) => latestMs - new Date(e.ts).getTime() > CLUSTER_WINDOW_MS,
       );
       const distinctKinds = new Set(inWindow.map((e) => e.kind)).size;
+      const distinctCategories = new Set(
+        inWindow.map((e) => KIND_CATEGORY[e.kind]),
+      ).size;
 
-      if (distinctKinds >= 2) {
+      // Cluster requires ≥2 *categories*, not just kinds. Sort weight uses
+      // categories too so a same-category pair (repeated + vol/oi on one
+      // chain) doesn't outrank a real cross-lens cluster.
+      if (distinctCategories >= 2) {
         const totalPremium = inWindow.reduce((s, e) => s + (e.premium ?? 0), 0);
         const sortScore =
-          distinctKinds * 100 +
+          distinctCategories * 100 +
           recencyScore(latestTs) * 10 +
           premiumScore(totalPremium) * 5;
         items.push({
@@ -223,6 +255,7 @@ export function FlowView() {
           ticker,
           events: inWindow,
           distinctKinds,
+          distinctCategories,
           latestTs,
           totalPremium,
           sortScore,
@@ -450,21 +483,32 @@ export function FlowView() {
                 </tr>
               </thead>
               <tbody>
-                {feedItems.map((item, idx) =>
-                  item.type === "cluster" ? (
-                    <ClusterRow
-                      key={`cluster-${item.ticker}-${item.latestTs}-${idx}`}
-                      item={item}
-                      onTickerClick={openDossier}
-                    />
-                  ) : (
+                {feedItems.map((item, idx) => {
+                  if (item.type === "cluster") {
+                    const key = `cluster-${item.ticker}-${item.latestTs}`;
+                    // High-confluence (4+ categories) opens by default so the
+                    // alpha moments never need a click; lower-confluence stays
+                    // collapsed to keep the feed dense.
+                    const autoOpen = item.distinctCategories >= 4;
+                    const expanded = autoOpen || expandedClusters.has(key);
+                    return (
+                      <ClusterRow
+                        key={key}
+                        item={item}
+                        expanded={expanded}
+                        onToggle={() => toggleCluster(key)}
+                        onTickerClick={openDossier}
+                      />
+                    );
+                  }
+                  return (
                     <FlowRow
                       key={`single-${item.event.ts}-${item.event.ticker}-${item.event.kind}-${idx}`}
                       event={item.event}
                       onTickerClick={openDossier}
                     />
-                  ),
-                )}
+                  );
+                })}
               </tbody>
             </table>
           </CardContent>
@@ -542,75 +586,105 @@ function FlowRow({
 // scales with distinctKinds: 5+ glows, 3-4 highlights, 2 stays muted.
 function ClusterRow({
   item,
+  expanded,
+  onToggle,
   onTickerClick,
 }: {
   item: ClusterItem;
+  expanded: boolean;
+  onToggle: () => void;
   onTickerClick: (ticker: string) => void;
 }) {
-  const { ticker, events: clusterEvents, distinctKinds, latestTs, totalPremium } = item;
+  const {
+    ticker,
+    events: clusterEvents,
+    distinctKinds,
+    distinctCategories,
+    latestTs,
+    totalPremium,
+  } = item;
   const earliest = clusterEvents[clusterEvents.length - 1]?.ts ?? latestTs;
   const spanMs = new Date(latestTs).getTime() - new Date(earliest).getTime();
   const spanMin = Math.max(1, Math.round(spanMs / 60_000));
 
+  // Visual weight keys off *categories* (independent lenses) not raw kinds.
+  // 4 categories = all four lenses agreeing = the alpha moment.
   const tone =
-    distinctKinds >= 5
+    distinctCategories >= 4
       ? "border-l-4 border-l-amber-400/80 bg-amber-500/[0.06]"
-      : distinctKinds >= 3
+      : distinctCategories >= 3
         ? "border-l-4 border-l-primary/70 bg-primary/[0.05]"
         : "border-l-4 border-l-foreground/30 bg-foreground/[0.02]";
 
-  const flame = distinctKinds >= 5 ? "🔥 " : distinctKinds >= 3 ? "⚡ " : "";
+  const flame = distinctCategories >= 4 ? "🔥 " : distinctCategories >= 3 ? "⚡ " : "";
 
   return (
     <tr className={cn("border-b last:border-0", tone)}>
       <td colSpan={6} className="px-3 py-2">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <button
-                type="button"
-                onClick={() => onTickerClick(ticker)}
+            <button
+              type="button"
+              onClick={onToggle}
+              className="flex w-full flex-wrap items-baseline gap-x-2 gap-y-1 text-left"
+            >
+              <span className="text-xs text-foreground/40">{expanded ? "▾" : "▸"}</span>
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onTickerClick(ticker);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.stopPropagation();
+                    onTickerClick(ticker);
+                  }
+                }}
                 className="font-semibold text-foreground hover:text-primary"
               >
                 {flame}
                 {ticker}
-              </button>
-              <span className="text-xs text-muted-foreground">
-                {distinctKinds} signals in {spanMin}m · {formatMoney(totalPremium)} total ·
-                latest {formatRelative(latestTs)}
               </span>
-            </div>
-            <ul className="mt-1 space-y-0.5 text-xs">
-              {clusterEvents.slice(0, 5).map((e, i) => {
-                const meta = KIND_META[e.kind];
-                return (
-                  <li
-                    key={`${e.ts}-${e.kind}-${i}`}
-                    className="flex flex-wrap items-baseline gap-x-2 text-muted-foreground"
-                  >
-                    <span className="text-foreground/40">└</span>
-                    <span
-                      className={cn(
-                        "rounded-full px-1.5 py-0 text-[9px] font-medium uppercase tracking-wide",
-                        meta.cls,
-                      )}
+              <span className="text-xs text-muted-foreground">
+                {distinctKinds} signals · {distinctCategories} lenses in {spanMin}m ·{" "}
+                {formatMoney(totalPremium)} · latest {formatRelative(latestTs)}
+              </span>
+            </button>
+            {expanded && (
+              <ul className="mt-1 space-y-0.5 text-xs">
+                {clusterEvents.slice(0, 5).map((e, i) => {
+                  const meta = KIND_META[e.kind];
+                  return (
+                    <li
+                      key={`${e.ts}-${e.kind}-${i}`}
+                      className="flex flex-wrap items-baseline gap-x-2 text-muted-foreground"
                     >
-                      {meta.label}
-                    </span>
-                    <span className={cn("flex-1", sideTone(e.option_type))}>{e.headline}</span>
-                    <span className="font-mono text-[10px]">{formatMoney(e.premium)}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">
-                      {formatRelative(e.ts)}
-                    </span>
+                      <span className="text-foreground/40">└</span>
+                      <span
+                        className={cn(
+                          "rounded-full px-1.5 py-0 text-[9px] font-medium uppercase tracking-wide",
+                          meta.cls,
+                        )}
+                      >
+                        {meta.label}
+                      </span>
+                      <span className={cn("flex-1", sideTone(e.option_type))}>{e.headline}</span>
+                      <span className="font-mono text-[10px]">{formatMoney(e.premium)}</span>
+                      <span className="font-mono text-[10px] text-muted-foreground">
+                        {formatRelative(e.ts)}
+                      </span>
+                    </li>
+                  );
+                })}
+                {clusterEvents.length > 5 && (
+                  <li className="text-[10px] text-muted-foreground">
+                    + {clusterEvents.length - 5} more
                   </li>
-                );
-              })}
-              {clusterEvents.length > 5 && (
-                <li className="text-[10px] text-muted-foreground">
-                  + {clusterEvents.length - 5} more
-                </li>
-              )}
-            </ul>
+                )}
+              </ul>
+            )}
           </div>
           <button
             type="button"
