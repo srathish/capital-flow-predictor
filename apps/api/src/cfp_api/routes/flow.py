@@ -679,6 +679,77 @@ class UpcomingEarnings(BaseModel):
     revenue_estimate_analyst_count: int | None
 
 
+class SectorAlignment(BaseModel):
+    """Is this ticker's flow running with or against its sector tape?
+
+    Sourced from uw_stock_info.sector × uw_sector_tide (rolling 1h sum).
+    Verdict 'with-sector' = both ticker and sector lean the same direction;
+    'against-sector' = opposites (= louder smart-money conviction); 'neutral'
+    = sector premium too small to read."""
+    sector: str
+    sector_lean: Literal["bull", "bear", "neutral"]
+    sector_net_call_premium_1h: float
+    sector_net_put_premium_1h: float
+    alignment: Literal["with-sector", "against-sector", "neutral"]
+    headline: str  # one-line plain-English summary
+
+
+class IvTermPoint(BaseModel):
+    expiry: str
+    dte: int | None
+    iv: float | None
+    iv_atm: float | None
+
+
+class IvTermStructure(BaseModel):
+    """ATM IV by expiry — when front > back IV, the market is pricing an
+    imminent move. Pulled soft from uw_iv_term_structure (owned by explosive
+    ingest)."""
+    snapshot_date: str
+    points: list[IvTermPoint]
+    front_iv: float | None
+    back_iv: float | None
+    inverted: bool                  # front > back by ≥5% = catalyst priced
+    inversion_pct: float | None     # (front - back) / back
+
+
+class SkewPoint(BaseModel):
+    dte: int
+    skew: float | None         # 25-delta call_iv − put_iv (signed)
+    call_iv: float | None
+    put_iv: float | None
+
+
+class RiskReversalSkew(BaseModel):
+    """25-delta call IV minus put IV across DTE buckets. Positive = call
+    demand > put demand = bullish lean from the option-pricing surface."""
+    snapshot_date: str
+    points: list[SkewPoint]
+    headline: str               # one-line summary of bias
+
+
+class IvVsRv(BaseModel):
+    """IV30 (from uw_iv_rank_history) vs realized vol (from uw_realized_volatility).
+    IV >> RV = vol overpriced (good for selling); IV << RV = cheap optionality."""
+    snapshot_date: str
+    iv30: float | None
+    rv30: float | None
+    iv_rv_ratio: float | None       # iv30 / rv30 (1.0 = equal)
+    verdict: Literal["cheap", "fair", "rich"]
+
+
+class PeerCorrelation(BaseModel):
+    peer_ticker: str
+    correlation: float | None
+
+
+class TopPeers(BaseModel):
+    """Peers most correlated with this ticker (UW correlations basket).
+    Useful context for 'is this name moving alone or with a herd?'."""
+    snapshot_date: str
+    peers: list[PeerCorrelation]
+
+
 class FlowAggregateResponse(BaseModel):
     ticker: str
     days: int                          # window applied (kept for the FE filter)
@@ -703,10 +774,18 @@ class FlowAggregateResponse(BaseModel):
     oi_growth_window_days: int               # the window we summed daily deltas over
     top_strikes: list[TopStrike]
     top_trades: list[TopTradeAgg]
-    # ---- New chips backed by migration 0027 + soft reads from 0024 ---------
+    # ---- New chips backed by migration 0027 + soft reads from 0024/0025 ----
     iv_rank: IvRankSnapshot | None = None                 # /api/stock/{T}/iv-rank
     upcoming_earnings: UpcomingEarnings | None = None     # /api/companies/{T}/earnings-estimates
     max_pain: list[MaxPainExpiry] = []                    # soft-read from uw_max_pain
+    # The chips below are all soft-reads from tables owned by other ingests
+    # (explosive Phase 2/3 + my sector_tide/correlations scheduler). They
+    # silently nil-out when the source table is empty for this ticker.
+    sector_alignment: SectorAlignment | None = None       # uw_stock_info × uw_sector_tide
+    iv_term_structure: IvTermStructure | None = None      # uw_iv_term_structure
+    risk_reversal_skew: RiskReversalSkew | None = None    # uw_risk_reversal_skew
+    iv_vs_rv: IvVsRv | None = None                        # uw_realized_volatility + iv_rank
+    top_peers: TopPeers | None = None                     # uw_correlations
     # True when this request triggered a background UW ingest (or one was
     # already in flight). The UI can poll/re-fetch to pick up the fresh data.
     refresh_queued: bool = False
@@ -934,6 +1013,103 @@ async def flow_aggregate(
             "SELECT close FROM prices_daily WHERE symbol = $1 ORDER BY ts DESC LIMIT 1",
             sym,
         )
+        # ---- Soft reads for advanced chips (explosive-owned + scheduler) ----
+        # Each wrapped so a missing table / no data degrades gracefully.
+        ticker_sector: str | None = None
+        try:
+            ticker_sector = await conn.fetchval(
+                "SELECT sector FROM uw_stock_info WHERE ticker = $1",
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("stock_info sector read failed for %s: %s", sym, e)
+
+        sector_tide_row = None
+        if ticker_sector:
+            try:
+                sector_tide_row = await conn.fetchrow(
+                    """
+                    SELECT
+                        COALESCE(SUM(net_call_premium), 0)::float AS call_sum,
+                        COALESCE(SUM(net_put_premium),  0)::float AS put_sum
+                    FROM uw_sector_tide
+                    WHERE sector = $1 AND ts >= NOW() - INTERVAL '1 hour'
+                    """,
+                    ticker_sector,
+                )
+            except Exception as e:  # noqa: BLE001
+                log.debug("sector_tide read failed for %s: %s", sym, e)
+
+        iv_term_rows: list = []
+        try:
+            iv_term_rows = await conn.fetch(
+                """
+                SELECT expiry, dte, iv, iv_atm
+                FROM uw_iv_term_structure
+                WHERE ticker = $1
+                  AND snapshot_date = (
+                    SELECT MAX(snapshot_date) FROM uw_iv_term_structure WHERE ticker = $1
+                  )
+                ORDER BY expiry ASC
+                LIMIT 12
+                """,
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("iv_term_structure soft-read failed for %s: %s", sym, e)
+            iv_term_rows = []
+
+        skew_rows: list = []
+        try:
+            skew_rows = await conn.fetch(
+                """
+                SELECT dte, skew, call_iv, put_iv
+                FROM uw_risk_reversal_skew
+                WHERE ticker = $1
+                  AND snapshot_date = (
+                    SELECT MAX(snapshot_date) FROM uw_risk_reversal_skew WHERE ticker = $1
+                  )
+                ORDER BY dte ASC
+                """,
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("risk_reversal_skew soft-read failed for %s: %s", sym, e)
+            skew_rows = []
+
+        rv30_val = None
+        try:
+            rv30_val = await conn.fetchval(
+                """
+                SELECT realized_volatility
+                FROM uw_realized_volatility
+                WHERE ticker = $1 AND rv_window_days = 30
+                ORDER BY snapshot_date DESC
+                LIMIT 1
+                """,
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("realized_volatility soft-read failed for %s: %s", sym, e)
+
+        peer_rows: list = []
+        try:
+            peer_rows = await conn.fetch(
+                """
+                SELECT snd_ticker AS peer, correlation
+                FROM uw_correlations
+                WHERE fst_ticker = $1
+                  AND snapshot_date = (
+                    SELECT MAX(snapshot_date) FROM uw_correlations WHERE fst_ticker = $1
+                  )
+                ORDER BY ABS(correlation) DESC NULLS LAST
+                LIMIT 5
+                """,
+                sym,
+            )
+        except Exception as e:  # noqa: BLE001
+            log.debug("correlations soft-read failed for %s: %s", sym, e)
+            peer_rows = []
 
     # Decide whether to kick off a background UW refresh. Force the refresh
     # when refresh=now or when we have zero alerts on file; otherwise apply
@@ -1122,6 +1298,138 @@ async def flow_aggregate(
             revenue_estimate_analyst_count=earnings_row["revenue_estimate_analyst_count"],
         )
 
+    # ---- Build the advanced soft-read chips ---------------------------------
+    sector_alignment_chip: SectorAlignment | None = None
+    if ticker_sector and sector_tide_row is not None:
+        call_sum = float(sector_tide_row["call_sum"] or 0.0)
+        put_sum = float(sector_tide_row["put_sum"] or 0.0)
+        diff = call_sum - put_sum
+        if abs(diff) < 5_000_000:
+            sec_lean: Literal["bull", "bear", "neutral"] = "neutral"
+        else:
+            sec_lean = "bull" if diff > 0 else "bear"
+        # `verdict` is set above based on the ticker's bullish_score.
+        if sec_lean == "neutral" or verdict == "mixed":
+            alignment: Literal["with-sector", "against-sector", "neutral"] = "neutral"
+            align_msg = "Sector flow too small to read; no alignment signal."
+        else:
+            ticker_lean = "bull" if verdict == "bullish" else "bear"
+            if ticker_lean == sec_lean:
+                alignment = "with-sector"
+                align_msg = (
+                    f"{sym} is {verdict} *with* {ticker_sector} sector "
+                    f"(${abs(diff)/1e6:.1f}M net {sec_lean} in last hour)."
+                )
+            else:
+                alignment = "against-sector"
+                align_msg = (
+                    f"{sym} is {verdict} *against* a {sec_lean}-leaning "
+                    f"{ticker_sector} sector — louder smart-money conviction."
+                )
+        sector_alignment_chip = SectorAlignment(
+            sector=ticker_sector,
+            sector_lean=sec_lean,
+            sector_net_call_premium_1h=call_sum,
+            sector_net_put_premium_1h=put_sum,
+            alignment=alignment,
+            headline=align_msg,
+        )
+
+    iv_term_chip: IvTermStructure | None = None
+    if iv_term_rows:
+        pts = [
+            IvTermPoint(
+                expiry=r["expiry"].isoformat(),
+                dte=int(r["dte"]) if r["dte"] is not None else None,
+                iv=_f(r["iv"]),
+                iv_atm=_f(r["iv_atm"]),
+            )
+            for r in iv_term_rows
+        ]
+        # Use iv_atm where available, fall back to iv; pick front and back IV
+        # by DTE rather than table order to be robust.
+        valued = [(p.dte, p.iv_atm if p.iv_atm is not None else p.iv) for p in pts if p.dte is not None]
+        front_iv = back_iv = None
+        if valued:
+            front_iv = min(valued, key=lambda x: x[0])[1]
+            back_iv = max(valued, key=lambda x: x[0])[1]
+        inversion_pct: float | None = None
+        inverted = False
+        if front_iv is not None and back_iv is not None and back_iv > 0:
+            inversion_pct = (front_iv - back_iv) / back_iv
+            inverted = inversion_pct >= 0.05
+        iv_term_chip = IvTermStructure(
+            snapshot_date=iv_term_rows[0]["expiry"].isoformat(),
+            points=pts,
+            front_iv=front_iv,
+            back_iv=back_iv,
+            inverted=inverted,
+            inversion_pct=inversion_pct,
+        )
+
+    skew_chip: RiskReversalSkew | None = None
+    if skew_rows:
+        sk_pts = [
+            SkewPoint(
+                dte=int(r["dte"]),
+                skew=_f(r["skew"]),
+                call_iv=_f(r["call_iv"]),
+                put_iv=_f(r["put_iv"]),
+            )
+            for r in skew_rows
+        ]
+        # Headline: look at the 30d-ish bucket. Skew > +1% = bullish lean,
+        # < -1% = bearish lean, else neutral.
+        ref = min(sk_pts, key=lambda p: abs((p.dte or 30) - 30)) if sk_pts else None
+        if ref is None or ref.skew is None:
+            sk_msg = "Risk-reversal skew flat across DTE."
+        elif ref.skew >= 0.01:
+            sk_msg = f"+{ref.skew*100:.1f}% call-side skew at {ref.dte}d — option market is paying for upside."
+        elif ref.skew <= -0.01:
+            sk_msg = f"{ref.skew*100:.1f}% put-side skew at {ref.dte}d — option market is paying for downside."
+        else:
+            sk_msg = f"Neutral skew at {ref.dte}d (no directional lean from option pricing)."
+        # We need a snapshot_date — pull it from any row's expiry isn't right
+        # since skew rows are keyed by (date, ticker, dte). Re-fetch the date
+        # cheaply from the first row's payload? skew_rows don't carry the
+        # snapshot_date column; default to today.
+        skew_chip = RiskReversalSkew(
+            snapshot_date=datetime.now(UTC).date().isoformat(),
+            points=sk_pts,
+            headline=sk_msg,
+        )
+
+    iv_vs_rv_chip: IvVsRv | None = None
+    if rv30_val is not None and iv_rank_chip is not None and iv_rank_chip.iv30 is not None:
+        rv30 = float(rv30_val)
+        iv30 = float(iv_rank_chip.iv30)
+        ratio = iv30 / rv30 if rv30 > 0 else None
+        if ratio is None:
+            rv_verdict: Literal["cheap", "fair", "rich"] = "fair"
+        elif ratio >= 1.30:
+            rv_verdict = "rich"
+        elif ratio <= 0.80:
+            rv_verdict = "cheap"
+        else:
+            rv_verdict = "fair"
+        iv_vs_rv_chip = IvVsRv(
+            snapshot_date=iv_rank_chip.snapshot_date,
+            iv30=iv30,
+            rv30=rv30,
+            iv_rv_ratio=ratio,
+            verdict=rv_verdict,
+        )
+
+    top_peers_chip: TopPeers | None = None
+    if peer_rows:
+        top_peers_chip = TopPeers(
+            snapshot_date=datetime.now(UTC).date().isoformat(),
+            peers=[
+                PeerCorrelation(peer_ticker=r["peer"], correlation=_f(r["correlation"]))
+                for r in peer_rows
+            ],
+        )
+
     spot_for_mp: float | None = float(spot_val) if spot_val is not None else None
     max_pain_chips: list[MaxPainExpiry] = []
     for r in max_pain_rows:
@@ -1176,6 +1484,11 @@ async def flow_aggregate(
         iv_rank=iv_rank_chip,
         upcoming_earnings=upcoming_earnings_chip,
         max_pain=max_pain_chips,
+        sector_alignment=sector_alignment_chip,
+        iv_term_structure=iv_term_chip,
+        risk_reversal_skew=skew_chip,
+        iv_vs_rv=iv_vs_rv_chip,
+        top_peers=top_peers_chip,
         refresh_queued=refresh_queued,
     )
 

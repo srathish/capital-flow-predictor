@@ -973,6 +973,62 @@ export type FlowUpcomingEarnings = {
   revenue_estimate_analyst_count: number | null;
 };
 
+export type FlowSectorAlignment = {
+  sector: string;
+  sector_lean: "bull" | "bear" | "neutral";
+  sector_net_call_premium_1h: number;
+  sector_net_put_premium_1h: number;
+  alignment: "with-sector" | "against-sector" | "neutral";
+  headline: string;
+};
+
+export type FlowIvTermPoint = {
+  expiry: string;
+  dte: number | null;
+  iv: number | null;
+  iv_atm: number | null;
+};
+
+export type FlowIvTermStructure = {
+  snapshot_date: string;
+  points: FlowIvTermPoint[];
+  front_iv: number | null;
+  back_iv: number | null;
+  inverted: boolean;
+  inversion_pct: number | null;
+};
+
+export type FlowSkewPoint = {
+  dte: number;
+  skew: number | null;
+  call_iv: number | null;
+  put_iv: number | null;
+};
+
+export type FlowRiskReversalSkew = {
+  snapshot_date: string;
+  points: FlowSkewPoint[];
+  headline: string;
+};
+
+export type FlowIvVsRv = {
+  snapshot_date: string;
+  iv30: number | null;
+  rv30: number | null;
+  iv_rv_ratio: number | null;
+  verdict: "cheap" | "fair" | "rich";
+};
+
+export type FlowPeerCorrelation = {
+  peer_ticker: string;
+  correlation: number | null;
+};
+
+export type FlowTopPeers = {
+  snapshot_date: string;
+  peers: FlowPeerCorrelation[];
+};
+
 export type FlowAggregateResponse = {
   ticker: string;
   days: number;
@@ -1000,6 +1056,11 @@ export type FlowAggregateResponse = {
   iv_rank: FlowIvRankSnapshot | null;
   upcoming_earnings: FlowUpcomingEarnings | null;
   max_pain: FlowMaxPainExpiry[];
+  sector_alignment: FlowSectorAlignment | null;
+  iv_term_structure: FlowIvTermStructure | null;
+  risk_reversal_skew: FlowRiskReversalSkew | null;
+  iv_vs_rv: FlowIvVsRv | null;
+  top_peers: FlowTopPeers | null;
   refresh_queued?: boolean;
 };
 

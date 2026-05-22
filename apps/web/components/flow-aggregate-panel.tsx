@@ -171,6 +171,158 @@ export function FlowAggregatePanel() {
             </div>
           )}
 
+          {(data.sector_alignment ||
+            data.iv_term_structure ||
+            data.risk_reversal_skew ||
+            data.iv_vs_rv ||
+            (data.top_peers?.peers?.length ?? 0) > 0) && (
+            <div className="space-y-2">
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Advanced signals
+              </div>
+              <div className="grid grid-cols-1 gap-2 text-xs sm:grid-cols-2 lg:grid-cols-3">
+                {data.sector_alignment && (
+                  <div
+                    className={`rounded border p-2 ${
+                      data.sector_alignment.alignment === "against-sector"
+                        ? "border-amber-500/40"
+                        : data.sector_alignment.alignment === "with-sector"
+                          ? "border-emerald-500/30"
+                          : "border-border/50"
+                    }`}
+                  >
+                    <div className="text-muted-foreground">
+                      Sector · {data.sector_alignment.sector}
+                    </div>
+                    <div className="font-mono text-sm">
+                      {data.sector_alignment.alignment === "against-sector" && (
+                        <span className="text-amber-300">⚡ against-sector</span>
+                      )}
+                      {data.sector_alignment.alignment === "with-sector" && (
+                        <span className="text-emerald-300">with-sector</span>
+                      )}
+                      {data.sector_alignment.alignment === "neutral" && (
+                        <span className="text-muted-foreground">neutral</span>
+                      )}
+                    </div>
+                    <div className="text-muted-foreground leading-tight">
+                      {data.sector_alignment.headline}
+                    </div>
+                  </div>
+                )}
+                {data.iv_term_structure && (
+                  <div className="rounded border border-border/50 p-2">
+                    <div className="text-muted-foreground">IV term structure</div>
+                    {data.iv_term_structure.front_iv != null &&
+                    data.iv_term_structure.back_iv != null ? (
+                      <div className="font-mono text-sm">
+                        front {(data.iv_term_structure.front_iv * 100).toFixed(0)}% →
+                        back {(data.iv_term_structure.back_iv * 100).toFixed(0)}%
+                        {data.iv_term_structure.inverted ? (
+                          <span className="ml-1 text-rose-300">
+                            inverted{" "}
+                            {data.iv_term_structure.inversion_pct != null
+                              ? `+${(data.iv_term_structure.inversion_pct * 100).toFixed(0)}%`
+                              : ""}
+                          </span>
+                        ) : (
+                          <span className="ml-1 text-muted-foreground">normal</span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-muted-foreground">no data</div>
+                    )}
+                    {data.iv_term_structure.inverted && (
+                      <div className="text-muted-foreground leading-tight">
+                        Front-month IV elevated — market pricing an imminent move.
+                      </div>
+                    )}
+                  </div>
+                )}
+                {data.risk_reversal_skew && (
+                  <div className="rounded border border-border/50 p-2">
+                    <div className="text-muted-foreground">25Δ risk-reversal skew</div>
+                    <div className="font-mono text-sm">
+                      {data.risk_reversal_skew.points.map((p) => (
+                        <span
+                          key={p.dte}
+                          className={
+                            p.skew == null
+                              ? "text-muted-foreground"
+                              : p.skew >= 0.005
+                                ? "text-emerald-300"
+                                : p.skew <= -0.005
+                                  ? "text-rose-300"
+                                  : "text-muted-foreground"
+                          }
+                        >
+                          {p.dte}d {p.skew != null ? `${p.skew >= 0 ? "+" : ""}${(p.skew * 100).toFixed(1)}%` : "—"}{" "}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="text-muted-foreground leading-tight">
+                      {data.risk_reversal_skew.headline}
+                    </div>
+                  </div>
+                )}
+                {data.iv_vs_rv && (
+                  <div className="rounded border border-border/50 p-2">
+                    <div className="text-muted-foreground">IV vs realized</div>
+                    <div className="font-mono text-sm">
+                      IV {data.iv_vs_rv.iv30 != null ? (data.iv_vs_rv.iv30 * 100).toFixed(0) : "—"}% /
+                      RV {data.iv_vs_rv.rv30 != null ? (data.iv_vs_rv.rv30 * 100).toFixed(0) : "—"}%
+                      {data.iv_vs_rv.iv_rv_ratio != null && (
+                        <span
+                          className={`ml-1 ${
+                            data.iv_vs_rv.verdict === "rich"
+                              ? "text-rose-300"
+                              : data.iv_vs_rv.verdict === "cheap"
+                                ? "text-emerald-300"
+                                : "text-muted-foreground"
+                          }`}
+                        >
+                          ({data.iv_vs_rv.iv_rv_ratio.toFixed(2)}× · {data.iv_vs_rv.verdict})
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-muted-foreground leading-tight">
+                      {data.iv_vs_rv.verdict === "rich"
+                        ? "Vol is overpriced vs realized — options are expensive."
+                        : data.iv_vs_rv.verdict === "cheap"
+                          ? "Vol is underpriced vs realized — cheap optionality."
+                          : "Vol is roughly in line with realized."}
+                    </div>
+                  </div>
+                )}
+                {data.top_peers && data.top_peers.peers.length > 0 && (
+                  <div className="rounded border border-border/50 p-2">
+                    <div className="text-muted-foreground">Top correlated peers</div>
+                    <div className="font-mono text-sm">
+                      {data.top_peers.peers.slice(0, 5).map((p) => (
+                        <span key={p.peer_ticker} className="mr-2">
+                          {p.peer_ticker}
+                          <span
+                            className={
+                              p.correlation == null
+                                ? "text-muted-foreground"
+                                : p.correlation >= 0.6
+                                  ? "text-emerald-300"
+                                  : p.correlation <= -0.6
+                                    ? "text-rose-300"
+                                    : "text-muted-foreground"
+                            }
+                          >
+                            {p.correlation != null ? ` ${p.correlation.toFixed(2)}` : " —"}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {suggest && <SuggestedPlaysBlock data={suggest} />}
 
           <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
