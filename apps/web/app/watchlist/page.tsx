@@ -1,16 +1,7 @@
-import type { Metadata } from "next";
-import { MyWatchlist } from "@/components/my-watchlist";
-import { WatchlistGrid } from "@/components/watchlist-grid";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Watchlist · Bellwether",
-};
-
+// /watchlist was folded into /screener (view toggle: Flat | By sector,
+// with a "My list" sidebar). Kept as a redirect so old links don't 404.
 export default function WatchlistPage() {
-  return (
-    <div className="space-y-6">
-      <MyWatchlist />
-      <WatchlistGrid />
-    </div>
-  );
+  redirect("/screener");
 }

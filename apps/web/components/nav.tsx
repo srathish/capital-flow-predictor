@@ -14,7 +14,6 @@ const tabs = [
   { href: "/explosive", label: "Explosive" },
   { href: "/screener", label: "Screener" },
   { href: "/scanner", label: "Scanner" },
-  { href: "/watchlist", label: "Watchlist" },
   { href: "/discord", label: "Discord Alerts" },
 ];
 

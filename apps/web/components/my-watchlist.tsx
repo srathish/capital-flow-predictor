@@ -1,63 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { api } from "@/lib/api";
 import { getSessionId } from "@/lib/session";
-import type { CustomWatchlistEntry } from "@/lib/types";
+import type { CustomWatchlistResponse } from "@/lib/types";
 
-// Minimal portfolio-construction stub. Users add tickers; entries persist in
+// Portfolio-construction stub. Users add tickers; entries persist in
 // custom_watchlist keyed by a browser session id. When real auth lands, the
 // session_id column becomes user_id and the UI flow is unchanged.
 
+export const CUSTOM_WATCHLIST_KEY = ["custom-watchlist"] as const;
+
+export function useCustomWatchlist() {
+  return useQuery<CustomWatchlistResponse>({
+    queryKey: CUSTOM_WATCHLIST_KEY,
+    queryFn: () => api.listCustomWatchlist(getSessionId()),
+    enabled: typeof window !== "undefined",
+  });
+}
+
+export function useAddToCustomWatchlist() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ ticker, note }: { ticker: string; note?: string }) =>
+      api.addToCustomWatchlist(getSessionId(), ticker, note),
+    onSuccess: (res) => qc.setQueryData(CUSTOM_WATCHLIST_KEY, res),
+  });
+}
+
+export function useRemoveFromCustomWatchlist() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ ticker }: { ticker: string }) =>
+      api.removeFromCustomWatchlist(getSessionId(), ticker),
+    onSuccess: (res) => qc.setQueryData(CUSTOM_WATCHLIST_KEY, res),
+  });
+}
+
 export function MyWatchlist() {
-  const [entries, setEntries] = useState<CustomWatchlistEntry[]>([]);
+  const { data, error: loadError } = useCustomWatchlist();
+  const add = useAddToCustomWatchlist();
+  const remove = useRemoveFromCustomWatchlist();
   const [ticker, setTicker] = useState("");
   const [note, setNote] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const sid = getSessionId();
-        if (!sid) return;
-        const res = await api.listCustomWatchlist(sid);
-        if (!cancelled) setEntries(res.entries);
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "load failed");
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const entries = data?.entries ?? [];
+  const error =
+    add.error?.message ?? remove.error?.message ?? (loadError as Error | null)?.message ?? null;
 
-  async function add() {
-    setError(null);
+  async function submit() {
     const t = ticker.trim().toUpperCase();
     if (!t) return;
-    setLoading(true);
-    try {
-      const res = await api.addToCustomWatchlist(getSessionId(), t, note.trim() || undefined);
-      setEntries(res.entries);
-      setTicker("");
-      setNote("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "add failed");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function remove(t: string) {
-    setError(null);
-    try {
-      const res = await api.removeFromCustomWatchlist(getSessionId(), t);
-      setEntries(res.entries);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "remove failed");
-    }
+    await add.mutateAsync({ ticker: t, note: note.trim() || undefined });
+    setTicker("");
+    setNote("");
   }
 
   return (
@@ -67,8 +64,8 @@ export function MyWatchlist() {
         <input
           value={ticker}
           onChange={(e) => setTicker(e.target.value)}
-          placeholder="Ticker (e.g. NVDA)"
-          className="w-32 rounded border border-border bg-background px-2 py-1 text-sm uppercase"
+          placeholder="Ticker"
+          className="w-24 rounded border border-border bg-background px-2 py-1 text-sm uppercase"
           maxLength={12}
         />
         <input
@@ -80,8 +77,8 @@ export function MyWatchlist() {
         />
         <button
           type="button"
-          onClick={add}
-          disabled={loading || !ticker.trim()}
+          onClick={submit}
+          disabled={add.isPending || !ticker.trim()}
           className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground disabled:opacity-50"
         >
           Add
@@ -90,19 +87,22 @@ export function MyWatchlist() {
       {error && <p className="mb-2 text-xs text-destructive">{error}</p>}
       {entries.length === 0 ? (
         <p className="text-xs text-muted-foreground">
-          Nothing tracked yet. Add a ticker above — entries persist across reloads in this browser.
+          Nothing tracked yet. Star a row in the screener or add a ticker above.
         </p>
       ) : (
         <ul className="space-y-1">
           {entries.map((e) => (
-            <li key={e.ticker} className="flex items-center justify-between rounded border border-border/50 px-2 py-1">
+            <li
+              key={e.ticker}
+              className="flex items-center justify-between rounded border border-border/50 px-2 py-1"
+            >
               <div>
                 <span className="font-mono font-semibold">{e.ticker}</span>
                 {e.note && <span className="ml-2 text-xs text-muted-foreground">{e.note}</span>}
               </div>
               <button
                 type="button"
-                onClick={() => remove(e.ticker)}
+                onClick={() => remove.mutate({ ticker: e.ticker })}
                 className="text-xs text-muted-foreground hover:text-destructive"
               >
                 remove
