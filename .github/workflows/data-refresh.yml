@@ -24,8 +24,10 @@ on:
     - cron: "*/10 13-20 * * 1-5"
     # Every 12 minutes during US RTH — whale-conviction scorer (re-derives from current data)
     - cron: "2,14,26,38,50 13-20 * * 1-5"
-    # Hourly during US RTH (13:00-20:00 UTC, Mon-Fri) — UW flow-universe ingest
-    - cron: "0 13-20 * * 1-5"
+    # Every 30 min during US RTH (13:00-20:00 UTC, Mon-Fri) — UW flow-universe
+    # ingest. Hourly was too coarse: the /flow feed routinely showed alerts
+    # 60+ min old, plus GH Actions' top-of-hour delay can push that to 90 min.
+    - cron: "0,30 13-20 * * 1-5"
     # Daily at 23:30 UTC (after US close) — snapshot per-ticker IV regime
     - cron: "30 23 * * 1-5"
     # Hourly at :07 — Apewisdom mention snapshots (asymmetry flags need 3+ days to mean anything)
@@ -379,7 +381,7 @@ jobs:
     # UW per-ticker flow alerts + dark pool + net premium + greeks + insiders.
     # Twice a day during RTH for the top constituents — enough for the /flow
     # page to render and the scorer to have fresh ammunition.
-    if: github.event.schedule == '0 13-20 * * 1-5' || github.event.inputs.job == 'flow-universe'
+    if: github.event.schedule == '0,30 13-20 * * 1-5' || github.event.inputs.job == 'flow-universe'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
