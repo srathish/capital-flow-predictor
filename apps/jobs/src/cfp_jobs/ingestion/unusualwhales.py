@@ -527,6 +527,63 @@ class UwClient:
         """Per-ticker insider buy/sell rollup across standard windows."""
         return self._get(f"/stock/{ticker}/insider-buy-sells") or []
 
+    # ---------- Phase A: funnel-architecture endpoints ----------
+    # Top-of-funnel discovery + deep GEX + institutional lit/dark + news.
+
+    def screener_stocks(
+        self,
+        *,
+        limit: int = 200,
+        min_iv_rank: float | None = None,
+        min_pct_change: float | None = None,
+        min_volume: int | None = None,
+    ) -> list[dict]:
+        """Stock-level pre-ranked screener. Primary universe seed for /explosive."""
+        params: dict[str, Any] = {"limit": limit}
+        if min_iv_rank is not None:
+            params["min_iv_rank"] = min_iv_rank
+        if min_pct_change is not None:
+            params["min_pct_change"] = min_pct_change
+        if min_volume is not None:
+            params["min_volume"] = min_volume
+        return self._get("/screener/stocks", params=params) or []
+
+    def market_oi_change(self, limit: int = 200) -> list[dict]:
+        """Market-wide OI change ranking — biggest overnight positioning shifts."""
+        return self._get("/market/oi-change", params={"limit": limit}) or []
+
+    def greek_exposure_strike(self, ticker: str) -> list[dict]:
+        """Per-strike GEX breakdown. The actual gamma wall locations."""
+        return self._get(f"/stock/{ticker}/greek-exposure/strike") or []
+
+    def greek_exposure_expiry(self, ticker: str) -> list[dict]:
+        """Per-expiry GEX breakdown — which weekly carries the gamma cliff."""
+        return self._get(f"/stock/{ticker}/greek-exposure/expiry") or []
+
+    def greek_flow(self, ticker: str, target_date: date | None = None) -> list[dict]:
+        """Intraday change in net greek exposure as flow accumulates."""
+        params: dict[str, Any] = {}
+        if target_date:
+            params["date"] = target_date.isoformat()
+        return self._get(f"/stock/{ticker}/greek-flow", params=params) or []
+
+    def lit_flow_recent(self, limit: int = 200) -> list[dict]:
+        """Recent lit-exchange institutional prints across the market."""
+        return self._get("/lit-flow/recent", params={"limit": limit}) or []
+
+    def lit_flow_ticker(self, ticker: str, limit: int = 200) -> list[dict]:
+        """Per-ticker lit-flow history."""
+        return self._get(f"/lit-flow/{ticker}", params={"limit": limit}) or []
+
+    def darkpool_recent(self, limit: int = 200) -> list[dict]:
+        """Recent dark-pool prints across the market (global discovery feed)."""
+        return self._get("/darkpool/recent", params={"limit": limit}) or []
+
+    def news_global(self, limit: int = 100) -> list[dict]:
+        """Global news feed (no ticker filter). Event injector for unscheduled
+        catalysts (M&A leaks, surprise FDA, halts)."""
+        return self._get("/news/headlines", params={"limit": limit}) or []
+
     def close(self) -> None:
         self._client.close()
 

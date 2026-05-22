@@ -169,62 +169,90 @@ def _clip(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 
 def _load_universe(conn: psycopg.Connection, today: date) -> list[str]:
-    """Tickers we'll score — union of recent contract_screener hits + catalysts.
+    """Tickers we'll score — the top of the funnel.
 
-    Sources, in order of importance:
-      1. uw_earnings_calendar_daily — UW's authoritative upcoming-earnings
-         feed (added by migration 0028). This is the actual full list of
-         names reporting in the next ~10 days; without it the universe is
-         starved.
-      2. uw_contract_screener — recent UW unusual-options scans. Window is
-         24h (was 6h, but ingest doesn't always run that often).
-      3. uw_fda_calendar / uw_ipo_calendar — non-earnings catalysts.
-      4. uw_earnings (legacy) — only has tickers we've previously asked UW
-         about via /stock/{ticker}/earnings. Kept as a backstop.
+    Funnel-architecture seed order (Phase A):
+      1. uw_screener_stocks — UW's stock-level pre-ranked screener (last 24h).
+         The primary discovery surface: UW already filtered for unusual
+         IV/volume/perchange, we just pull names.
+      2. uw_market_oi_change — biggest overnight OI shifts market-wide
+         (catches institutional positioning before tape moves).
+      3. uw_top_net_impact — names where net options impact moves the needle.
+      4. uw_movers_snapshot — top % gainers/losers (last 24h).
+      5. uw_contract_screener — UW "Hottest Chains" (option-level, last 24h).
+      6. uw_earnings_calendar_daily — every name reporting next 10d.
+      7. uw_fda_calendar / uw_ipo_calendar — non-earnings catalysts.
+      8. uw_earnings (legacy backstop).
+
+    Each source is wrapped in try/except so a missing table (e.g. Phase A
+    migrations not yet applied) doesn't blow up scoring.
     """
     horizon = today + timedelta(days=10)
     universe: set[str] = set()
     with conn.cursor() as cur:
-        # 1. Upcoming earnings (UW daily calendar) — the primary seed.
-        try:
-            cur.execute(
-                """
-                SELECT DISTINCT ticker FROM uw_earnings_calendar_daily
-                WHERE report_date BETWEEN %s AND %s
-                """,
-                (today, horizon),
-            )
-            universe.update(row[0] for row in cur.fetchall() if row[0])
-        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
-            pass
-        # 2. Recent UW unusual-options screener hits (24h window).
-        cur.execute(
+        def _safe(sql: str, params: tuple[Any, ...] = ()) -> None:
+            try:
+                cur.execute(sql, params)
+                universe.update(row[0] for row in cur.fetchall() if row[0])
+            except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+                conn.rollback()
+        # 1. Stock screener — primary discovery (Phase A).
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_screener_stocks
+            WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
+            """
+        )
+        # 2. Market-wide OI change (Phase A).
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_market_oi_change
+            WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
+            """
+        )
+        # 3. Top net-impact ranking.
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_top_net_impact
+            WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
+            """
+        )
+        # 4. Market movers (gainers / losers / most-active buckets).
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_movers_snapshot
+            WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
+            """
+        )
+        # 5. Hottest contract chains.
+        _safe(
             """
             SELECT DISTINCT ticker FROM uw_contract_screener
             WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'
             """
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        # 3. FDA + IPO catalysts.
-        cur.execute(
+        # 6. Upcoming earnings (UW daily calendar).
+        _safe(
+            """
+            SELECT DISTINCT ticker FROM uw_earnings_calendar_daily
+            WHERE report_date BETWEEN %s AND %s
+            """,
+            (today, horizon),
+        )
+        # 7. FDA + IPO catalysts.
+        _safe(
             "SELECT DISTINCT ticker FROM uw_fda_calendar WHERE catalyst_date BETWEEN %s AND %s",
             (today, horizon),
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        cur.execute(
+        _safe(
             "SELECT DISTINCT ticker FROM uw_ipo_calendar WHERE ipo_date BETWEEN %s AND %s",
             (today, horizon),
         )
-        universe.update(row[0] for row in cur.fetchall() if row[0])
-        # 4. Legacy per-ticker earnings table — backstop.
-        try:
-            cur.execute(
-                "SELECT DISTINCT ticker FROM uw_earnings WHERE report_date BETWEEN %s AND %s",
-                (today, horizon),
-            )
-            universe.update(row[0] for row in cur.fetchall() if row[0])
-        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
-            pass
+        # 8. Legacy earnings backstop.
+        _safe(
+            "SELECT DISTINCT ticker FROM uw_earnings WHERE report_date BETWEEN %s AND %s",
+            (today, horizon),
+        )
     return sorted(t.upper() for t in universe if t)
 
 

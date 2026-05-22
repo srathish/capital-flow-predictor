@@ -37,6 +37,7 @@ from cfp_jobs.ingestion import explosive as explosive_mod  # noqa: E402
 from cfp_jobs.ingestion import catalysts as catalysts_mod  # noqa: E402
 from cfp_jobs.ingestion import gex_spot as gex_spot_mod  # noqa: E402
 from cfp_jobs.ingestion import institutional as institutional_mod  # noqa: E402
+from cfp_jobs.ingestion import screeners as screeners_mod  # noqa: E402
 from cfp_jobs.settings import settings  # noqa: E402
 
 app = typer.Typer(
@@ -1115,6 +1116,83 @@ def institutional_ingest_cmd(
                 f"[green]institutional (per-ticker):[/green] tickers={pt['tickers']} "
                 f"ownership={pt['ownership']} stock_insider={pt['stock_insider']}"
             )
+
+
+@app.command("uw-screeners-ingest")
+def uw_screeners_ingest_cmd() -> None:
+    """Phase A: refresh all market-level UW endpoints feeding the funnel.
+
+    Pulls:
+      - /screener/stocks         -> uw_screener_stocks (primary universe seed)
+      - /market/oi-change        -> uw_market_oi_change
+      - /lit-flow/recent         -> uw_lit_flow_recent
+      - /darkpool/recent         -> uw_darkpool_recent
+      - /news/headlines (global) -> uw_news_global
+
+    Designed to run every 15 minutes. Each endpoint is independent — if
+    one 403/404/500s on the current subscription tier, the others still
+    populate.
+    """
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    out = screeners_mod.ingest_uw_market_layer(
+        settings.database_url, settings.unusual_whales_api_key
+    )
+    console.print(
+        f"[green]uw-screeners-ingest:[/green] "
+        f"screener_stocks={out.get('screener_stocks', 0)} "
+        f"market_oi_change={out.get('market_oi_change', 0)} "
+        f"lit_flow_recent={out.get('lit_flow_recent', 0)} "
+        f"darkpool_recent={out.get('darkpool_recent', 0)} "
+        f"news_global={out.get('news_global', 0)}"
+    )
+
+
+@app.command("uw-gex-ingest")
+def uw_gex_ingest_cmd(
+    tickers: str = typer.Option(
+        "",
+        help="Comma-separated tickers. If empty, uses the explosive universe.",
+    ),
+) -> None:
+    """Phase A: per-ticker deep GEX ingest.
+
+    For each ticker pulls:
+      - /stock/{t}/greek-exposure/strike -> uw_greek_exposure_strike
+      - /stock/{t}/greek-exposure/expiry -> uw_greek_exposure_expiry
+      - /stock/{t}/greek-flow            -> uw_greek_flow
+      - /lit-flow/{t}                    -> uw_lit_flow_ticker
+
+    Run after `uw-screeners-ingest` so the universe is already built.
+    """
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    if tickers.strip():
+        symbols = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    else:
+        symbols = _explosive_universe()
+    if not symbols:
+        console.print("[yellow]no tickers[/yellow]")
+        return
+    totals = {"strike": 0, "expiry": 0, "flow": 0, "lit": 0}
+    for sym in symbols:
+        counts = screeners_mod.ingest_gex_for_ticker(
+            settings.database_url, settings.unusual_whales_api_key, sym
+        )
+        totals["strike"] += counts.get("strike", 0)
+        totals["expiry"] += counts.get("expiry", 0)
+        totals["flow"] += counts.get("flow", 0)
+        lit = screeners_mod.ingest_lit_flow_ticker(
+            settings.database_url, settings.unusual_whales_api_key, sym
+        )
+        totals["lit"] += lit
+    console.print(
+        f"[green]uw-gex-ingest:[/green] tickers={len(symbols)} "
+        f"strike={totals['strike']} expiry={totals['expiry']} "
+        f"flow={totals['flow']} lit={totals['lit']}"
+    )
 
 
 if __name__ == "__main__":
