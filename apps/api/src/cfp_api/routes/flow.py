@@ -831,6 +831,19 @@ class SuggestedPlay(BaseModel):
     stop_loss_pct: float               # -0.50 = cut at -50% of premium
     approx_spot_target: float | None   # rough underlying price needed for the 3× target
 
+    # Live pricing + EV (added so the suggestion isn't "buy a 420 call" without
+    # the actual current price + expected payoff). NULL when no live price
+    # found within 7d in uw_flow_alerts AND no historical close in
+    # uw_option_contract_history.
+    current_mid: float | None = None         # $ per share (multiply by 100 for contract cost)
+    cost_per_contract: float | None = None   # current_mid * 100
+    profit_at_target: float | None = None    # 3.0x cost in $ (target_multiple - 1) * cost
+    loss_at_stop: float | None = None        # 0.5x cost in $
+    ev_per_contract: float | None = None     # prob_hit * profit - (1-prob_hit) * loss
+    breakeven_probability: float | None = None  # p needed for EV>=0
+    price_source: str | None = None          # 'uw_flow' | 'uw_history' | 'none'
+    price_as_of: datetime | None = None
+
     why: list[str]                     # plain-English reasons we picked it
     caveats: list[str]                 # anti-conviction signals (trap detection)
     flip_condition: str                # what would invalidate the thesis
@@ -1905,6 +1918,49 @@ async def suggest_plays(
 
     n_considered = len(rows)
     today = datetime.now(UTC).date()
+
+    # ---- Live option mid lookup (batched, single query) ----
+    # Pull the freshest mid for every (ticker, strike, expiry, option_type)
+    # combination we'll consider. uw_flow_alerts is the source of truth for
+    # the last-traded price; we fall back to uw_option_contract_history if
+    # the contract hasn't traded recently. Keys: (strike, expiry, type) since
+    # ticker is fixed at $1.
+    pricing: dict[tuple[float, Any, str], dict[str, Any]] = {}
+    try:
+        triples = list({(float(r["strike"]), r["expiry"], r["option_type"]) for r in rows})
+        if triples:
+            # PostgreSQL doesn't support IN with multi-column tuples cleanly via
+            # asyncpg parameters, so use unnest with three parallel arrays.
+            strikes = [t[0] for t in triples]
+            expiries = [t[1] for t in triples]
+            types_arr = [t[2] for t in triples]
+            price_rows = await conn.fetch(
+                """
+                SELECT DISTINCT ON (strike, expiry, option_type)
+                    strike, expiry, option_type,
+                    price, iv_end, created_at AS as_of, 'uw_flow' AS source
+                FROM uw_flow_alerts
+                WHERE ticker = $1
+                  AND (strike, expiry, option_type) IN (
+                    SELECT * FROM UNNEST($2::float[], $3::date[], $4::text[])
+                  )
+                  AND created_at >= NOW() - INTERVAL '7 days'
+                  AND price IS NOT NULL AND price > 0
+                ORDER BY strike, expiry, option_type, created_at DESC
+                """,
+                sym, strikes, expiries, types_arr,
+            )
+            for pr in price_rows:
+                pricing[(float(pr["strike"]), pr["expiry"], pr["option_type"])] = {
+                    "current_mid": float(pr["price"]),
+                    "current_iv": float(pr["iv_end"]) if pr["iv_end"] is not None else None,
+                    "as_of": pr["as_of"],
+                    "source": pr["source"],
+                }
+    except Exception as e:
+        import logging as _l
+        _l.getLogger("cfp_api").warning("flow suggested-plays price-batch failed: %s", e)
+
     candidates: list[tuple[float, dict]] = []
     for r in rows:
         expiry = r["expiry"]
@@ -2045,6 +2101,26 @@ async def suggest_plays(
             approx_spot_target = strike_f * 1.05 if spot is None else max(strike_f * 1.05, spot * 1.05)
         else:
             approx_spot_target = strike_f * 0.95 if spot is None else min(strike_f * 0.95, spot * 0.95)
+        # ---- Live mid + EV (uses the batched `pricing` dict) ----
+        price_info = pricing.get((strike_f, expiry, opt_type))
+        current_mid = price_info["current_mid"] if price_info else None
+        price_source = price_info["source"] if price_info else "none"
+        price_as_of = price_info["as_of"] if price_info else None
+        cost_per_contract = (current_mid * 100) if current_mid else None
+        # 1:3 R:R semantics: +200% on target hit, -50% on stop.
+        profit_at_target = (current_mid * (target_multiple - 1) * 100) if current_mid else None
+        loss_at_stop = (current_mid * abs(stop_loss_pct) * 100) if current_mid else None
+        # Heuristic probability from conviction score (0..100). Anchored at
+        # 0.30 baseline, +0.40 at score=100. Replaced by a real estimator
+        # once Delphi outcomes accrue for these strike-level setups.
+        prob_hit = max(0.20, min(0.90, 0.30 + 0.40 * (score / 100.0)))
+        ev_per_contract = None
+        breakeven_p = None
+        if cost_per_contract:
+            ev_per_contract = prob_hit * profit_at_target - (1 - prob_hit) * loss_at_stop
+            denom = profit_at_target + loss_at_stop
+            breakeven_p = (loss_at_stop / denom) if denom > 0 else None
+
         candidates.append((
             score,
             dict(
@@ -2072,6 +2148,15 @@ async def suggest_plays(
                 target_payout_multiple=target_multiple,
                 stop_loss_pct=stop_loss_pct,
                 approx_spot_target=round(approx_spot_target, 2) if approx_spot_target is not None else None,
+                # New live-price + EV fields
+                current_mid=current_mid,
+                cost_per_contract=cost_per_contract,
+                profit_at_target=profit_at_target,
+                loss_at_stop=loss_at_stop,
+                ev_per_contract=ev_per_contract,
+                breakeven_probability=breakeven_p,
+                price_source=price_source,
+                price_as_of=price_as_of,
                 why=why,
                 caveats=caveats,
                 flip_condition=flip,

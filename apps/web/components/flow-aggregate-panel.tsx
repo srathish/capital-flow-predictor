@@ -679,6 +679,77 @@ function SuggestedPlaysBlock({ data }: { data: FlowSuggestedPlaysResponse }) {
                   </div>
                 </div>
 
+                {/* Live contract pricing + EV — the missing actionable layer */}
+                <div className="mb-2 grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">
+                      Current mid
+                      {p.price_source && p.price_source !== "none" && (
+                        <span
+                          className={`ml-1 px-1 rounded text-[9px] ${
+                            p.price_source === "uw_flow"
+                              ? "bg-emerald-500/15 text-emerald-300"
+                              : p.price_source === "uw_history"
+                              ? "bg-blue-500/15 text-blue-300"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                          title={
+                            p.price_source === "uw_flow"
+                              ? "Last trade <7d from uw_flow_alerts"
+                              : p.price_source === "uw_history"
+                              ? "Most recent contract OHLC close"
+                              : "Black-Scholes theoretical"
+                          }
+                        >
+                          {p.price_source === "uw_flow" ? "live" : p.price_source === "uw_history" ? "EOD" : "theo"}
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-mono text-sm">
+                      {p.current_mid !== null ? `$${p.current_mid.toFixed(2)}` : "—"}
+                    </div>
+                  </div>
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">Cost / contract</div>
+                    <div className="font-mono text-sm">
+                      {p.cost_per_contract !== null
+                        ? `$${p.cost_per_contract.toFixed(0)}`
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="rounded border border-border/40 px-2 py-1">
+                    <div className="text-muted-foreground">Profit @ target</div>
+                    <div className="font-mono text-sm text-emerald-300">
+                      {p.profit_at_target !== null
+                        ? `+$${p.profit_at_target.toFixed(0)}`
+                        : "—"}
+                    </div>
+                  </div>
+                  <div
+                    className="rounded border border-border/40 px-2 py-1"
+                    title={
+                      p.breakeven_probability !== null
+                        ? `Breakeven at ${(p.breakeven_probability * 100).toFixed(0)}% probability`
+                        : ""
+                    }
+                  >
+                    <div className="text-muted-foreground">EV / contract</div>
+                    <div
+                      className={`font-mono text-sm ${
+                        p.ev_per_contract !== null && p.ev_per_contract > 0
+                          ? "text-emerald-300"
+                          : p.ev_per_contract !== null && p.ev_per_contract < 0
+                          ? "text-rose-300"
+                          : ""
+                      }`}
+                    >
+                      {p.ev_per_contract !== null
+                        ? `${p.ev_per_contract >= 0 ? "+" : ""}$${p.ev_per_contract.toFixed(0)}`
+                        : "—"}
+                    </div>
+                  </div>
+                </div>
+
                 {/* Evidence chips */}
                 <ul className="mb-2 space-y-0.5 text-xs">
                   {p.why.map((w, i) => (

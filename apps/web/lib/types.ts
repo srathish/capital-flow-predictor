@@ -1019,6 +1019,17 @@ export type FlowSuggestedPlay = {
   target_payout_multiple: number;
   stop_loss_pct: number;
   approx_spot_target: number | null;
+  // Live contract pricing + EV (added so we don't just say "buy a 420 call"
+  // without telling you what it costs and what it's worth). NULL when no
+  // mid found within 7d.
+  current_mid: number | null;
+  cost_per_contract: number | null;
+  profit_at_target: number | null;
+  loss_at_stop: number | null;
+  ev_per_contract: number | null;
+  breakeven_probability: number | null;
+  price_source: string | null;
+  price_as_of: string | null;
   why: string[];
   caveats: string[];
   flip_condition: string;
