@@ -49,6 +49,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import math
 import os
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -62,7 +63,7 @@ from cfp_jobs.db import connect
 log = logging.getLogger(__name__)
 
 
-MODEL_VERSION = "v0.2-features"
+MODEL_VERSION = "v0.3-quant"
 
 
 def _flag(name: str, default: bool = False) -> bool:
@@ -387,6 +388,165 @@ def _emit_reason_codes(fs: FeatureSnapshot, bias: str) -> list[str]:  # noqa: PL
 
 
 # ----------------------------------------------------------------------------
+# GEX wall reader — port from v0.1, extended with intraday flip detection.
+# ----------------------------------------------------------------------------
+
+
+def _largest_gex_walls(
+    conn: psycopg.Connection, ticker: str, spot: float
+) -> tuple[float | None, float | None]:
+    """Return (largest_call_wall_above_spot, largest_put_wall_below_spot) strikes.
+
+    Reads uw_greek_exposure_strike (per-strike GEX snapshot). v0.1 used this
+    to anchor primary_target to where dealer hedging actually pushes price;
+    v0.2 dropped that and just used expected_move. This restores it.
+    """
+    row = conn.execute(
+        "SELECT MAX(snapshot_date) FROM uw_greek_exposure_strike WHERE ticker = %s",
+        (ticker,),
+    ).fetchone()
+    if not row or row[0] is None:
+        return (None, None)
+    snap = row[0]
+    call_row = conn.execute(
+        """
+        SELECT strike FROM uw_greek_exposure_strike
+        WHERE ticker = %s AND snapshot_date = %s AND strike > %s
+        ORDER BY COALESCE(call_gex, 0) DESC LIMIT 1
+        """,
+        (ticker, snap, spot),
+    ).fetchone()
+    put_row = conn.execute(
+        """
+        SELECT strike FROM uw_greek_exposure_strike
+        WHERE ticker = %s AND snapshot_date = %s AND strike < %s
+        ORDER BY COALESCE(put_gex, 0) DESC LIMIT 1
+        """,
+        (ticker, snap, spot),
+    ).fetchone()
+    return (
+        float(call_row[0]) if call_row else None,
+        float(put_row[0]) if put_row else None,
+    )
+
+
+def _intraday_gex_flip(conn: psycopg.Connection, ticker: str) -> str | None:
+    """Detect today's intraday gamma flip from uw_spot_gex_intraday (1-min bars).
+
+    Returns 'GEX_FLIP_NEGATIVE_TODAY' if total_gex crossed from >0 to <0 in
+    the last 4 hours, 'GEX_FLIP_POSITIVE_TODAY' for the reverse, None when no
+    flip or data missing. Highest-resolution gamma signal we ingest — Delphi
+    has never read it until now.
+    """
+    rows = conn.execute(
+        """
+        SELECT ts, total_gex FROM uw_spot_gex_intraday
+        WHERE ticker = %s AND ts >= NOW() - INTERVAL '4 hours'
+        ORDER BY ts ASC
+        """,
+        (ticker,),
+    ).fetchall()
+    if not rows or len(rows) < 20:
+        return None
+    vals = [float(r[1]) if r[1] is not None else None for r in rows]
+    # find the most recent sign change
+    last_sign = None
+    flip = None
+    for v in vals:
+        if v is None:
+            continue
+        s = 1 if v > 0 else (-1 if v < 0 else 0)
+        if s == 0:
+            continue
+        if last_sign is not None and s != last_sign:
+            flip = "GEX_FLIP_POSITIVE_TODAY" if s > 0 else "GEX_FLIP_NEGATIVE_TODAY"
+        last_sign = s
+    return flip
+
+
+# ----------------------------------------------------------------------------
+# Conformal CI + Kelly + quantile helpers.
+# ----------------------------------------------------------------------------
+
+
+def _conformal_ci(
+    conn: psycopg.Connection,
+    prob: float,
+    regime: str,
+    horizon: str,
+    alpha: float = 0.20,
+) -> tuple[float | None, float | None, int]:
+    """Bootstrap-based (1-alpha) confidence interval on probability.
+
+    Reads matured outcomes from the same (regime, horizon) and probability
+    bucket. Returns (lo, hi, n_samples). When fewer than 15 comparable
+    outcomes exist, returns (None, None, n) — UI shows "calibrating".
+
+    This is a "split-conformal-with-bucketing" approximation. Real conformal
+    coverage needs holdout residuals; we don't have enough yet. Coverage is
+    approximate but directionally useful — wider intervals = less conviction.
+    """
+    bucket_lo = max(0.50, prob - 0.05)
+    bucket_hi = min(1.00, prob + 0.05)
+    rows = conn.execute(
+        """
+        SELECT (CASE WHEN o.hit_target_range THEN 1.0 ELSE 0.0 END)
+        FROM delphi_predictions p
+        JOIN delphi_outcomes o USING (prediction_id)
+        WHERE p.forecast_horizon = %s
+          AND COALESCE(p.regime, 'any') IN (%s, 'any')
+          AND p.probability BETWEEN %s AND %s
+        """,
+        (horizon, regime, bucket_lo, bucket_hi),
+    ).fetchall()
+    n = len(rows)
+    if n < 15:
+        return (None, None, n)
+    hits = sum(float(r[0]) for r in rows)
+    p_hat = hits / n
+    # Wilson-score CI (better than normal for proportions, especially extremes)
+    z = 1.281552 if alpha == 0.20 else 1.959964  # 80% or 95%
+    denom = 1 + (z * z) / n
+    centre = (p_hat + (z * z) / (2 * n)) / denom
+    half = (z * math.sqrt((p_hat * (1 - p_hat) + (z * z) / (4 * n)) / n)) / denom
+    return (max(0.0, centre - half), min(1.0, centre + half), n)
+
+
+def _kelly_fraction(p: float, b: float) -> float | None:
+    """Kelly criterion: f* = (p*b - (1-p)) / b   where b = upside/downside.
+
+    Returns FRACTIONAL Kelly at 0.25× for survivability. Negative or NaN -> None.
+    """
+    if b is None or b <= 0 or p is None:
+        return None
+    f_star = (p * b - (1 - p)) / b
+    if not math.isfinite(f_star) or f_star <= 0:
+        return None
+    return round(0.25 * f_star, 4)
+
+
+def _rules_quantiles(
+    expected_return: float, bias: str, exp_move: float
+) -> tuple[float, float, float]:
+    """Rules-based fallback for return quantiles when no ML reg head is active.
+
+    Uses the expected_move as a width proxy: p50 = expected_return,
+    p10/p90 = expected_return ∓ ~0.6 * expected_move. Sign is preserved.
+    LightGBM quantile head overrides these once trained.
+    """
+    width = max(0.001, 0.6 * exp_move)
+    if bias == "bullish":
+        p10 = expected_return - width
+        p50 = expected_return
+        p90 = expected_return + width
+    else:
+        p10 = -expected_return - width
+        p50 = -expected_return
+        p90 = -expected_return + width
+    return (p10, p50, p90)
+
+
+# ----------------------------------------------------------------------------
 # Bias + expected move
 # ----------------------------------------------------------------------------
 
@@ -572,19 +732,47 @@ def _holdout_bucket(prediction_id: str) -> int | None:
     return None
 
 
-def _build_prediction(fs: FeatureSnapshot, signal_tf: str, horizon: str) -> dict[str, Any] | None:
+def _build_prediction(
+    fs: FeatureSnapshot,
+    signal_tf: str,
+    horizon: str,
+    *,
+    call_wall: float | None = None,
+    put_wall: float | None = None,
+    gex_flip_code: str | None = None,
+) -> dict[str, Any] | None:
     bias = _decide_bias(fs)
     exp_move = _expected_move(fs, horizon)
     max_dist = exp_move * REACHABILITY[horizon]
     spot = fs.spot
 
-    # Target range from expected move + bias side.
+    # ---- Target selection ----
+    # v0.3: anchor primary_target to the largest GEX wall on the bias side
+    # when it sits within reachability. Dealer hedging pushes price toward
+    # large gamma magnets, so target = nearest big wall is what the dealer
+    # hedging mechanic actually produces. Fallback to expected-move target
+    # when no wall exists or it's out of reach.
+    gex_anchored = False
     if bias == "bullish":
-        primary_target = spot * (1 + exp_move * 0.85)
-        invalidation  = spot * (1 - exp_move * 0.55)
+        if call_wall is not None and (call_wall - spot) / spot <= max_dist:
+            primary_target = call_wall
+            gex_anchored = True
+        else:
+            primary_target = spot * (1 + exp_move * 0.85)
+        if put_wall is not None and (spot - put_wall) / spot <= max_dist:
+            invalidation = put_wall
+        else:
+            invalidation = spot * (1 - exp_move * 0.55)
     else:
-        primary_target = spot * (1 - exp_move * 0.85)
-        invalidation  = spot * (1 + exp_move * 0.55)
+        if put_wall is not None and (spot - put_wall) / spot <= max_dist:
+            primary_target = put_wall
+            gex_anchored = True
+        else:
+            primary_target = spot * (1 - exp_move * 0.85)
+        if call_wall is not None and (call_wall - spot) / spot <= max_dist:
+            invalidation = call_wall
+        else:
+            invalidation = spot * (1 + exp_move * 0.55)
 
     # Reachability check.
     if abs(primary_target - spot) / spot > max_dist:
@@ -599,6 +787,11 @@ def _build_prediction(fs: FeatureSnapshot, signal_tf: str, horizon: str) -> dict
     rr              = expected_return / downside_risk if downside_risk > 1e-6 else None
 
     codes = _emit_reason_codes(fs, bias)
+    # GEX-derived reason codes
+    if gex_anchored:
+        codes.append("GEX_WALL_ABOVE" if bias == "bullish" else "GEX_WALL_BELOW")
+    if gex_flip_code:
+        codes.append(gex_flip_code)
     p_base = _base_probability(fs, bias, codes)
     p_after_conflict, applied_conflicts = _apply_conflicts(p_base, fs.conflict_codes)
     codes.extend(applied_conflicts)
@@ -616,7 +809,11 @@ def _build_prediction(fs: FeatureSnapshot, signal_tf: str, horizon: str) -> dict
 
     now = datetime.now(UTC)
     horizon_ends_at = now + timedelta(hours=HORIZON_HOURS[horizon])
-    pid = f"{fs.ticker}_{now.strftime('%Y%m%d_%H%M')}_{signal_tf}_{horizon}_v02"
+    pid = f"{fs.ticker}_{now.strftime('%Y%m%d_%H%M')}_{signal_tf}_{horizon}_v03"
+
+    # Kelly + quantiles — pure computation, no DB required.
+    kelly = _kelly_fraction(p_after_conflict, rr) if rr is not None else None
+    p10, p50, p90 = _rules_quantiles(expected_return, bias, exp_move)
 
     return {
         "prediction_id": pid,
@@ -640,18 +837,32 @@ def _build_prediction(fs: FeatureSnapshot, signal_tf: str, horizon: str) -> dict
         "reason_codes":      codes,
         "regime":            fs.composite_regime,
         "model_version":     MODEL_VERSION,
+        # v0.3 quant additions — written into new columns by _upsert_prediction
+        "kelly_fraction":   kelly,
+        "return_p10":       p10,
+        "return_p50":       p50,
+        "return_p90":       p90,
+        "gex_wall_anchored": gex_anchored,
+        # prob_lo/prob_hi/prob_ci_n get filled by _apply_learning_layers
+        # using historical outcomes; left None here.
+        "prob_lo": None,
+        "prob_hi": None,
+        "prob_ci_n": None,
         "explanation": (
             f"{fs.ticker} {bias} {signal_tf}→{horizon} (regime: {fs.composite_regime}). "
             f"Target {target_low:.2f}–{target_high:.2f}, invalidation {invalidation:.2f}. "
+            f"{'GEX-anchored. ' if gex_anchored else ''}"
             f"{len(codes)} signals; {len(applied_conflicts)} conflict(s)."
         ),
         "features": {
-            "v02_inputs": {
+            "v03_inputs": {
                 "iv30": fs.iv30, "iv_rank": fs.iv_rank, "rv30": fs.rv30,
                 "regime": fs.composite_regime,
                 "conflicts": fs.conflict_codes,
                 "base_prob": round(p_base, 4),
                 "conflict_dampened": round(p_after_conflict - p_base, 4),
+                "gex_wall_anchored": gex_anchored,
+                "kelly_fractional_0_25x": kelly,
             },
             # Inline the snapshot so the ML overlay (when trained) can re-score
             # this exact row from the stored row alone.
@@ -708,6 +919,18 @@ def _apply_learning_layers(conn: psycopg.Connection, pred: dict[str, Any]) -> di
     final = max(_PROB_MIN, min(_PROB_MAX, blended))
     pred["probability"] = final
 
+    # Conformal CI on the final probability — read historical hits/misses
+    # in the same (regime, horizon) and probability bucket.
+    lo, hi, n_cmp = _conformal_ci(conn, final, regime, horizon)
+    pred["prob_lo"] = lo
+    pred["prob_hi"] = hi
+    pred["prob_ci_n"] = n_cmp
+
+    # Recompute Kelly with the final probability (rules used pre-calibration).
+    rr = pred.get("risk_reward")
+    if rr is not None:
+        pred["kelly_fraction"] = _kelly_fraction(final, rr)
+
     # Recompute score with final probability.
     er = float(pred["expected_return"])
     dr = float(pred["downside_risk"])
@@ -750,6 +973,7 @@ def _score_with_model(model: Any, calibrator: Any, pred: dict[str, Any]) -> floa
 
 
 def _upsert_prediction(conn: psycopg.Connection, p: dict[str, Any]) -> None:
+    # First insert the v0.1+v0.2 core fields (always present).
     conn.execute(
         """
         INSERT INTO delphi_predictions (
@@ -778,6 +1002,28 @@ def _upsert_prediction(conn: psycopg.Connection, p: dict[str, Any]) -> None:
             p["regime"], p["model_version"], p["explanation"], Jsonb(p["features"]),
         ),
     )
+    # Now update the v0.3 quant columns. Wrapped in try/except so we
+    # degrade cleanly if migration 0038 hasn't been applied yet on this DB.
+    try:
+        conn.execute(
+            """
+            UPDATE delphi_predictions SET
+                prob_lo = %s, prob_hi = %s, prob_ci_n = %s,
+                kelly_fraction = %s,
+                return_p10 = %s, return_p50 = %s, return_p90 = %s,
+                gex_wall_anchored = %s
+            WHERE prediction_id = %s
+            """,
+            (
+                p.get("prob_lo"), p.get("prob_hi"), p.get("prob_ci_n"),
+                p.get("kelly_fraction"),
+                p.get("return_p10"), p.get("return_p50"), p.get("return_p90"),
+                bool(p.get("gex_wall_anchored", False)),
+                p["prediction_id"],
+            ),
+        )
+    except psycopg.errors.UndefinedColumn:
+        log.warning("delphi-rank v0.3 quant columns missing — run migrations to enable")
     bucket = _holdout_bucket(p["prediction_id"])
     if bucket is not None:
         conn.execute(
@@ -802,9 +1048,17 @@ def rank(database_url: str, *, candidate_limit: int = 50) -> dict[str, Any]:
             return {"candidates": 0, "predictions_written": 0, "horizons": {}}
 
         for fs in candidates:
+            # Pull GEX walls + intraday flip once per ticker; reused across
+            # all (signal_tf, horizon) pairs since spot is the same.
+            call_wall, put_wall = _largest_gex_walls(conn, fs.ticker, fs.spot)
+            flip_code = _intraday_gex_flip(conn, fs.ticker)
             for signal_tf, horizons in SIGNAL_TO_HORIZONS.items():
                 for horizon in horizons:
-                    pred = _build_prediction(fs, signal_tf, horizon)
+                    pred = _build_prediction(
+                        fs, signal_tf, horizon,
+                        call_wall=call_wall, put_wall=put_wall,
+                        gex_flip_code=flip_code,
+                    )
                     if pred is None:
                         skipped += 1
                         continue
