@@ -4,8 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { FlowAggregatePanel } from "@/components/flow-aggregate-panel";
+import { PriceChart } from "@/components/price-chart";
+import { RANGE_TO_DAYS, TimeRangeTabs, type TimeRange } from "@/components/ui/time-range-tabs";
 import type {
   CalibrationResponse,
+  ChartDataResponse,
   ReplayResponse,
   StockScreenItem,
 } from "@/lib/types";
@@ -334,6 +337,84 @@ function ReplayPanel() {
   );
 }
 
+function ChartPlayground() {
+  const [ticker, setTicker] = useState("SPY");
+  const [draft, setDraft] = useState("SPY");
+  const [range, setRange] = useState<TimeRange>("3M");
+  const [data, setData] = useState<ChartDataResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    api
+      .chartData(ticker, RANGE_TO_DAYS[range])
+      .then((res) => {
+        if (!cancelled) setData(res);
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "load failed");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker, range]);
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const v = draft.trim().toUpperCase();
+    if (v) setTicker(v);
+  }
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 className="text-base font-medium">Chart playground</h3>
+          <p className="text-[10px] text-muted-foreground">
+            Any ticker, any timeframe. Candles + MA50/MA200 + flow / insider / earnings markers.
+          </p>
+        </div>
+        <form onSubmit={submit} className="flex items-center gap-2">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="Ticker"
+            maxLength={12}
+            className="w-28 rounded border border-border bg-background px-2 py-1 text-sm uppercase"
+          />
+          <button
+            type="submit"
+            className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
+          >
+            Load
+          </button>
+        </form>
+      </div>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-mono text-muted-foreground">
+          {ticker}
+          {loading && " · loading…"}
+          {data && !loading && ` · ${data.bars.length} bars · ${data.markers.length} markers`}
+        </span>
+        <TimeRangeTabs value={range} onChange={setRange} />
+      </div>
+      {error && <p className="text-xs text-destructive">{error}</p>}
+      {data && data.bars.length > 0 && (
+        <PriceChart data={data} height={420} range={range} onRangeChange={setRange} />
+      )}
+      {data && data.bars.length === 0 && !loading && (
+        <p className="text-xs text-muted-foreground">No bars returned for {ticker}.</p>
+      )}
+    </div>
+  );
+}
+
 function ComingSoon({ title, blurb }: { title: string; blurb: string }) {
   return (
     <div className="rounded-lg border border-dashed border-border/60 bg-muted/30 p-4">
@@ -361,6 +442,7 @@ export function LabView() {
         </Link>
       </div>
 
+      <ChartPlayground />
       <OpportunityScreener />
       <FlowAggregatePanel />
       <ReplayPanel />
