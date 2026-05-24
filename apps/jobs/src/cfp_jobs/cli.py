@@ -1273,7 +1273,9 @@ def delphi_ml_train_cmd(
 @app.command("delphi-features")
 def delphi_features_cmd(
     max_tickers: int = typer.Option(
-        200, help="Max tickers from latest screener snapshot to compose."
+        120, help="Max tickers from latest screener snapshot to compose. "
+                 "Lowered from 200 to 120 to stay under 15-min cron grid; "
+                 "see workflow timeout-minutes for the hard cap."
     ),
 ) -> None:
     """Compose ~120 features per ticker into delphi_features.
