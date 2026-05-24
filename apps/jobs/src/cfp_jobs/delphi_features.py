@@ -32,6 +32,8 @@ from psycopg.types.json import Jsonb
 
 from cfp_jobs.db import connect
 from cfp_jobs import delphi_price_action
+from cfp_jobs import delphi_macro_spreads
+from cfp_jobs import delphi_anomalies
 
 log = logging.getLogger(__name__)
 
@@ -857,6 +859,13 @@ def _compose_ticker(conn: psycopg.Connection, ticker: str, spot: float | None) -
     f.features.update(_gex_detail(conn, ticker))
     f.features.update(_institutional_detail(conn, ticker))
 
+    # Anomalies (PEAD, 12-1 momentum, idiosyncratic vol) — well-replicated
+    # academic alphas. Always computed per-ticker. Empty dict on missing data.
+    try:
+        f.features.update(delphi_anomalies.compute(conn, ticker))
+    except Exception as e:  # noqa: BLE001
+        log.debug("anomalies failed for %s: %s", ticker, e)
+
     # Backfill spot_price from price_action if the screener gave us None.
     if f.spot_price is None and f.features.get("last_close"):
         f.spot_price = float(f.features["last_close"])
@@ -935,11 +944,138 @@ def _upsert(conn: psycopg.Connection, f: FeatureRow) -> None:
     )
 
 
+# Numeric features in delphi_features that get a cross-sectional rank
+# computed across the universe at each snapshot. The rank is the percentile
+# (0..1) of this ticker's value among non-null values today. Stored back
+# into features JSONB as f"xs_rank_{name}". Rank features are regime-
+# invariant — "top decile by 24h dark-pool premium" means the same thing
+# in any vol regime, unlike the raw $ value.
+_XS_FEATURES: list[str] = [
+    "dp_net_premium_24h", "dp_print_count_24h", "dp_late_day_share",
+    "insider_net_30d", "insider_buyers_30d", "insider_sellers_30d",
+    "congress_buys_14d", "oi_opening_ratio",
+    "max_pain_distance", "short_pct_float", "short_fee_rate",
+    "analyst_net_upgrade", "inst_net_delta_shares",
+    "gex_expiry_front", "rr_skew_25d", "nope_score",
+    "uw_smart_money_score", "uw_whales_score",
+    "news_sentiment_24h",
+]
+# Same idea but for features stored inside the JSONB `features` dict.
+_XS_FEATURES_JSON: list[str] = [
+    "ret_5d", "ret_20d", "ret_60d", "ret_vs_spy_5d", "ret_vs_spy_20d",
+    "rsi_14", "macd_histogram", "atr_pct", "bb_pct_position",
+    "volume_vs_30d", "volume_z_30d", "obv_slope_20",
+    "ts_momentum_12_1", "pead_signal", "idio_vol_60d",
+    "total_premium_24h", "call_put_premium_ratio_24h",
+    "total_gex", "biggest_call_wall_size", "biggest_put_wall_size",
+]
+
+
+def _percentile_ranks(values: list[float | None]) -> list[float | None]:
+    """Return percentile rank (0..1) of each non-null value among the population.
+    Nulls map to None. Ties get the average rank."""
+    indexed = [(i, v) for i, v in enumerate(values) if v is not None and isinstance(v, (int, float))]
+    if len(indexed) < 5:
+        return [None] * len(values)
+    sorted_vals = sorted(indexed, key=lambda x: x[1])
+    n = len(sorted_vals)
+    ranks: list[float | None] = [None] * len(values)
+    # Average rank for ties
+    i = 0
+    while i < n:
+        j = i
+        while j + 1 < n and sorted_vals[j + 1][1] == sorted_vals[i][1]:
+            j += 1
+        avg_rank = (i + j) / 2.0 / max(1, n - 1)
+        for k in range(i, j + 1):
+            ranks[sorted_vals[k][0]] = avg_rank
+        i = j + 1
+    return ranks
+
+
+def _compute_xs_ranks(rows: list[FeatureRow]) -> None:
+    """Mutate each row's features dict to add xs_rank_<name> percentiles.
+
+    Two passes: promoted scalars (read from row attributes) and JSONB features.
+    Universe percentiles for the batch get stashed in delphi_xs_universe_stats
+    so the API can show distributional context per feature.
+    """
+    if not rows:
+        return
+    # Promoted scalars
+    for name in _XS_FEATURES:
+        vals = [getattr(r, name, None) for r in rows]
+        try:
+            ranks = _percentile_ranks(vals)
+        except Exception:  # noqa: BLE001
+            ranks = [None] * len(rows)
+        for r, rk in zip(rows, ranks, strict=True):
+            if rk is not None:
+                r.features[f"xs_rank_{name}"] = rk
+    # JSONB features
+    for name in _XS_FEATURES_JSON:
+        vals = [r.features.get(name) for r in rows]
+        try:
+            ranks = _percentile_ranks(vals)
+        except Exception:  # noqa: BLE001
+            ranks = [None] * len(rows)
+        for r, rk in zip(rows, ranks, strict=True):
+            if rk is not None:
+                r.features[f"xs_rank_{name}"] = rk
+
+
+def _write_universe_stats(conn: psycopg.Connection, snapshot_ts: datetime, rows: list[FeatureRow]) -> None:
+    """Persist universe percentiles for each tracked feature so the API can
+    surface "top decile of X" badges per ticker without recomputing."""
+    import statistics
+    for name in (_XS_FEATURES + _XS_FEATURES_JSON):
+        if name in _XS_FEATURES:
+            vals = [getattr(r, name, None) for r in rows]
+        else:
+            vals = [r.features.get(name) for r in rows]
+        vals = [float(v) for v in vals if v is not None and isinstance(v, (int, float))]
+        if len(vals) < 5:
+            continue
+        vals_sorted = sorted(vals)
+        n = len(vals_sorted)
+        def q(p: float) -> float:
+            idx = max(0, min(n - 1, int(round(p * (n - 1)))))
+            return vals_sorted[idx]
+        try:
+            conn.execute(
+                """
+                INSERT INTO delphi_xs_universe_stats (
+                    snapshot_ts, feature_name, n_tickers,
+                    pct10, pct25, pct50, pct75, pct90,
+                    mean_val, stddev_val
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (snapshot_ts, feature_name) DO NOTHING
+                """,
+                (
+                    snapshot_ts, name, n,
+                    q(0.10), q(0.25), q(0.50), q(0.75), q(0.90),
+                    statistics.fmean(vals),
+                    statistics.pstdev(vals) if n > 1 else 0.0,
+                ),
+            )
+        except psycopg.errors.UndefinedTable:
+            return  # migration 0038 not applied yet
+
+
 def compose(database_url: str, *, max_tickers: int = 200) -> dict[str, Any]:
     """Compose features for every ticker in the freshest screener snapshot.
 
     Returns a summary dict. Idempotent — same (ticker, snapshot_ts) PK skips
     duplicates within the same minute.
+
+    Two-pass design:
+      1. Per-ticker compose: pulls ~120 raw features into FeatureRow objects.
+         Macro spreads computed once per batch (broadcast into every row).
+      2. Cross-sectional rank pass: for each tracked numeric feature, compute
+         the percentile rank across the batch and add xs_rank_<name> into
+         the JSONB. This is what makes features regime-invariant.
+      3. Universe stats: persist percentile breakpoints for the API.
+      4. Bulk upsert.
     """
     written = 0
     conflict_n = 0
@@ -949,20 +1085,50 @@ def compose(database_url: str, *, max_tickers: int = 200) -> dict[str, Any]:
         if not candidates:
             log.warning("delphi-features: no candidates — screener_stocks empty?")
             return {"composed": 0}
+
+        # One-shot macro/breadth pull — broadcast into every ticker row so
+        # the ML model can interact macro × per-ticker features.
+        try:
+            macro_block = delphi_macro_spreads.compute(conn)
+        except Exception as e:  # noqa: BLE001
+            log.warning("delphi-features: macro spreads failed: %s", e)
+            macro_block = {}
+
+        rows: list[FeatureRow] = []
         for ticker, spot in candidates[:max_tickers]:
             try:
                 f = _compose_ticker(conn, ticker, spot)
-                _upsert(conn, f)
-                written += 1
+                f.features.update(macro_block)
+                rows.append(f)
                 if f.has_conflict:
                     conflict_n += 1
                     for code in f.conflict_codes:
                         by_conflict[code] = by_conflict.get(code, 0) + 1
             except Exception as e:  # noqa: BLE001
                 log.warning("delphi-features composer failed for %s: %s", ticker, e)
+
+        # Pass 2: cross-sectional ranks. Mutates each row's features JSONB
+        # in place. Regime-invariance trick from the cross-sectional quant
+        # playbook.
+        _compute_xs_ranks(rows)
+
+        # Pass 3: persist universe distribution for the API.
+        if rows:
+            snap = rows[0].snapshot_ts
+            _write_universe_stats(conn, snap, rows)
+
+        # Pass 4: bulk write.
+        for f in rows:
+            try:
+                _upsert(conn, f)
+                written += 1
+            except Exception as e:  # noqa: BLE001
+                log.warning("delphi-features upsert failed for %s: %s", f.ticker, e)
+
         conn.commit()
     return {
         "composed": written,
         "conflicts": conflict_n,
         "by_conflict_code": by_conflict,
+        "macro_keys": list(macro_block.keys()) if macro_block else [],
     }
