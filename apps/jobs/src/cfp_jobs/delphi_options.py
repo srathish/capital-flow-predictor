@@ -86,6 +86,34 @@ SIZING_BANKROLL = float(os.environ.get("DELPHI_OPTIONS_BANKROLL", "10000"))
 # ----------------------------------------------------------------------------
 
 
+def _safe_fetchone(conn: psycopg.Connection, sql: str, params: tuple) -> tuple | None:
+    """SELECT wrapped in a savepoint so a query failure (missing column,
+    bad cast, etc) doesn't poison the outer transaction. Same defensive
+    pattern as delphi_features._safe_fetchone — necessary because this
+    module hits many UW tables some of which may not exist on a partial
+    migration window.
+    """
+    try:
+        with conn.transaction():
+            return conn.execute(sql, params).fetchone()
+    except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+        return None
+    except Exception as e:  # noqa: BLE001
+        log.debug("options safe-select failed: %s", e)
+        return None
+
+
+def _safe_fetchall(conn: psycopg.Connection, sql: str, params: tuple) -> list[tuple]:
+    try:
+        with conn.transaction():
+            return conn.execute(sql, params).fetchall()
+    except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
+        return []
+    except Exception as e:  # noqa: BLE001
+        log.debug("options safe-select failed: %s", e)
+        return []
+
+
 def _norm_cdf(x: float) -> float:
     """Standard normal CDF via erf."""
     return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
@@ -201,14 +229,9 @@ def _pick_contract(
         "SELECT DISTINCT expiry FROM uw_flow_per_expiry WHERE ticker = %s AND expiry >= CURRENT_DATE",
         "SELECT DISTINCT expiry FROM uw_flow_alerts WHERE ticker = %s AND expiry >= CURRENT_DATE",
     ):
-        try:
-            rows = conn.execute(sql, (ticker,)).fetchall()
-            if rows:
-                break
-        except psycopg.errors.UndefinedTable:
-            continue
-        except Exception as e:  # noqa: BLE001
-            log.debug("picker expiry query failed: %s", e)
+        rows = _safe_fetchall(conn, sql, (ticker,))
+        if rows:
+            break
 
     if not rows:
         # No live data — synthesize a typical weekly Friday closest to target
@@ -242,51 +265,43 @@ def _fetch_current_price(
     underlying iv30 from features).
     """
     # Source 1: uw_flow_alerts for that ticker/strike/expiry/type in last 7d
-    try:
-        row = conn.execute(
-            """
-            SELECT price, iv_end, created_at
-            FROM uw_flow_alerts
-            WHERE ticker = %s
-              AND expiry = %s
-              AND strike = %s
-              AND option_type = %s
-              AND created_at >= NOW() - INTERVAL '7 days'
-            ORDER BY created_at DESC LIMIT 1
-            """,
-            (choice.underlying, choice.expiry, choice.strike,
-             "call" if choice.option_type == "C" else "put"),
-        ).fetchone()
-        if row and row[0]:
-            mid = float(row[0])
-            return (mid, None, None, float(row[1]) if row[1] else iv,
-                    "uw_flow", row[2])
-    except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
-        pass
-    except Exception as e:  # noqa: BLE001
-        log.debug("price uw_flow query failed: %s", e)
+    row = _safe_fetchone(
+        conn,
+        """
+        SELECT price, iv_end, created_at
+        FROM uw_flow_alerts
+        WHERE ticker = %s
+          AND expiry = %s
+          AND strike = %s
+          AND option_type = %s
+          AND created_at >= NOW() - INTERVAL '7 days'
+        ORDER BY created_at DESC LIMIT 1
+        """,
+        (choice.underlying, choice.expiry, choice.strike,
+         "call" if choice.option_type == "C" else "put"),
+    )
+    if row and row[0]:
+        mid = float(row[0])
+        return (mid, None, None, float(row[1]) if row[1] else iv,
+                "uw_flow", row[2])
 
     # Source 2: uw_option_contract_history latest close
     if choice.contract_symbol:
-        try:
-            row = conn.execute(
-                """
-                SELECT close, iv, date::timestamptz
-                FROM uw_option_contract_history
-                WHERE option_symbol = %s AND close IS NOT NULL
-                ORDER BY date DESC LIMIT 1
-                """,
-                (choice.contract_symbol,),
-            ).fetchone()
-            if row and row[0]:
-                mid = float(row[0])
-                return (mid, None, None,
-                        float(row[1]) if row[1] else iv,
-                        "uw_history", row[2])
-        except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn):
-            pass
-        except Exception as e:  # noqa: BLE001
-            log.debug("price uw_history query failed: %s", e)
+        row = _safe_fetchone(
+            conn,
+            """
+            SELECT close, iv, date::timestamptz
+            FROM uw_option_contract_history
+            WHERE option_symbol = %s AND close IS NOT NULL
+            ORDER BY date DESC LIMIT 1
+            """,
+            (choice.contract_symbol,),
+        )
+        if row and row[0]:
+            mid = float(row[0])
+            return (mid, None, None,
+                    float(row[1]) if row[1] else iv,
+                    "uw_history", row[2])
 
     # Source 3: Black-Scholes theoretical from underlying spot + iv
     rfr = _risk_free_rate(conn)
@@ -297,15 +312,14 @@ def _fetch_current_price(
 
 def _risk_free_rate(conn: psycopg.Connection) -> float:
     """Pull latest 3M T-bill from FRED DTB3 if ingested, else fallback."""
-    try:
-        row = conn.execute(
-            "SELECT value FROM macro_daily WHERE series_id = 'DTB3' AND value IS NOT NULL ORDER BY ts DESC LIMIT 1"
-        ).fetchone()
-        if row and row[0]:
-            # DTB3 is percent, e.g. 5.32 -> 0.0532
-            return float(row[0]) / 100.0
-    except Exception:  # noqa: BLE001
-        pass
+    row = _safe_fetchone(
+        conn,
+        "SELECT value FROM macro_daily WHERE series_id = 'DTB3' AND value IS NOT NULL ORDER BY ts DESC LIMIT 1",
+        (),
+    )
+    if row and row[0]:
+        # DTB3 is percent, e.g. 5.32 -> 0.0532
+        return float(row[0]) / 100.0
     return DEFAULT_RFR
 
 
@@ -350,14 +364,15 @@ def suggest_for_prediction(conn: psycopg.Connection, prediction_id: str) -> dict
     Returns the persisted row dict; None on hard failure (e.g. prediction
     not found).
     """
-    pred = conn.execute(
+    pred = _safe_fetchone(
+        conn,
         """
         SELECT ticker, bias, current_price, primary_target, invalidation,
                forecast_horizon, probability, kelly_fraction, features
         FROM delphi_predictions WHERE prediction_id = %s
         """,
         (prediction_id,),
-    ).fetchone()
+    )
     if not pred:
         return None
     ticker, bias, spot, primary_target, invalidation, horizon, prob, kelly, features = pred
