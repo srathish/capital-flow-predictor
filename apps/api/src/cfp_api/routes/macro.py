@@ -53,7 +53,15 @@ class MacroSeriesResponse(BaseModel):
 @router.get("/current", response_model=CurrentRegimeResponse)
 async def current_regime(days: int = Query(90, ge=1, le=365)) -> CurrentRegimeResponse:
     """Today's composite regime + history. Empty rows when macro_regime hasn't
-    been populated yet (delphi-regime job is the writer)."""
+    been populated yet (delphi-regime job is the writer).
+
+    Earlier version used `CURRENT_DATE - $1` and asyncpg sometimes binds the
+    int such that the subtraction fails; the broad except hid the error and
+    the UI rendered the "macro_regime is empty" fallback even when 90 days
+    of rows existed. Fixed by using INTERVAL with explicit cast and by
+    LOGGING the exception instead of silently swallowing it.
+    """
+    import logging as _l
     pool = get_pool()
     async with pool.acquire() as conn:
         try:
@@ -64,12 +72,13 @@ async def current_regime(days: int = Query(90, ge=1, le=365)) -> CurrentRegimeRe
                        vix_close, vix_z_30d, yield_curve_2_10, dxy_close,
                        fed_funds_rate, spy_close
                 FROM macro_regime
-                WHERE asof_date >= CURRENT_DATE - $1
+                WHERE asof_date >= (CURRENT_DATE - ($1::int || ' days')::interval)::date
                 ORDER BY asof_date DESC
                 """,
                 days,
             )
-        except Exception:
+        except Exception as e:
+            _l.getLogger("cfp_api").warning("macro/current query failed: %s", e)
             return CurrentRegimeResponse(current=None, history=[])
     pts = [
         RegimePoint(
