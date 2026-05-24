@@ -76,6 +76,9 @@ class PredictionRow(BaseModel):
     return_p50: float | None = None
     return_p90: float | None = None
     gex_wall_anchored: bool = False
+    # Phase 5d: concrete option suggestion if generated yet. NULL when
+    # delphi-options-suggest hasn't run for this prediction.
+    option: "OptionSuggestion | None" = None
 
 
 class PredictionOutcome(BaseModel):
@@ -95,6 +98,7 @@ class PredictionOutcome(BaseModel):
 
 class PredictionDetail(PredictionRow):
     outcome: PredictionOutcome | None = None
+    option: "OptionSuggestion | None" = None
 
 
 class PredictionListResponse(BaseModel):
@@ -174,6 +178,29 @@ class ModelPerformanceRow(BaseModel):
     calibration_error: float | None
 
 
+class OptionSuggestion(BaseModel):
+    """Concrete tradeable contract suggested for a Delphi prediction."""
+    prediction_id: str
+    contract_symbol: str | None
+    underlying: str
+    option_type: str          # 'C' or 'P'
+    strike: float
+    expiry: datetime
+    days_to_expiry: int
+    current_mid: float | None
+    current_iv: float | None
+    current_delta: float | None
+    price_source: str | None
+    theo_price_now: float | None
+    value_at_target: float | None
+    value_at_invalidation: float | None
+    ev_per_contract: float | None       # $ per contract (100 shares)
+    ev_pct_of_cost: float | None
+    breakeven_probability: float | None
+    contracts_at_kelly: int | None
+    rationale: str | None
+
+
 class V3HealthResponse(BaseModel):
     """One-screen morning sanity check for v0.3 pipeline.
 
@@ -218,6 +245,37 @@ class LearningStateResponse(BaseModel):
     model_performance: list[ModelPerformanceRow]
 
 
+def _opt_row_to_model(row: dict | None) -> OptionSuggestion | None:
+    if not row or not row.get("prediction_id"):
+        return None
+    from datetime import datetime as _dt
+    expiry = row["expiry"]
+    if hasattr(expiry, "isoformat") and not isinstance(expiry, _dt):
+        # date -> datetime at midnight UTC for the Pydantic field
+        expiry = _dt.combine(expiry, _dt.min.time())
+    return OptionSuggestion(
+        prediction_id=row["prediction_id"],
+        contract_symbol=row.get("contract_symbol"),
+        underlying=row["underlying"],
+        option_type=row["option_type"],
+        strike=float(row["strike"]),
+        expiry=expiry,
+        days_to_expiry=int(row["days_to_expiry"] or 0),
+        current_mid=row.get("current_mid"),
+        current_iv=row.get("current_iv"),
+        current_delta=row.get("current_delta"),
+        price_source=row.get("price_source"),
+        theo_price_now=row.get("theo_price_now"),
+        value_at_target=row.get("value_at_target"),
+        value_at_invalidation=row.get("value_at_invalidation"),
+        ev_per_contract=row.get("ev_per_contract"),
+        ev_pct_of_cost=row.get("ev_pct_of_cost"),
+        breakeven_probability=row.get("breakeven_probability"),
+        contracts_at_kelly=row.get("contracts_at_kelly"),
+        rationale=row.get("rationale"),
+    )
+
+
 def _pred_row_to_model(row: dict) -> PredictionRow:
     return PredictionRow(
         prediction_id=row["prediction_id"],
@@ -252,6 +310,7 @@ def _pred_row_to_model(row: dict) -> PredictionRow:
         return_p50=row.get("return_p50"),
         return_p90=row.get("return_p90"),
         gex_wall_anchored=bool(row.get("gex_wall_anchored") or False),
+        option=_opt_row_to_model(row) if row.get("contract_symbol") else None,
     )
 
 
@@ -285,23 +344,55 @@ async def list_predictions(
         params.append(bias)
         where.append(f"bias = ${len(params)}")
 
+    # LEFT JOIN delphi_option_suggestions so the table renders contract +
+    # mid + EV in one fetch. Wrap in a defensive guard: if migration 0039
+    # hasn't applied on this DB, fall back to the non-joined query.
     sql = f"""
         WITH latest AS (
             SELECT MAX(created_at) AS ts
             FROM delphi_predictions
             WHERE forecast_horizon = $1
         )
-        SELECT *
-        FROM delphi_predictions, latest
-        WHERE {' AND '.join(where)}
-          AND created_at >= latest.ts - INTERVAL '12 hours'
-        ORDER BY {order_clause}
+        SELECT p.*, o.contract_symbol, o.underlying, o.option_type, o.strike,
+               o.expiry, o.days_to_expiry,
+               o.current_mid, o.current_iv, o.current_delta,
+               o.price_source, o.theo_price_now,
+               o.value_at_target, o.value_at_invalidation,
+               o.ev_per_contract, o.ev_pct_of_cost, o.breakeven_probability,
+               o.contracts_at_kelly, o.rationale
+        FROM delphi_predictions p, latest
+        LEFT JOIN delphi_option_suggestions o USING (prediction_id)
+        WHERE {' AND '.join('p.' + w if not w.startswith('p.') else w for w in where)}
+          AND p.created_at >= latest.ts - INTERVAL '12 hours'
+        ORDER BY {('p.' + order_clause).replace(', ', ', p.')}
         LIMIT {int(limit)}
     """
 
     pool = get_pool()
     async with pool.acquire() as conn:
-        rows = await conn.fetch(sql, *params)
+        try:
+            rows = await conn.fetch(sql, *params)
+        except Exception as e:
+            # Fall back to the un-joined query if 0039 hasn't applied yet.
+            import logging as _l
+            _l.getLogger("cfp_api").warning(
+                "delphi predictions JOIN with options_suggestions failed (%s); "
+                "falling back to bare prediction rows", e,
+            )
+            bare_sql = f"""
+                WITH latest AS (
+                    SELECT MAX(created_at) AS ts
+                    FROM delphi_predictions
+                    WHERE forecast_horizon = $1
+                )
+                SELECT *
+                FROM delphi_predictions, latest
+                WHERE {' AND '.join(where)}
+                  AND created_at >= latest.ts - INTERVAL '12 hours'
+                ORDER BY {order_clause}
+                LIMIT {int(limit)}
+            """
+            rows = await conn.fetch(bare_sql, *params)
 
     preds = [_pred_row_to_model(dict(r)) for r in rows]
     return PredictionListResponse(
@@ -327,6 +418,14 @@ async def get_prediction(prediction_id: str) -> PredictionDetail:
             "SELECT * FROM delphi_outcomes WHERE prediction_id = $1",
             prediction_id,
         )
+        opt = None
+        try:
+            opt = await conn.fetchrow(
+                "SELECT * FROM delphi_option_suggestions WHERE prediction_id = $1",
+                prediction_id,
+            )
+        except Exception:
+            opt = None
 
     base = _pred_row_to_model(dict(pred))
     outcome_model: PredictionOutcome | None = None
@@ -346,7 +445,37 @@ async def get_prediction(prediction_id: str) -> PredictionDetail:
             time_to_target_hours=o["time_to_target_hours"],
             result=o["result"],
         )
-    return PredictionDetail(**base.model_dump(), outcome=outcome_model)
+    option_model = _opt_row_to_model(dict(opt)) if opt is not None else None
+    # base.model_dump() includes `option=None` from the PredictionRow default;
+    # remove so we can pass the resolved value explicitly to PredictionDetail.
+    base_dump = base.model_dump()
+    base_dump.pop("option", None)
+    return PredictionDetail(**base_dump, outcome=outcome_model, option=option_model)
+
+
+@router.get("/predictions/{prediction_id}/option", response_model=OptionSuggestion)
+async def get_prediction_option(prediction_id: str) -> OptionSuggestion:
+    """Concrete option contract suggested for this Delphi prediction.
+
+    404 when the suggestion job hasn't run for this prediction yet
+    (delphi-options-suggest runs after each rank-v2). Same row that
+    surfaces inline on the list endpoint via LEFT JOIN.
+    """
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        try:
+            row = await conn.fetchrow(
+                "SELECT * FROM delphi_option_suggestions WHERE prediction_id = $1",
+                prediction_id,
+            )
+        except Exception as e:
+            raise HTTPException(status_code=503, detail=f"options_suggestions table not ready: {e}")
+    if row is None:
+        raise HTTPException(status_code=404, detail="no option suggestion for this prediction")
+    model = _opt_row_to_model(dict(row))
+    if model is None:
+        raise HTTPException(status_code=500, detail="failed to render option suggestion")
+    return model
 
 
 # -- /memory/stats -----------------------------------------------------------

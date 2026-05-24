@@ -35,6 +35,7 @@ from cfp_jobs import delphi_ml_train as delphi_ml_train_mod  # noqa: E402
 from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
 from cfp_jobs import delphi_rank_v2 as delphi_rank_v2_mod  # noqa: E402
 from cfp_jobs import delphi_regime as delphi_regime_mod  # noqa: E402
+from cfp_jobs import delphi_options as delphi_options_mod  # noqa: E402
 from cfp_jobs import delphi_replay as delphi_replay_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
@@ -1318,6 +1319,24 @@ def uw_predictions_cmd() -> None:
     from cfp_jobs.ingestion import uw_predictions
     out = uw_predictions.ingest(settings.database_url, settings.unusual_whales_api_key)
     console.print(f"[green]uw-predictions:[/green] {out}")
+
+
+@app.command("delphi-options-suggest")
+def delphi_options_suggest_cmd(
+    hours: int = typer.Option(
+        24, help="Suggest for every v0.3 prediction in the last N hours."
+    ),
+) -> None:
+    """For every recent v0.3 prediction, pick a contract (strike near target,
+    expiry matched to horizon), pull a fresh mid price, model BS value at
+    target and invalidation, and write a delphi_option_suggestions row.
+
+    Turns 'NVDA bullish 1w, target 158, prob 68%' into 'NVDA 158C exp 2026-
+    06-13 @ $4.20 mid, EV +$185/contract, breakeven 42%, size 6 contracts
+    at fractional Kelly.'
+    """
+    out = delphi_options_mod.suggest_recent(settings.database_url, hours=hours)
+    console.print(f"[green]delphi-options:[/green] {out}")
 
 
 @app.command("delphi-replay")

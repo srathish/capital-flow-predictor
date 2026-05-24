@@ -139,6 +139,7 @@ on:
           - delphi-regime
           - uw-predictions
           - delphi-replay
+          - delphi-options-suggest
       backfill_days:
         description: "delphi-regime: backfill this many past days (0 = today only)"
         required: false
@@ -780,6 +781,9 @@ jobs:
       - name: Rank v0.2 predictions from delphi_features
         working-directory: apps/jobs
         run: uv run cfp-jobs delphi-rank-v2 --candidate-limit 50
+      - name: Suggest options + EV for fresh predictions
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-options-suggest --hours 2
 
   delphi-regime:
     # Tags today's composite regime (vol/trend/macro). Stratifies all
@@ -825,6 +829,27 @@ jobs:
       - name: Pull UW prediction endpoints
         working-directory: apps/jobs
         run: uv run cfp-jobs uw-predictions
+
+  delphi-options-suggest:
+    # Phase 5d: pick a contract + pull mid + compute BS EV for every
+    # v0.3 prediction in the last N hours. Manual-only; the rank-v2 job
+    # also runs this as a post-step on every scheduled rank.
+    if: github.event.inputs.job == 'delphi-options-suggest'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations (0039_delphi_options)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Suggest options + EV for fresh predictions
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-options-suggest --hours 6
 
   delphi-replay:
     # Walk-forward backtest. Manual only — windows are caller-defined.

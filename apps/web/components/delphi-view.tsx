@@ -66,6 +66,23 @@ type PredictionRow = {
   return_p50?: number | null;
   return_p90?: number | null;
   gex_wall_anchored?: boolean;
+  // Phase 5d: concrete option suggestion (NULL until delphi-options-suggest runs)
+  option?: {
+    contract_symbol: string | null;
+    option_type: string;
+    strike: number;
+    expiry: string;
+    days_to_expiry: number;
+    current_mid: number | null;
+    current_iv: number | null;
+    price_source: string | null;
+    value_at_target: number | null;
+    value_at_invalidation: number | null;
+    ev_per_contract: number | null;
+    ev_pct_of_cost: number | null;
+    breakeven_probability: number | null;
+    contracts_at_kelly: number | null;
+  } | null;
 };
 
 type PredictionListResponse = {
@@ -384,6 +401,9 @@ function PredictionTable({
             <th className="text-right px-3 py-2" title="Fractional Kelly (0.25x) position size. Negative or unavailable = do not trade.">
               Kelly
             </th>
+            <th className="text-left px-3 py-2" title="Suggested option contract with current mid price + expected value per contract">
+              Option · EV
+            </th>
             <th className="text-right px-3 py-2">Invalidation</th>
             <th className="text-right px-3 py-2">Score</th>
             <th className="text-left px-3 py-2">Why</th>
@@ -462,6 +482,60 @@ function PredictionTable({
                   </span>
                 ) : (
                   <span className="text-[11px] text-muted-foreground">—</span>
+                )}
+              </td>
+              <td className="px-3 py-2 font-mono text-[11px]">
+                {p.option ? (
+                  <div className="flex flex-col leading-tight gap-0.5">
+                    <span className="font-semibold">
+                      {p.option.strike}{p.option.option_type} {p.option.expiry.slice(0, 10)}
+                      <span className="ml-1 text-muted-foreground">({p.option.days_to_expiry}d)</span>
+                    </span>
+                    <span>
+                      mid <span className="font-semibold">${(p.option.current_mid ?? 0).toFixed(2)}</span>
+                      {p.option.price_source && (
+                        <span
+                          className={cn(
+                            "ml-1 px-1 py-0.5 rounded text-[9px]",
+                            p.option.price_source === "uw_flow" && "bg-emerald-500/15 text-emerald-300",
+                            p.option.price_source === "uw_history" && "bg-blue-500/15 text-blue-300",
+                            p.option.price_source === "bs_theo" && "bg-muted text-muted-foreground"
+                          )}
+                          title={`Price source: ${p.option.price_source === "uw_flow" ? "live flow trade <7d" : p.option.price_source === "uw_history" ? "yesterday's close" : "Black-Scholes theoretical"}`}
+                        >
+                          {p.option.price_source === "uw_flow" ? "live" : p.option.price_source === "uw_history" ? "EOD" : "theo"}
+                        </span>
+                      )}
+                    </span>
+                    {p.option.ev_per_contract != null && (
+                      <span
+                        className={cn(
+                          "font-semibold",
+                          p.option.ev_per_contract > 0 ? "text-emerald-400" : "text-rose-400"
+                        )}
+                        title={
+                          p.option.breakeven_probability != null
+                            ? `Breakeven at ${(p.option.breakeven_probability * 100).toFixed(0)}% probability`
+                            : ""
+                        }
+                      >
+                        EV {p.option.ev_per_contract >= 0 ? "+" : ""}
+                        ${p.option.ev_per_contract.toFixed(0)}/contract
+                        {p.option.ev_pct_of_cost != null && (
+                          <span className="ml-1 text-[10px] opacity-80">
+                            ({(p.option.ev_pct_of_cost * 100).toFixed(0)}%)
+                          </span>
+                        )}
+                      </span>
+                    )}
+                    {p.option.contracts_at_kelly != null && p.option.contracts_at_kelly > 0 && (
+                      <span className="text-[10px] text-muted-foreground">
+                        size: {p.option.contracts_at_kelly} contracts @ Kelly
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">—</span>
                 )}
               </td>
               <td className="px-3 py-2 text-right font-mono text-muted-foreground">
