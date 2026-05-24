@@ -474,11 +474,17 @@ def suggest_for_prediction(conn: psycopg.Connection, prediction_id: str) -> dict
 
 
 def suggest_recent(database_url: str, hours: int = 24) -> dict[str, Any]:
-    """Build suggestions for every v0.3 prediction in the last `hours`."""
+    """Build suggestions for every v0.3 prediction in the last `hours`.
+
+    Uses a FRESH connection per prediction so a poisoned transaction in one
+    ticker (e.g. a SELECT throwing on a missing table) cannot abort the rest.
+    First production run skipped all 300 with "current transaction is
+    aborted" because the per-prediction work shared one conn; this fixes it.
+    """
     n_ok = n_skip = 0
     by_source: dict[str, int] = {}
-    with connect(database_url) as conn:
-        rows = conn.execute(
+    with connect(database_url) as list_conn:
+        rows = list_conn.execute(
             """
             SELECT prediction_id FROM delphi_predictions
             WHERE model_version = 'v0.3-quant'
@@ -488,17 +494,19 @@ def suggest_recent(database_url: str, hours: int = 24) -> dict[str, Any]:
             """,
             (hours,),
         ).fetchall()
-        for (pid,) in rows:
-            try:
+
+    for (pid,) in rows:
+        try:
+            with connect(database_url) as conn:
                 out = suggest_for_prediction(conn, pid)
-                if out is None:
-                    n_skip += 1
-                else:
-                    n_ok += 1
-                    src = out["source"]
-                    by_source[src] = by_source.get(src, 0) + 1
-            except Exception as e:  # noqa: BLE001
-                log.warning("option suggest failed for %s: %s", pid, e)
+                conn.commit()
+            if out is None:
                 n_skip += 1
-        conn.commit()
+            else:
+                n_ok += 1
+                src = out["source"]
+                by_source[src] = by_source.get(src, 0) + 1
+        except Exception as e:  # noqa: BLE001
+            log.warning("option suggest failed for %s: %s", pid, e)
+            n_skip += 1
     return {"suggested": n_ok, "skipped": n_skip, "by_price_source": by_source}
