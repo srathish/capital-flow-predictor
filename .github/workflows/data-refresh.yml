@@ -140,6 +140,7 @@ on:
           - uw-predictions
           - delphi-replay
           - delphi-options-suggest
+          - delphi-evaluate-intraday
       backfill_days:
         description: "delphi-regime: backfill this many past days (0 = today only)"
         required: false
@@ -829,6 +830,27 @@ jobs:
       - name: Pull UW prediction endpoints
         working-directory: apps/jobs
         run: uv run cfp-jobs uw-predictions
+
+  delphi-evaluate-intraday:
+    # Phase 5e: resolve hit_invalidation_first touch order using yfinance 5m
+    # bars for predictions where both target and invalidation touched the
+    # same day. Runs nightly after delphi-evaluate; idempotent.
+    if: github.event.inputs.job == 'delphi-evaluate-intraday'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Resolve touch-order for ambiguous predictions
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-evaluate-intraday --max-batch 200
 
   delphi-options-suggest:
     # Phase 5d: pick a contract + pull mid + compute BS EV for every

@@ -35,6 +35,7 @@ from cfp_jobs import delphi_ml_train as delphi_ml_train_mod  # noqa: E402
 from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
 from cfp_jobs import delphi_rank_v2 as delphi_rank_v2_mod  # noqa: E402
 from cfp_jobs import delphi_regime as delphi_regime_mod  # noqa: E402
+from cfp_jobs import delphi_evaluate_intraday as delphi_evaluate_intraday_mod  # noqa: E402
 from cfp_jobs import delphi_options as delphi_options_mod  # noqa: E402
 from cfp_jobs import delphi_replay as delphi_replay_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
@@ -1319,6 +1320,31 @@ def uw_predictions_cmd() -> None:
     from cfp_jobs.ingestion import uw_predictions
     out = uw_predictions.ingest(settings.database_url, settings.unusual_whales_api_key)
     console.print(f"[green]uw-predictions:[/green] {out}")
+
+
+@app.command("delphi-evaluate-intraday")
+def delphi_evaluate_intraday_cmd(
+    max_batch: int = typer.Option(
+        200, help="Max ambiguous predictions to resolve per run."
+    ),
+) -> None:
+    """Phase 5e: fix hit_invalidation_first ordering noise using yfinance 5m bars.
+
+    For any prediction whose daily-bar outcome shows BOTH target AND
+    invalidation touched in the window, pulls intraday 5m candles and
+    determines which side was hit FIRST. Writes corrected ordering to
+    delphi_intraday_outcomes.
+
+    Why it matters: the daily evaluator defaults to 'win' on any same-day
+    double-touch. Empirically ~20-30% of those wins are actually invalidated-
+    first → label noise → upper bound on holdout Brier. Cleaning labels =
+    cleaner model.
+
+    yfinance 5m bars only go 60 days back, so older predictions stay daily-
+    bar resolved.
+    """
+    out = delphi_evaluate_intraday_mod.evaluate(settings.database_url, max_batch=max_batch)
+    console.print(f"[green]delphi-evaluate-intraday:[/green] {out}")
 
 
 @app.command("delphi-options-suggest")
