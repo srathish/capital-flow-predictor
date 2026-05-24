@@ -174,6 +174,31 @@ class ModelPerformanceRow(BaseModel):
     calibration_error: float | None
 
 
+class V3HealthResponse(BaseModel):
+    """One-screen morning sanity check for v0.3 pipeline.
+
+    All fields are aggregate-only — no per-prediction PII. Designed to be
+    polled cheaply from a dashboard or curl'd from a launch-day script.
+    """
+    generated_at: datetime
+    feature_rows_24h: int
+    feature_universe_size_latest: int
+    v3_predictions_24h: int
+    v3_horizons: dict[str, int]
+    v3_conflict_rate: float | None
+    v3_gex_anchored_rate: float | None
+    v3_kelly_actionable_rate: float | None      # fraction with kelly >= 5%
+    v3_avg_probability: float | None
+    v3_avg_ci_n: float | None                   # avg # comparable outcomes used in CI
+    ml_models_total: int
+    ml_models_active: int
+    ml_models_tripwire_fired: int
+    last_regime_composite: str | None
+    last_regime_asof: datetime | None
+    promotions_total: int
+    promotions_promoted: int
+
+
 class LearningStateResponse(BaseModel):
     """What Layers 2-4 have learned so far.
 
@@ -403,6 +428,144 @@ async def memory_stats() -> MemoryStatsResponse:
 
 
 # -- /learning/state ---------------------------------------------------------
+
+
+@router.get("/v3-health", response_model=V3HealthResponse)
+async def v3_health() -> V3HealthResponse:
+    """Aggregate health check on the v0.3 pipeline.
+
+    Reads:
+      - delphi_features (composer output last 24h)
+      - delphi_predictions WHERE model_version='v0.3-quant' last 24h
+      - delphi_ml_models (registry + tripwire counts)
+      - macro_regime (latest composite)
+      - delphi_reason_code_promotions (BH FDR promotion log)
+
+    Cheap (~6 aggregate queries) — safe to poll from a dashboard. Every
+    field can return None when the underlying table is empty; the UI/script
+    should treat None as "calibrating", not "broken".
+    """
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        # Features volume
+        try:
+            feat_24h = await conn.fetchval(
+                "SELECT COUNT(*) FROM delphi_features WHERE snapshot_ts >= NOW() - INTERVAL '24 hours'"
+            ) or 0
+            feat_universe = await conn.fetchval(
+                """
+                SELECT COUNT(DISTINCT ticker) FROM delphi_features
+                WHERE snapshot_ts = (SELECT MAX(snapshot_ts) FROM delphi_features)
+                """
+            ) or 0
+        except Exception:
+            feat_24h = 0
+            feat_universe = 0
+
+        # v0.3 predictions
+        try:
+            row = await conn.fetchrow(
+                """
+                SELECT
+                    COUNT(*) AS n,
+                    AVG(probability) AS avg_p,
+                    AVG(prob_ci_n) AS avg_ci_n,
+                    AVG(CASE WHEN array_length(reason_codes, 1) IS NOT NULL
+                             AND EXISTS (SELECT 1 FROM unnest(reason_codes) c WHERE c LIKE 'CONFLICT_%%')
+                             THEN 1.0 ELSE 0.0 END) AS conflict_rate,
+                    AVG(CASE WHEN gex_wall_anchored THEN 1.0 ELSE 0.0 END) AS gex_rate,
+                    AVG(CASE WHEN kelly_fraction >= 0.05 THEN 1.0 ELSE 0.0 END) AS kelly_rate
+                FROM delphi_predictions
+                WHERE model_version = 'v0.3-quant'
+                  AND created_at >= NOW() - INTERVAL '24 hours'
+                """
+            )
+            v3_n = (row["n"] or 0) if row else 0
+            avg_p = float(row["avg_p"]) if row and row["avg_p"] is not None else None
+            avg_ci_n = float(row["avg_ci_n"]) if row and row["avg_ci_n"] is not None else None
+            conflict_rate = float(row["conflict_rate"]) if row and row["conflict_rate"] is not None else None
+            gex_rate = float(row["gex_rate"]) if row and row["gex_rate"] is not None else None
+            kelly_rate = float(row["kelly_rate"]) if row and row["kelly_rate"] is not None else None
+
+            horizons_rows = await conn.fetch(
+                """
+                SELECT forecast_horizon, COUNT(*) AS n
+                FROM delphi_predictions
+                WHERE model_version = 'v0.3-quant'
+                  AND created_at >= NOW() - INTERVAL '24 hours'
+                GROUP BY forecast_horizon
+                """
+            )
+            horizons = {r["forecast_horizon"]: int(r["n"]) for r in horizons_rows}
+        except Exception:
+            v3_n = 0
+            avg_p = None
+            avg_ci_n = None
+            conflict_rate = None
+            gex_rate = None
+            kelly_rate = None
+            horizons = {}
+
+        # ML registry
+        try:
+            ml_row = await conn.fetchrow(
+                """
+                SELECT
+                    COUNT(*) AS total,
+                    COUNT(*) FILTER (WHERE status = 'active') AS active,
+                    COUNT(*) FILTER (WHERE tripwire_fired) AS tripped
+                FROM delphi_ml_models
+                """
+            )
+            ml_total = int(ml_row["total"] or 0)
+            ml_active = int(ml_row["active"] or 0)
+            ml_tripped = int(ml_row["tripped"] or 0)
+        except Exception:
+            ml_total = ml_active = ml_tripped = 0
+
+        # Regime
+        try:
+            reg_row = await conn.fetchrow(
+                "SELECT composite_regime, asof_date::timestamptz AS asof_date FROM macro_regime ORDER BY asof_date DESC LIMIT 1"
+            )
+            last_regime = reg_row["composite_regime"] if reg_row else None
+            last_regime_asof = reg_row["asof_date"] if reg_row else None
+        except Exception:
+            last_regime = None
+            last_regime_asof = None
+
+        # Promotions
+        try:
+            prom_row = await conn.fetchrow(
+                """
+                SELECT COUNT(*) AS total, COUNT(*) FILTER (WHERE promoted) AS promoted
+                FROM delphi_reason_code_promotions
+                """
+            )
+            prom_total = int(prom_row["total"] or 0)
+            prom_promoted = int(prom_row["promoted"] or 0)
+        except Exception:
+            prom_total = prom_promoted = 0
+
+    return V3HealthResponse(
+        generated_at=datetime.utcnow(),
+        feature_rows_24h=int(feat_24h),
+        feature_universe_size_latest=int(feat_universe),
+        v3_predictions_24h=int(v3_n),
+        v3_horizons=horizons,
+        v3_conflict_rate=conflict_rate,
+        v3_gex_anchored_rate=gex_rate,
+        v3_kelly_actionable_rate=kelly_rate,
+        v3_avg_probability=avg_p,
+        v3_avg_ci_n=avg_ci_n,
+        ml_models_total=ml_total,
+        ml_models_active=ml_active,
+        ml_models_tripwire_fired=ml_tripped,
+        last_regime_composite=last_regime,
+        last_regime_asof=last_regime_asof,
+        promotions_total=prom_total,
+        promotions_promoted=prom_promoted,
+    )
 
 
 @router.get("/learning/state", response_model=LearningStateResponse)
