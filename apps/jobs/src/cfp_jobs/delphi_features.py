@@ -1062,7 +1062,7 @@ def _write_universe_stats(conn: psycopg.Connection, snapshot_ts: datetime, rows:
             return  # migration 0038 not applied yet
 
 
-def compose(database_url: str, *, max_tickers: int = 200) -> dict[str, Any]:
+def compose(database_url: str, *, max_tickers: int = 60) -> dict[str, Any]:
     """Compose features for every ticker in the freshest screener snapshot.
 
     Returns a summary dict. Idempotent — same (ticker, snapshot_ts) PK skips
@@ -1095,7 +1095,10 @@ def compose(database_url: str, *, max_tickers: int = 200) -> dict[str, Any]:
             macro_block = {}
 
         rows: list[FeatureRow] = []
-        for ticker, spot in candidates[:max_tickers]:
+        batch = candidates[:max_tickers]
+        log.info("delphi-features: composing %d tickers", len(batch))
+        t0 = datetime.now(UTC)
+        for i, (ticker, spot) in enumerate(batch):
             try:
                 f = _compose_ticker(conn, ticker, spot)
                 f.features.update(macro_block)
@@ -1104,6 +1107,15 @@ def compose(database_url: str, *, max_tickers: int = 200) -> dict[str, Any]:
                     conflict_n += 1
                     for code in f.conflict_codes:
                         by_conflict[code] = by_conflict.get(code, 0) + 1
+                # Progress log every 10 tickers (cheap; helps timeout triage)
+                if (i + 1) % 10 == 0:
+                    elapsed = (datetime.now(UTC) - t0).total_seconds()
+                    rate = (i + 1) / elapsed if elapsed > 0 else 0.0
+                    eta = (len(batch) - i - 1) / rate if rate > 0 else 0.0
+                    log.info(
+                        "delphi-features: %d/%d composed (%.1f tk/s, ETA %.0fs)",
+                        i + 1, len(batch), rate, eta,
+                    )
             except Exception as e:  # noqa: BLE001
                 log.warning("delphi-features composer failed for %s: %s", ticker, e)
 

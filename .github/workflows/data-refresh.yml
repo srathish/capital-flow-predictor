@@ -756,7 +756,7 @@ jobs:
         run: uv run cfp-jobs migrate
       - name: Compose Delphi v0.3 features
         working-directory: apps/jobs
-        run: uv run cfp-jobs delphi-features --max-tickers 120
+        run: uv run cfp-jobs delphi-features --max-tickers 60
 
   delphi-rank-v2:
     # v0.2 ranker — reads delphi_features, emits ~40 reason codes, tags
