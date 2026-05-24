@@ -57,6 +57,15 @@ type PredictionRow = {
   regime: string | null;
   model_version: string;
   explanation: string | null;
+  // v0.3 quant fields — optional because v0.1/v0.2 rows return null/false
+  prob_lo?: number | null;
+  prob_hi?: number | null;
+  prob_ci_n?: number | null;
+  kelly_fraction?: number | null;
+  return_p10?: number | null;
+  return_p50?: number | null;
+  return_p90?: number | null;
+  gex_wall_anchored?: boolean;
 };
 
 type PredictionListResponse = {
@@ -368,7 +377,13 @@ function PredictionTable({
             <th className="text-right px-3 py-2">Price</th>
             <th className="text-right px-3 py-2">Target</th>
             <th className="text-right px-3 py-2">Est. Return</th>
+            <th className="text-right px-3 py-2" title="ML quantile fan: p10 / p50 / p90 of expected return distribution">
+              Return fan
+            </th>
             <th className="text-right px-3 py-2">Probability</th>
+            <th className="text-right px-3 py-2" title="Fractional Kelly (0.25x) position size. Negative or unavailable = do not trade.">
+              Kelly
+            </th>
             <th className="text-right px-3 py-2">Invalidation</th>
             <th className="text-right px-3 py-2">Score</th>
             <th className="text-left px-3 py-2">Why</th>
@@ -378,7 +393,19 @@ function PredictionTable({
           {data.predictions.map((p, i) => (
             <tr key={p.prediction_id} className="hover:bg-accent/30">
               <td className="px-3 py-2 text-muted-foreground">{i + 1}</td>
-              <td className="px-3 py-2 font-medium">{p.ticker}</td>
+              <td className="px-3 py-2 font-medium">
+                <div className="flex items-center gap-1">
+                  {p.ticker}
+                  {p.gex_wall_anchored && (
+                    <span
+                      className="font-mono text-[9px] px-1 py-0.5 rounded bg-amber-500/15 text-amber-300"
+                      title="Target anchored to dealer gamma wall — mechanical magnet for price"
+                    >
+                      GEX
+                    </span>
+                  )}
+                </div>
+              </td>
               <td className="px-3 py-2 text-muted-foreground">{p.signal_timeframe}</td>
               <td className={cn("px-3 py-2 capitalize", biasColor(p.bias))}>
                 {p.bias.replace("_", " ")}
@@ -396,7 +423,47 @@ function PredictionTable({
                 {p.expected_return >= 0 ? "+" : ""}
                 {fmtPct(p.expected_return)}
               </td>
-              <td className="px-3 py-2 text-right font-mono">{fmtPct(p.probability)}</td>
+              <td className="px-3 py-2 text-right font-mono text-[11px] text-muted-foreground">
+                {p.return_p10 != null && p.return_p50 != null && p.return_p90 != null ? (
+                  <div className="flex flex-col items-end leading-tight">
+                    <span>{fmtPct(p.return_p50)}</span>
+                    <span className="text-[10px] opacity-70">
+                      [{fmtPct(p.return_p10)}, {fmtPct(p.return_p90)}]
+                    </span>
+                  </div>
+                ) : (
+                  "—"
+                )}
+              </td>
+              <td className="px-3 py-2 text-right font-mono">
+                <div className="flex flex-col items-end leading-tight">
+                  <span>{fmtPct(p.probability)}</span>
+                  {p.prob_lo != null && p.prob_hi != null ? (
+                    <span className="text-[10px] text-muted-foreground">
+                      [{fmtPct(p.prob_lo)}, {fmtPct(p.prob_hi)}] · n={p.prob_ci_n}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-muted-foreground italic">calibrating</span>
+                  )}
+                </div>
+              </td>
+              <td className="px-3 py-2 text-right font-mono">
+                {p.kelly_fraction != null && p.kelly_fraction > 0 ? (
+                  <span
+                    className={cn(
+                      "px-1.5 py-0.5 rounded",
+                      p.kelly_fraction >= 0.05
+                        ? "bg-emerald-500/15 text-emerald-300"
+                        : "bg-muted text-muted-foreground"
+                    )}
+                    title="Fractional Kelly at 0.25x — multiply by account equity for $ size"
+                  >
+                    {fmtPct(p.kelly_fraction)}
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-muted-foreground">—</span>
+                )}
+              </td>
               <td className="px-3 py-2 text-right font-mono text-muted-foreground">
                 {fmtPrice(p.invalidation)}
               </td>
@@ -408,7 +475,14 @@ function PredictionTable({
                   {p.reason_codes.slice(0, 3).map((rc) => (
                     <span
                       key={rc}
-                      className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
+                      className={cn(
+                        "font-mono text-[10px] px-1.5 py-0.5 rounded",
+                        rc.startsWith("CONFLICT_")
+                          ? "bg-amber-500/15 text-amber-300"
+                          : rc.startsWith("GEX_")
+                            ? "bg-blue-500/15 text-blue-300"
+                            : "bg-muted text-muted-foreground"
+                      )}
                     >
                       {rc}
                     </span>

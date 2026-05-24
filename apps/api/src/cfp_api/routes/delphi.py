@@ -67,6 +67,15 @@ class PredictionRow(BaseModel):
     regime: str | None
     model_version: str
     explanation: str | None
+    # v0.3 quant additions (NULL on v0.1/v0.2 rows; populated for v0.3-quant)
+    prob_lo: float | None = None
+    prob_hi: float | None = None
+    prob_ci_n: int | None = None
+    kelly_fraction: float | None = None
+    return_p10: float | None = None
+    return_p50: float | None = None
+    return_p90: float | None = None
+    gex_wall_anchored: bool = False
 
 
 class PredictionOutcome(BaseModel):
@@ -207,6 +216,17 @@ def _pred_row_to_model(row: dict) -> PredictionRow:
         regime=row["regime"],
         model_version=row["model_version"],
         explanation=row["explanation"],
+        # v0.3 quant fields — .get() because v0.1/v0.2 rows return NULL
+        # AND because older API deployments may select with SELECT * before
+        # the migration applied (defensive across rolling restarts).
+        prob_lo=row.get("prob_lo"),
+        prob_hi=row.get("prob_hi"),
+        prob_ci_n=row.get("prob_ci_n"),
+        kelly_fraction=row.get("kelly_fraction"),
+        return_p10=row.get("return_p10"),
+        return_p50=row.get("return_p50"),
+        return_p90=row.get("return_p90"),
+        gex_wall_anchored=bool(row.get("gex_wall_anchored") or False),
     )
 
 
