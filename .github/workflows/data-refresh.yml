@@ -139,6 +139,11 @@ on:
           - delphi-regime
           - uw-predictions
           - delphi-replay
+      backfill_days:
+        description: "delphi-regime: backfill this many past days (0 = today only)"
+        required: false
+        default: "0"
+        type: string
 
 jobs:
   reddit-catalysts:
@@ -791,7 +796,9 @@ jobs:
         run: uv run cfp-jobs migrate
       - name: Tag composite regime
         working-directory: apps/jobs
-        run: uv run cfp-jobs delphi-regime
+        env:
+          BACKFILL_DAYS: ${{ github.event.inputs.backfill_days || '0' }}
+        run: uv run cfp-jobs delphi-regime --backfill-days "$BACKFILL_DAYS"
 
   uw-predictions:
     # UW prediction endpoints (smart_money, whales, market, insiders,
