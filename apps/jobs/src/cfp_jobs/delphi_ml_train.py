@@ -75,11 +75,49 @@ MIN_OUTCOMES_TO_TRAIN = _ienv("DELPHI_ML_MIN_OUTCOMES", 200)
 OVERFIT_THRESHOLD     = _fenv("DELPHI_ML_OVERFIT_GAP", 0.05)
 VAL_GAP_THRESHOLD     = _fenv("DELPHI_ML_VAL_GAP", 0.03)
 BLEND_WEIGHT_ML       = _fenv("DELPHI_ML_BLEND_WEIGHT", 0.6)
-# Half-life in DAYS for the exponential time-decay sample weights. Recent
-# outcomes weigh more — financial regimes drift, and an outcome from 9 months
-# ago is half as informative as one from today. 90 days = quarterly half-life
-# matches typical buy-side recalibration cadence.
-TIME_DECAY_HALFLIFE_DAYS = _fenv("DELPHI_ML_HALFLIFE_DAYS", 90.0)
+# Half-life in DAYS for the exponential time-decay sample weights, BY
+# forecast_horizon. Short horizons decay information faster — an EOD-trade
+# outcome from 60 days ago tells you almost nothing about today's tape
+# microstructure; a 6mo-trade outcome from 60 days ago is still highly
+# relevant because the underlying macro/regime probably hasn't shifted.
+# Default ladder matches the spirit of "halflife ≈ 1× the horizon":
+#   EOD  → 21d (one trading month)
+#   1w   → 30d
+#   1mo  → 60d
+#   3mo  → 90d
+#   6mo  → 180d
+#   12mo → 365d
+#   24mo → 540d
+# Override globally with DELPHI_ML_HALFLIFE_DAYS, or per-horizon with
+# DELPHI_ML_HALFLIFE_{HORIZON}_DAYS (e.g. DELPHI_ML_HALFLIFE_EOD_DAYS=14).
+HALFLIFE_DEFAULTS: dict[str, float] = {
+    "EOD": 21.0, "1w": 30.0, "1mo": 60.0, "3mo": 90.0,
+    "6mo": 180.0, "12mo": 365.0, "24mo": 540.0,
+}
+TIME_DECAY_HALFLIFE_DAYS = _fenv("DELPHI_ML_HALFLIFE_DAYS", 90.0)  # legacy global default
+
+
+def _halflife_for(horizon: str | None) -> float:
+    """Return the half-life to use for the given horizon.
+
+    Resolution order:
+      1. DELPHI_ML_HALFLIFE_{HORIZON}_DAYS env (e.g. DELPHI_ML_HALFLIFE_1W_DAYS)
+      2. HALFLIFE_DEFAULTS[horizon]
+      3. DELPHI_ML_HALFLIFE_DAYS env (legacy global)
+      4. 90.0 hard default
+    """
+    if horizon:
+        # Normalize 1w -> 1W for the env var.
+        env_name = f"DELPHI_ML_HALFLIFE_{horizon.upper()}_DAYS"
+        v = os.environ.get(env_name)
+        if v:
+            try:
+                return float(v)
+            except ValueError:
+                pass
+        if horizon in HALFLIFE_DEFAULTS:
+            return HALFLIFE_DEFAULTS[horizon]
+    return TIME_DECAY_HALFLIFE_DAYS
 
 
 # Hyperparameter defaults chosen for noisy financial data. The bias here is
@@ -175,6 +213,7 @@ def _shape_rows(rows: list[tuple]) -> dict[str, Any]:
     y_clf = []
     y_reg = []
     created = []
+    horizons_list: list[str] = []
     for r in rows:
         feat_blob = r[9] or {}
         snap = (feat_blob.get("features_snapshot") or {}).copy()
@@ -190,6 +229,7 @@ def _shape_rows(rows: list[tuple]) -> dict[str, Any]:
         y_clf.append(1 if r[10] else 0)
         y_reg.append(float(r[11]) if r[11] is not None else 0.0)
         created.append(r[1])
+        horizons_list.append(str(r[3]))  # forecast_horizon column in _load_training_set
 
     feature_names = sorted(feature_names_set)
     X = np.full((len(feature_rows), len(feature_names)), np.nan)
@@ -215,19 +255,31 @@ def _shape_rows(rows: list[tuple]) -> dict[str, Any]:
         "y_reg": np.array(y_reg),
         "feature_names": feature_names,
         "created_at": created,
+        "horizons": horizons_list,
         "cat_lookup": cat_lookup,
     }
 
 
-def _time_decay_weights(created_at: list, halflife_days: float) -> Any:
-    """Exponential decay sample weights with `halflife_days` half-life.
+def _time_decay_weights(
+    created_at: list,
+    halflife_days: float | None = None,
+    horizons: list[str] | None = None,
+) -> Any:
+    """Exponential decay sample weights with PER-HORIZON half-life.
 
-    weight[i] = 0.5 ** (days_old / halflife)
+    weight[i] = 0.5 ** (days_old[i] / halflife[i])
 
-    A sample 90 days old (default halflife) gets weight 0.5; 180 days old
-    gets 0.25; same-day gets 1.0. Total mass NORMALIZED so LightGBM sees
-    sum(weights) == len(weights), keeping its internal regularization
-    behavior the same as uniform-weighted.
+    Where halflife[i] = _halflife_for(horizons[i]) when horizons provided,
+    else `halflife_days` (legacy global path).
+
+    Why per-horizon: EOD outcomes from 60 days ago tell you almost nothing
+    about today's tape microstructure; 6mo outcomes from 60 days ago are
+    still highly relevant. Single global halflife under-weights short-
+    horizon recent data when held with long-horizon data, and over-weights
+    short-horizon old data.
+
+    Total mass NORMALIZED so LightGBM sees sum(weights) == len(weights),
+    keeping its internal regularization behavior the same as uniform.
     """
     import numpy as np
     if not created_at:
@@ -236,7 +288,12 @@ def _time_decay_weights(created_at: list, halflife_days: float) -> Any:
     days_old = np.array([
         max(0.0, (now - ts).total_seconds() / 86400.0) for ts in created_at
     ])
-    w = 0.5 ** (days_old / max(1e-6, halflife_days))
+    if horizons is not None and len(horizons) == len(created_at):
+        hl = np.array([_halflife_for(h) for h in horizons])
+    else:
+        # Legacy: single global halflife (back-compat with existing callers)
+        hl = np.full(len(days_old), halflife_days or TIME_DECAY_HALFLIFE_DAYS)
+    w = 0.5 ** (days_old / np.maximum(1e-6, hl))
     # Normalize so sum equals n (keeps LGBM regularization comparable)
     w = w * (len(w) / w.sum())
     return w
@@ -386,10 +443,16 @@ def train(database_url: str) -> dict[str, Any]:
         return {"status": "insufficient_split", "train_n": train_d["n"],
                 "val_n": val_d["n"] if val_d else 0, "holdout_n": holdout["n"]}
 
-    # Time-decay sample weights. Train slice's created_at order matters; the
-    # split is time-ordered so train_d holds the OLDEST 82% chronologically.
+    # Time-decay sample weights with PER-HORIZON halflife. Train slice's
+    # created_at + horizons order matters; the split is time-ordered so
+    # train_d holds the OLDEST 82% chronologically.
     train_created = data["created_at"][:train_d["n"]]
-    train_weights = _time_decay_weights(train_created, TIME_DECAY_HALFLIFE_DAYS)
+    train_horizons = data["horizons"][:train_d["n"]]
+    train_weights = _time_decay_weights(
+        train_created,
+        halflife_days=TIME_DECAY_HALFLIFE_DAYS,
+        horizons=train_horizons,
+    )
 
     # ---- Classification head ----
     clf = _train_lightgbm(train_d, val_d, DEFAULT_PARAMS_CLF, weights=train_weights)
@@ -503,7 +566,10 @@ def train(database_url: str) -> dict[str, Any]:
                     "blend_weight_ml": BLEND_WEIGHT_ML,
                     "reg_mae_holdout": reg_mae,
                     "reg_p10_p90_coverage_holdout": coverage_80,
-                    "time_decay_halflife_days": TIME_DECAY_HALFLIFE_DAYS,
+                    "time_decay_halflife_days_legacy": TIME_DECAY_HALFLIFE_DAYS,
+                    "time_decay_halflife_per_horizon": {
+                        h: _halflife_for(h) for h in HALFLIFE_DEFAULTS
+                    },
                 }),
                 Jsonb(feat_imp),
                 psycopg.Binary(blob), psycopg.Binary(iso_blob),
