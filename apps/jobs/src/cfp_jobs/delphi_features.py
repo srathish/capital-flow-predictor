@@ -106,6 +106,10 @@ class FeatureRow:
     has_conflict: bool
     conflict_codes: list[str]
 
+    # Sector for sector-neutral cross-sectional ranks. None when uw_stock_info
+    # hasn't ingested the ticker yet.
+    sector: str | None
+
     features: dict[str, Any]
 
 
@@ -664,6 +668,19 @@ def _institutional_detail(conn: psycopg.Connection, ticker: str) -> dict[str, An
     }
 
 
+def _sector(conn: psycopg.Connection, ticker: str) -> str | None:
+    """Pull sector from uw_stock_info. None when missing or 'Unknown'."""
+    row = _safe_fetchone(
+        conn,
+        "SELECT sector FROM uw_stock_info WHERE ticker = %s LIMIT 1",
+        (ticker,),
+    )
+    if not row or not row[0]:
+        return None
+    s = str(row[0]).strip()
+    return s if s and s.lower() not in ("unknown", "n/a", "none", "") else None
+
+
 def _iv_stats(conn: psycopg.Connection, ticker: str) -> tuple[float | None, float | None, float | None]:
     """iv30, rv30, iv_rank from uw_volatility_stats."""
     row = _safe_fetchone(
@@ -777,6 +794,7 @@ def _candidate_tickers(conn: psycopg.Connection) -> list[tuple[str, float | None
 
 def _compose_ticker(conn: psycopg.Connection, ticker: str, spot: float | None) -> FeatureRow:
     iv30, rv30, iv_rank = _iv_stats(conn, ticker)
+    sector = _sector(conn, ticker)
     dp_net, dp_n, dp_late = _dark_pool_24h(conn, ticker)
     ins_net, ins_b, ins_s = _insider_30d(conn, ticker)
     cong_b, cong_s = _congress_14d(conn, ticker)
@@ -834,6 +852,7 @@ def _compose_ticker(conn: psycopg.Connection, ticker: str, spot: float | None) -
         macro_regime=macro_r,
         has_conflict=False,
         conflict_codes=[],
+        sector=sector,
         features={},
     )
     has_conflict, codes = _detect_conflicts(f)
@@ -871,6 +890,10 @@ def _compose_ticker(conn: psycopg.Connection, ticker: str, spot: float | None) -
     # Backfill spot_price from price_action if the screener gave us None.
     if f.spot_price is None and f.features.get("last_close"):
         f.spot_price = float(f.features["last_close"])
+
+    # Stash sector in features JSONB too so the ML model + API can see it
+    # without having to join uw_stock_info.
+    f.features["sector"] = f.sector
 
     # Record feature count for observability — easier to spot a regression
     # in the composer (e.g. "tickers losing 30 features overnight").
@@ -998,13 +1021,26 @@ def _percentile_ranks(values: list[float | None]) -> list[float | None]:
 def _compute_xs_ranks(rows: list[FeatureRow]) -> None:
     """Mutate each row's features dict to add xs_rank_<name> percentiles.
 
-    Two passes: promoted scalars (read from row attributes) and JSONB features.
-    Universe percentiles for the batch get stashed in delphi_xs_universe_stats
-    so the API can show distributional context per feature.
+    Two passes, both UNIVERSE-WIDE and SECTOR-NEUTRAL:
+      promoted scalars (read from row attributes)
+      JSONB features (read from row.features)
+
+    Universe-wide percentiles (`xs_rank_<name>`) measure "where does this
+    ticker sit across the whole universe today." Useful for cross-sector
+    signals (high IV regime = high IV regime regardless of sector).
+
+    Sector-neutral percentiles (`xs_rank_sector_<name>`) measure "where
+    does this ticker sit AMONG ITS SECTOR PEERS today." Critical for
+    signals that are inherently sector-dependent (a 30% short interest is
+    normal for biotech, extreme for utilities). Computed within each
+    sector group with ≥5 members; smaller groups get None.
+
+    Tickers with sector=None still get universe ranks but no sector ranks.
     """
     if not rows:
         return
-    # Promoted scalars
+
+    # Universe-wide ranks — existing behavior.
     for name in _XS_FEATURES:
         vals = [getattr(r, name, None) for r in rows]
         try:
@@ -1014,7 +1050,6 @@ def _compute_xs_ranks(rows: list[FeatureRow]) -> None:
         for r, rk in zip(rows, ranks, strict=True):
             if rk is not None:
                 r.features[f"xs_rank_{name}"] = rk
-    # JSONB features
     for name in _XS_FEATURES_JSON:
         vals = [r.features.get(name) for r in rows]
         try:
@@ -1024,6 +1059,39 @@ def _compute_xs_ranks(rows: list[FeatureRow]) -> None:
         for r, rk in zip(rows, ranks, strict=True):
             if rk is not None:
                 r.features[f"xs_rank_{name}"] = rk
+
+    # Sector-neutral ranks — group by sector then rank within.
+    sector_groups: dict[str, list[int]] = {}
+    for i, r in enumerate(rows):
+        if r.sector:
+            sector_groups.setdefault(r.sector, []).append(i)
+
+    for idxs in sector_groups.values():
+        if len(idxs) < 5:
+            continue  # too few peers for a meaningful percentile
+        for name in _XS_FEATURES:
+            sub_vals = [getattr(rows[i], name, None) for i in idxs]
+            try:
+                sub_ranks = _percentile_ranks(sub_vals)
+            except Exception:  # noqa: BLE001
+                sub_ranks = [None] * len(idxs)
+            for i, rk in zip(idxs, sub_ranks, strict=True):
+                if rk is not None:
+                    rows[i].features[f"xs_rank_sector_{name}"] = rk
+        for name in _XS_FEATURES_JSON:
+            sub_vals = [rows[i].features.get(name) for i in idxs]
+            try:
+                sub_ranks = _percentile_ranks(sub_vals)
+            except Exception:  # noqa: BLE001
+                sub_ranks = [None] * len(idxs)
+            for i, rk in zip(idxs, sub_ranks, strict=True):
+                if rk is not None:
+                    rows[i].features[f"xs_rank_sector_{name}"] = rk
+
+    log.info(
+        "delphi-features: xs_ranks computed (universe + %d sectors with >=5 members)",
+        sum(1 for idxs in sector_groups.values() if len(idxs) >= 5),
+    )
 
 
 def _write_universe_stats(conn: psycopg.Connection, snapshot_ts: datetime, rows: list[FeatureRow]) -> None:
