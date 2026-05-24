@@ -491,13 +491,19 @@ def suggest_for_prediction(conn: psycopg.Connection, prediction_id: str) -> dict
 def suggest_recent(database_url: str, hours: int = 24) -> dict[str, Any]:
     """Build suggestions for every v0.3 prediction in the last `hours`.
 
-    Uses a FRESH connection per prediction so a poisoned transaction in one
-    ticker (e.g. a SELECT throwing on a missing table) cannot abort the rest.
-    First production run skipped all 300 with "current transaction is
-    aborted" because the per-prediction work shared one conn; this fixes it.
+    Thread-pooled (DELPHI_OPTIONS_WORKERS env, default 10). Same pattern
+    that took the composer from 30+ min serial down to ~2 min. Per-ticker
+    work is network-bound; threads release the GIL on socket I/O. Each
+    worker owns its own connection so savepoint failures in one ticker
+    can't poison another.
     """
+    import os
+    from concurrent.futures import ThreadPoolExecutor
+
     n_ok = n_skip = 0
     by_source: dict[str, int] = {}
+    max_workers = int(os.environ.get("DELPHI_OPTIONS_WORKERS", "10"))
+
     with connect(database_url) as list_conn:
         rows = list_conn.execute(
             """
@@ -509,19 +515,34 @@ def suggest_recent(database_url: str, hours: int = 24) -> dict[str, Any]:
             """,
             (hours,),
         ).fetchall()
+    pids = [r[0] for r in rows]
+    total = len(pids)
+    log.info("delphi-options: suggesting for %d predictions (workers=%d)", total, max_workers)
+    t0 = datetime.now(UTC)
 
-    for (pid,) in rows:
+    def _worker(pid: str) -> tuple[str, dict[str, Any] | None, str | None]:
         try:
             with connect(database_url) as conn:
                 out = suggest_for_prediction(conn, pid)
                 conn.commit()
-            if out is None:
+            return (pid, out, None)
+        except Exception as e:  # noqa: BLE001
+            return (pid, None, f"{type(e).__name__}: {e}")
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for i, (pid, out, err) in enumerate(executor.map(_worker, pids), 1):
+            if err:
+                log.warning("option suggest failed for %s: %s", pid, err)
+                n_skip += 1
+            elif out is None:
                 n_skip += 1
             else:
                 n_ok += 1
                 src = out["source"]
                 by_source[src] = by_source.get(src, 0) + 1
-        except Exception as e:  # noqa: BLE001
-            log.warning("option suggest failed for %s: %s", pid, e)
-            n_skip += 1
-    return {"suggested": n_ok, "skipped": n_skip, "by_price_source": by_source}
+            if i % 50 == 0:
+                elapsed = (datetime.now(UTC) - t0).total_seconds()
+                rate = i / elapsed if elapsed > 0 else 0.0
+                log.info("delphi-options: %d/%d processed (%.1f/s)", i, total, rate)
+
+    return {"suggested": n_ok, "skipped": n_skip, "total": total, "by_price_source": by_source}

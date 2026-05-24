@@ -856,11 +856,14 @@ jobs:
     # Phase 5d: pick a contract + pull mid + compute BS EV for every
     # v0.3 prediction in the last N hours. Manual-only; the rank-v2 job
     # also runs this as a post-step on every scheduled rank.
+    # Threaded composer (10 workers default) keeps 300 predictions under
+    # 5 minutes.
     if: github.event.inputs.job == 'delphi-options-suggest'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DELPHI_OPTIONS_WORKERS: "10"
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
