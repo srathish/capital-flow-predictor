@@ -738,10 +738,12 @@ jobs:
   delphi-features:
     # Composes ~120 features per ticker into delphi_features. Reads ~20 UW
     # tables + prices_daily + macro_regime. 4 min after uw-screeners-ingest
-    # so screener_stocks is fresh. v0.2 of Delphi reads from here.
+    # so screener_stocks is fresh. v0.2/v0.3 of Delphi reads from here.
+    # NOTE: timeout bumped to 30m (was 15) after 200 tickers ran 15m+;
+    # max_tickers lowered to 120 to leave margin for 15-min-grid completion.
     if: startsWith(github.event.schedule, '9,24,39,54') || github.event.inputs.job == 'delphi-features'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
@@ -749,12 +751,12 @@ jobs:
       - uses: astral-sh/setup-uv@v3
       - run: uv python install 3.11
       - run: uv sync --all-packages
-      - name: Apply migrations (0037_delphi_v2)
+      - name: Apply migrations (0037_delphi_v2 + 0038_delphi_quant)
         working-directory: apps/jobs
         run: uv run cfp-jobs migrate
-      - name: Compose Delphi v0.2 features
+      - name: Compose Delphi v0.3 features
         working-directory: apps/jobs
-        run: uv run cfp-jobs delphi-features --max-tickers 200
+        run: uv run cfp-jobs delphi-features --max-tickers 120
 
   delphi-rank-v2:
     # v0.2 ranker — reads delphi_features, emits ~40 reason codes, tags

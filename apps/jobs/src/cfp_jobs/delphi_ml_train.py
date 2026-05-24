@@ -75,6 +75,11 @@ MIN_OUTCOMES_TO_TRAIN = _ienv("DELPHI_ML_MIN_OUTCOMES", 200)
 OVERFIT_THRESHOLD     = _fenv("DELPHI_ML_OVERFIT_GAP", 0.05)
 VAL_GAP_THRESHOLD     = _fenv("DELPHI_ML_VAL_GAP", 0.03)
 BLEND_WEIGHT_ML       = _fenv("DELPHI_ML_BLEND_WEIGHT", 0.6)
+# Half-life in DAYS for the exponential time-decay sample weights. Recent
+# outcomes weigh more — financial regimes drift, and an outcome from 9 months
+# ago is half as informative as one from today. 90 days = quarterly half-life
+# matches typical buy-side recalibration cadence.
+TIME_DECAY_HALFLIFE_DAYS = _fenv("DELPHI_ML_HALFLIFE_DAYS", 90.0)
 
 
 # Hyperparameter defaults chosen for noisy financial data. The bias here is
@@ -214,6 +219,29 @@ def _shape_rows(rows: list[tuple]) -> dict[str, Any]:
     }
 
 
+def _time_decay_weights(created_at: list, halflife_days: float) -> Any:
+    """Exponential decay sample weights with `halflife_days` half-life.
+
+    weight[i] = 0.5 ** (days_old / halflife)
+
+    A sample 90 days old (default halflife) gets weight 0.5; 180 days old
+    gets 0.25; same-day gets 1.0. Total mass NORMALIZED so LightGBM sees
+    sum(weights) == len(weights), keeping its internal regularization
+    behavior the same as uniform-weighted.
+    """
+    import numpy as np
+    if not created_at:
+        return np.array([])
+    now = max(created_at)
+    days_old = np.array([
+        max(0.0, (now - ts).total_seconds() / 86400.0) for ts in created_at
+    ])
+    w = 0.5 ** (days_old / max(1e-6, halflife_days))
+    # Normalize so sum equals n (keeps LGBM regularization comparable)
+    w = w * (len(w) / w.sum())
+    return w
+
+
 def _walk_forward_split(data: dict[str, Any], train_frac: float = 0.82) -> tuple:
     """Time-ordered split: oldest `train_frac` → train, rest → val. No shuffling.
 
@@ -250,10 +278,11 @@ def _auc(y_true: Any, y_proba: Any) -> float | None:
 
 
 def _train_lightgbm(
-    train: dict[str, Any], val: dict[str, Any] | None, params: dict[str, Any]
+    train: dict[str, Any], val: dict[str, Any] | None, params: dict[str, Any],
+    weights: Any = None,
 ) -> Any:
     import lightgbm as lgb
-    train_set = lgb.Dataset(train["X"], train["y_clf"])
+    train_set = lgb.Dataset(train["X"], train["y_clf"], weight=weights)
     callbacks = [lgb.log_evaluation(period=0)]
     if val is not None:
         val_set = lgb.Dataset(val["X"], val["y_clf"], reference=train_set)
@@ -267,10 +296,42 @@ def _train_lightgbm(
 
 
 def _train_lightgbm_reg(
-    train: dict[str, Any], val: dict[str, Any] | None, params: dict[str, Any]
+    train: dict[str, Any], val: dict[str, Any] | None, params: dict[str, Any],
+    weights: Any = None,
 ) -> Any:
     import lightgbm as lgb
-    train_set = lgb.Dataset(train["X"], train["y_reg"])
+    train_set = lgb.Dataset(train["X"], train["y_reg"], weight=weights)
+    callbacks = [lgb.log_evaluation(period=0)]
+    if val is not None:
+        val_set = lgb.Dataset(val["X"], val["y_reg"], reference=train_set)
+        callbacks.append(lgb.early_stopping(stopping_rounds=30, verbose=False))
+        return lgb.train(
+            params, train_set, num_boost_round=300,
+            valid_sets=[train_set, val_set], valid_names=["train", "val"],
+            callbacks=callbacks,
+        )
+    return lgb.train(params, train_set, num_boost_round=200, callbacks=callbacks)
+
+
+def _train_lightgbm_quantile(
+    train: dict[str, Any], val: dict[str, Any] | None,
+    base_params: dict[str, Any], alpha: float,
+    weights: Any = None,
+) -> Any:
+    """Quantile regression head. alpha=0.1 gives p10, alpha=0.5 = median,
+    alpha=0.9 = p90. Used to output the return-distribution fan chart that
+    the UI renders per prediction.
+
+    Quantile loss is asymmetric MAE — penalizes (alpha)% on overprediction
+    and (1-alpha)% on underprediction. Robust to fat tails (no squared
+    residuals), which is what financial returns require.
+    """
+    import lightgbm as lgb
+    params = dict(base_params)
+    params["objective"] = "quantile"
+    params["alpha"] = alpha
+    params["metric"] = ["quantile"]
+    train_set = lgb.Dataset(train["X"], train["y_reg"], weight=weights)
     callbacks = [lgb.log_evaluation(period=0)]
     if val is not None:
         val_set = lgb.Dataset(val["X"], val["y_reg"], reference=train_set)
@@ -325,8 +386,13 @@ def train(database_url: str) -> dict[str, Any]:
         return {"status": "insufficient_split", "train_n": train_d["n"],
                 "val_n": val_d["n"] if val_d else 0, "holdout_n": holdout["n"]}
 
+    # Time-decay sample weights. Train slice's created_at order matters; the
+    # split is time-ordered so train_d holds the OLDEST 82% chronologically.
+    train_created = data["created_at"][:train_d["n"]]
+    train_weights = _time_decay_weights(train_created, TIME_DECAY_HALFLIFE_DAYS)
+
     # ---- Classification head ----
-    clf = _train_lightgbm(train_d, val_d, DEFAULT_PARAMS_CLF)
+    clf = _train_lightgbm(train_d, val_d, DEFAULT_PARAMS_CLF, weights=train_weights)
     train_proba = clf.predict(train_d["X"])
     val_proba   = clf.predict(val_d["X"])
     holdout_proba_raw = clf.predict(holdout["X"])
@@ -350,22 +416,39 @@ def train(database_url: str) -> dict[str, Any]:
     val_gap     = holdout_brier - val_brier
     tripwire    = (overfit_gap > OVERFIT_THRESHOLD) or (val_gap > VAL_GAP_THRESHOLD)
 
-    # ---- Regression head (predict % return) ----
-    reg = _train_lightgbm_reg(train_d, val_d, DEFAULT_PARAMS_REG)
+    # ---- Regression head (mean prediction of % return) ----
+    reg = _train_lightgbm_reg(train_d, val_d, DEFAULT_PARAMS_REG, weights=train_weights)
     holdout_pred_reg = reg.predict(holdout["X"])
     reg_mae = float(np.mean(np.abs(holdout_pred_reg - holdout["y_reg"])))
+
+    # ---- Quantile heads (p10, p50, p90) — for the UI fan chart ----
+    # p50 (median) is more robust to fat tails than the mean reg head and
+    # often used as the production point estimate; we keep both. p10/p90
+    # give the 80% prediction interval which the trader uses to size.
+    reg_p10 = _train_lightgbm_quantile(train_d, val_d, DEFAULT_PARAMS_REG, alpha=0.10, weights=train_weights)
+    reg_p50 = _train_lightgbm_quantile(train_d, val_d, DEFAULT_PARAMS_REG, alpha=0.50, weights=train_weights)
+    reg_p90 = _train_lightgbm_quantile(train_d, val_d, DEFAULT_PARAMS_REG, alpha=0.90, weights=train_weights)
+    # Calibration sanity: holdout coverage of the 80% interval should be ~80%
+    p10_hold = reg_p10.predict(holdout["X"])
+    p90_hold = reg_p90.predict(holdout["X"])
+    coverage_80 = float(np.mean((holdout["y_reg"] >= p10_hold) & (holdout["y_reg"] <= p90_hold)))
 
     model_version = f"v0.3-lgbm-{datetime.now(UTC).strftime('%Y%m%d')}"
     feat_imp = _featimp(clf, data["feature_names"])
 
-    # Pack model blobs. Includes regression head + feature names + cat lookup
-    # so production scoring can reproduce the feature vector exactly.
+    # Pack model blobs. Includes mean + quantile regression heads + feature
+    # names + cat lookup so production scoring can reproduce the feature
+    # vector exactly.
     bundle = {
         "clf": clf,
         "reg": reg,
+        "reg_p10": reg_p10,
+        "reg_p50": reg_p50,
+        "reg_p90": reg_p90,
         "isotonic": iso,
         "feature_names": data["feature_names"],
         "cat_lookup": data["cat_lookup"],
+        "time_decay_halflife_days": TIME_DECAY_HALFLIFE_DAYS,
     }
     blob = pickle.dumps(bundle)
     iso_blob = pickle.dumps(iso)
@@ -415,7 +498,13 @@ def train(database_url: str) -> dict[str, Any]:
                 train_auc, val_auc, holdout_auc,
                 holdout_hit_rate, calib_err,
                 overfit_gap, OVERFIT_THRESHOLD, tripwire,
-                Jsonb({**DEFAULT_PARAMS_CLF, "blend_weight_ml": BLEND_WEIGHT_ML, "reg_mae_holdout": reg_mae}),
+                Jsonb({
+                    **DEFAULT_PARAMS_CLF,
+                    "blend_weight_ml": BLEND_WEIGHT_ML,
+                    "reg_mae_holdout": reg_mae,
+                    "reg_p10_p90_coverage_holdout": coverage_80,
+                    "time_decay_halflife_days": TIME_DECAY_HALFLIFE_DAYS,
+                }),
                 Jsonb(feat_imp),
                 psycopg.Binary(blob), psycopg.Binary(iso_blob),
                 False, 0,
@@ -447,5 +536,7 @@ def train(database_url: str) -> dict[str, Any]:
         "val_gap": round(val_gap, 4),
         "tripwire_fired": tripwire,
         "regression_holdout_mae": round(reg_mae, 4),
+        "quantile_80_coverage_holdout": round(coverage_80, 4),
+        "time_decay_halflife_days": TIME_DECAY_HALFLIFE_DAYS,
         "top_features": dict(sorted(feat_imp.items(), key=lambda kv: -kv[1])[:15]),
     }

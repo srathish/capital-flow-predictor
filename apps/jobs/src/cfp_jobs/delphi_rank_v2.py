@@ -900,19 +900,30 @@ def _apply_learning_layers(conn: psycopg.Connection, pred: dict[str, Any]) -> di
     prob = max(_PROB_MIN, min(_PROB_MAX, prob))
     cal_prob = _calibrate(conn, prob, horizon, regime)
 
-    # Layer 4 ML blend
+    # Layer 4 ML blend — bundle includes clf + isotonic + quantile heads.
     ml_model = _load_active_ml_model(conn)
     blended = cal_prob
     if ml_model is not None:
         try:
             import pickle
-            model = pickle.loads(ml_model["model_blob"])
-            calibrator = pickle.loads(ml_model["calibrator_blob"]) if ml_model["calibrator_blob"] else None
-            ml_proba = _score_with_model(model, calibrator, pred)
-            blend_w = float(ml_model["hyperparams"].get("blend_weight_ml", 0.6))
-            blended = blend_w * ml_proba + (1 - blend_w) * cal_prob
-            pred["features"]["ml_proba"] = round(ml_proba, 4)
-            pred["features"]["ml_model_version"] = ml_model["model_version"]
+            bundle = pickle.loads(ml_model["model_blob"])
+            scored = _score_with_bundle(bundle, pred)
+            ml_proba = scored.get("proba")
+            if ml_proba is not None:
+                blend_w = float(ml_model["hyperparams"].get("blend_weight_ml", 0.6))
+                blended = blend_w * ml_proba + (1 - blend_w) * cal_prob
+                pred["features"]["ml_proba"] = round(ml_proba, 4)
+                pred["features"]["ml_model_version"] = ml_model["model_version"]
+            # Override rules-based quantiles with ML quantile heads when present.
+            # These flow into delphi_predictions.return_p10/p50/p90 columns.
+            if scored.get("ret_p10") is not None:
+                pred["return_p10"] = scored["ret_p10"]
+            if scored.get("ret_p50") is not None:
+                pred["return_p50"] = scored["ret_p50"]
+            if scored.get("ret_p90") is not None:
+                pred["return_p90"] = scored["ret_p90"]
+            if scored.get("ret_mean") is not None:
+                pred["features"]["ml_ret_mean"] = round(scored["ret_mean"], 4)
         except Exception as e:  # noqa: BLE001
             log.warning("ML overlay scoring failed: %s", e)
 
@@ -945,16 +956,88 @@ def _apply_learning_layers(conn: psycopg.Connection, pred: dict[str, Any]) -> di
     return pred
 
 
-def _score_with_model(model: Any, calibrator: Any, pred: dict[str, Any]) -> float:
-    """Score one prediction row with the LightGBM model + isotonic calibrator.
+def _build_feature_vector(pred: dict[str, Any], feature_names: list[str], cat_lookup: dict[str, dict[str, int]]) -> Any:
+    """Reconstruct the feature vector exactly as training saw it.
 
-    Feature vector is built from the snapshot stored inline in pred["features"].
-    Returns calibrated probability in [0, 1].
+    `feature_names` is the canonical order LGBM was trained on; `cat_lookup`
+    maps categorical string values to the integer codes they had at training
+    time. Unknown categoricals (new values seen in production) map to NaN —
+    LGBM handles NaN natively.
     """
     import numpy as np
     feat = pred["features"].get("features_snapshot") or {}
     promoted = pred["features"].get("promoted_snapshot") or {}
-    # Concatenate the dicts in a stable order; model knows its own feature order.
+    feat = {**promoted, **feat}
+    # Re-derive the training-time pseudo features so the model sees them.
+    feat["__horizon"] = pred.get("forecast_horizon")
+    feat["__signal_tf"] = pred.get("signal_timeframe")
+    feat["__regime"] = pred.get("regime") or "any"
+    feat["__bias_bullish"] = 1 if pred.get("bias") == "bullish" else 0
+    feat["__rules_prob"] = float(pred.get("probability", 0.5))
+    row: list[float] = []
+    for name in feature_names:
+        v = feat.get(name)
+        if isinstance(v, bool):
+            row.append(1.0 if v else 0.0)
+        elif isinstance(v, (int, float)):
+            row.append(float(v))
+        elif isinstance(v, str):
+            row.append(float(cat_lookup.get(name, {}).get(v, float("nan"))))
+        else:
+            row.append(float("nan"))
+    return np.array([row])
+
+
+def _score_with_bundle(bundle: dict[str, Any], pred: dict[str, Any]) -> dict[str, Any]:
+    """Score one prediction with the full v0.3 bundle.
+
+    Returns:
+      proba_raw   — classifier output 0..1 (pre-isotonic)
+      proba       — calibrated probability (post-isotonic)
+      ret_mean    — regression head point estimate
+      ret_p10     — quantile-0.10 head
+      ret_p50     — quantile-0.50 head (robust median)
+      ret_p90     — quantile-0.90 head
+    Any missing head returns None for that field (safe degrade).
+    """
+    feature_names = bundle.get("feature_names", [])
+    cat_lookup = bundle.get("cat_lookup", {})
+    X = _build_feature_vector(pred, feature_names, cat_lookup)
+    out: dict[str, Any] = {}
+    clf = bundle.get("clf")
+    iso = bundle.get("isotonic")
+    if clf is not None:
+        try:
+            raw = float(clf.predict(X)[0])  # lgbm Booster: predict returns proba directly
+        except Exception:
+            try:
+                raw = float(clf.predict_proba(X)[0, 1])
+            except Exception:
+                raw = None
+        out["proba_raw"] = raw
+        out["proba"] = float(iso.predict([raw])[0]) if (iso is not None and raw is not None) else raw
+    for key in ("reg", "reg_p10", "reg_p50", "reg_p90"):
+        m = bundle.get(key)
+        if m is not None:
+            try:
+                out[{"reg":"ret_mean","reg_p10":"ret_p10","reg_p50":"ret_p50","reg_p90":"ret_p90"}[key]] = float(m.predict(X)[0])
+            except Exception:
+                pass
+    return out
+
+
+def _score_with_model(model: Any, calibrator: Any, pred: dict[str, Any]) -> float:
+    """Backwards-compat shim. Detects bundle vs single-model and routes.
+
+    Kept for any future code paths that imported this; the new bundle path
+    is _score_with_bundle. Returns calibrated probability.
+    """
+    if isinstance(model, dict) and "clf" in model:
+        return _score_with_bundle(model, pred).get("proba", 0.5)
+    # Legacy single-model path
+    import numpy as np
+    feat = pred["features"].get("features_snapshot") or {}
+    promoted = pred["features"].get("promoted_snapshot") or {}
     feature_names = sorted(set(feat.keys()) | set(promoted.keys()))
     row = []
     for k in feature_names:
