@@ -86,9 +86,20 @@ on:
     # interval crons. This is the "you should always have fresh predictions
     # at market open" slot.
     - cron: "31 13 * * 1-5"
-    # delphi-ml-train (Layer 4) — calibrating-mode stub until 500 outcomes
-    # accrue. Logs progress nightly so the runway is visible.
+    # delphi-ml-train (Layer 4) — dual-head LightGBM with overfitting
+    # tripwire. Trains when outcomes_total >= 200. Logs runway nightly.
     - cron: "45 23 * * 1-5"
+    # Delphi v0.2 expansion:
+    #   delphi-features composes ~120 features per ticker (RTH, 4 min after
+    #     uw-screeners-ingest so screener_stocks is fresh)
+    #   delphi-rank-v2 reads features and writes v0.2 predictions (RTH,
+    #     4 min after delphi-features so the composed row is fresh)
+    #   delphi-regime tags today's composite regime (daily, after prices)
+    #   uw-predictions polls UW prediction endpoints (RTH)
+    - cron: "9,24,39,54 13-20 * * 1-5"   # delphi-features
+    - cron: "11,26,41,56 13-20 * * 1-5"  # delphi-rank-v2
+    - cron: "15 22 * * *"                # delphi-regime (after prices_daily)
+    - cron: "8,38 13-20 * * 1-5"         # uw-predictions
   workflow_dispatch:
     inputs:
       job:
@@ -119,10 +130,15 @@ on:
           - uw-screeners-ingest
           - uw-gex-ingest
           - delphi-rank
+          - delphi-rank-v2
           - delphi-evaluate
           - delphi-learn
           - delphi-ml-train
           - delphi-morning
+          - delphi-features
+          - delphi-regime
+          - uw-predictions
+          - delphi-replay
 
 jobs:
   reddit-catalysts:
@@ -693,9 +709,10 @@ jobs:
         run: uv run cfp-jobs delphi-rank --candidate-limit 50
 
   delphi-ml-train:
-    # Layer 4 ML overlay — calibrating-mode stub until DELPHI_ML_MIN_OUTCOMES
-    # (default 500) is reached. Logs current runway nightly so the threshold
-    # crossing is visible.
+    # Layer 4 ML overlay — dual-head LightGBM with overfitting tripwire.
+    # Trains when outcomes_total >= DELPHI_ML_MIN_OUTCOMES (default 200).
+    # Rejects models whose train/holdout Brier gap > 0.05 (so iteration
+    # cannot ship a model that overfits the in-sample distribution).
     if: github.event.schedule == '45 23 * * 1-5' || github.event.inputs.job == 'delphi-ml-train'
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -712,3 +729,111 @@ jobs:
       - name: Layer-4 ML overlay (calibrating until threshold)
         working-directory: apps/jobs
         run: uv run cfp-jobs delphi-ml-train
+
+  delphi-features:
+    # Composes ~120 features per ticker into delphi_features. Reads ~20 UW
+    # tables + prices_daily + macro_regime. 4 min after uw-screeners-ingest
+    # so screener_stocks is fresh. v0.2 of Delphi reads from here.
+    if: startsWith(github.event.schedule, '9,24,39,54') || github.event.inputs.job == 'delphi-features'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations (0037_delphi_v2)
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Compose Delphi v0.2 features
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-features --max-tickers 200
+
+  delphi-rank-v2:
+    # v0.2 ranker — reads delphi_features, emits ~40 reason codes, tags
+    # composite_regime, applies conflict dampening, assigns 15% to holdout.
+    # 2 min after delphi-features so the composed row is fresh.
+    if: startsWith(github.event.schedule, '11,26,41,56') || github.event.inputs.job == 'delphi-rank-v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Rank v0.2 predictions from delphi_features
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-rank-v2 --candidate-limit 50
+
+  delphi-regime:
+    # Tags today's composite regime (vol/trend/macro). Stratifies all
+    # downstream calibration buckets. Daily 22:15 UTC, 15 min after the
+    # 22:00 prices_daily refresh so SPY MAs + VIX/FRED are fresh.
+    if: github.event.schedule == '15 22 * * *' || github.event.inputs.job == 'delphi-regime'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Tag composite regime
+        working-directory: apps/jobs
+        run: uv run cfp-jobs delphi-regime
+
+  uw-predictions:
+    # UW prediction endpoints (smart_money, whales, market, insiders,
+    # unusual_markets) → uw_predictions_api. Used as ensemble voters in
+    # delphi-rank-v2. Twice per hour during RTH.
+    if: startsWith(github.event.schedule, '8,38 13-20') || github.event.inputs.job == 'uw-predictions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Pull UW prediction endpoints
+        working-directory: apps/jobs
+        run: uv run cfp-jobs uw-predictions
+
+  delphi-replay:
+    # Walk-forward backtest. Manual only — windows are caller-defined.
+    # Default window covers the last 90 days when invoked without inputs.
+    if: github.event.inputs.job == 'delphi-replay'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Apply migrations
+        working-directory: apps/jobs
+        run: uv run cfp-jobs migrate
+      - name: Walk-forward replay (last 90d)
+        working-directory: apps/jobs
+        run: |
+          END=$(date -u +%Y-%m-%d)
+          START=$(date -u -d '90 days ago' +%Y-%m-%d)
+          uv run cfp-jobs delphi-replay --window-start "$START" --window-end "$END"

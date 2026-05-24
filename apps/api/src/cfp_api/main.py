@@ -21,12 +21,15 @@ from cfp_api.routes import (
     agents,
     assistant,
     backtest,
+    backtest_lab,
     catalysts,
     chat,
     cohorts,
     confluence,
+    conviction,
     delphi,
     discord,
+    earnings,
     explosive,
     flow,
     gex,
@@ -34,12 +37,14 @@ from cfp_api.routes import (
     health,
     institutional,
     intraday_gex,
+    macro,
     network,
     news,
     reddit,
     replay,
     scorecard,
     sectors,
+    smart_money,
     stage,
     stocks,
     watchlist,
@@ -152,6 +157,12 @@ app.include_router(intraday_gex.router, dependencies=PROTECTED)
 # Institutional flow & ownership rollups (migration 0030). Smart-money
 # confirmation layer for the /explosive scanner; standalone screener too.
 app.include_router(institutional.router, dependencies=PROTECTED)
+# Delphi v0.2 surface — 5 new tabs share these routes.
+app.include_router(smart_money.router, dependencies=PROTECTED)
+app.include_router(macro.router, dependencies=PROTECTED)
+app.include_router(earnings.router, dependencies=PROTECTED)
+app.include_router(conviction.router, dependencies=PROTECTED)
+app.include_router(backtest_lab.router, dependencies=PROTECTED)
 app.include_router(discord.router, dependencies=PROTECTED)
 # SSE stream uses query-param auth (EventSource can't set headers) — it
 # does its own validation against settings.api_keys_raw inside the handler.

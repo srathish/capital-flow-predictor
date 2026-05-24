@@ -35,6 +35,7 @@ from cfp_jobs import delphi_ml_train as delphi_ml_train_mod  # noqa: E402
 from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
 from cfp_jobs import delphi_rank_v2 as delphi_rank_v2_mod  # noqa: E402
 from cfp_jobs import delphi_regime as delphi_regime_mod  # noqa: E402
+from cfp_jobs import delphi_replay as delphi_replay_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
@@ -1314,6 +1315,33 @@ def uw_predictions_cmd() -> None:
     from cfp_jobs.ingestion import uw_predictions
     out = uw_predictions.ingest(settings.database_url, settings.unusual_whales_api_key)
     console.print(f"[green]uw-predictions:[/green] {out}")
+
+
+@app.command("delphi-replay")
+def delphi_replay_cmd(
+    window_start: str = typer.Option(..., help="YYYY-MM-DD"),
+    window_end:   str = typer.Option(..., help="YYYY-MM-DD"),
+    step_days:    int = typer.Option(7, help="Walk-forward step in days."),
+    candidate_limit: int = typer.Option(50, help="Per-snapshot candidate cap."),
+    notes:        str = typer.Option("", help="Optional human-readable note."),
+) -> None:
+    """Walk-forward backtest using delphi_features at each historical snapshot.
+
+    Replays the v0.2 ranker logic without writing to delphi_predictions,
+    scores against actual prices_daily, persists aggregate + by_horizon +
+    by_regime metrics to delphi_backtest_runs. The Backtest Lab tab reads
+    these runs to surface honest out-of-sample numbers.
+    """
+    from datetime import date as _date
+    ws = _date.fromisoformat(window_start)
+    we = _date.fromisoformat(window_end)
+    out = delphi_replay_mod.run(
+        settings.database_url,
+        window_start=ws, window_end=we,
+        step_days=step_days, candidate_limit=candidate_limit,
+        notes=notes or None,
+    )
+    console.print(f"[green]delphi-replay:[/green] {out}")
 
 
 @app.command("delphi-rank-v2")
