@@ -754,9 +754,11 @@ jobs:
       - name: Apply migrations (0037_delphi_v2 + 0038_delphi_quant)
         working-directory: apps/jobs
         run: uv run cfp-jobs migrate
-      - name: Compose Delphi v0.3 features
+      - name: Compose Delphi v0.3 features (thread-pooled, ~10x faster)
         working-directory: apps/jobs
-        run: uv run cfp-jobs delphi-features --max-tickers 60
+        env:
+          DELPHI_COMPOSER_WORKERS: "10"
+        run: uv run cfp-jobs delphi-features --max-tickers 150
 
   delphi-rank-v2:
     # v0.2 ranker — reads delphi_features, emits ~40 reason codes, tags

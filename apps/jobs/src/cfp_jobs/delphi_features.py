@@ -23,6 +23,8 @@ key = same row.
 from __future__ import annotations
 
 import logging
+import os
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
@@ -1062,7 +1064,7 @@ def _write_universe_stats(conn: psycopg.Connection, snapshot_ts: datetime, rows:
             return  # migration 0038 not applied yet
 
 
-def compose(database_url: str, *, max_tickers: int = 60) -> dict[str, Any]:
+def compose(database_url: str, *, max_tickers: int = 150) -> dict[str, Any]:
     """Compose features for every ticker in the freshest screener snapshot.
 
     Returns a summary dict. Idempotent — same (ticker, snapshot_ts) PK skips
@@ -1098,26 +1100,48 @@ def compose(database_url: str, *, max_tickers: int = 60) -> dict[str, Any]:
         batch = candidates[:max_tickers]
         log.info("delphi-features: composing %d tickers", len(batch))
         t0 = datetime.now(UTC)
-        for i, (ticker, spot) in enumerate(batch):
+
+        # Thread-pool parallelism — composer is network-bound by per-query
+        # latency (~600ms × ~30 queries per ticker). Each worker owns its
+        # own DB connection so savepoints don't serialize. 10 workers
+        # ~= 10x throughput, bounded by Postgres connection pool capacity
+        # on Railway.
+        max_workers = int(os.environ.get("DELPHI_COMPOSER_WORKERS", "10"))
+
+        def _worker(args: tuple[str, float | None]) -> tuple[FeatureRow | None, str | None]:
+            ticker_, spot_ = args
             try:
-                f = _compose_ticker(conn, ticker, spot)
-                f.features.update(macro_block)
-                rows.append(f)
-                if f.has_conflict:
-                    conflict_n += 1
-                    for code in f.conflict_codes:
-                        by_conflict[code] = by_conflict.get(code, 0) + 1
-                # Progress log every 10 tickers (cheap; helps timeout triage)
-                if (i + 1) % 10 == 0:
-                    elapsed = (datetime.now(UTC) - t0).total_seconds()
-                    rate = (i + 1) / elapsed if elapsed > 0 else 0.0
-                    eta = (len(batch) - i - 1) / rate if rate > 0 else 0.0
-                    log.info(
-                        "delphi-features: %d/%d composed (%.1f tk/s, ETA %.0fs)",
-                        i + 1, len(batch), rate, eta,
-                    )
+                with connect(database_url) as w_conn:
+                    f_ = _compose_ticker(w_conn, ticker_, spot_)
+                    f_.features.update(macro_block)
+                    return (f_, None)
             except Exception as e:  # noqa: BLE001
-                log.warning("delphi-features composer failed for %s: %s", ticker, e)
+                return (None, f"{ticker_}: {type(e).__name__}: {e}")
+
+        if max_workers <= 1:
+            results = [_worker(item) for item in batch]
+        else:
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                results = list(executor.map(_worker, batch))
+
+        for i, (f, err) in enumerate(results):
+            if err:
+                log.warning("delphi-features composer failed for %s", err)
+                continue
+            if f is None:
+                continue
+            rows.append(f)
+            if f.has_conflict:
+                conflict_n += 1
+                for code in f.conflict_codes:
+                    by_conflict[code] = by_conflict.get(code, 0) + 1
+            if (i + 1) % 10 == 0:
+                elapsed = (datetime.now(UTC) - t0).total_seconds()
+                rate = (i + 1) / elapsed if elapsed > 0 else 0.0
+                log.info(
+                    "delphi-features: %d/%d collected (%.1f tk/s)",
+                    i + 1, len(batch), rate,
+                )
 
         # Pass 2: cross-sectional ranks. Mutates each row's features JSONB
         # in place. Regime-invariance trick from the cross-sectional quant
