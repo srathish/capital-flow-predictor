@@ -28,9 +28,13 @@ from rich.table import Table  # noqa: E402
 
 from cfp_jobs import agents_runner, ingestion, migrate  # noqa: E402
 from cfp_jobs import delphi_evaluate as delphi_evaluate_mod  # noqa: E402
+from cfp_jobs import delphi_features as delphi_features_mod  # noqa: E402
 from cfp_jobs import delphi_learn as delphi_learn_mod  # noqa: E402
 from cfp_jobs import delphi_ml_overlay as delphi_ml_overlay_mod  # noqa: E402
+from cfp_jobs import delphi_ml_train as delphi_ml_train_mod  # noqa: E402
 from cfp_jobs import delphi_rank as delphi_rank_mod  # noqa: E402
+from cfp_jobs import delphi_rank_v2 as delphi_rank_v2_mod  # noqa: E402
+from cfp_jobs import delphi_regime as delphi_regime_mod  # noqa: E402
 from cfp_jobs import features as features_mod  # noqa: E402
 from cfp_jobs import morning_brief as morning_brief_mod  # noqa: E402
 from cfp_jobs import rerun_stale as rerun_stale_mod  # noqa: E402
@@ -1245,14 +1249,93 @@ def delphi_learn_cmd() -> None:
 
 
 @app.command("delphi-ml-train")
-def delphi_ml_train_cmd() -> None:
-    """Layer 4 ML overlay — calibrating until enough outcomes accrue.
+def delphi_ml_train_cmd(
+    legacy: bool = typer.Option(
+        False, "--legacy", help="Use legacy calibrating-mode stub (delphi_ml_overlay)."
+    ),
+) -> None:
+    """Layer 4 ML overlay — trains LightGBM dual-head (clf + reg) with overfitting
+    tripwire, isotonic calibration, and walk-forward train/val/holdout split.
 
-    Logs current state and exits clean. Real training body lands when
-    delphi_outcomes count crosses DELPHI_ML_MIN_OUTCOMES (default 500).
+    Trains when outcomes_total >= DELPHI_ML_MIN_OUTCOMES (default 200).
+    Rejects (status='rejected') if train/holdout Brier gap > DELPHI_ML_OVERFIT_GAP
+    (default 0.05) or if holdout Brier > val Brier + DELPHI_ML_VAL_GAP (0.03).
+    Active model is rotated only when status='active' (passes tripwire).
     """
-    out = delphi_ml_overlay_mod.train(settings.database_url)
+    if legacy:
+        out = delphi_ml_overlay_mod.train(settings.database_url)
+    else:
+        out = delphi_ml_train_mod.train(settings.database_url)
     console.print(f"[green]delphi-ml-train:[/green] {out}")
+
+
+@app.command("delphi-features")
+def delphi_features_cmd(
+    max_tickers: int = typer.Option(
+        200, help="Max tickers from latest screener snapshot to compose."
+    ),
+) -> None:
+    """Compose ~120 features per ticker into delphi_features.
+
+    Joins ~20 UW tables + prices_daily + macro_regime. Per-feature savepoint
+    isolation means missing tables degrade gracefully. Conflict detector
+    emits source-disagreement codes that delphi_rank_v2 uses to dampen
+    probability."""
+    out = delphi_features_mod.compose(settings.database_url, max_tickers=max_tickers)
+    console.print(
+        f"[green]delphi-features:[/green] composed={out.get('composed', 0)} "
+        f"conflicts={out.get('conflicts', 0)} by_code={out.get('by_conflict_code', {})}"
+    )
+
+
+@app.command("delphi-regime")
+def delphi_regime_cmd(
+    backfill_days: int = typer.Option(0, help="Tag this many past days too (idempotent)."),
+) -> None:
+    """Tag today's composite regime (vol_regime × trend_regime × macro_regime)
+    into macro_regime. Stratifies all downstream Delphi calibration buckets
+    so 70%-probability buckets in different regimes don't average together."""
+    out = delphi_regime_mod.tag_today(settings.database_url)
+    console.print(f"[green]delphi-regime:[/green] {out['composite_regime']} "
+                  f"(vix={out['vix']}, yc={out['yield_curve_2_10']})")
+    if backfill_days > 0:
+        bf = delphi_regime_mod.backfill(settings.database_url, days=backfill_days)
+        console.print(f"  backfilled: {bf}")
+
+
+@app.command("uw-predictions")
+def uw_predictions_cmd() -> None:
+    """Pull UW's prediction endpoints (smart_money, whales, market, insiders,
+    unusual_markets) into uw_predictions_api. Used as voters in the Delphi
+    ensemble layer."""
+    if not settings.unusual_whales_api_key:
+        console.print("[red]UNUSUAL_WHALES_API_KEY not set[/red]")
+        raise typer.Exit(1)
+    from cfp_jobs.ingestion import uw_predictions
+    out = uw_predictions.ingest(settings.database_url, settings.unusual_whales_api_key)
+    console.print(f"[green]uw-predictions:[/green] {out}")
+
+
+@app.command("delphi-rank-v2")
+def delphi_rank_v2_cmd(
+    candidate_limit: int = typer.Option(
+        50, help="Max candidates from delphi_features to rank."
+    ),
+) -> None:
+    """v0.2 Delphi ranker — reads delphi_features (~120 features per ticker),
+    emits ~40 reason codes, tags composite_regime, applies conflict dampening,
+    assigns 15% to holdout, and blends ML overlay when active.
+
+    Writes alongside v0.1-rules so model_performance shows A/B head-to-head.
+    """
+    out = delphi_rank_v2_mod.rank(settings.database_url, candidate_limit=candidate_limit)
+    console.print(
+        f"[green]delphi-rank-v2:[/green] candidates={out.get('candidates', 0)} "
+        f"written={out.get('predictions_written', 0)} "
+        f"holdout={out.get('holdout_assigned', 0)} "
+        f"ml_overlay={out.get('ml_overlay')} "
+        f"horizons={out.get('horizons', {})}"
+    )
 
 
 @app.command("delphi-evaluate")
