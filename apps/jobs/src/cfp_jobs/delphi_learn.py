@@ -119,6 +119,167 @@ def _midpoint(label: str) -> float:
 # ----------------------------------------------------------------------------
 
 
+# ----------------------------------------------------------------------------
+# Benjamini-Hochberg FDR control for reason-code promotions.
+#
+# v0.2/v0.3 emit ~40 reason codes per prediction. With ~7 horizons and ~10
+# regimes, the family of hypotheses we test ("does code X have edge in
+# segment Y?") is roughly 2800. Naive p<0.05 testing surfaces ~140 false
+# positives by chance alone. BH at α=0.05 caps the expected false-discovery
+# rate at 5% across the family.
+#
+# A code's weight_modifier in delphi_reason_code_performance is only allowed
+# to deviate from 1.0 when the segment clears BH. We write the test result
+# (raw_p, q_value, promoted flag, direction) to delphi_reason_code_promotions
+# so the promotion decision is auditable.
+# ----------------------------------------------------------------------------
+
+
+def _binom_test_one_sided(k: int, n: int, p0: float) -> float:
+    """One-sided binomial test: P(X >= k | n, p0).
+
+    Used to test "this code's hit rate exceeds the base rate" — we care
+    about edge in either direction so the caller flips k for bearish edge.
+    Falls back to normal approximation when scipy isn't around.
+    """
+    if n <= 0 or k < 0 or k > n:
+        return 1.0
+    try:
+        from scipy.stats import binomtest
+        return float(binomtest(k, n, p0, alternative="greater").pvalue)
+    except ImportError:
+        # Normal approximation with continuity correction
+        import math
+        mu = n * p0
+        sd = math.sqrt(max(1e-9, n * p0 * (1 - p0)))
+        z = (k - 0.5 - mu) / sd  # continuity correction
+        # 1 - Phi(z)
+        return 0.5 * math.erfc(z / math.sqrt(2))
+
+
+def _bh_qvalues(p_values: list[float]) -> list[float]:
+    """Benjamini-Hochberg step-up procedure.
+
+    Returns a list of BH-corrected q-values, same order as input. q_i is the
+    smallest FDR at which hypothesis i would be rejected.
+    """
+    n = len(p_values)
+    if n == 0:
+        return []
+    indexed = sorted(enumerate(p_values), key=lambda x: x[1])
+    qs: list[float] = [1.0] * n
+    min_q = 1.0
+    for rank in range(n - 1, -1, -1):
+        orig_idx, p = indexed[rank]
+        q = p * n / (rank + 1)
+        if q < min_q:
+            min_q = q
+        qs[orig_idx] = min(1.0, min_q)
+    return qs
+
+
+def _update_reason_code_promotions(conn: psycopg.Connection, fdr_alpha: float = 0.05) -> dict[str, int]:
+    """Test every (code, signal_tf, horizon, regime) segment for hit-rate
+    edge vs the segment base rate, BH-correct the family, and write
+    promotion decisions to delphi_reason_code_promotions.
+
+    Subsequent runs of _update_reason_code_performance read this table and
+    only set weight_modifier away from 1.0 when promoted=TRUE.
+    """
+    # Pull per-segment stats already aggregated in delphi_reason_code_performance.
+    try:
+        rows = conn.execute(
+            """
+            SELECT rc.reason_code, rc.signal_timeframe, rc.forecast_horizon, rc.regime,
+                   rc.sample_size, rc.target_hit_rate,
+                   (SELECT AVG(CASE WHEN o.hit_target_range THEN 1.0 ELSE 0.0 END)
+                    FROM delphi_predictions p
+                    JOIN delphi_outcomes o USING (prediction_id)
+                    WHERE p.signal_timeframe = rc.signal_timeframe
+                      AND p.forecast_horizon = rc.forecast_horizon
+                      AND COALESCE(p.regime, 'any') = rc.regime
+                   ) AS base_rate
+            FROM delphi_reason_code_performance rc
+            WHERE rc.target_hit_rate IS NOT NULL
+              AND rc.sample_size >= 20
+            """
+        ).fetchall()
+    except psycopg.errors.UndefinedTable:
+        return {"tested": 0, "promoted": 0, "note": "delphi_reason_code_performance missing"}
+
+    if not rows:
+        return {"tested": 0, "promoted": 0}
+
+    # Compute one-sided p-values (greater than base rate) — we only promote
+    # codes that beat base, not ones that under-perform (under-performers
+    # already get suppressed via weight_modifier < 1.0 but don't need FDR
+    # protection because we don't promote them to "active" anything).
+    p_values: list[float] = []
+    parsed: list[tuple] = []
+    for r in rows:
+        rc, stf, hz, regime, n, hit, base = r
+        n = int(n or 0)
+        if hit is None or base is None or n < 20:
+            continue
+        hit = float(hit)
+        base = float(base)
+        # Test in the direction of observed deviation: greater if hit>base, else less.
+        if hit >= base:
+            k = int(round(hit * n))
+            p = _binom_test_one_sided(k, n, base)
+            direction = "bullish"
+        else:
+            # Test "less than base": equivalent to greater test on (n-k) vs (1-base)
+            k = n - int(round(hit * n))
+            p = _binom_test_one_sided(k, n, 1 - base)
+            direction = "bearish"
+        edge = hit - base
+        p_values.append(p)
+        parsed.append((rc, stf, hz, regime, n, edge, p, direction))
+
+    q_values = _bh_qvalues(p_values)
+
+    promoted_count = 0
+    try:
+        for (rc, stf, hz, regime, n, edge, p, direction), q in zip(parsed, q_values, strict=True):
+            promoted = q < fdr_alpha
+            conn.execute(
+                """
+                INSERT INTO delphi_reason_code_promotions (
+                    reason_code, signal_timeframe, forecast_horizon, regime,
+                    n_observations, edge_vs_base, raw_p_value, bh_q_value,
+                    promoted, direction, promoted_at, last_evaluated_at
+                ) VALUES (
+                    %s, %s, %s, %s,
+                    %s, %s, %s, %s,
+                    %s, %s,
+                    CASE WHEN %s THEN NOW() ELSE NULL END,
+                    NOW()
+                ) ON CONFLICT (reason_code, signal_timeframe, forecast_horizon, regime) DO UPDATE SET
+                    n_observations = EXCLUDED.n_observations,
+                    edge_vs_base = EXCLUDED.edge_vs_base,
+                    raw_p_value = EXCLUDED.raw_p_value,
+                    bh_q_value = EXCLUDED.bh_q_value,
+                    promoted = EXCLUDED.promoted,
+                    direction = EXCLUDED.direction,
+                    promoted_at = COALESCE(delphi_reason_code_promotions.promoted_at, EXCLUDED.promoted_at),
+                    last_evaluated_at = NOW()
+                """,
+                (rc, stf, hz, regime, n, edge, p, q, promoted, direction, promoted),
+            )
+            if promoted:
+                promoted_count += 1
+    except psycopg.errors.UndefinedTable:
+        return {"tested": len(parsed), "promoted": 0, "note": "delphi_reason_code_promotions table missing"}
+
+    return {
+        "tested": len(parsed),
+        "promoted": promoted_count,
+        "family_size": len(parsed),
+        "fdr_alpha": fdr_alpha,
+    }
+
+
 def _update_reason_code_performance(conn: psycopg.Connection) -> dict[str, int]:
     """Roll up (reason_code × signal_tf × horizon × regime) hit-rate stats.
 
@@ -628,6 +789,10 @@ def learn(database_url: str) -> dict[str, Any]:
             }
 
         rc = _update_reason_code_performance(conn)
+        # BH FDR pass after the per-code stats land — promotes only segments
+        # that clear FDR-corrected q<0.05. Subsequent ranker reads should
+        # join against delphi_reason_code_promotions.promoted for the gate.
+        fdr = _update_reason_code_promotions(conn, fdr_alpha=0.05)
         cal = _update_calibration_buckets(conn)
         aw = _update_adaptive_weights(conn)
         tm = _update_ticker_memory(conn)

@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import logging
 import math
+import random
 import uuid
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
@@ -168,6 +169,68 @@ def _classify(pred: dict[str, Any], high: float, low: float, close: float) -> di
     }
 
 
+def _block_bootstrap_metrics(
+    sample_records: list[tuple[int, float, float]],
+    n_boot: int = 1000,
+    block_size: int = 5,
+    seed: int = 42,
+) -> dict[str, dict[str, float | None]]:
+    """Stationary block bootstrap CIs for hit_rate, brier, avg_return.
+
+    Block bootstrap (Politis & Romano 1994) preserves the autocorrelation
+    that adjacent predictions share — Delphi writes predictions in batches
+    every 15 min, and predictions in the same batch see the same regime,
+    so they're not iid. iid bootstrap would understate the CI width by
+    ~sqrt(block_size). Block size ~5 matches the typical run-cluster.
+
+    Inputs are (hit_int, proba, realized_return) tuples in time order.
+    Returns {metric: {p2_5, p50, p97_5}}.
+    """
+    n = len(sample_records)
+    if n < 30:
+        return {
+            "hit_rate":   {"p2_5": None, "p50": None, "p97_5": None},
+            "brier":      {"p2_5": None, "p50": None, "p97_5": None},
+            "avg_return": {"p2_5": None, "p50": None, "p97_5": None},
+        }
+    rng = random.Random(seed)
+    hits = [r[0] for r in sample_records]
+    probas = [r[1] for r in sample_records]
+    rets = [r[2] for r in sample_records]
+
+    boot_hr: list[float] = []
+    boot_br: list[float] = []
+    boot_rt: list[float] = []
+    for _ in range(n_boot):
+        sample_hr = sample_br = sample_rt = 0.0
+        sample_n = 0
+        # Build a length-n resample of blocks
+        while sample_n < n:
+            start = rng.randrange(n)
+            for i in range(block_size):
+                idx = (start + i) % n
+                sample_hr += hits[idx]
+                sample_br += (probas[idx] - hits[idx]) ** 2
+                sample_rt += rets[idx]
+                sample_n += 1
+                if sample_n >= n:
+                    break
+        boot_hr.append(sample_hr / sample_n)
+        boot_br.append(sample_br / sample_n)
+        boot_rt.append(sample_rt / sample_n)
+
+    def q(arr: list[float], p: float) -> float:
+        s = sorted(arr)
+        idx = max(0, min(len(s) - 1, int(round(p * (len(s) - 1)))))
+        return s[idx]
+
+    return {
+        "hit_rate":   {"p2_5": q(boot_hr, 0.025), "p50": q(boot_hr, 0.5), "p97_5": q(boot_hr, 0.975)},
+        "brier":      {"p2_5": q(boot_br, 0.025), "p50": q(boot_br, 0.5), "p97_5": q(boot_br, 0.975)},
+        "avg_return": {"p2_5": q(boot_rt, 0.025), "p50": q(boot_rt, 0.5), "p97_5": q(boot_rt, 0.975)},
+    }
+
+
 def run(
     database_url: str,
     *,
@@ -189,6 +252,8 @@ def run(
     sum_ret_loss = 0.0
     by_horizon: dict[str, dict[str, Any]] = {}
     by_regime: dict[str, dict[str, Any]] = {}
+    # Time-ordered per-prediction record kept for block bootstrap.
+    boot_records: list[tuple[int, float, float]] = []
 
     with connect(database_url) as conn:
         cur_dt = datetime.combine(window_start, datetime.min.time(), tzinfo=UTC)
@@ -217,6 +282,7 @@ def run(
                         p = float(pred["probability"])
                         sum_hit += y
                         sum_brier += (p - y) ** 2
+                        boot_records.append((y, p, float(result["realized_return"])))
                         # Clamped log loss
                         p_c = max(1e-6, min(1 - 1e-6, p))
                         sum_log_loss += -(y * math.log(p_c) + (1 - y) * math.log(1 - p_c))
@@ -244,6 +310,10 @@ def run(
                 v["brier"]    = (v["brier_sum"] / v["n"]) if v["n"] else None
                 v.pop("brier_sum", None)
 
+        # Block bootstrap CIs across the full window (preserves
+        # autocorrelation between predictions in adjacent 15-min batches).
+        boot_ci = _block_bootstrap_metrics(boot_records, n_boot=1000, block_size=5)
+
         conn.execute(
             """
             INSERT INTO delphi_backtest_runs (
@@ -270,7 +340,8 @@ def run(
                 window_start, window_end, step_days,
                 n_pred, n_scored, hit_rate, brier, log_loss,
                 pf, avg_ret, None,
-                Jsonb(by_horizon), Jsonb(by_regime), Jsonb({}),
+                Jsonb(by_horizon), Jsonb(by_regime),
+                Jsonb({"bootstrap_ci": boot_ci, "block_size": 5, "n_boot": 1000}),
                 notes,
             ),
         )

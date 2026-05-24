@@ -102,14 +102,18 @@ CREATE TABLE IF NOT EXISTS delphi_xs_universe_stats (
 
 -- ----------------------------------------------------------------------------
 -- Register the new model version.
+-- IMPORTANT: demote existing default(s) FIRST. The partial unique index
+-- idx_delphi_model_versions_default enforces at-most-one is_default=TRUE,
+-- so we cannot INSERT a TRUE row while another is still TRUE — Postgres
+-- checks unique constraints per-statement, not per-transaction (the index
+-- is not DEFERRABLE).
 -- ----------------------------------------------------------------------------
+UPDATE delphi_model_versions SET is_default = FALSE WHERE is_default = TRUE;
+
 INSERT INTO delphi_model_versions (model_version, family, description, is_default)
 VALUES ('v0.3-quant', 'features', 'Adds GEX wall anchoring, conformal CI, Kelly, quantile heads, BH FDR, xs-ranks, time-decay ML weights, PEAD/momentum/macro-spread features', TRUE)
 ON CONFLICT (model_version) DO UPDATE SET
     description = EXCLUDED.description,
     is_default = TRUE;
-
-UPDATE delphi_model_versions SET is_default = FALSE
-WHERE model_version <> 'v0.3-quant';
 
 COMMIT;
