@@ -58,4 +58,9 @@ FRED_SERIES: list[str] = [
     "DHHNGSP",       # Henry Hub natural gas spot
     "DTB3",          # 3M T-bill secondary market rate
     "BAMLH0A0HYM2",  # ICE BofA US High Yield OAS
+    "VIXCLS",        # CBOE Volatility Index. Required by delphi_regime.py
+                     #   for vol_regime (low/normal/high/crisis). Without it
+                     #   vol_regime falls back to 'normal' for every day.
+    "DFF",           # Effective Federal Funds Rate. Required by delphi_regime.py
+                     #   for macro_regime (risk_on/neutral/risk_off).
 ]
