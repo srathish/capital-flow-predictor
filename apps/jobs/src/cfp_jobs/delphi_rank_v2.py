@@ -433,14 +433,19 @@ def _largest_gex_walls(
 def _intraday_gex_flip(conn: psycopg.Connection, ticker: str) -> str | None:
     """Detect today's intraday gamma flip from uw_spot_gex_intraday (1-min bars).
 
-    Returns 'GEX_FLIP_NEGATIVE_TODAY' if total_gex crossed from >0 to <0 in
+    Returns 'GEX_FLIP_NEGATIVE_TODAY' if total_gamma crossed from >0 to <0 in
     the last 4 hours, 'GEX_FLIP_POSITIVE_TODAY' for the reverse, None when no
     flip or data missing. Highest-resolution gamma signal we ingest — Delphi
     has never read it until now.
+
+    Column is `total_gamma` in uw_spot_gex_intraday (migration 0029), NOT
+    `total_gex` — that's the synthesized name we use in the composer JSONB.
+    First production run of this code crashed with UndefinedColumn because
+    of that confusion. Caught + fixed.
     """
     rows = conn.execute(
         """
-        SELECT ts, total_gex FROM uw_spot_gex_intraday
+        SELECT ts, total_gamma FROM uw_spot_gex_intraday
         WHERE ticker = %s AND ts >= NOW() - INTERVAL '4 hours'
         ORDER BY ts ASC
         """,
