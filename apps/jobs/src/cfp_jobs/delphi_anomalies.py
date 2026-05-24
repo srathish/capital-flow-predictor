@@ -34,8 +34,79 @@ log = logging.getLogger(__name__)
 
 
 def _pead(conn: psycopg.Connection, ticker: str) -> dict[str, Any]:
-    """Most recent earnings + days since + signed 1d post-move + decay factor."""
+    """True PEAD signal — actual EPS − consensus EPS, with 60-day decay.
+
+    Earnings surprise is the textbook PEAD predictor (Ball & Brown 1968):
+    standardized unexpected earnings (SUE) drift positively for 60 trading
+    days post-announcement. Sign of surprise tells direction, magnitude
+    tells strength. We use raw $ surprise scaled by analyst-disagreement
+    proxy (estimate_high − estimate_low) so that a $0.05 beat on a
+    consensus-tight name carries more weight than $0.05 on a wide range.
+
+    Falls back to the post_earnings_move_1d proxy when consensus estimates
+    are missing — but only for the SIGN, not magnitude. Removes the
+    look-back bias my v1 proxy had (which leaked the next-day reaction
+    into the "predictor").
+
+    Returns:
+      pead_signal           decayed surprise (sign = direction, mag = strength)
+      pead_surprise_pct     (actual − est) / abs(est)   — raw, undecayed
+      pead_sue              standardized: surprise / (high − low) when present
+      pead_days_since       trading days since report (calendar days actually)
+      pead_in_window        days_since <= 60
+      pead_source           'true_surprise' | 'reaction_proxy' | 'no_data'
+    """
+    # First try the true surprise path.
     row = conn.execute(
+        """
+        SELECT report_date, actual_eps, street_mean_est
+        FROM uw_earnings
+        WHERE ticker = %s AND report_date <= CURRENT_DATE
+          AND actual_eps IS NOT NULL AND street_mean_est IS NOT NULL
+        ORDER BY report_date DESC LIMIT 1
+        """,
+        (ticker,),
+    ).fetchone()
+    if row and row[0] is not None:
+        rd, actual, est = row[0], float(row[1]), float(row[2])
+        days_since = (pd.Timestamp.now(tz="UTC").date() - rd).days
+        surprise = actual - est
+        # Percent surprise relative to consensus magnitude.
+        surprise_pct = surprise / abs(est) if abs(est) > 1e-6 else None
+
+        # Pull analyst-disagreement range for SUE-style normalization.
+        rng_row = conn.execute(
+            """
+            SELECT eps_estimate_high, eps_estimate_low
+            FROM uw_earnings_estimates
+            WHERE ticker = %s AND report_date = %s
+              AND eps_estimate_high IS NOT NULL AND eps_estimate_low IS NOT NULL
+            ORDER BY report_date DESC LIMIT 1
+            """,
+            (ticker, rd),
+        ).fetchone()
+        sue = None
+        if rng_row and rng_row[0] is not None and rng_row[1] is not None:
+            spread = float(rng_row[0]) - float(rng_row[1])
+            if spread > 1e-9:
+                sue = surprise / spread  # standardized unexpected earnings
+
+        # 60-trading-day linear decay (~84 calendar days).
+        decay = max(0.0, 1.0 - days_since / 60.0) if days_since <= 60 else 0.0
+        signal_mag = sue if sue is not None else surprise_pct
+        signal = (float(signal_mag) * decay) if signal_mag is not None else None
+        return {
+            "pead_signal":       signal,
+            "pead_surprise_pct": surprise_pct,
+            "pead_sue":          sue,
+            "pead_days_since":   int(days_since),
+            "pead_in_window":    days_since <= 60,
+            "pead_source":       "true_surprise",
+        }
+
+    # Fallback: reaction proxy. Sign-only — magnitude is the next-day move
+    # which has look-back leakage so we don't use it as strength.
+    fb_row = conn.execute(
         """
         SELECT report_date, post_earnings_move_1d
         FROM uw_earnings
@@ -45,21 +116,23 @@ def _pead(conn: psycopg.Connection, ticker: str) -> dict[str, Any]:
         """,
         (ticker,),
     ).fetchone()
-    if not row or row[0] is None:
-        return {"pead_signal": None, "pead_days_since": None, "pead_in_window": False}
-    rd, move = row[0], float(row[1])
+    if not fb_row or fb_row[0] is None:
+        return {
+            "pead_signal": None, "pead_surprise_pct": None, "pead_sue": None,
+            "pead_days_since": None, "pead_in_window": False,
+            "pead_source": "no_data",
+        }
+    rd, move = fb_row[0], float(fb_row[1])
     days_since = (pd.Timestamp.now(tz="UTC").date() - rd).days
-    # Drift typically dies after 60 trading days (~84 calendar days).
-    # Linear decay from full effect (day 0) to 0 (day 60).
-    if days_since > 60:
-        decay = 0.0
-    else:
-        decay = max(0.0, 1.0 - days_since / 60.0)
+    decay = max(0.0, 1.0 - days_since / 60.0) if days_since <= 60 else 0.0
     return {
-        "pead_signal":     float(move) * decay,
-        "pead_days_since": int(days_since),
-        "pead_in_window":  days_since <= 60,
-        "pead_raw_move":   float(move),
+        # sign-only signal: small fixed magnitude so it's not dominant
+        "pead_signal":       (0.5 if move > 0 else -0.5) * decay,
+        "pead_surprise_pct": None,
+        "pead_sue":          None,
+        "pead_days_since":   int(days_since),
+        "pead_in_window":    days_since <= 60,
+        "pead_source":       "reaction_proxy",
     }
 
 
