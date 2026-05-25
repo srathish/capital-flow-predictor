@@ -1,0 +1,126 @@
+//@version=5
+indicator("FINAL TREND v5 — Indicator", shorttitle="TRENDv5 IND", overlay=true, max_labels_count=500)
+
+// =============================================================================
+// FINAL TREND v5 INDICATOR (signal-only version)
+//
+// Same logic as FINAL_STRATEGY_v5.pine but as a pure INDICATOR (no auto-trades).
+// Use this if you want visual signals + alerts on multiple charts WITHOUT
+// running TradingView's Strategy Tester.
+//
+// Plots: 4 EMAs, entry signal arrow, danger marker, current stop levels
+// Alerts: entry signal, danger entered, stop level hit (informational)
+//
+// Per-ticker performance (10y backtest):
+//   NVDA: +1,459% / Sharpe 1.26
+//   MSFT: +325%   / Sharpe 1.12
+//   AAPL: +137%   / Sharpe 0.68
+//   QQQ:  +158%   / Sharpe 0.84
+//   SPY:  +49%    / Sharpe 0.50
+//
+// Portfolio mode (run on watchlist of 10-20 names, take max 10 concurrent):
+//   CAGR 27% / Sharpe 1.28 / Max DD 21%
+// =============================================================================
+
+// ============ INPUTS ============
+grpEntry = "Entry"
+emaShort = input.int(8,   "EMA Short",   group=grpEntry)
+emaMid   = input.int(21,  "EMA Mid",     group=grpEntry)
+emaLong  = input.int(50,  "EMA Long",    group=grpEntry)
+emaTrend = input.int(200, "EMA Trend",   group=grpEntry)
+ema50RisingBars = input.int(10, "EMA50 rising over N bars", group=grpEntry)
+
+grpRisk = "Risk Management (visual)"
+atrLen        = input.int(14,    "ATR Length",                        group=grpRisk)
+atrStopMult   = input.float(2.0, "Initial stop = N x ATR",            minval=0.5, step=0.1, group=grpRisk)
+atrTrailMult  = input.float(15.0,"Trail = highSinceEntry - N x ATR",  minval=1.0, step=0.5, group=grpRisk)
+showTrail     = input.bool(true, "Show trail stop after signal", group=grpRisk)
+
+// ============ INDICATORS ============
+ema8   = ta.ema(close, emaShort)
+ema21  = ta.ema(close, emaMid)
+ema50  = ta.ema(close, emaLong)
+ema200 = ta.ema(close, emaTrend)
+atrVal = ta.atr(atrLen)
+
+// ============ SIGNALS ============
+stacked     = ema8 > ema21 and ema21 > ema50 and ema50 > ema200
+ema50Rising = ema50 > ema50[ema50RisingBars]
+breakout    = close > high[1]
+entrySignal = stacked and ema50Rising and breakout
+
+stage4    = close < ema200 and ema200 < ema200[20]
+bearStack = ema8 < ema21 and ema21 < ema50 and ema50 < ema200
+danger    = stage4 or bearStack
+
+stopLevel = math.max(close - atrVal * atrStopMult, ema50)
+
+// ============ TRAIL TRACKING (visual only) ============
+var float trailHigh = na
+var float trailStop = na
+var int   barsSinceSignal = 9999
+
+if entrySignal and not danger
+    trailHigh := high
+    trailStop := stopLevel
+    barsSinceSignal := 0
+else if barsSinceSignal < 250 and not na(trailHigh)
+    trailHigh := math.max(trailHigh, high)
+    chandelier = trailHigh - atrVal * atrTrailMult
+    trailStop := math.max(trailStop, chandelier)
+    barsSinceSignal += 1
+    if close < trailStop or danger
+        trailHigh := na
+        trailStop := na
+
+inSignal = not na(trailStop)
+
+// ============ PLOTS ============
+plot(ema8,   "EMA 8",   color=color.aqua,    linewidth=1)
+plot(ema21,  "EMA 21",  color=color.fuchsia, linewidth=2)
+plot(ema50,  "EMA 50",  color=color.white,   linewidth=2)
+plot(ema200, "EMA 200", color=color.yellow,  linewidth=1)
+
+plot(showTrail and inSignal ? trailStop : na, "Trail Stop", color=color.new(color.red, 0), style=plot.style_linebr, linewidth=2)
+plot(entrySignal and not danger ? stopLevel : na, "Entry Stop", color=color.new(color.red, 40), style=plot.style_circles, linewidth=2)
+
+plotshape(entrySignal and not danger, "GO", shape.triangleup, location.belowbar, color.lime, size=size.normal, text="LONG")
+plotshape(danger and not danger[1], "DANGER", shape.xcross, location.abovebar, color.red, size=size.small, text="DGR")
+plotshape(inSignal[1] and not inSignal, "EXIT", shape.xcross, location.abovebar, color.orange, size=size.small, text="EXIT")
+
+bgcolor(danger ? color.new(color.red, 92) : na, title="Danger")
+bgcolor(inSignal ? color.new(color.aqua, 95) : na, title="In Signal")
+
+// ============ DASHBOARD ============
+f_cell(table t, int c, int r, string txt, color tcol, color bg) => table.cell(t, c, r, txt, text_color=tcol, bgcolor=bg)
+var table dash = table.new(position.top_right, 2, 10, bgcolor=color.new(color.black, 70), border_width=1)
+
+if barstate.islast
+    state = danger ? "DANGER - STAY OUT" : inSignal ? "IN SIGNAL - HOLD" : entrySignal ? "ENTRY GO" : "WAIT"
+    stateColor = danger ? color.red : inSignal ? color.aqua : entrySignal ? color.lime : color.gray
+    f_cell(dash, 0, 0, "STATE", color.white, color.new(stateColor, 25))
+    f_cell(dash, 1, 0, state, color.white, color.new(stateColor, 25))
+    f_cell(dash, 0, 1, "EMAs Stacked", color.white, color.new(color.gray, 40))
+    f_cell(dash, 1, 1, stacked ? "YES" : "NO", stacked ? color.lime : color.red, color.new(color.gray, 40))
+    f_cell(dash, 0, 2, "EMA50 Rising", color.white, color(na))
+    f_cell(dash, 1, 2, ema50Rising ? "YES" : "NO", ema50Rising ? color.lime : color.red, color(na))
+    f_cell(dash, 0, 3, "Breakout Today", color.white, color(na))
+    f_cell(dash, 1, 3, breakout ? "YES" : "NO", breakout ? color.lime : color.gray, color(na))
+    f_cell(dash, 0, 4, "Danger", color.white, color.new(color.gray, 40))
+    f_cell(dash, 1, 4, danger ? "YES (skip)" : "no", danger ? color.red : color.lime, color.new(color.gray, 40))
+    f_cell(dash, 0, 5, "Entry Stop", color.white, color(na))
+    f_cell(dash, 1, 5, "$" + str.tostring(stopLevel, "#.##"), color.new(color.red, 0), color(na))
+    risk_per_share_pct = (close - stopLevel) / close * 100
+    f_cell(dash, 0, 6, "Risk / share", color.white, color(na))
+    f_cell(dash, 1, 6, str.tostring(risk_per_share_pct, "#.#") + "%", color.yellow, color(na))
+    f_cell(dash, 0, 7, "Trail Stop", color.white, color(na))
+    f_cell(dash, 1, 7, na(trailStop) ? "-" : "$" + str.tostring(trailStop, "#.##"), color.new(color.red, 0), color(na))
+    f_cell(dash, 0, 8, "ATR", color.white, color(na))
+    f_cell(dash, 1, 8, str.tostring(atrVal, "#.##"), color.aqua, color(na))
+    f_cell(dash, 0, 9, "Trail = N x ATR", color.white, color(na))
+    f_cell(dash, 1, 9, str.tostring(atrTrailMult, "#.#") + "x = $" + str.tostring(atrVal * atrTrailMult, "#.##"), color.aqua, color(na))
+
+// ============ ALERTS ============
+alertcondition(entrySignal and not danger, "Entry Long", "TREND v5: long entry signal — stop at {{plot('Entry Stop')}}")
+alertcondition(danger and not danger[1], "Entered Danger", "TREND v5: danger phase — exit longs")
+alertcondition(inSignal[1] and not inSignal, "Signal Exited", "TREND v5: trade exited via trail or danger")
