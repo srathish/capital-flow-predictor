@@ -1,0 +1,6 @@
+universe,tickers,trades,win%,net%,cagr%,dd%,sharpe
+Small/Mid US,8,347,20.7,618.4,6.6,25.2,0.53
+International ETFs,13,477,20.3,790.9,7.6,30.7,0.54
+Sector ETFs,11,520,20.2,293.1,5.2,34.9,0.47
+Commodity + Bond,9,339,20.4,384.5,6.9,30.0,0.67
+High-vol speculative,9,139,16.5,1232.0,18.0,36.7,0.77
