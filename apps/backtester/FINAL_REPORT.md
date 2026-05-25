@@ -227,9 +227,28 @@ Based on 250+ experiments:
 
 ---
 
+## Year-by-year breakdown (10-year window)
+
+| Year | Strategy % | SPY % | Alpha % | Max DD % |
+|------|-----------:|------:|--------:|---------:|
+| 2017 | +8.9   | +21.7 | -12.8 | -9.4  |
+| 2018 | -2.6   | -4.6  | +2.0  | -14.2 |
+| 2019 | +25.5  | +31.2 | -5.8  | -13.1 |
+| 2020 | +26.7  | +18.3 | +8.4  | -21.6 |
+| 2021 | +13.0  | +28.7 | -15.8 | -13.5 |
+| 2022 | **+2.7**   | **-18.2** | **+20.9** | -12.1 |
+| 2023 | +32.0  | +26.2 | +5.9  | -14.7 |
+| 2024 | +44.2  | +24.9 | +19.3 | -10.4 |
+| 2025 | +15.2  | +17.7 | -2.5  | -12.0 |
+| 2026 | +1.2   | +9.6  | -8.4  | -10.9 |
+
+**9 out of 10 years positive.** Only 2018 lost money (-2.6%). Biggest single-year drawdown 21.6% (COVID).
+
+**Key insight:** The strategy's edge is RISK MANAGEMENT, not pure return. In 2022 when SPY crashed -18%, strategy was +3% (20% alpha). In 2024 strategy was +44% vs SPY +25%. In strong simple bull years (2017, 2021), strategy underperforms because buy-and-hold catches more of the up. This is a defensive trend-follower — perfect for risk-controlled compounding, not maximum upside chase.
+
 ## Bottom line
 
-The 5-hour session converged on a strategy that's **6 lines of logic and validated across 250+ experiments**:
+The 5-hour session converged on a strategy that's **6 lines of logic and validated across 460+ experiments**:
 
 1. EMAs stacked AND EMA50 rising AND close > yesterday's high → enter long
 2. Stop = max(close − 2×ATR, EMA50)
