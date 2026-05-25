@@ -30,58 +30,78 @@ SECTOR_ETF = {
     "Utilities": "XLU",
 }
 
-# Hardcoded ticker -> sector for the test basket (avoids slow yfinance .info lookups)
+# Hardcoded ticker -> sector ETF (avoids slow yfinance .info lookups).
+# Expanded to cover the diversified basket for v3 ablations.
 TICKER_SECTOR = {
-    "INTC": "XLK", "META": "XLC", "NFLX": "XLC", "AAPL": "XLK",
-    "NVDA": "XLK", "MSFT": "XLK", "AMZN": "XLY", "GOOGL": "XLC",
-    "SPY": "SPY", "QQQ": "QQQ",  # benchmarks — use self
-    # Space basket (from user memory)
+    # Tech
+    "INTC": "XLK", "AAPL": "XLK", "NVDA": "XLK", "MSFT": "XLK",
+    "AMD": "XLK", "AVGO": "XLK", "MU": "XLK", "MRVL": "XLK",
+    "ORCL": "XLK", "CRM": "XLK", "ADBE": "XLK", "QCOM": "XLK",
+    # Communication services
+    "META": "XLC", "NFLX": "XLC", "GOOGL": "XLC", "GOOG": "XLC",
+    "DIS": "XLC", "T": "XLC", "VZ": "XLC",
+    # Consumer discretionary
+    "AMZN": "XLY", "TSLA": "XLY", "HD": "XLY", "MCD": "XLY",
+    "NKE": "XLY", "SBUX": "XLY", "LOW": "XLY",
+    # Consumer staples
+    "WMT": "XLP", "KO": "XLP", "PG": "XLP", "PEP": "XLP",
+    # Financials
+    "JPM": "XLF", "GS": "XLF", "BAC": "XLF", "WFC": "XLF",
+    "MS": "XLF", "C": "XLF", "BRK-B": "XLF",
+    # Energy
+    "XOM": "XLE", "CVX": "XLE", "COP": "XLE", "SLB": "XLE",
+    # Health
+    "JNJ": "XLV", "UNH": "XLV", "PFE": "XLV", "ABBV": "XLV", "LLY": "XLV",
+    # Industrials
+    "BA": "XLI", "CAT": "XLI", "GE": "XLI", "HON": "XLI", "LMT": "XLI",
+    "RTX": "XLI", "NOC": "XLI", "GD": "XLI",
+    # Space basket
     "RKLB": "XLI", "ASTS": "XLC", "SPCE": "XLI", "PL": "XLI",
-    "RDW": "XLI", "IRDM": "XLC", "LMT": "XLI", "RTX": "XLI",
-    "NOC": "XLI", "BA": "XLI", "GD": "XLI", "AMPG": "XLI",
-    # Common test tickers
-    "TSLA": "XLY", "AMD": "XLK", "AVGO": "XLK", "MU": "XLK",
-    "MRVL": "XLK", "JPM": "XLF", "GS": "XLF", "BAC": "XLF",
-    "XOM": "XLE", "CVX": "XLE", "GLD": "XLB", "TLT": "XLB",
+    "RDW": "XLI", "IRDM": "XLC", "AMPG": "XLI",
+    # Materials / Utilities / Real Estate
+    "GLD": "XLB", "TLT": "XLB",  # not really sector ETFs but for proxy
+    "XLU": "XLU", "XLRE": "XLRE",
+    # Benchmarks
+    "SPY": "SPY", "QQQ": "QQQ", "IWM": "SPY",  # IWM uses SPY as fallback
 }
 
 
 def ticker_to_sector_etf(ticker: str) -> str:
-    """Return the SPDR sector ETF for a ticker. Falls back to SPY if unknown."""
     return TICKER_SECTOR.get(ticker.upper(), "SPY")
 
 
 @lru_cache(maxsize=20)
 def get_sector_series(etf: str, period: str = "max") -> pd.DataFrame:
-    """Pull sector ETF data + compute strength signals.
-
-    Returns DataFrame with:
-      sec_close, sec_sma50, sec_above_50, sec_roc20, sec_rs_vs_spy_20, sec_hot
-    """
     if etf == "SPY":
         spy = load_ohlcv("SPY", period=period)["close"].rename("sec_close")
         df = spy.to_frame()
         df["sec_sma50"] = df["sec_close"].rolling(50).mean()
+        df["sec_sma200"] = df["sec_close"].rolling(200).mean()
         df["sec_above_50"] = df["sec_close"] > df["sec_sma50"]
+        df["sec_above_200"] = df["sec_close"] > df["sec_sma200"]
         df["sec_roc20"] = df["sec_close"].pct_change(20) * 100
-        df["sec_rs_vs_spy_20"] = 0.0  # SPY vs SPY = 0
+        df["sec_rs_vs_spy_20"] = 0.0
         df["sec_hot"] = df["sec_above_50"]
+        df["sec_not_dead"] = df["sec_above_200"]  # weaker filter — used by v3
         return df
 
     sec = load_ohlcv(etf, period=period)["close"].rename("sec_close")
     spy = load_ohlcv("SPY", period=period)["close"].rename("spy_close")
     df = pd.concat([sec, spy], axis=1).dropna()
     df["sec_sma50"] = df["sec_close"].rolling(50).mean()
+    df["sec_sma200"] = df["sec_close"].rolling(200).mean()
     df["sec_above_50"] = df["sec_close"] > df["sec_sma50"]
+    df["sec_above_200"] = df["sec_close"] > df["sec_sma200"]
     df["sec_roc20"] = df["sec_close"].pct_change(20) * 100
     df["spy_roc20"] = df["spy_close"].pct_change(20) * 100
     df["sec_rs_vs_spy_20"] = df["sec_roc20"] - df["spy_roc20"]
     df["sec_hot"] = df["sec_above_50"] & (df["sec_rs_vs_spy_20"] > 0)
-    return df[["sec_close", "sec_sma50", "sec_above_50", "sec_roc20", "sec_rs_vs_spy_20", "sec_hot"]]
+    df["sec_not_dead"] = df["sec_above_200"]  # weaker filter — only blocks bear-sector trades
+    return df[["sec_close", "sec_sma50", "sec_sma200", "sec_above_50", "sec_above_200",
+               "sec_roc20", "sec_rs_vs_spy_20", "sec_hot", "sec_not_dead"]]
 
 
 def get_sector_for_ticker(ticker: str, period: str = "max") -> pd.DataFrame:
-    """Convenience: get sector signals aligned to a ticker's universe."""
     etf = ticker_to_sector_etf(ticker)
     return get_sector_series(etf, period=period)
 
@@ -91,4 +111,5 @@ if __name__ == "__main__":
         etf = ticker_to_sector_etf(tk)
         df = get_sector_for_ticker(tk, period="2y")
         hot_pct = df["sec_hot"].mean() * 100
-        print(f"{tk} -> {etf}: hot {hot_pct:.0f}% of last 2y, recent RS vs SPY: {df['sec_rs_vs_spy_20'].iloc[-1]:+.1f}%")
+        not_dead_pct = df["sec_not_dead"].mean() * 100
+        print(f"{tk} -> {etf}: hot {hot_pct:.0f}%  not_dead {not_dead_pct:.0f}%")

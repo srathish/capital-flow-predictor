@@ -87,9 +87,16 @@ class ParamsV2:
 
     # === v2 NEW: Macro filter ===
     use_macro_filter: bool = False     # require macro_risk_on (SPY>200ma AND NOT vix>25)
+    use_macro_loose: bool = False      # weaker: require macro_not_panic (NOT (SPY -5% AND VIX>35))
+    exit_on_macro_panic: bool = False  # exit any open trade if vix_panic AND spy collapsed
 
     # === v2 NEW: Sector filter ===
     use_sector_filter: bool = False    # require sec_hot (sector above 50ma AND outperforming SPY)
+    use_sector_loose: bool = False     # weaker: require sec_not_dead (sector above 200ma)
+    exit_on_sector_death: bool = False # exit if sector drops below 200ma while in trade
+
+    # Trend filter — strict requires STRONG_UP; loose just blocks STRONG_DOWN
+    use_trend_loose: bool = False      # block only STRONG_DOWN, allow everything else
 
     # === v2 NEW: Trend-continuation entries ===
     use_continuation_entries: bool = False  # add pullback-to-21EMA path in confirmed trend
@@ -198,26 +205,39 @@ def precompute_v2(df_in: pd.DataFrame, p: ParamsV2, ticker: str = "?") -> pd.Dat
         o["bars_in_trend"] = 0
 
     # === v2 NEW: Macro regime ===
-    if p.use_macro_filter:
+    if p.use_macro_filter or p.use_macro_loose or p.exit_on_macro_panic:
         try:
             macro = get_macro_series(period="max")
             macro_aligned = align_to(macro, o.index)
             o["macro_risk_on"] = macro_aligned["macro_risk_on"].fillna(False)
+            o["macro_not_panic"] = macro_aligned["macro_not_panic"].fillna(True)
+            o["vix_panic"] = macro_aligned["vix_panic"].fillna(False)
+            o["spy_collapsed"] = macro_aligned["spy"] < macro_aligned["spy_sma200"] * 0.95
+            o["spy_collapsed"] = o["spy_collapsed"].fillna(False)
         except Exception:
-            o["macro_risk_on"] = True  # default to risk-on if data unavailable
+            o["macro_risk_on"] = True
+            o["macro_not_panic"] = True
+            o["vix_panic"] = False
+            o["spy_collapsed"] = False
     else:
         o["macro_risk_on"] = True
+        o["macro_not_panic"] = True
+        o["vix_panic"] = False
+        o["spy_collapsed"] = False
 
     # === v2 NEW: Sector strength ===
-    if p.use_sector_filter:
+    if p.use_sector_filter or p.use_sector_loose or p.exit_on_sector_death:
         try:
             sec = get_sector_for_ticker(ticker, period="max")
             sec_aligned = sec.reindex(o.index, method="ffill")
             o["sec_hot"] = sec_aligned["sec_hot"].fillna(False)
+            o["sec_not_dead"] = sec_aligned["sec_not_dead"].fillna(True)
         except Exception:
             o["sec_hot"] = True
+            o["sec_not_dead"] = True
     else:
         o["sec_hot"] = True
+        o["sec_not_dead"] = True
 
     # === v2 NEW: Trend-continuation arming candidate ===
     # Confirmed STRONG_UP trend that has been in place for N bars,
@@ -315,9 +335,15 @@ def run_backtest_v2(df_in: pd.DataFrame, p: ParamsV2, ticker: str = "?") -> Back
         # Apply macro/sector/trend filters at arm time
         if new_arm and p.use_macro_filter and not bar.get("macro_risk_on", True):
             new_arm = False
+        if new_arm and p.use_macro_loose and not bar.get("macro_not_panic", True):
+            new_arm = False
         if new_arm and p.use_sector_filter and not bar.get("sec_hot", True):
             new_arm = False
+        if new_arm and p.use_sector_loose and not bar.get("sec_not_dead", True):
+            new_arm = False
         if new_arm and p.use_trend_filter and bar.get("trend_state", "UNKNOWN") not in ("STRONG_UP", "WEAK_UP", "UNKNOWN"):
+            new_arm = False
+        if new_arm and p.use_trend_loose and bar.get("trend_state", "UNKNOWN") == "STRONG_DOWN":
             new_arm = False
 
         if new_arm:
@@ -457,6 +483,12 @@ def run_backtest_v2(df_in: pd.DataFrame, p: ParamsV2, ticker: str = "?") -> Back
                 exit_price = trade.trail_stop * (1 - p.slippage_bps / 10000)
             elif bar["danger"] and p.exit_on_danger:
                 exit_reason = "DangerExit"
+                exit_price = close * (1 - p.slippage_bps / 10000)
+            elif p.exit_on_macro_panic and bar.get("vix_panic", False) and bar.get("spy_collapsed", False):
+                exit_reason = "MacroPanicExit"
+                exit_price = close * (1 - p.slippage_bps / 10000)
+            elif p.exit_on_sector_death and not bar.get("sec_not_dead", True):
+                exit_reason = "SectorDeathExit"
                 exit_price = close * (1 - p.slippage_bps / 10000)
             elif trade.bars_in_trade >= p.max_trade_bars:
                 exit_reason = "TimeExit"

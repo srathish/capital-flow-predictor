@@ -1,0 +1,6 @@
+variant,train_net%,test_net%,net_decay,train_sharpe,test_sharpe,sharpe_decay,train_dd%,test_dd%
+"base (5xATR, py3, 1%)",22.1,27.8,5.8,0.35,0.39,0.04,13.7,14.0
+"best Sharpe (10xATR, 1%)",37.6,45.0,7.4,0.51,0.46,-0.06,15.3,15.9
+"high return (5xATR, py3, 2%)",42.8,63.3,20.4,0.34,0.41,0.07,22.1,23.2
+"high return (5xATR, py3, 3%)",55.4,97.8,42.3,0.33,0.42,0.08,23.6,28.4
+best Sharpe (10xATR) + 2% risk,77.9,91.9,13.9,0.52,0.47,-0.05,25.1,26.1
