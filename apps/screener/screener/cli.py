@@ -83,7 +83,7 @@ def main() -> int:
         key=lambda r: r["tech_score"],
         reverse=True,
     )
-    cap = max(30, cfg["output"]["top_n_print"] * 2)
+    cap = max(60, cfg["output"]["top_n_print"] * 4)
     survivors = [r["ticker"] for r in relaxed[:cap]]
     print(
         f"  {len(tech_rows)} evaluated; {len(strict_pass)} strict pass, "
@@ -107,7 +107,13 @@ def main() -> int:
     surv_set = set(survivors)
     tech_subset = [r for r in tech_rows if r["ticker"] in surv_set]
     flow_dicts = {k: v.to_dict() for k, v in flow_rows.items()}
+    n_illiquid = sum(1 for v in flow_dicts.values() if not v.get("passes_options_liquidity"))
     df = build_ranking(tech_subset, flow_dicts, cfg)
+    print(
+        f"  dropped {n_illiquid}/{len(flow_dicts)} for failing options-liquidity gate "
+        f"(min ${cfg['stage2_flow']['min_call_premium_today']:,} call premium today)",
+        flush=True,
+    )
 
     out_dir = Path(cfg["output"]["csv_dir"])
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -118,7 +124,8 @@ def main() -> int:
     top_n = args.top or cfg["output"]["top_n_print"]
     cols = [
         "ticker", "price", "sector", "base_length", "pct_from_ema21", "atr_squeeze_pct",
-        "breakout_date", "vol_ratio", "iv_rank", "net_call_prem_5d",
+        "breakout_date", "vol_ratio", "iv_rank",
+        "call_prem_today", "call_vol_today", "net_call_prem_5d",
         "bullish_alerts", "darkpool_above_pct", "sector_tide", "sector_mult",
         "tech_score", "flow_score", "composite",
         "stage1_pass", "flow_confirmed", "flow_confirmed_cheap", "cheap_options", "rationale",

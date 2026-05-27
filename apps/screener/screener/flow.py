@@ -40,6 +40,9 @@ class FlowRow:
     oi_change_call_pct: float | None
     sector_tide_label: str
     sector_tide_mult: float
+    call_premium_today: float     # $ premium traded in calls on the most recent day
+    call_volume_today: int        # contract count for calls today
+    passes_options_liquidity: bool  # >= min_call_premium_today AND min_call_volume_today
     flow_confirmed: bool          # >=2 directional signals (independent of IV)
     flow_confirmed_cheap: bool    # flow_confirmed AND cheap_options
     flow_score: float
@@ -61,24 +64,25 @@ def _safe_float(v: Any) -> float | None:
         return None
 
 
-def _net_call_prem_daily(raw: Any, n_days: int) -> float:
-    """Sum daily net_call_premium over the last n_days from /options-volume.
-
-    options-volume rows: {date, net_call_premium, bullish_premium, bearish_premium, ...}
-    """
+def _options_volume_stats(raw: Any, n_days: int) -> tuple[float, float, int]:
+    """From /options-volume return (net_call_prem_sum_n_days, latest_call_premium, latest_call_volume)."""
     if not raw or "data" not in raw:
-        return 0.0
+        return 0.0, 0.0, 0
     rows = raw["data"]
     if not rows:
-        return 0.0
+        return 0.0, 0.0, 0
     df = pd.DataFrame(rows)
-    if "net_call_premium" not in df.columns:
-        return 0.0
-    df["net_call_premium"] = pd.to_numeric(df["net_call_premium"], errors="coerce").fillna(0)
+    for col in ("net_call_premium", "call_premium", "call_volume"):
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
     if "date" in df.columns:
         df["date"] = pd.to_datetime(df["date"], errors="coerce").dt.date
-        df = df.sort_values("date").tail(n_days)
-    return float(df["net_call_premium"].sum())
+        df = df.sort_values("date")
+    net_sum = float(df["net_call_premium"].tail(n_days).sum()) if "net_call_premium" in df.columns else 0.0
+    latest = df.iloc[-1] if not df.empty else None
+    call_prem = float(latest["call_premium"]) if latest is not None and "call_premium" in df.columns else 0.0
+    call_vol = int(latest["call_volume"]) if latest is not None and "call_volume" in df.columns else 0
+    return net_sum, call_prem, call_vol
 
 
 def _bullish_alerts(raw: Any, n_days: int) -> int:
@@ -226,7 +230,9 @@ def fetch_flow(
         iv30d = iv_lookup.get(t, {}).get("iv30d")
         sector = sector_lookup.get(t)
 
-        net_call_5d = _net_call_prem_daily(opt_vol, s["net_prem_days"])
+        net_call_5d, call_prem_today, call_vol_today = _options_volume_stats(
+            opt_vol, s["net_prem_days"]
+        )
         alerts_n = _bullish_alerts(flow_alerts, s["alerts_lookback_days"])
         dp_n, dp_ratio = _darkpool_stats(darkpool, s["darkpool_lookback_days"], ref_prices.get(t, 0.0))
         oi_pct = _oi_change_call_pct(oi_change)
@@ -235,6 +241,10 @@ def fetch_flow(
         net_pos = net_call_5d > s["net_prem_min_dollars"]
         alerts_ok = alerts_n >= s["alerts_bullish_min"]
         dp_accum = dp_ratio >= s["darkpool_min_above_close_ratio"] and dp_n >= 3
+        passes_liq = (
+            call_prem_today >= s["min_call_premium_today"]
+            and call_vol_today >= s["min_call_volume_today"]
+        )
 
         # Base flow score (0-100, before sector multiplier).
         score = 0.0
@@ -281,6 +291,9 @@ def fetch_flow(
             oi_change_call_pct=oi_pct,
             sector_tide_label=sector_label,
             sector_tide_mult=float(sector_mult),
+            call_premium_today=float(call_prem_today),
+            call_volume_today=int(call_vol_today),
+            passes_options_liquidity=bool(passes_liq),
             flow_confirmed=bool(flow_confirmed),
             flow_confirmed_cheap=bool(flow_confirmed_cheap),
             flow_score=float(score),

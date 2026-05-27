@@ -8,6 +8,10 @@ def build_ranking(tech_rows: list[dict], flow_rows: dict[str, dict], cfg: dict) 
     rows = []
     for t in tech_rows:
         f = flow_rows.get(t["ticker"])
+        # HARD FILTER: drop names whose options don't trade enough today.
+        # Stage 1 candidates with no flow row at all are also dropped here.
+        if not f or not f.get("passes_options_liquidity"):
+            continue
         flow_score = f["flow_score"] if f else 0.0
         composite = (
             cfg["scoring"]["technical_weight"] * t["tech_score"]
@@ -25,6 +29,8 @@ def build_ranking(tech_rows: list[dict], flow_rows: dict[str, dict], cfg: dict) 
                 "vol_ratio": round(t["vol_ratio_breakout"], 2) if t["vol_ratio_breakout"] == t["vol_ratio_breakout"] else None,
                 "sector": f.get("sector") if f else None,
                 "iv_rank": round(f["iv_rank"], 1) if f and f["iv_rank"] is not None else None,
+                "call_prem_today": int(f.get("call_premium_today") or 0) if f else 0,
+                "call_vol_today": int(f.get("call_volume_today") or 0) if f else 0,
                 "net_call_prem_5d": int(f["net_call_prem_5d"]) if f else 0,
                 "bullish_alerts": f["bullish_alerts_5d"] if f else 0,
                 "darkpool_above_pct": round(f["darkpool_above_close_ratio"] * 100, 0) if f else None,

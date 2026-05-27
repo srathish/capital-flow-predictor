@@ -52,6 +52,11 @@ stage1_technical:
   min_avg_dollar_vol: 20_000_000
 
 stage2_flow:
+  # Options liquidity HARD filter — drops names whose options aren't traded
+  # enough to be worth a position. Measured on the most recent /options-volume row.
+  min_call_premium_today: 100_000   # require >= $100K in call premium traded today
+  min_call_volume_today: 0          # optional contract-count floor (0 = disabled)
+
   # Cheap options: we PREFER low IV, but it's no longer a hard gate on flow_confirmed.
   # The composite still rewards cheap names via flow_score (20pt) + extra bonus <25.
   iv_rank_max: 50.0              # IV rank <= 50 = "cheap" flag for output column
