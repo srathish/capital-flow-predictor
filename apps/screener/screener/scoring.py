@@ -23,15 +23,19 @@ def build_ranking(tech_rows: list[dict], flow_rows: dict[str, dict], cfg: dict) 
                 "atr_squeeze_pct": round(t["atr_squeeze_ratio"] * 100, 1) if t["atr_squeeze_ratio"] == t["atr_squeeze_ratio"] else None,
                 "breakout_date": t["breakout_date"],
                 "vol_ratio": round(t["vol_ratio_breakout"], 2) if t["vol_ratio_breakout"] == t["vol_ratio_breakout"] else None,
+                "sector": f.get("sector") if f else None,
                 "iv_rank": round(f["iv_rank"], 1) if f and f["iv_rank"] is not None else None,
                 "net_call_prem_5d": int(f["net_call_prem_5d"]) if f else 0,
                 "bullish_alerts": f["bullish_alerts_5d"] if f else 0,
                 "darkpool_above_pct": round(f["darkpool_above_close_ratio"] * 100, 0) if f else None,
+                "sector_tide": f.get("sector_tide_label") if f else None,
+                "sector_mult": round(f["sector_tide_mult"], 2) if f else 1.0,
                 "flow_score": round(flow_score, 1),
                 "tech_score": round(t["tech_score"], 1),
                 "composite": round(composite, 1),
                 "stage1_pass": t.get("passes_stage1", False),
                 "flow_confirmed": (f["flow_confirmed"] if f else False),
+                "flow_confirmed_cheap": (f.get("flow_confirmed_cheap", False) if f else False),
                 "cheap_options": (f["cheap_options"] if f else False),
                 "rationale": rationale,
             }
@@ -57,4 +61,6 @@ def _rationale(t: dict, f: dict | None) -> str:
             bits.append(f"{f['bullish_alerts_5d']} bull alerts")
         if f["darkpool_accumulation"]:
             bits.append(f"DP {f['darkpool_above_close_ratio']*100:.0f}% above close")
+        if f.get("sector_tide_label") and f["sector_tide_label"] not in ("n/a", "missing", "neutral"):
+            bits.append(f"sector {f['sector_tide_label']}")
     return "; ".join(bits)

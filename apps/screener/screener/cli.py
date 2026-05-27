@@ -15,7 +15,7 @@ import yaml
 
 from .client import UWClient
 from .data import fetch_ohlc_batch, fetch_universe
-from .flow import fetch_flow
+from .flow import fetch_flow, fetch_sector_tides
 from .scoring import build_ranking
 from .technical import compute_technical
 
@@ -58,6 +58,7 @@ def main() -> int:
         r["ticker"]: {"iv_rank": r.get("iv_rank"), "iv30d": r.get("iv30d")}
         for _, r in uni.iterrows()
     }
+    sector_lookup = {r["ticker"]: r.get("sector") for _, r in uni.iterrows()}
     print(f"  {len(tickers)} tickers after filters", flush=True)
 
     print(f"[2/5] Fetching OHLC ({cfg['ohlc']['candle_size']}, limit={cfg['ohlc']['limit']}) for {len(tickers)} tickers ...", flush=True)
@@ -92,7 +93,15 @@ def main() -> int:
 
     print(f"[4/5] Stage 2 flow overlay on {len(survivors)} survivors ...", flush=True)
     ref_prices = {t: float(ohlc[t]["close"].iloc[-1]) for t in survivors if t in ohlc and not ohlc[t].empty}
-    flow_rows = fetch_flow(client, survivors, ref_prices, iv_lookup, cfg)
+    # Pull sector-tide once per unique sector among survivors.
+    unique_sectors = sorted({sector_lookup.get(t) for t in survivors if sector_lookup.get(t)})
+    print(f"  pulling sector-tide for {len(unique_sectors)} unique sectors ...", flush=True)
+    sector_tide = fetch_sector_tides(client, unique_sectors, cfg)
+    for sec, (label, mult) in sector_tide.items():
+        print(f"    {sec}: {label} (x{mult:.2f})", flush=True)
+    flow_rows = fetch_flow(
+        client, survivors, ref_prices, iv_lookup, sector_lookup, sector_tide, cfg
+    )
 
     print("[5/5] Scoring + ranking ...", flush=True)
     surv_set = set(survivors)
@@ -108,10 +117,11 @@ def main() -> int:
 
     top_n = args.top or cfg["output"]["top_n_print"]
     cols = [
-        "ticker", "price", "base_length", "pct_from_ema21", "atr_squeeze_pct",
+        "ticker", "price", "sector", "base_length", "pct_from_ema21", "atr_squeeze_pct",
         "breakout_date", "vol_ratio", "iv_rank", "net_call_prem_5d",
-        "bullish_alerts", "darkpool_above_pct", "tech_score", "flow_score",
-        "composite", "stage1_pass", "flow_confirmed", "cheap_options", "rationale",
+        "bullish_alerts", "darkpool_above_pct", "sector_tide", "sector_mult",
+        "tech_score", "flow_score", "composite",
+        "stage1_pass", "flow_confirmed", "flow_confirmed_cheap", "cheap_options", "rationale",
     ]
     cols = [c for c in cols if c in df.columns]
     with_format = df[cols].head(top_n).to_string(index=False)

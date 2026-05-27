@@ -73,7 +73,10 @@ def fetch_universe(client: UWClient, cfg: dict) -> pd.DataFrame:
     seen: set[str] = set()
     cur_max = int(uc["max_marketcap"])
     min_mc = int(uc["min_marketcap"])
-    while len(rows) < uc["max_size"]:
+    max_iters = 40  # hard cap — protects against infinite loops if UW shape changes
+    iters = 0
+    while len(rows) < uc["max_size"] and iters < max_iters:
+        iters += 1
         params = {
             "limit": page_size,
             "order": "marketcap",
@@ -85,8 +88,10 @@ def fetch_universe(client: UWClient, cfg: dict) -> pd.DataFrame:
         if not data or not data.get("data"):
             break
         batch = data["data"]
-        # Track smallest marketcap in this batch — will become next call's ceiling.
+        # Track smallest POSITIVE marketcap in this batch — will become next ceiling.
+        # ETFs and some issue types can have marketcap=null/0 which would collapse min().
         batch_mcs = [int(float(r.get("marketcap") or 0)) for r in batch]
+        batch_mcs = [m for m in batch_mcs if m > 0]
         new = [r for r in batch if r.get("ticker") not in seen]
         for r in new:
             seen.add(r.get("ticker"))
@@ -94,7 +99,9 @@ def fetch_universe(client: UWClient, cfg: dict) -> pd.DataFrame:
         if not batch_mcs:
             break
         new_max = min(batch_mcs) - 1
-        if new_max <= min_mc or new_max >= cur_max:
+        if new_max >= cur_max:
+            break
+        if new_max <= min_mc:
             break
         cur_max = new_max
         if len(batch) < page_size:
@@ -116,6 +123,8 @@ def fetch_universe(client: UWClient, cfg: dict) -> pd.DataFrame:
     ):
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce")
+    if "sector" not in df.columns:
+        df["sector"] = None
     # Approximate avg dollar volume from prev volume * close (UW screener doesn't expose 20d $-vol directly).
     if "prev_close" in df.columns and "volume" in df.columns:
         df["prev_close"] = pd.to_numeric(df["prev_close"], errors="coerce")
@@ -138,10 +147,9 @@ def fetch_universe(client: UWClient, cfg: dict) -> pd.DataFrame:
     con = _ddb(cfg["output"]["duckdb_path"])
     snap = out[[
         "ticker", "marketcap", "close", "iv_rank", "iv30d",
-        "week_52_high", "week_52_low", "avg_dollar_vol_proxy", "issue_type", "full_name",
+        "week_52_high", "week_52_low", "avg_dollar_vol_proxy", "issue_type", "full_name", "sector",
     ]].copy()
     snap = snap.rename(columns={"avg_dollar_vol_proxy": "avg_dollar_vol"})
-    snap["sector"] = None
     snap["fetched_on"] = date.today()
     con.execute("DELETE FROM screener_snapshot")
     con.register("snap_df", snap)

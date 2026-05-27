@@ -1,12 +1,21 @@
 """Stage 2 — Unusual Whales flow confirmation overlay.
 
-Pulls per-ticker flow data and computes a 0-100 flow sub-score.
+Per-ticker flow data + per-sector tide multiplier → 0-100 flow_score.
+
+Changes vs v0:
+- Replaced sparse `/net-prem-ticks` rollup with daily `/options-volume` summary
+  (has explicit daily `net_call_premium`, `bullish_premium`, `bearish_premium`).
+- `flow_confirmed` no longer requires cheap-options; it's purely directional
+  (>=2 of {net call positive, bullish alerts, dark-pool accumulation}).
+  Cheap-IV stays as a separate flag and a flow_score component.
+- Sector tide multiplier: `/api/market/{sector}/sector-tide` rolled up today,
+  applied as 1.10 / 1.00 / 0.85 on flow_score.
 """
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import pandas as pd
@@ -17,22 +26,30 @@ from .client import UWClient
 @dataclass
 class FlowRow:
     ticker: str
+    sector: str | None
     iv_rank: float | None
     iv30d: float | None
-    cheap_options: bool          # iv_rank <= cfg.iv_rank_max
-    net_call_prem_5d: float      # net call premium over the recent days
+    cheap_options: bool
+    net_call_prem_5d: float
     net_call_prem_positive: bool
     bullish_alerts_5d: int
     has_bullish_alerts: bool
     darkpool_prints_3d: int
     darkpool_above_close_ratio: float
     darkpool_accumulation: bool
-    oi_change_call_pct: float | None  # net OI change call-side (premium-weighted) recent
-    flow_confirmed: bool         # composite: at least 2 of the 3 main flow signals
-    flow_score: float            # 0-100
+    oi_change_call_pct: float | None
+    sector_tide_label: str
+    sector_tide_mult: float
+    flow_confirmed: bool          # >=2 directional signals (independent of IV)
+    flow_confirmed_cheap: bool    # flow_confirmed AND cheap_options
+    flow_score: float
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def _now_utc() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 def _safe_float(v: Any) -> float | None:
@@ -44,22 +61,23 @@ def _safe_float(v: Any) -> float | None:
         return None
 
 
-def _net_prem_recent(raw: Any, n_days: int) -> float:
-    """net-prem-ticks returns intraday rows. Sum the most recent ~n_days worth of net call premium."""
+def _net_call_prem_daily(raw: Any, n_days: int) -> float:
+    """Sum daily net_call_premium over the last n_days from /options-volume.
+
+    options-volume rows: {date, net_call_premium, bullish_premium, bearish_premium, ...}
+    """
     if not raw or "data" not in raw:
         return 0.0
     rows = raw["data"]
     if not rows:
         return 0.0
     df = pd.DataFrame(rows)
-    # tick rows typically include net_call_premium, net_put_premium, tape_time.
     if "net_call_premium" not in df.columns:
         return 0.0
     df["net_call_premium"] = pd.to_numeric(df["net_call_premium"], errors="coerce").fillna(0)
-    if "tape_time" in df.columns:
-        df["tape_time"] = pd.to_datetime(df["tape_time"], errors="coerce", utc=True)
-        cutoff = datetime.utcnow().replace(tzinfo=df["tape_time"].iloc[0].tzinfo) - timedelta(days=n_days)
-        df = df[df["tape_time"] >= cutoff]
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce").dt.date
+        df = df.sort_values("date").tail(n_days)
     return float(df["net_call_premium"].sum())
 
 
@@ -67,23 +85,20 @@ def _bullish_alerts(raw: Any, n_days: int) -> int:
     if not raw or "data" not in raw:
         return 0
     rows = raw["data"]
-    cutoff = datetime.utcnow() - timedelta(days=n_days)
+    cutoff = _now_utc() - timedelta(days=n_days)
     count = 0
     for r in rows:
-        # Bullish = CALL alert where ask-side premium dominates bid-side.
         if (r.get("type") or "").lower() != "call":
             continue
         ask = _safe_float(r.get("total_ask_side_prem")) or 0.0
         bid = _safe_float(r.get("total_bid_side_prem")) or 0.0
         total = ask + bid
-        if total <= 0:
-            continue
-        if (ask / total) < 0.55:
+        if total <= 0 or (ask / total) < 0.55:
             continue
         ts = r.get("created_at") or r.get("executed_at") or r.get("alert_time")
         if ts:
             try:
-                if pd.to_datetime(ts, utc=True).to_pydatetime().replace(tzinfo=None) < cutoff:
+                if pd.to_datetime(ts, utc=True).to_pydatetime() < cutoff:
                     continue
             except Exception:  # noqa: BLE001
                 pass
@@ -95,14 +110,13 @@ def _darkpool_stats(raw: Any, n_days: int, ref_price: float) -> tuple[int, float
     if not raw or "data" not in raw or not ref_price:
         return 0, 0.0
     rows = raw["data"]
-    cutoff = datetime.utcnow() - timedelta(days=n_days)
-    n_recent = 0
-    n_above = 0
+    cutoff = _now_utc() - timedelta(days=n_days)
+    n_recent = n_above = 0
     for r in rows:
         ts = r.get("executed_at")
         if ts:
             try:
-                if pd.to_datetime(ts, utc=True).to_pydatetime().replace(tzinfo=None) < cutoff:
+                if pd.to_datetime(ts, utc=True).to_pydatetime() < cutoff:
                     continue
             except Exception:  # noqa: BLE001
                 pass
@@ -117,17 +131,13 @@ def _darkpool_stats(raw: Any, n_days: int, ref_price: float) -> tuple[int, float
 
 
 def _oi_change_call_pct(raw: Any) -> float | None:
-    """Premium-weighted call vs put OI change over the recent rows."""
     if not raw or "data" not in raw:
         return None
     rows = raw["data"]
-    call_delta = 0.0
-    put_delta = 0.0
+    call_delta = put_delta = 0.0
     for r in rows:
-        # Option symbol like "APP260529C00435000": position 1+ticker_len has YYMMDD then C/P.
         sym = r.get("option_symbol") or ""
         otype = ""
-        # Scan for the C/P after the 6-digit date in the symbol.
         for i in range(len(sym) - 1, 0, -1):
             ch = sym[i]
             if ch in ("C", "P") and sym[i + 1 : i + 2].isdigit():
@@ -147,47 +157,96 @@ def _oi_change_call_pct(raw: Any) -> float | None:
     total = abs(call_delta) + abs(put_delta)
     if total == 0:
         return None
-    return call_delta / total  # in [-1, 1]; positive = calls growing faster
+    return call_delta / total
+
+
+def fetch_sector_tides(
+    client: UWClient,
+    sectors: list[str],
+    cfg: dict,
+) -> dict[str, tuple[str, float]]:
+    """Pull today's sector-tide for each unique sector → (label, multiplier)."""
+    s_cfg = cfg["stage2_flow"]["sector_tide"]
+    if not s_cfg["enabled"]:
+        return {}
+    out: dict[str, tuple[str, float]] = {}
+    today = _now_utc().date().isoformat()
+    for sector in sectors:
+        if not sector:
+            continue
+        try:
+            raw = client.get(
+                f"/api/market/{sector.replace(' ', '%20')}/sector-tide"
+            )
+        except Exception:  # noqa: BLE001
+            raw = None
+        if not raw or "data" not in raw:
+            out[sector] = ("missing", s_cfg["neutral_mult"])
+            continue
+        rows = raw["data"]
+        if not rows:
+            out[sector] = ("missing", s_cfg["neutral_mult"])
+            continue
+        # Sum today's net_call_premium across intraday ticks.
+        df = pd.DataFrame(rows)
+        if "net_call_premium" not in df.columns:
+            out[sector] = ("missing", s_cfg["neutral_mult"])
+            continue
+        df["net_call_premium"] = pd.to_numeric(df["net_call_premium"], errors="coerce").fillna(0)
+        if "date" in df.columns:
+            df = df[df["date"].astype(str) == today]
+        total = float(df["net_call_premium"].sum())
+        if total > s_cfg["neutral_threshold_dollars"]:
+            out[sector] = ("bullish", s_cfg["bullish_mult"])
+        elif total < -s_cfg["neutral_threshold_dollars"]:
+            out[sector] = ("bearish", s_cfg["bearish_mult"])
+        else:
+            out[sector] = ("neutral", s_cfg["neutral_mult"])
+    return out
 
 
 def fetch_flow(
     client: UWClient,
     tickers: list[str],
     ref_prices: dict[str, float],
-    iv_lookup: dict[str, dict[str, float]],
+    iv_lookup: dict[str, dict[str, Any]],
+    sector_lookup: dict[str, str | None],
+    sector_tide: dict[str, tuple[str, float]],
     cfg: dict,
 ) -> dict[str, FlowRow]:
-    """Pull flow endpoints in parallel per ticker."""
     s = cfg["stage2_flow"]
     threads = cfg["api"]["thread_count"]
 
     def _pull(t: str) -> FlowRow:
-        # 5-endpoint stack per survivor.
-        net_prem = client.get(f"/api/stock/{t}/net-prem-ticks")
+        opt_vol = client.get(f"/api/stock/{t}/options-volume")
         flow_alerts = client.get(f"/api/stock/{t}/flow-alerts", params={"limit": 200})
         darkpool = client.get(f"/api/darkpool/{t}", params={"limit": 200})
         oi_change = client.get(f"/api/stock/{t}/oi-change", params={"limit": 50})
         iv_rank = iv_lookup.get(t, {}).get("iv_rank")
         iv30d = iv_lookup.get(t, {}).get("iv30d")
+        sector = sector_lookup.get(t)
 
-        net_call_prem_5d = _net_prem_recent(net_prem, s["net_prem_days"])
+        net_call_5d = _net_call_prem_daily(opt_vol, s["net_prem_days"])
         alerts_n = _bullish_alerts(flow_alerts, s["alerts_lookback_days"])
         dp_n, dp_ratio = _darkpool_stats(darkpool, s["darkpool_lookback_days"], ref_prices.get(t, 0.0))
         oi_pct = _oi_change_call_pct(oi_change)
 
         cheap = iv_rank is not None and iv_rank <= s["iv_rank_max"]
-        net_pos = net_call_prem_5d > s["net_prem_min_dollars"]
+        net_pos = net_call_5d > s["net_prem_min_dollars"]
         alerts_ok = alerts_n >= s["alerts_bullish_min"]
         dp_accum = dp_ratio >= s["darkpool_min_above_close_ratio"] and dp_n >= 3
 
-        # Flow score (0-100): IV cheap 25, net prem positive 25, alerts 20, darkpool 15, OI tilt call 15.
+        # Base flow score (0-100, before sector multiplier).
         score = 0.0
         if cheap:
-            score += 20.0
+            score += 15.0
             if s.get("iv_rank_weight_bonus") and iv_rank is not None and iv_rank < 25:
                 score += 5.0
         if net_pos:
             score += 25.0
+            # Bonus for size — net call > $5M is a real conviction signal.
+            if net_call_5d > 5_000_000:
+                score += 10.0
         if alerts_ok:
             score += 15.0
             if alerts_n >= 5:
@@ -195,17 +254,24 @@ def fetch_flow(
         if dp_accum:
             score += 15.0
         if oi_pct is not None:
-            score += max(0.0, oi_pct) * 15.0  # up to +15 if all OI growth is call-side
+            score += max(0.0, oi_pct) * 10.0
+
+        # Sector tide multiplier.
+        sector_label, sector_mult = sector_tide.get(sector or "", ("n/a", 1.0))
+        score *= sector_mult
+        score = min(100.0, score)
 
         confirmed_count = sum([net_pos, alerts_ok, dp_accum])
-        flow_confirmed = confirmed_count >= 2 and cheap  # require cheap-options AND >=2 directional signals
+        flow_confirmed = confirmed_count >= 2
+        flow_confirmed_cheap = flow_confirmed and cheap
 
         return FlowRow(
             ticker=t,
+            sector=sector,
             iv_rank=iv_rank,
             iv30d=iv30d,
             cheap_options=bool(cheap),
-            net_call_prem_5d=float(net_call_prem_5d),
+            net_call_prem_5d=float(net_call_5d),
             net_call_prem_positive=bool(net_pos),
             bullish_alerts_5d=int(alerts_n),
             has_bullish_alerts=bool(alerts_ok),
@@ -213,8 +279,11 @@ def fetch_flow(
             darkpool_above_close_ratio=float(dp_ratio),
             darkpool_accumulation=bool(dp_accum),
             oi_change_call_pct=oi_pct,
+            sector_tide_label=sector_label,
+            sector_tide_mult=float(sector_mult),
             flow_confirmed=bool(flow_confirmed),
-            flow_score=float(min(100.0, score)),
+            flow_confirmed_cheap=bool(flow_confirmed_cheap),
+            flow_score=float(score),
         )
 
     results: dict[str, FlowRow] = {}

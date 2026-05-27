@@ -12,9 +12,13 @@ universe:
   exclude_issue_types: ["ETF", "ETN", "ADR"]  # focus on common stock
 
 ohlc:
+  # UW /api/stock/{t}/ohlc/1d returns ~250 regular sessions even at limit=2500
+  # on the current plan. start_date/end_date are accepted but don't extend
+  # history further. base_max_length is capped at 220 to fit this window;
+  # raise it (e.g., to 500) if you upgrade to a deeper-history plan.
   candle_size: "1d"
-  limit: 2500                    # max allowed by UW; returns ~1yr of regular sessions
-  history_min_sessions: 120      # require at least this much history to evaluate
+  limit: 2500
+  history_min_sessions: 120
 
 stage1_technical:
   # Base: tight contiguous range BEFORE the breakout window.
@@ -48,12 +52,13 @@ stage1_technical:
   min_avg_dollar_vol: 20_000_000
 
 stage2_flow:
-  # Cheap options gate — we want LOW IV (premium not bid up) so contracts are affordable
-  # and the move isn't already priced in.
-  iv_rank_max: 50.0              # IV rank <= 50 = options are in the cheaper half of their year
-  iv_rank_weight_bonus: true     # extra credit for very-low IV (<25)
+  # Cheap options: we PREFER low IV, but it's no longer a hard gate on flow_confirmed.
+  # The composite still rewards cheap names via flow_score (20pt) + extra bonus <25.
+  iv_rank_max: 50.0              # IV rank <= 50 = "cheap" flag for output column
+  iv_rank_weight_bonus: true     # +5 bonus when IV rank < 25
 
   # Net-call premium positivity over recent days.
+  # Now uses /api/stock/{t}/options-volume (daily summary), not net-prem-ticks (intraday).
   net_prem_days: 5
   net_prem_min_dollars: 0        # require sum > 0 (positive call-side flow)
 
@@ -64,6 +69,15 @@ stage2_flow:
   # Dark-pool accumulation: recent prints above day's VWAP-equivalent (use price vs close).
   darkpool_lookback_days: 3
   darkpool_min_above_close_ratio: 0.5  # >= 50% of recent prints printed above the close
+
+  # Sector tide multiplier on flow_score. We pull /api/market/{sector}/sector-tide once
+  # per unique sector in the survivor pool and roll up today's net call premium.
+  sector_tide:
+    enabled: true
+    bullish_mult: 1.10           # sector net call premium positive today
+    bearish_mult: 0.85           # sector net call premium negative today
+    neutral_mult: 1.00           # within +/-$5M
+    neutral_threshold_dollars: 5_000_000
 
 scoring:
   technical_weight: 0.60         # 60% technical setup
