@@ -33,3 +33,9 @@ node_modules/
 data/
 *.parquet
 infra/terraform/terraform.tfvars
+apps/screener/cache/
+apps/screener/output/
+
+# Screener outputs (regenerated per run)
+apps/screener/cache/
+apps/screener/output/

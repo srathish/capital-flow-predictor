@@ -1,0 +1,83 @@
+# Base-Breakout + Flow screener config
+# All thresholds are tunable; comments call out the intent.
+
+universe:
+  # Pull liquid optionable names from UW screener.
+  # Targets the "NVTS-like" zone: mid/small caps that are still optionable.
+  source: uw_screener            # uw_screener | static
+  max_size: 2500                 # cap total names pulled
+  min_marketcap: 500_000_000     # $500M floor — skip true micro-caps
+  max_marketcap: 200_000_000_000 # $200B ceiling — skip mega-caps where moves are slow
+  min_avg_dollar_vol: 20_000_000 # $20M/day liquidity floor (dropped from $50M to keep mid-caps like NVTS)
+  exclude_issue_types: ["ETF", "ETN", "ADR"]  # focus on common stock
+
+ohlc:
+  candle_size: "1d"
+  limit: 2500                    # max allowed by UW; returns ~1yr of regular sessions
+  history_min_sessions: 120      # require at least this much history to evaluate
+
+stage1_technical:
+  # Base: tight contiguous range BEFORE the breakout window.
+  # Default tuned for "pennant / multi-month coil" (NVTS-style ~50-150 sessions),
+  # but the same logic covers true multi-year bases when set higher.
+  base_min_length: 40            # minimum sessions in the base
+  base_max_length: 220           # cap — anything older isn't part of *this* setup
+  base_exclude_recent: 10        # exclude the last N sessions from the base measurement
+  base_max_range_pct: 0.45       # (high-low)/low must be < this over the base
+
+  # Breakout: close pushing through the base high.
+  breakout_threshold: 0.98       # close >= 0.98 * base_high counts as breakout
+  breakout_lookback: 10          # breakout must occur in last N sessions
+
+  # Tight handle off EMAs.
+  ema_fast: 10
+  ema_slow: 21
+  max_pct_from_ema_slow: 0.05    # close within 5% of 21EMA (not extended)
+
+  # ATR squeeze.
+  atr_period: 14
+  atr_squeeze_lookback: 50       # compare current ATR% to avg of last N
+  atr_squeeze_max_ratio: 1.0     # pre-breakout ATR% must be <= 1.0x its 50d avg (contracting)
+
+  # Volume expansion on breakout.
+  vol_avg_period: 50
+  vol_breakout_ratio: 1.5        # breakout-day vol >= 1.5x avg (relaxed from 1.6 to catch more)
+
+  # Liquidity gate.
+  dollar_vol_avg_period: 20
+  min_avg_dollar_vol: 20_000_000
+
+stage2_flow:
+  # Cheap options gate — we want LOW IV (premium not bid up) so contracts are affordable
+  # and the move isn't already priced in.
+  iv_rank_max: 50.0              # IV rank <= 50 = options are in the cheaper half of their year
+  iv_rank_weight_bonus: true     # extra credit for very-low IV (<25)
+
+  # Net-call premium positivity over recent days.
+  net_prem_days: 5
+  net_prem_min_dollars: 0        # require sum > 0 (positive call-side flow)
+
+  # Bullish flow alerts (sweeps, repeated hits) recent count.
+  alerts_lookback_days: 5
+  alerts_bullish_min: 1
+
+  # Dark-pool accumulation: recent prints above day's VWAP-equivalent (use price vs close).
+  darkpool_lookback_days: 3
+  darkpool_min_above_close_ratio: 0.5  # >= 50% of recent prints printed above the close
+
+scoring:
+  technical_weight: 0.60         # 60% technical setup
+  flow_weight: 0.40              # 40% flow confirmation
+
+api:
+  base_url: "https://api.unusualwhales.com"
+  rate_limit_rps: 6.0            # 6 req/s — safe under typical UW limits
+  max_retries: 5
+  timeout_seconds: 30
+  thread_count: 8
+
+output:
+  top_n_print: 15
+  csv_dir: "output"
+  cache_dir: "cache"
+  duckdb_path: "cache/ohlc.duckdb"
