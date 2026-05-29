@@ -50,11 +50,11 @@ on:
     # bars settle on yfinance. Re-runs any pending plans from the last 7 days.
     - cron: "30 3 * * 2-6"
     # Explosive options tab pipeline (Mon-Fri RTH):
-    #   ingest at :03, :18, :33, :48 — UW screeners + per-ticker pulls
-    #   score  at :07, :22, :37, :52 — composite ranking written to DB
+    #   ingest+score at :03, :18, :33, :48 — chained in one job so GH Actions
+    #     can't drop the score half by deduping the :07/:22/:37/:52 cron
+    #     against other schedules landing on the same minute (see the job def)
     #   drilldown at :12 once an hour — per-contract history + correlations
     - cron: "3,18,33,48 13-20 * * 1-5"
-    - cron: "7,22,37,52 13-20 * * 1-5"
     - cron: "12 14-20 * * 1-5"
     # Daily 22:00 UTC (~18:00 ET, after US close + yfinance settle) — refresh
     # prices_daily + macro_daily across the full universe (sector ETFs +
@@ -495,11 +495,16 @@ jobs:
     # short_screener, FDA + IPO calendars, top_net_impact, volume_profile
     # for top contracts, and per-ticker flow_per_strike / flow_per_expiry /
     # iv_term / max_pain / FTD / NOPE / skew / RV / insider flow.
-    # Runs every 15 min during RTH at :03 / :18 / :33 / :48 (offset from
-    # other UW jobs to spread the per-minute rate across the budget).
+    # Then immediately scores in the same job (chained 2026-05-29) so the
+    # /explosive snapshot_ts always advances when ingest does. The standalone
+    # explosive-score cron used to fire 4 min later, but GH Actions was
+    # silently dropping the :07/:22/:37/:52 trigger when other crons collided
+    # at the same minute (e.g. the hourly `7 * * * *` reddit-mentions slot)
+    # — leaving the API serving a day-old snapshot even when ingest worked.
+    # Chaining matches the delphi-morning atomic-batch pattern further down.
     if: startsWith(github.event.schedule, '3,18,33,48') || github.event.inputs.job == 'explosive-ingest'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
@@ -514,18 +519,19 @@ jobs:
       - name: Ensure migrations applied (0024, 0025, 0026)
         working-directory: apps/jobs
         run: uv run cfp-jobs migrate
-      - name: Ingest explosive-tab universe
+      - name: Step 1/2 — ingest explosive-tab universe
         working-directory: apps/jobs
         run: uv run cfp-jobs explosive-ingest --max-tickers 80
+      - name: Step 2/2 — compute + persist explosive_scores
+        working-directory: apps/jobs
+        run: uv run cfp-jobs explosive-score
 
   explosive-score:
-    # Reads the tables explosive-ingest just refreshed and writes a new
-    # explosive_scores snapshot the /explosive API reads. Runs 4 min after
-    # each ingest (:07 / :22 / :37 / :52) to give per-ticker pulls time.
-    # Bumped from 5→12 min on 2026-05-29: score_all grew past the original
-    # 30-90s estimate (80-ticker universe with per-ticker UW pulls now
-    # routinely lands at 4-7 min wall time).
-    if: startsWith(github.event.schedule, '7,22,37,52') || github.event.inputs.job == 'explosive-score'
+    # Manual-only fallback now. The scheduled run is chained at the end of
+    # explosive-ingest above (workflow_dispatch still lets you trigger a
+    # score-only refresh when the ingest tables are fresh but the snapshot
+    # is stale, e.g. after a deploy that wiped the API cache).
+    if: github.event.inputs.job == 'explosive-score'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
