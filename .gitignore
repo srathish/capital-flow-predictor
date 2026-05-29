@@ -29,9 +29,10 @@ node_modules/
 .vscode/
 .idea/
 
-# Data
-data/
+# Data (top-level only — package-level src/.../data dirs are real source)
+/data/
 *.parquet
+!apps/*/src/**/data/
 infra/terraform/terraform.tfvars
 apps/screener/cache/
 apps/screener/output/
