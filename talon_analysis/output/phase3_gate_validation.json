@@ -1,0 +1,65 @@
+{
+  "gate1_delta_buildup": {
+    "n": 46,
+    "r": 0.4849624826528075,
+    "p": 0.0006361016372192573,
+    "slope": 0.00018644882269836844,
+    "r_capped": 0.38014487008247666,
+    "p_capped": 0.009161923740474049,
+    "buildup_gt50_mean": 0.07500000000000002,
+    "buildup_le50_mean": 0.019794871794871792,
+    "spread": 0.05520512820512823,
+    "pass": true
+  },
+  "gate2_gamma_sign": {
+    "n": 48,
+    "bull_match_rate": 0.8,
+    "bear_match_rate": 0.5,
+    "overall_match_rate": 0.7291666666666666,
+    "matched_mean_ret": 0.040485714285714285,
+    "unmatched_mean_ret": -0.01090909090909091,
+    "t_stat": 1.8489501560701604,
+    "p": 0.07515904267177799,
+    "pass": false
+  },
+  "gate3_vanna_stability": {
+    "n": 46,
+    "rho": -0.5103469605779896,
+    "p": 0.0002906942348447736,
+    "stable_mean_ret": -0.009029411764705881,
+    "mid_mean_ret": 0.1784,
+    "weak_mean_ret": -0.09,
+    "pass": true
+  },
+  "gate4_call_dom_trend": {
+    "n": 46,
+    "rho": 0.10510408760271867,
+    "p": 0.486953967493026,
+    "rising_mean_ret": 0.05542857142857143,
+    "flat_mean_ret": 0.021809523809523806,
+    "falling_mean_ret": 0.025055555555555557,
+    "pass": false
+  },
+  "gate5_call_dom_5d_high": {
+    "n_hedges": 8,
+    "fresh_mean_ret": 0.026000000000000002,
+    "stale_mean_ret": -0.07828571428571429,
+    "freshness_effect": 0.10428571428571429,
+    "pass": "hedge-specific (no global p-test)"
+  },
+  "master": {
+    "n": 46,
+    "r2_gates_only": 0.27703633831001806,
+    "r2_adj": 0.1866658805987702,
+    "r2_grade_alone": 0.24411989053840288,
+    "improvement_pp": 3.2916447771615176,
+    "coefficients": {
+      "delta_buildup_pct": 0.030433374698998986,
+      "gamma_positive": 0.007774338577545882,
+      "vanna_stability": -0.00257690314149479,
+      "call_dom_trend_5d": 0.0047890773740821456,
+      "theme_coherent": 0.03648775836774868
+    },
+    "r2_grade_plus_gates": 0.6965271254878009
+  }
+}

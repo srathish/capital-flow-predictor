@@ -1,0 +1,1917 @@
+{
+  "symbols": [
+    {
+      "name": "AAOI",
+      "is_index": false,
+      "created_at": "2026-01-02T22:53:32.577738198Z"
+    },
+    {
+      "name": "AAPL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "ABNB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:29Z"
+    },
+    {
+      "name": "ACHR",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:40Z"
+    },
+    {
+      "name": "ACN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "ADBE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:13Z"
+    },
+    {
+      "name": "AFRM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:25Z"
+    },
+    {
+      "name": "AI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:48Z"
+    },
+    {
+      "name": "ALAB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:14Z"
+    },
+    {
+      "name": "ALGN",
+      "is_index": false,
+      "created_at": "2025-07-31T13:35:10Z"
+    },
+    {
+      "name": "ALIT",
+      "is_index": false,
+      "created_at": "2025-09-03T13:30:22Z"
+    },
+    {
+      "name": "AMAT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:49Z"
+    },
+    {
+      "name": "AMC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:19Z"
+    },
+    {
+      "name": "AMD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:47Z"
+    },
+    {
+      "name": "AMGN",
+      "is_index": false,
+      "created_at": "2026-01-02T22:54:04.220550314Z"
+    },
+    {
+      "name": "AMKR",
+      "is_index": false,
+      "created_at": "2026-05-02T01:54:43.930305457Z",
+      "status": "active"
+    },
+    {
+      "name": "AMPX",
+      "is_index": false,
+      "created_at": "2026-01-11T03:03:50.352356262Z"
+    },
+    {
+      "name": "AMZN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "ANET",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:03Z"
+    },
+    {
+      "name": "APLD",
+      "is_index": false,
+      "created_at": "2025-10-22T02:00:12.540106388Z"
+    },
+    {
+      "name": "APP",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:05Z"
+    },
+    {
+      "name": "ARKK",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:52Z"
+    },
+    {
+      "name": "ARM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:02Z"
+    },
+    {
+      "name": "ASAN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:02Z"
+    },
+    {
+      "name": "ASML",
+      "is_index": false,
+      "created_at": "2025-10-21T16:42:32.713801066Z"
+    },
+    {
+      "name": "ASST",
+      "is_index": false,
+      "created_at": "2025-10-27T03:22:34.181915086Z"
+    },
+    {
+      "name": "ASTS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:35Z"
+    },
+    {
+      "name": "AUR",
+      "is_index": false,
+      "created_at": "2026-04-18T05:17:03.027880032Z",
+      "status": "active"
+    },
+    {
+      "name": "AVGO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:09Z"
+    },
+    {
+      "name": "AXON",
+      "is_index": false,
+      "created_at": "2025-07-31T13:35:03Z"
+    },
+    {
+      "name": "AXP",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:37Z"
+    },
+    {
+      "name": "AXTI",
+      "is_index": false,
+      "created_at": "2026-03-09T18:57:57.829231622Z"
+    },
+    {
+      "name": "BA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:06Z"
+    },
+    {
+      "name": "BABA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:12Z"
+    },
+    {
+      "name": "BAC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:21Z"
+    },
+    {
+      "name": "BB",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:10Z"
+    },
+    {
+      "name": "BBAI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:58Z"
+    },
+    {
+      "name": "BE",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:11Z"
+    },
+    {
+      "name": "BIDU",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:06Z"
+    },
+    {
+      "name": "BIIB",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:34Z"
+    },
+    {
+      "name": "BKNG",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:47Z"
+    },
+    {
+      "name": "BLNK",
+      "is_index": false,
+      "created_at": "2025-07-31T13:34:14Z"
+    },
+    {
+      "name": "BMNR",
+      "is_index": false,
+      "created_at": "2025-09-01T13:30:59Z"
+    },
+    {
+      "name": "BP",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:40Z"
+    },
+    {
+      "name": "BROS",
+      "is_index": false,
+      "created_at": "2025-11-01T22:02:59.013918798Z"
+    },
+    {
+      "name": "BULL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:00Z"
+    },
+    {
+      "name": "BX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:12Z"
+    },
+    {
+      "name": "BYND",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:09Z"
+    },
+    {
+      "name": "C",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "CAKE",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:30Z"
+    },
+    {
+      "name": "CAN",
+      "is_index": false,
+      "created_at": "2025-10-21T16:37:25.154744122Z"
+    },
+    {
+      "name": "CAR",
+      "is_index": false,
+      "created_at": "2026-04-10T00:53:04.491734727Z",
+      "status": "active"
+    },
+    {
+      "name": "CART",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:39Z"
+    },
+    {
+      "name": "CAT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "CAVA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:20Z"
+    },
+    {
+      "name": "CCCX",
+      "is_index": false,
+      "created_at": "2025-10-29T02:56:18.24813563Z"
+    },
+    {
+      "name": "CCJ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "CCL",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "CDNS",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:10Z"
+    },
+    {
+      "name": "CEG",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:47Z"
+    },
+    {
+      "name": "CELH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:25Z"
+    },
+    {
+      "name": "CFLT",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "CHWY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "CIEN",
+      "is_index": false,
+      "created_at": "2026-01-02T22:53:52.201543391Z"
+    },
+    {
+      "name": "CIFR",
+      "is_index": false,
+      "created_at": "2025-10-22T01:28:47.088822985Z"
+    },
+    {
+      "name": "CLOU",
+      "is_index": false,
+      "created_at": "2026-01-30T14:41:31.351805637Z"
+    },
+    {
+      "name": "CLOV",
+      "is_index": false,
+      "created_at": "2025-09-22T13:30:41Z"
+    },
+    {
+      "name": "CLSK",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:51Z"
+    },
+    {
+      "name": "CMCSA",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "CMG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "CMI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:09Z"
+    },
+    {
+      "name": "COHR",
+      "is_index": false,
+      "created_at": "2026-02-22T12:53:47.062322987Z"
+    },
+    {
+      "name": "COIN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "COP",
+      "is_index": false,
+      "created_at": "2026-03-05T19:25:49.681843431Z"
+    },
+    {
+      "name": "CORZ",
+      "is_index": false,
+      "created_at": "2025-10-21T16:40:13.955253166Z"
+    },
+    {
+      "name": "COST",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:28Z"
+    },
+    {
+      "name": "CPNG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:06Z"
+    },
+    {
+      "name": "CRCL",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "CRDO",
+      "is_index": false,
+      "created_at": "2025-10-29T02:55:04.742635241Z"
+    },
+    {
+      "name": "CRM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "CROX",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:20Z"
+    },
+    {
+      "name": "CRSP",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "CRWD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:11Z"
+    },
+    {
+      "name": "CRWV",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "CVNA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:54Z"
+    },
+    {
+      "name": "CVS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:13Z"
+    },
+    {
+      "name": "CVX",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:18Z"
+    },
+    {
+      "name": "DAL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:09Z"
+    },
+    {
+      "name": "DASH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:52Z"
+    },
+    {
+      "name": "DBX",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:41Z"
+    },
+    {
+      "name": "DDOG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "DE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:15Z"
+    },
+    {
+      "name": "DECK",
+      "is_index": false,
+      "created_at": "2025-10-29T02:55:38.754401314Z"
+    },
+    {
+      "name": "DELL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:08Z"
+    },
+    {
+      "name": "DHI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "DIA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:10Z"
+    },
+    {
+      "name": "DIS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:41Z"
+    },
+    {
+      "name": "DJT",
+      "is_index": false,
+      "created_at": "2025-09-19T23:56:42Z"
+    },
+    {
+      "name": "DKNG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:53Z"
+    },
+    {
+      "name": "DKS",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "DNUT",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "DOCN",
+      "is_index": false,
+      "created_at": "2026-01-02T22:54:10.451560579Z"
+    },
+    {
+      "name": "DOCU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:05Z"
+    },
+    {
+      "name": "DPZ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "DRAM",
+      "is_index": false,
+      "created_at": "2026-05-06T16:30:06.197753124Z",
+      "status": "active"
+    },
+    {
+      "name": "DUOL",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:06Z"
+    },
+    {
+      "name": "DXCM",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "EA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:58Z"
+    },
+    {
+      "name": "EBAY",
+      "is_index": false,
+      "created_at": "2025-08-26T13:30:49Z"
+    },
+    {
+      "name": "EL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:36Z"
+    },
+    {
+      "name": "ELF",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:44Z"
+    },
+    {
+      "name": "ENPH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:20Z"
+    },
+    {
+      "name": "EOSE",
+      "is_index": false,
+      "created_at": "2025-10-15T15:00:14Z"
+    },
+    {
+      "name": "ETHA",
+      "is_index": false,
+      "created_at": "2025-10-22T01:29:19.781680399Z"
+    },
+    {
+      "name": "ETSY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:59Z"
+    },
+    {
+      "name": "EWY",
+      "is_index": false,
+      "created_at": "2026-05-06T17:10:17.478640692Z",
+      "status": "backfilling"
+    },
+    {
+      "name": "EXPE",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:26Z"
+    },
+    {
+      "name": "F",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "FCEL",
+      "is_index": false,
+      "created_at": "2026-05-01T15:04:49.795680002Z",
+      "status": "active"
+    },
+    {
+      "name": "FCX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:56Z"
+    },
+    {
+      "name": "FDX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "FIG",
+      "is_index": false,
+      "created_at": "2025-08-05T13:33:13Z"
+    },
+    {
+      "name": "FIVE",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "FLNA",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:28Z",
+      "status": "active",
+      "previous_names": [
+        "SAVA"
+      ],
+      "renamed_at": "2026-05-05T03:11:06.923991532Z"
+    },
+    {
+      "name": "FRSH",
+      "is_index": false,
+      "created_at": "2025-10-29T02:56:44.202180794Z"
+    },
+    {
+      "name": "FSLR",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "FUBO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:40Z"
+    },
+    {
+      "name": "FUTU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:39Z"
+    },
+    {
+      "name": "FVRR",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "FXI",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:28Z"
+    },
+    {
+      "name": "GDX",
+      "is_index": false,
+      "created_at": "2025-10-29T02:54:24.604125845Z"
+    },
+    {
+      "name": "GE",
+      "is_index": false,
+      "created_at": "2025-10-15T15:06:25Z"
+    },
+    {
+      "name": "GEV",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "GILD",
+      "is_index": false,
+      "created_at": "2025-09-09T13:30:11Z"
+    },
+    {
+      "name": "GLD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:12Z"
+    },
+    {
+      "name": "GLW",
+      "is_index": false,
+      "created_at": "2026-02-07T14:12:48.648487725Z"
+    },
+    {
+      "name": "GLXY",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:54Z"
+    },
+    {
+      "name": "GM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:27Z"
+    },
+    {
+      "name": "GME",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:48Z"
+    },
+    {
+      "name": "GOOG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:34Z"
+    },
+    {
+      "name": "GOOGL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:21Z"
+    },
+    {
+      "name": "GPRO",
+      "is_index": false,
+      "created_at": "2025-09-09T13:30:22Z"
+    },
+    {
+      "name": "GRAB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:54Z"
+    },
+    {
+      "name": "GS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:51Z"
+    },
+    {
+      "name": "GTLB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:51Z"
+    },
+    {
+      "name": "HAL",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:06Z"
+    },
+    {
+      "name": "HD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:01Z"
+    },
+    {
+      "name": "HIMS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:24Z"
+    },
+    {
+      "name": "HON",
+      "is_index": false,
+      "created_at": "2025-08-14T17:23:04Z"
+    },
+    {
+      "name": "HOOD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:06Z"
+    },
+    {
+      "name": "HPE",
+      "is_index": false,
+      "created_at": "2025-12-10T02:07:53.377846766Z"
+    },
+    {
+      "name": "HPQ",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:41Z"
+    },
+    {
+      "name": "HTZ",
+      "is_index": false,
+      "created_at": "2025-10-22T14:54:26.120051038Z"
+    },
+    {
+      "name": "HUT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "HYG",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "IBIT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:22Z"
+    },
+    {
+      "name": "IBM",
+      "is_index": false,
+      "created_at": "2025-10-27T18:59:07.030800265Z"
+    },
+    {
+      "name": "IBRX",
+      "is_index": false,
+      "created_at": "2025-10-29T16:15:15.987569672Z"
+    },
+    {
+      "name": "IDCC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:38Z"
+    },
+    {
+      "name": "IGV",
+      "is_index": false,
+      "created_at": "2026-03-12T12:26:18.703557477Z"
+    },
+    {
+      "name": "INTC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:01Z"
+    },
+    {
+      "name": "INTU",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "IONQ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "IREN",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:47Z"
+    },
+    {
+      "name": "ISRG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:13Z"
+    },
+    {
+      "name": "IVV",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:33Z"
+    },
+    {
+      "name": "IWM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:12Z"
+    },
+    {
+      "name": "JD",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:29Z"
+    },
+    {
+      "name": "JKS",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "JNJ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:15Z"
+    },
+    {
+      "name": "JOBY",
+      "is_index": false,
+      "created_at": "2025-12-10T02:07:57.5432187Z"
+    },
+    {
+      "name": "JPM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:29Z"
+    },
+    {
+      "name": "KEEL",
+      "is_index": false,
+      "created_at": "2025-10-22T02:00:09.618148441Z",
+      "status": "active",
+      "previous_names": [
+        "BITF"
+      ],
+      "renamed_at": "2026-05-05T04:34:22.22287153Z"
+    },
+    {
+      "name": "KHC",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:45Z"
+    },
+    {
+      "name": "KO",
+      "is_index": false,
+      "created_at": "2025-10-21T16:42:04.323864478Z"
+    },
+    {
+      "name": "KRE",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:34Z"
+    },
+    {
+      "name": "KTOS",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:42Z"
+    },
+    {
+      "name": "KWEB",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:48Z"
+    },
+    {
+      "name": "LAES",
+      "is_index": false,
+      "created_at": "2025-10-29T02:54:47.871132033Z"
+    },
+    {
+      "name": "LASR",
+      "is_index": false,
+      "created_at": "2026-03-09T18:57:50.460142423Z"
+    },
+    {
+      "name": "LCID",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:29Z"
+    },
+    {
+      "name": "LEN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:25Z"
+    },
+    {
+      "name": "LEU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:52Z"
+    },
+    {
+      "name": "LITE",
+      "is_index": false,
+      "created_at": "2026-01-02T22:53:47.065730376Z"
+    },
+    {
+      "name": "LLY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:09Z"
+    },
+    {
+      "name": "LMND",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:56Z"
+    },
+    {
+      "name": "LMT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:41Z"
+    },
+    {
+      "name": "LRCX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:12Z"
+    },
+    {
+      "name": "LULU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:12Z"
+    },
+    {
+      "name": "LUMN",
+      "is_index": false,
+      "created_at": "2026-01-02T22:53:59.606907895Z"
+    },
+    {
+      "name": "LUNR",
+      "is_index": false,
+      "created_at": "2026-04-22T17:55:52.352058323Z",
+      "status": "active"
+    },
+    {
+      "name": "LWLG",
+      "is_index": false,
+      "created_at": "2026-05-06T16:29:35.317798313Z",
+      "status": "active"
+    },
+    {
+      "name": "LYFT",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:34Z"
+    },
+    {
+      "name": "MA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:24Z"
+    },
+    {
+      "name": "MARA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:52Z"
+    },
+    {
+      "name": "MCD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:21Z"
+    },
+    {
+      "name": "MDB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:54Z"
+    },
+    {
+      "name": "MELI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:57Z"
+    },
+    {
+      "name": "META",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "MGM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "MMM",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:47Z"
+    },
+    {
+      "name": "MP",
+      "is_index": false,
+      "created_at": "2025-09-22T13:30:46Z"
+    },
+    {
+      "name": "MRK",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:26Z"
+    },
+    {
+      "name": "MRNA",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "MRVL",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:15Z"
+    },
+    {
+      "name": "MS",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:27Z"
+    },
+    {
+      "name": "MSFT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "MSTR",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:03Z"
+    },
+    {
+      "name": "MU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:24Z"
+    },
+    {
+      "name": "MVST",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:35Z"
+    },
+    {
+      "name": "NBIS",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:58Z"
+    },
+    {
+      "name": "NET",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:22Z"
+    },
+    {
+      "name": "NFLX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:21Z"
+    },
+    {
+      "name": "NIO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:10Z"
+    },
+    {
+      "name": "NKE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:05Z"
+    },
+    {
+      "name": "NNE",
+      "is_index": false,
+      "created_at": "2025-10-22T15:12:09.722211688Z"
+    },
+    {
+      "name": "NOC",
+      "is_index": false,
+      "created_at": "2026-01-04T23:18:17.014975918Z"
+    },
+    {
+      "name": "NOK",
+      "is_index": false,
+      "created_at": "2026-04-29T16:22:05.812282931Z",
+      "status": "active"
+    },
+    {
+      "name": "NOW",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:15Z"
+    },
+    {
+      "name": "NRG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:29Z"
+    },
+    {
+      "name": "NU",
+      "is_index": false,
+      "created_at": "2025-08-04T13:32:07Z"
+    },
+    {
+      "name": "NVAX",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "NVDA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:06Z"
+    },
+    {
+      "name": "NVO",
+      "is_index": false,
+      "created_at": "2025-10-23T12:05:09.871469143Z"
+    },
+    {
+      "name": "NVTS",
+      "is_index": false,
+      "created_at": "2025-10-22T01:29:56.814514524Z"
+    },
+    {
+      "name": "OKLO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:00Z"
+    },
+    {
+      "name": "OKTA",
+      "is_index": false,
+      "created_at": "2025-08-26T13:30:52Z"
+    },
+    {
+      "name": "OMDA",
+      "is_index": false,
+      "created_at": "2026-01-22T15:33:27.958273732Z"
+    },
+    {
+      "name": "ON",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:41Z"
+    },
+    {
+      "name": "ONDS",
+      "is_index": false,
+      "created_at": "2025-10-22T01:29:37.879638733Z"
+    },
+    {
+      "name": "OPEN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:09Z"
+    },
+    {
+      "name": "ORCL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "OSCR",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:26Z"
+    },
+    {
+      "name": "OXY",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:39Z"
+    },
+    {
+      "name": "PANW",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:54Z"
+    },
+    {
+      "name": "PATH",
+      "is_index": false,
+      "created_at": "2025-07-31T13:32:39Z"
+    },
+    {
+      "name": "PBR",
+      "is_index": false,
+      "created_at": "2026-02-09T18:57:13.375528733Z"
+    },
+    {
+      "name": "PCT",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "PDD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:04Z"
+    },
+    {
+      "name": "PENN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:08Z"
+    },
+    {
+      "name": "PEP",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "PG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "PHM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:52Z"
+    },
+    {
+      "name": "PINS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:15Z"
+    },
+    {
+      "name": "PL",
+      "is_index": false,
+      "created_at": "2026-04-17T18:14:17.340183027Z",
+      "status": "active"
+    },
+    {
+      "name": "PLTR",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "PLUG",
+      "is_index": false,
+      "created_at": "2025-07-31T13:34:46Z"
+    },
+    {
+      "name": "POET",
+      "is_index": false,
+      "created_at": "2025-10-22T01:30:02.160032904Z"
+    },
+    {
+      "name": "PRI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "PTON",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:47Z"
+    },
+    {
+      "name": "PYPL",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:49Z"
+    },
+    {
+      "name": "PZZA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:13Z"
+    },
+    {
+      "name": "QBTS",
+      "is_index": false,
+      "created_at": "2026-04-22T17:56:57.600585487Z",
+      "status": "active"
+    },
+    {
+      "name": "QCOM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:05Z"
+    },
+    {
+      "name": "QQQ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:48Z"
+    },
+    {
+      "name": "QS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:12Z"
+    },
+    {
+      "name": "RBLX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:21Z"
+    },
+    {
+      "name": "RCL",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:31Z"
+    },
+    {
+      "name": "RDDT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:43Z"
+    },
+    {
+      "name": "REGN",
+      "is_index": false,
+      "created_at": "2025-08-25T13:30:39Z"
+    },
+    {
+      "name": "RGTI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "RH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "RIOT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:55Z"
+    },
+    {
+      "name": "RIVN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:52Z"
+    },
+    {
+      "name": "RKLB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:56Z"
+    },
+    {
+      "name": "RKT",
+      "is_index": false,
+      "created_at": "2025-08-22T14:43:45Z"
+    },
+    {
+      "name": "ROKU",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:29Z"
+    },
+    {
+      "name": "RR",
+      "is_index": false,
+      "created_at": "2025-09-09T13:30:20Z"
+    },
+    {
+      "name": "RTX",
+      "is_index": false,
+      "created_at": "2025-08-05T13:32:26Z"
+    },
+    {
+      "name": "RUN",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "SBET",
+      "is_index": false,
+      "created_at": "2025-09-22T13:30:56Z"
+    },
+    {
+      "name": "SBUX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "SDY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:04Z"
+    },
+    {
+      "name": "SE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:49Z"
+    },
+    {
+      "name": "SEDG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:27Z"
+    },
+    {
+      "name": "SG",
+      "is_index": false,
+      "created_at": "2025-10-21T19:00:08.702936513Z"
+    },
+    {
+      "name": "SHOP",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:09Z"
+    },
+    {
+      "name": "SLV",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:06Z"
+    },
+    {
+      "name": "SMCI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:03Z"
+    },
+    {
+      "name": "SMH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:53Z"
+    },
+    {
+      "name": "SNAP",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:22Z"
+    },
+    {
+      "name": "SNDK",
+      "is_index": false,
+      "created_at": "2025-11-25T04:23:03.0408649Z"
+    },
+    {
+      "name": "SNOW",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:06Z"
+    },
+    {
+      "name": "SNPS",
+      "is_index": false,
+      "created_at": "2026-01-02T22:53:39.691895066Z"
+    },
+    {
+      "name": "SOFI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:10Z"
+    },
+    {
+      "name": "SOUN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:48Z"
+    },
+    {
+      "name": "SOXL",
+      "is_index": false,
+      "created_at": "2025-11-25T04:23:18.906090996Z"
+    },
+    {
+      "name": "SPCE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:23Z"
+    },
+    {
+      "name": "SPOT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:28Z"
+    },
+    {
+      "name": "SPXW",
+      "is_index": true,
+      "created_at": "2025-07-21T16:13:11Z"
+    },
+    {
+      "name": "SPY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:13Z"
+    },
+    {
+      "name": "SQQQ",
+      "is_index": false,
+      "created_at": "2025-09-01T13:31:55Z"
+    },
+    {
+      "name": "SRPT",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:47Z"
+    },
+    {
+      "name": "STLD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:32Z"
+    },
+    {
+      "name": "STT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "STX",
+      "is_index": false,
+      "created_at": "2025-10-29T02:43:41.800031155Z"
+    },
+    {
+      "name": "SYK",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:32Z"
+    },
+    {
+      "name": "SYM",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:56Z"
+    },
+    {
+      "name": "T",
+      "is_index": false,
+      "created_at": "2025-09-22T13:30:41Z"
+    },
+    {
+      "name": "TE",
+      "is_index": false,
+      "created_at": "2025-12-29T15:19:00.975322009Z"
+    },
+    {
+      "name": "TEAM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:21Z"
+    },
+    {
+      "name": "TEM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "TER",
+      "is_index": false,
+      "created_at": "2026-03-09T18:57:46.864381079Z"
+    },
+    {
+      "name": "TFC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:42Z"
+    },
+    {
+      "name": "TGT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:58Z"
+    },
+    {
+      "name": "TIGR",
+      "is_index": false,
+      "created_at": "2025-10-23T16:48:52.858694337Z"
+    },
+    {
+      "name": "TJX",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:41Z"
+    },
+    {
+      "name": "TLRY",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "TLT",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:47Z"
+    },
+    {
+      "name": "TMO",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:33Z"
+    },
+    {
+      "name": "TMUS",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "TOST",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:41Z"
+    },
+    {
+      "name": "TQQQ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:10Z"
+    },
+    {
+      "name": "TRU",
+      "is_index": false,
+      "created_at": "2026-01-03T23:43:02.964801147Z"
+    },
+    {
+      "name": "TSLA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:07Z"
+    },
+    {
+      "name": "TSM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "TTD",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "TTWO",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "TWLO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:40Z"
+    },
+    {
+      "name": "TXN",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:47Z"
+    },
+    {
+      "name": "U",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:09Z"
+    },
+    {
+      "name": "UAL",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "UAMY",
+      "is_index": false,
+      "created_at": "2026-01-02T22:35:38.194381845Z"
+    },
+    {
+      "name": "UBER",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:17Z"
+    },
+    {
+      "name": "UEC",
+      "is_index": false,
+      "created_at": "2025-10-29T02:53:53.525763582Z"
+    },
+    {
+      "name": "ULTA",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:26Z"
+    },
+    {
+      "name": "UNH",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "UNM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:41Z"
+    },
+    {
+      "name": "UPS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:12Z"
+    },
+    {
+      "name": "UPST",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:59Z"
+    },
+    {
+      "name": "UPWK",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:49Z"
+    },
+    {
+      "name": "UPXI",
+      "is_index": false,
+      "created_at": "2025-09-22T13:30:41Z"
+    },
+    {
+      "name": "USB",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:42Z"
+    },
+    {
+      "name": "USO",
+      "is_index": false,
+      "created_at": "2026-03-11T17:06:58.964331532Z"
+    },
+    {
+      "name": "UUUU",
+      "is_index": false,
+      "created_at": "2025-10-29T02:53:20.747384691Z"
+    },
+    {
+      "name": "UVXY",
+      "is_index": false,
+      "created_at": "2025-09-01T13:31:05Z"
+    },
+    {
+      "name": "V",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:15Z"
+    },
+    {
+      "name": "VALE",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:57Z"
+    },
+    {
+      "name": "VEEV",
+      "is_index": false,
+      "created_at": "2026-05-01T11:39:57.39392662Z",
+      "status": "active"
+    },
+    {
+      "name": "VIX",
+      "is_index": true,
+      "created_at": "2025-09-01T13:31:21Z"
+    },
+    {
+      "name": "VKTX",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:26Z"
+    },
+    {
+      "name": "VLO",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:25Z"
+    },
+    {
+      "name": "VNET",
+      "is_index": false,
+      "created_at": "2025-10-23T16:48:48.368093573Z"
+    },
+    {
+      "name": "VRTX",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:36Z"
+    },
+    {
+      "name": "VTI",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:06Z"
+    },
+    {
+      "name": "VUG",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:16Z"
+    },
+    {
+      "name": "VZ",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "W",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:50Z"
+    },
+    {
+      "name": "WBD",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:49Z"
+    },
+    {
+      "name": "WDAY",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:58Z"
+    },
+    {
+      "name": "WDC",
+      "is_index": false,
+      "created_at": "2025-10-29T02:43:44.777850107Z"
+    },
+    {
+      "name": "WFC",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:59Z"
+    },
+    {
+      "name": "WING",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:30Z"
+    },
+    {
+      "name": "WM",
+      "is_index": false,
+      "created_at": "2025-11-26T20:32:36.982446399Z"
+    },
+    {
+      "name": "WMB",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:10Z"
+    },
+    {
+      "name": "WMT",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:18Z"
+    },
+    {
+      "name": "WOLF",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "WULF",
+      "is_index": false,
+      "created_at": "2025-08-04T13:33:46Z"
+    },
+    {
+      "name": "WW",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:09Z"
+    },
+    {
+      "name": "WYNN",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:10Z"
+    },
+    {
+      "name": "XLB",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:36Z"
+    },
+    {
+      "name": "XLC",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:35Z"
+    },
+    {
+      "name": "XLE",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:35Z"
+    },
+    {
+      "name": "XLF",
+      "is_index": false,
+      "created_at": "2025-07-21T16:13:49Z"
+    },
+    {
+      "name": "XLI",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:59Z"
+    },
+    {
+      "name": "XLK",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:34Z"
+    },
+    {
+      "name": "XLP",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:50Z"
+    },
+    {
+      "name": "XLRE",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:37Z"
+    },
+    {
+      "name": "XLU",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:35Z"
+    },
+    {
+      "name": "XLV",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:33Z"
+    },
+    {
+      "name": "XLY",
+      "is_index": false,
+      "created_at": "2025-07-28T13:30:36Z"
+    },
+    {
+      "name": "XOM",
+      "is_index": false,
+      "created_at": "2025-08-04T13:31:37Z"
+    },
+    {
+      "name": "XYZ",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:19Z"
+    },
+    {
+      "name": "Z",
+      "is_index": false,
+      "created_at": "2025-07-31T13:31:10Z"
+    },
+    {
+      "name": "ZETA",
+      "is_index": false,
+      "created_at": "2025-11-25T04:19:15.371028072Z"
+    },
+    {
+      "name": "ZM",
+      "is_index": false,
+      "created_at": "2025-07-21T16:14:03Z"
+    },
+    {
+      "name": "ZS",
+      "is_index": false,
+      "created_at": "2025-07-21T16:12:56Z"
+    },
+    {
+      "name": "ZVRA",
+      "is_index": false,
+      "created_at": "2026-04-23T10:58:41.252650648Z",
+      "status": "active"
+    }
+  ]
+}

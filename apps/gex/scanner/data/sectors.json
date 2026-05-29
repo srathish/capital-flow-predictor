@@ -1,0 +1,22 @@
+{
+  "themes": {
+    "Cloud/AI": ["MSFT","NVDA","GOOGL","GOOG","NBIS","ORCL","AMD","AVGO","ANET","CRWV","CRDO","ALAB","SMCI","CDNS","SNPS","DELL","HPE","HPQ","IBM","INTC","TER","ASML","TSM","MU","WDC","STX","SNDK","MRVL","ARM","AMAT","LRCX","AMKR","COHR","LITE","CRWD","PANW","ZS","NET","DDOG","MDB","SNOW","WDAY","NOW","ADBE","CRM","WMT","DOCU","DOCN","DBX","ASAN","TEAM","GTLB","FRSH","TWLO","CFLT","OKTA","DUOL","FUBO","ZM","BABA","BIDU","JD","PDD","NU","ON","QCOM","TXN"],
+    "Clean Energy": ["RUN","PLUG","FSLR","ENPH","SEDG","FCEL","BE","NRG","CEG","BLNK","BMNR","UEC","CCJ","LEU","NNE","OKLO","SDY"],
+    "EVs": ["RIVN","LCID","TSLA","NIO","JOBY","MVST","ACHR","QS","XYZ"],
+    "Crypto Miners": ["MARA","RIOT","CLSK","HUT","IREN","WULF","CIFR","BITF","CORZ","CAN","BMNR","BTBT","HIVE","ANY"],
+    "Crypto/Blockchain": ["COIN","HOOD","MSTR","SBET","GLXY","BULL","SQ","XYZ"],
+    "China ADRs": ["BABA","JD","PDD","BIDU","NIO","KWEB","FXI","FUTU","TIGR","VNET","ZETA"],
+    "Financials": ["JPM","BAC","WFC","C","GS","MS","BX","BLK","COF","USB","TFC","STT","UNM","AXP","V","MA","PYPL","SOFI","AFRM","UPST","LMND","NU","RKT","BULL"],
+    "Materials/Metals": ["FCX","NEM","MP","STLD","NUE","AA","X","CLF","VALE","RIO","BHP","HBM","UAMY","FREE","GLD","SLV"],
+    "Software/AI Apps": ["ADBE","CRM","NOW","WDAY","DDOG","SNOW","MDB","NET","CRWD","PANW","ZS","TEAM","DOCU","ASAN","DUOL","DBX","FRSH","GTLB","TWLO","TOST","CART","CFLT","AI","BBAI","SOUN","PLTR","TEM","OPEN"],
+    "Aerospace/Defense": ["BA","LMT","RTX","NOC","KTOS","RKLB","LUNR","SPCE","ASTS","HON","GE","GEV","PL","RR","AUR"],
+    "Energy Services": ["HAL","SLB","BKR","FTI","WMB","OXY","CVX","XOM","COP","BP","PBR","VLO","EOG"],
+    "Healthcare/Biotech": ["LLY","JNJ","MRK","PFE","UNH","CVS","ABBV","TMO","DHR","ISRG","REGN","VRTX","BIIB","GILD","AMGN","ALGN","CRSP","MRNA","NVAX","SRPT","HIMS","DXCM","SYK","BIDU","NVO","IBRX"],
+    "Consumer Discretionary": ["AMZN","HD","NKE","SBUX","MCD","CMG","CMI","DAL","UAL","CCL","RCL","BKNG","ABNB","EXPE","DIS","NFLX","GME","AMC","TGT","WMT","COST","DPZ","CAVA","BROS","CAKE","WING","DKS","PZZA","DECK","CROX","SG","PTON","TJX","ULTA","RH","WYNN","MGM","PENN","DKNG"],
+    "Communication": ["META","T","VZ","TMUS","CMCSA","CHTR","DIS","ROKU","EA","TTWO","SPOT","DJT","WBD","PINS","SNAP","RDDT","SHOP","RBLX"],
+    "Consumer Staples": ["PG","KO","PEP","WMT","COST","KHC","EL","ELF","KO","WM","MCD"],
+    "Industrials": ["CAT","DE","GE","BA","UPS","FDX","HON","RTX","LMT","MMM","CMI","UNP","LUV","UAL","DAL","CCL","RCL","DAL","DE","WM","SYM","AXON"],
+    "Real Estate": ["HD","LEN","DHI","PHM","XLRE"],
+    "Quantum/Photonics": ["IONQ","RGTI","QBTS","LASR","LWLG","POET"]
+  }
+}

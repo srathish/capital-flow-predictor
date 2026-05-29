@@ -234,37 +234,127 @@ runs as a separate Railway service.
 Live UW-driven scanner that ranks **504 tickers** by a composite Grade
 built from gates validated against a 48-ticker historical universe
 (Phase 3 regression, master R²=0.70 when Grade is layered onto Talon's
-own signals). The validated gates: **delta_buildup rank**
-(r=+0.49, p=0.0006), **vanna band** (sweet-spot 0.65–1.05, peak 0.85;
-the Phase 2 sign was inverted by Phase 3), **theme coherence**
-(largest standardized coefficient), and a **call-dominance** anchor.
-Excluded after Phase 3: `call_dom_trend_5d` (p=0.49) and `gamma_sign`
-(marginal, bullish-only).
+own signals).
 
-Layered on top: a **dark-pool overlay** — DP_VWAP / DP_share / DP_skew
-from `stock-volume-price-levels`. **Display-only**, no grade weight yet
-(awaiting Phase 5 validation). Used to flag conflicts (bullish thesis
-but DP distributing — e.g. BTDR at −1.08% skew), confirmations (ENPH
-+0.22%, SMCI +0.22%), and stealth accumulation candidates
-(DP_share > 70%, e.g. RDW at 84%, LMT 83%, ABBV 82%).
+**Two sub-tabs**: `[Scanner]` shows the full ranked board; `[Top 20 Plays]`
+turns the top 20 actionable setups into tradeable contracts with chain
+levels + 3 contract tiers per ticker (defensive ITM / standard ATM-OTM /
+aggressive OTM lottery), each defensible by actual UW flow-alert data.
+
+#### How Talon picks its setups
+
+Talon runs in **two stages** — first rank the universe, then enrich the
+top 20 with tradeable contract picks.
+
+##### Stage 1 — Rank the universe (Scanner tab)
+
+For each of 504 tickers, Talon pulls **dealer Greek exposure** (GEX)
+timeseries and a **dark-pool volume-by-price** snapshot from Unusual
+Whales, then computes four gates that were validated in a 48-ticker
+historical regression (Phase 3):
+
+- **Gate 1 — Delta buildup (30% of Grade)** — Has dealer net delta
+  grown over the last ~10 days vs the prior period? Tickers ranked by
+  percentile across the universe. Big buildup → dealers are
+  accumulating long delta exposure → mechanical bid pressure as the
+  stock rises (positive gamma forces them to buy more on the way up).
+  Phase 3 r = +0.49, p = 0.0006.
+- **Gate 2 — Vanna band (18%)** — Where does the 5-day-backward vanna
+  ratio sit? Sweet spot is 0.65–1.05, peak at 0.85. Above 1.05 = trade
+  hasn't unfolded. Below 0.65 = vol exposure collapsed (you missed it).
+  0.65–1.05 = vol exposure actively converting into price.
+- **Gate 3 — Theme coherence (37%, the largest weight)** — Mean Spearman
+  correlation of `call_dominance_pct` with same-theme peers. High
+  coherence = the whole basket is moving together → real institutional
+  rotation, not idiosyncratic noise. Phase 3 said this was the single
+  most predictive gate.
+- **Gate 4 — Call-dominance anchor (15%)** — % of dealer net delta on
+  the call side. Above 50% = bullish positioning. Below = bearish.
+
+**Composite Grade** = weighted sum of 4 gates, scaled to 0–100. **Grade
+≥ 70 = actionable**, 55–69 = watchlist, < 55 = skip.
+
+**Dark-pool overlay** (display-only, **not weighted in Grade yet** —
+awaiting Phase 5 validation):
+
+- **DP_skew** = (DP-volume-weighted price − session midline) / midline.
+  Positive = institutions paying above midline (bullish confirmation).
+  Negative = institutions selling into rallies (conflict warning,
+  e.g. BTDR at −1.08% skew, ENPH flipping +0.22% → −0.35% over the
+  weekend).
+- **DP_share** = DP volume / total session volume. > 70% = stealth
+  accumulation (e.g. RDW 84%, LMT 83%, ABBV 82%).
+
+**Excluded after Phase 3 validation**: `call_dom_trend_5d` (p = 0.49,
+failed) and `gamma_sign × thesis` (p = 0.075, marginal — bullish-only).
+
+##### Stage 2 — Select contracts (Top 20 Plays tab)
+
+For each of the top 20 actionable setups, Talon enriches with **levels**
+and **3 contract tiers**:
+
+**Levels** come from per-strike GEX (`/api/stock/{t}/greek-exposure/strike`):
+- Top call walls above current → **ST target** + 2–3 **swing targets**
+- Top put wall below current → **soft invalidation**
+
+**Contracts** come from recent UW **ask-side call flow alerts**
+(`/api/option-trades/flow-alerts`, ≤35 DTE, ≥$25K premium):
+1. Aggregate all alerts at the same (strike, expiry) into "buckets"
+2. For each tier — **ITM** (2–10% below spot), **ATM** (−2% to +5% from
+   spot), **OTM** (5–20% above) — pick the bucket with the highest
+   **confidence score** (0–100):
+
+| Weight | Signal | Notes |
+|---|---|---|
+| 50% | Total ask-side $$ at this strike | Log-scaled, $500K caps near full credit |
+| 20% | Distinct alert count | 5+ alerts = building, not one-off |
+| 15% | Open-interest growth % | First alert → current; 200% = full credit |
+| 10% | Sweep / floor-block flags | Institutional speed (sweep) + block size (floor) |
+|  5% | Recency | Last alert within 7 days = full credit |
+
+3. **If no qualifying alert exists in a tier's strike range**, the tier
+   surfaces `✗ no recent UW backing — grade-only conviction` instead of
+   a fabricated pick. That's the defensibility guarantee — every
+   contract in the Top Plays tab has an evidence dict you can audit
+   (total $, n alerts, OI growth, sweep/floor flags, IV).
+
+#### Architecture
 
 **Every Run Scan = brand-new UW fetch.** 504 GEX timeseries + 504
 volume-by-price calls fanned out at concurrency 5 (UW's 120/min limit).
-Cold-cache scan runs in ~7–10 min; concurrent clicks share the
-in-flight scan via an internal lock and don't double-fetch. Progress is
-exposed at `GET /v1/talon/scan/progress` (phase + ticker counter +
-elapsed); the UI polls every 2 s during a scan, every 30 s as a
-background heartbeat. Results persist to Postgres (`talon_scans`,
-migration 0040) so the latest scan survives Railway redeploys and
-concurrent users see the same result.
+Cold-cache scan runs in ~5 min with the scoped in-process cache
+(prewarm phase populates, metrics + coherence read from memory).
+Concurrent clicks share the in-flight scan via an internal lock —
+they don't double-fetch.
 
-The full research pipeline that produced these gates is in
-[talon_analysis/](talon_analysis/) — Phase 1 (scorecard against the
-published May 18 scan, 30 tickers, Grade → 2-week return r=+0.55,
-p=0.003), Phase 2 (six per-task deep dives including the ENPH-vs-MSFT
-+1369 % vs +28 % delta-buildup gap), Phase 3 (48-ticker universe
-regression), Phase 4 (full 504-ticker live scan + DP overlay +
-contract-pick analysis).
+Progress is exposed at `GET /v1/talon/scan/progress` (phase + ticker
+counter + current ticker); the UI polls every 2 s during a scan, every
+30 s as a heartbeat. Results persist to Postgres (`talon_scans`,
+migration 0040) so the latest scan survives Railway redeploys and
+concurrent users see the same data.
+
+The Top Plays tab triggers **lazy enrichment** on first visit (~20–30 s
+for 20 tickers' GEX + flow-alert calls), then caches under
+`result_json.top_plays` for instant subsequent loads.
+
+#### Research pipeline behind the gates
+
+The full validation work is in [talon_analysis/](talon_analysis/):
+
+- **Phase 1** — Scorecard against the published May 18 scan (30 tickers
+  with grades + levels). **Grade → 2-week return r = +0.55, p = 0.003.**
+- **Phase 2** — Six per-task deep dives: ENPH vs MSFT (+1369% vs +28%
+  delta buildup), VIX A+ 97 failure, crypto miners vs tokens divergence,
+  GOOGL/AMZN/SHOP target misses, the ungraded-mystery names
+  (ENPH/MU/SMCI strongest, Talon never published levels), hedge complex
+  fully fading 7–11 days before publication.
+- **Phase 3** — 48-ticker universe regression. **Grade alone R² = 0.24;
+  Grade + flow gates combined R² = 0.70.** Validated 2 gates strongly
+  (delta_buildup, theme_coherence), inverted 1 (vanna — Phase 2 had the
+  sign wrong), failed 1 (call_dom_trend), marginal on 1 (gamma_sign).
+- **Phase 4** — Full 504-ticker live scan + dark-pool overlay + per-name
+  contract-pick analysis (the prototype for what's now in the Top Plays
+  tab).
 
 ### Macro — top-down rates / yield-curve / credit context
 
