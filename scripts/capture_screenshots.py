@@ -113,6 +113,33 @@ async def main() -> int:
         # 12. Discord Alerts.
         await shoot(page, f"{BASE}/discord", "12-discord", settle_ms=2500)
 
+        # 13. Talon — Phase 3-validated flow scanner (504 universe).
+        await shoot(page, f"{BASE}/talon", "13-talon", settle_ms=2500)
+
+        # 14. Macro — top-down rates/yield/credit context.
+        await shoot(page, f"{BASE}/macro", "14-macro", settle_ms=2500)
+
+        # 15. Confluence — cross-tab aggregator (Explosive ∩ Delphi ∩ Whale ∩ Reddit).
+        await shoot(page, f"{BASE}/confluence", "15-confluence", settle_ms=2500)
+
+        # 16. Smart Money — institutional positioning rollup.
+        await shoot(page, f"{BASE}/smart-money", "16-smart-money", settle_ms=2500)
+
+        # 17. Delphi — multi-source ensemble forecast.
+        await shoot(page, f"{BASE}/delphi", "17-delphi", settle_ms=2500)
+
+        # 18. Conviction — per-ticker high-conviction setups.
+        await shoot(page, f"{BASE}/conviction", "18-conviction", settle_ms=2500)
+
+        # 19. Earnings calendar + reaction tracker.
+        await shoot(page, f"{BASE}/earnings", "19-earnings", settle_ms=2500)
+
+        # 20. Backtest Lab — strategy backtester.
+        await shoot(page, f"{BASE}/backtest", "20-backtest", settle_ms=2500)
+
+        # 21. Heatseeker — intraday GEX monitor (was "GEX" tab).
+        await shoot(page, f"{BASE}/gex", "21-heatseeker", settle_ms=3000)
+
         await browser.close()
     return 0
 

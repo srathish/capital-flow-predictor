@@ -227,6 +227,114 @@ forward-return tracking on the tickers they've called. The listener
 itself lives in [apps/discord_listener/](apps/discord_listener/) and
 runs as a separate Railway service.
 
+### Talon — Phase 3-validated flow scanner (504-ticker universe)
+
+![Talon](docs/screenshots/13-talon.png)
+
+Live UW-driven scanner that ranks **504 tickers** by a composite Grade
+built from gates validated against a 48-ticker historical universe
+(Phase 3 regression, master R²=0.70 when Grade is layered onto Talon's
+own signals). The validated gates: **delta_buildup rank**
+(r=+0.49, p=0.0006), **vanna band** (sweet-spot 0.65–1.05, peak 0.85;
+the Phase 2 sign was inverted by Phase 3), **theme coherence**
+(largest standardized coefficient), and a **call-dominance** anchor.
+Excluded after Phase 3: `call_dom_trend_5d` (p=0.49) and `gamma_sign`
+(marginal, bullish-only).
+
+Layered on top: a **dark-pool overlay** — DP_VWAP / DP_share / DP_skew
+from `stock-volume-price-levels`. **Display-only**, no grade weight yet
+(awaiting Phase 5 validation). Used to flag conflicts (bullish thesis
+but DP distributing — e.g. BTDR at −1.08% skew), confirmations (ENPH
++0.22%, SMCI +0.22%), and stealth accumulation candidates
+(DP_share > 70%, e.g. RDW at 84%, LMT 83%, ABBV 82%).
+
+**Every Run Scan = brand-new UW fetch.** 504 GEX timeseries + 504
+volume-by-price calls fanned out at concurrency 5 (UW's 120/min limit).
+Cold-cache scan runs in ~7–10 min; concurrent clicks share the
+in-flight scan via an internal lock and don't double-fetch. Progress is
+exposed at `GET /v1/talon/scan/progress` (phase + ticker counter +
+elapsed); the UI polls every 2 s during a scan, every 30 s as a
+background heartbeat. Results persist to Postgres (`talon_scans`,
+migration 0040) so the latest scan survives Railway redeploys and
+concurrent users see the same result.
+
+The full research pipeline that produced these gates is in
+[talon_analysis/](talon_analysis/) — Phase 1 (scorecard against the
+published May 18 scan, 30 tickers, Grade → 2-week return r=+0.55,
+p=0.003), Phase 2 (six per-task deep dives including the ENPH-vs-MSFT
++1369 % vs +28 % delta-buildup gap), Phase 3 (48-ticker universe
+regression), Phase 4 (full 504-ticker live scan + DP overlay +
+contract-pick analysis).
+
+### Macro — top-down rates / yield-curve / credit context
+
+![Macro](docs/screenshots/14-macro.png)
+
+Macro regime tab: yield curve shape, real rates, IG/HY credit spreads,
+DXY, and the macro composite our XGBoost predictor uses as a top-down
+filter for sector rotation. Use as context when bottom-up signals
+disagree across tabs.
+
+### Confluence — cross-tab aggregator
+
+![Confluence](docs/screenshots/15-confluence.png)
+
+Lazy aggregator that scores every ticker by how many other tabs
+agree with the same direction. Pulls from Explosive + Delphi +
+Whale + Reddit + Flow. Tickers showing up on ≥3 of those independent
+signals jump to the top — the strongest "everyone's seeing the same
+thing" filter in the stack.
+
+### Smart Money — institutional positioning rollup
+
+![Smart Money](docs/screenshots/16-smart-money.png)
+
+13F + insider Form 4 + dark-pool prints + ETF holdings rolled up per
+ticker. Use to confirm whether the call-flow / GEX setup you see on
+other tabs has institutional buying behind it, or is purely retail.
+
+### Delphi — multi-source ensemble forecast
+
+![Delphi](docs/screenshots/17-delphi.png)
+
+The 25-agent ensemble + the XGBoost predictor + sentiment composite
+fused into one forecast per ticker. Shows the bull-case, bear-case,
+and base-case panels with the underlying source signals.
+
+### Conviction — per-ticker high-conviction setups
+
+![Conviction](docs/screenshots/18-conviction.png)
+
+Filters the universe down to only tickers where multiple high-weight
+gates align (delta-buildup top-decile, theme coherence ≥0.5, gamma
+positive, etc.). Smaller daily list than the Screener/Scanner — designed
+for "if I could only trade 5 things this week".
+
+### Earnings — calendar + reaction tracker
+
+![Earnings](docs/screenshots/19-earnings.png)
+
+Upcoming earnings ordered by report date, with implied-move %, gamma
+exposure context, and post-earnings reaction history. Distinguishes
+pre-market / after-market times.
+
+### Backtest Lab — strategy backtester
+
+![Backtest Lab](docs/screenshots/20-backtest.png)
+
+Hosted version of the v5 backtester (S&P 100 OOS — CAGR 27 %, Sharpe
+1.28). Tune entries/exits, rerun, see per-ticker equity curves +
+parameter-sensitivity. Pairs with `apps/backtester/FINAL_STRATEGY_v5.pine`
+for TV-side validation.
+
+### Heatseeker — intraday GEX monitor (SPY / QQQ / SPXW)
+
+![Heatseeker](docs/screenshots/21-heatseeker.png)
+
+Morning brief + intraday level alerts for the index/ETF complex. Was
+the "GEX" tab; renamed Heatseeker May 22 (path unchanged). Powered by
+the `apps/gex` service.
+
 ### Lab — opportunity score, calibration, ensemble freshness
 
 ![Lab](docs/screenshots/09-lab.png)
@@ -497,9 +605,13 @@ still works for fully-local dev where Postgres isn't in play.
 uv run python scripts/capture_screenshots.py
 ```
 
-Writes ~12 PNGs into `docs/screenshots/` (one per top-level tab plus
-the Sectors → Network sub-view, the Agents drill-in, and the secret
-Lab tab).
+Writes **~21 PNGs** into `docs/screenshots/` — one per top-level nav tab
+(Sectors, Macro, Confluence, Reddit + Catalysts, Flow, Smart Money, Hot
+Options, Stocks, Setups, Talon, Delphi, Conviction, Earnings, Backtest Lab,
+Discord Alerts, Heatseeker) plus the Sectors → Network sub-view, the Agents
+drill-in, and the secret Lab tab. Numbering preserves backward compatibility
+with older snapshots — `01-12` are the original tabs, `13` is Talon, `14-21`
+fill in the tabs that weren't captured in the original script.
 
 ---
 
