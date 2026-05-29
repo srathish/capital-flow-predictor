@@ -92,24 +92,25 @@ def reset_live_client() -> None:
         _LIVE_CLIENT = None
     uw_client.clear_cache()
 
-# Cache location is configurable via env so different deploys can point to
-# their own GEX store. Defaults to repo-relative `talon_analysis/cache/uw_gex/`
-# so local runs work out of the box.
-_DEFAULT_CACHE = Path(__file__).resolve().parents[4] / "talon_analysis" / "cache" / "uw_gex"
-GEX_CACHE_DIR = Path(os.environ.get("TALON_GEX_CACHE_DIR", str(_DEFAULT_CACHE)))
-
-# Dark pool cache — per-ticker JSON from /api/stock/{t}/volume-by-price (latest session)
-_DEFAULT_DP_CACHE = Path(__file__).resolve().parents[4] / "talon_analysis" / "cache" / "uw_dp"
-DP_CACHE_DIR = Path(os.environ.get("TALON_DP_CACHE_DIR", str(_DEFAULT_DP_CACHE)))
-
-# Output dir — where scan JSONs are persisted between runs.
-_DEFAULT_OUT = Path(__file__).resolve().parents[4] / "talon_analysis" / "output"
-OUTPUT_DIR = Path(os.environ.get("TALON_OUTPUT_DIR", str(_DEFAULT_OUT)))
-OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
-
-# Universe file — default to repo-relative phase4 universe; override-able.
-_DEFAULT_UNIVERSE = Path(__file__).resolve().parents[4] / "talon_analysis" / "phase4_scanner" / "universe.txt"
+# Universe file — bundled with the cfp_api package so it ships in the Railway
+# container. Override via TALON_UNIVERSE_FILE for local dev / experiments.
+_PKG_DATA = Path(__file__).resolve().parent / "data"
+_DEFAULT_UNIVERSE = _PKG_DATA / "talon_universe.txt"
 UNIVERSE_FILE = Path(os.environ.get("TALON_UNIVERSE_FILE", str(_DEFAULT_UNIVERSE)))
+
+# Disk caches: optional dev-fallback only. In production every scan live-fetches
+# from UW (TALON_USE_LIVE_FETCH=1, the default) so these dirs not existing is
+# fine. We point them at /tmp by default so the writes don't fail if the live
+# client tries to opportunistically warm-cache later.
+_DEFAULT_CACHE_ROOT = Path(os.environ.get("TALON_CACHE_ROOT", "/tmp/talon_cache"))
+GEX_CACHE_DIR = Path(os.environ.get("TALON_GEX_CACHE_DIR", str(_DEFAULT_CACHE_ROOT / "uw_gex")))
+DP_CACHE_DIR = Path(os.environ.get("TALON_DP_CACHE_DIR", str(_DEFAULT_CACHE_ROOT / "uw_dp")))
+
+# Output dir — historical scan JSONs. Production reads via Postgres; this is
+# kept as a side-channel for dev / debug.
+_DEFAULT_OUT = Path(os.environ.get("TALON_OUTPUT_DIR", "/tmp/talon_cache/output"))
+OUTPUT_DIR = Path(_DEFAULT_OUT)
+OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 
 
 # Gate weights from Phase 3 standardized regression coefficients (gates-only model)
