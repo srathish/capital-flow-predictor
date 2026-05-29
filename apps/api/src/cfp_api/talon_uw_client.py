@@ -18,7 +18,8 @@ from __future__ import annotations
 import logging
 import os
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Callable
 from typing import Any
 
 import httpx
@@ -37,24 +38,29 @@ def use_live_fetch() -> bool:
     return os.environ.get("TALON_USE_LIVE_FETCH", "1") not in ("0", "false", "False")
 
 
-class _NullCache:
-    """Pass-through. Every call to get() returns None so we always live-fetch.
+class _ScopedCache:
+    """In-process dict that holds prewarm results for the duration of one scan.
 
-    Kept as a class (rather than removing the attribute) so the rest of the
-    client doesn't need a code path for "no cache present."
+    Cleared at the start of every Run Scan (see `reset_live_client` in
+    talon_scanner.py), so each scan is "brand new" from UW's perspective but
+    the prewarm GEX/DP batches actually serve the downstream metrics +
+    coherence phases — no redundant HTTP for the same ticker within one scan.
     """
 
-    def get(self, key: str) -> Any | None:  # noqa: ARG002
-        return None
+    def __init__(self):
+        self._store: dict[str, Any] = {}
+
+    def get(self, key: str) -> Any | None:
+        return self._store.get(key)
 
     def set(self, key: str, value: Any) -> None:
-        return None
+        self._store[key] = value
 
     def clear(self) -> None:
-        return None
+        self._store.clear()
 
 
-_CACHE = _NullCache()
+_CACHE = _ScopedCache()
 
 
 class TalonUwClient:
@@ -196,24 +202,50 @@ class TalonUwClient:
 
     # ------------------------------------------------------------------
     # Batch fan-out — one call per ticker, executed concurrently
+    #
+    # Optional on_progress(done, total, last_ticker) callback fires each
+    # time a future completes — the scanner uses it to update the in-memory
+    # progress state so the UI can show ticker-by-ticker advance through
+    # prewarm_gex / prewarm_dp instead of being stuck at 0/504.
     # ------------------------------------------------------------------
-    def gex_batch(self, tickers: list[str]) -> dict[str, dict | None]:
-        return self._batch(tickers, self.gex_timeseries)
+    def gex_batch(
+        self,
+        tickers: list[str],
+        on_progress: Callable[[int, int, str], None] | None = None,
+    ) -> dict[str, dict | None]:
+        return self._batch(tickers, self.gex_timeseries, on_progress)
 
-    def dp_batch(self, tickers: list[str]) -> dict[str, dict | None]:
-        return self._batch(tickers, self.dp_volume_by_price)
+    def dp_batch(
+        self,
+        tickers: list[str],
+        on_progress: Callable[[int, int, str], None] | None = None,
+    ) -> dict[str, dict | None]:
+        return self._batch(tickers, self.dp_volume_by_price, on_progress)
 
-    def _batch(self, tickers: list[str], fn) -> dict[str, dict | None]:
+    def _batch(
+        self,
+        tickers: list[str],
+        fn,
+        on_progress: Callable[[int, int, str], None] | None = None,
+    ) -> dict[str, dict | None]:
         out: dict[str, dict | None] = {}
+        total = len(tickers)
+        done = 0
         with ThreadPoolExecutor(max_workers=self._concurrency) as pool:
             futures = {pool.submit(fn, t): t for t in tickers}
-            for fut in futures:
+            for fut in as_completed(futures):
                 t = futures[fut]
                 try:
                     out[t] = fut.result()
                 except Exception as e:
                     log.warning("batch fetch failed for %s: %s", t, e)
                     out[t] = None
+                done += 1
+                if on_progress is not None:
+                    try:
+                        on_progress(done, total, t)
+                    except Exception:  # noqa: BLE001 — callback failure must not break the batch
+                        pass
         return out
 
 

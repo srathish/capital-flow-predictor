@@ -328,13 +328,20 @@ def _compute_metrics(ticker: str, scan_date: pd.Timestamp) -> dict | None:
 
 
 def _compute_theme_coherence(rows: list[dict]) -> None:
-    """Mutate rows: add theme_coherence (mean Spearman corr with same-theme peers)."""
+    """Mutate rows: add theme_coherence (mean Spearman corr with same-theme peers).
+
+    Updates _SCAN_STATE.phase_progress / current_ticker as it walks so the UI
+    can show ticker-by-ticker advance through the coherence phase.
+    """
+    n = len(rows)
     cache: dict[str, pd.Series] = {}
-    for r in rows:
+    for i, r in enumerate(rows):
+        _set_progress(phase_progress=i, current_ticker=r["ticker"])
         df = _load_gex_df(r["ticker"])
         if not df.empty:
             cache[r["ticker"]] = df.set_index("date")["call_dominance_pct"]
-    for r in rows:
+    for i, r in enumerate(rows):
+        _set_progress(phase_progress=i, current_ticker=r["ticker"])
         theme = r["theme"]
         peers = [t for t in THEMES.get(theme, []) if t != r["ticker"] and t in cache]
         if not peers or r["ticker"] not in cache:
@@ -351,6 +358,7 @@ def _compute_theme_coherence(rows: list[dict]) -> None:
             if not pd.isna(corr):
                 corrs.append(float(corr))
         r["theme_coherence"] = round(float(np.mean(corrs)), 4) if corrs else None
+    _set_progress(phase_progress=n, current_ticker=None)
 
 
 def _band_score(x: float | None) -> float:
@@ -382,6 +390,10 @@ def run_scan(scan_date: str | None = None) -> dict[str, Any]:
     (the lock is released before this returns).
     """
     with _SCAN_LOCK:
+        # Wipe the in-process UW cache so this scan is truly brand-new.
+        # The cache only exists so prewarm can serve metrics + coherence
+        # within a single scan; across scans we always re-fetch.
+        uw_client.clear_cache()
         scan_id = uuid.uuid4().hex[:12]
         started_at = datetime.now(UTC)
         _set_progress(
@@ -415,20 +427,23 @@ def _run_scan_inner(
     universe = load_universe()
     client = _get_live_client()
 
+    def _on_batch_progress(done: int, total: int, last_ticker: str) -> None:
+        _set_progress(phase_progress=done, current_ticker=last_ticker)
+
     # Phase 1: prewarm GEX
     if client is not None:
         log.info("Talon: pre-warming GEX for %d tickers", len(universe))
         _set_progress(phase="prewarm_gex", phase_progress=0,
-                      phase_total=len(universe))
-        client.gex_batch(universe)
-        _set_progress(phase_progress=len(universe))
+                      phase_total=len(universe), current_ticker=None)
+        client.gex_batch(universe, on_progress=_on_batch_progress)
+        _set_progress(phase_progress=len(universe), current_ticker=None)
 
     # Phase 2: prewarm DP
     if client is not None:
         _set_progress(phase="prewarm_dp", phase_progress=0,
-                      phase_total=len(universe))
-        client.dp_batch(universe)
-        _set_progress(phase_progress=len(universe))
+                      phase_total=len(universe), current_ticker=None)
+        client.dp_batch(universe, on_progress=_on_batch_progress)
+        _set_progress(phase_progress=len(universe), current_ticker=None)
 
     # Phase 3: serial metric computation (reads from cache, fast)
     _set_progress(phase="metrics", phase_progress=0,
