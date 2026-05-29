@@ -1,0 +1,354 @@
+# Talon Aggressive Scan — 2026-05-18, 10:03 AM ET
+# 30 tickers with explicit grades + levels (extracted from published article)
+# Thematic mentions without levels (ENPH, COIN, MSTR, IBIT, etc.) are omitted.
+#
+# Schema:
+#   ticker:       symbol (yfinance form, e.g. ^VIX for VIX)
+#   category:     "actionable" | "ote_watch" | "risk_watch_bullish" | "bearish"
+#   grade:        int 0-100
+#   direction:    "bullish" | "bearish"
+#   current:      reported price at scan time
+#   trigger:      optional — explicit "trigger" price if scan called it out
+#   ote:          optional — OTE / preferred entry zone
+#   soft_inval:   first-warning invalidation
+#   st_target:    short-term GEX target (0-5 trading day window: May 18-22)
+#   swing:        list of swing/VEX targets (2-4 wk window: ~Jun 1-12). Unscored in Phase 1.
+#   ceilings:     bearish only — ceiling stack above OTE
+#   floors:       bearish only — downside floor stack
+#
+# For bearish setups: st_target is a DOWNSIDE target (price must reach LOW <= st_target).
+# For bullish setups: st_target is UPSIDE (price must reach HIGH >= st_target).
+
+scan_date: "2026-05-18"
+scan_time_et: "10:03"
+universe_scanned: 418
+qualified_setups: 99
+bullish_qualified: 92
+bearish_qualified: 7
+sector_bullish_weight_pct: 92.1
+
+tickers:
+  # ------------------------- ACTIONABLE BULLISH (11) -------------------------
+  - ticker: FSLR
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 231.06
+    soft_inval: 227.70
+    st_target: 240
+    swing: [250, 260, 280, 300]
+
+  - ticker: SHOP
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 101.49
+    trigger: 102
+    soft_inval: 99
+    st_target: 110
+    swing: [140, 150, 160, 200]
+
+  - ticker: RIVN
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 13.40
+    trigger: 13.50
+    soft_inval: 13.00
+    st_target: 14.50
+    swing: [18, 20, 22, 25]
+
+  - ticker: TTD
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 22.09
+    soft_inval: 21.78
+    st_target: 23
+    swing: [25, 27.50, 30, 40]
+
+  - ticker: CLSK
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 13.17
+    ote: 13
+    soft_inval: 12.87
+    st_target: 14
+    swing: [16, 17, 20, 25]
+
+  - ticker: MARA
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 12.03
+    soft_inval: 11.88
+    st_target: 12.50
+    swing: [20, 40]
+
+  - ticker: DIS
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 104.01
+    soft_inval: 102.96
+    st_target: 109
+    swing: [115, 120, 130, 135]
+
+  - ticker: BKNG
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 155.81
+    ote: 155
+    soft_inval: 153.45
+    st_target: 168.40
+    swing: [168, 188, 219.20, 224]
+
+  - ticker: KWEB
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 28.20
+    ote: 28
+    soft_inval: 27.72
+    st_target: 30
+    swing: [31, 32, 33, 35]
+
+  - ticker: F
+    category: actionable
+    grade: 100
+    direction: bullish
+    current: 13.21
+    trigger: 13.50
+    soft_inval: 12.87
+    st_target: 15
+    swing: [16.85, 17, 18]
+
+  - ticker: MSFT
+    category: actionable
+    grade: 91
+    direction: bullish
+    current: 421.50
+    soft_inval: 415.80
+    st_target: 427.50
+    swing: [450, 480, 575]
+
+  # ------------------------- OTE / RECLAIM WATCHES (9) -------------------------
+  - ticker: HOOD
+    category: ote_watch
+    grade: 90
+    direction: bullish
+    current: 78.87
+    ote: 78
+    soft_inval: 77.22
+    st_target: 80
+    swing: [85, 90, 100, 105]
+
+  - ticker: META
+    category: ote_watch
+    grade: 81
+    direction: bullish
+    current: 609.86
+    ote: 605
+    soft_inval: 601.42
+    st_target: 612.50
+    swing: [700, 720, 780]
+
+  - ticker: TSLA
+    category: ote_watch
+    grade: 81
+    direction: bullish
+    current: 413.90
+    ote: 407.50
+    soft_inval: 405.90
+    st_target: 415
+    swing: [445, 495, 500, 540]
+
+  - ticker: AMZN
+    category: ote_watch
+    grade: 77
+    direction: bullish
+    current: 266.78
+    ote: 262.50
+    soft_inval: 259.88
+    st_target: 270
+    swing: [290, 310, 325, 350]
+
+  - ticker: SLV
+    category: ote_watch
+    grade: 76
+    direction: bullish
+    current: 70.36
+    ote: 69.50
+    soft_inval: 69.30
+    st_target: 70.50
+    swing: [80, 93, 100]
+
+  - ticker: GOOGL
+    category: ote_watch
+    grade: 56
+    direction: bullish
+    current: 404.54
+    ote: 400
+    soft_inval: 396
+    st_target: 407.50
+    swing: [430, 450, 550]
+
+  - ticker: PINS
+    category: ote_watch
+    grade: 72
+    direction: bullish
+    current: 20.03
+    ote: 19.50
+    soft_inval: 19.30
+    st_target: 21
+    swing: [23, 25, 30]
+
+  - ticker: WBD
+    category: ote_watch
+    grade: 39
+    direction: bullish
+    current: 27.04
+    ote: 26.50
+    soft_inval: 26
+    st_target: null   # scan listed no explicit ST target; use first swing rung
+    swing: [28, 29, 30]
+
+  - ticker: XLF
+    category: ote_watch
+    grade: 22
+    direction: bullish
+    current: 51.70
+    ote: 51
+    soft_inval: 50
+    st_target: null   # no explicit ST target
+    swing: [53, 54, 56]
+
+  # ------------------------- RISK WATCH BULLISH (2) -------------------------
+  - ticker: ^VIX
+    category: risk_watch_bullish
+    grade: 97
+    direction: bullish
+    current: 18.55
+    soft_inval: 18.32
+    st_target: 19
+    swing: [22, 23, 25]
+
+  - ticker: SQQQ
+    category: risk_watch_bullish
+    grade: 46
+    direction: bullish
+    current: 43.32
+    ote: 42.50
+    soft_inval: 41.50
+    st_target: 46
+    swing: [50, 55]
+
+  # ------------------------- BEARISH (7) -------------------------
+  # For bearish: soft_inval is ABOVE current (rally-rejection setup).
+  # st_target is BELOW current (downside target).
+  - ticker: QQQ
+    category: bearish
+    grade: 14
+    direction: bearish
+    current: 707.20
+    ote: 712              # rally / rejection zone
+    soft_inval: 715
+    st_target: 706        # first listed short-term downside target
+    swing: [705, 701, 700, 698]
+
+  - ticker: SMH
+    category: bearish
+    grade: 89
+    direction: bearish
+    current: 548.60
+    ote: 560
+    soft_inval: 567.50
+    st_target: 500
+    swing: [520, 510, 500]
+
+  - ticker: IGV
+    category: bearish
+    grade: 40
+    direction: bearish
+    current: 92.36
+    ote: 93
+    soft_inval: 94
+    st_target: 90
+    swing: [86.50, 80, 75]
+
+  - ticker: CVS
+    category: bearish
+    grade: 87
+    direction: bearish
+    current: 96.30
+    ote: 97
+    soft_inval: 98
+    st_target: null       # no explicit ST target; use first swing rung
+    swing: [93, 92.50, 90, 87.50]
+
+  - ticker: XLP
+    category: bearish
+    grade: 45
+    direction: bearish
+    current: 85.69
+    ote: 86.50
+    soft_inval: 87.50
+    st_target: null
+    swing: [83, 82.50, 73]
+
+  - ticker: HPE
+    category: bearish
+    grade: 26
+    direction: bearish
+    current: 33.18
+    ote: 34
+    soft_inval: 35
+    st_target: 32
+    swing: [31, 30, 27]
+
+  - ticker: LLY
+    category: bearish
+    grade: 16
+    direction: bearish
+    current: 994.32
+    ote: 1002.50
+    soft_inval: 1010
+    st_target: 990
+    swing: [985, 950, 932.50, 930, 927.50]
+
+  # ------------------------- SYSTEMIC LEADER (1) -------------------------
+  # NVDA — explicitly called a "watchlist" setup in Systemic Leaders section,
+  # grade not given but levels published; treat as ote_watch with null grade.
+  - ticker: NVDA
+    category: ote_watch
+    grade: null
+    direction: bullish
+    current: 224.44
+    soft_inval: 215
+    st_target: 230
+    swing: [245, 300, 340]
+    theme: ai_cloud_semis
+
+  # ------------------------- THEMATIC MENTIONS (18) -------------------------
+  # Named in the bullish-theme sections without published levels or grade.
+  # Scored on direction + full-window return only.
+  - { ticker: MSTR,  category: thematic_bullish, grade: null, direction: bullish, theme: crypto, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: IBIT,  category: thematic_bullish, grade: null, direction: bullish, theme: crypto, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: ETHA,  category: thematic_bullish, grade: null, direction: bullish, theme: crypto, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: ENPH,  category: thematic_bullish, grade: null, direction: bullish, theme: clean_energy, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: CRM,   category: thematic_bullish, grade: null, direction: bullish, theme: ai_cloud, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: PLTR,  category: thematic_bullish, grade: null, direction: bullish, theme: ai_cloud, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: ORCL,  category: thematic_bullish, grade: null, direction: bullish, theme: ai_cloud, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: PYPL,  category: thematic_bullish, grade: null, direction: bullish, theme: fintech, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: SOFI,  category: thematic_bullish, grade: null, direction: bullish, theme: fintech, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: COIN,  category: thematic_bullish, grade: null, direction: bullish, theme: fintech, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: HD,    category: thematic_bullish, grade: null, direction: bullish, theme: consumer_travel, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: RCL,   category: thematic_bullish, grade: null, direction: bullish, theme: consumer_travel, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: CCL,   category: thematic_bullish, grade: null, direction: bullish, theme: consumer_travel, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: DASH,  category: thematic_bullish, grade: null, direction: bullish, theme: consumer_travel, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: LYFT,  category: thematic_bullish, grade: null, direction: bullish, theme: consumer_travel, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: SMCI,  category: thematic_bullish, grade: null, direction: bullish, theme: semis, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: MU,    category: thematic_bullish, grade: null, direction: bullish, theme: semis, current: null, soft_inval: null, st_target: null, swing: [] }
+  - { ticker: TXN,   category: thematic_bullish, grade: null, direction: bullish, theme: semis, current: null, soft_inval: null, st_target: null, swing: [] }

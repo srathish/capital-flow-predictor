@@ -39,3 +39,17 @@ apps/screener/output/
 # Screener outputs (regenerated per run)
 apps/screener/cache/
 apps/screener/output/
+
+# Talon research artifacts — keep reports + research code, exclude bulky data
+# - cache/: re-fetchable from UW on every scan (1000+ JSONs)
+# - output/scan_*.json: production scan results live in Postgres
+# - output/*.csv: intermediate research data
+talon_analysis/cache/
+talon_analysis/output/scan_*.json
+talon_analysis/output/*.csv
+
+# Claude Code working state (per-machine)
+.claude/
+
+# Local-chat (local dev only)
+local-chat/

@@ -1504,3 +1504,81 @@ export type ConfluenceBatchResponse = {
   generated_at: string;
   rows: ConfluenceRow[];
 };
+
+// ---------- Talon scanner ----------
+export type TalonSetup = {
+  ticker: string;
+  grade: number;
+  direction: "bull" | "bear" | "neutral";
+  theme: string;
+  call_dom_now: number | null;
+  delta_buildup_pct: number | null;
+  vanna_ratio_5d_back: number | null;
+  gamma_now: number | null;
+  gamma_positive: number;
+  theme_coherence: number | null;
+  n_gex_days: number;
+  g_delta_score: number;
+  g_vanna_score: number;
+  g_theme_score: number;
+  g_call_dom_score: number;
+  // Dark pool (latest session) — display-only, no grade weight
+  dp_vwap: number | null;
+  dp_share_pct: number | null;
+  dp_skew_pct: number | null;
+  dp_volume_total: number | null;
+  dp_session_date: string | null;
+};
+
+export type TalonScanResponse = {
+  scan_id: string;
+  scan_date: string;
+  generated_at: string;
+  started_at?: string;
+  elapsed_seconds?: number;
+  universe_total: number;
+  with_gex_data: number;
+  skipped_no_data: number;
+  actionable_count: number;
+  watchlist_count: number;
+  skip_count: number;
+  actionable: TalonSetup[];
+  watchlist: TalonSetup[];
+  skipped_tickers: string[];
+  gate_weights_used: Record<string, number>;
+  notes: string;
+};
+
+export type TalonScanProgress = {
+  status: "idle" | "running" | "complete" | "error";
+  scan_id: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  phase: "init" | "prewarm_gex" | "prewarm_dp" | "metrics" | "coherence" | "done" | null;
+  phase_progress: number;
+  phase_total: number;
+  current_ticker: string | null;
+  last_error: string | null;
+};
+
+export type TalonRecentScanRow = {
+  scan_id: string;
+  scan_date: string;
+  completed_at: string;
+  elapsed_seconds: number;
+  universe_total: number;
+  with_gex_data: number;
+  actionable_count: number;
+  watchlist_count: number;
+  skip_count: number;
+};
+
+export type TalonRecentScansResponse = {
+  count: number;
+  scans: TalonRecentScanRow[];
+};
+
+export type TalonUniverseResponse = {
+  count: number;
+  tickers: string[];
+};

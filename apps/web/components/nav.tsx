@@ -16,6 +16,7 @@ const tabs = [
   { href: "/explosive", label: "Hot Options" },
   { href: "/screener", label: "Stocks" },
   { href: "/scanner", label: "Setups" },
+  { href: "/talon", label: "Talon" },
   { href: "/delphi", label: "Delphi" },
   { href: "/conviction", label: "Conviction" },
   { href: "/earnings", label: "Earnings" },

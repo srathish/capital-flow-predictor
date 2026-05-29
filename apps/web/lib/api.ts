@@ -60,6 +60,10 @@ import type {
   RunStatusResponse,
   SectorsResponse,
   SectorRrgResponse,
+  TalonRecentScansResponse,
+  TalonScanProgress,
+  TalonScanResponse,
+  TalonUniverseResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -617,6 +621,31 @@ export const api = {
   confluenceForTicker(ticker: string, refresh = false): Promise<ConfluenceRow> {
     const qs = refresh ? "?refresh=true" : "";
     return getJson<ConfluenceRow>(`/v1/confluence/${encodeURIComponent(ticker)}${qs}`);
+  },
+
+  // ---------- Talon scanner ----------
+  talonLatestScan(): Promise<TalonScanResponse> {
+    return getJson<TalonScanResponse>(`/v1/talon/scan/latest`);
+  },
+  talonRunScan(): Promise<TalonScanResponse> {
+    return fetch(`${baseUrl()}/v1/talon/scan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      // Long-running: no client-side timeout. Every scan hits UW live for all
+      // 504 tickers — takes ~7-10 minutes. Use talonScanProgress() to poll.
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as TalonScanResponse;
+    });
+  },
+  talonScanProgress(): Promise<TalonScanProgress> {
+    return getJson<TalonScanProgress>(`/v1/talon/scan/progress`);
+  },
+  talonRecentScans(limit = 20): Promise<TalonRecentScansResponse> {
+    return getJson<TalonRecentScansResponse>(`/v1/talon/scan/recent?limit=${limit}`);
+  },
+  talonUniverse(): Promise<TalonUniverseResponse> {
+    return getJson<TalonUniverseResponse>(`/v1/talon/universe`);
   },
 };
 

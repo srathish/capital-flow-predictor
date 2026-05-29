@@ -47,6 +47,7 @@ from cfp_api.routes import (
     smart_money,
     stage,
     stocks,
+    talon,
     watchlist,
 )
 from cfp_api.settings import settings
@@ -157,6 +158,9 @@ app.include_router(intraday_gex.router, dependencies=PROTECTED)
 # Institutional flow & ownership rollups (migration 0030). Smart-money
 # confirmation layer for the /explosive scanner; standalone screener too.
 app.include_router(institutional.router, dependencies=PROTECTED)
+# Talon scanner — Phase 3-validated flow gates over 504-ticker universe.
+# Library lives in cfp_api.talon_scanner; reads GEX cache, produces ranked setups.
+app.include_router(talon.router, dependencies=PROTECTED)
 # Delphi v0.2 surface — 5 new tabs share these routes.
 app.include_router(smart_money.router, dependencies=PROTECTED)
 app.include_router(macro.router, dependencies=PROTECTED)
