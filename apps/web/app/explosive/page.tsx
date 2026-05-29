@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { baseUrl, authHeaders } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -413,6 +413,33 @@ export default function ExplosivePage() {
   const [rescoring, setRescoring] = useState(false);
   const [rescoreError, setRescoreError] = useState<string | null>(null);
   const [rescoreCooldown, setRescoreCooldown] = useState(0);
+  // Elapsed-seconds counter for live "Rescoring… 23s" feedback.
+  // Rescore status endpoint only returns `in_progress`, so we self-time it.
+  const [rescoreElapsed, setRescoreElapsed] = useState(0);
+  useEffect(() => {
+    if (!rescoring) return;
+    setRescoreElapsed(0);
+    const id = setInterval(() => setRescoreElapsed((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [rescoring]);
+  // Cooldown countdown ticker — drains by 1s/sec.
+  useEffect(() => {
+    if (rescoreCooldown <= 0) return;
+    const id = setInterval(
+      () => setRescoreCooldown((s) => Math.max(0, s - 1)),
+      1000,
+    );
+    return () => clearInterval(id);
+  }, [rescoreCooldown]);
+
+  // Visual progress fraction: linear to 30s ("typical low"), then asymptotic
+  // toward 1.0 as it approaches and passes 90s ("typical high").
+  const rescoreProgressFrac = (() => {
+    if (!rescoring) return 0;
+    if (rescoreElapsed <= 30) return rescoreElapsed / 60; // fills to 50% at 30s
+    if (rescoreElapsed <= 90) return 0.5 + (rescoreElapsed - 30) / 120; // fills to 100% at 90s
+    return Math.min(0.98, 1 - Math.exp(-(rescoreElapsed - 90) / 60) * 0.02); // creeps past 90s
+  })();
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["explosive", filter, minScore],
@@ -420,6 +447,27 @@ export default function ExplosivePage() {
     refetchInterval: REFETCH_MS,
     refetchOnWindowFocus: false,
   });
+
+  // Track when the last refresh landed so the user knows the Refresh
+  // button actually pulled fresh data (vs the snapshot which is server-side time).
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null);
+  const [, forceTick] = useState(0);  // re-render every second so "Xs ago" updates
+  useEffect(() => {
+    if (data) setLastFetchedAt(Date.now());
+  }, [data]);
+  useEffect(() => {
+    const id = setInterval(() => forceTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const fetchedAgoLabel = (() => {
+    if (lastFetchedAt == null) return "—";
+    if (isFetching) return "fetching…";
+    const sec = Math.round((Date.now() - lastFetchedAt) / 1000);
+    if (sec < 5) return "just now";
+    if (sec < 60) return `${sec}s ago`;
+    if (sec < 3600) return `${Math.round(sec / 60)}m ago`;
+    return `${Math.round(sec / 3600)}h ago`;
+  })();
 
   // Bypass the GHA cron entirely — POST kicks score_explosive as a
   // background task on the API (Railway proxies 30s sync requests, so
@@ -497,22 +545,62 @@ export default function ExplosivePage() {
             · {data?.count ?? 0} setups
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={triggerRescore}
-            disabled={rescoring || isFetching}
-            title="Run scoring in-process on the API. Bypasses the GHA cron. 60s cooldown."
-            className="h-9 rounded-full border border-primary/40 bg-primary/10 px-4 text-sm text-primary hover:border-primary disabled:opacity-50"
-          >
-            {rescoring ? "Rescoring… ~30-90s" : rescoreCooldown > 0 ? `Cooldown ${rescoreCooldown}s` : "Rescore now"}
-          </button>
-          <button
-            onClick={() => refetch()}
-            disabled={isFetching}
-            className="h-9 rounded-full border border-border bg-card px-4 text-sm hover:border-primary/60 disabled:opacity-50"
-          >
-            {isFetching ? "Refreshing…" : "Refresh"}
-          </button>
+        <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={triggerRescore}
+              disabled={rescoring || isFetching}
+              title="Run scoring in-process on the API. Bypasses the GHA cron. 60s cooldown."
+              className="h-9 rounded-full border border-primary/40 bg-primary/10 px-4 text-sm text-primary hover:border-primary disabled:opacity-50 tabular-nums"
+            >
+              {rescoring
+                ? `Rescoring… ${rescoreElapsed}s / typ. 30-90s`
+                : rescoreCooldown > 0
+                ? `Cooldown ${rescoreCooldown}s`
+                : "Rescore now"}
+            </button>
+            <button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              title="Re-pull the latest scored data from the API. Doesn't run new scoring (use Rescore for that)."
+              className="h-9 rounded-full border border-border bg-card px-4 text-sm hover:border-primary/60 disabled:opacity-50 inline-flex items-center gap-1.5"
+            >
+              {isFetching && (
+                <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4zm2 5.3A7.96 7.96 0 014 12H0c0 3 1.1 5.8 3 7.9l3-2.6z" />
+                </svg>
+              )}
+              {isFetching ? "Refreshing…" : "Refresh"}
+            </button>
+          </div>
+          <p className="text-[10px] tabular-nums text-muted-foreground">
+            Refreshed{" "}
+            <span className={isFetching ? "text-primary" : "font-medium text-foreground"}>
+              {fetchedAgoLabel}
+            </span>{" "}
+            · Refresh re-pulls cached scores · Rescore reruns scoring (~30-90s)
+          </p>
+          {rescoring && (
+            <div className="w-[260px] space-y-0.5">
+              <div className="h-1 overflow-hidden rounded-full bg-foreground/10">
+                <div
+                  className={cn(
+                    "h-full transition-all duration-500",
+                    rescoreElapsed > 90 ? "bg-amber-500" : "bg-primary",
+                  )}
+                  style={{ width: `${rescoreProgressFrac * 100}%` }}
+                />
+              </div>
+              <p className="text-[10px] tabular-nums text-muted-foreground">
+                {rescoreElapsed > 90
+                  ? "Taking longer than typical — still running"
+                  : rescoreElapsed > 30
+                  ? "Past the fast path — usually done by 90s"
+                  : "Within the typical 30s fast path"}
+              </p>
+            </div>
+          )}
         </div>
       </div>
       {rescoreError && (
