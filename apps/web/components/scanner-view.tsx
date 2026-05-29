@@ -145,7 +145,7 @@ export function ScannerView() {
     limit: 200,
   };
 
-  const { data, isLoading, isError, isFetching, error } = useQuery({
+  const { data, isLoading, isError, isFetching, error, refetch } = useQuery({
     queryKey: ["stage-scan", params.universe, params.tickers, params.onlyArmed],
     queryFn: () => api.stageScan(params),
     // S&P 500 scan is slow on first call (Yahoo fetch); subsequent calls are
@@ -221,16 +221,30 @@ export function ScannerView() {
           pre-breakout flow gate, pre-break tightness in Grade, handle duration check,
           deterministic phase tie-break.
         </p>
-        <div className="ml-auto text-xs text-muted-foreground">
+        <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
           {data ? (
-            <>
-              {isFetching ? "refreshing… " : ""}
+            <span>
               {armedCount} armed · {data.scanned} scanned
               {data.skipped > 0 ? ` · ${data.skipped} skipped` : ""}
-            </>
+            </span>
           ) : (
-            "—"
+            <span>—</span>
           )}
+          <button
+            type="button"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            title="Refresh scan"
+            className={cn(
+              "inline-flex h-7 items-center gap-1 rounded-full border border-border bg-card px-3 text-xs transition-colors",
+              isFetching
+                ? "cursor-not-allowed opacity-60"
+                : "hover:text-foreground hover:border-primary/60",
+            )}
+          >
+            <span className={cn("inline-block", isFetching && "animate-spin")}>↻</span>
+            {isFetching ? "refreshing…" : "refresh"}
+          </button>
         </div>
       </header>
 
