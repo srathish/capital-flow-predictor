@@ -158,6 +158,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Pull Reddit RSS catalyst posts
@@ -173,6 +176,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Snapshot Apewisdom mention rankings
@@ -190,6 +196,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Run migrations (ensures reddit_predictions table exists)
@@ -213,6 +222,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply pending migrations
@@ -237,6 +249,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Compute forward returns for matured agent signals
@@ -256,6 +271,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Build + post pre-market brief
@@ -283,6 +301,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Re-run ensemble on stale + catalyst-flagged tickers
@@ -338,6 +359,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations (gex_plan_outcomes idempotent)
@@ -359,6 +383,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Rebuild full daily feature panel (cross-asset + sector + alpha158)
@@ -378,6 +405,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -398,6 +428,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -420,6 +453,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -442,6 +478,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -467,6 +506,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied (0024, 0025, 0026)
@@ -488,6 +530,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -512,6 +557,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -534,6 +582,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -556,6 +607,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -581,6 +635,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -608,6 +665,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -631,6 +691,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -654,6 +717,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -677,6 +743,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -700,6 +769,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -728,6 +800,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Ensure migrations applied
@@ -751,6 +826,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations (0037_delphi_v2 + 0038_delphi_quant)
@@ -774,6 +852,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations
@@ -798,6 +879,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations
@@ -822,6 +906,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations
@@ -843,6 +930,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations
@@ -867,6 +957,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations (0039_delphi_options)
@@ -887,6 +980,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - run: uv python install 3.11
       - run: uv sync --all-packages
       - name: Apply migrations
