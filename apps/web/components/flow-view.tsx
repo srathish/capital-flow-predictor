@@ -214,6 +214,7 @@ export function FlowView() {
   const [ticker, setTicker] = useState<string>("");
   const [dossierTicker, setDossierTicker] = useState<string | null>(null);
   const [expandedClusters, setExpandedClusters] = useState<Set<string>>(new Set());
+  const [sortMode, setSortMode] = useState<"top" | "latest">("top");
 
   function openDossier(t: string) {
     const sym = t.trim().toUpperCase();
@@ -334,9 +335,23 @@ export function FlowView() {
       }
     }
 
-    items.sort((a, b) => b.sortScore - a.sortScore);
+    if (sortMode === "latest") {
+      const tsOf = (i: FeedItem) =>
+        i.type === "cluster"
+          ? new Date(i.latestTs).getTime()
+          : new Date(i.event.ts).getTime();
+      const premOf = (i: FeedItem) =>
+        i.type === "cluster" ? i.totalPremium : i.event.premium ?? 0;
+      items.sort((a, b) => {
+        const dt = tsOf(b) - tsOf(a);
+        if (dt !== 0) return dt;
+        return premOf(b) - premOf(a);
+      });
+    } else {
+      items.sort((a, b) => b.sortScore - a.sortScore);
+    }
     return items;
-  }, [events, data]);
+  }, [events, data, sortMode]);
 
   const clusterCount = feedItems.filter((i) => i.type === "cluster").length;
 
@@ -529,12 +544,49 @@ export function FlowView() {
       ) : (
         <Card>
           <CardContent className="p-0">
-            {clusterCount > 0 && (
-              <div className="border-b border-border/60 px-3 py-2 text-[10px] uppercase tracking-wide text-muted-foreground">
-                {clusterCount} confluence {clusterCount === 1 ? "cluster" : "clusters"} ·
-                ranked by signals × recency × size
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-3 py-2 text-[10px] uppercase tracking-wide text-muted-foreground">
+              <span>
+                {clusterCount > 0 ? (
+                  <>
+                    {clusterCount} confluence {clusterCount === 1 ? "cluster" : "clusters"}
+                    {sortMode === "top"
+                      ? " · ranked by signals × recency × size"
+                      : " · newest first"}
+                  </>
+                ) : sortMode === "top" ? (
+                  "ranked by signals × recency × size"
+                ) : (
+                  "newest first"
+                )}
+              </span>
+              <div className="flex items-center gap-1 normal-case tracking-normal">
+                <span className="text-[10px] uppercase tracking-wide text-muted-foreground/70">
+                  Sort
+                </span>
+                <div className="inline-flex overflow-hidden rounded-md border border-border/60">
+                  {(["top", "latest"] as const).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setSortMode(m)}
+                      className={cn(
+                        "px-2 py-0.5 text-[11px] font-medium transition-colors",
+                        sortMode === m
+                          ? "bg-foreground/10 text-foreground"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                      title={
+                        m === "top"
+                          ? "Top: confluence + size weighted"
+                          : "Latest: newest hits first"
+                      }
+                    >
+                      {m === "top" ? "Top" : "Latest"}
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
+            </div>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
