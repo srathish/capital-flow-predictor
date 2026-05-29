@@ -1582,3 +1582,57 @@ export type TalonUniverseResponse = {
   count: number;
   tickers: string[];
 };
+
+// Top Plays — 3 tiered contract picks per top-20 ticker, defensible by UW data
+export type TalonTier = "itm" | "atm" | "otm";
+
+export type TalonContractPickEvidence = {
+  total_ask_side_prem?: number;
+  n_alerts?: number;
+  has_sweep?: boolean;
+  has_floor?: boolean;
+  first_oi?: number | null;
+  current_oi?: number | null;
+  oi_growth_pct?: number | null;
+  first_alert_at?: string | null;
+  last_alert_at?: string | null;
+  iv_latest_pct?: number | null;
+  unbacked_reason?: string;
+};
+
+export type TalonContractPick = {
+  tier: TalonTier;
+  strike: number | null;
+  expiry: string | null;
+  cost_estimate: number | null;
+  breakeven: number | null;
+  breakeven_pct_above_price: number | null;
+  confidence_score: number;
+  evidence: TalonContractPickEvidence;
+};
+
+export type TalonTopPlay = {
+  ticker: string;
+  grade: number;
+  direction: "bull" | "bear" | "neutral";
+  theme: string;
+  call_dom_now: number | null;
+  dp_skew_pct: number | null;
+  dp_share_pct: number | null;
+  current_price: number;
+  soft_inval: number | null;
+  st_target: number | null;
+  swing_targets: number[];
+  all_call_walls: number[];
+  all_put_walls: number[];
+  picks: TalonContractPick[];
+  n_picks_backed: number;
+};
+
+export type TalonTopPlaysResponse = {
+  scan_id: string;
+  scan_date: string;
+  generated_at: string;
+  top_plays: TalonTopPlay[];
+  _cache_hit: boolean;
+};

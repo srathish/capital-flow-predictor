@@ -45,6 +45,33 @@ async def save_scan(scan: dict[str, Any]) -> None:
         )
 
 
+async def update_scan_top_plays(scan_id: str, top_plays: list[dict]) -> None:
+    """Patch the cached scan's result_json with a freshly-computed top_plays list.
+
+    Implementation note: legacy rows store result_json as a JSON-encoded *string*
+    inside the jsonb column (double-encoding side-effect of how save_scan binds
+    text via asyncpg). jsonb_set won't work on a scalar string, so we read the
+    full payload, mutate, and rewrite. Payload is 50-150KB — acceptable for an
+    operation that runs once per scan.
+    """
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT result_json FROM talon_scans WHERE scan_id = $1", scan_id
+        )
+        if not row:
+            return
+        payload = row["result_json"]
+        if isinstance(payload, str):
+            payload = json.loads(payload)
+        payload["top_plays"] = top_plays
+        await conn.execute(
+            "UPDATE talon_scans SET result_json = $2::jsonb WHERE scan_id = $1",
+            scan_id,
+            json.dumps(payload),
+        )
+
+
 async def load_latest_scan() -> dict[str, Any] | None:
     pool = get_pool()
     async with pool.acquire() as conn:

@@ -181,7 +181,7 @@ export function TalonView() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl space-y-4 px-4 py-6">
+    <div className="space-y-4">
       {/* ===== Header ===== */}
       <Card>
         <CardContent className="space-y-3 p-4">

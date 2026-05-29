@@ -201,6 +201,68 @@ class TalonUwClient:
         return normalized
 
     # ------------------------------------------------------------------
+    # Per-strike GEX (for wall structure) + per-ticker flow alerts (for
+    # whale-backed strike selection). Used by talon_top_plays.
+    # ------------------------------------------------------------------
+    def strike_gex(self, ticker: str) -> list[dict] | None:
+        """Per-strike Greek exposure for the latest market session.
+
+        Returns a list of rows with strike + call_gamma / put_gamma /
+        call_delta / put_delta / call_vanna / put_vanna. Used to identify
+        call walls (resistance / ST target) and put walls (support / inval).
+        """
+        cache_key = f"strike_gex:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/greek-exposure/strike", None)
+        if body is None:
+            return None
+        rows = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(rows, list):
+            return None
+        _CACHE.set(cache_key, rows)
+        return rows
+
+    def flow_alerts_for_ticker(
+        self,
+        ticker: str,
+        is_call: bool = True,
+        is_ask_side: bool = True,
+        min_premium: int = 25_000,
+        max_dte: int = 35,
+        limit: int = 150,
+    ) -> list[dict] | None:
+        """Recent UW flow alerts for one ticker, filtered to ask-side calls.
+
+        Returns the raw alert list — strike, expiry, total_ask_side_prem,
+        open_interest, volume_oi_ratio, has_sweep, has_floor, alert_rule, etc.
+        Used by talon_top_plays to identify the strike whales are accumulating.
+        """
+        cache_key = f"flow_alerts:{ticker}:{int(is_call)}{int(is_ask_side)}{min_premium}{max_dte}{limit}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(
+            "/api/option-trades/flow-alerts",
+            {
+                "ticker_symbol": ticker,
+                "is_call": str(is_call).lower(),
+                "is_ask_side": str(is_ask_side).lower(),
+                "min_premium": str(min_premium),
+                "max_dte": str(max_dte),
+                "limit": limit,
+            },
+        )
+        if body is None:
+            return None
+        rows = body.get("data") or body.get("result") or []
+        if not isinstance(rows, list):
+            return None
+        _CACHE.set(cache_key, rows)
+        return rows
+
+    # ------------------------------------------------------------------
     # Batch fan-out — one call per ticker, executed concurrently
     #
     # Optional on_progress(done, total, last_ticker) callback fires each
