@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 import math
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
@@ -1481,7 +1482,12 @@ def score_all(database_url: str) -> dict[str, Any]:
     with connect(database_url) as conn:
         universe = _load_universe(conn, today)
         log.info("explosive scoring: %d tickers in universe", len(universe))
-        for ticker in universe:
+        # Progress heartbeat every 25 tickers — without it, a hang on any
+        # single ticker looks identical to "still working" in GH Actions
+        # logs, and the only signal is the job-level timeout 10+ min later.
+        progress_step = 25
+        loop_started = time.monotonic()
+        for idx, ticker in enumerate(universe, start=1):
             try:
                 # Wrap the *entire* per-ticker block in a savepoint so that
                 # any SELECT failure rolls back cleanly instead of leaving
@@ -1495,6 +1501,11 @@ def score_all(database_url: str) -> dict[str, Any]:
                 top_preview.append((ticker, int(stages.get("stages_passed", 0)), score))
             except Exception as e:
                 log.warning("scoring failed for %s: %s", ticker, e, exc_info=True)
+            if idx % progress_step == 0 or idx == len(universe):
+                log.info(
+                    "explosive scoring: %d / %d tickers done (%.1fs elapsed)",
+                    idx, len(universe), time.monotonic() - loop_started,
+                )
         # No explicit conn.commit(): psycopg3's `with psycopg.connect(...)`
         # already wraps the body in a transaction and commits on clean exit;
         # an explicit commit here raises "Explicit commit() forbidden within

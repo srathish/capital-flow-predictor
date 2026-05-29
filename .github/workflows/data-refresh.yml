@@ -533,7 +533,7 @@ jobs:
     # is stale, e.g. after a deploy that wiped the API cache).
     if: github.event.inputs.job == 'explosive-score'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
