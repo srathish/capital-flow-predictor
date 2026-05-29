@@ -522,9 +522,12 @@ jobs:
     # Reads the tables explosive-ingest just refreshed and writes a new
     # explosive_scores snapshot the /explosive API reads. Runs 4 min after
     # each ingest (:07 / :22 / :37 / :52) to give per-ticker pulls time.
+    # Bumped from 5→12 min on 2026-05-29: score_all grew past the original
+    # 30-90s estimate (80-ticker universe with per-ticker UW pulls now
+    # routinely lands at 4-7 min wall time).
     if: startsWith(github.event.schedule, '7,22,37,52') || github.event.inputs.job == 'explosive-score'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
