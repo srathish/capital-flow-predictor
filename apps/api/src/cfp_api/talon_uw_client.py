@@ -224,6 +224,36 @@ class TalonUwClient:
         _CACHE.set(cache_key, rows)
         return rows
 
+    def candles(self, ticker: str, days: int = 60) -> list[dict] | None:
+        """Daily OHLCV candles for the past N trading days.
+
+        Used by Talon v2 for chart-structure signals: ATR, volume contraction,
+        MA position. Cached because v2 fans out for the full universe.
+        """
+        cache_key = f"candles:{ticker}:{days}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(
+            f"/api/stock/{ticker}/ohlc/1d",
+            {"limit": str(days)},
+        )
+        if body is None:
+            return None
+        rows = body.get("data") if isinstance(body, dict) else body
+        if not isinstance(rows, list):
+            return None
+        _CACHE.set(cache_key, rows)
+        return rows
+
+    def candles_batch(
+        self,
+        tickers: list[str],
+        days: int = 60,
+        on_progress: Callable[[int, int, str], None] | None = None,
+    ) -> dict[str, list[dict] | None]:
+        return self._batch(tickers, lambda t: self.candles(t, days), on_progress)
+
     def flow_alerts_for_ticker(
         self,
         ticker: str,

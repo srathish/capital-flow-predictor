@@ -17,6 +17,7 @@ const tabs = [
   { href: "/screener", label: "Stocks" },
   { href: "/scanner", label: "Setups" },
   { href: "/talon", label: "Talon" },
+  { href: "/talon-v2", label: "Talon 2" },
   { href: "/delphi", label: "Delphi" },
   { href: "/conviction", label: "Conviction" },
   { href: "/earnings", label: "Earnings" },

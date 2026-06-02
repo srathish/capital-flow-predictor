@@ -48,6 +48,7 @@ from cfp_api.routes import (
     stage,
     stocks,
     talon,
+    talon_v2,
     watchlist,
 )
 from cfp_api.settings import settings
@@ -161,6 +162,9 @@ app.include_router(institutional.router, dependencies=PROTECTED)
 # Talon scanner — Phase 3-validated flow gates over 504-ticker universe.
 # Library lives in cfp_api.talon_scanner; reads GEX cache, produces ranked setups.
 app.include_router(talon.router, dependencies=PROTECTED)
+# Talon v2 — v1's flow gates + chart structure (ATR / vol contraction / MA pos).
+# Separate routes under /v1/talon/v2/*, separate Postgres table (talon2_scans).
+app.include_router(talon_v2.router, dependencies=PROTECTED)
 # Delphi v0.2 surface — 5 new tabs share these routes.
 app.include_router(smart_money.router, dependencies=PROTECTED)
 app.include_router(macro.router, dependencies=PROTECTED)

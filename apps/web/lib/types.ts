@@ -1636,3 +1636,62 @@ export type TalonTopPlaysResponse = {
   top_plays: TalonTopPlay[];
   _cache_hit: boolean;
 };
+
+// ---------- Talon v2 (chart structure overlay) ----------
+export type TalonV2ChartSignals = {
+  atr_5: number | null;
+  atr_20: number | null;
+  atr_ratio: number | null;
+  vol_5: number | null;
+  vol_20: number | null;
+  vol_ratio: number | null;
+  above_20d: number | null;
+  above_50d: number | null;
+  above_200d: number | null;
+  pct_from_high_20: number | null;
+  slope_4w_pct: number | null;
+  coiled_score: number | null;
+  coiled: boolean;
+};
+
+export type TalonV2Setup = TalonSetup & TalonV2ChartSignals;
+
+export type TalonV2CoiledSetup = TalonV2ChartSignals & {
+  ticker: string;
+  theme: string;
+  grade: number | null;
+  direction: "bull" | "bear" | "neutral" | null;
+  chart_only?: boolean;
+};
+
+export type TalonV2ThemeSummary = {
+  n_members_with_data: number;
+  n_coiled: number;
+  mean_coiled_score: number | null;
+  coiled_tickers: string[];
+  coiled_basket: boolean;
+};
+
+export type TalonV2ScanResponse = TalonScanResponse & {
+  v2: true;
+  v2_scan_id: string;
+  v2_generated_at: string;
+  v2_elapsed_seconds: number;
+  v2_phases_added: string[];
+  themes_summary: Record<string, TalonV2ThemeSummary>;
+  coiled_themes: string[];
+  coiled_setups: TalonV2CoiledSetup[];
+  coiled_count: number;
+  chart_only_coiled: string[];
+  v2_notes: string;
+};
+
+export type TalonV2ScanPhase =
+  | NonNullable<TalonScanProgress["phase"]>
+  | "v1_scan"
+  | "prewarm_candles"
+  | "chart_signals";
+
+export type TalonV2ScanProgress = Omit<TalonScanProgress, "phase"> & {
+  phase: TalonV2ScanPhase | null;
+};

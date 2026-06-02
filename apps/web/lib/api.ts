@@ -65,6 +65,8 @@ import type {
   TalonScanResponse,
   TalonTopPlaysResponse,
   TalonUniverseResponse,
+  TalonV2ScanProgress,
+  TalonV2ScanResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -651,6 +653,24 @@ export const api = {
   talonTopPlays(forceRecompute = false): Promise<TalonTopPlaysResponse> {
     const qs = forceRecompute ? "?force_recompute=true" : "";
     return getJson<TalonTopPlaysResponse>(`/v1/talon/top-plays${qs}`);
+  },
+
+  // ---------- Talon v2 (chart structure overlay) ----------
+  talonV2LatestScan(): Promise<TalonV2ScanResponse> {
+    return getJson<TalonV2ScanResponse>(`/v1/talon/v2/scan/latest`);
+  },
+  talonV2RunScan(): Promise<TalonV2ScanResponse> {
+    return fetch(`${baseUrl()}/v1/talon/v2/scan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      // Long-running: v1 (~7-10 min) + candle prewarm (~2-3 min) ≈ 10-15 min.
+    }).then(async (res) => {
+      if (!res.ok) throw new ApiError(res.status, `${res.status} ${res.statusText}`);
+      return (await res.json()) as TalonV2ScanResponse;
+    });
+  },
+  talonV2ScanProgress(): Promise<TalonV2ScanProgress> {
+    return getJson<TalonV2ScanProgress>(`/v1/talon/v2/scan/progress`);
   },
 };
 
