@@ -110,7 +110,8 @@ def _swing_adjusted_score(bucket: dict) -> float:
     dte = _dte_for(bucket.get("expiry"))
     if dte is None:
         return v1_picks._confidence_score(bucket)  # noqa: SLF001
-    if dte > MAX_DTE:
+    # Drop expired contracts and anything past the swing horizon
+    if dte < 0 or dte > MAX_DTE:
         return float("-inf")
     base = v1_picks._confidence_score(bucket)  # noqa: SLF001
     return base + _swing_dte_bonus(dte)
