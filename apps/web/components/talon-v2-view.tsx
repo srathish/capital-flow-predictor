@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ApiError, api } from "@/lib/api";
 import type {
   TalonV2CoiledSetup,
@@ -38,6 +38,59 @@ const PHASE_LABELS: Record<NonNullable<TalonV2ScanProgress["phase"]>, string> = 
   fundamentals_signals: "Fundamentals",
   done: "Done",
 };
+
+// Phases grouped by stage with approximate elapsed-seconds budgets (used for
+// ETA estimation). Numbers calibrated from the first real scan (16m32s total
+// for 504 tickers). Tweak from telemetry as we collect more runs.
+const PHASE_ORDER: Array<{
+  key: NonNullable<TalonV2ScanProgress["phase"]>;
+  stage: "v1" | "v2";
+  approxSec: number;
+}> = [
+  { key: "init", stage: "v1", approxSec: 1 },
+  { key: "prewarm_gex", stage: "v1", approxSec: 220 },
+  { key: "prewarm_dp", stage: "v1", approxSec: 200 },
+  { key: "metrics", stage: "v1", approxSec: 30 },
+  { key: "coherence", stage: "v1", approxSec: 30 },
+  { key: "v1_scan", stage: "v1", approxSec: 0 },
+  { key: "prewarm_candles", stage: "v2", approxSec: 140 },
+  { key: "chart_signals", stage: "v2", approxSec: 10 },
+  { key: "prewarm_earnings", stage: "v2", approxSec: 90 },
+  { key: "catalyst_signals", stage: "v2", approxSec: 5 },
+  { key: "prewarm_flow_alerts", stage: "v2", approxSec: 200 },
+  { key: "whale_signals", stage: "v2", approxSec: 5 },
+  { key: "prewarm_short", stage: "v2", approxSec: 80 },
+  { key: "short_signals", stage: "v2", approxSec: 5 },
+  { key: "prewarm_analyst", stage: "v2", approxSec: 80 },
+  { key: "analyst_signals", stage: "v2", approxSec: 5 },
+  { key: "prewarm_insider", stage: "v2", approxSec: 80 },
+  { key: "insider_signals", stage: "v2", approxSec: 5 },
+  { key: "pattern_signals", stage: "v2", approxSec: 15 },
+  { key: "prewarm_fundamentals", stage: "v2", approxSec: 100 },
+  { key: "fundamentals_signals", stage: "v2", approxSec: 5 },
+  { key: "done", stage: "v2", approxSec: 1 },
+];
+
+function phaseIndex(phase: TalonV2ScanProgress["phase"]): number {
+  if (!phase) return -1;
+  return PHASE_ORDER.findIndex((p) => p.key === phase);
+}
+
+function totalRemainingSec(currentPhase: TalonV2ScanProgress["phase"], phaseFrac: number): number {
+  const idx = phaseIndex(currentPhase);
+  if (idx < 0) return 0;
+  const current = PHASE_ORDER[idx];
+  const currentRemaining = current.approxSec * (1 - phaseFrac);
+  const futureRemaining = PHASE_ORDER.slice(idx + 1).reduce((a, p) => a + p.approxSec, 0);
+  return Math.max(0, currentRemaining + futureRemaining);
+}
+
+function fmtDuration(sec: number): string {
+  if (sec < 60) return `${Math.round(sec)}s`;
+  const m = Math.floor(sec / 60);
+  const s = Math.round(sec % 60);
+  return `${m}m${s.toString().padStart(2, "0")}s`;
+}
 
 function relativeTime(iso: string | null | undefined): string {
   if (!iso) return "";
@@ -341,19 +394,7 @@ export function TalonV2View() {
             {isScanning ? "Scanning…" : "Run scan"}
           </button>
           {isScanning && progress && (
-            <div className="w-[320px] space-y-0.5">
-              <div className="h-1 overflow-hidden rounded-full bg-foreground/10">
-                <div
-                  className="h-full bg-primary transition-all duration-500"
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-              <p className="text-[10px] tabular-nums text-muted-foreground">
-                {progress.phase ? PHASE_LABELS[progress.phase] : "…"} ·{" "}
-                {progress.phase_progress}/{progress.phase_total}
-                {progress.current_ticker ? ` · ${progress.current_ticker}` : ""}
-              </p>
-            </div>
+            <ScanProgressPanel progress={progress} progressPct={progressPct} />
           )}
         </div>
       </div>
@@ -366,7 +407,7 @@ export function TalonV2View() {
         </Card>
       )}
 
-      {!scan && !isLoading && !error && (
+      {!scan && !isLoading && !error && !isScanning && (
         <Card>
           <CardContent className="space-y-2 p-6 text-sm text-muted-foreground">
             <p className="text-foreground">No Talon v2 scan yet.</p>
@@ -374,6 +415,19 @@ export function TalonV2View() {
               Click <span className="text-foreground">Run scan</span> to kick the first one off
               (full Phase 1-3 signal stack, ~15-25 min).
             </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Stale-data banner: scan is running over an existing one */}
+      {scan && isScanning && (
+        <Card>
+          <CardContent className="flex items-center gap-2 p-3 text-xs text-muted-foreground">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-primary" />
+            <span>
+              <span className="text-foreground">New scan in progress.</span> Below is the previous
+              scan ({relativeTime(scan.v2_generated_at)}); it'll be replaced when the new one finishes.
+            </span>
           </CardContent>
         </Card>
       )}
@@ -552,6 +606,145 @@ export function TalonV2View() {
           </CardContent>
         </Card>
       )}
+    </div>
+  );
+}
+
+// ScanProgressPanel — phase checklist + elapsed/ETA + recent tickers ribbon.
+// The progress endpoint only tells us the current phase + ticker counter;
+// everything else (which phases are done, elapsed seconds, ETA) is derived
+// client-side from PHASE_ORDER.
+function ScanProgressPanel({
+  progress,
+  progressPct,
+}: {
+  progress: TalonV2ScanProgress;
+  progressPct: number;
+}) {
+  // Tick every second so elapsed + ETA update in real time
+  const [, tick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => tick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const elapsedSec = progress.started_at
+    ? Math.max(0, (Date.now() - new Date(progress.started_at).getTime()) / 1000)
+    : 0;
+  const phaseFrac =
+    progress.phase_total > 0
+      ? Math.min(1, progress.phase_progress / progress.phase_total)
+      : 0;
+  const etaSec = totalRemainingSec(progress.phase, phaseFrac);
+
+  const currentIdx = phaseIndex(progress.phase);
+  const v1Phases = PHASE_ORDER.filter((p) => p.stage === "v1");
+  const v2Phases = PHASE_ORDER.filter((p) => p.stage === "v2");
+
+  // Track the last N tickers we saw so the user sees a "live" ticker feed
+  const [recentTickers, setRecentTickers] = useState<string[]>([]);
+  useEffect(() => {
+    if (progress.current_ticker) {
+      setRecentTickers((cur) => {
+        if (cur[0] === progress.current_ticker) return cur;
+        return [progress.current_ticker!, ...cur].slice(0, 8);
+      });
+    }
+  }, [progress.current_ticker]);
+
+  return (
+    <div className="w-[360px] space-y-2 rounded-lg border border-border bg-card/40 p-3">
+      {/* Headline + ETA */}
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="text-xs font-medium">
+          {progress.phase ? PHASE_LABELS[progress.phase] : "Initializing…"}
+        </p>
+        <p className="text-[10px] tabular-nums text-muted-foreground">
+          {fmtDuration(elapsedSec)} / ~{fmtDuration(elapsedSec + etaSec)}
+        </p>
+      </div>
+
+      {/* Per-phase progress bar */}
+      <div className="h-1.5 overflow-hidden rounded-full bg-foreground/10">
+        <div
+          className="h-full bg-primary transition-all duration-500"
+          style={{ width: `${progressPct}%` }}
+        />
+      </div>
+      <p className="text-[10px] tabular-nums text-muted-foreground">
+        {progress.phase_progress}/{progress.phase_total}
+        {progress.current_ticker ? ` · ${progress.current_ticker}` : ""}
+      </p>
+
+      {/* Phase checklist — stage by stage */}
+      <div className="space-y-1.5 pt-1">
+        <PhaseStage label="v1 — flow gates" phases={v1Phases} currentIdx={currentIdx} />
+        <PhaseStage label="v2 — context + structure" phases={v2Phases} currentIdx={currentIdx} />
+      </div>
+
+      {/* Recent tickers ribbon */}
+      {recentTickers.length > 0 && (
+        <div className="pt-1">
+          <p className="text-[9px] uppercase tracking-wide text-muted-foreground">
+            Recent
+          </p>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {recentTickers.map((t, i) => (
+              <span
+                key={`${t}-${i}`}
+                className={cn(
+                  "rounded-full px-1.5 py-0.5 text-[10px] tabular-nums",
+                  i === 0
+                    ? "bg-primary/15 text-primary"
+                    : "bg-foreground/10 text-muted-foreground",
+                )}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PhaseStage({
+  label,
+  phases,
+  currentIdx,
+}: {
+  label: string;
+  phases: Array<{ key: NonNullable<TalonV2ScanProgress["phase"]>; stage: "v1" | "v2"; approxSec: number }>;
+  currentIdx: number;
+}) {
+  return (
+    <div>
+      <p className="text-[9px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <div className="mt-0.5 flex flex-wrap gap-1">
+        {phases.map((p) => {
+          const idx = PHASE_ORDER.findIndex((x) => x.key === p.key);
+          const status = idx < currentIdx ? "done" : idx === currentIdx ? "running" : "pending";
+          return (
+            <span
+              key={p.key}
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] tabular-nums",
+                status === "done"
+                  ? "bg-emerald-500/15 text-emerald-300"
+                  : status === "running"
+                  ? "bg-primary/15 text-primary animate-pulse"
+                  : "bg-foreground/5 text-muted-foreground/60",
+              )}
+            >
+              <span className="inline-block">
+                {status === "done" ? "✓" : status === "running" ? "▶" : "○"}
+              </span>
+              {PHASE_LABELS[p.key].replace(/^(Talon |Fetching |Computing )/, "")}
+            </span>
+          );
+        })}
+      </div>
     </div>
   );
 }
