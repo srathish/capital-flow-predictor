@@ -1,16 +1,22 @@
-"""Talon v2 scanner — runs v1 first, then enriches with chart signals.
+"""Talon v2 scanner — runs v1 first, then enriches with all v2 phases.
 
-Phase 1.1 (this build): adds ATR + Volume contraction + MA structure per
-ticker, computes a coiled_score, aggregates to theme level.
+Phase map (all shipped):
+  1.1 chart structure   talon_v2_chart       ATR + vol + MA + coiled
+  1.2 earnings window   talon_v2_catalysts   dte_to_earnings, earnings_risk
+  1.3 whale concentration talon_v2_whale     top strike $, concentration, score
+  2.1 MA-gate           (in this file)        v1 grade adjusted by MA structure
+  2.2 short interest    talon_v2_context     si_pct_float, days_to_cover, squeeze
+  2.3 analyst ratings   talon_v2_context     consensus PT vs spot, skew
+  3.1 insider           talon_v2_context     cluster buy flag
+  3.2 base patterns     talon_v2_patterns    flat_base / htf / cup-handle / pullback
+  3.3 fundamentals      talon_v2_fundamentals rev_growth, gross_margin, D/E, quality
 
-Phase 1.2 (next): earnings window flag.
-Phase 1.3 (next): whale order concentration.
-Phase 2: insider, analyst, short interest, MA structure as gates not just signals.
-Phase 3: base-pattern detection, fundamentals.
+Each phase is independent. If a UW endpoint returns null for a ticker, the
+row just lacks that signal — the scan keeps going for the other 503.
 
-Architecture: v2 is a *superset* of v1. It reuses v1's UW prewarm + flow
-metrics + theme coherence + grade, then adds new signals and a coiled tier.
-v1 keeps running unchanged — every existing /v1/talon/* endpoint still works.
+The v1 flow gates and grade stay UNCHANGED. v2's only effect on grade is
+Phase 2.1 — a small ±5pt adjustment based on MA structure (above 50d = +,
+below = -). The other signals are surfaced as fields, not graded.
 """
 from __future__ import annotations
 
@@ -22,13 +28,38 @@ from typing import Any
 
 import pandas as pd
 
-from cfp_api import talon_scanner, talon_uw_client as uw_client, talon_v2_chart
+from cfp_api import (
+    talon_scanner,
+    talon_v2_catalysts,
+    talon_v2_chart,
+    talon_v2_context,
+    talon_v2_fundamentals,
+    talon_v2_patterns,
+    talon_v2_whale,
+)
 
 log = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Per-phase enable flags. Toggle off via env if a specific UW endpoint is
+# misbehaving and you want to keep the scanner working without it.
+# ---------------------------------------------------------------------------
+import os
+
+_PHASE_ENABLED = {
+    "chart":        os.environ.get("TALON_V2_CHART", "1") != "0",
+    "catalysts":    os.environ.get("TALON_V2_CATALYSTS", "1") != "0",
+    "whale":        os.environ.get("TALON_V2_WHALE", "1") != "0",
+    "short":        os.environ.get("TALON_V2_SHORT", "1") != "0",
+    "analyst":      os.environ.get("TALON_V2_ANALYST", "1") != "0",
+    "insider":      os.environ.get("TALON_V2_INSIDER", "1") != "0",
+    "patterns":     os.environ.get("TALON_V2_PATTERNS", "1") != "0",
+    "fundamentals": os.environ.get("TALON_V2_FUNDAMENTALS", "1") != "0",
+}
+
 
 # ---------------------------------------------------------------------------
-# Scan-in-progress state (v2 has its own — runs in parallel with v1's)
+# Scan-in-progress state
 # ---------------------------------------------------------------------------
 _V2_SCAN_LOCK = threading.Lock()
 _V2_PROGRESS_LOCK = threading.Lock()
@@ -56,19 +87,6 @@ def _set_v2_progress(**kwargs) -> None:
 
 
 def run_v2_scan(scan_date: str | None = None) -> dict[str, Any]:
-    """Run a full Talon v2 scan.
-
-    Steps:
-      1. Run v1 scan (flow gates → grades for the full universe)
-      2. Fan out candle fetches for the universe (parallel)
-      3. Compute chart signals per ticker
-      4. Merge chart signals into the v1 result rows
-      5. Aggregate themes for coiled-basket detection
-      6. Return augmented result with new fields:
-         - per-ticker: atr_ratio, vol_ratio, above_*d, coiled_score, coiled
-         - per-theme: themes_summary[theme] = {n_coiled, mean_coiled_score, coiled_basket}
-         - new tier: coiled_setups (the names that pass the chart filter)
-    """
     with _V2_SCAN_LOCK:
         scan_id = uuid.uuid4().hex[:12]
         started_at = datetime.now(UTC)
@@ -95,111 +113,267 @@ def run_v2_scan(scan_date: str | None = None) -> dict[str, Any]:
             raise
 
 
+# ---------------------------------------------------------------------------
+# Phase 2.1 — MA structure as a soft grade modifier
+# ---------------------------------------------------------------------------
+def _apply_ma_gate(row: dict, sig: dict) -> None:
+    """Adjust row['grade'] in place by ±5 based on MA structure.
+
+    Above 50d AND above 200d = +3 (long-term trend intact)
+    Above 20d only            = +1 (short-term momentum)
+    Below 20d AND 50d         = -3 (structure compromised)
+    """
+    grade = row.get("grade")
+    if grade is None:
+        return
+    above_20 = sig.get("above_20d")
+    above_50 = sig.get("above_50d")
+    above_200 = sig.get("above_200d")
+    adjust = 0
+    if above_200 == 1 and above_50 == 1:
+        adjust += 3
+    if above_20 == 1:
+        adjust += 1
+    if above_20 == 0 and above_50 == 0:
+        adjust -= 3
+    if adjust != 0:
+        row["grade_v1"] = grade
+        row["grade"] = max(0.0, min(100.0, round(grade + adjust, 1)))
+        row["ma_gate_adjust"] = adjust
+
+
 def _run_v2_inner(
     scan_date: str | None, scan_id: str, started_at: datetime
 ) -> dict[str, Any]:
-    # Step 1: delegate to v1 for the flow side
+    # Step 1: v1
     v1 = talon_scanner.run_scan(scan_date)
-
     universe = talon_scanner.load_universe()
-    client = talon_scanner._get_live_client()  # noqa: SLF001 — intentional cross-module reuse
-
-    # Step 2: prewarm candles for every name in the universe
-    candles_by_ticker: dict[str, list[dict] | None] = {}
-    if client is not None:
-        _set_v2_progress(
-            phase="prewarm_candles",
-            phase_progress=0,
-            phase_total=len(universe),
-            current_ticker=None,
-        )
-
-        def _on_progress(done: int, total: int, last_ticker: str) -> None:
-            _set_v2_progress(phase_progress=done, current_ticker=last_ticker)
-
-        candles_by_ticker = client.candles_batch(universe, days=60, on_progress=_on_progress)
-        _set_v2_progress(phase_progress=len(universe), current_ticker=None)
-
-    # Step 3+4: compute chart signals and merge into v1 rows
-    _set_v2_progress(
-        phase="chart_signals",
-        phase_progress=0,
-        phase_total=len(universe),
-        current_ticker=None,
+    client = talon_scanner._get_live_client()  # noqa: SLF001
+    scan_date_obj = (
+        datetime.fromisoformat(v1["scan_date"]).date()
+        if v1.get("scan_date")
+        else datetime.now(UTC).date()
     )
-    # Build a map keyed by ticker for all v1 output rows (actionable + watchlist),
-    # so we can enrich each tier in place.
+
+    # Build the row map we'll enrich
     v1_rows_by_ticker: dict[str, dict] = {}
     for r in v1.get("actionable", []):
         v1_rows_by_ticker[r["ticker"]] = r
     for r in v1.get("watchlist", []):
         v1_rows_by_ticker[r["ticker"]] = r
 
-    # Also build chart-only rows for tickers v1 skipped (no GEX data) — they
-    # may still be valid coiled setups even when the flow side is silent.
     chart_only_rows: list[dict] = []
 
-    for i, t in enumerate(universe):
-        _set_v2_progress(phase_progress=i, current_ticker=t)
-        candles = candles_by_ticker.get(t)
-        sig = talon_v2_chart.compute_chart_signals(candles)
-        v1_row = v1_rows_by_ticker.get(t)
-        if v1_row is not None:
-            # Enrich the v1 row with chart signals
-            v1_row.update(sig)
-        elif sig.get("coiled"):
-            # No flow data, but coiled per chart — surface anyway in coiled_setups
-            chart_only_rows.append({
-                "ticker": t,
-                "theme": talon_scanner._theme_for(t),  # noqa: SLF001
-                "grade": None,  # no v1 grade
-                "direction": None,
-                "chart_only": True,
-                **sig,
-            })
-    _set_v2_progress(phase_progress=len(universe), current_ticker=None)
+    # -----------------------------------------------------------------------
+    # Prewarm + compute helper — runs a batch fetch with progress, then
+    # per-ticker compute that writes into v1_rows_by_ticker.
+    # -----------------------------------------------------------------------
+    def _on(done, _total, last):
+        _set_v2_progress(phase_progress=done, current_ticker=last)
 
-    # Step 5: theme-level aggregation
+    # Phase 1.1 — chart structure
+    candles_by_ticker: dict[str, list[dict] | None] = {}
+    if client is not None and _PHASE_ENABLED["chart"]:
+        _set_v2_progress(phase="prewarm_candles", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        candles_by_ticker = client.candles_batch(universe, days=60, on_progress=_on)
+        _set_v2_progress(phase="chart_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_chart.compute_chart_signals(candles_by_ticker.get(t))
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+                _apply_ma_gate(row, sig)  # Phase 2.1
+            elif sig.get("coiled"):
+                chart_only_rows.append({
+                    "ticker": t,
+                    "theme": talon_scanner._theme_for(t),  # noqa: SLF001
+                    "grade": None,
+                    "direction": None,
+                    "chart_only": True,
+                    **sig,
+                })
+
+    # Phase 1.2 — earnings calendar
+    if client is not None and _PHASE_ENABLED["catalysts"]:
+        _set_v2_progress(phase="prewarm_earnings", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        earnings_by_ticker = client.earnings_batch(universe, on_progress=_on)
+        _set_v2_progress(phase="catalyst_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_catalysts.compute_catalyst_signals(
+                earnings_by_ticker.get(t), scan_date_obj
+            )
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # Phase 1.3 — whale concentration
+    if client is not None and _PHASE_ENABLED["whale"]:
+        _set_v2_progress(phase="prewarm_flow_alerts", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        # Only fetch flow alerts for tickers v1 surfaced — saves 504->~300 calls
+        whale_universe = list(v1_rows_by_ticker.keys()) or universe
+        flow_by_ticker = client.flow_alerts_batch(whale_universe, on_progress=_on)
+        _set_v2_progress(phase="whale_signals", phase_progress=0,
+                         phase_total=len(whale_universe))
+        for i, t in enumerate(whale_universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_whale.compute_whale_signals(flow_by_ticker.get(t))
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # Phase 2.2 — short
+    if client is not None and _PHASE_ENABLED["short"]:
+        _set_v2_progress(phase="prewarm_short", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        short_by_ticker = client.short_batch(universe, on_progress=_on)
+        _set_v2_progress(phase="short_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_context.compute_short_signals(short_by_ticker.get(t))
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # Phase 2.3 — analyst (needs spot price from v1 row, none for chart-only)
+    if client is not None and _PHASE_ENABLED["analyst"]:
+        _set_v2_progress(phase="prewarm_analyst", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        analyst_by_ticker = client.analyst_batch(universe, on_progress=_on)
+        _set_v2_progress(phase="analyst_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            row = v1_rows_by_ticker.get(t)
+            # Try to get spot from candles we already pulled
+            spot = None
+            cs = candles_by_ticker.get(t)
+            if cs:
+                df = pd.DataFrame(cs[-1:]) if cs else None
+                if df is not None and "close" in df:
+                    try:
+                        spot = float(df["close"].iloc[-1])
+                    except (ValueError, IndexError):
+                        spot = None
+            sig = talon_v2_context.compute_analyst_signals(
+                analyst_by_ticker.get(t), spot
+            )
+            if row is not None:
+                row.update(sig)
+
+    # Phase 3.1 — insider
+    if client is not None and _PHASE_ENABLED["insider"]:
+        _set_v2_progress(phase="prewarm_insider", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        insider_by_ticker = client.insider_batch(universe, on_progress=_on)
+        _set_v2_progress(phase="insider_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_context.compute_insider_signals(insider_by_ticker.get(t))
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # Phase 3.2 — patterns (reads candles already fetched)
+    if _PHASE_ENABLED["patterns"]:
+        _set_v2_progress(phase="pattern_signals", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_patterns.compute_pattern_signals(candles_by_ticker.get(t))
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # Phase 3.3 — fundamentals
+    if client is not None and _PHASE_ENABLED["fundamentals"]:
+        _set_v2_progress(phase="prewarm_fundamentals", phase_progress=0,
+                         phase_total=len(universe), current_ticker=None)
+        fund_by_ticker = client.fundamentals_batch(universe, on_progress=_on)
+        _set_v2_progress(phase="fundamentals_signals", phase_progress=0,
+                         phase_total=len(universe))
+        for i, t in enumerate(universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_fundamentals.compute_fundamentals_signals(
+                fund_by_ticker.get(t)
+            )
+            row = v1_rows_by_ticker.get(t)
+            if row is not None:
+                row.update(sig)
+
+    # -----------------------------------------------------------------------
+    # Aggregate themes (uses chart coiled signals only — themes care about
+    # basket structure, not single-name fundamentals)
+    # -----------------------------------------------------------------------
     all_rows_for_themes: list[dict] = list(v1_rows_by_ticker.values()) + chart_only_rows
     themes_summary = talon_v2_chart.aggregate_themes(
         all_rows_for_themes, talon_scanner.THEMES
     )
 
-    # Coiled tier: names with coiled=True, sorted by coiled_score then v1 grade
-    coiled_setups = [
-        r for r in all_rows_for_themes
-        if r.get("coiled")
-    ]
+    # Coiled tier sort
+    coiled_setups = [r for r in all_rows_for_themes if r.get("coiled")]
     coiled_setups.sort(
-        key=lambda r: (
-            r.get("coiled_score") or 0,
-            r.get("grade") or 0,
-        ),
+        key=lambda r: (r.get("coiled_score") or 0, r.get("grade") or 0),
         reverse=True,
     )
+
+    # Whale-flagged tier — highest-conviction single-strike accumulation
+    whale_setups = [
+        r for r in v1_rows_by_ticker.values()
+        if r.get("whale_flag")
+    ]
+    whale_setups.sort(key=lambda r: r.get("whale_score") or 0, reverse=True)
+
+    # Pattern setups — anything with a detected pattern
+    pattern_setups = [r for r in v1_rows_by_ticker.values() if r.get("pattern")]
+    pattern_setups.sort(key=lambda r: r.get("pattern_score") or 0, reverse=True)
+
+    # Re-sort actionable/watchlist after MA-gate adjustments
+    actionable = [r for r in v1_rows_by_ticker.values() if (r.get("grade") or 0) >= 70]
+    watchlist = [r for r in v1_rows_by_ticker.values() if 55 <= (r.get("grade") or 0) < 70]
+    actionable.sort(key=lambda r: r.get("grade") or 0, reverse=True)
+    watchlist.sort(key=lambda r: r.get("grade") or 0, reverse=True)
 
     completed_at = datetime.now(UTC)
     elapsed = round((completed_at - started_at).total_seconds(), 1)
 
     result = {
-        **v1,  # carry every v1 field through unchanged
+        **v1,
+        # Override with re-graded lists (MA gate may have shifted boundaries)
+        "actionable": actionable,
+        "watchlist": watchlist[:100],
+        "actionable_count": len(actionable),
+        "watchlist_count": len(watchlist),
+        # v2 metadata
         "v2": True,
         "v2_scan_id": scan_id,
         "v2_generated_at": completed_at.isoformat(),
         "v2_elapsed_seconds": elapsed,
-        "v2_phases_added": ["prewarm_candles", "chart_signals"],
-        # Theme-level coiled aggregation
+        "v2_phases_enabled": [p for p, on in _PHASE_ENABLED.items() if on],
+        "v2_phases_disabled": [p for p, on in _PHASE_ENABLED.items() if not on],
+        # New tiers
         "themes_summary": themes_summary,
         "coiled_themes": [t for t, s in themes_summary.items() if s.get("coiled_basket")],
-        # Per-ticker coiled tier
         "coiled_setups": coiled_setups,
         "coiled_count": len(coiled_setups),
-        # Chart-only rows kept separately so v1 consumers don't see them in `watchlist`
+        "whale_setups": whale_setups,
+        "whale_count": len(whale_setups),
+        "pattern_setups": pattern_setups,
+        "pattern_count": len(pattern_setups),
         "chart_only_coiled": [r["ticker"] for r in chart_only_rows],
         "v2_notes": (
-            "v2 Phase 1.1 — adds ATR / volume / MA structure per ticker plus a "
-            "composite coiled_score. A theme is `coiled_basket` if ≥3 members "
-            "score ≥0.65. v1 flow gates and grade are unchanged."
+            "Phases shipped: 1.1 chart, 1.2 earnings, 1.3 whale, 2.1 MA-gate, "
+            "2.2 short, 2.3 analyst, 3.1 insider, 3.2 patterns, 3.3 fundamentals. "
+            "v1 flow gates unchanged; grade may be ±5 from v1 due to Phase 2.1 "
+            "MA structure adjustment (see grade_v1 + ma_gate_adjust on row)."
         ),
     }
     _set_v2_progress(

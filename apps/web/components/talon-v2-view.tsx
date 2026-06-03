@@ -21,8 +21,21 @@ const PHASE_LABELS: Record<NonNullable<TalonV2ScanProgress["phase"]>, string> = 
   prewarm_dp: "Fetching dark pool data",
   metrics: "Computing flow metrics",
   coherence: "Computing theme coherence",
-  prewarm_candles: "Fetching daily candles",
-  chart_signals: "Computing ATR / vol / MA signals",
+  prewarm_candles: "Fetching candles",
+  chart_signals: "Chart signals",
+  prewarm_earnings: "Fetching earnings",
+  catalyst_signals: "Catalyst signals",
+  prewarm_flow_alerts: "Fetching whale flow",
+  whale_signals: "Whale concentration",
+  prewarm_short: "Fetching short data",
+  short_signals: "Short signals",
+  prewarm_analyst: "Fetching analyst",
+  analyst_signals: "Analyst signals",
+  prewarm_insider: "Fetching insider",
+  insider_signals: "Insider signals",
+  pattern_signals: "Pattern detection",
+  prewarm_fundamentals: "Fetching fundamentals",
+  fundamentals_signals: "Fundamentals",
   done: "Done",
 };
 
@@ -48,6 +61,15 @@ function fmtPct(x: number | null | undefined, digits = 1): string {
 function fmtRatio(x: number | null | undefined, digits = 2): string {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   return x.toFixed(digits);
+}
+
+function fmtMoney(x: number | null | undefined): string {
+  if (x === null || x === undefined || Number.isNaN(x)) return "—";
+  const abs = Math.abs(x);
+  if (abs >= 1_000_000_000) return `$${(x / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 1_000_000) return `$${(x / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `$${(x / 1_000).toFixed(0)}K`;
+  return `$${x.toFixed(0)}`;
 }
 
 function CoiledBadge({ score }: { score: number | null | undefined }) {
@@ -98,6 +120,105 @@ function StructureBadge({
   );
 }
 
+function EarningsBadge({ risk, dte }: { risk?: string; dte?: number | null }) {
+  if (!risk || risk === "unknown") return null;
+  const cls =
+    risk === "imminent" ? "bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40" :
+    risk === "near" ? "bg-amber-500/15 text-amber-300" :
+    risk === "past" ? "bg-foreground/10 text-muted-foreground" :
+    "bg-emerald-500/10 text-emerald-300";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium tabular-nums", cls)} title={`Next earnings: ${risk}`}>
+      E{dte !== null && dte !== undefined ? (dte >= 0 ? `+${dte}` : `${dte}`) : ""}
+    </span>
+  );
+}
+
+function WhaleBadge({ score, prem }: { score?: number | null; prem?: number }) {
+  if (!score || !prem) return null;
+  if (score < 0.50) return null;
+  const cls =
+    score >= 0.75 ? "bg-violet-500/20 text-violet-300 ring-1 ring-violet-500/40" :
+    score >= 0.60 ? "bg-violet-500/10 text-violet-300/80" :
+    "bg-foreground/10 text-muted-foreground";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium tabular-nums", cls)} title="Whale concentration">
+      🐋 {fmtMoney(prem)}
+    </span>
+  );
+}
+
+function SqueezeBadge({ flag, siPct, dtc }: { flag?: boolean; siPct?: number | null; dtc?: number | null }) {
+  if (!flag) return null;
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-orange-500/15 px-2 text-[10px] font-medium tabular-nums text-orange-300" title={`SI ${siPct?.toFixed(1)}% / DTC ${dtc?.toFixed(1)}`}>
+      🔥 squeeze
+    </span>
+  );
+}
+
+function PatternBadge({ pattern, score }: { pattern?: string | null; score?: number | null }) {
+  if (!pattern) return null;
+  const label = pattern.replace(/_/g, " ");
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-sky-500/15 px-2 text-[10px] font-medium text-sky-300" title={`${label} · ${(score! * 100).toFixed(0)}`}>
+      {label}
+    </span>
+  );
+}
+
+function InsiderBadge({ flag, value }: { flag?: boolean; value?: number }) {
+  if (!flag) return null;
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-emerald-500/15 px-2 text-[10px] font-medium tabular-nums text-emerald-300" title="3+ insiders buying in 30d">
+      👥 {fmtMoney(value)}
+    </span>
+  );
+}
+
+function AnalystBadge({ skew, ptVsSpot }: { skew?: string; ptVsSpot?: number | null }) {
+  if (!skew || skew === "unknown") return null;
+  const cls =
+    skew === "bull" ? "bg-emerald-500/10 text-emerald-300" :
+    skew === "bear" ? "bg-rose-500/10 text-rose-300" :
+    "bg-foreground/10 text-muted-foreground";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium tabular-nums", cls)} title={`Analyst ${skew}`}>
+      A {ptVsSpot !== null && ptVsSpot !== undefined ? fmtPct(ptVsSpot) : skew}
+    </span>
+  );
+}
+
+function FundBadge({ q }: { q?: string }) {
+  if (!q || q === "unknown") return null;
+  const cls =
+    q === "high" ? "bg-emerald-500/15 text-emerald-300" :
+    q === "low" ? "bg-rose-500/15 text-rose-300" :
+    "bg-foreground/10 text-muted-foreground";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium uppercase tabular-nums", cls)} title="Fundamentals quality">
+      F:{q}
+    </span>
+  );
+}
+
+function SetupBadges({ r }: { r: TalonV2Setup }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      <CoiledBadge score={r.coiled_score} />
+      <EarningsBadge risk={r.earnings_risk} dte={r.dte_to_earnings} />
+      <WhaleBadge score={r.whale_score} prem={r.whale_total_prem_5d} />
+      <PatternBadge pattern={r.pattern} score={r.pattern_score} />
+      <SqueezeBadge flag={r.squeeze_flag} siPct={r.si_pct_float} dtc={r.days_to_cover} />
+      <InsiderBadge flag={r.insider_cluster_flag} value={r.insider_recent_buys_total_value} />
+      <AnalystBadge skew={r.analyst_skew} ptVsSpot={r.analyst_pt_vs_spot_pct} />
+      <FundBadge q={r.fund_quality} />
+    </div>
+  );
+}
+
+type Tier = "coiled" | "whale" | "patterns" | "actionable" | "watchlist";
+
 type CoiledSortKey =
   | "coiled_score"
   | "ticker"
@@ -109,6 +230,7 @@ type CoiledSortKey =
 
 export function TalonV2View() {
   const qc = useQueryClient();
+  const [tier, setTier] = useState<Tier>("coiled");
   const [coiledSort, setCoiledSort] = useState<{ k: CoiledSortKey; d: "asc" | "desc" }>({
     k: "coiled_score",
     d: "desc",
@@ -149,12 +271,15 @@ export function TalonV2View() {
     if (!coiledSetups.length) return [];
     const arr = [...coiledSetups];
     arr.sort((a, b) => {
-      const va = (a as any)[coiledSort.k];
-      const vb = (b as any)[coiledSort.k];
+      const va = (a as Record<string, unknown>)[coiledSort.k];
+      const vb = (b as Record<string, unknown>)[coiledSort.k];
       if (va === null || va === undefined) return 1;
       if (vb === null || vb === undefined) return -1;
-      if (typeof va === "string") return coiledSort.d === "desc" ? vb.localeCompare(va) : va.localeCompare(vb);
-      return coiledSort.d === "desc" ? vb - va : va - vb;
+      if (typeof va === "string" && typeof vb === "string")
+        return coiledSort.d === "desc" ? vb.localeCompare(va) : va.localeCompare(vb);
+      return coiledSort.d === "desc"
+        ? (vb as number) - (va as number)
+        : (va as number) - (vb as number);
     });
     return arr;
   }, [coiledSetups, coiledSort]);
@@ -177,26 +302,33 @@ export function TalonV2View() {
     );
   }
 
+  const tierRows: TalonV2Setup[] = (
+    tier === "coiled" ? [] :
+    tier === "whale" ? (scan?.whale_setups ?? []) :
+    tier === "patterns" ? (scan?.pattern_setups ?? []) :
+    tier === "actionable" ? (scan?.actionable ?? []) :
+    (scan?.watchlist ?? [])
+  );
+
   return (
     <div className="space-y-4">
-      {/* Header + run button */}
+      {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">Talon v2</h1>
             <span className="inline-flex h-5 items-center rounded-full bg-emerald-500/15 px-2 text-[10px] font-medium text-emerald-300 ring-1 ring-emerald-500/30">
-              chart structure
+              full signal stack
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            v1 flow gates + ATR / volume contraction / MA position. Surfaces themes that are
-            <span className="font-medium text-foreground"> basing, drying up volume, and ready to expand</span>.
+            v1 flow + chart + earnings + whale + short + analyst + insider + patterns + fundamentals.
           </p>
           {scan && (
             <p className="mt-1 text-[10px] tabular-nums text-muted-foreground">
-              Last scan {relativeTime(scan.v2_generated_at)} · {scan.universe_total} tickers ·
-              {" "}{scan.coiled_count} coiled · {scan.coiled_themes.length} coiled themes ·
-              {" "}{(scan.v2_elapsed_seconds ?? 0).toFixed(0)}s elapsed
+              Last scan {relativeTime(scan.v2_generated_at)} · {scan.universe_total} tickers ·{" "}
+              {scan.coiled_count ?? 0} coiled · {scan.whale_count ?? 0} whale · {scan.pattern_count ?? 0} pattern ·{" "}
+              {scan.actionable_count} actionable · {(scan.v2_elapsed_seconds ?? 0).toFixed(0)}s
             </p>
           )}
         </div>
@@ -209,7 +341,7 @@ export function TalonV2View() {
             {isScanning ? "Scanning…" : "Run scan"}
           </button>
           {isScanning && progress && (
-            <div className="w-[280px] space-y-0.5">
+            <div className="w-[320px] space-y-0.5">
               <div className="h-1 overflow-hidden rounded-full bg-foreground/10">
                 <div
                   className="h-full bg-primary transition-all duration-500"
@@ -237,16 +369,16 @@ export function TalonV2View() {
       {!scan && !isLoading && !error && (
         <Card>
           <CardContent className="space-y-2 p-6 text-sm text-muted-foreground">
-            <p className="text-foreground">No Talon v2 scan in the database yet.</p>
+            <p className="text-foreground">No Talon v2 scan yet.</p>
             <p>
               Click <span className="text-foreground">Run scan</span> to kick the first one off
-              (takes ~10–15 min — runs v1's flow side plus the new candle prewarm).
+              (full Phase 1-3 signal stack, ~15-25 min).
             </p>
           </CardContent>
         </Card>
       )}
 
-      {/* Coiled themes — the headline insight */}
+      {/* Coiled themes summary */}
       {scan && coiledThemes.length > 0 && (
         <Card>
           <CardContent className="space-y-3 p-4">
@@ -289,18 +421,31 @@ export function TalonV2View() {
         </Card>
       )}
 
-      {/* Coiled setups table */}
-      {scan && sortedCoiled.length > 0 && (
+      {/* Tier switcher */}
+      {scan && (
+        <div className="flex flex-wrap items-center gap-1 rounded-full bg-foreground/[0.03] p-1 text-sm w-fit">
+          <TierButton active={tier === "coiled"} onClick={() => setTier("coiled")}>
+            Coiled ({scan.coiled_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "whale"} onClick={() => setTier("whale")}>
+            Whale ({scan.whale_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "patterns"} onClick={() => setTier("patterns")}>
+            Patterns ({scan.pattern_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "actionable"} onClick={() => setTier("actionable")}>
+            Actionable ({scan.actionable_count})
+          </TierButton>
+          <TierButton active={tier === "watchlist"} onClick={() => setTier("watchlist")}>
+            Watchlist ({scan.watchlist_count})
+          </TierButton>
+        </div>
+      )}
+
+      {/* Coiled table (uses different shape than the other tiers) */}
+      {scan && tier === "coiled" && sortedCoiled.length > 0 && (
         <Card>
-          <CardContent className="space-y-2 p-0">
-            <div className="flex items-center justify-between px-4 pt-4">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Coiled setups ({sortedCoiled.length})
-              </h2>
-              <p className="text-[10px] text-muted-foreground">
-                Pre-breakout candidates · sorted by coiled_score
-              </p>
-            </div>
+          <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead className="text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -317,28 +462,69 @@ export function TalonV2View() {
                 </thead>
                 <tbody>
                   {sortedCoiled.map((r) => (
+                    <CoiledRow key={r.ticker} r={r} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Whale / Patterns / Actionable / Watchlist — shared table shape */}
+      {scan && tier !== "coiled" && tierRows.length > 0 && (
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-y border-border">
+                    <th className="px-3 py-2 text-left">Ticker</th>
+                    <th className="px-3 py-2 text-left">Theme</th>
+                    <th className="px-3 py-2 text-left">Grade</th>
+                    <th className="px-3 py-2 text-left">Signals</th>
+                    {tier === "whale" && (
+                      <>
+                        <th className="px-3 py-2 text-left">Top strike</th>
+                        <th className="px-3 py-2 text-left">Concentration</th>
+                      </>
+                    )}
+                    {tier === "patterns" && (
+                      <th className="px-3 py-2 text-left">Pattern detail</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {tierRows.map((r) => (
                     <tr key={r.ticker} className="border-b border-border/60 hover:bg-foreground/[0.02]">
-                      <td className="px-3 py-2 font-medium">
-                        {r.ticker}
-                        {r.chart_only && (
-                          <span className="ml-1 text-[9px] text-amber-400">chart-only</span>
-                        )}
-                      </td>
+                      <td className="px-3 py-2 font-medium">{r.ticker}</td>
                       <td className="px-3 py-2 text-muted-foreground">{r.theme}</td>
-                      <td className="px-3 py-2"><CoiledBadge score={r.coiled_score} /></td>
-                      <td className="px-3 py-2 tabular-nums">{fmtRatio(r.atr_ratio)}</td>
-                      <td className="px-3 py-2 tabular-nums">{fmtRatio(r.vol_ratio)}</td>
-                      <td className="px-3 py-2 tabular-nums">{fmtPct(r.slope_4w_pct)}</td>
-                      <td className="px-3 py-2">
-                        <StructureBadge
-                          above20={r.above_20d}
-                          above50={r.above_50d}
-                          above200={r.above_200d}
-                        />
-                      </td>
                       <td className="px-3 py-2 tabular-nums">
-                        {r.grade !== null && r.grade !== undefined ? r.grade.toFixed(1) : "—"}
+                        {r.grade?.toFixed(1) ?? "—"}
+                        {r.ma_gate_adjust ? (
+                          <span className={cn("ml-1 text-[9px]", r.ma_gate_adjust > 0 ? "text-emerald-400" : "text-rose-400")}>
+                            ({r.ma_gate_adjust > 0 ? "+" : ""}{r.ma_gate_adjust})
+                          </span>
+                        ) : null}
                       </td>
+                      <td className="px-3 py-2">
+                        <SetupBadges r={r} />
+                      </td>
+                      {tier === "whale" && (
+                        <>
+                          <td className="px-3 py-2 tabular-nums">
+                            ${r.whale_top_strike}{r.whale_top_expiry ? ` ${r.whale_top_expiry}` : ""}
+                          </td>
+                          <td className="px-3 py-2 tabular-nums">
+                            {fmtMoney(r.whale_top_strike_prem)} ({fmtPct((r.whale_concentration_pct ?? 0) * 100, 0)})
+                          </td>
+                        </>
+                      )}
+                      {tier === "patterns" && (
+                        <td className="px-3 py-2 text-[10px] text-muted-foreground">
+                          {r.pattern_detail ? JSON.stringify(r.pattern_detail).slice(0, 80) : "—"}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -348,26 +534,72 @@ export function TalonV2View() {
         </Card>
       )}
 
-      {/* v1 actionable count — link to v1 page for the full setups table */}
+      {/* Link to v1 */}
       {scan && (
         <Card>
           <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
-            <div className="text-sm">
-              <span className="font-medium">{scan.actionable_count}</span>{" "}
-              <span className="text-muted-foreground">actionable +</span>{" "}
-              <span className="font-medium">{scan.watchlist_count}</span>{" "}
-              <span className="text-muted-foreground">watchlist (from v1 flow gates)</span>
+            <div className="text-xs text-muted-foreground">
+              v2 phases: {scan.v2_phases_enabled?.join(" · ") ?? "—"}
+              {scan.v2_phases_disabled?.length ? (
+                <span className="ml-2 text-rose-400/80">
+                  disabled: {scan.v2_phases_disabled.join(", ")}
+                </span>
+              ) : null}
             </div>
-            <a
-              href="/talon"
-              className="text-xs text-primary hover:underline"
-            >
+            <a href="/talon" className="text-xs text-primary hover:underline">
               View v1 setups →
             </a>
           </CardContent>
         </Card>
       )}
     </div>
+  );
+}
+
+function TierButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-full px-3 py-1.5 transition-colors",
+        active
+          ? "bg-primary text-white shadow-sm"
+          : "text-muted-foreground hover:text-foreground",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function CoiledRow({ r }: { r: TalonV2CoiledSetup }) {
+  return (
+    <tr className="border-b border-border/60 hover:bg-foreground/[0.02]">
+      <td className="px-3 py-2 font-medium">
+        {r.ticker}
+        {r.chart_only && <span className="ml-1 text-[9px] text-amber-400">chart-only</span>}
+      </td>
+      <td className="px-3 py-2 text-muted-foreground">{r.theme}</td>
+      <td className="px-3 py-2"><CoiledBadge score={r.coiled_score} /></td>
+      <td className="px-3 py-2 tabular-nums">{fmtRatio(r.atr_ratio)}</td>
+      <td className="px-3 py-2 tabular-nums">{fmtRatio(r.vol_ratio)}</td>
+      <td className="px-3 py-2 tabular-nums">{fmtPct(r.slope_4w_pct)}</td>
+      <td className="px-3 py-2">
+        <StructureBadge above20={r.above_20d} above50={r.above_50d} above200={r.above_200d} />
+      </td>
+      <td className="px-3 py-2 tabular-nums">
+        {r.grade !== null && r.grade !== undefined ? r.grade.toFixed(1) : "—"}
+      </td>
+    </tr>
   );
 }
 
@@ -399,6 +631,3 @@ function SortableTh({
     </th>
   );
 }
-
-// (TalonV2Setup is imported for type-completeness; the v1 setups table lives at /talon.)
-export type _UseTalonV2Setup = TalonV2Setup;

@@ -1637,7 +1637,7 @@ export type TalonTopPlaysResponse = {
   _cache_hit: boolean;
 };
 
-// ---------- Talon v2 (chart structure overlay) ----------
+// ---------- Talon v2 (full Phase 1.1 → 3.3 signal stack) ----------
 export type TalonV2ChartSignals = {
   atr_5: number | null;
   atr_20: number | null;
@@ -1654,7 +1654,76 @@ export type TalonV2ChartSignals = {
   coiled: boolean;
 };
 
-export type TalonV2Setup = TalonSetup & TalonV2ChartSignals;
+export type TalonV2CatalystSignals = {
+  next_earnings_date: string | null;
+  dte_to_earnings: number | null;
+  earnings_risk: "imminent" | "near" | "clear" | "past" | "unknown";
+};
+
+export type TalonV2WhaleSignals = {
+  whale_total_prem_5d: number;
+  whale_top_strike: number | null;
+  whale_top_expiry: string | null;
+  whale_top_strike_prem: number;
+  whale_concentration_pct: number | null;
+  whale_n_alerts: number;
+  whale_sweep_count: number;
+  whale_floor_count: number;
+  whale_score: number | null;
+  whale_flag: boolean;
+};
+
+export type TalonV2ShortSignals = {
+  si_pct_float: number | null;
+  days_to_cover: number | null;
+  si_change_pct: number | null;
+  squeeze_flag: boolean;
+};
+
+export type TalonV2AnalystSignals = {
+  analyst_consensus_pt: number | null;
+  analyst_pt_vs_spot_pct: number | null;
+  analyst_recent_upgrades: number;
+  analyst_recent_downgrades: number;
+  analyst_skew: "bull" | "bear" | "mixed" | "unknown";
+};
+
+export type TalonV2InsiderSignals = {
+  insider_recent_buys_count: number;
+  insider_recent_buys_total_value: number;
+  insider_cluster_flag: boolean;
+};
+
+export type TalonV2PatternSignals = {
+  pattern: "flat_base" | "high_tight_flag" | "cup_with_handle" | "pullback_to_ma" | null;
+  pattern_score: number | null;
+  pattern_detail: Record<string, unknown> | null;
+};
+
+export type TalonV2FundSignals = {
+  market_cap: number | null;
+  pe_ratio: number | null;
+  rev_growth_yoy: number | null;
+  gross_margin: number | null;
+  debt_to_equity: number | null;
+  fund_quality: "high" | "mid" | "low" | "unknown";
+};
+
+export type TalonV2MAGate = {
+  grade_v1?: number;
+  ma_gate_adjust?: number;
+};
+
+export type TalonV2Setup = TalonSetup &
+  Partial<TalonV2ChartSignals> &
+  Partial<TalonV2CatalystSignals> &
+  Partial<TalonV2WhaleSignals> &
+  Partial<TalonV2ShortSignals> &
+  Partial<TalonV2AnalystSignals> &
+  Partial<TalonV2InsiderSignals> &
+  Partial<TalonV2PatternSignals> &
+  Partial<TalonV2FundSignals> &
+  TalonV2MAGate;
 
 export type TalonV2CoiledSetup = TalonV2ChartSignals & {
   ticker: string;
@@ -1672,16 +1741,23 @@ export type TalonV2ThemeSummary = {
   coiled_basket: boolean;
 };
 
-export type TalonV2ScanResponse = TalonScanResponse & {
+export type TalonV2ScanResponse = Omit<TalonScanResponse, "actionable" | "watchlist"> & {
+  actionable: TalonV2Setup[];
+  watchlist: TalonV2Setup[];
   v2: true;
   v2_scan_id: string;
   v2_generated_at: string;
   v2_elapsed_seconds: number;
-  v2_phases_added: string[];
+  v2_phases_enabled: string[];
+  v2_phases_disabled: string[];
   themes_summary: Record<string, TalonV2ThemeSummary>;
   coiled_themes: string[];
   coiled_setups: TalonV2CoiledSetup[];
   coiled_count: number;
+  whale_setups: TalonV2Setup[];
+  whale_count: number;
+  pattern_setups: TalonV2Setup[];
+  pattern_count: number;
   chart_only_coiled: string[];
   v2_notes: string;
 };
@@ -1690,7 +1766,20 @@ export type TalonV2ScanPhase =
   | NonNullable<TalonScanProgress["phase"]>
   | "v1_scan"
   | "prewarm_candles"
-  | "chart_signals";
+  | "chart_signals"
+  | "prewarm_earnings"
+  | "catalyst_signals"
+  | "prewarm_flow_alerts"
+  | "whale_signals"
+  | "prewarm_short"
+  | "short_signals"
+  | "prewarm_analyst"
+  | "analyst_signals"
+  | "prewarm_insider"
+  | "insider_signals"
+  | "pattern_signals"
+  | "prewarm_fundamentals"
+  | "fundamentals_signals";
 
 export type TalonV2ScanProgress = Omit<TalonScanProgress, "phase"> & {
   phase: TalonV2ScanPhase | null;

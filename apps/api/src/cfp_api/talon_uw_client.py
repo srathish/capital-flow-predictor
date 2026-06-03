@@ -254,6 +254,120 @@ class TalonUwClient:
     ) -> dict[str, list[dict] | None]:
         return self._batch(tickers, lambda t: self.candles(t, days), on_progress)
 
+    # ------------------------------------------------------------------
+    # Talon v2 supplementary endpoints (Phases 1.2 - 3.3)
+    # Each returns the raw UW payload or None. Defensive — failures bubble
+    # as None so the scanner can keep going for the other 503 tickers.
+    # ------------------------------------------------------------------
+    def upcoming_earnings(self, ticker: str) -> dict | None:
+        """Next scheduled earnings date for one ticker."""
+        cache_key = f"earnings:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/earnings/next", None)
+        if body is None:
+            # Some UW endpoints return the report under /earnings instead
+            body = self._get(f"/api/stock/{ticker}/earnings", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def short_data(self, ticker: str) -> dict | None:
+        """Short interest, days-to-cover, recent change."""
+        cache_key = f"short:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/short", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def analyst_ratings(self, ticker: str) -> dict | None:
+        """Recent analyst rating changes + consensus price target."""
+        cache_key = f"analyst:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/analyst-ratings", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def insider_activity(self, ticker: str) -> dict | None:
+        """Recent insider Form 4 transactions."""
+        cache_key = f"insider:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/insider-activity", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def income_statement(self, ticker: str) -> dict | None:
+        """Recent income statement (quarterly + annual)."""
+        cache_key = f"income:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/income-statement", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def fundamentals_overview(self, ticker: str) -> dict | None:
+        """Company info / fundamentals snapshot."""
+        cache_key = f"fund:{ticker}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        body = self._get(f"/api/stock/{ticker}/info", None)
+        if body is None:
+            return None
+        _CACHE.set(cache_key, body)
+        return body
+
+    def earnings_batch(self, tickers, on_progress=None):
+        return self._batch(tickers, self.upcoming_earnings, on_progress)
+
+    def short_batch(self, tickers, on_progress=None):
+        return self._batch(tickers, self.short_data, on_progress)
+
+    def analyst_batch(self, tickers, on_progress=None):
+        return self._batch(tickers, self.analyst_ratings, on_progress)
+
+    def insider_batch(self, tickers, on_progress=None):
+        return self._batch(tickers, self.insider_activity, on_progress)
+
+    def fundamentals_batch(self, tickers, on_progress=None):
+        return self._batch(tickers, self.fundamentals_overview, on_progress)
+
+    def flow_alerts_batch(
+        self,
+        tickers,
+        is_call: bool = True,
+        is_ask_side: bool = True,
+        min_premium: int = 25_000,
+        max_dte: int = 35,
+        on_progress=None,
+    ):
+        def _fetch(t):
+            return self.flow_alerts_for_ticker(
+                t,
+                is_call=is_call,
+                is_ask_side=is_ask_side,
+                min_premium=min_premium,
+                max_dte=max_dte,
+            )
+        return self._batch(tickers, _fetch, on_progress)
+
     def flow_alerts_for_ticker(
         self,
         ticker: str,
