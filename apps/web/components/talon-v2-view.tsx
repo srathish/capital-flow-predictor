@@ -36,6 +36,11 @@ const PHASE_LABELS: Record<NonNullable<TalonV2ScanProgress["phase"]>, string> = 
   pattern_signals: "Pattern detection",
   prewarm_fundamentals: "Fetching fundamentals",
   fundamentals_signals: "Fundamentals",
+  macro_regime: "Macro regime",
+  news_signals: "News catalysts",
+  block_accumulation: "Dark pool blocks",
+  float_signals: "Float / structure",
+  squeeze_signals: "Gamma squeeze",
   done: "Done",
 };
 
@@ -68,6 +73,12 @@ const PHASE_ORDER: Array<{
   { key: "pattern_signals", stage: "v2", approxSec: 15 },
   { key: "prewarm_fundamentals", stage: "v2", approxSec: 100 },
   { key: "fundamentals_signals", stage: "v2", approxSec: 5 },
+  // Phase 4
+  { key: "macro_regime", stage: "v2", approxSec: 5 },
+  { key: "news_signals", stage: "v2", approxSec: 180 },
+  { key: "block_accumulation", stage: "v2", approxSec: 10 },
+  { key: "float_signals", stage: "v2", approxSec: 90 },
+  { key: "squeeze_signals", stage: "v2", approxSec: 60 },
   { key: "done", stage: "v2", approxSec: 1 },
 ];
 
@@ -255,22 +266,74 @@ function FundBadge({ q }: { q?: string }) {
   );
 }
 
+function NewsBadge({ flag, category, score }: { flag?: boolean; category?: string | null; score?: number }) {
+  if (!flag || !category) return null;
+  const cls = "bg-blue-500/15 text-blue-300 ring-1 ring-blue-500/30";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium tabular-nums", cls)} title={`Catalyst score ${score?.toFixed(0)}`}>
+      📰 {category}
+    </span>
+  );
+}
+
+function BlockBadge({ flag, buy, ratio }: { flag?: boolean; buy?: number; ratio?: number | null }) {
+  if (!flag || !buy) return null;
+  const cls = "bg-teal-500/15 text-teal-300 ring-1 ring-teal-500/30";
+  return (
+    <span className={cn("inline-flex h-5 items-center rounded-full px-2 text-[10px] font-medium tabular-nums", cls)} title={`DP buy ratio ${((ratio ?? 0) * 100).toFixed(0)}%`}>
+      🏦 {fmtMoney(buy)}
+    </span>
+  );
+}
+
+function SqueezeTriggerBadge({ flag, dist, score }: { flag?: boolean; dist?: number | null; score?: number | null }) {
+  if (!flag) return null;
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-pink-500/20 px-2 text-[10px] font-medium tabular-nums text-pink-300 ring-1 ring-pink-500/40" title={`Gamma squeeze · pain ${dist?.toFixed(1)}% above spot · score ${((score ?? 0) * 100).toFixed(0)}`}>
+      ⚡ squeeze
+    </span>
+  );
+}
+
+function SmallFloatBadge({ flag, fl }: { flag?: boolean; fl?: number | null }) {
+  if (!flag) return null;
+  const mm = fl ? (fl / 1_000_000).toFixed(0) : "?";
+  return (
+    <span className="inline-flex h-5 items-center rounded-full bg-yellow-500/15 px-2 text-[10px] font-medium tabular-nums text-yellow-300" title={`Float ${mm}M shares`}>
+      🪶 {mm}M
+    </span>
+  );
+}
+
 function SetupBadges({ r }: { r: TalonV2Setup }) {
   return (
     <div className="flex flex-wrap items-center gap-1">
       <CoiledBadge score={r.coiled_score} />
+      <NewsBadge flag={r.news_flag} category={r.news_top_category} score={r.news_catalyst_score} />
+      <SqueezeTriggerBadge flag={r.squeeze_trigger_flag} dist={r.squeeze_distance_pct} score={r.squeeze_score} />
       <EarningsBadge risk={r.earnings_risk} dte={r.dte_to_earnings} />
       <WhaleBadge score={r.whale_score} prem={r.whale_total_prem_5d} />
+      <BlockBadge flag={r.dp_block_flag} buy={r.dp_buy_notional_5d} ratio={r.dp_buy_ratio_5d} />
       <PatternBadge pattern={r.pattern} score={r.pattern_score} />
       <SqueezeBadge flag={r.squeeze_flag} siPct={r.si_pct_float} dtc={r.days_to_cover} />
       <InsiderBadge flag={r.insider_cluster_flag} value={r.insider_recent_buys_total_value} />
       <AnalystBadge skew={r.analyst_skew} ptVsSpot={r.analyst_pt_vs_spot_pct} />
+      <SmallFloatBadge flag={r.small_float_flag} fl={r.float_shares} />
       <FundBadge q={r.fund_quality} />
     </div>
   );
 }
 
-type Tier = "coiled" | "whale" | "patterns" | "actionable" | "watchlist";
+type Tier =
+  | "coiled"
+  | "whale"
+  | "patterns"
+  | "catalysts"
+  | "blocks"
+  | "squeeze"
+  | "small_float"
+  | "actionable"
+  | "watchlist";
 
 type CoiledSortKey =
   | "coiled_score"
@@ -359,6 +422,10 @@ export function TalonV2View() {
     tier === "coiled" ? [] :
     tier === "whale" ? (scan?.whale_setups ?? []) :
     tier === "patterns" ? (scan?.pattern_setups ?? []) :
+    tier === "catalysts" ? (scan?.catalyst_setups ?? []) :
+    tier === "blocks" ? (scan?.block_setups ?? []) :
+    tier === "squeeze" ? (scan?.squeeze_setups ?? []) :
+    tier === "small_float" ? (scan?.small_float_setups ?? []) :
     tier === "actionable" ? (scan?.actionable ?? []) :
     (scan?.watchlist ?? [])
   );
@@ -432,6 +499,48 @@ export function TalonV2View() {
         </Card>
       )}
 
+      {/* Market regime banner */}
+      {scan?.market_regime && (
+        <Card>
+          <CardContent className="flex flex-wrap items-center justify-between gap-3 p-3 text-xs">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Market regime
+              </span>
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 font-medium",
+                  scan.market_regime.composite_regime?.includes("uptrend")
+                    ? "bg-emerald-500/15 text-emerald-300"
+                    : scan.market_regime.composite_regime?.includes("downtrend")
+                    ? "bg-rose-500/15 text-rose-300"
+                    : "bg-foreground/10 text-muted-foreground",
+                )}
+              >
+                {scan.market_regime.composite_regime ?? "unknown"}
+              </span>
+              {scan.market_regime.multipliers && (
+                <span className="text-[10px] tabular-nums text-muted-foreground">
+                  Bull ×{scan.market_regime.multipliers.bull.toFixed(2)} · Bear ×
+                  {scan.market_regime.multipliers.bear.toFixed(2)}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-[10px] tabular-nums text-muted-foreground">
+              {scan.market_regime.vix_close != null && (
+                <span>VIX {scan.market_regime.vix_close.toFixed(2)}</span>
+              )}
+              {scan.market_regime.yield_curve_2_10 != null && (
+                <span>2s10s {scan.market_regime.yield_curve_2_10.toFixed(2)}</span>
+              )}
+              {scan.market_regime.dxy_close != null && (
+                <span>DXY {scan.market_regime.dxy_close.toFixed(2)}</span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Coiled themes summary */}
       {scan && coiledThemes.length > 0 && (
         <Card>
@@ -477,15 +586,27 @@ export function TalonV2View() {
 
       {/* Tier switcher */}
       {scan && (
-        <div className="flex flex-wrap items-center gap-1 rounded-full bg-foreground/[0.03] p-1 text-sm w-fit">
+        <div className="flex flex-wrap items-center gap-1 rounded-full bg-foreground/[0.03] p-1 text-sm">
+          <TierButton active={tier === "catalysts"} onClick={() => setTier("catalysts")}>
+            📰 Catalysts ({scan.catalyst_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "squeeze"} onClick={() => setTier("squeeze")}>
+            ⚡ Squeeze ({scan.squeeze_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "whale"} onClick={() => setTier("whale")}>
+            🐋 Whale ({scan.whale_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "blocks"} onClick={() => setTier("blocks")}>
+            🏦 Blocks ({scan.block_count ?? 0})
+          </TierButton>
           <TierButton active={tier === "coiled"} onClick={() => setTier("coiled")}>
             Coiled ({scan.coiled_count ?? 0})
           </TierButton>
-          <TierButton active={tier === "whale"} onClick={() => setTier("whale")}>
-            Whale ({scan.whale_count ?? 0})
-          </TierButton>
           <TierButton active={tier === "patterns"} onClick={() => setTier("patterns")}>
             Patterns ({scan.pattern_count ?? 0})
+          </TierButton>
+          <TierButton active={tier === "small_float"} onClick={() => setTier("small_float")}>
+            🪶 Small Float ({scan.small_float_count ?? 0})
           </TierButton>
           <TierButton active={tier === "actionable"} onClick={() => setTier("actionable")}>
             Actionable ({scan.actionable_count})

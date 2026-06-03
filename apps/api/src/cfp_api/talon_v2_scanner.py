@@ -30,11 +30,16 @@ import pandas as pd
 
 from cfp_api import (
     talon_scanner,
+    talon_v2_block,
     talon_v2_catalysts,
     talon_v2_chart,
     talon_v2_context,
+    talon_v2_float,
     talon_v2_fundamentals,
+    talon_v2_macro,
+    talon_v2_news,
     talon_v2_patterns,
+    talon_v2_squeeze,
     talon_v2_whale,
 )
 
@@ -55,6 +60,12 @@ _PHASE_ENABLED = {
     "insider":      os.environ.get("TALON_V2_INSIDER", "1") != "0",
     "patterns":     os.environ.get("TALON_V2_PATTERNS", "1") != "0",
     "fundamentals": os.environ.get("TALON_V2_FUNDAMENTALS", "1") != "0",
+    # Phase 4 additions
+    "news":         os.environ.get("TALON_V2_NEWS", "1") != "0",
+    "block":        os.environ.get("TALON_V2_BLOCK", "1") != "0",
+    "macro":        os.environ.get("TALON_V2_MACRO", "1") != "0",
+    "float":        os.environ.get("TALON_V2_FLOAT", "1") != "0",
+    "squeeze":      os.environ.get("TALON_V2_SQUEEZE", "1") != "0",
 }
 
 
@@ -314,6 +325,90 @@ def _run_v2_inner(
                 row.update(sig)
 
     # -----------------------------------------------------------------------
+    # Phase 4 additions — explosive-play detection
+    # -----------------------------------------------------------------------
+
+    # Phase 4.3 — macro regime (one global query; applied per row at the end)
+    macro_regime: dict | None = None
+    if _PHASE_ENABLED["macro"]:
+        _set_v2_progress(phase="macro_regime", phase_progress=0, phase_total=1)
+        macro_regime = talon_v2_macro.load_regime()
+        _set_v2_progress(phase_progress=1)
+
+    # Phase 4.1 — news catalysts (only for tickers v1 surfaced; news fetch is
+    # the slowest external call so we narrow the universe)
+    news_universe = list(v1_rows_by_ticker.keys()) or universe
+    if _PHASE_ENABLED["news"]:
+        _set_v2_progress(phase="news_signals", phase_progress=0,
+                         phase_total=len(news_universe), current_ticker=None)
+        news_by_ticker = talon_v2_news.fetch_and_compute_batch(
+            news_universe, on_progress=_on
+        )
+        for t in news_universe:
+            row = v1_rows_by_ticker.get(t)
+            sig = news_by_ticker.get(t)
+            if row is not None and sig:
+                row.update(sig)
+
+    # Phase 4.2 — dark pool block accumulation (one DB query)
+    if _PHASE_ENABLED["block"]:
+        _set_v2_progress(phase="block_accumulation", phase_progress=0,
+                         phase_total=len(news_universe))
+        block_by_ticker = talon_v2_block.fetch_aggregates(news_universe)
+        for t in news_universe:
+            row = v1_rows_by_ticker.get(t)
+            sig = block_by_ticker.get(t)
+            if row is not None and sig:
+                row.update(sig)
+        _set_v2_progress(phase_progress=len(news_universe))
+
+    # Phase 4.4 — float / share structure (yfinance batched)
+    if _PHASE_ENABLED["float"]:
+        _set_v2_progress(phase="float_signals", phase_progress=0,
+                         phase_total=len(news_universe), current_ticker=None)
+        float_by_ticker = talon_v2_float.fetch_batch(
+            news_universe, on_progress=_on
+        )
+        for t in news_universe:
+            row = v1_rows_by_ticker.get(t)
+            sig = float_by_ticker.get(t)
+            if row is not None and sig:
+                row.update(sig)
+
+    # Phase 4.5 — gamma squeeze trigger (uses strike_gex already cached
+    # for whale phase; one UW call per ticker but cached when whale ran)
+    if client is not None and _PHASE_ENABLED["squeeze"]:
+        _set_v2_progress(phase="squeeze_signals", phase_progress=0,
+                         phase_total=len(news_universe), current_ticker=None)
+        for i, t in enumerate(news_universe):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            row = v1_rows_by_ticker.get(t)
+            if row is None:
+                continue
+            try:
+                strike_rows = client.strike_gex(t) or []
+            except Exception:  # noqa: BLE001
+                strike_rows = []
+            # Best-effort spot from candles already fetched in chart phase
+            spot = None
+            cs = candles_by_ticker.get(t) if candles_by_ticker else None
+            if cs:
+                try:
+                    spot = float(cs[-1].get("close")) if cs[-1].get("close") else None
+                except (ValueError, IndexError):
+                    spot = None
+            sig = talon_v2_squeeze.compute_squeeze_signals(
+                strike_rows, spot, row, row.get("gamma_now")
+            )
+            row.update(sig)
+
+    # Phase 4.3 application — apply regime multipliers to every row's grade
+    # AFTER all other phases, so the multiplier acts on the v1+MA-gate grade.
+    if macro_regime is not None:
+        for row in v1_rows_by_ticker.values():
+            talon_v2_macro.apply_regime_to_row(row, macro_regime)
+
+    # -----------------------------------------------------------------------
     # Aggregate themes (uses chart coiled signals only — themes care about
     # basket structure, not single-name fundamentals)
     # -----------------------------------------------------------------------
@@ -340,7 +435,23 @@ def _run_v2_inner(
     pattern_setups = [r for r in v1_rows_by_ticker.values() if r.get("pattern")]
     pattern_setups.sort(key=lambda r: r.get("pattern_score") or 0, reverse=True)
 
-    # Re-sort actionable/watchlist after MA-gate adjustments
+    # Phase 4 tiers
+    catalyst_setups = [r for r in v1_rows_by_ticker.values() if r.get("news_flag")]
+    catalyst_setups.sort(key=lambda r: r.get("news_catalyst_score") or 0, reverse=True)
+
+    block_setups = [r for r in v1_rows_by_ticker.values() if r.get("dp_block_flag")]
+    block_setups.sort(key=lambda r: r.get("dp_buy_notional_5d") or 0, reverse=True)
+
+    squeeze_setups = [r for r in v1_rows_by_ticker.values() if r.get("squeeze_trigger_flag")]
+    squeeze_setups.sort(key=lambda r: r.get("squeeze_score") or 0, reverse=True)
+
+    small_float_setups = [r for r in v1_rows_by_ticker.values() if r.get("small_float_flag")]
+    small_float_setups.sort(
+        key=lambda r: (r.get("explosiveness_factor") or 0, r.get("grade") or 0),
+        reverse=True,
+    )
+
+    # Re-sort actionable/watchlist after MA-gate AND macro-regime adjustments
     actionable = [r for r in v1_rows_by_ticker.values() if (r.get("grade") or 0) >= 70]
     watchlist = [r for r in v1_rows_by_ticker.values() if 55 <= (r.get("grade") or 0) < 70]
     actionable.sort(key=lambda r: r.get("grade") or 0, reverse=True)
@@ -372,12 +483,24 @@ def _run_v2_inner(
         "whale_count": len(whale_setups),
         "pattern_setups": pattern_setups,
         "pattern_count": len(pattern_setups),
+        # Phase 4 tiers
+        "catalyst_setups": catalyst_setups,
+        "catalyst_count": len(catalyst_setups),
+        "block_setups": block_setups,
+        "block_count": len(block_setups),
+        "squeeze_setups": squeeze_setups,
+        "squeeze_count": len(squeeze_setups),
+        "small_float_setups": small_float_setups,
+        "small_float_count": len(small_float_setups),
+        "market_regime": macro_regime,
         "chart_only_coiled": [r["ticker"] for r in chart_only_rows],
         "v2_notes": (
             "Phases shipped: 1.1 chart, 1.2 earnings, 1.3 whale, 2.1 MA-gate, "
-            "2.2 short, 2.3 analyst, 3.1 insider, 3.2 patterns, 3.3 fundamentals. "
-            "v1 flow gates unchanged; grade may be ±5 from v1 due to Phase 2.1 "
-            "MA structure adjustment (see grade_v1 + ma_gate_adjust on row)."
+            "2.2 short, 2.3 analyst, 3.1 insider, 3.2 patterns, 3.3 fundamentals, "
+            "4.1 news, 4.2 block, 4.3 macro-regime, 4.4 float, 4.5 squeeze. "
+            "v1 flow gates unchanged; grade may be ±5 from v1 due to MA-gate, "
+            "and ±20% due to macro-regime multiplier (see grade_v1 + ma_gate_adjust "
+            "+ regime_grade_multiplier on row)."
         ),
     }
     _set_v2_progress(

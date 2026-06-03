@@ -100,6 +100,13 @@ on:
     - cron: "11,26,41,56 13-20 * * 1-5"  # delphi-rank-v2
     - cron: "15 22 * * *"                # delphi-regime (after prices_daily)
     - cron: "8,38 13-20 * * 1-5"         # uw-predictions
+    # 06:30 ET (= 10:30 UTC) weekdays — UW catalyst calendars (earnings pre/post,
+    # analyst ratings, economic events, dividends, splits). Without this the
+    # uw_earnings_calendar_daily / uw_dividends / uw_stock_splits /
+    # uw_analyst_ratings / uw_economic_calendar tables stay empty and the
+    # /v1/catalysts/* endpoints return empty arrays (which broke Talon v2's
+    # 1.2 earnings-window guardrail until 2026-06-03).
+    - cron: "30 10 * * 1-5"              # catalysts-ingest
   workflow_dispatch:
     inputs:
       job:
@@ -109,6 +116,7 @@ on:
         type: choice
         options:
           - reddit-catalysts
+          - catalysts-ingest
           - reddit
           - reddit-predict
           - reddit-backfill-outcomes
@@ -309,6 +317,30 @@ jobs:
       - name: Re-run ensemble on stale + catalyst-flagged tickers
         working-directory: apps/jobs
         run: uv run cfp-jobs ensemble-rerun-stale --max-tickers 30
+
+  catalysts-ingest:
+    # UW catalyst calendars feed → populates uw_earnings_calendar_daily,
+    # uw_dividends, uw_stock_splits, uw_analyst_ratings, uw_economic_calendar.
+    # The /v1/catalysts/* routes (and Talon v2 1.2) read from these tables, so
+    # if this job stops the catalyst tab silently goes empty. Daily at
+    # 06:30 ET so the calendar is fresh before market open.
+    if: github.event.schedule == '30 10 * * 1-5' || github.event.inputs.job == 'catalysts-ingest'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UNUSUAL_WHALES_API_KEY: ${{ secrets.UNUSUAL_WHALES_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - run: uv python install 3.11
+      - run: uv sync --all-packages
+      - name: Ingest UW catalyst calendars
+        working-directory: apps/jobs
+        run: uv run cfp-jobs catalysts-ingest --days-ahead 14
 
   gex-snapshot:
     # Skylit / Heatseeker GEX structure for SPY/QQQ/SPX persisted to Postgres

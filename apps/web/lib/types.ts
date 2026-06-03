@@ -1712,6 +1712,65 @@ export type TalonV2FundSignals = {
 export type TalonV2MAGate = {
   grade_v1?: number;
   ma_gate_adjust?: number;
+  regime_grade_multiplier?: number;
+  market_regime_at_scan?: string;
+};
+
+// Phase 4 signals
+export type TalonV2NewsSignals = {
+  news_n_items_5d: number;
+  news_catalyst_score: number;
+  news_top_category: string | null;
+  news_top_headline: string | null;
+  news_top_url: string | null;
+  news_keywords: string[];
+  news_recency_hours: number | null;
+  news_flag: boolean;
+};
+
+export type TalonV2BlockSignals = {
+  dp_buy_notional_5d: number;
+  dp_sell_notional_5d: number;
+  dp_net_notional_5d: number;
+  dp_n_blocks_5d: number;
+  dp_n_buy_blocks_5d: number;
+  dp_buy_ratio_5d: number | null;
+  dp_largest_print_5d: number;
+  dp_block_flag: boolean;
+};
+
+export type TalonV2FloatSignals = {
+  shares_outstanding: number | null;
+  float_shares: number | null;
+  float_pct_of_so: number | null;
+  short_pct_of_float: number | null;
+  insider_pct: number | null;
+  inst_pct: number | null;
+  explosiveness_factor: number | null;
+  small_float_flag: boolean;
+};
+
+export type TalonV2SqueezeSignals = {
+  squeeze_strike_cluster_$: number | null;
+  squeeze_pain_strike: number | null;
+  squeeze_dealers_short_gamma: number;
+  squeeze_distance_pct: number | null;
+  squeeze_score: number | null;
+  squeeze_trigger_flag: boolean;
+};
+
+export type TalonV2MarketRegime = {
+  asof_date?: string;
+  composite_regime?: string;
+  vol_regime?: string;
+  trend_regime?: string;
+  macro_regime?: string;
+  vix_close?: number | null;
+  yield_curve_2_10?: number | null;
+  dxy_close?: number | null;
+  fed_funds_rate?: number | null;
+  spy_close?: number | null;
+  multipliers?: { bull: number; bear: number };
 };
 
 // ---------- Talon v2 Top Plays ----------
@@ -1778,6 +1837,10 @@ export type TalonV2Setup = TalonSetup &
   Partial<TalonV2InsiderSignals> &
   Partial<TalonV2PatternSignals> &
   Partial<TalonV2FundSignals> &
+  Partial<TalonV2NewsSignals> &
+  Partial<TalonV2BlockSignals> &
+  Partial<TalonV2FloatSignals> &
+  Partial<TalonV2SqueezeSignals> &
   TalonV2MAGate;
 
 export type TalonV2CoiledSetup = TalonV2ChartSignals & {
@@ -1813,6 +1876,15 @@ export type TalonV2ScanResponse = Omit<TalonScanResponse, "actionable" | "watchl
   whale_count: number;
   pattern_setups: TalonV2Setup[];
   pattern_count: number;
+  catalyst_setups: TalonV2Setup[];
+  catalyst_count: number;
+  block_setups: TalonV2Setup[];
+  block_count: number;
+  squeeze_setups: TalonV2Setup[];
+  squeeze_count: number;
+  small_float_setups: TalonV2Setup[];
+  small_float_count: number;
+  market_regime: TalonV2MarketRegime | null;
   chart_only_coiled: string[];
   v2_notes: string;
 };
@@ -1834,7 +1906,12 @@ export type TalonV2ScanPhase =
   | "insider_signals"
   | "pattern_signals"
   | "prewarm_fundamentals"
-  | "fundamentals_signals";
+  | "fundamentals_signals"
+  | "macro_regime"
+  | "news_signals"
+  | "block_accumulation"
+  | "float_signals"
+  | "squeeze_signals";
 
 export type TalonV2ScanProgress = Omit<TalonScanProgress, "phase"> & {
   phase: TalonV2ScanPhase | null;
