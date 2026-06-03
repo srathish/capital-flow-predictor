@@ -216,9 +216,13 @@ def _run_v2_inner(
     if client is not None and _PHASE_ENABLED["whale"]:
         _set_v2_progress(phase="prewarm_flow_alerts", phase_progress=0,
                          phase_total=len(universe), current_ticker=None)
-        # Only fetch flow alerts for tickers v1 surfaced — saves 504->~300 calls
+        # Only fetch flow alerts for tickers v1 surfaced — saves 504->~300 calls.
+        # max_dte=75 covers the 1-2 month swing window the picker actually
+        # wants. Default UW limit is 35 (too short — biases to weeklies).
         whale_universe = list(v1_rows_by_ticker.keys()) or universe
-        flow_by_ticker = client.flow_alerts_batch(whale_universe, on_progress=_on)
+        flow_by_ticker = client.flow_alerts_batch(
+            whale_universe, max_dte=75, on_progress=_on
+        )
         _set_v2_progress(phase="whale_signals", phase_progress=0,
                          phase_total=len(whale_universe))
         for i, t in enumerate(whale_universe):

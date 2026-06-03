@@ -1723,6 +1723,7 @@ export type TalonV2PickEvidence = TalonContractPickEvidence & {
 
 export type TalonV2ContractPick = Omit<TalonContractPick, "evidence"> & {
   evidence: TalonV2PickEvidence;
+  dte?: number | null;
 };
 
 export type TalonV2TopPlay = {

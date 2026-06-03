@@ -29,7 +29,7 @@ Upgrades over v1 top plays:
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 
 from cfp_api import talon_scanner, talon_top_plays as v1_picks
@@ -39,6 +39,16 @@ log = logging.getLogger(__name__)
 TOP_N = 20
 TIER_BOUNDS = v1_picks.TIER_BOUNDS  # reuse v1's ITM/ATM/OTM range definitions
 
+# Swing window — the picker prefers expiries in this DTE range. v1 had no
+# preference and just picked highest-confidence regardless, which biased to
+# the soonest expiries because near-term whales pay the most premium per
+# strike. v2 explicitly targets the 1-2 month swing setup.
+SWING_DTE_MIN = 25
+SWING_DTE_MAX = 75
+# Maximum DTE we'll even consider — anything past this is too far out for
+# the gates to mean anything.
+MAX_DTE = 90
+
 
 def _parse_expiry(s: Any) -> datetime | None:
     if not s or not isinstance(s, str):
@@ -47,6 +57,36 @@ def _parse_expiry(s: Any) -> datetime | None:
         return datetime.fromisoformat(s.split("T")[0])
     except (ValueError, AttributeError):
         return None
+
+
+def _dte_for(expiry: str | None, today: date | None = None) -> int | None:
+    if not expiry:
+        return None
+    exp = _parse_expiry(expiry)
+    if exp is None:
+        return None
+    base = today or date.today()
+    return (exp.date() - base).days
+
+
+def _swing_dte_bonus(dte: int | None) -> float:
+    """Confidence bonus 0-25 for expiries in the swing sweet spot.
+
+    Out-of-window (<25 or >75 DTE) → 0 bonus, slight penalty at extremes.
+    In-window with peak at 45 DTE → up to +25 score points.
+    """
+    if dte is None:
+        return 0.0
+    if dte < SWING_DTE_MIN:
+        # Penalize near-term: -10 at 0 DTE, ramping to 0 at SWING_DTE_MIN
+        return -10.0 * max(0, (SWING_DTE_MIN - dte) / SWING_DTE_MIN)
+    if dte > SWING_DTE_MAX:
+        return -5.0 * min(1.0, (dte - SWING_DTE_MAX) / SWING_DTE_MAX)
+    # Triangular peak at 45 DTE inside the window
+    peak = (SWING_DTE_MIN + SWING_DTE_MAX) / 2
+    if dte <= peak:
+        return 25.0 * (dte - SWING_DTE_MIN) / (peak - SWING_DTE_MIN)
+    return 25.0 * (SWING_DTE_MAX - dte) / (SWING_DTE_MAX - peak)
 
 
 def _expiry_spans_earnings(expiry: str, earnings_date: str | None) -> bool:
@@ -60,12 +100,57 @@ def _expiry_spans_earnings(expiry: str, earnings_date: str | None) -> bool:
     return ed <= exp
 
 
+def _swing_adjusted_score(bucket: dict) -> float:
+    """v1 confidence score + swing-DTE bonus + max-DTE filter.
+
+    Returns -inf for buckets outside the MAX_DTE cutoff so they get dropped
+    rather than picked. In-window buckets get up to +25 score points for
+    being in the 25-75 DTE swing sweet spot.
+    """
+    dte = _dte_for(bucket.get("expiry"))
+    if dte is None:
+        return v1_picks._confidence_score(bucket)  # noqa: SLF001
+    if dte > MAX_DTE:
+        return float("-inf")
+    base = v1_picks._confidence_score(bucket)  # noqa: SLF001
+    return base + _swing_dte_bonus(dte)
+
+
+def _pick_for_tier_swing(
+    buckets: dict[tuple[float, str], dict],
+    price: float,
+    tier: str,
+) -> dict | None:
+    """v2 version of v1's _pick_for_tier — same strike filter, but ranks by
+    swing-adjusted score (prefers 25-75 DTE) and drops buckets > MAX_DTE.
+    """
+    lo_pct, hi_pct = TIER_BOUNDS[tier]
+    lo, hi = price * (1 + lo_pct), price * (1 + hi_pct)
+    candidates: list[dict] = []
+    for key, b in buckets.items():
+        if lo <= key[0] <= hi:
+            score = _swing_adjusted_score(b)
+            if score == float("-inf"):
+                continue
+            candidates.append((score, b))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    return candidates[0][1]
+
+
 def _anchored_standard_pick(
     row: dict,
     buckets: dict,
     price: float,
 ) -> tuple[dict | None, list[str]]:
     """If a whale-flagged top strike exists, use it as the standard tier anchor.
+
+    Prefers a same-strike bucket in the swing-DTE window over the absolute
+    whale_top_expiry — the v2 scanner's "top expiry" is whichever single
+    bucket had the most $, which can be a 0-7 DTE weekly. For the swing
+    picker we'd rather take the same strike on a 30-75 DTE expiry if one
+    exists with meaningful flow.
 
     Returns (pick_dict_or_None, anchor_notes).
     """
@@ -74,27 +159,38 @@ def _anchored_standard_pick(
     whale_expiry = row.get("whale_top_expiry")
     if not row.get("whale_flag") or whale_strike is None or whale_expiry is None:
         return None, notes
-    # Find the bucket matching the whale's (strike, expiry)
     try:
         ws = float(whale_strike)
     except (TypeError, ValueError):
         return None, notes
-    key = (ws, whale_expiry)
-    bucket = buckets.get(key)
-    if bucket is None:
-        # Fuzzy match — same strike, any expiry; or same expiry, nearest strike
-        for k, b in buckets.items():
-            if k[0] == ws:
-                bucket = b
-                break
-    if bucket is None:
-        return None, notes
-    pick = v1_picks._bucket_to_contract_pick(bucket, "atm", price)  # noqa: SLF001
-    notes.append(
-        f"anchored to whale concentration (${row.get('whale_top_strike_prem', 0):,.0f} "
-        f"on this strike, conc {(row.get('whale_concentration_pct') or 0) * 100:.0f}%)"
-    )
-    return pick, notes
+
+    # 1. Look for same-strike buckets and rank by swing-adjusted score
+    same_strike = [(k, b) for k, b in buckets.items() if k[0] == ws]
+    if same_strike:
+        ranked = []
+        for k, b in same_strike:
+            score = _swing_adjusted_score(b)
+            if score != float("-inf"):
+                ranked.append((score, k, b))
+        if ranked:
+            ranked.sort(key=lambda x: x[0], reverse=True)
+            _, key, bucket = ranked[0]
+            pick = v1_picks._bucket_to_contract_pick(bucket, "atm", price)  # noqa: SLF001
+            dte = _dte_for(bucket.get("expiry"))
+            chosen_expiry = key[1]
+            if chosen_expiry != whale_expiry:
+                notes.append(
+                    f"anchored to whale strike ${ws}; preferred swing expiry "
+                    f"{chosen_expiry} ({dte}d) over whale's near-term {whale_expiry}"
+                )
+            else:
+                notes.append(
+                    f"anchored to whale concentration (${row.get('whale_top_strike_prem', 0):,.0f} "
+                    f"on this strike, conc {(row.get('whale_concentration_pct') or 0) * 100:.0f}%, "
+                    f"{dte}d to expiry)"
+                )
+            return pick, notes
+    return None, notes
 
 
 def _apply_v2_guardrails(pick: dict, row: dict) -> dict:
@@ -189,11 +285,13 @@ def compute_v2_top_plays(
             continue
 
         strike_rows = client.strike_gex(ticker) or []
-        alerts = client.flow_alerts_for_ticker(ticker) or []
+        # max_dte=75 — pull the swing window (1-2 month expiries) so the
+        # picker has real swing candidates. UW default is 35 (too short).
+        alerts = client.flow_alerts_for_ticker(ticker, max_dte=75) or []
         walls = v1_picks._identify_walls(strike_rows, price)  # noqa: SLF001
         buckets = v1_picks._aggregate_alerts(alerts)  # noqa: SLF001
 
-        # Whale-anchored standard tier
+        # Whale-anchored standard tier (already swing-aware)
         anchored, anchor_notes = _anchored_standard_pick(s, buckets, price)
 
         picks: list[dict] = []
@@ -203,14 +301,17 @@ def compute_v2_top_plays(
                 # Surface anchor explanation on the pick
                 pick.setdefault("evidence", {})["v2_anchor_notes"] = anchor_notes
             else:
-                bucket = v1_picks._pick_for_tier(buckets, price, tier)  # noqa: SLF001
+                # Use the swing-DTE-preferring picker (drops >90 DTE, bonuses 25-75)
+                bucket = _pick_for_tier_swing(buckets, price, tier)
                 if bucket is not None:
                     pick = v1_picks._bucket_to_contract_pick(bucket, tier, price)  # noqa: SLF001
                 else:
                     pick = v1_picks._empty_tier_pick(  # noqa: SLF001
                         tier,
-                        "no recent UW backing in this strike range — grade-only conviction",
+                        "no swing-window UW backing in this strike range — grade-only conviction",
                     )
+            # Annotate DTE on every pick so the UI can show it + sanity-check
+            pick["dte"] = _dte_for(pick.get("expiry"))
             _apply_v2_guardrails(pick, s)
             picks.append(pick)
 

@@ -124,6 +124,27 @@ function PickCard({ pick, currentPrice }: { pick: TalonV2ContractPick; currentPr
           <div className="flex items-baseline gap-2">
             <span className="text-base font-semibold tabular-nums">${pick.strike}C</span>
             <span className="text-xs text-muted-foreground tabular-nums">{pick.expiry}</span>
+            {pick.dte != null && (
+              <span
+                className={cn(
+                  "rounded-full px-1.5 py-0.5 text-[9px] tabular-nums",
+                  pick.dte >= 25 && pick.dte <= 75
+                    ? "bg-emerald-500/15 text-emerald-300"
+                    : pick.dte < 25
+                    ? "bg-amber-500/15 text-amber-300"
+                    : "bg-foreground/10 text-muted-foreground",
+                )}
+                title={
+                  pick.dte >= 25 && pick.dte <= 75
+                    ? "Swing window (25-75 DTE)"
+                    : pick.dte < 25
+                    ? "Near-term — outside swing window"
+                    : "Long-dated — outside swing window"
+                }
+              >
+                {pick.dte}d
+              </span>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-1 text-[10px] tabular-nums">
             <span className="text-muted-foreground">
