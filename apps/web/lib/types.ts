@@ -1714,6 +1714,60 @@ export type TalonV2MAGate = {
   ma_gate_adjust?: number;
 };
 
+// ---------- Talon v2 Top Plays ----------
+export type TalonV2PickEvidence = TalonContractPickEvidence & {
+  v2_warnings?: string[];
+  v2_notes?: string[];
+  v2_anchor_notes?: string[];
+};
+
+export type TalonV2ContractPick = Omit<TalonContractPick, "evidence"> & {
+  evidence: TalonV2PickEvidence;
+};
+
+export type TalonV2TopPlay = {
+  ticker: string;
+  grade: number | null;
+  grade_v1?: number;
+  ma_gate_adjust?: number;
+  direction: "bull" | "bear" | "neutral" | null;
+  theme: string;
+  current_price: number;
+  soft_inval: number | null;
+  st_target: number | null;
+  swing_targets: number[];
+  all_call_walls: number[];
+  all_put_walls: number[];
+  // v2 carry-through
+  coiled_score: number | null;
+  pattern: string | null;
+  pattern_score: number | null;
+  next_earnings_date: string | null;
+  dte_to_earnings: number | null;
+  earnings_risk: "imminent" | "near" | "clear" | "past" | "unknown";
+  whale_score: number | null;
+  whale_top_strike: number | null;
+  whale_top_expiry: string | null;
+  whale_top_strike_prem: number | null;
+  whale_flag: boolean;
+  squeeze_flag?: boolean;
+  analyst_skew?: "bull" | "bear" | "mixed" | "unknown";
+  analyst_pt_vs_spot_pct?: number | null;
+  insider_cluster_flag?: boolean;
+  fund_quality?: "high" | "mid" | "low" | "unknown";
+  picks: TalonV2ContractPick[];
+  n_picks_backed: number;
+  row_warnings: string[];
+};
+
+export type TalonV2TopPlaysResponse = {
+  v2_scan_id: string;
+  scan_date: string;
+  generated_at: string;
+  top_plays: TalonV2TopPlay[];
+  _cache_hit: boolean;
+};
+
 export type TalonV2Setup = TalonSetup &
   Partial<TalonV2ChartSignals> &
   Partial<TalonV2CatalystSignals> &

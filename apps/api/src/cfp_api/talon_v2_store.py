@@ -69,6 +69,27 @@ async def load_v2_scan_by_id(scan_id: str) -> dict[str, Any] | None:
     return payload
 
 
+async def update_v2_scan_top_plays(scan_id: str, top_plays: list[dict]) -> None:
+    """Patch v2 result_json with freshly-computed top_plays. Read-modify-write
+    because legacy rows store result_json as a JSON-encoded string."""
+    pool = get_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT result_json FROM talon2_scans WHERE v2_scan_id = $1", scan_id
+        )
+        if not row:
+            return
+        payload = row["result_json"]
+        if isinstance(payload, str):
+            payload = json.loads(payload)
+        payload["v2_top_plays"] = top_plays
+        await conn.execute(
+            "UPDATE talon2_scans SET result_json = $2::jsonb WHERE v2_scan_id = $1",
+            scan_id,
+            json.dumps(payload),
+        )
+
+
 async def list_recent_v2_scans(limit: int = 20) -> list[dict[str, Any]]:
     pool = get_pool()
     async with pool.acquire() as conn:

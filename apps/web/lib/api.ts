@@ -67,6 +67,7 @@ import type {
   TalonUniverseResponse,
   TalonV2ScanProgress,
   TalonV2ScanResponse,
+  TalonV2TopPlaysResponse,
   WatchlistResponse,
   WatchlistSector,
 } from "./types";
@@ -671,6 +672,10 @@ export const api = {
   },
   talonV2ScanProgress(): Promise<TalonV2ScanProgress> {
     return getJson<TalonV2ScanProgress>(`/v1/talon/v2/scan/progress`);
+  },
+  talonV2TopPlays(forceRecompute = false): Promise<TalonV2TopPlaysResponse> {
+    const qs = forceRecompute ? "?force_recompute=true" : "";
+    return getJson<TalonV2TopPlaysResponse>(`/v1/talon/v2/top-plays${qs}`);
   },
 };
 
