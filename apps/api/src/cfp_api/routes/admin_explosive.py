@@ -62,15 +62,25 @@ class RescoreStatusResponse(BaseModel):
     last_error: str | None = None
 
 
+_SCORE_BUDGET_SECONDS = 360.0  # 6-min hard ceiling; UI safety stop is 8 min.
+
+
 async def _run_score() -> None:
     """The actual scoring work, run as a background asyncio task. Updates
-    module-level state so the status endpoint can report progress / result."""
+    module-level state so the status endpoint can report progress / result.
+
+    Wrapped in `asyncio.wait_for` so a runaway scoring pass surfaces as a
+    clear error in `_last_error` instead of just spinning forever and
+    blocking the next rescore behind the cooldown."""
     global _last_finish_ts, _in_progress, _last_result, _last_error
     started = time.monotonic()
     try:
         from cfp_jobs import score_explosive
-        log.info("admin rescore: starting (background task)")
-        result = await asyncio.to_thread(score_explosive.score_all, settings.database_url)
+        log.info("admin rescore: starting (background task, budget=%.0fs)", _SCORE_BUDGET_SECONDS)
+        result = await asyncio.wait_for(
+            asyncio.to_thread(score_explosive.score_all, settings.database_url),
+            timeout=_SCORE_BUDGET_SECONDS,
+        )
         elapsed = time.monotonic() - started
         log.info("admin rescore: done count=%s elapsed=%.1fs", result.get("count"), elapsed)
         _last_result = {
@@ -80,6 +90,10 @@ async def _run_score() -> None:
             "elapsed_seconds": elapsed,
         }
         _last_error = None
+    except asyncio.TimeoutError:
+        elapsed = time.monotonic() - started
+        log.error("admin rescore: exceeded %.0fs budget (elapsed=%.1fs)", _SCORE_BUDGET_SECONDS, elapsed)
+        _last_error = f"score_all exceeded {_SCORE_BUDGET_SECONDS:.0f}s budget — check DB performance"
     except Exception as e:
         log.exception("admin rescore: failed")
         _last_error = str(e)

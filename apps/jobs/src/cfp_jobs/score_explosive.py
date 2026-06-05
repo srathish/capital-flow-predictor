@@ -27,6 +27,7 @@ from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
 import psycopg
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from psycopg.types.json import Jsonb
 
 from cfp_jobs.db import connect
@@ -1470,46 +1471,67 @@ def _upsert_score(
         cur.execute(sql, params)
 
 
+_SCORE_MAX_WORKERS = 6
+_PER_TICKER_TIMEOUT_S = 25.0
+
+
+def _score_one_ticker(database_url: str, ticker: str, now: datetime, today: date) -> tuple[str, int, float]:
+    """Per-ticker work, run inside a worker thread with its own DB connection.
+    psycopg connections are not thread-safe, so each worker owns one outright."""
+    with connect(database_url) as wconn:
+        with wconn.transaction():
+            sig = _compute_signals(wconn, ticker, today)
+            score = _composite(sig)
+            stages = _evaluate_stages(sig)
+            _upsert_score(wconn, now, sig, score, stages)
+    return (ticker, int(stages.get("stages_passed", 0)), score)
+
+
 def score_all(database_url: str) -> dict[str, Any]:
     """Compute and persist explosive_scores for every ticker in the universe.
-    Returns {snapshot_ts, count, top: [{ticker, score}, ...]}"""
+    Returns {snapshot_ts, count, top: [{ticker, score}, ...]}
+
+    Per-ticker work is 100% I/O-bound (~15 DB queries, no CPU), so we fan it
+    out across a thread pool. Sequential mode was ~60-300s and tripped the
+    UI's 5-min safety stop under any DB stress; parallel mode lands in 10-20s.
+    """
     now = datetime.now(UTC)
     today = now.date()
     written = 0
     # (ticker, stages_passed, score) — preview is sorted by stages first,
     # then score, mirroring how /v1/explosive will rank the Board.
     top_preview: list[tuple[str, int, float]] = []
+
+    # Load universe on a short-lived connection so we don't hold an idle
+    # one while workers are running.
     with connect(database_url) as conn:
         universe = _load_universe(conn, today)
-        log.info("explosive scoring: %d tickers in universe", len(universe))
-        # Progress heartbeat every 25 tickers — without it, a hang on any
-        # single ticker looks identical to "still working" in GH Actions
-        # logs, and the only signal is the job-level timeout 10+ min later.
-        progress_step = 25
-        loop_started = time.monotonic()
-        for idx, ticker in enumerate(universe, start=1):
+    log.info("explosive scoring: %d tickers in universe (workers=%d)", len(universe), _SCORE_MAX_WORKERS)
+
+    progress_step = 25
+    loop_started = time.monotonic()
+    completed = 0
+
+    with ThreadPoolExecutor(max_workers=_SCORE_MAX_WORKERS) as pool:
+        futures = {pool.submit(_score_one_ticker, database_url, t, now, today): t for t in universe}
+        for fut in as_completed(futures):
+            ticker = futures[fut]
             try:
-                # Wrap the *entire* per-ticker block in a savepoint so that
-                # any SELECT failure rolls back cleanly instead of leaving
-                # the outer transaction in INERROR for the next iteration.
-                with conn.transaction():
-                    sig = _compute_signals(conn, ticker, today)
-                    score = _composite(sig)
-                    stages = _evaluate_stages(sig)
-                    _upsert_score(conn, now, sig, score, stages)
+                # Per-ticker timeout guards against a single hung query stalling
+                # the whole rescore. The thread itself can't be cancelled (Python
+                # limitation) but the future stops blocking us.
+                result = fut.result(timeout=_PER_TICKER_TIMEOUT_S)
+                top_preview.append(result)
                 written += 1
-                top_preview.append((ticker, int(stages.get("stages_passed", 0)), score))
             except Exception as e:
                 log.warning("scoring failed for %s: %s", ticker, e, exc_info=True)
-            if idx % progress_step == 0 or idx == len(universe):
+            completed += 1
+            if completed % progress_step == 0 or completed == len(universe):
                 log.info(
                     "explosive scoring: %d / %d tickers done (%.1fs elapsed)",
-                    idx, len(universe), time.monotonic() - loop_started,
+                    completed, len(universe), time.monotonic() - loop_started,
                 )
-        # No explicit conn.commit(): psycopg3's `with psycopg.connect(...)`
-        # already wraps the body in a transaction and commits on clean exit;
-        # an explicit commit here raises "Explicit commit() forbidden within
-        # a Transaction context."
+
     top_preview.sort(key=lambda x: (x[1], x[2]), reverse=True)
     return {
         "snapshot_ts": now.isoformat(),

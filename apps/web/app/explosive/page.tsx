@@ -486,7 +486,9 @@ export default function ExplosivePage() {
       }
       // Status will be 'started' or 'already_running' — either way, poll
       // until the task finishes. Server-side guard prevents duplicate runs.
-      const deadline = Date.now() + 5 * 60_000; // 5-minute safety stop
+      // Safety stop sits above the backend's 6-min budget so the server's
+      // own error message wins if scoring blows past the budget.
+      const deadline = Date.now() + 8 * 60_000;
       while (Date.now() < deadline) {
         await new Promise((res) => setTimeout(res, 2000));
         const s = await api.explosiveRescoreStatus();
@@ -497,7 +499,7 @@ export default function ExplosivePage() {
           return;
         }
       }
-      setRescoreError("rescore timed out after 5 min");
+      setRescoreError("rescore timed out after 8 min");
     } catch (e) {
       setRescoreError((e as Error)?.message ?? "rescore failed");
     } finally {
