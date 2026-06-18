@@ -40,6 +40,7 @@ from cfp_api import (
     talon_v2_news,
     talon_v2_patterns,
     talon_v2_squeeze,
+    talon_v2_swing,
     talon_v2_whale,
 )
 
@@ -66,6 +67,8 @@ _PHASE_ENABLED = {
     "macro":        os.environ.get("TALON_V2_MACRO", "1") != "0",
     "float":        os.environ.get("TALON_V2_FLOAT", "1") != "0",
     "squeeze":      os.environ.get("TALON_V2_SQUEEZE", "1") != "0",
+    # Phase 5 — 1-2 month swing eligibility (re-filter, no extra fetches)
+    "swing":        os.environ.get("TALON_V2_SWING", "1") != "0",
 }
 
 
@@ -159,7 +162,7 @@ def _run_v2_inner(
     # Step 1: v1
     v1 = talon_scanner.run_scan(scan_date)
     universe = talon_scanner.load_universe()
-    client = talon_scanner._get_live_client()  # noqa: SLF001
+    client = talon_scanner._get_live_client()
     scan_date_obj = (
         datetime.fromisoformat(v1["scan_date"]).date()
         if v1.get("scan_date")
@@ -200,7 +203,7 @@ def _run_v2_inner(
             elif sig.get("coiled"):
                 chart_only_rows.append({
                     "ticker": t,
-                    "theme": talon_scanner._theme_for(t),  # noqa: SLF001
+                    "theme": talon_scanner._theme_for(t),
                     "grade": None,
                     "direction": None,
                     "chart_only": True,
@@ -387,7 +390,7 @@ def _run_v2_inner(
                 continue
             try:
                 strike_rows = client.strike_gex(t) or []
-            except Exception:  # noqa: BLE001
+            except Exception:
                 strike_rows = []
             # Best-effort spot from candles already fetched in chart phase
             spot = None
@@ -407,6 +410,16 @@ def _run_v2_inner(
     if macro_regime is not None:
         for row in v1_rows_by_ticker.values():
             talon_v2_macro.apply_regime_to_row(row, macro_regime)
+
+    # Phase 5 — swing eligibility (runs LAST so it sees the final adjusted
+    # grade and every other signal). No external fetches — pure re-filter.
+    if _PHASE_ENABLED["swing"]:
+        _set_v2_progress(phase="swing_signals", phase_progress=0,
+                         phase_total=len(v1_rows_by_ticker), current_ticker=None)
+        for i, (t, row) in enumerate(v1_rows_by_ticker.items()):
+            _set_v2_progress(phase_progress=i, current_ticker=t)
+            sig = talon_v2_swing.compute_swing_signals(row, scan_date_obj)
+            row.update(sig)
 
     # -----------------------------------------------------------------------
     # Aggregate themes (uses chart coiled signals only — themes care about
@@ -451,6 +464,9 @@ def _run_v2_inner(
         reverse=True,
     )
 
+    # Phase 5 — swing setups tier (1-2 month holding window, 30-75 DTE)
+    swing_setups = talon_v2_swing.rank_swing_setups(list(v1_rows_by_ticker.values()))
+
     # Re-sort actionable/watchlist after MA-gate AND macro-regime adjustments
     actionable = [r for r in v1_rows_by_ticker.values() if (r.get("grade") or 0) >= 70]
     watchlist = [r for r in v1_rows_by_ticker.values() if 55 <= (r.get("grade") or 0) < 70]
@@ -492,15 +508,20 @@ def _run_v2_inner(
         "squeeze_count": len(squeeze_setups),
         "small_float_setups": small_float_setups,
         "small_float_count": len(small_float_setups),
+        # Phase 5 — swing tier (1-2 month holding window, 30-75 DTE)
+        "swing_setups": swing_setups,
+        "swing_count": len(swing_setups),
         "market_regime": macro_regime,
         "chart_only_coiled": [r["ticker"] for r in chart_only_rows],
         "v2_notes": (
             "Phases shipped: 1.1 chart, 1.2 earnings, 1.3 whale, 2.1 MA-gate, "
             "2.2 short, 2.3 analyst, 3.1 insider, 3.2 patterns, 3.3 fundamentals, "
-            "4.1 news, 4.2 block, 4.3 macro-regime, 4.4 float, 4.5 squeeze. "
+            "4.1 news, 4.2 block, 4.3 macro-regime, 4.4 float, 4.5 squeeze, "
+            "5 swing-eligibility (1-2 month window re-filter, 30-75 DTE). "
             "v1 flow gates unchanged; grade may be ±5 from v1 due to MA-gate, "
             "and ±20% due to macro-regime multiplier (see grade_v1 + ma_gate_adjust "
-            "+ regime_grade_multiplier on row)."
+            "+ regime_grade_multiplier on row). Swing tier is a re-filter — "
+            "no grade impact, just a separate ranked list for 60-120 day swings."
         ),
     }
     _set_v2_progress(
