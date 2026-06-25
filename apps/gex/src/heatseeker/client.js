@@ -22,6 +22,8 @@ export async function fetchSnapshot(ticker) {
     headers: {
       'Origin': 'https://app.skylit.ai',
       'Referer': 'https://app.skylit.ai/',
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'text/event-stream',
     },
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
@@ -72,8 +74,12 @@ async function readSseStream(resp, ticker) {
 
       try {
         const parsed = JSON.parse(dataLine);
-        if (eventType === 'snapshot_update' && parsed.data?.CurrentSpot) {
-          snapshot = parsed.data;
+        // Skylit rotates event names; accept any that carry the canonical
+        // CurrentSpot payload. 'initial_data' is the current name as of
+        // 2026-06-25; 'snapshot_update' was the older one.
+        const payload = parsed.data?.data ?? parsed.data;
+        if ((eventType === 'snapshot_update' || eventType === 'initial_data' || eventType === 'snapshot') && payload?.CurrentSpot) {
+          snapshot = payload;
         } else if (eventType === 'velocity_update' && parsed.data?.topRisers) {
           velocity = parsed.data;
         }

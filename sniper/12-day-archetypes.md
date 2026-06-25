@@ -24,6 +24,24 @@ gives you back the win.
 | **Non-Trend Day** | Very narrow range, flat profile | IB < 0.5× yesterday's IB; coil all day | **Skip the day.** No rungs print cleanly. |
 | **P-shape / b-shape** | Long stem then balance | Sharp morning move, then sideways at the new level | TP1 + maybe TP2; trim aggressively. Don't chase extension into balance. |
 
+## Empirical prior — NEG regime morning bias (validated 12 months)
+
+**Before 10:30 ET you already have one signal: the morning GEX regime.** Empirically (see [validation/REPORT.md](validation/REPORT.md)):
+
+| Morning GEX read at 09:25 | SPY trend day rate | QQQ trend day rate |
+|---|---|---|
+| Positive net GEX | 11.9 % | 5.9 % |
+| **Negative net GEX** | **18.2 %** | **26.2 %** |
+| Ratio NEG / POS | 1.5 × | **4.4 ×** |
+
+The NEG-regime bump is biggest in QQQ — when QQQ shows negative net GEX at 09:25 ET, the prior probability of a Trend Day is **4.4× higher** than under positive GEX. SPY's effect is real but smaller.
+
+Use this as a *prior* on archetype call, not a determinant. The 10:30 IB extension still decides — but a NEG-regime morning gives you permission to *lean* toward Trend Day expectation an hour earlier, and that translates directly to sizing aggressiveness.
+
+**Practical sizing rule:**
+- NEG regime + first 15-min IB extending in one direction → assume Trend Day, size at 1.5× from the first rung.
+- POS regime + first 15-min IB tight → assume Normal Day, TP1 only.
+
 ## How to identify by 10:30 ET
 
 Check these in sequence at the bottom of the first hour (10:30 ET):
@@ -190,32 +208,36 @@ worth more than getting the original call right.
 
 ## Edge case — overnight gap morning
 
-The research is concrete: roughly **80 % of intraday gaps fill by
-noon ET**. Gap fill rates:
+**Empirically calibrated against 249 SPY/QQQ trading days** (see [validation/REPORT.md](validation/REPORT.md)). The original "80 % gaps fill by noon" rule from third-party research **did not survive validation on this data** — the real picture is asymmetric by direction.
 
-- 0.15 % gap-down: ~92 % fill rate
-- 0.35 % gap-down: ~69 % fill rate
-- 1–2 % gap: ~45 % fill rate same day
-- > 2 % gap: ~30–33 % fill rate same day
+### Same-day fill rate by gap size and direction (May 2025 – May 2026)
 
-For sniper, this means:
+| Gap | SPY fill | QQQ fill | Implication |
+|---|---|---|---|
+| Small gap UP (0.15 – 0.5 %) | **44 %** | **43 %** | Continues > fills. **Don't fade.** |
+| Medium gap UP (0.5 – 1.0 %) | 52 % | 51 % | Coin flip. No bias. |
+| Big gap UP (> 1.0 %) | 50 % | 59 % | Slight fade bias on QQQ only. |
+| Small gap DOWN (-0.5 to -0.15 %) | 57 % | 58 % | Fills more than continues. |
+| Big gap DOWN (< -1.0 %) | **67 %** | **67 %** | Reliable bullish reversal. |
 
-- **Small gap morning (< 0.5 %)**: bias *toward* the gap-fill
-  direction in the first hour. The rung most likely to print is the
-  one in the gap-fill direction.
-- **Large gap morning (> 1 %)**: the gap is part of a *real* move.
-  Do not fade. Treat the open as a Trend Day until proven otherwise.
-- **Gap day-of-week effect**:
-  - Monday gap-down: **does NOT fade** historically — bias continues.
-    Don't fade Monday morning weakness.
-  - Wednesday gap-up: tends to extend. Buy reclaim, don't sell rip.
+**Rules that survive the data:**
 
-Add a "gap" indicator to the `/sniper` morning panel:
+- **Small gap up (< 0.5 %)**: bias *with* the gap, not against. Sniper preference: take the bull-side rungs first; the failure trigger has a *worse* base rate than the reclaim.
+- **Any gap down**: bias *with* the fill direction (i.e., upward reversal). Bigger gap down = stronger reversal bias.
+- **Big gap up (> 1 %)**: treat as Trend Day candidate until proven otherwise — the macro driver doesn't reverse on a whim.
+- **Big gap down (> 1 %)**: tradeable bullish reversal — but time the bottom with the EMA stack and confluence, don't buy the first dip.
+
+### What is NOT validated
+
+- Day-of-week gap effects ("Monday gap-down doesn't fade", "Wednesday gap-up extends") come from third-party research and **were not separately confirmed** in this sample. Treat as weak priors until validated independently.
+- Intraday gap-fill rate (price tagging prior close briefly intraday but closing elsewhere) is higher than the close-vs-open numbers above. We don't have 1m bars across 12 months to test it cleanly.
+
+Add a "gap" indicator to the `/sniper` morning panel that uses the validated rates:
 
 ```
-GAP: -0.22 % from y'day close   →  fill bias: BULLISH
-     prior close: 738.65        →  target: 738.65 by noon
-     historic fill rate at this size: ~80 %
+GAP: -1.2 % from y'day close   →  fill bias: STRONG BULLISH REVERSAL
+     prior close: 738.65       →  target: 738.65 (close > open)
+     empirical fill rate at this size: 67 %  [SPY 12mo]
 ```
 
 ## Edge case — opening-range breakout (ORB) overlay

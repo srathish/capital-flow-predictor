@@ -1,0 +1,150 @@
+{
+  "SPY": {
+    "ticker": "SPY",
+    "n_days": 249,
+    "date_range": [
+      "2025-05-12",
+      "2026-05-07"
+    ],
+    "regime_split": {
+      "pos": 101,
+      "neg": 148
+    },
+    "claims": {
+      "C1_regime_predicts_range": {
+        "pos_n": 100,
+        "neg_n": 148,
+        "pos_mean_next_range": 0.7701008784670131,
+        "neg_mean_next_range": 1.0612838390311141,
+        "pos_median": 0.6776847321682401,
+        "neg_median": 0.9375877528370888,
+        "delta_means": 0.291182960564101,
+        "pass": true
+      },
+      "C2_gap_fill_bias": {
+        "small_up_n": 68,
+        "small_up_fill_rate": 44.11764705882353,
+        "medium_up_n": 31,
+        "medium_up_fill_rate": 51.61290322580645,
+        "big_up_n": 6,
+        "big_up_fill_rate": 50.0,
+        "small_down_n": 44,
+        "small_down_fill_rate": 56.81818181818182,
+        "big_down_n": 9,
+        "big_down_fill_rate": 66.66666666666666,
+        "framework_says": "Small gaps fill ~80%, big gaps fill ~30-45%"
+      },
+      "C3_continuation_by_regime": {
+        "pos_total": 100,
+        "pos_continuations": 51,
+        "pos_continuation_rate": 51.0,
+        "neg_total": 148,
+        "neg_continuations": 85,
+        "neg_continuation_rate": 57.432432432432435,
+        "framework_says": "NEG should have HIGHER continuation rate than POS (trending regime)",
+        "pass": true
+      },
+      "C4_directional_baseline": {
+        "n": 248,
+        "correct": 134,
+        "hit_rate_pct": 54.03225806451613,
+        "baseline_walkforward_hit_rate_pct": 48.3,
+        "framework_says": "Combined regime+continuation rule should beat 50%",
+        "pass": true
+      },
+      "C5_trend_day_in_neg_regime": {
+        "median_range_pct": 0.8351028383036777,
+        "pos_total": 101,
+        "pos_trend_days": 12,
+        "pos_trend_rate": 11.881188118811881,
+        "neg_total": 148,
+        "neg_trend_days": 27,
+        "neg_trend_rate": 18.243243243243242,
+        "framework_says": "Trend Day rate should be HIGHER in NEG regime than POS",
+        "pass": true
+      },
+      "C6_volume_in_neg_regime": {
+        "pos_mean_vol": 70637178.21782178,
+        "neg_mean_vol": 80359243.91891892,
+        "pos_n": 101,
+        "neg_n": 148,
+        "framework_says": "NEG regime should have HIGHER volume (more institutional activity)",
+        "pass": true
+      }
+    }
+  },
+  "QQQ": {
+    "ticker": "QQQ",
+    "n_days": 249,
+    "date_range": [
+      "2025-05-12",
+      "2026-05-07"
+    ],
+    "regime_split": {
+      "pos": 119,
+      "neg": 130
+    },
+    "claims": {
+      "C1_regime_predicts_range": {
+        "pos_n": 118,
+        "neg_n": 130,
+        "pos_mean_next_range": 1.029955154934439,
+        "neg_mean_next_range": 1.4487488224029357,
+        "pos_median": 0.9436712904138052,
+        "neg_median": 1.2812529325975,
+        "delta_means": 0.41879366746849667,
+        "pass": true
+      },
+      "C2_gap_fill_bias": {
+        "small_up_n": 61,
+        "small_up_fill_rate": 42.62295081967213,
+        "medium_up_n": 39,
+        "medium_up_fill_rate": 51.28205128205128,
+        "big_up_n": 17,
+        "big_up_fill_rate": 58.82352941176471,
+        "small_down_n": 40,
+        "small_down_fill_rate": 57.49999999999999,
+        "big_down_n": 15,
+        "big_down_fill_rate": 66.66666666666666,
+        "framework_says": "Small gaps fill ~80%, big gaps fill ~30-45%"
+      },
+      "C3_continuation_by_regime": {
+        "pos_total": 118,
+        "pos_continuations": 59,
+        "pos_continuation_rate": 50.0,
+        "neg_total": 130,
+        "neg_continuations": 67,
+        "neg_continuation_rate": 51.53846153846153,
+        "framework_says": "NEG should have HIGHER continuation rate than POS (trending regime)",
+        "pass": true
+      },
+      "C4_directional_baseline": {
+        "n": 248,
+        "correct": 126,
+        "hit_rate_pct": 50.806451612903224,
+        "baseline_walkforward_hit_rate_pct": 48.3,
+        "framework_says": "Combined regime+continuation rule should beat 50%",
+        "pass": true
+      },
+      "C5_trend_day_in_neg_regime": {
+        "median_range_pct": 1.0971379517456712,
+        "pos_total": 119,
+        "pos_trend_days": 7,
+        "pos_trend_rate": 5.88235294117647,
+        "neg_total": 130,
+        "neg_trend_days": 34,
+        "neg_trend_rate": 26.153846153846157,
+        "framework_says": "Trend Day rate should be HIGHER in NEG regime than POS",
+        "pass": true
+      },
+      "C6_volume_in_neg_regime": {
+        "pos_mean_vol": 45543866.38655462,
+        "neg_mean_vol": 61688942.307692304,
+        "pos_n": 119,
+        "neg_n": 130,
+        "framework_says": "NEG regime should have HIGHER volume (more institutional activity)",
+        "pass": true
+      }
+    }
+  }
+}

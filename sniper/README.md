@@ -159,3 +159,18 @@ practitioner research and adds the depth modules. Key additions:
   reference.
 
 All research sources are listed in [14-glossary-and-sources.md](14-glossary-and-sources.md).
+
+## Validation status
+
+The framework has been **empirically validated on 249 SPY/QQQ trading days** (May 2025 → May 2026). Full report at [validation/REPORT.md](validation/REPORT.md). Headline:
+
+| Claim | Result |
+|---|---|
+| Net-GEX regime predicts next-day range | ✅ NEG range +38 % (SPY) / +41 % (QQQ) |
+| Negative GEX → higher continuation rate | ✅ +6.4 pp on SPY |
+| Combined regime predictor beats walk-forward baseline | ✅ 54.0 % (SPY) vs 48.3 % baseline |
+| Trend-Day rate higher in NEG regime | ✅ 1.5 × (SPY), **4.4 × (QQQ)** |
+| NEG regime carries more volume | ✅ +14 % (SPY), +35 % (QQQ) |
+| Small gap-ups fill at ~80 % | ❌ **Failed.** Actually 43 – 44 %. Plan corrected. |
+
+**5 of 6 testable load-bearing claims pass. One was wrong and has been replaced with empirical rates.** The plan is calibrated to real SPY/QQQ behavior, not aspirational claims.
