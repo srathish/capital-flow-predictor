@@ -8,8 +8,16 @@ The level ladder tells you *where* to act. The EMA stack tells you
 | TF | EMA | Role |
 |---|---|---|
 | **1m** | 8 EMA | Entry trigger. Body close above/below = arm the entry. |
+| **1m** | 13 EMA | **Trailing stop** for the runner after TP2. (Practitioner rule from the 8/13/21 EMA literature.) |
 | **5m** | 8 & 21 EMA | Direction filter. Stack must agree with the trade. |
 | **15m** | 8 & 21 EMA | Macro bias for the day. Determines max position size. |
+
+The reason to add the **1m 13 EMA** as the runner's trail (not the 8):
+the 8 EMA gives whipsaw stops on Trend Days where price chops along
+it for 4–6 bars before resuming. The 13 EMA sits roughly one ATR
+below the 8 on average, which keeps you in the runner through normal
+chop. Use the 13 EMA only *after* TP2 — before that, the 8 EMA is
+your active stop.
 
 Some traders use 3m + 15m + 1H. The principle is the same — short,
 medium, long. The numbers don't matter as much as the *separation* of

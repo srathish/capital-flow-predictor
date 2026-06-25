@@ -10,17 +10,35 @@ sniper. Three to five trades a day, max. Most days, zero trades.
 
 ## What this folder contains
 
+**Core system (read in order):**
+
 | File | Purpose |
 |---|---|
 | `01-level-ladder.md` | How to decode the Rapid-Trading level posts — pivot, reclaim, break, extension. |
-| `02-ema-stack.md` | 8 EMA on entry TF + higher EMA on macro TF. Alignment rules. |
-| `03-gex-vex-overlay.md` | Net GEX, gamma flip, call/put walls, vanna regime → confluence gate. |
-| `04-signal-stack.md` | 5-point score. Need ≥4 to fire 0DTE, ≥3 for 1-2DTE. |
+| `02-ema-stack.md` | 8 EMA entry trigger, 13 EMA runner trail, 5m/15m direction filters. |
+| `03-gex-vex-overlay.md` | Net GEX, gamma flip, walls, vanna regime, 1 PM CHEX drift, 4-Greek A++ setup. |
+| `04-signal-stack.md` | 6-point score (with internals). ≥4 fires 0DTE, ≥3 fires 1–2DTE. |
 | `05-execution.md` | Strike selection, sizing, scaling, exits. |
-| `06-risk-rules.md` | Hard stops, daily cutoffs, FOMC/CPI/OPEX behavior. |
+| `06-risk-rules.md` | Hard stops, daily cutoffs, calendar awareness. |
 | `07-automation.md` | What to wire into `apps/gex` + `apps/web` (`/sniper` tab). |
 | `08-pretrade-checklist.md` | The 60-second checklist before every trigger. |
-| `examples.md` | Worked example using the SPY 737.9 ladder. |
+
+**Depth modules (research-derived):**
+
+| File | Purpose |
+|---|---|
+| `09-rapid-trading-methodology.md` | Decode of the level-post grammar via Market Profile vocabulary; synthesizing a ladder when no post arrives. |
+| `10-zero-dte-mechanics.md` | Greeks math, theta clock, dealer-hedging mechanics, strike-delta cheat sheet. |
+| `11-internals-and-vwap.md` | TICK / ADD / VOLD 3-pillar rule and VWAP overlay → 6th signal-stack input. |
+| `12-day-archetypes.md` | Seven Market-Profile day types, identification by 10:30 ET, calendar overlay, gap-fill stats. |
+| `13-backtest-spec.md` | Concrete spec for Phase 4 — architecture, data, simulator, reports, walk-forward. |
+| `14-glossary-and-sources.md` | Vocabulary + every external research source the system synthesizes. |
+
+**Worked examples:**
+
+| File | Purpose |
+|---|---|
+| `examples.md` | Three trades on the SPY 737.9 ladder: A+ long, B-grade skip, conflict short. |
 
 ## Mental model in one paragraph
 
@@ -111,3 +129,33 @@ the pattern.
    (OPEX risk).
 
 Read the rest of the folder in order.
+
+## What changed in this iteration (research pass)
+
+The first draft was the framework. This iteration weaves in concrete
+practitioner research and adds the depth modules. Key additions:
+
+- **Internals as a 6th input** (`11`) — TICK/ADD/VOLD 3-pillar rule
+  replaces the implicit "watch breadth" hand-wave with a scored
+  check. Veto if 0 of 3 align.
+- **Day archetypes** (`12`) — by 10:30 ET you can usually identify
+  one of 7 day types; archetype determines whether to push extensions,
+  take TP1 only, or skip the day entirely. Major sizing modifier.
+- **CHEX 1 PM read** (`03` update) — afternoon dealer charm direction
+  is a 5-second check that filters or amplifies P.M. snipes.
+- **Four-Greek confluence A++ setup** (`03` update) — explicit
+  recognition of the rare GEX + DEX + VEX + CHEX alignment with 2×
+  sizing carve-out.
+- **13 EMA as runner trail** (`02` update) — separates the 8 EMA
+  active-stop role from the 13 EMA runner-trail role to avoid
+  Trend-Day whipsaws.
+- **0DTE Greek mechanics** (`10`) — theta acceleration schedule,
+  delta-strike cheat sheet, vanna mechanical bid math.
+- **Backtest spec** (`13`) — Phase 4 has a real handoff doc. Walk-
+  forward, ablation, calendar buckets, sanity tests, deliverable
+  notebook structure.
+- **Gap-fill stats baked in** (`12`) — gap-size → fill-rate table,
+  Monday-no-fade rule, Wednesday continuation rule, 80 %-by-noon
+  reference.
+
+All research sources are listed in [14-glossary-and-sources.md](14-glossary-and-sources.md).

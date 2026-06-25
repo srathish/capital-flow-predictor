@@ -125,7 +125,49 @@ the overlay is doing its job.
 - **Once at 09:25 ET** for the morning setup.
 - **Once at 12:00 ET** to refresh — afternoon walls can shift as
   0DTE flows materialize.
+- **Once at 13:00 ET** specifically for CHEX (see below).
 - **Once at 14:30 ET** before power hour.
 
 Don't refresh more often than that. GEX is a regime variable, not a
 tick-by-tick trigger.
+
+## The 1 PM CHEX read — the afternoon drift signal
+
+Charm exposure (CHEX) is the dealer-aggregate ∂Δ/∂t — how dealer
+deltas decay through the rest of the session. On 0DTE this becomes
+mechanically dominant after lunch.
+
+At **13:00 ET sharp**, read the sign of total dealer charm exposure:
+
+- **Negative CHEX** (dealers short charm) → dealers must *buy* SPY
+  into the close as OTM call deltas decay → **bullish drift bias**
+  through 16:00.
+- **Positive CHEX** → mirror → **bearish drift bias**.
+
+Apply as a size modifier on afternoon snipes:
+
+- Snipe **with** the CHEX drift: **full size** per `05-execution.md`.
+- Snipe **against** the CHEX drift: **half size, exit at TP1 only**.
+
+CHEX has no read before 13:00 — it's overwhelmed by intraday flow.
+Make this a single 5-second check at 1 PM and have the `/sniper` tab
+display the sign clearly above the ladder for the rest of the session.
+
+## The "four-Greek confluence" A++ setup
+
+The highest-conviction read, seen ~once every 2–3 weeks. **All four**
+dealer-aggregate Greeks align:
+
+- **GEX**: trending regime supports direction (neg for longs, or pos
+  + at-a-wall for short rejection)
+- **DEX**: dealer delta centered near current price (max gamma
+  punch zone — small moves create biggest dealer hedge demand)
+- **VEX**: vanna direction agrees with IV trajectory (neg VEX +
+  rising IV for longs; pos VEX + falling IV for short rejections)
+- **CHEX**: afternoon drift matches direction
+
+When the read appears, the dealer-flow stack is fully behind the
+move. This is the **only** setup where the system permits **2×
+sizing** — override the standard cap. Track explicitly in the journal
+as "4G" trades; review these separately to confirm they really are
+the best edge.
