@@ -1,0 +1,1297 @@
+{
+  "summary": {
+    "up_calls_after_retest_hold": {
+      "n_days_with_setup": 23,
+      "n_entries_triggered": 23,
+      "win_rate_pct": 43.47826086956522,
+      "stop_rate_pct": 56.52173913043478,
+      "avg_pnl_pts": -0.2286956521738978,
+      "median_pnl_pts": -0.7100000000000364,
+      "avg_max_favorable_pts": 0.6026086956521844,
+      "total_pnl_pts": -5.25999999999965,
+      "best_trade_pts": 1.2899999999999636,
+      "worst_trade_pts": -3.949999999999932
+    },
+    "down_puts_after_retest_hold": {
+      "n_days_with_setup": 20,
+      "n_entries_triggered": 20,
+      "win_rate_pct": 55.00000000000001,
+      "stop_rate_pct": 40.0,
+      "avg_pnl_pts": 0.2109999999999957,
+      "median_pnl_pts": 1.0300000000000296,
+      "avg_max_favorable_pts": 0.8344999999999914,
+      "total_pnl_pts": 4.219999999999914,
+      "best_trade_pts": 2.0599999999999454,
+      "worst_trade_pts": -1.8799999999999955
+    }
+  },
+  "days": [
+    {
+      "date": "2025-12-15",
+      "spot_0935": 681.695,
+      "structure": {
+        "king": 685,
+        "floor": 680,
+        "ceiling": 685,
+        "up_vacuum_target": 683,
+        "down_vacuum_target": 671
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 55,
+        "retest_at": 57,
+        "entry_idx": 60,
+        "entry_price": 679.915,
+        "max_fav": 679.915,
+        "exit_price": 681.015,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2025-12-16",
+      "spot_0935": 681.095,
+      "structure": {
+        "king": 679,
+        "floor": 679,
+        "ceiling": 684,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 673
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 11,
+        "retest_at": 45,
+        "entry_idx": 48,
+        "entry_price": 678.265,
+        "max_fav": 676.705,
+        "exit_price": 676.705,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2025-12-17",
+      "spot_0935": 679.175,
+      "structure": {
+        "king": 676,
+        "floor": 676,
+        "ceiling": 680,
+        "up_vacuum_target": 689,
+        "down_vacuum_target": 678
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-18",
+      "spot_0935": 671.49,
+      "structure": {
+        "king": 660,
+        "floor": 660,
+        "ceiling": 679,
+        "up_vacuum_target": 677,
+        "down_vacuum_target": 666
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-19",
+      "spot_0935": 676.755,
+      "structure": {
+        "king": 680,
+        "floor": 670,
+        "ceiling": 680,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 674
+      },
+      "up_trade": {
+        "broke_at": 117,
+        "retest_at": 118,
+        "entry_idx": 121,
+        "entry_price": 680.365,
+        "max_fav": 680.395,
+        "exit_price": 679.485,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-22",
+      "spot_0935": 680.415,
+      "structure": {
+        "king": 680,
+        "floor": 680,
+        "ceiling": 682,
+        "up_vacuum_target": 685,
+        "down_vacuum_target": 634
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-23",
+      "spot_0935": 684.875,
+      "structure": {
+        "king": 685,
+        "floor": 684,
+        "ceiling": 685,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 681
+      },
+      "up_trade": {
+        "broke_at": 6,
+        "retest_at": 7,
+        "entry_idx": 10,
+        "entry_price": 685.505,
+        "max_fav": 686.085,
+        "exit_price": 684.445,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-24",
+      "spot_0935": 687.945,
+      "structure": {
+        "king": 689,
+        "floor": 684,
+        "ceiling": 689,
+        "up_vacuum_target": 689,
+        "down_vacuum_target": 685
+      },
+      "up_trade": {
+        "broke_at": 43,
+        "retest_at": 44,
+        "entry_idx": 47,
+        "entry_price": 689.155,
+        "max_fav": 690.195,
+        "exit_price": 690.195,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-26",
+      "spot_0935": 689.97,
+      "structure": {
+        "king": 692,
+        "floor": 680,
+        "ceiling": 692,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 684
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-29",
+      "spot_0935": 690.135,
+      "structure": {
+        "king": 690,
+        "floor": 690,
+        "ceiling": 692,
+        "up_vacuum_target": 695,
+        "down_vacuum_target": 687
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-30",
+      "spot_0935": 687.865,
+      "structure": {
+        "king": 689,
+        "floor": 684,
+        "ceiling": 689,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 642
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2025-12-31",
+      "spot_0935": 686.745,
+      "structure": {
+        "king": 685,
+        "floor": 684,
+        "ceiling": 688,
+        "up_vacuum_target": 692,
+        "down_vacuum_target": 681
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-02",
+      "spot_0935": 686.075,
+      "structure": {
+        "king": 687,
+        "floor": 686,
+        "ceiling": 687,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 685
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 38,
+        "retest_at": 39,
+        "entry_idx": 42,
+        "entry_price": 685.275,
+        "max_fav": 683.975,
+        "exit_price": 683.975,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-01-05",
+      "spot_0935": 683.155,
+      "structure": {
+        "king": 680,
+        "floor": 682,
+        "ceiling": 686,
+        "up_vacuum_target": 689,
+        "down_vacuum_target": 679
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-06",
+      "spot_0935": 687.385,
+      "structure": {
+        "king": 690,
+        "floor": 685,
+        "ceiling": 690,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 684
+      },
+      "up_trade": {
+        "broke_at": 29,
+        "retest_at": 30,
+        "entry_idx": 33,
+        "entry_price": 690.315,
+        "max_fav": 690.835,
+        "exit_price": 689.275,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-07",
+      "spot_0935": 691.865,
+      "structure": {
+        "king": 692,
+        "floor": 690,
+        "ceiling": 692,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 646
+      },
+      "up_trade": {
+        "broke_at": 5,
+        "retest_at": 7,
+        "entry_idx": 10,
+        "entry_price": 692.365,
+        "max_fav": 692.945,
+        "exit_price": 691.415,
+        "exit_reason": "STOP"
+      },
+      "down_trade": {
+        "broke_at": 364,
+        "retest_at": 373,
+        "entry_idx": 376,
+        "entry_price": 689.555,
+        "max_fav": 689.445,
+        "exit_price": 689.695,
+        "exit_reason": "EOD"
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "spot_0935": 689.645,
+      "structure": {
+        "king": 692,
+        "floor": 689,
+        "ceiling": 692,
+        "up_vacuum_target": 694,
+        "down_vacuum_target": 688
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 8,
+        "retest_at": 22,
+        "entry_idx": 25,
+        "entry_price": 688.825,
+        "max_fav": 687.945,
+        "exit_price": 689.645,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-01-09",
+      "spot_0935": 689.71,
+      "structure": {
+        "king": 693,
+        "floor": 687,
+        "ceiling": 693,
+        "up_vacuum_target": 700,
+        "down_vacuum_target": 686
+      },
+      "up_trade": {
+        "broke_at": 133,
+        "retest_at": 134,
+        "entry_idx": 137,
+        "entry_price": 693.225,
+        "max_fav": 694.235,
+        "exit_price": 694.235,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-12",
+      "spot_0935": 694.115,
+      "structure": {
+        "king": 692,
+        "floor": 692,
+        "ceiling": 695,
+        "up_vacuum_target": 701,
+        "down_vacuum_target": 693
+      },
+      "up_trade": {
+        "broke_at": 231,
+        "retest_at": 232,
+        "entry_idx": 235,
+        "entry_price": 695.105,
+        "max_fav": 696.005,
+        "exit_price": 695.355,
+        "exit_reason": "EOD"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-13",
+      "spot_0935": 695.225,
+      "structure": {
+        "king": 694,
+        "floor": 694,
+        "ceiling": 696,
+        "up_vacuum_target": 698,
+        "down_vacuum_target": 688
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 32,
+        "retest_at": 35,
+        "entry_idx": 38,
+        "entry_price": 693.81,
+        "max_fav": 692.685,
+        "exit_price": 692.685,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-01-14",
+      "spot_0935": 693.905,
+      "structure": {
+        "king": 693,
+        "floor": 693,
+        "ceiling": 695,
+        "up_vacuum_target": 700,
+        "down_vacuum_target": 689
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-15",
+      "spot_0935": 690.385,
+      "structure": {
+        "king": 690,
+        "floor": 685,
+        "ceiling": 691,
+        "up_vacuum_target": 696,
+        "down_vacuum_target": 684
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-16",
+      "spot_0935": 691.825,
+      "structure": {
+        "king": 690,
+        "floor": 685,
+        "ceiling": 695,
+        "up_vacuum_target": 694,
+        "down_vacuum_target": 688
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-20",
+      "spot_0935": 691.505,
+      "structure": {
+        "king": 692,
+        "floor": 690,
+        "ceiling": 692,
+        "up_vacuum_target": 699,
+        "down_vacuum_target": 688
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-21",
+      "spot_0935": 677.3,
+      "structure": {
+        "king": 663,
+        "floor": 677,
+        "ceiling": 683,
+        "up_vacuum_target": 688,
+        "down_vacuum_target": 671
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-22",
+      "spot_0935": 685.195,
+      "structure": {
+        "king": 690,
+        "floor": 685,
+        "ceiling": 690,
+        "up_vacuum_target": 693,
+        "down_vacuum_target": 684
+      },
+      "up_trade": {
+        "broke_at": 131,
+        "retest_at": 132,
+        "entry_idx": 135,
+        "entry_price": 690.245,
+        "max_fav": 690.325,
+        "exit_price": 689.445,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-23",
+      "spot_0935": 688.905,
+      "structure": {
+        "king": 689,
+        "floor": 685,
+        "ceiling": 689,
+        "up_vacuum_target": 694,
+        "down_vacuum_target": 683
+      },
+      "up_trade": {
+        "broke_at": 30,
+        "retest_at": 33,
+        "entry_idx": 36,
+        "entry_price": 689.145,
+        "max_fav": 689.175,
+        "exit_price": 688.435,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-26",
+      "spot_0935": 689.145,
+      "structure": {
+        "king": 691,
+        "floor": 679,
+        "ceiling": 691,
+        "up_vacuum_target": 693,
+        "down_vacuum_target": 686
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-27",
+      "spot_0935": 692.785,
+      "structure": {
+        "king": 695,
+        "floor": 691,
+        "ceiling": 695,
+        "up_vacuum_target": 700,
+        "down_vacuum_target": 647
+      },
+      "up_trade": {
+        "broke_at": 23,
+        "retest_at": 30,
+        "entry_idx": 33,
+        "entry_price": 695.095,
+        "max_fav": 696.095,
+        "exit_price": 696.095,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-01-28",
+      "spot_0935": 695.445,
+      "structure": {
+        "king": 695,
+        "floor": 695,
+        "ceiling": 699,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 691
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 141,
+        "retest_at": 148,
+        "entry_idx": 151,
+        "entry_price": 694.955,
+        "max_fav": 694.925,
+        "exit_price": 695.545,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-01-29",
+      "spot_0935": 695.595,
+      "structure": {
+        "king": 696,
+        "floor": 690,
+        "ceiling": 696,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 692
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 54,
+        "retest_at": 57,
+        "entry_idx": 60,
+        "entry_price": 689.245,
+        "max_fav": 688.165,
+        "exit_price": 688.165,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-01-30",
+      "spot_0935": 694.285,
+      "structure": {
+        "king": 690,
+        "floor": 682,
+        "ceiling": 699,
+        "up_vacuum_target": 697,
+        "down_vacuum_target": 689
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-02",
+      "spot_0935": 691.685,
+      "structure": {
+        "king": 696,
+        "floor": 691,
+        "ceiling": 696,
+        "up_vacuum_target": 700,
+        "down_vacuum_target": 681
+      },
+      "up_trade": {
+        "broke_at": 151,
+        "retest_at": 157,
+        "entry_idx": 160,
+        "entry_price": 696.435,
+        "max_fav": 696.845,
+        "exit_price": 695.245,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-03",
+      "spot_0935": 695.38,
+      "structure": {
+        "king": 695,
+        "floor": 692,
+        "ceiling": 696,
+        "up_vacuum_target": 699,
+        "down_vacuum_target": 690
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 108,
+        "retest_at": 110,
+        "entry_idx": 113,
+        "entry_price": 691.035,
+        "max_fav": 688.975,
+        "exit_price": 688.975,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-02-04",
+      "spot_0935": 689.4300000000001,
+      "structure": {
+        "king": 688,
+        "floor": 683,
+        "ceiling": 695,
+        "up_vacuum_target": 699,
+        "down_vacuum_target": 684
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 187,
+        "retest_at": 194,
+        "entry_idx": 197,
+        "entry_price": 682.76,
+        "max_fav": 681.845,
+        "exit_price": 683.755,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-02-05",
+      "spot_0935": 686.235,
+      "structure": {
+        "king": 695,
+        "floor": 682,
+        "ceiling": 695,
+        "up_vacuum_target": 692,
+        "down_vacuum_target": 685
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 24,
+        "retest_at": 25,
+        "entry_idx": 28,
+        "entry_price": 680.69,
+        "max_fav": 679.58,
+        "exit_price": 679.58,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-02-06",
+      "spot_0935": 677.855,
+      "structure": {
+        "king": 680,
+        "floor": 670,
+        "ceiling": 680,
+        "up_vacuum_target": 680,
+        "down_vacuum_target": 671
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-09",
+      "spot_0935": 691.4300000000001,
+      "structure": {
+        "king": 694,
+        "floor": 686,
+        "ceiling": 694,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 683
+      },
+      "up_trade": {
+        "broke_at": 86,
+        "retest_at": 98,
+        "entry_idx": 101,
+        "entry_price": 694.31,
+        "max_fav": 695.36,
+        "exit_price": 695.36,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-10",
+      "spot_0935": 694.04,
+      "structure": {
+        "king": 694,
+        "floor": 694,
+        "ceiling": 696,
+        "up_vacuum_target": 699,
+        "down_vacuum_target": 691
+      },
+      "up_trade": {
+        "broke_at": 74,
+        "retest_at": 75,
+        "entry_idx": 78,
+        "entry_price": 696.02,
+        "max_fav": 696.02,
+        "exit_price": 695.45,
+        "exit_reason": "STOP"
+      },
+      "down_trade": {
+        "broke_at": 8,
+        "retest_at": 11,
+        "entry_idx": 14,
+        "entry_price": 693.99,
+        "max_fav": 693.8,
+        "exit_price": 694.9,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-02-11",
+      "spot_0935": 692.3,
+      "structure": {
+        "king": 690,
+        "floor": 677,
+        "ceiling": 696,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 646
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-12",
+      "spot_0935": 691.94,
+      "structure": {
+        "king": 697,
+        "floor": 689,
+        "ceiling": 697,
+        "up_vacuum_target": 702,
+        "down_vacuum_target": 688
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-13",
+      "spot_0935": 681.35,
+      "structure": {
+        "king": 680,
+        "floor": 660,
+        "ceiling": 685,
+        "up_vacuum_target": 690,
+        "down_vacuum_target": 675
+      },
+      "up_trade": {
+        "broke_at": 151,
+        "retest_at": 152,
+        "entry_idx": 155,
+        "entry_price": 685.47,
+        "max_fav": 686.16,
+        "exit_price": 684.48,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-17",
+      "spot_0935": 681.45,
+      "structure": {
+        "king": 675,
+        "floor": 680,
+        "ceiling": 685,
+        "up_vacuum_target": 685,
+        "down_vacuum_target": 676
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 17,
+        "retest_at": 19,
+        "entry_idx": 22,
+        "entry_price": 678.8,
+        "max_fav": 677.78,
+        "exit_price": 677.78,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-02-18",
+      "spot_0935": 682.75,
+      "structure": {
+        "king": 675,
+        "floor": 680,
+        "ceiling": 685,
+        "up_vacuum_target": 689,
+        "down_vacuum_target": 674
+      },
+      "up_trade": {
+        "broke_at": 25,
+        "retest_at": 308,
+        "entry_idx": 311,
+        "entry_price": 685.53,
+        "max_fav": 685.6,
+        "exit_price": 684.36,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-19",
+      "spot_0935": 686.03,
+      "structure": {
+        "king": 688,
+        "floor": 680,
+        "ceiling": 688,
+        "up_vacuum_target": 693,
+        "down_vacuum_target": 681
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-20",
+      "spot_0935": 684.44,
+      "structure": {
+        "king": 685,
+        "floor": 680,
+        "ceiling": 685,
+        "up_vacuum_target": 689,
+        "down_vacuum_target": 679
+      },
+      "up_trade": {
+        "broke_at": 17,
+        "retest_at": 29,
+        "entry_idx": 32,
+        "entry_price": 688.31,
+        "max_fav": 688.31,
+        "exit_price": 684.36,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-23",
+      "spot_0935": 687.8,
+      "structure": {
+        "king": 700,
+        "floor": 685,
+        "ceiling": 700,
+        "up_vacuum_target": 691,
+        "down_vacuum_target": 686
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 52,
+        "retest_at": 54,
+        "entry_idx": 57,
+        "entry_price": 684.7,
+        "max_fav": 683.66,
+        "exit_price": 683.66,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-02-24",
+      "spot_0935": 682.29,
+      "structure": {
+        "king": 686,
+        "floor": 682,
+        "ceiling": 686,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 676
+      },
+      "up_trade": {
+        "broke_at": 70,
+        "retest_at": 71,
+        "entry_idx": 74,
+        "entry_price": 686.24,
+        "max_fav": 686.24,
+        "exit_price": 685.47,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-25",
+      "spot_0935": 687.4,
+      "structure": {
+        "king": 684,
+        "floor": 684,
+        "ceiling": 690,
+        "up_vacuum_target": 698,
+        "down_vacuum_target": 675
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-02-26",
+      "spot_0935": 693.09,
+      "structure": {
+        "king": 694,
+        "floor": 688,
+        "ceiling": 694,
+        "up_vacuum_target": 702,
+        "down_vacuum_target": 679
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 127,
+        "retest_at": 255,
+        "entry_idx": 258,
+        "entry_price": 687.305,
+        "max_fav": 687.15,
+        "exit_price": 688.65,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-02-27",
+      "spot_0935": 689.07,
+      "structure": {
+        "king": 692,
+        "floor": 687,
+        "ceiling": 692,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 684
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-02",
+      "spot_0935": 678.66,
+      "structure": {
+        "king": 675,
+        "floor": 677,
+        "ceiling": 684,
+        "up_vacuum_target": 683,
+        "down_vacuum_target": 667
+      },
+      "up_trade": {
+        "broke_at": 72,
+        "retest_at": 73,
+        "entry_idx": 76,
+        "entry_price": 684.46,
+        "max_fav": 684.77,
+        "exit_price": 683.37,
+        "exit_reason": "STOP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-03",
+      "spot_0935": 686.43,
+      "structure": {
+        "king": 690,
+        "floor": 680,
+        "ceiling": 690,
+        "up_vacuum_target": 700,
+        "down_vacuum_target": 671
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 280,
+        "retest_at": 303,
+        "entry_idx": 306,
+        "entry_price": 679.61,
+        "max_fav": 679.61,
+        "exit_price": 681.27,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-03-04",
+      "spot_0935": 680.22,
+      "structure": {
+        "king": 672,
+        "floor": 665,
+        "ceiling": 681,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 675
+      },
+      "up_trade": {
+        "broke_at": 17,
+        "retest_at": 21,
+        "entry_idx": 24,
+        "entry_price": 681.42,
+        "max_fav": 682.42,
+        "exit_price": 682.42,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-05",
+      "spot_0935": 685.46,
+      "structure": {
+        "king": 690,
+        "floor": 685,
+        "ceiling": 690,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 682
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 31,
+        "retest_at": 32,
+        "entry_idx": 35,
+        "entry_price": 684.04,
+        "max_fav": 682.94,
+        "exit_price": 682.94,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-03-06",
+      "spot_0935": 681.53,
+      "structure": {
+        "king": 680,
+        "floor": 680,
+        "ceiling": 686,
+        "up_vacuum_target": 683,
+        "down_vacuum_target": 677
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-09",
+      "spot_0935": 666.37,
+      "structure": {
+        "king": 657,
+        "floor": 660,
+        "ceiling": 675,
+        "up_vacuum_target": 668,
+        "down_vacuum_target": 664
+      },
+      "up_trade": {
+        "broke_at": 346,
+        "retest_at": 349,
+        "entry_idx": 352,
+        "entry_price": 676.54,
+        "max_fav": 677.61,
+        "exit_price": 677.61,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-10",
+      "spot_0935": 677.57,
+      "structure": {
+        "king": 675,
+        "floor": 675,
+        "ceiling": 678,
+        "up_vacuum_target": 682,
+        "down_vacuum_target": 666
+      },
+      "up_trade": {
+        "broke_at": 55,
+        "retest_at": 56,
+        "entry_idx": 59,
+        "entry_price": 678.93,
+        "max_fav": 680.07,
+        "exit_price": 680.07,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-11",
+      "spot_0935": 677.94,
+      "structure": {
+        "king": 675,
+        "floor": 675,
+        "ceiling": 681,
+        "up_vacuum_target": 679,
+        "down_vacuum_target": 674
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 122,
+        "retest_at": 123,
+        "entry_idx": 126,
+        "entry_price": 674.87,
+        "max_fav": 673.72,
+        "exit_price": 673.72,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-03-12",
+      "spot_0935": 670.92,
+      "structure": {
+        "king": 665,
+        "floor": 662,
+        "ceiling": 672,
+        "up_vacuum_target": 682,
+        "down_vacuum_target": 669
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-13",
+      "spot_0935": 669.56,
+      "structure": {
+        "king": 660,
+        "floor": 660,
+        "ceiling": 670,
+        "up_vacuum_target": 672,
+        "down_vacuum_target": 668
+      },
+      "up_trade": {
+        "broke_at": 2,
+        "retest_at": 3,
+        "entry_idx": 6,
+        "entry_price": 670.58,
+        "max_fav": 671.87,
+        "exit_price": 671.87,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-14",
+      "spot_0935": 662.1,
+      "structure": {
+        "king": 675,
+        "floor": 653,
+        "ceiling": 675,
+        "up_vacuum_target": 670,
+        "down_vacuum_target": 659
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-17",
+      "spot_0935": 673.45,
+      "structure": {
+        "king": 673,
+        "floor": 664,
+        "ceiling": 677,
+        "up_vacuum_target": 682,
+        "down_vacuum_target": 662
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-18",
+      "spot_0935": 668.56,
+      "structure": {
+        "king": 671,
+        "floor": 665,
+        "ceiling": 671,
+        "up_vacuum_target": 680,
+        "down_vacuum_target": 666
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 304,
+        "retest_at": 308,
+        "entry_idx": 311,
+        "entry_price": 664.835,
+        "max_fav": 663.72,
+        "exit_price": 663.72,
+        "exit_reason": "TP"
+      }
+    },
+    {
+      "date": "2026-03-19",
+      "spot_0935": 656.15,
+      "structure": {
+        "king": 650,
+        "floor": 656,
+        "ceiling": 665,
+        "up_vacuum_target": 665,
+        "down_vacuum_target": 651
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-20",
+      "spot_0935": 655,
+      "structure": {
+        "king": 660,
+        "floor": 653,
+        "ceiling": 660,
+        "up_vacuum_target": 665,
+        "down_vacuum_target": 652
+      },
+      "up_trade": null,
+      "down_trade": {
+        "broke_at": 33,
+        "retest_at": 34,
+        "entry_idx": 37,
+        "entry_price": 652.03,
+        "max_fav": 651.28,
+        "exit_price": 653.91,
+        "exit_reason": "STOP"
+      }
+    },
+    {
+      "date": "2026-03-21",
+      "spot_0935": 648.33,
+      "structure": {
+        "king": 650,
+        "floor": 641,
+        "ceiling": 650,
+        "up_vacuum_target": 656,
+        "down_vacuum_target": 647
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-03-31",
+      "spot_0935": 639.65,
+      "structure": {
+        "king": 645,
+        "floor": 636,
+        "ceiling": 645,
+        "up_vacuum_target": 648,
+        "down_vacuum_target": 625
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-04-02",
+      "spot_0935": 647.07,
+      "structure": {
+        "king": 645,
+        "floor": 645,
+        "ceiling": 648,
+        "up_vacuum_target": 652,
+        "down_vacuum_target": 639
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-04-30",
+      "spot_0935": 712.86,
+      "structure": {
+        "king": 699,
+        "floor": 705,
+        "ceiling": 713,
+        "up_vacuum_target": 717,
+        "down_vacuum_target": 709
+      },
+      "up_trade": null,
+      "down_trade": null
+    },
+    {
+      "date": "2026-05-05",
+      "spot_0935": 722.28,
+      "structure": {
+        "king": 722,
+        "floor": 722,
+        "ceiling": 723,
+        "up_vacuum_target": null,
+        "down_vacuum_target": 676
+      },
+      "up_trade": {
+        "broke_at": 49,
+        "retest_at": 52,
+        "entry_idx": 55,
+        "entry_price": 723.2,
+        "max_fav": 724.26,
+        "exit_price": 724.26,
+        "exit_reason": "TP"
+      },
+      "down_trade": null
+    }
+  ]
+}
