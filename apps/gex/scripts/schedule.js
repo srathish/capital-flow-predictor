@@ -196,6 +196,20 @@ async function fireBrief(date) {
 }
 
 
+async function fireTrinityBrief(date) {
+  log.info(`[trinity-brief] firing for ${date} (--discord)`);
+  try {
+    // Trinity brief — Skylit live (not snapshot-store-backed). Validated 64.1%
+    // win rate at score extremes per sniper/validation/REPORT_SKYLIT.md.
+    // Mirrors to gex_feed (UI source) and Discord if configured.
+    await spawnScript('scripts/trinity-brief.js', ['--discord']);
+    log.info(`[trinity-brief] OK ${date}`);
+  } catch (e) {
+    log.error(`[trinity-brief] failed ${date}: ${e.message}`);
+  }
+}
+
+
 async function fireMonitor(date, slot) {
   log.info(`[monitor] firing for ${date} (slot ${slot} ET --discord)`);
   try {
@@ -228,6 +242,16 @@ async function tick() {
     // Fire-and-forget: don't await, otherwise the next monitor checkpoint
     // could be delayed by a slow brief. Failures are logged by fireBrief.
     fireBrief(today);
+  }
+
+  // ---- Trinity brief (sniper system, validated 64.1% win rate) ----
+  // Fires once per day at the FIRST tick on or after 09:25 ET. Earlier than
+  // the morning brief so the trinity score is on the screen before the
+  // 09:30 - 10:30 ET "morning trap" window. Live Skylit pull, posts to
+  // gex_feed (UI source) and Discord.
+  if (!alreadyFired(today, 'trinity-brief') && hhmm >= '09:25' && hhmm < '16:00') {
+    markFired(today, 'trinity-brief');
+    fireTrinityBrief(today);
   }
 
   // ---- Intraday monitor ----

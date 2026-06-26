@@ -16,6 +16,14 @@ import { initAuth } from '../src/heatseeker/auth.js';
 import { fetchSnapshot } from '../src/heatseeker/client.js';
 import { computeSurface } from '../src/domain/significance.js';
 import { deriveStructure } from '../src/domain/structure.js';
+import { postEmbed } from '../src/discord/webhook.js';
+
+const args = {};
+for (const a of process.argv.slice(2)) {
+  const m = a.match(/^--([^=]+)(?:=(.*))?$/);
+  if (m) args[m[1]] = m[2] ?? true;
+}
+const POST_TO_FEED = !!args.discord || !!args.feed;  // mirror to gex_feed + Discord
 
 const TICKERS = ['SPY', 'QQQ', 'SPXW'];
 
@@ -203,6 +211,47 @@ async function main() {
   md += `- WHIPSAW days perform best (+2.5 pts), TREND_UP +0.7, TREND_DOWN breakeven\n\n`;
 
   process.stdout.write(md);
+
+  if (POST_TO_FEED) {
+    // Color: green for actionable bullish (PUTS_REJECT setup), red for bearish (V-bounce setup),
+    // gray for skip/middle, amber for divergence
+    let color;
+    if (action.action === 'SKIP') color = 0xf59e0b;          // amber
+    else if (action.action?.includes('CALLS')) color = 0x22c55e; // green
+    else if (action.action?.includes('PUTS')) color = 0xef4444;  // red
+    else color = 0x6b7280;  // gray
+
+    const fields = [];
+    for (const ticker of TICKERS) {
+      const s = structs[ticker];
+      if (!s) continue;
+      fields.push({
+        name: `${ticker} — score ${subScores[ticker].toFixed(0)} (${regimeLabel(subScores[ticker])})`,
+        value: `spot ${s.spot?.toFixed(2)} | floor ${s.floor?.toFixed(2) ?? '—'} | King ${s.king?.toFixed(2) ?? '—'} | ceil ${s.ceiling?.toFixed(2) ?? '—'} | VEX ${s.netVex > 0 ? '+' : ''}${(s.netVex / 1e6).toFixed(1)}M`,
+      });
+    }
+    if (div.flags.length) {
+      fields.push({ name: '⚠️ Divergences', value: div.flags.slice(0, 3).join('\n').slice(0, 1024) });
+    }
+    if (div.notes.length) {
+      fields.push({ name: 'Structural notes', value: div.notes.slice(0, 5).join('\n').slice(0, 1024) });
+    }
+    fields.push({ name: 'Action', value: `**${action.action}**\n${action.reason}${action.entry ? `\nEntry: ${action.entry}, Target: ${action.target}, Stop: ${action.stop}` : ''}`.slice(0, 1024) });
+
+    try {
+      await postEmbed({
+        title: `Trinity Brief — ${trinityScore.toFixed(0)}/100 ${regime}${divergence > 30 ? ' ⚠ DIVERGENT' : ''}`,
+        description: `SPY ${structs.SPY?.spot?.toFixed(2)} | QQQ ${structs.QQQ?.spot?.toFixed(2)} | SPXW ${structs.SPXW?.spot?.toFixed(2)}`,
+        fields,
+        color,
+        footer: `Validated 64.1% win rate at score extremes (sniper/validation/REPORT_SKYLIT.md)`,
+        source: 'brief',
+      });
+      process.stderr.write('Posted to gex_feed (and Discord if configured).\n');
+    } catch (e) {
+      process.stderr.write(`postEmbed failed: ${e.message}\n`);
+    }
+  }
   process.exit(0);
 }
 
