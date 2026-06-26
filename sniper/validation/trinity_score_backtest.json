@@ -1,0 +1,1070 @@
+{
+  "by_archetype": {
+    "TREND_DOWN": {
+      "n_days": 16,
+      "n_setup": 11,
+      "setup_pct": 68.75,
+      "win_rate": 54.54545454545454,
+      "avg_pnl": -0.01045454545452561,
+      "total_pnl": -0.11499999999978172
+    },
+    "WHIPSAW": {
+      "n_days": 23,
+      "n_setup": 12,
+      "setup_pct": 52.17391304347826,
+      "win_rate": 66.66666666666666,
+      "avg_pnl": 0.20583333333331666,
+      "total_pnl": 2.4699999999998
+    },
+    "TREND_UP": {
+      "n_days": 25,
+      "n_setup": 14,
+      "setup_pct": 56.00000000000001,
+      "win_rate": 64.28571428571429,
+      "avg_pnl": 0.050357142857121416,
+      "total_pnl": 0.7049999999996999
+    },
+    "QUIET": {
+      "n_days": 7,
+      "n_setup": 2,
+      "setup_pct": 28.57142857142857,
+      "win_rate": 100.0,
+      "avg_pnl": 0.43499999999994543,
+      "total_pnl": 0.8699999999998909
+    }
+  },
+  "by_direction": {
+    "CALLS_VBOUNCE": {
+      "n": 8,
+      "win_rate": 50.0,
+      "avg_pnl": -0.025625000000019327,
+      "total_pnl": -0.20500000000015461
+    },
+    "PUTS_REJECT": {
+      "n": 31,
+      "win_rate": 67.74193548387096,
+      "avg_pnl": 0.13338709677418592,
+      "total_pnl": 4.1349999999997635
+    }
+  },
+  "days": [
+    {
+      "date": "2025-12-15",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 19.996666666666467,
+        "sub_scores": {
+          "SPY": 17.5,
+          "QQQ": 7.499999999999622,
+          "SPXW": 34.98999999999978
+        },
+        "divergence": 27.49000000000016,
+        "entry_ts_min": 892,
+        "entry_spot": 683.125,
+        "target": 683.475,
+        "stop": 682.525,
+        "exit_reason": "STOP",
+        "exit_spot": 682.425,
+        "pnl_pts": -0.7000000000000455
+      }
+    },
+    {
+      "date": "2025-12-16",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2025-12-17",
+      "archetype": "TREND_DOWN",
+      "trade": null
+    },
+    {
+      "date": "2025-12-18",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 89.07020202020362,
+        "sub_scores": {
+          "SPY": 87.50000000000455,
+          "QQQ": 80.5833333333328,
+          "SPXW": 99.12727272727352
+        },
+        "divergence": 18.543939393940718,
+        "entry_ts_min": 990,
+        "entry_spot": 679.825,
+        "target": 679.475,
+        "stop": 680.4250000000001,
+        "exit_reason": "STOP",
+        "exit_spot": 680.575,
+        "pnl_pts": -0.75
+      }
+    },
+    {
+      "date": "2025-12-19",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.64743589743625,
+        "sub_scores": {
+          "SPY": 93.25000000000159,
+          "QQQ": 83.9999999999992,
+          "SPXW": 64.69230769230796
+        },
+        "divergence": 28.557692307693628,
+        "entry_ts_min": 989,
+        "entry_spot": 679.965,
+        "target": 679.615,
+        "stop": 680.565,
+        "exit_reason": "TARGET",
+        "exit_spot": 679.505,
+        "pnl_pts": 0.4600000000000364
+      }
+    },
+    {
+      "date": "2025-12-22",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2025-12-23",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 15.950000000000651,
+        "sub_scores": {
+          "SPY": 4.750000000002501,
+          "QQQ": 31.99999999999818,
+          "SPXW": 11.100000000001273
+        },
+        "divergence": 27.24999999999568,
+        "entry_ts_min": 929,
+        "entry_spot": 685.195,
+        "target": 685.5450000000001,
+        "stop": 684.595,
+        "exit_reason": "TARGET",
+        "exit_spot": 685.575,
+        "pnl_pts": 0.37999999999999545
+      }
+    },
+    {
+      "date": "2025-12-24",
+      "archetype": "QUIET",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 11.866666666667243,
+        "sub_scores": {
+          "SPY": 14.500000000005002,
+          "QQQ": 7.5,
+          "SPXW": 13.599999999996726
+        },
+        "divergence": 7.000000000005002,
+        "entry_ts_min": 874,
+        "entry_spot": 688.195,
+        "target": 688.5450000000001,
+        "stop": 687.595,
+        "exit_reason": "TARGET",
+        "exit_spot": 688.645,
+        "pnl_pts": 0.4499999999999318
+      }
+    },
+    {
+      "date": "2025-12-26",
+      "archetype": "QUIET",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.60833333333449,
+        "sub_scores": {
+          "SPY": 81.50000000000091,
+          "QQQ": 86.75000000000182,
+          "SPXW": 73.57500000000073
+        },
+        "divergence": 13.175000000001091,
+        "entry_ts_min": 962,
+        "entry_spot": 690.865,
+        "target": 690.515,
+        "stop": 691.465,
+        "exit_reason": "TARGET",
+        "exit_spot": 690.445,
+        "pnl_pts": 0.4199999999999591
+      }
+    },
+    {
+      "date": "2025-12-29",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2025-12-30",
+      "archetype": "QUIET",
+      "trade": null
+    },
+    {
+      "date": "2025-12-31",
+      "archetype": "TREND_DOWN",
+      "trade": null
+    },
+    {
+      "date": "2026-01-02",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 87.57222222222197,
+        "sub_scores": {
+          "SPY": 100.0,
+          "QQQ": 76.91666666666663,
+          "SPXW": 85.79999999999927
+        },
+        "divergence": 23.08333333333337,
+        "entry_ts_min": 916,
+        "entry_spot": 683.975,
+        "target": 683.625,
+        "stop": 684.575,
+        "exit_reason": "TARGET",
+        "exit_spot": 683.605,
+        "pnl_pts": 0.37000000000000455
+      }
+    },
+    {
+      "date": "2026-01-05",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 87.83174603174446,
+        "sub_scores": {
+          "SPY": 98.49999999999454,
+          "QQQ": 90.16666666666727,
+          "SPXW": 74.82857142857158
+        },
+        "divergence": 23.671428571422965,
+        "entry_ts_min": 898,
+        "entry_spot": 686.935,
+        "target": 686.5849999999999,
+        "stop": 687.535,
+        "exit_reason": "STOP",
+        "exit_spot": 687.585,
+        "pnl_pts": -0.650000000000091
+      }
+    },
+    {
+      "date": "2026-01-06",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 87.24999999999909,
+        "sub_scores": {
+          "SPY": 74.49999999999591,
+          "QQQ": 87.25000000000136,
+          "SPXW": 100.0
+        },
+        "divergence": 25.500000000004093,
+        "entry_ts_min": 892,
+        "entry_spot": 689.795,
+        "target": 689.4449999999999,
+        "stop": 690.395,
+        "exit_reason": "TARGET",
+        "exit_spot": 689.385,
+        "pnl_pts": 0.40999999999996817
+      }
+    },
+    {
+      "date": "2026-01-07",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 91.08333333333367,
+        "sub_scores": {
+          "SPY": 88.25000000000045,
+          "QQQ": 85.00000000000057,
+          "SPXW": 100.0
+        },
+        "divergence": 14.999999999999432,
+        "entry_ts_min": 870,
+        "entry_spot": 691.865,
+        "target": 691.515,
+        "stop": 692.465,
+        "exit_reason": "STOP",
+        "exit_spot": 692.755,
+        "pnl_pts": -0.8899999999999864
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "archetype": "QUIET",
+      "trade": null
+    },
+    {
+      "date": "2026-01-09",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 86.10303030302916,
+        "sub_scores": {
+          "SPY": 87.49999999999545,
+          "QQQ": 81.70000000000073,
+          "SPXW": 89.10909090909131
+        },
+        "divergence": 7.40909090909058,
+        "entry_ts_min": 928,
+        "entry_spot": 692.925,
+        "target": 692.5749999999999,
+        "stop": 693.525,
+        "exit_reason": "TARGET",
+        "exit_spot": 692.295,
+        "pnl_pts": 0.6299999999999955
+      }
+    },
+    {
+      "date": "2026-01-12",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-01-13",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 14.980000000000928,
+        "sub_scores": {
+          "SPY": 15.000000000002274,
+          "QQQ": 0.0,
+          "SPXW": 29.94000000000051
+        },
+        "divergence": 29.94000000000051,
+        "entry_ts_min": 916,
+        "entry_spot": 693.2,
+        "target": 693.5500000000001,
+        "stop": 692.6,
+        "exit_reason": "STOP",
+        "exit_spot": 692.395,
+        "pnl_pts": -0.8050000000000637
+      }
+    },
+    {
+      "date": "2026-01-14",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-01-15",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 90.97777777777664,
+        "sub_scores": {
+          "SPY": 96.83333333333319,
+          "QQQ": 91.74999999999727,
+          "SPXW": 84.34999999999945
+        },
+        "divergence": 12.483333333333732,
+        "entry_ts_min": 884,
+        "entry_spot": 693.755,
+        "target": 693.405,
+        "stop": 694.355,
+        "exit_reason": "STOP",
+        "exit_spot": 694.475,
+        "pnl_pts": -0.7200000000000273
+      }
+    },
+    {
+      "date": "2026-01-16",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-01-20",
+      "archetype": "TREND_DOWN",
+      "trade": null
+    },
+    {
+      "date": "2026-01-21",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 90.09970760234029,
+        "sub_scores": {
+          "SPY": 91.83333333333394,
+          "QQQ": 92.2500000000025,
+          "SPXW": 86.21578947368442
+        },
+        "divergence": 6.034210526318077,
+        "entry_ts_min": 921,
+        "entry_spot": 682.605,
+        "target": 682.255,
+        "stop": 683.205,
+        "exit_reason": "TARGET",
+        "exit_spot": 682.195,
+        "pnl_pts": 0.40999999999996817
+      }
+    },
+    {
+      "date": "2026-01-22",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.48111111111191,
+        "sub_scores": {
+          "SPY": 91.50000000000318,
+          "QQQ": 72.58333333333287,
+          "SPXW": 77.35999999999967
+        },
+        "divergence": 18.91666666667031,
+        "entry_ts_min": 878,
+        "entry_spot": 689.965,
+        "target": 689.615,
+        "stop": 690.565,
+        "exit_reason": "TARGET",
+        "exit_spot": 689.195,
+        "pnl_pts": 0.7699999999999818
+      }
+    },
+    {
+      "date": "2026-01-23",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.52037037037019,
+        "sub_scores": {
+          "SPY": 78.83333333333287,
+          "QQQ": 72.08333333333333,
+          "SPXW": 90.64444444444436
+        },
+        "divergence": 18.561111111111032,
+        "entry_ts_min": 935,
+        "entry_spot": 689.515,
+        "target": 689.165,
+        "stop": 690.115,
+        "exit_reason": "STOP",
+        "exit_spot": 690.185,
+        "pnl_pts": -0.6699999999999591
+      }
+    },
+    {
+      "date": "2026-01-26",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 82.55454545454471,
+        "sub_scores": {
+          "SPY": 94.75000000000023,
+          "QQQ": 84.74999999999795,
+          "SPXW": 68.16363636363596
+        },
+        "divergence": 26.58636363636427,
+        "entry_ts_min": 912,
+        "entry_spot": 691.995,
+        "target": 691.645,
+        "stop": 692.595,
+        "exit_reason": "STOP",
+        "exit_spot": 692.695,
+        "pnl_pts": -0.7000000000000455
+      }
+    },
+    {
+      "date": "2026-01-27",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-01-28",
+      "archetype": "QUIET",
+      "trade": null
+    },
+    {
+      "date": "2026-01-29",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-01-30",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 83.2055555555552,
+        "sub_scores": {
+          "SPY": 92.58333333333363,
+          "QQQ": 83.49999999999909,
+          "SPXW": 73.53333333333285
+        },
+        "divergence": 19.05000000000078,
+        "entry_ts_min": 885,
+        "entry_spot": 692.855,
+        "target": 692.505,
+        "stop": 693.455,
+        "exit_reason": "TARGET",
+        "exit_spot": 692.085,
+        "pnl_pts": 0.7699999999999818
+      }
+    },
+    {
+      "date": "2026-02-02",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 89.15793650793682,
+        "sub_scores": {
+          "SPY": 98.00000000000068,
+          "QQQ": 93.66666666666687,
+          "SPXW": 75.80714285714294
+        },
+        "divergence": 22.192857142857747,
+        "entry_ts_min": 874,
+        "entry_spot": 690.72,
+        "target": 690.37,
+        "stop": 691.32,
+        "exit_reason": "STOP",
+        "exit_spot": 691.945,
+        "pnl_pts": -1.2250000000000227
+      }
+    },
+    {
+      "date": "2026-02-03",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-02-04",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 83.09999999999945,
+        "sub_scores": {
+          "SPY": 87.79999999999973,
+          "QQQ": 74.04999999999973,
+          "SPXW": 87.44999999999891
+        },
+        "divergence": 13.75,
+        "entry_ts_min": 967,
+        "entry_spot": 687.64,
+        "target": 687.29,
+        "stop": 688.24,
+        "exit_reason": "TARGET",
+        "exit_spot": 687.095,
+        "pnl_pts": 0.5449999999999591
+      }
+    },
+    {
+      "date": "2026-02-05",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 84.28077956989274,
+        "sub_scores": {
+          "SPY": 91.00000000000136,
+          "QQQ": 76.6874999999996,
+          "SPXW": 85.15483870967728
+        },
+        "divergence": 14.312500000001762,
+        "entry_ts_min": 902,
+        "entry_spot": 679.58,
+        "target": 679.23,
+        "stop": 680.1800000000001,
+        "exit_reason": "TARGET",
+        "exit_spot": 679.1949999999999,
+        "pnl_pts": 0.3850000000001046
+      }
+    },
+    {
+      "date": "2026-02-06",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-02-09",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-02-10",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 94.32156862745116,
+        "sub_scores": {
+          "SPY": 100.0,
+          "QQQ": 100.0,
+          "SPXW": 82.96470588235346
+        },
+        "divergence": 17.035294117646544,
+        "entry_ts_min": 885,
+        "entry_spot": 693.99,
+        "target": 693.64,
+        "stop": 694.59,
+        "exit_reason": "STOP",
+        "exit_spot": 694.9,
+        "pnl_pts": -0.9099999999999682
+      }
+    },
+    {
+      "date": "2026-02-11",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 15.67777777777552,
+        "sub_scores": {
+          "SPY": 11.499999999999773,
+          "QQQ": 13.333333333333334,
+          "SPXW": 22.19999999999345
+        },
+        "divergence": 10.699999999993679,
+        "entry_ts_min": 894,
+        "entry_spot": 695.13,
+        "target": 695.48,
+        "stop": 694.53,
+        "exit_reason": "STOP",
+        "exit_spot": 694.38,
+        "pnl_pts": -0.75
+      }
+    },
+    {
+      "date": "2026-02-12",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 92.95000000000073,
+        "sub_scores": {
+          "SPY": 99.00000000000546,
+          "QQQ": 82.99999999999727,
+          "SPXW": 96.84999999999945
+        },
+        "divergence": 16.000000000008185,
+        "entry_ts_min": 923,
+        "entry_spot": 692.94,
+        "target": 692.59,
+        "stop": 693.5400000000001,
+        "exit_reason": "TARGET",
+        "exit_spot": 692.29,
+        "pnl_pts": 0.650000000000091
+      }
+    },
+    {
+      "date": "2026-02-13",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-02-17",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.65072463767999,
+        "sub_scores": {
+          "SPY": 94.49999999999818,
+          "QQQ": 77.99999999999841,
+          "SPXW": 69.45217391304338
+        },
+        "divergence": 25.0478260869548,
+        "entry_ts_min": 972,
+        "entry_spot": 681.79,
+        "target": 681.4399999999999,
+        "stop": 682.39,
+        "exit_reason": "STOP",
+        "exit_spot": 682.41,
+        "pnl_pts": -0.6200000000000045
+      }
+    },
+    {
+      "date": "2026-02-18",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-02-19",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 90.35555555555587,
+        "sub_scores": {
+          "SPY": 98.19999999999936,
+          "QQQ": 73.50000000000023,
+          "SPXW": 99.366666666668
+        },
+        "divergence": 25.86666666666777,
+        "entry_ts_min": 909,
+        "entry_spot": 684.66,
+        "target": 684.31,
+        "stop": 685.26,
+        "exit_reason": "TARGET",
+        "exit_spot": 684.08,
+        "pnl_pts": 0.5799999999999272
+      }
+    },
+    {
+      "date": "2026-02-20",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.77380952380975,
+        "sub_scores": {
+          "SPY": 88.50000000000023,
+          "QQQ": 73.40000000000032,
+          "SPXW": 80.42142857142868
+        },
+        "divergence": 15.099999999999909,
+        "entry_ts_min": 905,
+        "entry_spot": 686.87,
+        "target": 686.52,
+        "stop": 687.47,
+        "exit_reason": "TARGET",
+        "exit_spot": 685.69,
+        "pnl_pts": 1.17999999999995
+      }
+    },
+    {
+      "date": "2026-02-23",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 80.18888888888885,
+        "sub_scores": {
+          "SPY": 80.0,
+          "QQQ": 83.49999999999966,
+          "SPXW": 77.0666666666669
+        },
+        "divergence": 6.4333333333327545,
+        "entry_ts_min": 937,
+        "entry_spot": 683.75,
+        "target": 683.4,
+        "stop": 684.35,
+        "exit_reason": "TARGET",
+        "exit_spot": 683,
+        "pnl_pts": 0.75
+      }
+    },
+    {
+      "date": "2026-02-24",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-02-25",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 8.744444444443566,
+        "sub_scores": {
+          "SPY": 8.49999999999909,
+          "QQQ": 10.999999999996817,
+          "SPXW": 6.733333333334788
+        },
+        "divergence": 4.2666666666620285,
+        "entry_ts_min": 917,
+        "entry_spot": 690.27,
+        "target": 690.62,
+        "stop": 689.67,
+        "exit_reason": "TARGET",
+        "exit_spot": 690.65,
+        "pnl_pts": 0.37999999999999545
+      }
+    },
+    {
+      "date": "2026-02-26",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 81.84962962962825,
+        "sub_scores": {
+          "SPY": 83.99999999999636,
+          "QQQ": 67.88888888888854,
+          "SPXW": 93.65999999999985
+        },
+        "divergence": 25.77111111111131,
+        "entry_ts_min": 953,
+        "entry_spot": 687.79,
+        "target": 687.4399999999999,
+        "stop": 688.39,
+        "exit_reason": "TARGET",
+        "exit_spot": 687.4,
+        "pnl_pts": 0.38999999999998636
+      }
+    },
+    {
+      "date": "2026-02-27",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-03-02",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 88.24444444444401,
+        "sub_scores": {
+          "SPY": 80.33333333333151,
+          "QQQ": 84.40000000000055,
+          "SPXW": 100.0
+        },
+        "divergence": 19.66666666666849,
+        "entry_ts_min": 929,
+        "entry_spot": 683.56,
+        "target": 683.2099999999999,
+        "stop": 684.16,
+        "exit_reason": "TARGET",
+        "exit_spot": 683.15,
+        "pnl_pts": 0.40999999999996817
+      }
+    },
+    {
+      "date": "2026-03-03",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 17.993518518518155,
+        "sub_scores": {
+          "SPY": 7.599999999999909,
+          "QQQ": 17.624999999999886,
+          "SPXW": 28.755555555554665
+        },
+        "divergence": 21.155555555554756,
+        "entry_ts_min": 923,
+        "entry_spot": 670.13,
+        "target": 670.48,
+        "stop": 669.53,
+        "exit_reason": "TARGET",
+        "exit_spot": 671.72,
+        "pnl_pts": 1.5900000000000318
+      }
+    },
+    {
+      "date": "2026-03-04",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-03-05",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-03-06",
+      "archetype": "TREND_DOWN",
+      "trade": null
+    },
+    {
+      "date": "2026-03-09",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-03-10",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 87.00088888888885,
+        "sub_scores": {
+          "SPY": 93.66666666666788,
+          "QQQ": 93.99999999999864,
+          "SPXW": 73.33600000000006
+        },
+        "divergence": 20.66399999999858,
+        "entry_ts_min": 867,
+        "entry_spot": 677.96,
+        "target": 677.61,
+        "stop": 678.5600000000001,
+        "exit_reason": "TARGET",
+        "exit_spot": 677.48,
+        "pnl_pts": 0.4800000000000182
+      }
+    },
+    {
+      "date": "2026-03-11",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-03-12",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 87.08888888888943,
+        "sub_scores": {
+          "SPY": 90.00000000000227,
+          "QQQ": 100.0,
+          "SPXW": 71.26666666666603
+        },
+        "divergence": 28.733333333333974,
+        "entry_ts_min": 869,
+        "entry_spot": 668.85,
+        "target": 668.5,
+        "stop": 669.45,
+        "exit_reason": "TARGET",
+        "exit_spot": 668.02,
+        "pnl_pts": 0.8300000000000409
+      }
+    },
+    {
+      "date": "2026-03-13",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 81.27499999999998,
+        "sub_scores": {
+          "SPY": 93.09999999999945,
+          "QQQ": 85.4000000000002,
+          "SPXW": 65.32500000000027
+        },
+        "divergence": 27.77499999999918,
+        "entry_ts_min": 844,
+        "entry_spot": 669.81,
+        "target": 669.4599999999999,
+        "stop": 670.41,
+        "exit_reason": "STOP",
+        "exit_spot": 670.43,
+        "pnl_pts": -0.6200000000000045
+      }
+    },
+    {
+      "date": "2026-03-14",
+      "archetype": "QUIET",
+      "trade": null
+    },
+    {
+      "date": "2026-03-17",
+      "archetype": "WHIPSAW",
+      "trade": null
+    },
+    {
+      "date": "2026-03-18",
+      "archetype": "TREND_DOWN",
+      "trade": null
+    },
+    {
+      "date": "2026-03-19",
+      "archetype": "WHIPSAW",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 84.9416666666669,
+        "sub_scores": {
+          "SPY": 98.99999999999977,
+          "QQQ": 69.00000000000091,
+          "SPXW": 86.82500000000005
+        },
+        "divergence": 29.999999999998863,
+        "entry_ts_min": 924,
+        "entry_spot": 657.88,
+        "target": 657.53,
+        "stop": 658.48,
+        "exit_reason": "TARGET",
+        "exit_spot": 657.45,
+        "pnl_pts": 0.42999999999995
+      }
+    },
+    {
+      "date": "2026-03-20",
+      "archetype": "TREND_DOWN",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 88.34761904761882,
+        "sub_scores": {
+          "SPY": 100.0,
+          "QQQ": 70.49999999999955,
+          "SPXW": 94.54285714285692
+        },
+        "divergence": 29.500000000000455,
+        "entry_ts_min": 850,
+        "entry_spot": 652.93,
+        "target": 652.5799999999999,
+        "stop": 653.53,
+        "exit_reason": "TARGET",
+        "exit_spot": 652.3,
+        "pnl_pts": 0.6299999999999955
+      }
+    },
+    {
+      "date": "2026-03-21",
+      "archetype": "QUIET",
+      "trade": null
+    },
+    {
+      "date": "2026-03-31",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "CALLS_VBOUNCE",
+        "regime": "MAX_BEARISH",
+        "trinity_score": 14.082608695652102,
+        "sub_scores": {
+          "SPY": 10.199999999999818,
+          "QQQ": 14.099999999999682,
+          "SPXW": 17.947826086956805
+        },
+        "divergence": 7.747826086956987,
+        "entry_ts_min": 885,
+        "entry_spot": 640.26,
+        "target": 640.61,
+        "stop": 639.66,
+        "exit_reason": "STOP",
+        "exit_spot": 639.51,
+        "pnl_pts": -0.75
+      }
+    },
+    {
+      "date": "2026-04-02",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-04-30",
+      "archetype": "TREND_UP",
+      "trade": null
+    },
+    {
+      "date": "2026-05-05",
+      "archetype": "TREND_UP",
+      "trade": {
+        "direction": "PUTS_REJECT",
+        "regime": "MAX_BULLISH",
+        "trinity_score": 83.25952380952386,
+        "sub_scores": {
+          "SPY": 83.99999999999864,
+          "QQQ": 82.75000000000034,
+          "SPXW": 83.02857142857258
+        },
+        "divergence": 1.2499999999982947,
+        "entry_ts_min": 874,
+        "entry_spot": 722.89,
+        "target": 722.54,
+        "stop": 723.49,
+        "exit_reason": "TARGET",
+        "exit_spot": 722.5,
+        "pnl_pts": 0.38999999999998636
+      }
+    }
+  ]
+}
