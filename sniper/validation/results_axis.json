@@ -1,0 +1,118 @@
+{
+  "SPY": {
+    "all_above": {
+      "label": "ABOVE \u2192 up?",
+      "n": 1570,
+      "continuation_rate_pct": 53.566878980891715,
+      "crossback_rate_pct": 9.681528662420384,
+      "avg_signed_move_pct": 0.0043202568174537425
+    },
+    "all_below": {
+      "label": "BELOW \u2192 down?",
+      "n": 2344,
+      "continuation_rate_pct": 46.84300341296928,
+      "crossback_rate_pct": 9.00170648464164,
+      "avg_signed_move_pct": -0.004351791355733724
+    },
+    "above_NEG_regime": {
+      "label": "ABOVE \u00d7 NEG GEX \u2192 up?",
+      "n": 207,
+      "continuation_rate_pct": 48.792270531400966,
+      "crossback_rate_pct": 9.66183574879227,
+      "avg_signed_move_pct": 0.002159038864262668
+    },
+    "below_NEG_regime": {
+      "label": "BELOW \u00d7 NEG GEX \u2192 down?",
+      "n": 444,
+      "continuation_rate_pct": 38.96396396396396,
+      "crossback_rate_pct": 7.4324324324324325,
+      "avg_signed_move_pct": -0.0005077255873018459
+    },
+    "above_POS_regime": {
+      "label": "ABOVE \u00d7 POS GEX \u2192 up?",
+      "n": 1363,
+      "continuation_rate_pct": 54.292002934702865,
+      "crossback_rate_pct": 9.684519442406456,
+      "avg_signed_move_pct": 0.004648482874908293
+    },
+    "below_POS_regime": {
+      "label": "BELOW \u00d7 POS GEX \u2192 down?",
+      "n": 1900,
+      "continuation_rate_pct": 48.68421052631579,
+      "crossback_rate_pct": 9.368421052631579,
+      "avg_signed_move_pct": -0.005250088830040964
+    },
+    "above_GEX_VEX_agree": {
+      "label": "ABOVE \u00d7 GEX=VEX \u2192 up?",
+      "n": 422,
+      "continuation_rate_pct": 48.81516587677725,
+      "crossback_rate_pct": 15.639810426540285,
+      "avg_signed_move_pct": 0.0015659272228824553
+    },
+    "below_GEX_VEX_agree": {
+      "label": "BELOW \u00d7 GEX=VEX \u2192 down?",
+      "n": 1995,
+      "continuation_rate_pct": 46.8671679197995,
+      "crossback_rate_pct": 7.669172932330827,
+      "avg_signed_move_pct": -0.004351254933112366
+    }
+  },
+  "QQQ": {
+    "all_above": {
+      "label": "ABOVE \u2192 up?",
+      "n": 1204,
+      "continuation_rate_pct": 46.262458471760795,
+      "crossback_rate_pct": 7.641196013289036,
+      "avg_signed_move_pct": -0.012805629485997512
+    },
+    "all_below": {
+      "label": "BELOW \u2192 down?",
+      "n": 1790,
+      "continuation_rate_pct": 46.64804469273743,
+      "crossback_rate_pct": 7.318435754189945,
+      "avg_signed_move_pct": 0.009416016697187427
+    },
+    "above_NEG_regime": {
+      "label": "ABOVE \u00d7 NEG GEX \u2192 up?",
+      "n": 195,
+      "continuation_rate_pct": 49.23076923076923,
+      "crossback_rate_pct": 7.6923076923076925,
+      "avg_signed_move_pct": 0.00014951998897866258
+    },
+    "below_NEG_regime": {
+      "label": "BELOW \u00d7 NEG GEX \u2192 down?",
+      "n": 263,
+      "continuation_rate_pct": 47.90874524714829,
+      "crossback_rate_pct": 10.646387832699618,
+      "avg_signed_move_pct": 0.012583551830939635
+    },
+    "above_POS_regime": {
+      "label": "ABOVE \u00d7 POS GEX \u2192 up?",
+      "n": 1009,
+      "continuation_rate_pct": 45.68880079286422,
+      "crossback_rate_pct": 7.631318136769079,
+      "avg_signed_move_pct": -0.015309350147662878
+    },
+    "below_POS_regime": {
+      "label": "BELOW \u00d7 POS GEX \u2192 down?",
+      "n": 1527,
+      "continuation_rate_pct": 46.4309102815979,
+      "crossback_rate_pct": 6.745252128356253,
+      "avg_signed_move_pct": 0.008870462184956365
+    },
+    "above_GEX_VEX_agree": {
+      "label": "ABOVE \u00d7 GEX=VEX \u2192 up?",
+      "n": 408,
+      "continuation_rate_pct": 39.950980392156865,
+      "crossback_rate_pct": 9.313725490196079,
+      "avg_signed_move_pct": -0.020556906089531885
+    },
+    "below_GEX_VEX_agree": {
+      "label": "BELOW \u00d7 GEX=VEX \u2192 down?",
+      "n": 1372,
+      "continuation_rate_pct": 47.44897959183674,
+      "crossback_rate_pct": 7.069970845481049,
+      "avg_signed_move_pct": 0.006779701300263241
+    }
+  }
+}
