@@ -174,3 +174,16 @@ The framework has been **empirically validated on 249 SPY/QQQ trading days** (Ma
 | Small gap-ups fill at ~80 % | ❌ **Failed.** Actually 43 – 44 %. Plan corrected. |
 
 **5 of 6 testable load-bearing claims pass. One was wrong and has been replaced with empirical rates.** The plan is calibrated to real SPY/QQQ behavior, not aspirational claims.
+
+### Skylit intraday validation (the real test)
+
+A second validation run against **11,120 actual Skylit Trinity replay samples** (5-min subsample × 72 trading days, Dec 2025 → May 2026) — both **GEX and VEX** — at [validation/REPORT_SKYLIT.md](validation/REPORT_SKYLIT.md):
+
+| Claim | Result |
+|---|---|
+| Pin behavior near King (≤ 0.5 SPY pts) | ✅ **+30 pp** edge over baseline — strongest finding |
+| Spot mean-reverts toward King from distance | ❌ Coin flip — **rejected**, plan updated |
+| GEX × VEX agreement amplifies moves | ✅ +17 % bigger 30-min moves on both tickers |
+| Time-of-day pin rates (lunch + afternoon) | ✅ **QQQ pin rate 66 %** in afternoon — tradeable |
+
+**Combined: 6 of 7 load-bearing claims validated on real data.** The two rejected claims are now corrected. The framework that ships is the validated one, not the aspirational one.

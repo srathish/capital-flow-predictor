@@ -153,6 +153,41 @@ CHEX has no read before 13:00 — it's overwhelmed by intraday flow.
 Make this a single 5-second check at 1 PM and have the `/sniper` tab
 display the sign clearly above the ladder for the rest of the session.
 
+## Empirical calibrations from 11,120 intraday Skylit samples
+
+The following are calibrated against 72 trading days of Skylit Trinity replay
+(see [validation/REPORT_SKYLIT.md](validation/REPORT_SKYLIT.md)):
+
+### King behavior
+
+| Rule | Validated? |
+|---|---|
+| Spot near King (≤ 0.5 SPY / 1.0 QQQ) stays near King 30 min later | ✅ +30 pp edge over baseline |
+| Spot far from King mean-reverts toward King | ❌ **Coin flip — DO NOT use** as directional signal |
+
+**Use the King as a setup filter, not a directional entry.** When spot is already inside the pin band, expect more time near King. When spot is far from King, the distance tells you nothing about direction.
+
+### GEX × VEX agreement (empirical)
+
+When net GEX and net VEX share the same sign, 30-min spot moves are **~17 % larger** on both SPY and QQQ. This holds regardless of regime — agreement = amplification of *whatever* the structure is doing (bigger pin oscillations OR bigger trend moves).
+
+**Practical rule:** add +0.5 to the signal-stack score when GEX sign = VEX sign. This is the empirical floor for the "4-Greek confluence" boost.
+
+### Time-of-day pin rates (Skylit-validated)
+
+Pin rate = % of "near King" samples still near King 30 min later:
+
+| ET window | SPY pin | QQQ pin |
+|---|---|---|
+| 09:35 – 10:30 | 35 % | 51 % |
+| 10:30 – 12:00 | 38 % | 43 % |
+| 12:00 – 14:00 | **54 %** | **66 %** |
+| 14:00 – 15:30 | **54 %** | **67 %** |
+
+**Implication:** the lunch + afternoon pin windows are real and tradeable. *Directional* sniper trades belong in the morning (pin weak, breaks possible). *Premium-selling* trades belong in the afternoon (pin strong, sell calls/puts at the King).
+
+QQQ pins more than SPY at every hour — when running both, expect QQQ-side pin trades to have higher base rate.
+
 ## The "four-Greek confluence" A++ setup
 
 The highest-conviction read, seen ~once every 2–3 weeks. **All four**

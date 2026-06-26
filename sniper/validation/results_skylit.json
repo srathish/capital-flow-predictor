@@ -1,0 +1,82 @@
+{
+  "SPY": {
+    "n_samples_total": 4453,
+    "claim_A_pin_behavior": {
+      "near_king_threshold_pts": 0.5,
+      "n_near_king": 978,
+      "pct_stayed_near_30min": 50.10224948875256,
+      "baseline_pct_30min": 20.260850011243537,
+      "edge_vs_baseline": 29.841399477509025
+    },
+    "claim_B_move_toward_king": {
+      "n": 4438,
+      "pct_moved_toward_king": 49.88733663812528,
+      "framework_says": "Spot should mean-revert toward King \u2014 expect > 50%"
+    },
+    "claim_C_gex_vex_agreement": {
+      "agreed_n": 2654,
+      "disagreed_n": 1793,
+      "agreed_abs_30min_move_pct": 0.13750564318522288,
+      "disagreed_abs_30min_move_pct": 0.11823214708416784,
+      "framework_says": "When GEX and VEX both POS (pin) or both NEG (trend), signal is stronger \u2014 expect bigger moves when both NEG, smaller when both POS"
+    },
+    "claim_D_time_of_day_pin_rates": {
+      "09:35-10:30": {
+        "n_near": 17,
+        "pin_rate_pct": 35.294117647058826
+      },
+      "10:30-12:00": {
+        "n_near": 224,
+        "pin_rate_pct": 38.392857142857146
+      },
+      "12:00-14:00": {
+        "n_near": 395,
+        "pin_rate_pct": 54.177215189873415
+      },
+      "14:00-15:30": {
+        "n_near": 342,
+        "pin_rate_pct": 53.80116959064327
+      }
+    }
+  },
+  "QQQ": {
+    "n_samples_total": 4453,
+    "claim_A_pin_behavior": {
+      "near_king_threshold_pts": 1.0,
+      "n_near_king": 1722,
+      "pct_stayed_near_30min": 60.278745644599304,
+      "baseline_pct_30min": 33.32583764335507,
+      "edge_vs_baseline": 26.952908001244232
+    },
+    "claim_B_move_toward_king": {
+      "n": 4437,
+      "pct_moved_toward_king": 49.199909848997066,
+      "framework_says": "Spot should mean-revert toward King \u2014 expect > 50%"
+    },
+    "claim_C_gex_vex_agreement": {
+      "agreed_n": 2530,
+      "disagreed_n": 1917,
+      "agreed_abs_30min_move_pct": 0.18292077489891762,
+      "disagreed_abs_30min_move_pct": 0.15839058324844335,
+      "framework_says": "When GEX and VEX both POS (pin) or both NEG (trend), signal is stronger \u2014 expect bigger moves when both NEG, smaller when both POS"
+    },
+    "claim_D_time_of_day_pin_rates": {
+      "09:35-10:30": {
+        "n_near": 41,
+        "pin_rate_pct": 51.21951219512195
+      },
+      "10:30-12:00": {
+        "n_near": 401,
+        "pin_rate_pct": 42.643391521197
+      },
+      "12:00-14:00": {
+        "n_near": 645,
+        "pin_rate_pct": 65.73643410852713
+      },
+      "14:00-15:30": {
+        "n_near": 635,
+        "pin_rate_pct": 66.45669291338582
+      }
+    }
+  }
+}
