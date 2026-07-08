@@ -317,6 +317,7 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
       // the option mark finishes catching down to the new structure.
       closeStmt.run(CLOSE_REASON_STRUCTURE, now, quote.mid,
         `${CLOSE_REASON_STRUCTURE}:${structural.reason}`, r.play_id);
+      printExit({ ...r, best_mark: newBest }, quote.mid, `STRUCT ${structural.reason}`);
       structureClosed++;
       continue;
     }
@@ -329,6 +330,8 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
         newBest > 0 &&
         quote.mid <= newBest * (1 - TRAIL_GIVEBACK_PCT)) {
       closeStmt.run(CLOSE_REASON_TRAIL, now, quote.mid, CLOSE_REASON_TRAIL, r.play_id);
+      printExit({ ...r, best_mark: newBest }, quote.mid,
+        `TRAIL 15% off peak $${newBest.toFixed(2)}`);
       trailClosed++;
     }
   }
@@ -336,7 +339,27 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
 }
 
 /**
+ * Print one unmissable exit line to the terminal. Every close path funnels
+ * through this so "when did we get out and why" is always visible live,
+ * not just in the EOD summary.
+ */
+function printExit(row, exitMark, reason) {
+  const t = new Date().toLocaleTimeString('en-US', { hour12: false, timeZone: 'America/New_York' });
+  const entry = Number(row.entry_mark) || 0;
+  const exit = Number(exitMark) || 0;
+  const pct = entry > 0 ? ((exit - entry) / entry) * 100 : 0;
+  const peak = row.best_mark != null ? `  peak $${Number(row.best_mark).toFixed(2)}` : '';
+  const sign = pct >= 0 ? '🟢 +' : '🔴 ';
+  console.log(
+    `  ${t}  ✂ EXIT  ${row.ticker.padEnd(5)} ${row.option_type === 'put' ? 'PUT ' : 'CALL'} ` +
+    `$${row.strike}  ${row.state.padEnd(13)} $${entry.toFixed(2)} → $${exit.toFixed(2)}  ` +
+    `(${sign}${Math.abs(pct).toFixed(0)}%)${peak}  [${reason}]`
+  );
+}
+
+/**
  * Close live plays. Called on state clear, EOD, or manual override.
+ * Prints one exit line per closed play.
  */
 export function closePlays({ db, reason, ticker, state }) {
   const now = Date.now();
@@ -348,10 +371,12 @@ export function closePlays({ db, reason, ticker, state }) {
     UPDATE tracked_plays
     SET status = @status, close_ts_ms = @now, close_mark = current_mark, close_reason = @reason
     WHERE ${filters.join(' AND ')}
+    RETURNING *
   `;
   const stmt = db.prepare(sql);
-  const info = stmt.run({ ...params, status: reason.startsWith('closed_') ? reason : 'closed_state_clear', now, reason });
-  return { closed: info.changes };
+  const rows = stmt.all({ ...params, status: reason.startsWith('closed_') ? reason : 'closed_state_clear', now, reason });
+  for (const r of rows) printExit(r, r.close_mark, reason);
+  return { closed: rows.length };
 }
 
 /**

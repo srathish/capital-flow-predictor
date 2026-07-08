@@ -24,6 +24,31 @@ const { Pool } = pg;
 
 let _pool = null;
 let _poolDisabledReason = null;
+let _consecutiveFailures = 0;
+
+// After this many consecutive query failures, stop trying — the mirror is
+// best-effort and a dead connection (e.g. Railway's *.railway.internal URL
+// running on a laptop where it can't resolve) would otherwise spam an empty
+// "failed:" warning every write for the whole session.
+const MAX_CONSECUTIVE_FAILURES = 3;
+
+/** Format pg errors that arrive as message-less AggregateErrors (DNS/conn refusal). */
+export function pgErrMessage(e) {
+  if (e?.message) return e.message;
+  if (e?.errors?.length) return e.errors.map(x => x.code || x.message).join(',');
+  return e?.code || e?.constructor?.name || 'unknown error';
+}
+
+export function notePgResult(ok, context, e) {
+  if (ok) { _consecutiveFailures = 0; return; }
+  _consecutiveFailures++;
+  log.warn(`${context} failed: ${pgErrMessage(e)}`);
+  if (_consecutiveFailures >= MAX_CONSECUTIVE_FAILURES && !_poolDisabledReason) {
+    _poolDisabledReason = `${_consecutiveFailures} consecutive failures (last: ${pgErrMessage(e)})`;
+    log.warn(`Postgres mirror disabled for this session — ${_poolDisabledReason}. ` +
+      'Local SQLite is unaffected; unset DATABASE_URL to silence this at startup.');
+  }
+}
 
 function getPool() {
   if (_poolDisabledReason) return null;
@@ -32,6 +57,13 @@ function getPool() {
   if (!url) {
     _poolDisabledReason = 'DATABASE_URL not set';
     log.warn('Postgres disabled — DATABASE_URL not set. Briefs/alerts will post to Discord only.');
+    return null;
+  }
+  if (url.includes('.railway.internal')) {
+    // Railway-internal hostname only resolves inside Railway. Running locally
+    // (plays-tracker on a laptop) every query would fail — skip the pool.
+    _poolDisabledReason = 'DATABASE_URL is railway.internal (unreachable outside Railway)';
+    log.warn(`Postgres mirror disabled — ${_poolDisabledReason}. Local SQLite is unaffected.`);
     return null;
   }
   _pool = new Pool({
@@ -77,7 +109,7 @@ export async function loadSkylitCredentials() {
       source: r.source,
     };
   } catch (e) {
-    log.warn(`loadSkylitCredentials failed: ${e.message}`);
+    notePgResult(false, 'loadSkylitCredentials', e);
     return null;
   }
 }
@@ -131,7 +163,7 @@ export async function loadPostedTitlesForDay(etDay, source) {
     );
     return new Set(rows.map(r => r.title).filter(Boolean));
   } catch (e) {
-    log.warn(`loadPostedTitlesForDay failed: ${e.message}`);
+    notePgResult(false, 'loadPostedTitlesForDay', e);
     return new Set();
   }
 }
@@ -160,7 +192,7 @@ export async function writeGexFeed({ source, title, description, fields, color, 
       ],
     );
   } catch (e) {
-    log.warn(`writeGexFeed failed: ${e.message}`);
+    notePgResult(false, 'writeGexFeed', e);
   }
 }
 
@@ -188,7 +220,7 @@ export async function writeSkylitStatus({ method, jwtTtlSeconds, cookieRotatedAt
       ],
     );
   } catch (e) {
-    log.warn(`writeSkylitStatus failed: ${e.message}`);
+    notePgResult(false, 'writeSkylitStatus', e);
   }
 }
 
@@ -224,7 +256,7 @@ export async function writeSkylitStructure({ ticker, fetchedAt, spot, expiration
     );
     return { ok: true };
   } catch (e) {
-    log.warn(`writeSkylitStructure failed for ${ticker}: ${e.message}`);
+    notePgResult(false, `writeSkylitStructure(${ticker})`, e);
     return { ok: false, error: e.message };
   }
 }
@@ -267,7 +299,7 @@ export async function loadFiredEventsForDay(etDay) {
     }
     return [...fired];
   } catch (e) {
-    log.warn(`loadFiredEventsForDay failed: ${e.message}`);
+    notePgResult(false, 'loadFiredEventsForDay', e);
     return [];
   }
 }
