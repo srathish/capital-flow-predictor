@@ -102,6 +102,10 @@ export async function openPlaysForFire(fireEvent, { db, quoteFetcher, expiration
         patternDetection,
         timeInPrevStateMs: fireEvent.timeInPrevStateMs,
         surfaceBaseline,
+        // Multi-timeframe regime at fire time (1/5/10/15/30m BULL/BEAR/CHOP)
+        // — context for the alignment analysis: do fires WITH the higher
+        // timeframes outperform fires against them?
+        regimes: fireEvent.regimes ?? null,
       }),
     );
     opened++;

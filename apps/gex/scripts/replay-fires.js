@@ -34,6 +34,7 @@ import { fileURLToPath } from 'node:url';
 import { runPerTickerPatterns } from '../src/domain/patterns/index.js';
 import { createFireStateMachine, State } from '../src/domain/fire-state.js';
 import { buildSurfaceBaseline, evaluateSurfaceExit } from '../src/tracker/plays.js';
+import { classifyRegimes } from '../src/domain/regime.js';
 import { createLogger } from '../src/utils/logger.js';
 
 const log = createLogger('ReplayFires');
@@ -99,6 +100,9 @@ function atmStrike(ticker, spot) {
 function replayDay(day, { verbose }) {
   const machines = Object.fromEntries(TICKERS.map(t => [t, createFireStateMachine({ ticker: t })]));
   const spotHistory = Object.fromEntries(TICKERS.map(t => [t, []]));
+  // Rolling surface history for the multi-timeframe regime (archive is 5-min
+  // frames, so 1m reads as no-history/CHOP; 5/10/15/30m are real).
+  const surfHistory = Object.fromEntries(TICKERS.map(t => [t, []]));
 
   // Merge frames into a single chronological stream of {ticker, frame}.
   const stream = [];
@@ -130,6 +134,10 @@ function replayDay(day, { verbose }) {
 
     const nodes = toNodes(frame);
     const surface = { tsMs: now, spot, nodes };
+    surfHistory[ticker].push(surface);
+    while (surfHistory[ticker].length && now - surfHistory[ticker][0].tsMs > 35 * 60_000) {
+      surfHistory[ticker].shift();
+    }
 
     // ---- update + exits for live plays on this ticker ----
     for (const p of [...live]) {
@@ -164,6 +172,7 @@ function replayDay(day, { verbose }) {
         mfeBps: 0, maeBps: 0, holdFrames: 0,
         baseline: buildSurfaceBaseline(nodes, spot),
         lastVerdict: 'neutral',
+        regimes: classifyRegimes(surfHistory[ticker], { windowsMin: [5, 10, 15, 30] }),
       });
     } else if (fire.state === State.IDLE && fire.prevState !== State.IDLE && fire.prevState !== State.PIN) {
       for (const p of [...live]) {
@@ -208,7 +217,7 @@ function main() {
         fireTsMs: p.fireTsMs, entrySpot: p.entrySpot,
         exitTsMs: p.exitTsMs, exitSpot: p.exitSpot, exitVia: p.exitVia,
         capturedBps: p.capturedBps, mfeBps: p.mfeBps, maeBps: p.maeBps,
-        holdFrames: p.holdFrames,
+        holdFrames: p.holdFrames, regimes: p.regimes ?? null,
       })));
       const dayBps = plays.reduce((s, p) => s + p.capturedBps, 0);
       log.info(`${day}: ${plays.length} plays, net ${dayBps >= 0 ? '+' : ''}${dayBps.toFixed(0)}bps`);
@@ -245,6 +254,21 @@ function main() {
   console.log('\n  By ticker:');
   for (const [k, v] of groups(p => p.ticker)) {
     console.log(`    ${k.padEnd(6)} n=${String(v.n).padStart(4)}  net=${v.bps >= 0 ? '+' : ''}${v.bps.toFixed(0)}bps  win=${(v.wins / v.n * 100).toFixed(0)}%`);
+  }
+
+  // Multi-timeframe alignment: does firing WITH the higher timeframe beat
+  // firing against it? (The question that decides whether regime becomes an
+  // entry gate.)
+  for (const w of ['15m', '30m']) {
+    console.log(`\n  By ${w} regime alignment at fire:`);
+    for (const [k, v] of groups(p => {
+      const r = p.regimes?.[w]?.label;
+      if (!r || r === 'CHOP') return `${w}=CHOP`;
+      const dirLabel = p.dir > 0 ? 'BULL' : 'BEAR';
+      return r === dirLabel ? 'ALIGNED' : 'AGAINST';
+    })) {
+      console.log(`    ${k.padEnd(10)} n=${String(v.n).padStart(4)}  net=${v.bps >= 0 ? '+' : ''}${v.bps.toFixed(0)}bps  avg=${(v.bps / v.n).toFixed(1)}bps  win=${(v.wins / v.n * 100).toFixed(0)}%`);
+    }
   }
 
   fs.mkdirSync(OUT, { recursive: true });

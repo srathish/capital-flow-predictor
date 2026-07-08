@@ -9,13 +9,21 @@
  */
 
 const surfaces = new Map();
+const histories = new Map();
 
 // A surface older than this is stale — refresh-loop skips structural checks
 // rather than acting on a map that no longer reflects dealer positioning.
 const MAX_SURFACE_AGE_MS = 3 * 60_000;
 
+// Rolling history retention — enough for the 30m regime window plus slack.
+const HISTORY_RETENTION_MS = 35 * 60_000;
+
 export function publishSurface(ticker, { tsMs, spot, nodes }) {
   surfaces.set(ticker, { tsMs, spot, nodes });
+  const hist = histories.get(ticker) ?? [];
+  hist.push({ tsMs, spot, nodes });
+  while (hist.length && tsMs - hist[0].tsMs > HISTORY_RETENTION_MS) hist.shift();
+  histories.set(ticker, hist);
 }
 
 export function getSurface(ticker, { maxAgeMs = MAX_SURFACE_AGE_MS } = {}) {
@@ -23,4 +31,9 @@ export function getSurface(ticker, { maxAgeMs = MAX_SURFACE_AGE_MS } = {}) {
   if (!s) return null;
   if (Date.now() - s.tsMs > maxAgeMs) return null;
   return s;
+}
+
+/** Rolling per-ticker surface history (ascending tsMs) for multi-timeframe regime. */
+export function getSurfaceHistory(ticker) {
+  return histories.get(ticker) ?? [];
 }

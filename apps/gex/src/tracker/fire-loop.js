@@ -16,7 +16,8 @@ import { fetchSnapshot } from '../heatseeker/client.js';
 import { runPerTickerPatterns } from '../domain/patterns/index.js';
 import { createFireStateMachine, State } from '../domain/fire-state.js';
 import { openPlaysForFire, closePlays } from './plays.js';
-import { publishSurface } from './surface-cache.js';
+import { publishSurface, getSurfaceHistory } from './surface-cache.js';
+import { classifyRegimes, regimeStrip } from '../domain/regime.js';
 import { getOptionQuote } from '../uw/quotes.js';
 import { openDb } from '../store/db.js';
 import { createLogger } from '../utils/logger.js';
@@ -163,10 +164,14 @@ async function tickOnce() {
       if (!fire) continue;
 
       if (fire.fired) {
-        log.info(`FIRE ${ticker} ${fire.state} (from ${fire.prevState})`);
+        // Multi-timeframe regime context — computed from the rolling surface
+        // history so every fire carries "what was the map doing on the 1/5/
+        // 10/15/30m frames" for live display and post-hoc alignment analysis.
+        const regimes = classifyRegimes(getSurfaceHistory(ticker));
+        log.info(`FIRE ${ticker} ${fire.state} (from ${fire.prevState})  [${regimeStrip(regimes)}]`);
         try {
           const result = await openPlaysForFire(
-            { ...fire, spot: snap.spot, surfaceNodes: nodes },
+            { ...fire, spot: snap.spot, surfaceNodes: nodes, regimes },
             { db, quoteFetcher, expiration }
           );
           log.info(`  opened ${result.opened} plays`);
