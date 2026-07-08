@@ -77,3 +77,24 @@ Points-based replay of today: −191bps across 26 plays (35% win) — yet the op
 - Underlying bps ≠ option dollars; convexity favors the system more than bps suggest, theta less.
 - Trail stop and quote-based exits not simulated (no option data by design — Skylit-only).
 - The regime thresholds were built today; the 64-day result is out-of-sample for the *rules* but the tape was one regime (up-trend). Bear-side conclusions need a down-tape test.
+
+---
+
+## Addendum (same evening) — down-day stress test REJECTED config B; final gate is G7
+
+User challenge: "on true bearish days will the system be correct?" Answer: config B would NOT have been. The 30m regime classifier read CHOP 89% of the time on down days (identical to up days), so "bears need 30m=BEAR" silently became "no bears ever" — and bears on down days are the best trades in the dataset (+1,544bps, 61% win, n=139). On 6/05 (−2.6%) config B went 0-for-9.
+
+Gate sweep across 9 down days / 5 hard-down days / 9 big-up days / V-reversal day (7/08):
+
+| Gate | Total | Down days | Up days | V-day (7/08) |
+|---|---|---|---|---|
+| none | −265bps | +595 | −1,598 | −191 |
+| config B (30m classifier) | +2,017 | **fails** | + | + |
+| G1 (dir must match spot-vs-open) | +1,440 | +634 ✓ | +1,471 ✓ | **−325 ✗** |
+| **G7 (bulls free; bears need spot<open; 15:15 cutoff)** | **+2,073** | −118 pts / **+9% optEV** ✓ | +2,706 ✓ | kept the winners ✓ |
+
+Key discovery resolving the V-day problem: counter-tape BULL_REVERSE is the highest-EV bucket (51% win, avgWin +29.9 vs avgLoss −24.9, ~+24% opt EV; on days that close up: 90% win, ~+196% opt EV). The reverse-rug pattern already encodes the reversal signature (pika holding below, barneys growing above) — additional map-fuel/drift overrides were tested (fuel≥0.25/0.5 × 15m/30m, wall, drift-turn 5-10bps, dip-depth bands) and ALL degraded results (double-counting the pattern, or non-monotonic noise). Counter-tape BEARS are the poison bucket (n=454, ~0% opt EV) — hence the asymmetric gate.
+
+G7 monthly opt EV: Apr +21% / May +13% / Jun +24% / Jul +1%.
+
+**Shipped live** in fire-loop as gateVerdict(): BEAR fires require spot < session open; no fires after 15:15 ET; bulls ungated. GATE_DISABLED=1 reverts to observation mode. Points-based caveats from the main report still apply; the option-mark measurement of 7/08 (+16.1% ungated, structural exits doing the work) remains the best evidence that convexity + full-surface exits carry V-days.

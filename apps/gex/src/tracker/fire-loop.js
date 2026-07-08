@@ -36,8 +36,50 @@ const machines = Object.fromEntries(
   TICKERS.map(t => [t, createFireStateMachine({ ticker: t })])
 );
 const spotHistory = Object.fromEntries(TICKERS.map(t => [t, []]));
+// Session open spot per ticker (first snapshot of the trading day) — feeds
+// the tape gate. Reset when the trading day rolls.
+const sessionOpen = {};
 let tickInFlight = false;
 let intervalHandle = null;
+
+// ---- Entry gate "G7" (validated on 64 archived days, 2026-07-08) ----
+//
+//   BEAR fires require spot < session open (never short an up-tape).
+//   BULL fires are never gated — counter-tape bull reversals are the
+//   highest-EV bucket in the dataset (+196% opt EV on V-days); the
+//   reverse-rug structure IS the map's reversal signature, so gating
+//   them by tape direction would cut exactly the plays that pay.
+//   No new fires after 15:15 ET (late fires won 33% and bled into EOD).
+//
+// Evidence: scripts/out/VALIDATION_REPORT.md. Config B (30m-classifier
+// bear gate) was REJECTED — the classifier read CHOP on down days and
+// the gate silently became "no bears ever". G7 is symmetric-tape-based
+// and stays positive on hard-down days (+15% opt EV) and big-up days.
+// Set GATE_DISABLED=1 to run ungated (observation mode).
+const LAST_FIRE_ET_MINUTES = 15 * 60 + 15; // 15:15 ET
+
+function etMinutes(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hour12: false,
+  }).formatToParts(now);
+  return Number(parts.find(p => p.type === 'hour')?.value) * 60 +
+         Number(parts.find(p => p.type === 'minute')?.value);
+}
+
+function gateVerdict({ state, spot, ticker }) {
+  if (process.env.GATE_DISABLED === '1') return { allowed: true, reason: 'gate_disabled' };
+  if (etMinutes() >= LAST_FIRE_ET_MINUTES) {
+    return { allowed: false, reason: 'after_15:15_ET' };
+  }
+  if (state.startsWith('BEAR')) {
+    const open = sessionOpen[ticker]?.open;
+    if (open == null) return { allowed: false, reason: 'no_session_open_yet' };
+    if (spot >= open) {
+      return { allowed: false, reason: `bear_above_open ($${spot.toFixed(2)} >= $${open.toFixed(2)})` };
+    }
+  }
+  return { allowed: true, reason: 'ok' };
+}
 
 function isMarketHours(now = new Date()) {
   if (process.env.FIRE_LOOP_247 === '1') return true;
@@ -141,6 +183,13 @@ async function tickOnce() {
       }
       if (!snap || !snap.spot) continue;
 
+      // Record session open (first snapshot of the trading day) for the tape gate.
+      const day = todayExpiration();
+      if (!sessionOpen[ticker] || sessionOpen[ticker].day !== day) {
+        sessionOpen[ticker] = { day, open: snap.spot };
+        log.info(`${ticker} session open recorded: $${snap.spot.toFixed(2)}`);
+      }
+
       // Update rolling spot history for pattern detectors that need it.
       spotHistory[ticker].push({ tsMs: now, spot: snap.spot });
       spotHistory[ticker] = spotHistory[ticker].filter(s => now - s.tsMs <= HISTORY_WINDOW_MS);
@@ -168,6 +217,12 @@ async function tickOnce() {
         // history so every fire carries "what was the map doing on the 1/5/
         // 10/15/30m frames" for live display and post-hoc alignment analysis.
         const regimes = classifyRegimes(getSurfaceHistory(ticker));
+        // G7 entry gate — bears need spot < open; nothing fires after 15:15 ET.
+        const gate = gateVerdict({ state: fire.state, spot: snap.spot, ticker });
+        if (!gate.allowed) {
+          log.info(`GATE ⛔ ${ticker} ${fire.state} blocked — ${gate.reason}  [${regimeStrip(regimes)}]`);
+          continue;
+        }
         log.info(`FIRE ${ticker} ${fire.state} (from ${fire.prevState})  [${regimeStrip(regimes)}]`);
         try {
           const result = await openPlaysForFire(
