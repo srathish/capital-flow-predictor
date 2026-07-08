@@ -39,7 +39,40 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ARCHIVE_ROOT = path.join(__dirname, '..', 'data', 'skylit-archive');
 
 const INDEX_TICKERS = ['SPXW', 'SPY', 'QQQ'];
-const CONCURRENCY = Number(process.env.ARCHIVE_CONCURRENCY || 5);
+const CONCURRENCY = Number(process.env.ARCHIVE_CONCURRENCY || 2);
+// Pace between request STARTS across all workers. Skylit 429'd a sustained
+// concurrency-5 blast on 2026-07-08 (~20K calls that day); stay polite.
+const MIN_REQUEST_SPACING_MS = Number(process.env.ARCHIVE_SPACING_MS || 350);
+// 429 backoff: start 30s, double per consecutive 429, cap 5 min.
+const BACKOFF_START_MS = 30_000;
+const BACKOFF_CAP_MS = 300_000;
+
+let lastRequestAt = 0;
+let backoffMs = 0;
+
+async function pacedFetch(ticker, ts) {
+  for (;;) {
+    // global spacing
+    const wait = Math.max(0, lastRequestAt + MIN_REQUEST_SPACING_MS - Date.now());
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+    lastRequestAt = Date.now();
+    try {
+      const snap = await fetchHistoricalSnapshot(ticker, ts);
+      backoffMs = 0; // success resets the backoff ladder
+      return { snap, error: null };
+    } catch (err) {
+      const msg = String(err.message || err);
+      if (msg.includes('AUTH_EXPIRED')) throw err;
+      if (msg.includes('429')) {
+        backoffMs = backoffMs ? Math.min(backoffMs * 2, BACKOFF_CAP_MS) : BACKOFF_START_MS;
+        log.warn(`429 — backing off ${Math.round(backoffMs / 1000)}s (${ticker}@${ts})`);
+        await new Promise(r => setTimeout(r, backoffMs));
+        continue; // retry same request after cooldown
+      }
+      return { snap: null, error: msg };
+    }
+  }
+}
 
 function parseArgs() {
   const a = { mode: null, daysBack: 85, date: null };
@@ -103,7 +136,8 @@ async function archiveIndexIntraday(days) {
   for (const day of days) for (const ticker of INDEX_TICKERS) jobs.push({ day, ticker });
   log.info(`index-intraday: ${jobs.length} ticker-days (${days.length} days × ${INDEX_TICKERS.length})`);
 
-  let done = 0, skipped = 0, wrote = 0, empty = 0;
+  let done = 0, skipped = 0, wrote = 0, empty = 0, errored = 0;
+  let lastError = null;
   const start = Date.now();
   await pMap(jobs, async ({ day, ticker }) => {
     done++;
@@ -112,26 +146,30 @@ async function archiveIndexIntraday(days) {
     if (fs.existsSync(file)) { skipped++; return; }
 
     const lines = [];
+    let dayErrors = 0;
     for (const ts of intradayTimestamps(day)) {
-      let snap = null;
-      try { snap = await fetchHistoricalSnapshot(ticker, ts); }
-      catch (err) {
-        if (String(err.message).includes('AUTH_EXPIRED')) throw err;
-      }
+      const { snap, error } = await pacedFetch(ticker, ts);
+      if (error) { dayErrors++; lastError = error; continue; }
       if (snap && snap.spot != null) {
         lines.push(JSON.stringify({ requestedTs: ts, ...snap }));
       }
     }
-    if (!lines.length) { empty++; return; }
+    if (!lines.length) {
+      if (dayErrors > 0) errored++; else empty++;
+      return;
+    }
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, zlib.gzipSync(lines.join('\n') + '\n'));
     wrote++;
     if (done % 10 === 0) {
       const rate = done / ((Date.now() - start) / 1000);
-      log.info(`${done}/${jobs.length}  wrote=${wrote} skipped=${skipped} empty=${empty}  eta=${Math.round((jobs.length - done) / rate)}s`);
+      log.info(`${done}/${jobs.length}  wrote=${wrote} skipped=${skipped} empty=${empty} errored=${errored}` +
+        (lastError ? ` lastErr=${lastError.slice(0, 60)}` : '') +
+        `  eta=${Math.round((jobs.length - done) / rate)}s`);
     }
   }, CONCURRENCY);
-  log.info(`index-intraday done: wrote=${wrote} skipped=${skipped} empty=${empty}`);
+  log.info(`index-intraday done: wrote=${wrote} skipped=${skipped} empty=${empty} errored=${errored}` +
+    (lastError ? ` lastErr=${lastError.slice(0, 80)}` : ''));
 }
 
 async function archiveUniverseDaily(days) {
@@ -140,7 +178,8 @@ async function archiveUniverseDaily(days) {
   for (const day of days) for (const ticker of universe) jobs.push({ day, ticker });
   log.info(`universe-daily: ${jobs.length} snapshots (${days.length} days × ${universe.length} tickers)`);
 
-  let done = 0, skipped = 0, wrote = 0, empty = 0;
+  let done = 0, skipped = 0, wrote = 0, empty = 0, errored = 0;
+  let lastError = null;
   const start = Date.now();
   await pMap(jobs, async ({ day, ticker }) => {
     done++;
@@ -148,21 +187,21 @@ async function archiveUniverseDaily(days) {
     const file = path.join(dir, `${ticker}.json.gz`);
     if (fs.existsSync(file)) { skipped++; return; }
 
-    let snap = null;
-    try { snap = await fetchHistoricalSnapshot(ticker, `${day}T13:35:00Z`); }
-    catch (err) {
-      if (String(err.message).includes('AUTH_EXPIRED')) throw err;
-    }
+    const { snap, error } = await pacedFetch(ticker, `${day}T13:35:00Z`);
+    if (error) { errored++; lastError = error; return; }
     if (!snap || snap.spot == null) { empty++; return; }
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, zlib.gzipSync(JSON.stringify({ requestedTs: `${day}T13:35:00Z`, ...snap })));
     wrote++;
     if (done % 100 === 0) {
       const rate = done / ((Date.now() - start) / 1000);
-      log.info(`${done}/${jobs.length}  wrote=${wrote} skipped=${skipped} empty=${empty}  eta=${Math.round((jobs.length - done) / rate)}s`);
+      log.info(`${done}/${jobs.length}  wrote=${wrote} skipped=${skipped} empty=${empty} errored=${errored}` +
+        (lastError ? ` lastErr=${lastError.slice(0, 60)}` : '') +
+        `  eta=${Math.round((jobs.length - done) / rate)}s`);
     }
   }, CONCURRENCY);
-  log.info(`universe-daily done: wrote=${wrote} skipped=${skipped} empty=${empty}`);
+  log.info(`universe-daily done: wrote=${wrote} skipped=${skipped} empty=${empty} errored=${errored}` +
+    (lastError ? ` lastErr=${lastError.slice(0, 80)}` : ''));
 }
 
 async function main() {
