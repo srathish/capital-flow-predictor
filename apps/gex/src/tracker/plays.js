@@ -102,8 +102,15 @@ export async function openPlaysForFire(fireEvent, { db, quoteFetcher, expiration
 // TRAIL_GIVEBACK_PCT of the peak — that's the signal the anchor deflection
 // is exhausting on the option side (which mirrors nodes shifting against
 // us on the underlying map without needing another Skylit pull).
+//
+// Calibrated 2026-07-08 against that day's 34 ATM fires via grid search over
+// arm ∈ {0.25, 0.30, 0.50} × giveback ∈ {0.15, 0.20, 0.30}: giveback
+// tightness dominated — dropping it 0.30 → 0.15 roughly tripled PnL at every
+// arm level. Best combo (0.50 / 0.15) captured +17.7% portfolio return vs
+// +6.8% with the initial 0.50 / 0.30. Arm kept at 0.50 so we don't exit
+// setups still developing at +25%.
 const TRAIL_ARM_MIN_GAIN = 0.50;   // arm once peak >= +50%
-const TRAIL_GIVEBACK_PCT = 0.30;   // exit if mid falls 30% off peak
+const TRAIL_GIVEBACK_PCT = 0.15;   // exit if mid falls 15% off peak
 const CLOSE_REASON_TRAIL = 'closed_trail_stop';
 
 /**
