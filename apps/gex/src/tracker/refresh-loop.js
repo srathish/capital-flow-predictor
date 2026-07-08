@@ -55,9 +55,12 @@ async function refreshTick() {
   try {
     const db = openDb();
     const quoteFetcher = (sym) => getOptionQuote(sym);
-    const { refreshed, trailClosed } = await refreshLivePlays({ db, quoteFetcher });
+    const { refreshed, trailClosed, structureClosed } = await refreshLivePlays({ db, quoteFetcher });
     if (refreshed > 0) {
-      const suffix = trailClosed > 0 ? ` (trail-stopped ${trailClosed})` : '';
+      const bits = [];
+      if (trailClosed > 0) bits.push(`trail-stopped ${trailClosed}`);
+      if (structureClosed > 0) bits.push(`structure-invalidated ${structureClosed}`);
+      const suffix = bits.length ? ` (${bits.join(', ')})` : '';
       log.info(`refreshed ${refreshed} live plays${suffix}`);
     }
   } catch (err) {

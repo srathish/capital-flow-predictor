@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS tracked_plays (
   best_mark         REAL,                 -- max mid seen since entry
   best_mark_ts_ms   INTEGER,
   best_pct_gain     REAL,                 -- (best_mark - entry_mark) / entry_mark
-  status            TEXT    NOT NULL,     -- 'live' | 'closed_state_clear' | 'closed_eod' | 'closed_expired' | 'closed_trail_stop'
+  status            TEXT    NOT NULL,     -- 'live' | 'closed_state_clear' | 'closed_eod' | 'closed_expired' | 'closed_trail_stop' | 'closed_structure_invalidated'
   close_ts_ms       INTEGER,
   close_mark        REAL,
   close_reason      TEXT,
