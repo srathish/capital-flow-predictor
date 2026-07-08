@@ -192,3 +192,36 @@ CREATE TABLE IF NOT EXISTS decision_log (
 
 CREATE INDEX IF NOT EXISTS idx_decision_day_ticker ON decision_log(trading_day, ticker, ts_ms);
 CREATE INDEX IF NOT EXISTS idx_decision_outcome ON decision_log(trading_day, decision);
+
+-- Tracked plays — one row per candidate contract snapshot on a state-fire event.
+-- Populated by fire-state.js -> tracker service. Polled every 60s for best_mark update.
+CREATE TABLE IF NOT EXISTS tracked_plays (
+  play_id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  fire_ts_ms        INTEGER NOT NULL,
+  trading_day       TEXT    NOT NULL,
+  ticker            TEXT    NOT NULL,     -- underlying (SPXW/SPY/QQQ)
+  state             TEXT    NOT NULL,     -- BEAR_RUG | BEAR_TRAPDOOR | BEAR_CONTINUE | BEAR_OVERNIGHT | BULL_REVERSE
+  pattern_name      TEXT    NOT NULL,
+  option_symbol     TEXT    NOT NULL,     -- OCC symbol e.g. SPXW260707P07505000
+  option_type       TEXT    NOT NULL,     -- 'put' | 'call'
+  strike            REAL    NOT NULL,
+  expiration        TEXT    NOT NULL,     -- YYYY-MM-DD
+  spot_at_fire      REAL    NOT NULL,
+  entry_mark        REAL    NOT NULL,     -- option mid at fire
+  entry_bid         REAL,
+  entry_ask         REAL,
+  current_mark      REAL,                 -- latest polled mid
+  current_ts_ms     INTEGER,
+  best_mark         REAL,                 -- max mid seen since entry
+  best_mark_ts_ms   INTEGER,
+  best_pct_gain     REAL,                 -- (best_mark - entry_mark) / entry_mark
+  status            TEXT    NOT NULL,     -- 'live' | 'closed_state_clear' | 'closed_eod' | 'closed_expired' | 'closed_trail_stop'
+  close_ts_ms       INTEGER,
+  close_mark        REAL,
+  close_reason      TEXT,
+  supporting_state  TEXT                  -- JSON blob: fire event context
+);
+
+CREATE INDEX IF NOT EXISTS idx_plays_day_ticker ON tracked_plays(trading_day, ticker, fire_ts_ms);
+CREATE INDEX IF NOT EXISTS idx_plays_status ON tracked_plays(status, ticker);
+CREATE INDEX IF NOT EXISTS idx_plays_symbol ON tracked_plays(option_symbol);
