@@ -50,6 +50,54 @@ export async function fetchSnapshot(ticker) {
   return normalize(ticker, raw);
 }
 
+/**
+ * Historical snapshot for a specific point in time. Uses Skylit's internal
+ * /api/data endpoint (discovered from webpack chunk 6571) which accepts a
+ * `timestamp` ISO string and returns a synchronous JSON payload — no SSE.
+ *
+ * Retention window is ~90 calendar days back from today (empirically probed
+ * 2026-07-08: 2026-04-15 works, 2026-04-01 returns HTTP 400). Timestamps
+ * outside market hours snap to the nearest available frame server-side.
+ *
+ * Returns the same normalized shape as fetchSnapshot() so grader/backtester
+ * code paths are identical.
+ */
+export async function fetchHistoricalSnapshot(ticker, timestampIso) {
+  const token = await getFreshToken();
+  const url = new URL('https://app.skylit.ai/api/data');
+  url.searchParams.set('symbol', ticker);
+  url.searchParams.set('nocache', Math.random().toString());
+  url.searchParams.set('max_strikes', '200');
+  url.searchParams.set('max_expirations', '10');
+  url.searchParams.set('timestamp', timestampIso);
+
+  const resp = await fetch(url.toString(), {
+    headers: {
+      'Origin': 'https://app.skylit.ai',
+      'Referer': 'https://app.skylit.ai/',
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+    },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
+
+  if (resp.status === 401 || resp.status === 403) {
+    throw new Error(`AUTH_EXPIRED: HTTP ${resp.status} for ${ticker}@${timestampIso}`);
+  }
+  if (resp.status === 400) {
+    // Out-of-retention window or malformed timestamp — a valid "no data here" signal.
+    return null;
+  }
+  if (!resp.ok) throw new Error(`Heatseeker HTTP ${resp.status} for ${ticker}@${timestampIso}`);
+
+  const raw = await resp.json();
+  if (!raw || raw.CurrentSpot == null) return null;
+
+  const snap = normalize(ticker, raw);
+  snap.fetchedAtMs = Date.parse(timestampIso);
+  return snap;
+}
+
 async function readSseStream(resp, ticker) {
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
@@ -102,6 +150,7 @@ function normalize(ticker, raw) {
   const expirations = raw.Expirations || [];
   const expiration = expirations[0] || null;
   const gammaRows = raw.GammaValues || [];
+  const vannaRows = raw.VannaValues || [];  // parallel-indexed with gammaRows
 
   let strikes = raw.Strikes;
   if (!Array.isArray(strikes)) {
@@ -113,27 +162,32 @@ function normalize(ticker, raw) {
     log.warn(`${ticker}: no Strikes array, derived ${strikes.length} from spot at step ${step}`);
   }
 
-  // Primary view: nearest expiration (gammaRows[i][0]). Preserves legacy callers
-  // that read `snapshot.strikes` and `snapshot.expiration` unchanged.
+  // Primary view: nearest expiration (index 0). Preserves legacy callers that
+  // read snapshot.strikes[].gamma unchanged, and adds .vanna for consumers
+  // that grade against GEX+VEX together (Giul's rules — magnet vs rejection).
   const nodes = [];
   for (let i = 0; i < gammaRows.length; i++) {
-    const row = gammaRows[i];
-    const gamma = (row && row[0]) || 0;
+    const gRow = gammaRows[i];
+    const vRow = vannaRows[i];
+    const gamma = (gRow && gRow[0]) || 0;
+    const vanna = (vRow && vRow[0]) || 0;
     if (strikes[i] == null) continue;
-    nodes.push({ strike: strikes[i], gamma });
+    nodes.push({ strike: strikes[i], gamma, vanna });
   }
 
-  // Multi-expiration view: every expiration in raw.Expirations gets its own
-  // strike → gamma map. Consumers can pick any horizon (0DTE, weekly, LEAP)
-  // and run the same surface/structure derivation against it.
+  // Multi-expiration view: every expiration gets its own strike → {gamma, vanna}
+  // map. Consumers can pick any horizon (0DTE, weekly, LEAP) and grade with
+  // both surfaces per Giul's rules.
   const allExpirations = [];
   for (let ei = 0; ei < expirations.length; ei++) {
     const expNodes = [];
     for (let si = 0; si < gammaRows.length; si++) {
-      const row = gammaRows[si];
-      const gamma = (row && row[ei]) || 0;
+      const gRow = gammaRows[si];
+      const vRow = vannaRows[si];
+      const gamma = (gRow && gRow[ei]) || 0;
+      const vanna = (vRow && vRow[ei]) || 0;
       if (strikes[si] == null) continue;
-      expNodes.push({ strike: strikes[si], gamma });
+      expNodes.push({ strike: strikes[si], gamma, vanna });
     }
     allExpirations.push({
       expiration: expirations[ei],
