@@ -33,7 +33,6 @@
 import { computeSurface } from '../domain/significance.js';
 import { deriveStructure } from '../domain/structure.js';
 import { runPerTickerPatterns } from '../domain/patterns/index.js';
-import { planTrade } from '../domain/execution.js';
 import { thresholds } from '../utils/config.js';
 
 // Giul rule 1: KING commands the map only if it's within this many percent
@@ -138,6 +137,84 @@ function labelPlayType(direction, structure, spot) {
   return null;
 }
 
+// ---------- Structural R:R plan (node-to-node per §6.7) ----------
+
+// Fallback break-and-hold stop width when no next-node-beyond-anchor exists.
+// 1% of anchor strike matches Skylit's "break and hold 1 node above/below"
+// language for maps that top out at the anchor.
+const FALLBACK_STOP_PCT = 0.01;
+
+function buildStructuralPlan({ direction, spot, structure, nodes }) {
+  const minStopSig = thresholds.node_significance.min_significance_for_stop_node;
+  const minTargetSig = thresholds.node_significance.min_significance_for_floor_ceiling;
+
+  const isBull = direction === 'bull';
+  const isBear = direction === 'bear';
+  if (!isBull && !isBear) {
+    return { accepted: false, rejectReason: 'no_direction', targetStrike: null, rr: 0 };
+  }
+
+  // Entry = the anchor node itself per Chapter 6 "direct tap of major node."
+  //   Bull: entry at floor (deflection up)
+  //   Bear: entry at ceiling (deflection down)
+  const entryNode = isBull ? structure.floor : structure.ceiling;
+  if (!entryNode) {
+    return { accepted: false, rejectReason: 'no_entry_anchor', targetStrike: null, rr: 0 };
+  }
+
+  // Stop: first significant node beyond entry_node (in the wrong direction).
+  // If none exists (anchor is at the map's edge), fall back to a 1% width —
+  // the map is telling us break-and-hold invalidation has no dealer structure
+  // to defend, so we use the standard Skylit "1 node beyond" width instead
+  // of rejecting the plan.
+  const stopCandidates = nodes
+    .filter(n => n.relativeSignificance >= minStopSig)
+    .filter(n => isBull ? n.strike < entryNode.strike : n.strike > entryNode.strike);
+  const stopNode = isBull
+    ? stopCandidates.sort((a, b) => b.strike - a.strike)[0]
+    : stopCandidates.sort((a, b) => a.strike - b.strike)[0];
+  const stopStrike = stopNode
+    ? stopNode.strike
+    : (isBull
+        ? entryNode.strike * (1 - FALLBACK_STOP_PCT)
+        : entryNode.strike * (1 + FALLBACK_STOP_PCT));
+
+  // Target: opposing structural anchor. If missing/wrong-side, next significant
+  // node in trade direction.
+  let targetNode = isBull ? structure.ceiling : structure.floor;
+  if (!targetNode || (isBull ? targetNode.strike <= entryNode.strike : targetNode.strike >= entryNode.strike)) {
+    const targetCandidates = nodes
+      .filter(n => n.relativeSignificance >= minTargetSig)
+      .filter(n => isBull ? n.strike > entryNode.strike : n.strike < entryNode.strike);
+    targetNode = isBull
+      ? targetCandidates.sort((a, b) => a.strike - b.strike)[0]
+      : targetCandidates.sort((a, b) => b.strike - a.strike)[0];
+  }
+  if (!targetNode) {
+    return { accepted: false, rejectReason: 'no_target_node', targetStrike: null, rr: 0 };
+  }
+
+  const entryPrice = entryNode.strike;
+  const stopDistance = Math.abs(entryPrice - stopStrike);
+  const targetDistance = Math.abs(targetNode.strike - entryPrice);
+  if (stopDistance <= 0 || targetDistance <= 0) {
+    return { accepted: false, rejectReason: 'zero_distance', targetStrike: null, rr: 0 };
+  }
+
+  const rr = targetDistance / stopDistance;
+  return {
+    accepted: true,
+    entryPrice,
+    stopStrike,
+    stopDistance,
+    stopIsFallback: !stopNode,
+    targetStrike: targetNode.strike,
+    targetDistance,
+    rr,
+    targets: [{ strike: targetNode.strike, distance: targetDistance }],
+  };
+}
+
 // ---------- Gatekeepers between spot and target ----------
 
 function gatekeepersBetween(structure, spot, targetStrike) {
@@ -166,32 +243,23 @@ function gradeOneExpiration({ ticker, spot, expObj, weeklyRange }) {
   const playType = labelPlayType(dir.direction, structure, spot);
   const patternName = dir.pattern?.pattern || null;
 
-  // Feed execution engine to get canonical R:R + stop + target per §6.
-  // Entry node = structure.floor for calls, structure.ceiling for puts.
-  let plan = null;
-  if (dir.direction === 'bull' && structure.floor) {
-    plan = planTrade({
-      direction: 'calls',
-      ticker, spot, structure, nodes: surface.nodes,
-      entryNode: structure.floor,
-      confluence: dir.pattern ? 'high_confidence_directional' : 'partial_alignment',
-      regimeScore: surface.regimeScore,
-    });
-  } else if (dir.direction === 'bear' && structure.ceiling) {
-    plan = planTrade({
-      direction: 'puts',
-      ticker, spot, structure, nodes: surface.nodes,
-      entryNode: structure.ceiling,
-      confluence: dir.pattern ? 'high_confidence_directional' : 'partial_alignment',
-      regimeScore: surface.regimeScore,
-    });
-  }
-
-  // Target strike (from planTrade first target, else fall back to opposing structure).
-  const targetStrike = plan?.accepted ? plan.targets[0]?.strike : (
-    dir.direction === 'bull' ? structure.ceiling?.strike :
-    dir.direction === 'bear' ? structure.floor?.strike : null
-  );
+  // Structural (node-to-node) R:R per Skylit doctrine §6.7 "targets = structure,
+  // play node-to-node from floor to ceiling." NOT the calibrated 0DTE fixed_bps
+  // scalp target — that's designed for SPX/SPY/QQQ 25-bp intraday moves and
+  // makes every single-name weekly setup fail R:R gating.
+  //
+  // Entry = spot (Chapter 6: "direct tap of the node" = current price arriving
+  //   at the deflection zone; here we're scanning "which map has an A+ setup
+  //   forming," so we grade against current spot).
+  // Stop  = first node beyond invalidation with rel_sig >= min_stop threshold.
+  //   For bull: first significant node BELOW entry_node (floor). For bear:
+  //   first significant node ABOVE entry_node (ceiling).
+  // Target = opposing structural anchor (ceiling for bull, floor for bear),
+  //   or planTrade's node-to-node scan if that's absent.
+  const plan = buildStructuralPlan({
+    direction: dir.direction, spot, structure, nodes: surface.nodes,
+  });
+  const targetStrike = plan.targetStrike;
 
   const gks = gatekeepersBetween(structure, spot, targetStrike);
   const delivered = targetDeliveredThisWeek(targetStrike, dir.direction, weeklyRange);
