@@ -270,6 +270,25 @@ async function tickOnce() {
         const regimes = classifyRegimes(getSurfaceHistory(ticker));
         // G7 entry gate — bears need spot < open; nothing fires after 15:15 ET.
         const gate = gateVerdict({ state: fire.state, spot: snap.spot, ticker });
+        // UW forward-validation observation logging (research/uw/live_logging).
+        // OBSERVATION ONLY — behind ENABLE_UW_OBSERVATION_LOGGING=true, dynamic
+        // import (zero cost when off), fire-and-forget, exception-proof inside
+        // the logger. Records every fire (including gate-blocked) so live
+        // sessions extend the out-of-sample record for the policy simulator.
+        if (process.env.ENABLE_UW_OBSERVATION_LOGGING === 'true') {
+          import('../../research/uw/live_logging/observation-logger.js')
+            .then(m => m.logFireObservation({
+              ticker, state: fire.state,
+              dir: fire.state.startsWith('BEAR') ? -1 : 1,
+              spot: snap.spot, fireTsMs: now, surfaceNodes: nodes,
+              executed: gate.allowed, execNote: gate.reason,
+              quoteFetcher: (sym) => getOptionQuote(sym)
+                .then(q => q ? { bid: q.bid, ask: q.ask, mid: q.mid } : null),
+              vixFetcher: () => fetchSnapshot('VIX')
+                .then(s => s?.spot ?? null).catch(() => null),
+            }))
+            .catch(() => { /* observation must never affect the fire loop */ });
+        }
         if (!gate.allowed) {
           log.info(`GATE ⛔ ${ticker} ${fire.state} blocked — ${gate.reason}  [${regimeStrip(regimes)}]`);
           continue;

@@ -1,0 +1,21 @@
+{
+  "_source": "mirrors research/uw/studies/policy_config.py THRESHOLDS (canonical) + in-sample quantile values baked from repriced_fires.parquet (2026-04-10..2026-07-08)",
+  "confirm_wait_min": 1,
+  "gex_positive_min": 0.15,
+  "gex_negative_max": -0.15,
+  "wall_skip_below_bps": 20,
+  "wall_sweet_lo_bps": 50,
+  "wall_sweet_hi_bps": 100,
+  "bad_window_start_hr": 13.5,
+  "bad_window_end_hr": 15.0,
+  "morning_end_hr": 12.0,
+  "premium_band_good": [0.50, 2.00],
+  "premium_band_bad": [2.00, 10.00],
+  "breakeven_max_bps": 30,
+  "onesided15_threshold": 0.4479,
+  "f15_extreme_threshold": 51104925.2,
+  "flags_max_relaxed": 1,
+  "flags_max_strict": 0,
+  "pin_relsig": 0.18,
+  "pin_distance_pct": 0.005
+}
