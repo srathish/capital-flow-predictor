@@ -1,0 +1,5 @@
+[2026-07-09 10:42:38] [Pg] Postgres pool initialized.
+[2026-07-09 10:42:38] [Pg] loadSkylitCredentials failed: ECONNREFUSED,ECONNREFUSED
+[2026-07-09 10:42:38] [Auth] Auth initialized from .env | session sess_3GDAPn2vUVuBf9e... (Postgres returned no row — consider migrating with the bootstrap script).
+S1 flow screen: 376 tickers (1 UW call each)...
+  50/376
