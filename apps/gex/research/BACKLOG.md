@@ -11,7 +11,7 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Node growth = intent** (doctrine Ch 9) — thesis: fires toward a target
+~~1. Node growth = intent (Ch 9) — CLOSED s8: REJECTED (non-monotone, placebo 34th, inverts within flags_eq_0). Ch 9 lifecycle is a stock-timeframe idea, not 0DTE.~~
    node whose magnitude is RISING over prior 15–30m beat fires toward a
    decaying node. PROMOTED after s7 (fresh>delivered held directionally,
    +28.6pp within flags_eq_0); growth is the sharper version of the same

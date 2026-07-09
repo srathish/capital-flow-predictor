@@ -52,6 +52,20 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 8 (continuous): node growth = intent (Ch 9) — REJECTED
+
+RAN: built target-node |gamma| growth over prior 30m from archive (coverage
+407/537), tested vs real dollars.
+VERDICT: **rejected.** Non-monotone (decay +6.4% / flat -14.6% / grow +1.5%),
+gap -4.8pp, placebo 34th (noise), fails ticker-neutrality (QQQ -9.9pp), and
+INVERTS within flags_eq_0 (decay +43.8% vs grow +4.5%, n=46). Doctrine's
+"growth=intent" does not hold for 0DTE index target-nodes — a DECAYED target
+did better, consistent with s7 (decay = price already delivered from it).
+The Ch 9 lifecycle intuition holds for the STOCK/campaign timeframe it was
+written for, not 0DTE index mechanics. Backlog #1 closed.
+
+---
+
 ## 2026-07-09 session 6 + enrichment (topology + doctrine study)
 
 RAN: research/sessions/s6 (map topology on raw archive) + deep read of
