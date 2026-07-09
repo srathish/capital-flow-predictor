@@ -1,0 +1,195 @@
+<title>Atlas — Swing Setups</title>
+<style>
+:root{
+  --bg:#090c13; --bg2:#0d1220; --card:#111726; --card2:#0e1420; --line:#1e2839;
+  --ink:#e9edf6; --dim:#8b95ab; --faint:#5a6478;
+  --amber:#f5b53d; --amber-hi:#ffd77a; --violet:#8b6cf0; --violet-hi:#b49bff;
+  --cyan:#3fe4ff; --good:#37d39b; --warn:#f5b53d; --bad:#f2678a;
+  --accent:#b49bff;
+}
+:root[data-theme="light"]{
+  --bg:#f2f4f9; --bg2:#e9edf5; --card:#ffffff; --card2:#f5f8fc; --line:#dde3ee;
+  --ink:#131a27; --dim:#54607a; --faint:#98a2b8;
+  --amber:#b9791a; --amber-hi:#8a5a10; --violet:#6a4bd0; --violet-hi:#553bb0;
+  --cyan:#0090b8; --good:#0f9e6e; --warn:#b9791a; --bad:#d23a63; --accent:#6a4bd0;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f2f4f9; --bg2:#e9edf5; --card:#ffffff; --card2:#f5f8fc; --line:#dde3ee;
+  --ink:#131a27; --dim:#54607a; --faint:#98a2b8;
+  --amber:#b9791a; --amber-hi:#8a5a10; --violet:#6a4bd0; --violet-hi:#553bb0;
+  --cyan:#0090b8; --good:#0f9e6e; --warn:#b9791a; --bad:#d23a63; --accent:#6a4bd0;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:radial-gradient(130% 80% at 50% -10%,var(--bg2),var(--bg));
+  color:var(--ink);min-height:100vh;
+  font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  -webkit-font-smoothing:antialiased;
+}
+.sans{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 20px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:13px}
+.mark{width:42px;height:42px;border-radius:11px;background:
+  linear-gradient(145deg,var(--violet),var(--amber));display:grid;place-items:center;
+  font-family:system-ui,sans-serif;font-weight:800;font-size:20px;color:#0a0d14;flex:none;
+  box-shadow:0 4px 18px rgba(139,108,240,.35)}
+.brand h1{font-family:system-ui,sans-serif;font-size:23px;font-weight:750;letter-spacing:-.01em;line-height:1}
+.brand .tag{font-size:11.5px;color:var(--dim);letter-spacing:.03em;margin-top:4px}
+.asof{font-size:11.5px;color:var(--dim);text-align:right;letter-spacing:.04em}
+.asof b{color:var(--ink)}
+.disclaimer{
+  font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:8px;
+  padding:8px 12px;margin:14px 0 22px;letter-spacing:.02em;line-height:1.5}
+.disclaimer b{color:var(--warn)}
+.feedhead{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
+.feedhead h2{font-family:system-ui,sans-serif;font-size:14px;font-weight:650;letter-spacing:.02em}
+.feedhead span{font-size:11.5px;color:var(--dim)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:15px;padding:16px 17px;position:relative;overflow:hidden;
+}
+.card.hero{grid-column:1/-1;border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}
+.card.hero::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,var(--amber),var(--violet))}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tk{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tkrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.tkrow .sym{font-family:system-ui,sans-serif;font-weight:750;font-size:21px;letter-spacing:-.01em}
+.theme{font-size:10.5px;color:var(--dim);letter-spacing:.04em;text-transform:uppercase}
+.pill{font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:5px;text-transform:uppercase}
+.pill.long{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.pill.confirmed{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.pill.watch{background:color-mix(in srgb,var(--violet) 20%,transparent);color:var(--violet-hi)}
+.pill.blocked{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.ring{width:58px;height:58px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;font-family:system-ui,sans-serif;
+  font-weight:750;font-size:18px}
+.ring .lbl{position:absolute;bottom:-14px;left:0;right:0;text-align:center;font-size:9px;color:var(--faint);letter-spacing:.08em}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0 13px}
+.t{font-size:9.5px;font-weight:600;letter-spacing:.05em;color:var(--dim);border:1px solid var(--line);
+  border-radius:4px;padding:3px 7px}
+.t.king{color:var(--amber-hi);border-color:color-mix(in srgb,var(--amber) 35%,var(--line))}
+
+.map{margin:6px 0 14px}
+.maptrack{position:relative;height:34px;border-radius:7px;background:var(--card2);
+  border:1px solid var(--line);overflow:hidden}
+.node{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:3px;
+  background:linear-gradient(180deg,var(--amber-hi),var(--amber));box-shadow:0 0 12px color-mix(in srgb,var(--amber) 55%,transparent)}
+.spotmk{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.spotmk::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--cyan)}
+.maplbl{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);margin-top:5px;font-variant-numeric:tabular-nums}
+.maplbl .kbadge{color:var(--amber-hi)}
+
+.contract{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:12px}
+.contract .occ{font-size:12.5px;font-weight:650;letter-spacing:.01em}
+.contract .occ small{color:var(--dim);font-weight:400;font-size:11px}
+.contract .entry{text-align:right;font-variant-numeric:tabular-nums}
+.contract .entry .v{font-weight:700;font-size:15px}
+.contract .entry .k{font-size:9.5px;color:var(--faint);letter-spacing:.06em}
+
+.rr{display:flex;align-items:center;gap:10px;margin-bottom:13px;font-size:11.5px;color:var(--dim)}
+.rrbar{flex:1;height:6px;border-radius:3px;background:var(--bad);position:relative;overflow:hidden}
+.rrbar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--good),var(--amber));border-radius:3px}
+.rr b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.stat{background:var(--card);padding:9px 10px}
+.stat .k{font-size:9.5px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+.stat .v{font-size:14px;font-weight:650;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat .v.pos{color:var(--good)} .stat .v.neg{color:var(--bad)} .stat .v.warnv{color:var(--warn)}
+.earn{margin-top:11px;font-size:10.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
+.earn.win{color:var(--warn)}
+footer{margin-top:34px;text-align:center;font-size:11px;color:var(--faint);letter-spacing:.03em;line-height:1.7}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">A</div>
+      <div><h1>Atlas</h1><div class="tag" id="tagline"></div></div>
+    </div>
+    <div class="asof" id="asof"></div>
+  </header>
+  <div class="disclaimer"><b>Research / observation only.</b> Unvalidated v1 — Skylit node structure × Unusual Whales 20-day option accumulation. Not a recommendation; no orders are placed. Earnings-in-window is flagged, not auto-rejected.</div>
+  <div class="feedhead"><h2>Surfaced setups</h2><span id="count"></span></div>
+  <div class="grid" id="feed"></div>
+  <footer>Atlas · multi-week swing engine · scores are composite conviction (accumulation, node strength, persistence, OI opening, ask-side, tradeability)<br>Skylit Heatseeker × Unusual Whales · sibling to the 0DTE index system, separate cadence</footer>
+</div>
+<script>
+const D = {"agent":"ATLAS","tagline":"multi-week swing agent \u00b7 Skylit nodes \u00d7 20-day accumulation","asof":"2026-07-09","cards":[{"ticker":"NBIS","theme":"AI Neocloud","score":84,"components":{"accumulation":98,"node_strength":94,"king":100,"persistence":70,"oi_opening":69,"ask_side":60,"tradeable":84,"confirmed":100},"dir":"LONG","status":"CONFIRMED","tags":["KING MAGNET","OI OPENING","ASK-SIDE","CONFIRMED"],"spot":216.22,"magnet":240,"expiry":"2026-08-21","dte":43,"distPct":11.0,"occ":"NBIS260821C00240000","entry":31.02,"nodeShare":18.8,"accum20d":146,"persist":14,"oiGrow":27,"askShare":55,"spread":2.4,"earnings":"2026-08-06","earningsInWindow":true,"rr":2.0,"reward":11.0,"stop":5.5},{"ticker":"ETHA","theme":"ETH Spot ETF","score":55,"components":{"accumulation":4,"node_strength":100,"king":100,"persistence":55,"oi_opening":50,"ask_side":66,"tradeable":88,"confirmed":0},"dir":"LONG","status":"WATCH","tags":["KING MAGNET","ASK-SIDE"],"spot":13.12,"magnet":14,"expiry":"2026-08-21","dte":43,"distPct":6.7,"occ":"ETHA260821C00014000","entry":0.56,"nodeShare":59.8,"accum20d":6,"persist":11,"oiGrow":null,"askShare":57,"spread":1.8,"earnings":null,"earningsInWindow":false,"rr":1.3,"reward":6.7,"stop":5},{"ticker":"DASH","theme":"Delivery","score":55,"components":{"accumulation":6,"node_strength":100,"king":100,"persistence":55,"oi_opening":50,"ask_side":97,"tradeable":40,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":193.29,"magnet":215,"expiry":"2026-07-24","dte":15,"distPct":11.2,"occ":"DASH260724C00215000","entry":0,"nodeShare":38.1,"accum20d":8,"persist":11,"oiGrow":null,"askShare":64,"spread":null,"earnings":"2026-08-05","earningsInWindow":false,"rr":2.0,"reward":11.2,"stop":5.6},{"ticker":"MRVL","theme":"AI Silicon","score":54,"components":{"accumulation":70,"node_strength":100,"king":100,"persistence":60,"oi_opening":0,"ask_side":0,"tradeable":65,"confirmed":0},"dir":"LONG","status":"WATCH","tags":["KING MAGNET"],"spot":247.13,"magnet":280,"expiry":"2026-07-24","dte":15,"distPct":13.3,"occ":"MRVL260724C00280000","entry":7.7,"nodeShare":49.0,"accum20d":106,"persist":12,"oiGrow":-5,"askShare":40,"spread":5.2,"earnings":"2026-08-27","earningsInWindow":false,"rr":2.0,"reward":13.3,"stop":6.7},{"ticker":"XLF","theme":"Financials ETF","score":54,"components":{"accumulation":7,"node_strength":100,"king":100,"persistence":50,"oi_opening":50,"ask_side":94,"tradeable":40,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":55.53,"magnet":58,"expiry":"2026-07-31","dte":22,"distPct":4.5,"occ":"XLF260731C00058000","entry":0,"nodeShare":46.0,"accum20d":11,"persist":10,"oiGrow":null,"askShare":64,"spread":null,"earnings":null,"earningsInWindow":false,"rr":0.9,"reward":4.5,"stop":5},{"ticker":"GEV","theme":"Grid / Power","score":52,"components":{"accumulation":47,"node_strength":100,"king":100,"persistence":55,"oi_opening":50,"ask_side":0,"tradeable":44,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET"],"spot":1074.53,"magnet":1105,"expiry":"2026-08-14","dte":36,"distPct":2.8,"occ":"GEV260814C01105000","entry":95.3,"nodeShare":29.7,"accum20d":71,"persist":11,"oiGrow":null,"askShare":25,"spread":8.4,"earnings":"2026-07-22","earningsInWindow":true,"rr":0.6,"reward":2.8,"stop":5},{"ticker":"TTWO","theme":"","score":52,"components":{"accumulation":6,"node_strength":100,"king":100,"persistence":55,"oi_opening":50,"ask_side":71,"tradeable":40,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":251.99,"magnet":280,"expiry":"2026-08-07","dte":29,"distPct":11.1,"occ":"TTWO260807C00280000","entry":0,"nodeShare":25.9,"accum20d":9,"persist":11,"oiGrow":null,"askShare":58,"spread":null,"earnings":"2026-08-06","earningsInWindow":true,"rr":2.0,"reward":11.1,"stop":5.6},{"ticker":"DIA","theme":"Dow Index","score":51,"components":{"accumulation":14,"node_strength":100,"king":100,"persistence":75,"oi_opening":50,"ask_side":0,"tradeable":76,"confirmed":0},"dir":"LONG","status":"WATCH","tags":["KING MAGNET"],"spot":523.43,"magnet":540,"expiry":"2026-08-07","dte":29,"distPct":3.2,"occ":"DIA260807C00540000","entry":2.19,"nodeShare":51.5,"accum20d":20,"persist":15,"oiGrow":null,"askShare":34,"spread":3.7,"earnings":null,"earningsInWindow":false,"rr":0.6,"reward":3.2,"stop":5},{"ticker":"DELL","theme":"AI Infrastructure","score":50,"components":{"accumulation":23,"node_strength":100,"king":100,"persistence":50,"oi_opening":50,"ask_side":27,"tradeable":51,"confirmed":0},"dir":"LONG","status":"WATCH","tags":["KING MAGNET"],"spot":455.06,"magnet":470,"expiry":"2026-08-28","dte":50,"distPct":3.3,"occ":"DELL260828C00470000","entry":45.8,"nodeShare":58.2,"accum20d":35,"persist":10,"oiGrow":null,"askShare":47,"spread":7.4,"earnings":"2026-08-27","earningsInWindow":true,"rr":0.7,"reward":3.3,"stop":5},{"ticker":"V","theme":"Payments","score":50,"components":{"accumulation":12,"node_strength":100,"king":100,"persistence":75,"oi_opening":50,"ask_side":58,"tradeable":0,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":346.63,"magnet":355,"expiry":"2026-08-28","dte":50,"distPct":2.4,"occ":"V260828C00355000","entry":10.53,"nodeShare":100,"accum20d":18,"persist":15,"oiGrow":null,"askShare":54,"spread":35.6,"earnings":"2026-07-28","earningsInWindow":true,"rr":0.5,"reward":2.4,"stop":5},{"ticker":"JPM","theme":"Money-Center Bank","score":50,"components":{"accumulation":8,"node_strength":100,"king":100,"persistence":55,"oi_opening":50,"ask_side":64,"tradeable":27,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":335.68,"magnet":350,"expiry":"2026-07-31","dte":22,"distPct":4.3,"occ":"JPM260731C00350000","entry":3.65,"nodeShare":56.2,"accum20d":12,"persist":11,"oiGrow":null,"askShare":56,"spread":11.0,"earnings":"2026-07-14","earningsInWindow":true,"rr":0.9,"reward":4.3,"stop":5},{"ticker":"SBUX","theme":"","score":50,"components":{"accumulation":1,"node_strength":100,"king":100,"persistence":70,"oi_opening":50,"ask_side":79,"tradeable":0,"confirmed":0},"dir":"LONG","status":"BLOCKED","tags":["KING MAGNET","ASK-SIDE"],"spot":106.28,"magnet":110,"expiry":"2026-08-07","dte":29,"distPct":3.5,"occ":"SBUX260807C00110000","entry":3.65,"nodeShare":29.0,"accum20d":2,"persist":14,"oiGrow":null,"askShare":60,"spread":16.4,"earnings":"2026-08-04","earningsInWindow":true,"rr":0.7,"reward":3.5,"stop":5}]};
+document.getElementById('tagline').textContent = D.tagline;
+document.getElementById('asof').innerHTML = 'AS OF <b>'+D.asof+'</b><br>'+D.cards.length+' candidates scanned';
+const conf = D.cards.filter(c=>c.status==='CONFIRMED').length;
+document.getElementById('count').textContent = conf+' confirmed · '+D.cards.filter(c=>c.status==='WATCH').length+' watch · '+D.cards.filter(c=>c.status==='BLOCKED').length+' blocked';
+
+function ring(score){
+  const r=24, C=2*Math.PI*r, col = score>=75?'var(--good)':score>=55?'var(--violet-hi)':'var(--faint)';
+  const off = C*(1-score/100);
+  return `<div class="ring"><svg width="58" height="58" viewBox="0 0 58 58">
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="var(--line)" stroke-width="5"/>
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="${col}" stroke-width="5"
+      stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg>
+    <div class="num" style="color:${col}">${score}</div><div class="lbl">CONVICTION</div></div>`;
+}
+function nodeMap(c){
+  // spot on the left region, magnet node to the right sized by nodeShare
+  const span = Math.max(c.distPct*1.35, 6);       // % window
+  const spotPos = 12;                              // % from left
+  const magPos = spotPos + (c.distPct/span)*(100-24);
+  const w = Math.max(6, Math.min(22, c.nodeShare*0.9));
+  return `<div class="map"><div class="maptrack">
+    <div class="spotmk" style="left:${spotPos}%"></div>
+    <div class="node" style="left:${magPos}%;width:${w}%;height:${30+c.nodeShare*1.2}%"></div>
+   </div><div class="maplbl"><span>spot $${c.spot}</span>
+   <span class="kbadge">👑 $${c.magnet} · ${c.nodeShare}% of map · +${c.distPct}%</span></div></div>`;
+}
+function stat(k,v,cls){return `<div class="stat"><div class="k">${k}</div><div class="v ${cls||''}">${v}</div></div>`}
+function card(c,hero){
+  const st=c.status.toLowerCase();
+  const rrFill=Math.min(100, c.rr/4*100);
+  const tags=c.tags.map(t=>`<span class="t ${t.includes('KING')?'king':''}">${t}</span>`).join('');
+  const oi = c.oiGrow==null?'—':(c.oiGrow>0?'+':'')+c.oiGrow+'%';
+  const ask = c.askShare==null?'—':c.askShare+'%';
+  const spread = c.spread==null?'—':c.spread+'%';
+  const [strike,exp]=[c.magnet, c.expiry];
+  return `<div class="card ${hero?'hero':''}">
+    <div class="ctop">
+      <div class="tk"><div class="tkrow"><span class="sym">${c.ticker}</span>
+        <span class="pill long">${c.dir}</span>
+        <span class="pill ${st}">${c.status}</span></div>
+        <span class="theme">${c.theme||'&nbsp;'}</span></div>
+      ${ring(c.score)}
+    </div>
+    <div class="tags">${tags}</div>
+    ${nodeMap(c)}
+    <div class="contract">
+      <div class="occ">${c.ticker} $${strike}C <small>${exp} · ${c.dte}d</small><br>
+        <small style="font-size:10px;color:var(--faint)">${c.occ||''}</small></div>
+      <div class="entry"><div class="v">$${c.entry}</div><div class="k">EST ENTRY</div></div>
+    </div>
+    <div class="rr"><span>R:R</span><div class="rrbar"><i style="width:${rrFill}%"></i></div>
+      <b>${c.rr} : 1</b> <span style="color:var(--faint)">(+${c.reward}% / −${c.stop}%)</span></div>
+    <div class="stats">
+      ${stat('20d ACCUM','$'+c.accum20d+'M','pos')}
+      ${stat('PERSIST',c.persist+'/20')}
+      ${stat('OI OPEN',oi, c.oiGrow>0?'pos':c.oiGrow<0?'neg':'')}
+      ${stat('ASK-SIDE',ask, c.askShare>=52?'pos':'')}
+      ${stat('SPREAD',spread, c.spread!=null&&c.spread<=8?'pos':'warnv')}
+      ${stat('NODE',c.nodeShare+'%','')}
+    </div>
+    ${c.earnings?`<div class="earn ${c.earningsInWindow?'win':''}">${c.earningsInWindow?'⚠ earnings in hold window':'earnings'} · ${c.earnings}</div>`:''}
+  </div>`;
+}
+const feed=document.getElementById('feed');
+feed.innerHTML = D.cards.map((c,i)=>card(c, i===0)).join('');
+new MutationObserver(()=>{}).observe(document.documentElement,{attributes:true});
+</script>
+
