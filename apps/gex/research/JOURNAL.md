@@ -13,6 +13,61 @@ DECISIONS NEEDED: <anything requiring the user — proposals only, nothing acted
 
 ---
 
+## 2026-07-09 session 2 (user-initiated: 0DTE SPY/SPX/QQQ exit research)
+
+PRE-REGISTERED (before compute):
+- Item: live trend trigger for exit patience (backlog #1). At the moment
+  the system takes its actual exit (exitTsMs), decide hold-to-15:55 instead
+  IF a trigger computable from data available at that moment fires.
+- PRIMARY trigger (fixed before compute): tape has moved ≥40bps from
+  session open IN THE PLAY'S DIRECTION, AND session efficiency ratio
+  ER = |spot−open| / Σ|5-min moves| ≥ 0.40, both measured at exit time
+  from the fired ticker's spot stream.
+- SECONDARY variants (sensitivity, not cherry-pick): move ∈ {30,50}bps ×
+  ER ∈ {0.30,0.50}; plus ablations (move-only, ER-only, cross-ticker
+  agreement at exit).
+- Metric: capital-weighted EV delta (hold minus actual) on triggered fires;
+  system-level lift when policy applied to all fires.
+- Bar: triggered-subset delta > +15pp; all four stability cuts (odd/even,
+  H1/H2) positive; placebo = real delta beats ≥95% of random same-size
+  fire subsets; threshold sensitivity same-sign across the variant grid.
+- Guards: fires whose actual exit is already ≥15:25 ET contribute ~0 by
+  construction (report their share); result CANNOT ship — exit-side change
+  requires explicit user approval via DECISIONS NEEDED.
+
+RAN: research/sessions/s2_2026-07-09.py + one pre-authorized follow-up
+(tail anatomy). Coverage 537/537 fires; 11% of exits already ≥15:25 ET.
+
+VERDICTS:
+- **Live trend trigger: research_more — real effect, crude instrument.**
+  PRIMARY (aligned move ≥40bps AND ER ≥0.40 at exit time, fully
+  live-computable): n=91, triggered delta +38.8pp (bar: >+15 ✓), placebo
+  96th pctl (✓), ALL 9 sensitivity-grid cells positive +14.8..+44.2 with
+  complement −1.8pp (✓ clean separation), system −3.5% → +4.3%.
+  FAILED: odd-days cut −14.1pp (bar requires all four cuts positive).
+  Follow-up anatomy: median play +30.1pp, 55% improve (not purely tail),
+  top-3 winners = 45% of gross gains, BUT 25% of holds give back >50pp;
+  odd-cut failure = three SPXW bear give-backs (2026-05-12 ×2, 06-23).
+  Naked hold-to-15:55 is the wrong policy shape: it wins on runners and
+  bleeds on reversals with no protection.
+- Observation (not sliced further per charter): QQQ triggered subset was
+  +89pp with all four cuts +86..+95 — noted for the refined study, not a
+  conclusion.
+
+BACKLOG: #1 refined → **trigger-conditioned TRAIL-PRESERVING hold**:
+on trigger, suppress structural/pin exits but KEEP the trail stop armed
+(and test wider trail givebacks 15/25/35%), repriced on UW 1-min candles.
+Pre-registered bar: same as s2 (delta >+15pp, all four cuts, placebo ≥95,
+grid same-sign) — the trail should cut the >50pp give-back tail that broke
+the odd cut. This is the last refinement before the thread parks (rule:
+two dry sessions parks it; s2 was not dry, but the shape must prove itself
+next pass).
+
+DECISIONS NEEDED: none — nothing ships from this. If the trail-preserving
+version passes the full bar, THAT becomes the exit-side ship proposal.
+
+---
+
 ## 2026-07-09 session 1 (first autonomous session)
 
 PRE-REGISTERED:

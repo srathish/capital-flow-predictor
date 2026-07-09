@@ -10,13 +10,15 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Live trend trigger for exit patience** — thesis: a trigger computable
-   at exit-decision time (regime strips / tape state, NOT the hindsight
-   trend_day flag) captures most of the +49.7pp hold-to-15:55 upper bound
-   found in s1. Bar: trigger-conditioned hold delta > +15pp, all four
-   stability cuts, placebo vs random same-size day subsets. Must not
-   re-litigate wall-escalator v3 (hold-extension after wall events =
-   rejected) — this is day-regime conditioning, a different trigger.
+1. **Trigger-conditioned TRAIL-PRESERVING hold** (s2 refinement) — thesis:
+   on live trend trigger (aligned move ≥40bps AND ER ≥0.40 at exit moment),
+   suppressing structural/pin exits while KEEPING the trail stop armed
+   captures the +38.8pp triggered delta while cutting the >50pp give-back
+   tail (25% of naked holds) that broke the odd-days cut in s2. Test trail
+   givebacks {15,25,35}%, repriced on UW 1-min candles. Bar: delta >+15pp,
+   ALL four stability cuts positive, placebo ≥95th, grid same-sign. Last
+   refinement before this thread parks. History: s1 hindsight upper bound
+   +49.7pp; s2 naked-hold research_more (odd cut −14.1pp).
 3. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage
