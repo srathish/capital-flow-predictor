@@ -42,21 +42,27 @@ const sessionOpen = {};
 let tickInFlight = false;
 let intervalHandle = null;
 
-// ---- Entry gate "G7" (validated on 64 archived days, 2026-07-08) ----
+// ---- Entry gate "G7-PC" (validated on 64 archived days, 2026-07-08) ----
 //
-//   BEAR fires require spot < session open (never short an up-tape).
+//   BEAR fires require spot < PRIOR SESSION CLOSE (never short a tape
+//   trading above yesterday). Validated split: bears below prior close
+//   +9% opt EV (n=280); bears above prior close −1% EV, −2,206bps (n=438).
 //   BULL fires are never gated — counter-tape bull reversals are the
 //   highest-EV bucket in the dataset (+196% opt EV on V-days); the
 //   reverse-rug structure IS the map's reversal signature, so gating
 //   them by tape direction would cut exactly the plays that pay.
 //   No new fires after 15:15 ET (late fires won 33% and bled into EOD).
 //
-// Evidence: scripts/out/VALIDATION_REPORT.md. Config B (30m-classifier
-// bear gate) was REJECTED — the classifier read CHOP on down days and
-// the gate silently became "no bears ever". G7 is symmetric-tape-based
-// and stays positive on hard-down days (+15% opt EV) and big-up days.
+// Anchor note: "session open" was tested and is WEAKER (+10% vs +17% EV)
+// — the edge is gap-aware. Prior close comes from Skylit's historical
+// endpoint at boot (one call per ticker); session open is the fallback.
+//
+// Evidence: scripts/out/VALIDATION_REPORT.md (incl. addendum). Config B
+// (30m-classifier bear gate) was REJECTED — the classifier read CHOP on
+// down days and the gate silently became "no bears ever".
 // Set GATE_DISABLED=1 to run ungated (observation mode).
 const LAST_FIRE_ET_MINUTES = 15 * 60 + 15; // 15:15 ET
+const priorClose = {}; // ticker -> { day, close }
 
 function etMinutes(now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -66,16 +72,41 @@ function etMinutes(now = new Date()) {
          Number(parts.find(p => p.type === 'minute')?.value);
 }
 
+function prevBusinessDay(dayStr) {
+  const d = new Date(`${dayStr}T12:00:00Z`);
+  do { d.setUTCDate(d.getUTCDate() - 1); } while ([0, 6].includes(d.getUTCDay()));
+  return d.toISOString().slice(0, 10);
+}
+
+async function ensurePriorClose(ticker, day) {
+  if (priorClose[ticker]?.day === day) return priorClose[ticker].close;
+  try {
+    const { fetchHistoricalSnapshot } = await import('../heatseeker/client.js');
+    const prev = prevBusinessDay(day);
+    const snap = await fetchHistoricalSnapshot(ticker, `${prev}T19:55:00Z`);
+    if (snap?.spot != null) {
+      priorClose[ticker] = { day, close: snap.spot };
+      log.info(`${ticker} prior close (${prev}): $${snap.spot.toFixed(2)}`);
+      return snap.spot;
+    }
+  } catch (err) {
+    log.warn(`${ticker} prior-close fetch failed: ${err.message}`);
+  }
+  return null;
+}
+
 function gateVerdict({ state, spot, ticker }) {
   if (process.env.GATE_DISABLED === '1') return { allowed: true, reason: 'gate_disabled' };
   if (etMinutes() >= LAST_FIRE_ET_MINUTES) {
     return { allowed: false, reason: 'after_15:15_ET' };
   }
   if (state.startsWith('BEAR')) {
-    const open = sessionOpen[ticker]?.open;
-    if (open == null) return { allowed: false, reason: 'no_session_open_yet' };
-    if (spot >= open) {
-      return { allowed: false, reason: `bear_above_open ($${spot.toFixed(2)} >= $${open.toFixed(2)})` };
+    // Anchor: prior close; fallback session open if the fetch failed.
+    const anchor = priorClose[ticker]?.close ?? sessionOpen[ticker]?.open;
+    const anchorName = priorClose[ticker]?.close != null ? 'prior_close' : 'session_open';
+    if (anchor == null) return { allowed: false, reason: 'no_anchor_yet' };
+    if (spot >= anchor) {
+      return { allowed: false, reason: `bear_above_${anchorName} ($${spot.toFixed(2)} >= $${anchor.toFixed(2)})` };
     }
   }
   return { allowed: true, reason: 'ok' };
@@ -183,11 +214,13 @@ async function tickOnce() {
       }
       if (!snap || !snap.spot) continue;
 
-      // Record session open (first snapshot of the trading day) for the tape gate.
+      // Record session open (first snapshot of the trading day) — fallback
+      // anchor for the tape gate — and fetch prior close (primary anchor).
       const day = todayExpiration();
       if (!sessionOpen[ticker] || sessionOpen[ticker].day !== day) {
         sessionOpen[ticker] = { day, open: snap.spot };
         log.info(`${ticker} session open recorded: $${snap.spot.toFixed(2)}`);
+        ensurePriorClose(ticker, day).catch(() => {});
       }
 
       // Update rolling spot history for pattern detectors that need it.
