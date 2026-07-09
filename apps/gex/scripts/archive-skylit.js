@@ -75,11 +75,12 @@ async function pacedFetch(ticker, ts) {
 }
 
 function parseArgs() {
-  const a = { mode: null, daysBack: 85, date: null };
+  const a = { mode: null, daysBack: 85, date: null, tickers: null };
   for (const x of process.argv.slice(2)) {
     if (x.startsWith('--mode=')) a.mode = x.slice(7);
     else if (x.startsWith('--days-back=')) a.daysBack = Number(x.slice(12));
     else if (x.startsWith('--date=')) a.date = x.slice(7);
+    else if (x.startsWith('--tickers=')) a.tickers = x.slice(10).split(',').map(t => t.trim().toUpperCase());
   }
   return a;
 }
@@ -131,10 +132,10 @@ async function pMap(items, mapper, concurrency) {
   return results;
 }
 
-async function archiveIndexIntraday(days) {
+async function archiveIndexIntraday(days, tickers = INDEX_TICKERS) {
   const jobs = [];
-  for (const day of days) for (const ticker of INDEX_TICKERS) jobs.push({ day, ticker });
-  log.info(`index-intraday: ${jobs.length} ticker-days (${days.length} days × ${INDEX_TICKERS.length})`);
+  for (const day of days) for (const ticker of tickers) jobs.push({ day, ticker });
+  log.info(`index-intraday: ${jobs.length} ticker-days (${days.length} days × ${tickers.length}: ${tickers.join(',')})`);
 
   let done = 0, skipped = 0, wrote = 0, empty = 0, errored = 0;
   let lastError = null;
@@ -216,7 +217,7 @@ async function main() {
   const days = businessDays(args.daysBack, args.date);
   log.info(`window: ${days[0]} → ${days[days.length - 1]}`);
 
-  if (args.mode === 'index-intraday') await archiveIndexIntraday(days);
+  if (args.mode === 'index-intraday') await archiveIndexIntraday(days, args.tickers ?? INDEX_TICKERS);
   else await archiveUniverseDaily(days);
 }
 
