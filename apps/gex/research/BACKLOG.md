@@ -10,16 +10,13 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Live trend trigger for exit patience** — thesis: a trigger computable at exit-decision time (regime strips/tape state) captures most of the +49.7pp hindsight upper bound (s1). Bar: trigger-conditioned hold delta > +15pp, all four stability cuts, placebo vs random day subsets. Supersedes the hindsight version (s1 research_more).
-~~1. **Trend-day exit patience (real dollars)** — thesis: on trend days
-   (regime strips trending, not hindsight flags), holding to 15:55 beats
-   structural exits; on non-trend days it loses. Bar: option-EV delta with
-   stability cuts; must NOT re-litigate wall-escalator v3 (hold-extension
-   after wall events = rejected) — this is day-regime conditioning, a
-   different trigger. Data: UW candles for fired contracts.
-~~2. Red-streak bull overlap check — CLOSED s1: absorbed by bull tape gate (residual n=17, −5.7%, odd/even flips).~~
-   streak bleed (down-day audit 2026-07-09) is already absorbed by the bull
-   tape gate; incremental filter adds nothing. Quick kill-or-confirm.
+1. **Live trend trigger for exit patience** — thesis: a trigger computable
+   at exit-decision time (regime strips / tape state, NOT the hindsight
+   trend_day flag) captures most of the +49.7pp hold-to-15:55 upper bound
+   found in s1. Bar: trigger-conditioned hold delta > +15pp, all four
+   stability cuts, placebo vs random same-size day subsets. Must not
+   re-litigate wall-escalator v3 (hold-extension after wall events =
+   rejected) — this is day-regime conditioning, a different trigger.
 3. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage
