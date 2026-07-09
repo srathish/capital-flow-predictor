@@ -25,3 +25,5 @@ variant contracts to fetch: 2141
 1200/2141 wrote=965 skipped=225 empty=1 errored=9
 1400/2141 wrote=1135 skipped=255 empty=1 errored=9
 1600/2141 wrote=1309 skipped=281 empty=1 errored=9
+1800/2141 wrote=1460 skipped=319 empty=2 errored=19
+variants done: wrote=1729 skipped=370 empty=4 errored=38
