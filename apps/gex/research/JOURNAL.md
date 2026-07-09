@@ -13,6 +13,104 @@ DECISIONS NEEDED: <anything requiring the user — proposals only, nothing acted
 
 ---
 
+## 2026-07-09 session 3 (continuous run — pure GEX/VEX conditioning)
+
+PRE-REGISTERED (before compute):
+- Item A (backlog: VIX-expansion × negGEX): thesis = negative local GEX
+  fires only pay when VIX is EXPANDING at fire time; negGEX + flat/falling
+  VIX is chop that doesn't reward long premium. Metric: real-dollar EV of
+  the 2×2 (net_gex_local sign × vixd15 sign). Bar: negGEX+VIXup beats
+  negGEX+VIXflat by >+10pp AND holds odd/even + H1/H2 AND placebo (shuffle
+  vixd15 across fires) ≥95th. Guard: vixd15 coverage <100% — report n.
+- Item B (GEX "sign persistence"): NEW pre-reg. thesis = a fire is better
+  when the local GEX sign at fire AGREES with where it was 15-30m earlier
+  (stable regime) vs a fresh sign flip (unstable). Feature: sign(net_gex
+  _local now) vs sign 30m back from surface history proxy — approximate
+  with net_gex_global sign stability using the m30 frame already built.
+  Metric: EV of sign-stable vs sign-flipped fires. Bar: gap >+10pp, all
+  four cuts, placebo ≥95th. If it duplicates net_gex_local level → reject
+  as non-incremental (study 77 rule).
+
+RAN: research/sessions s3 inline. Item A: negGEX×VIXup gap +10.1pp but
+placebo 44th (noise), negGEX×VIXflat cell unstable (even −19/H2 −24) →
+**rejected.** Item B: built the missing 30m-back SIGNED net_gex feature
+from the archive (coverage 407/537); sign-STABLE −3.9% vs sign-FLIP +3.0%,
+gap −6.9pp but placebo 37th and flip cell unstable (odd +28/even −8);
+within-sign conditioning shows no clean incremental effect → **rejected,
+non-incremental.**
+
+META (recorded): five straight secondary GEX/VEX conditioners now reject
+(VIX×GEX, sign-persistence, + the 77-program's density/curvature/migration
+families) — the tape gate + nflags + net_gex_local LEVEL already absorb the
+tradeable GEX/VEX signal on this fire set. Re-slicing the 537 fires has hit
+diminishing returns; pivoting to foundational structure→spot physics (s4)
+and the campaign system (different universe) is the higher-value direction.
+
+VERDICT: session 3 effectively DRY (2 rejects). Per charter, the
+"condition-the-fire-set on a new feature" thread is now on its first dry
+mark; one more dry conditioning session parks that whole approach.
+
+---
+
+## 2026-07-09 session 4 (continuous — foundational GEX/VEX physics)
+
+PRE-REGISTERED: does GEX regime predict FORWARD INDEX behavior on the raw
+64-day surface archive, independent of fires/options? Two classic
+hypotheses, tested on every 5-min frame for SPY/QQQ/SPXW:
+- H1 (pin/trend): net local GEX < 0 → LARGER forward 30-min realized
+  move; net GEX > 0 → SMALLER (pinning). Metric: median |fwd 30m move bps|
+  by GEX tercile. Bar: monotone across terciles AND holds per-ticker AND
+  holds on odd/even calendar days.
+- H2 (mean-reversion): net GEX > 0 → forward move mean-REVERTS toward the
+  dominant node (spot pulled to wall); net GEX < 0 → continuation. Metric:
+  sign-correlation of forward move with (wall − spot) by regime.
+- Placebo: shuffle GEX values across timestamps within ticker; real
+  monotonicity must beat 95th pctl. This is science (no P&L), so no
+  incremental-over-gate bar — it either holds physically or it doesn't.
+
+RAN: research/sessions/s4_2026-07-09.py — 14,400 frames (64 days × 3
+tickers), forward 30-min horizon.
+
+VERDICTS — **both textbook hypotheses REJECTED. This is a load-bearing
+finding, not a dead end:**
+- H1 (negGEX→bigger moves / posGEX→pin): NOT monotone on any cut. Forward
+  |move| by net-local-GEX tercile: neg 8.3 / mid 10.4 / pos 8.8 bps — the
+  MIDDLE tercile moves most, not the negative one. neg-minus-pos gap
+  −0.6bps, placebo 7th pctl (i.e. real "effect" is smaller than 93% of
+  random shuffles — no signal, if anything faintly inverted). Fails
+  per-ticker and odd/even.
+- H2 (posGEX→mean-revert-to-wall): P(forward move toward dominant node) =
+  posGEX 48.4% vs negGEX 44.6% vs baseline 47.5% — a coin flip; posGEX is
+  barely above chance and negGEX is below it. And by raw sign, posGEX
+  forward |move| 9.7bps > negGEX 8.2bps — the OPPOSITE of textbook, weakly.
+
+INTERPRETATION (recorded as a system-level fact): on Skylit 0DTE surfaces
+over these 64 days, raw net-GEX SIGN does not forecast forward index
+realized-move magnitude or mean-reversion. **The system's edge therefore
+does NOT come from "GEX predicts the tape" in the naive volatility-regime
+sense.** It comes from (a) the specific pattern detectors identifying
+structural inflection nodes, (b) the tape gate (prior-close directional
+context), and (c) node-structure EXITS — i.e. GEX/VEX as a MAP of where
+dealer hedging concentrates, not as a scalar volatility forecast. This
+explains why five straight scalar-GEX conditioners rejected (s3 meta): the
+scalar isn't where the information is.
+
+CAVEAT / one follow-up queued (not chased now): measured net GEX in a ±1%
+band on 0DTE surfaces (gamma is huge/concentrated near expiry). The
+natural robustness check is a FLIP-REFERENCED measure (spot distance from
+the zero-gamma level) + total signed GEX + 15-min horizon. Queued as s5;
+does not change today's verdict for the local measure.
+
+s5 (ran same session): the null is ROBUST to measurement. Total signed GEX
+(all strikes): not monotone at 15m (gap −0.6, placebo 10th) or 30m (gap
+−1.5, placebo 0th). Flip-referenced: spot BELOW flip forward |move|
+6.3/9.1 vs ABOVE 6.4/9.2bps (15/30m) — identical, no negative-gamma
+volatility premium. 29,376 samples. **Confirmed foundational null across
+band, aggregation, horizon, and flip-reference.** Written to
+research/gexvex-structure/FOUNDATIONAL_FINDINGS.md; memory saved.
+
+---
+
 ## 2026-07-09 session 2 (user-initiated: 0DTE SPY/SPX/QQQ exit research)
 
 PRE-REGISTERED (before compute):
