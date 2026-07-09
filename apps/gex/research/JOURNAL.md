@@ -52,6 +52,35 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 9 (continuous): air-pocket+fuel entry (Ch 8) — REJECTED + thread PARKED
+
+RAN: built air-pocket-ahead (empty forward band) + barney-fuel-growth (rising
+negative gamma in fire direction over 30m) from archive; tested vs real dollars.
+VERDICT: **rejected.** air-pocket gap -1.4pp (placebo 13th), fuel gap -7.2pp
+(placebo 49th, non-monotone), combined both-high -2.5% vs -3.2% rest. Within
+flags_eq_0 both-high +38.2% vs +28.0% (n=9 — far below floor, not evidence).
+
+META — ENTRY-CONDITIONING THREAD PARKED (charter: multiple dry sessions).
+The tally on conditioning the 537-fire set with new GEX/VEX features:
+- scalar: all reject (s3 VIX×GEX, sign-persistence; 77-study curvature/etc)
+- structural/temporal doctrine ideas: node-growth REJECTED (s8), air-pocket+
+  fuel REJECTED (s9); fresh-vs-delivered research_more only inside flags_eq_0
+  (s7, n<30). The runner's 46-feature sweep: 0 promising, 17 watchlist (all
+  fail ticker-neutrality or n).
+CONCLUSION: the bull tape gate + nflags + net_gex_local LEVEL + structural
+EXITS already capture the tradeable GEX/VEX signal on this fire set. Entry-
+side conditioning is MINED OUT. This is a finding, not a failure — it says
+the live system is close to the in-sample frontier for 0DTE index entries.
+Remaining edge lives in: (a) forward-data graduation of the watchlist
+(fresh-vs-delivered, open_field, SPXW dn_vex_mass), (b) the DIFFERENT-universe
+campaign system, (c) foundational physics (topology, confirmed s6). NOT in
+more re-slices of these 537 fires.
+
+DECISIONS NEEDED: none. Next real study = campaign cohort backtest, unblocks
+when the universe backfill finishes (~17:55 ET); nightly session picks it up.
+
+---
+
 ## 2026-07-09 session 8 (continuous): node growth = intent (Ch 9) — REJECTED
 
 RAN: built target-node |gamma| growth over prior 30m from archive (coverage

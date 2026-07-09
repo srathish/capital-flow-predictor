@@ -11,9 +11,6 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Air-pocket + fuel on ENTRY** (doctrine Ch 8) — thesis: air-pocket-ahead
-   + rising-node fuel at fire predicts cleaner delivery. The barney-fuel
-   EXIT already uses this; entry side untested. Must beat gate+nflags.
 4. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage
@@ -39,6 +36,10 @@ append with a thesis line, never jump the queue mid-study.
    pre-register properly and placebo it.
 
 ## ICEBOX (parked; re-open only with NEW data)
+- ENTRY-CONDITIONING on the 537-fire set (s3/s7/s8/s9 + 77-study + runner):
+  MINED OUT. scalar + doctrine structural/temporal ideas all reject or need
+  forward data. Edge is NOT in more re-slices. Re-open only via forward data
+  or a genuinely new feature class (event-level, cross-asset).
 - Exit-patience thread (s1/s2/s2b 2026-07-09): naked hold +38.8pp real but
   unharvestable; trail-preserving hold rejected (placebo 59th). Re-open only
   with multi-contract partial holds (sizing/execution-policy change) or
