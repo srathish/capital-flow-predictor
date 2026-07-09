@@ -262,7 +262,11 @@ async function tickOnce() {
             { ...fire, spot: snap.spot, surfaceNodes: nodes, regimes },
             { db, quoteFetcher, expiration }
           );
-          log.info(`  opened ${result.opened} plays`);
+          if (result.opened === 0 && result.skipped) {
+            log.info(`  skipped — ${result.skipped}`);
+          } else {
+            log.info(`  opened ${result.opened} plays`);
+          }
         } catch (err) {
           log.error(`openPlaysForFire failed for ${ticker}: ${err.message}`);
         }

@@ -79,6 +79,21 @@ export async function openPlaysForFire(fireEvent, { db, quoteFetcher, expiration
   });
   if (candidates.length === 0) return { opened: 0, skipped: 'no_candidates_for_state' };
 
+  // One live play per (ticker, direction) at a time. Re-fires of the same
+  // thesis while a play is still open just stack duplicate exposure —
+  // 64-day replay: dropping them cut plays 23% (11.0 → 8.5/day) at
+  // identical net bps, lifting per-play opt EV +17% → +21%.
+  const dupType = CANDIDATE_STRIKES_BY_STATE[state]?.type;
+  if (dupType) {
+    const openCount = db.prepare(
+      `SELECT COUNT(*) AS n FROM tracked_plays
+       WHERE status = 'live' AND ticker = ? AND option_type = ?`
+    ).get(ticker, dupType);
+    if (openCount?.n > 0) {
+      return { opened: 0, skipped: `already_live_${ticker}_${dupType}` };
+    }
+  }
+
   const tradingDay = new Date(tsMs).toISOString().slice(0, 10);
   const insert = db.prepare(`
     INSERT INTO tracked_plays (
