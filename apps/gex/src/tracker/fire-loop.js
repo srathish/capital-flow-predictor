@@ -64,6 +64,16 @@ let intervalHandle = null;
 const LAST_FIRE_ET_MINUTES = 15 * 60 + 15; // 15:15 ET
 const priorClose = {}; // ticker -> { day, close }
 
+// Flip-flop cooldown: block a fire if the SAME ticker opened an opposite-
+// direction play within the last 20 minutes. The state machine can flip
+// BULL↔BEAR on consecutive ticks when both pattern conditions coexist near
+// a turn; the second fire fights the first. 64-day evidence: flip-flop
+// fires ran 45% win / +6% opt EV vs 57% / +23% for the rest; the worst
+// single loss on 2026-07-08 (SPXW 7430P, −96%) was a bear fired 6 min
+// after the correct bull, against a 6:1 bullish barney-fuel skew.
+const FLIP_FLOP_COOLDOWN_MS = 20 * 60_000;
+const lastOpened = {}; // ticker -> { dir: +1|-1, tsMs }
+
 function etMinutes(now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hour12: false,
@@ -99,6 +109,12 @@ function gateVerdict({ state, spot, ticker }) {
   if (process.env.GATE_DISABLED === '1') return { allowed: true, reason: 'gate_disabled' };
   if (etMinutes() >= LAST_FIRE_ET_MINUTES) {
     return { allowed: false, reason: 'after_15:15_ET' };
+  }
+  const dir = state.startsWith('BEAR') ? -1 : +1;
+  const last = lastOpened[ticker];
+  if (last && last.dir === -dir && Date.now() - last.tsMs < FLIP_FLOP_COOLDOWN_MS) {
+    const mins = Math.round((Date.now() - last.tsMs) / 60_000);
+    return { allowed: false, reason: `flip_flop_cooldown (opposite fire ${mins}m ago)` };
   }
   if (state.startsWith('BEAR')) {
     // Anchor: prior close; fallback session open if the fetch failed.
@@ -266,6 +282,9 @@ async function tickOnce() {
             log.info(`  skipped — ${result.skipped}`);
           } else {
             log.info(`  opened ${result.opened} plays`);
+            if (result.opened > 0) {
+              lastOpened[ticker] = { dir: fire.state.startsWith('BEAR') ? -1 : +1, tsMs: Date.now() };
+            }
           }
         } catch (err) {
           log.error(`openPlaysForFire failed for ${ticker}: ${err.message}`);
