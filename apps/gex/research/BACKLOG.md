@@ -11,6 +11,13 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
+1. **Gatekeeper-break continuation — real-dollar validation** (findings.md §9,
+   s11 2026-07-09) — thick_break_ride (7-10% relsig, 52.4% cont, placebo 98th)
+   + thin_break_fade (3-5%, 52.7% revert) REPLICATE on 64d but weak. Price both
+   in real option dollars incl. spread at break events (needs UW candles at
+   event strikes/times — collect AFTER backfill). Bar: positive real-$ EV after
+   costs + stability + placebo. The one directional edge; new feature class
+   (event-level trend-continuation) that re-opens the entry frontier.
 4. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage

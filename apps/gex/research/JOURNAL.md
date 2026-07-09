@@ -52,6 +52,29 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 11 (continuous): gatekeeper-break continuation — REPLICATES (weak), real-$ pending
+
+ENRICHMENT: read docs/findings.md (Phase 1, Apr 2026). Surfaced the documented
+BIGGEST GAP: no trend-continuation pattern; system caught 1/802 impulse events.
+Phase 1 found thin_break_fade (3-5% relsig breaks revert 64%) + thick_break_ride
+(7-10% continue 58.7%) but never real-dollar validated or placebo'd.
+
+RAN (s11): re-validated on full 64-day archive (5,384 gatekeeper-break events).
+VERDICT: **replicates but WEAKER — research_more, real-$ pending.**
+Continuation by broken-node rel_sig: thin 3-5% 47.3% (=52.7% revert), med 48.3%,
+thick 7-10% 52.4%, huge 10%+ 50.2%. Thick vs baseline placebo 98th, stable
+odd/even (53/52). BUT 52.4% is far below Phase 1's 58.7% and marginal after
+0DTE option bid-ask. This is the ONLY directional edge to survive any test —
+and it CONFIRMS F4: structure (relsig band) selects WHICH tape-breaks continue;
+direction comes from the break (tape), not the structure sign.
+
+NEXT (queued, needs UW candles at break events — NOT during backfill): price
+thin_break_fade + thick_break_ride in real option dollars incl. spread. Only
+then is it a candidate. This is a genuinely new feature class (event-level,
+trend-continuation) that re-opens the entry frontier the fire-set exhausted.
+
+---
+
 ## 2026-07-09 session 10 (continuous): Trinity structural alignment (Ch 10) — REJECTED + F4 synthesis
 
 ENRICHMENT: read Academy Ch 10 (Trinity/cross-index confluence). Claim:
