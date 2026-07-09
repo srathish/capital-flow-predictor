@@ -25,8 +25,8 @@ Overfit control: the S13 regime matrix shows the L3 stack **positive in every si
 
 ## Study-by-study verdicts
 
-**S1/S11 — Contract selection & moneyness (regime-dependent, actionable):**
-ATM at-fire is never the best contract. In GEX−/neutral regimes OTM shines (2-OTM +7.1%, 1-OTM +6.2% vs ATM +3.3%); in GEX+ everything bleeds (don't fix the contract, skip the trade); **next-expiry ATM is the most defensive line in every cell** (−0.1% overall vs ATM −3.5%, and only −2.1% even in GEX+) — theta is the 0DTE killer. VIX-falling favors 1-OTM (+4.4%). Matches the "OTM for expansion, crushed in chop" hypothesis. True 25Δ/35Δ targeting deferred (needs historical greeks).
+**S1/S11 — Contract selection & moneyness (final, full 537-play sample per variant):**
+The partial-sample OTM edge in GEX−/neutral largely washed out at full sample (2-OTM +3.5%, 1-OTM +3.0% vs ATM +3.3%; 2-ITM actually leads that cell at +4.2%) — treat moneyness tweaks as noise-level. The claim that SURVIVED at full sample: **next-expiry ATM is the most defensive contract in every cell — −0.1% overall vs ATM −3.5%, and only −1.6% even in GEX+.** One extra day of expiry nearly eliminates the theta bleed that makes 0DTE ATM negative. VIX-falling still favors 1-OTM (+5.0%). In GEX+ every contract loses — skip the trade, don't fix the contract. True 25Δ/35Δ targeting deferred (needs historical greeks).
 
 **S2 — Entry timing (major, cheap to adopt):** at-fire is the WORST entry (−3.5%). +1 min −0.2%, and the option actually gets *cheaper* on average 1 min after the fire (−0.2% reprice) — there is no urgency premium. **Confirmation entry (only if the option is up 1 min later): +2.7% and 57% win while halving trade count.**
 
