@@ -11,15 +11,7 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-~~1. Node growth = intent (Ch 9) — CLOSED s8: REJECTED (non-monotone, placebo 34th, inverts within flags_eq_0). Ch 9 lifecycle is a stock-timeframe idea, not 0DTE.~~
-   node whose magnitude is RISING over prior 15–30m beat fires toward a
-   decaying node. PROMOTED after s7 (fresh>delivered held directionally,
-   +28.6pp within flags_eq_0); growth is the sharper version of the same
-   lifecycle signal. Distinct from rev_gex_pct (total-|GEX| frame delta;
-   this is target-node-specific). Bar: gap>+10pp, all 4 cuts, placebo ≥95th,
-   incremental over gate+nflags.
-   [s7 DONE: fresh vs delivered = research_more, on forward watchlist.]
-3. **Air-pocket + fuel on ENTRY** (doctrine Ch 8) — thesis: air-pocket-ahead
+1. **Air-pocket + fuel on ENTRY** (doctrine Ch 8) — thesis: air-pocket-ahead
    + rising-node fuel at fire predicts cleaner delivery. The barney-fuel
    EXIT already uses this; entry side untested. Must beat gate+nflags.
 4. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
