@@ -64,14 +64,15 @@ let intervalHandle = null;
 const LAST_FIRE_ET_MINUTES = 15 * 60 + 15; // 15:15 ET
 const priorClose = {}; // ticker -> { day, close }
 
-// Flip-flop cooldown: block a fire if the SAME ticker opened an opposite-
-// direction play within the last 20 minutes. The state machine can flip
-// BULL↔BEAR on consecutive ticks when both pattern conditions coexist near
-// a turn; the second fire fights the first. 64-day evidence: flip-flop
-// fires ran 45% win / +6% opt EV vs 57% / +23% for the rest; the worst
-// single loss on 2026-07-08 (SPXW 7430P, −96%) was a bear fired 6 min
-// after the correct bull, against a 6:1 bullish barney-fuel skew.
-const FLIP_FLOP_COOLDOWN_MS = 20 * 60_000;
+// Flip-flop cooldown — TESTED AND REJECTED (2026-07-08 loss study).
+// Blocking opposite-direction fires within 20 min looked good in points
+// (+113bps) but failed the option-EV test: the blocked bucket is +6% EV
+// (weaker but positive), and on 7/08 it would have blocked the +$1,980
+// morning put along with the −$1,348 loser. A fuel-skew veto (2:1/3:1/4:1)
+// was also tested — vetoed fires were +14-24% EV, i.e. fine in aggregate.
+// The −96% loser was a loss, not a pattern. Left configurable for future
+// study: set FLIP_FLOP_COOLDOWN_MIN>0 to enable.
+const FLIP_FLOP_COOLDOWN_MS = Number(process.env.FLIP_FLOP_COOLDOWN_MIN || 0) * 60_000;
 const lastOpened = {}; // ticker -> { dir: +1|-1, tsMs }
 
 function etMinutes(now = new Date()) {
@@ -112,7 +113,8 @@ function gateVerdict({ state, spot, ticker }) {
   }
   const dir = state.startsWith('BEAR') ? -1 : +1;
   const last = lastOpened[ticker];
-  if (last && last.dir === -dir && Date.now() - last.tsMs < FLIP_FLOP_COOLDOWN_MS) {
+  if (FLIP_FLOP_COOLDOWN_MS > 0 &&
+      last && last.dir === -dir && Date.now() - last.tsMs < FLIP_FLOP_COOLDOWN_MS) {
     const mins = Math.round((Date.now() - last.tsMs) / 60_000);
     return { allowed: false, reason: `flip_flop_cooldown (opposite fire ${mins}m ago)` };
   }

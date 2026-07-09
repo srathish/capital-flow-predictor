@@ -55,3 +55,13 @@ Today's losses had one systematic cause and two cosmetic ones. The systematic on
 
 64-day (points basis): ~+2,050bps, 57% win, ~+23% opt EV/play, ~7 plays/day.
 Today (option dollars): ~+$4,150 on ~$12,700 capital ≈ **+33%**, vs +0.8% old system.
+
+---
+
+## Correction (same evening) — flip-flop fix REVERTED after failing the dollar test
+
+The 20-min flip-flop cooldown shipped on the points-based evidence above, then failed its first option-dollar replay: on 7/08 itself it blocked the **+$1,980** 10:02 SPXW put (fired 10 min after the 9:52 call — a real regime flip, not noise) alongside the −$1,348 loser, dropping the day from +$2,762 to +$925. Root issue: the flip-flop bucket is 45%-win but **+6% option EV — weaker, not negative**. Blocking positive-EV trades is variance reduction purchased with expectancy.
+
+A fuel-skew veto (block fires opposing a ≥2:1/3:1/4:1 barney skew — the signature of the 11:42 loser) was then tested as the surgical alternative: **also rejected**. Vetoed fires ran +14% to +24% opt EV at every threshold; at 2:1 they *outperformed* the allowed set.
+
+Verdict: the −$1,348 was a loss, not a leak. Mode ① is downgraded from "systematic leak" to "watchlist" — revisit with 2+ weeks of live 1-min data. The cooldown remains in the code behind `FLIP_FLOP_COOLDOWN_MIN` (default 0 = off). Final system for 2026-07-09 is: ATM-only + dedupe + G7-PC gate + full-surface exits + trail. Today under exactly that: **+$2,762 on $15,175 (+18.2%), 19 plays.**
