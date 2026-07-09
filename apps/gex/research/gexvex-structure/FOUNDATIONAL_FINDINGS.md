@@ -26,6 +26,30 @@ detectors that locate structural inflection nodes, (b) the tape gate
 (prior-close directional context), and (c) node-structure EXITS. This is
 why every scalar-GEX conditioner tested has rejected (see F2).
 
+## F4 — GEX/VEX structure predicts VOLATILITY, not DIRECTION (2026-07-09, synthesis s4/s5/s6/s10 + H2)
+
+Every foundational test of whether GEX/VEX structure forecasts the *direction*
+of the next index move has come back null; the one robust forecast is of
+*volatility* (pin vs release):
+
+| test | predicts direction? | predicts volatility? |
+|---|---|---|
+| GEX sign (s4/s5) | no (placebo 0–10th) | no |
+| mean-reversion to wall (s4 H2) | no (48% ≈ coin flip) | — |
+| dual-wall trap topology (s6) | — | **YES: trap → less move, placebo 100th** |
+| Trinity structural alignment (s10) | no (53/51% up, unstable) | no (ER not monotone, placebo 91st, flips odd/even) |
+
+**Principle:** the dealer-gamma map tells you HOW MUCH price will move (dense
+bracketing topology compresses realized vol → pinning; sparse/air-pocket
+topology permits expansion), but NOT WHICH WAY. Direction must come from the
+tape/chart (exactly the Academy's "Charts First" doctrine — Heatseeker
+confirms, it does not generate direction). This is why: (a) the bull tape
+gate — a TAPE/direction rule — is the only shipped entry edge; (b) structural
+EXITS (pin detection = volatility compression) work; (c) every structural
+DIRECTION conditioner has rejected. Operationalization caveat: s10 used
+gamma center-of-mass bias in ±1.5%; a richer floor/ceiling/King alignment
+could differ, but the scalar-clean version is null.
+
 ## F3 — Map TOPOLOGY predicts pinning where the scalar failed (2026-07-09, s6)
 
 The same 14,400 frames where GEX *sign* had no forecasting power: when spot

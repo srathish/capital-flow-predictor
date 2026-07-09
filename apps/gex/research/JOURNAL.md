@@ -52,6 +52,29 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 10 (continuous): Trinity structural alignment (Ch 10) — REJECTED + F4 synthesis
+
+ENRICHMENT: read Academy Ch 10 (Trinity/cross-index confluence). Claim:
+structural alignment across SPX/SPY/QQQ -> cleaner delivery; divergence -> chop.
+RAN: foundational test on 64-day archive (4,864 matched 5-min timestamps).
+Structural bias per index = sign(gamma center-of-mass - spot) in +-1.5%;
+alignment count vs forward-30m SPY efficiency ratio (delivery cleanliness).
+VERDICT: **rejected.** ER by alignment 1/3=0.338, 2/3=0.367, 3/3=0.363 (NOT
+monotone), 3-vs-1 gap +0.025 placebo 91st (<95), and FLIPS across day-splits
+(odd 3/3<1/3, even 3/3>1/3 = unstable). Directional: floor-heavy 53% up vs
+ceiling-heavy 51% = coin flip. Caveat: gamma-COM operationalization; richer
+floor/ceiling/King alignment could differ.
+
+SYNTHESIS -> FOUNDATIONAL_FINDINGS F4: **GEX/VEX structure predicts
+VOLATILITY (pin vs release), not DIRECTION.** s6 dual-wall trap -> compression
+(confirmed, placebo 100th) is the one robust forecast; s4/s5 sign, s4-H2
+mean-reversion, s10 Trinity direction all null. Direction comes from the
+tape/chart (Academy "Charts First"). Explains why the bull tape gate (a
+tape rule) is the only shipped entry edge and structural exits (pin=vol
+compression) work while structural DIRECTION conditioners all reject.
+
+---
+
 ## 2026-07-09 session 9 (continuous): air-pocket+fuel entry (Ch 8) — REJECTED + thread PARKED
 
 RAN: built air-pocket-ahead (empty forward band) + barney-fuel-growth (rising
