@@ -147,9 +147,10 @@ ax.set_ylabel('vol (annualized %)'); ax.legend(); ax.set_title('Implied (VIX) vs
 fig.tight_layout(); fig.savefig(os.path.join(OUT, 'vrp_by_vix_quintile.png'), dpi=150); plt.close(fig)
 
 # ---------------- Q6/Q7: trade-quality joins ----------------
-rep_path = None
-for f in sorted(os.listdir(os.path.join(GEX, 'scripts', 'out'))):
-    if f.startswith('replay-fires-') and f.endswith('.json'): rep_path = os.path.join(GEX, 'scripts', 'out', f)
+# pick the LARGEST replay file (full 64-day run), not the last alphabetically
+cands = [os.path.join(GEX, 'scripts', 'out', f) for f in os.listdir(os.path.join(GEX, 'scripts', 'out'))
+         if f.startswith('replay-fires-') and f.endswith('.json')]
+rep_path = max(cands, key=os.path.getsize)
 plays = json.load(open(rep_path))
 vix_lookup = {(day, ts): v for day, row in panel.items() for ts, v in row['VIX'].items()}
 def vix_at(day, ts_ms, offset_min=0):
