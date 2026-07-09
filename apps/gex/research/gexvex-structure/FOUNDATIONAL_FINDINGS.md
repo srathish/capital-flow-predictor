@@ -26,6 +26,23 @@ detectors that locate structural inflection nodes, (b) the tape gate
 (prior-close directional context), and (c) node-structure EXITS. This is
 why every scalar-GEX conditioner tested has rejected (see F2).
 
+## F3 — Map TOPOLOGY predicts pinning where the scalar failed (2026-07-09, s6)
+
+The same 14,400 frames where GEX *sign* had no forecasting power: when spot
+is TRAPPED between two strong opposing walls (min of the nearest above/below
+wall shares, top tercile), forward 30-min |move| is **7.9 bps vs 9.9 bps**
+in the low-trap tercile — placebo **100th pctl**, and it holds on every
+ticker (SPY 8.0→6.8, QQQ 13.6→10.4, SPXW 9.1→6.9). **Pinning is real, but
+it is a SHAPE property (dual-wall trap), not a SIGN property.** This is the
+positive counterpart to F1 and the empirical basis for the node-structure
+exits: the map compresses realized move when its topology brackets spot.
+
+Directional repulsion (spot drifts away from the stronger wall) was NULL
+(+0.3 / +1.4 bps) — walls compress volatility symmetrically; they do not
+push price away. So the tradeable topology signal is VOLATILITY (pin vs
+release), consistent with why pin-exit logic works and directional
+wall-migration prediction (77-study) did not.
+
 ## F2 — Scalar GEX/VEX conditioners on the fire set are exhausted (2026-07-09)
 
 Seven+ secondary conditioners now reject or are non-incremental over

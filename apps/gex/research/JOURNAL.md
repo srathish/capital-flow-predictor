@@ -52,6 +52,39 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 6 + enrichment (topology + doctrine study)
+
+RAN: research/sessions/s6 (map topology on raw archive) + deep read of
+docs/skylit-academy.md (10 chapters).
+
+VERDICT s6: **CONFIRMED — topology predicts pinning where the scalar
+failed.** Spot trapped between two strong opposing walls (min of nearest
+above/below wall shares, top tercile) → forward 30m |move| 7.9 vs 9.9 bps
+low-trap, placebo 100th, holds every ticker (SPY 8.0→6.8, QQQ 13.6→10.4,
+SPXW 9.1→6.9). Directional repulsion (drift away from stronger wall) NULL
+(+0.3/+1.4bps) — walls compress vol symmetrically, don't push price. →
+FOUNDATIONAL_FINDINGS.md F3.
+
+ENRICHMENT (user request — "enrich yourself with knowledge about GEX/VEX,
+not just studies"): read the full Skylit Academy. Key synthesis in
+research/gexvex-structure/KNOWLEDGE_BASE.md. Load-bearing realization: the
+doctrine NEVER uses GEX sign alone (Ch 2 "size over color" is Mistake #1;
+Ch 4 "regime ≠ direction") — so my s4/s5 scalar-sign null CONFIRMS doctrine
+rather than contradicting it, and s6 topology = the Academy's Type-1 range
+day in realized-move data. The edge is the MAP (magnitude/topology/growth),
+not the scalar. Mapped 7 verified findings to doctrine anchors; extracted 5
+doctrine concepts the repo has NEVER tested.
+
+BACKLOG: 3 new doctrine-grounded items jumped to the top (fresh-vs-delivered
+node targeting #1, node-growth #2, air-pocket+fuel-on-entry #3) — all
+structural/temporal (the class that survives s6), not scalar re-slices.
+Node-lifecycle (Ch 9) flagged as highest-value untested doctrine idea.
+
+DECISIONS NEEDED: none. Enrichment produced KNOWLEDGE_BASE.md + new grounded
+research directions; nothing shipped.
+
+---
+
 ## 2026-07-09 session 4 (continuous — foundational GEX/VEX physics)
 
 PRE-REGISTERED: does GEX regime predict FORWARD INDEX behavior on the raw

@@ -10,7 +10,22 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
+1. **Node lifecycle: fresh vs delivered targeting** (doctrine Ch 9,
+   KNOWLEDGE_BASE #1) — thesis: fires whose target/anchor node is FRESH
+   (untapped earlier same day) beat fires targeting an already-delivered
+   node (tapped→reacted→left) in real dollars. Structural/temporal feature,
+   the class that survives (cf s6), NOT a scalar re-slice. Bar: EV gap
+   >+10pp, all four stability cuts, placebo ≥95th, incremental over
+   gate+nflags. HIGHEST-VALUE untested doctrine idea. Build: per-fire, scan
+   the day's prior frames for a spot-tap within Xbps of the target node.
+2. **Node growth = intent** (doctrine Ch 9) — thesis: fires toward a target
+   node whose magnitude is RISING over prior 15–30m beat fires toward a
+   decaying node. Distinct from rev_gex_pct (total-|GEX| frame delta; this
+   is target-node-specific). Same bar as #1.
+3. **Air-pocket + fuel on ENTRY** (doctrine Ch 8) — thesis: air-pocket-ahead
+   + rising-node fuel at fire predicts cleaner delivery. The barney-fuel
+   EXIT already uses this; entry side untested. Must beat gate+nflags.
+4. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage
    funnel's intersection (flow × map magnet) beats flow-only and map-only
