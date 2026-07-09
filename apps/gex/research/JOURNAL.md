@@ -83,6 +83,27 @@ Node-lifecycle (Ch 9) flagged as highest-value untested doctrine idea.
 DECISIONS NEEDED: none. Enrichment produced KNOWLEDGE_BASE.md + new grounded
 research directions; nothing shipped.
 
+### s7 (same session): fresh vs delivered node targeting (backlog #1) — research_more
+
+RAN: inline — tagged each fire's target node (forward wall) fresh vs
+delivered (spot tapped within 8bps earlier same day), real dollars.
+
+VERDICT: **research_more — directionally right, weak alone, promising in
+the clean-signal subset.** Fresh −2.7% vs delivered −5.0% overall (gap
++2.3pp, placebo only 64th — misses the ≥95th bar). BUT the direction is
+robust to the tap threshold (5/8/12bps all show fresh > delivered by
+~2pp), and the doctrine's real claim lands in the clean subset: **within
+flags_eq_0, fresh +49.6% (n=33) vs delivered +21.0% (n=27) = +28.6pp
+incremental.** n below graduation floor (27<30). So: the Ch 9 lifecycle
+signal is real and doctrine-consistent but needs the flags_eq_0
+conditioning + forward n to graduate. → forward watchlist alongside
+open_field and SPXW dn_vex_mass. Does NOT ship.
+
+NOTE: this is the first doctrine-derived hypothesis to show incremental
+promise over gate+nflags — validates the enrichment→research loop. The
+scalar conditioners all died; the structural/temporal one (fresh vs
+delivered) survives directionally, exactly as F3/s6 predicted.
+
 ---
 
 ## 2026-07-09 session 4 (continuous — foundational GEX/VEX physics)

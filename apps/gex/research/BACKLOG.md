@@ -6,11 +6,13 @@ append with a thesis line, never jump the queue mid-study.
 ## RECURRING (every session, before new work)
 - **R1 Forward-validation trackers**: merge new observation logs +
   bull-tape-gate dry would-blocks + archive growth. Track: flags_eq_0
-  9-check graduation, SPXW dn_vex_mass watch, open_field-on-flags0 watch.
+  9-check graduation, SPXW dn_vex_mass watch, open_field-on-flags0 watch,
+  **fresh-vs-delivered-within-flags0 watch (s7: +28.6pp, n=27/33)**.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Node lifecycle: fresh vs delivered targeting** (doctrine Ch 9,
+1. **Node growth = intent** (doctrine Ch 9) — thesis: fires toward a target node whose magnitude is RISING over prior 15-30m beat fires toward a decaying node. [PROMOTED from #2 after s7 established fresh>delivered directionally; growth is the sharper version of the same lifecycle signal.] Bar: gap>+10pp, all 4 cuts, placebo>=95th, incremental over gate+nflags.
+~~1. **Node lifecycle: fresh vs delivered targeting** (doctrine Ch 9,
    KNOWLEDGE_BASE #1) — thesis: fires whose target/anchor node is FRESH
    (untapped earlier same day) beat fires targeting an already-delivered
    node (tapped→reacted→left) in real dollars. Structural/temporal feature,
