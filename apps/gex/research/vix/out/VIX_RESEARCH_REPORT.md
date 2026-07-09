@@ -116,3 +116,24 @@ Per the module's charter, nothing ships as a rule from this study. Next steps in
 
 `uv run --with numpy,pandas,matplotlib,scipy,tabulate python research/vix/vix_study.py`
 Machine-readable outputs: correlations.csv, vix_direction_continuation.csv, vrp.csv, trade_quality_by_vix_*.csv alongside this report.
+
+---
+
+# Phase 2 — decision tests (same evening): VERDICT = EXCLUDE
+
+Both surviving candidates were prototyped against the 64-day final-system replay (G7-PC + dedupe, option-EV proxy) and REJECTED:
+
+**Exit accelerator** (exit when VIX moves against the play ≥ THR since entry):
+| Config | optEV/play |
+|---|---|
+| baseline (structural exits only) | **+20.6%** |
+| + VIX exit ≥0.2 | +14.0% |
+| + VIX exit ≥0.3 | +15.7% |
+| + VIX exit ≥0.5 | +18.1% |
+| + VIX exit ≥0.8 | +19.9% |
+
+Monotone: every threshold loses EV; looser only converges back to baseline. It cuts winners short — the full-surface structural exits already capture the information a VIX spike carries, earlier and cleaner.
+
+**Sizing tilt** (upsize bull entries by VIX tercile): every tested weighting (0.5/1/1.5, 0.75/1/1.25, 0.5/0.75/1.5) lowered both EV-per-unit-risk and total EV vs flat sizing. The tercile win% gradient (50→58%) does not survive as an EV gradient.
+
+**Final answer to the study objective: VIX does not earn a place in the trading logic** — not as entry filter, exit input, or sizing multiplier. Retained value is contextual only (high-VIX regimes are structurally friendlier for long premium; VIX RoC is noise at intraday horizons). Module stays for reproducibility; delete to revert.
