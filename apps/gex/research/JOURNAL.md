@@ -66,6 +66,27 @@ next pass).
 DECISIONS NEEDED: none — nothing ships from this. If the trail-preserving
 version passes the full bar, THAT becomes the exit-side ship proposal.
 
+### s2 item 2 (same session): trail-preserving hold — REJECTED, thread PARKED
+
+RAN: research/sessions/s2b_2026-07-09.py — on trigger, suppress exit but
+trail from hold-start mark at {15,25,35}% giveback, simulated on 1-min
+candles for all 91 triggered fires (90 had post-exit trades).
+
+VERDICT: **rejected.** Deltas +4.7/+2.1/+1.5pp (bar: >+15), placebo 59th
+(noise), delta-without-top3 ≤ 0 at every giveback, median play ≈ 0 or
+negative. The trail cuts the >50pp give-backs to 1-4% as designed — but
+0DTE marks whip so hard that the same trail stops out the runners before
+the trend leg pays. The naked-hold +38.8pp is real but inseparable from
+enduring the give-back tail; with a 1-contract book and no partial-exit
+capability, it is not harvestable. Third confirmation of the pattern
+(wall-escalator v3, hold-extension, now this): post-hoc protective exit
+logic eats the premium it protects. The current structural exits remain
+the best validated instrument for this book.
+
+THREAD PARKED (pre-declared: last refinement before park). Re-open only
+with NEW capability (multi-contract partial holds — a sizing change,
+execution-policy territory) or new forward data contradicting this.
+
 ---
 
 ## 2026-07-09 session 1 (first autonomous session)
