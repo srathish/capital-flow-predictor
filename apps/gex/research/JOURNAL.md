@@ -52,6 +52,40 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 sessions 14-15 (continuous): volatility-filter bridge + partial-hold instrument
+
+s14 — BRIDGE s6 physics to option EV: trap score at fire (min up/down wall
+share) vs pnl_atfire. **REJECTED at aggregate** — not monotone (open -1.9 /
+mid -8.8 / trapped +1.7), placebo 32nd, ticker-inconsistent. The fire
+detectors already select for structure, so the vol channel is absorbed;
+no free volatility filter to add. (Within flags_eq_0 open +43.9 vs trapped
++19.0 — overlaps the existing open_field watchlist item, not new.)
+
+s15 — PARTIAL-HOLD instrument (addresses s13: instrument is the constraint):
+2-contract policy on trigger-conditioned fires — one exits structurally, one
+rides to 15:55. Triggered fires: baseline +14.1% -> partial +33.5% (+19.4pp),
+captures 50% of the naked-hold uplift at HALF the give-back tail (naked 27%
+blow-back >50pp vs partial 9%). BUT EV improvement UNSTABLE (odd -7.1pp, even
++56pp) — the trigger instability (s2) persists; the instrument fixes the TAIL,
+not the EV stability. **research_more -> DECISIONS NEEDED proposal.**
+
+DECISIONS NEEDED (proposal, NOT implemented, needs approval + >=2-contract
+sizing the $1K account cannot support):
+  "Partial-hold exit option — when the live trend trigger fires (aligned move
+   >=40bps AND ER>=0.40 at a structural exit), hold a SECOND contract to 15:55
+   instead of flat. Recovers ~half the exit-patience edge and cuts the >50pp
+   give-back tail from 27% to 9%. Risk-management win; EV gain even-days-driven
+   (unstable). Requires >=2 contracts -> only viable at larger account sizes,
+   AFTER live validation. Do NOT implement now."
+
+META: s14+s15 confirm the s13 conclusion decisively. Signal discovery on the
+0DTE index system is saturated; every remaining lever is EXECUTION (partial
+holds, instrument selection, sizing) or a DIFFERENT UNIVERSE (campaign). The
+research frontier has moved off signal and onto execution-policy + the stock
+system.
+
+---
+
 ## 2026-07-09 session 13 (continuous): gatekeeper-break bps magnitude — RESOLVES real-$ question
 
 RAN: measured ACTUAL bps captured by thick_break_ride (not just hit%), to gate
