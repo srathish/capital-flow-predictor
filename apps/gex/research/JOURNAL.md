@@ -52,6 +52,39 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 16 (continuous, new idea): short-premium on predicted pins — REJECTED
+
+RAN: F4-grounded inverse — high-trap fires predict pins (s6); would SHORTING
+the ATM option profit from theta? Long-hold-to-1555 return negated, by trap.
+VERDICT: **rejected.** Predicted-pin tercile: short mean +1.7%, win 65% (theta),
+but CATASTROPHIC tail (23% lose >50%, worst -633% — naked 0DTE short can lose
+6x premium) and UNSTABLE (odd +14.9% / even -10.5% flip). Penny-in-front-of-
+steamroller. Defined-risk (spread/condor) would cap the tail but erase the
++1.7% edge after costs. Not viable.
+
+CLOSES the short-premium direction. Full instrument picture: LONG premium pays
+in expansion, dies in pins; SHORT premium pays in pins but has an uninvestable
+tail. The confirmed s6 pin-prediction edge is real but NEITHER 0DTE side
+captures it cleanly. The current system (long premium + structural exits to cut
+pin losses) is near the best achievable with the 0DTE index instrument.
+
+END-OF-BLOCK SYNTHESIS (s3-s16, 2026-07-09 continuous exploration):
+- CONFIRMED: F1 (GEX sign != forward move), F2 (scalar conditioners exhausted),
+  F3 (dual-wall topology -> pinning, placebo 100th), F4 (structure predicts
+  VOLATILITY not DIRECTION, across expirations + horizons incl. 3DTE/multi-day).
+- SIGNAL SIDE SATURATED: every entry conditioner (scalar, structural, temporal,
+  doctrine, cross-index, cross-expiration) rejects or is uncapturable. The tape
+  gate + nflags + net_gex level + structural exits already hold the tradeable
+  0DTE index signal.
+- INSTRUMENT IS THE CONSTRAINT: exit-patience (+38.8pp real, whipsaw-eaten),
+  gatekeeper-continuation (+1bps vs ~10bps spread), short-on-pins (catastrophic
+  tail) — three real edges, none capturable in 1-contract 0DTE ATM.
+- FRONTIER: (a) execution-policy (partial holds — s15 DECISIONS NEEDED), (b)
+  the campaign/stock universe (different instrument, longer hold, lower spread%),
+  (c) forward-data graduation of the watchlist. NOT more index signal discovery.
+
+---
+
 ## 2026-07-09 sessions 14-15 (continuous): volatility-filter bridge + partial-hold instrument
 
 s14 — BRIDGE s6 physics to option EV: trap score at fire (min up/down wall
