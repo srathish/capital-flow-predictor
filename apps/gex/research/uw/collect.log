@@ -1,0 +1,27 @@
+plays=1339 unique contracts=1042
+100/1042 wrote=100 skipped=0 empty=0 errored=0
+200/1042 wrote=200 skipped=0 empty=0 errored=0
+300/1042 wrote=300 skipped=0 empty=0 errored=0
+400/1042 wrote=400 skipped=0 empty=0 errored=0
+500/1042 wrote=500 skipped=0 empty=0 errored=0
+SPXW260525P07475000 2026-05-25: HTTP 422
+SPY260525P00746000 2026-05-25: HTTP 422
+600/1042 wrote=598 skipped=0 empty=0 errored=2
+700/1042 wrote=698 skipped=0 empty=0 errored=2
+800/1042 wrote=798 skipped=0 empty=0 errored=2
+SPXW260619P07500000 2026-06-19: HTTP 422
+SPY260619P00747000 2026-06-19: HTTP 422
+QQQ260619P00740000 2026-06-19: HTTP 422
+900/1042 wrote=895 skipped=0 empty=0 errored=5
+1000/1042 wrote=992 skipped=0 empty=0 errored=8
+done: wrote=1034 skipped=0 empty=0 errored=8
+flow done: wrote=192 skipped=0 errored=0
+final-system plays: 541
+variant contracts to fetch: 2141
+200/2141 wrote=157 skipped=42 empty=0 errored=1
+400/2141 wrote=316 skipped=83 empty=0 errored=1
+600/2141 wrote=477 skipped=122 empty=0 errored=1
+1000/2141 wrote=809 skipped=189 empty=0 errored=2
+1200/2141 wrote=965 skipped=225 empty=1 errored=9
+1400/2141 wrote=1135 skipped=255 empty=1 errored=9
+1600/2141 wrote=1309 skipped=281 empty=1 errored=9
