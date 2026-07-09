@@ -21,6 +21,10 @@ import { classifyRegimes, regimeStrip } from '../domain/regime.js';
 import { getOptionQuote } from '../uw/quotes.js';
 import { openDb } from '../store/db.js';
 import { createLogger } from '../utils/logger.js';
+import {
+  TAPE_TICKERS, bullTapeGateMode, evaluateBullTapeGate,
+  recordBullTapeGateFire, formatBullTapeGateStats,
+} from './bull-tape-gate.js';
 
 const log = createLogger('FireLoop');
 
@@ -126,6 +130,41 @@ function gateVerdict({ state, spot, ticker }) {
     if (spot >= anchor) {
       return { allowed: false, reason: `bear_above_${anchorName} ($${spot.toFixed(2)} >= $${anchor.toFixed(2)})` };
     }
+  }
+  // ---- Bull tape gate (ENABLE_BULL_TAPE_GATE) — see src/tracker/bull-tape-gate.js
+  // Bulls only; bears exit above. Uses in-memory spots + prior closes already
+  // fetched for the bear gate — zero extra network calls, so a quote failure
+  // can only ever mean 'unknown' (allow), never a crash or a block.
+  const tapeMode = bullTapeGateMode();
+  if (tapeMode !== 'off' && dir > 0) {
+    const tape = {};
+    for (const t of TAPE_TICKERS) {
+      const latest = t === ticker ? spot : spotHistory[t]?.at(-1)?.spot;
+      tape[t] = { spot: latest ?? null, priorClose: priorClose[t]?.close ?? null };
+    }
+    const verdict = evaluateBullTapeGate(tape);
+    recordBullTapeGateFire({ dir, verdict, mode: tapeMode });
+    if (verdict.pass === 'unknown') {
+      log.warn(`[BullTapeGate] missing tape-gate data (${verdict.missing.join(',')}) — allowing ${ticker} ${state}`);
+    }
+    if (verdict.pass === false) {
+      const detail = JSON.stringify({
+        gate_name: 'bull_tape_gate', reason: verdict.reason, ...verdict.data,
+        timestamp: new Date().toISOString(), fire_direction: 'bullish',
+        original_fire_metadata: { ticker, state },
+      });
+      if (tapeMode === 'on') {
+        log.info(`[BullTapeGate] ⛔ BLOCKED ${detail}`);
+        log.info(formatBullTapeGateStats());
+        return { allowed: false, reason: 'bull_tape_gate (SPY_QQQ_SPX_BELOW_PRIOR_CLOSE)', tape: verdict };
+      }
+      log.info(`[BullTapeGate] DRY would-block ${detail}`);
+    }
+    log.info(formatBullTapeGateStats());
+    return { allowed: true, reason: 'ok', tape: verdict };
+  }
+  if (tapeMode !== 'off' && dir < 0) {
+    recordBullTapeGateFire({ dir, verdict: { pass: true }, mode: tapeMode });
   }
   return { allowed: true, reason: 'ok' };
 }
@@ -275,13 +314,26 @@ async function tickOnce() {
         // import (zero cost when off), fire-and-forget, exception-proof inside
         // the logger. Records every fire (including gate-blocked) so live
         // sessions extend the out-of-sample record for the policy simulator.
+        // Bull-tape-gate fields ride into notes_json via execNote (the logger
+        // stringifies it verbatim — logger itself unchanged). Plain string
+        // when the gate is off → byte-identical rows to pre-gate behavior.
+        const execNote = gate.tape
+          ? {
+              note: gate.reason,
+              execution_status: gate.allowed ? 'executed' : 'gate_blocked',
+              ...(gate.allowed ? {} : { blocked_by: 'bull_tape_gate' }),
+              bull_tape_gate_pass: gate.tape.pass,
+              ...(gate.tape.pass === false ? { bull_tape_gate_reason: gate.tape.reason } : {}),
+              ...(gate.tape.pass === 'unknown' ? { bull_tape_gate_missing_data: true } : {}),
+            }
+          : gate.reason;
         if (process.env.ENABLE_UW_OBSERVATION_LOGGING === 'true') {
           import('../../research/uw/live_logging/observation-logger.js')
             .then(m => m.logFireObservation({
               ticker, state: fire.state,
               dir: fire.state.startsWith('BEAR') ? -1 : 1,
               spot: snap.spot, fireTsMs: now, surfaceNodes: nodes,
-              executed: gate.allowed, execNote: gate.reason,
+              executed: gate.allowed, execNote,
               quoteFetcher: (sym) => getOptionQuote(sym)
                 .then(q => q ? { bid: q.bid, ask: q.ask, mid: q.mid } : null),
               vixFetcher: () => fetchSnapshot('VIX')
