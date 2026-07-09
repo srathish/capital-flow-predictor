@@ -52,6 +52,29 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 13 (continuous): gatekeeper-break bps magnitude — RESOLVES real-$ question
+
+RAN: measured ACTUAL bps captured by thick_break_ride (not just hit%), to gate
+whether the queued real-dollar UW study is worth the API cost.
+VERDICT: **edge too small for 0DTE options — real-$ study DEPRIORITIZED (concluded
+without the UW pull).** thick_break_ride n=1063: hit 52.4%, avg win +18.4 / avg
+loss -18.2 -> MEAN captured move +1.0bps (median +1.1). With Phase-1 H2 target
+filter +1.3bps. A 0DTE ATM option spread costs ~8-15 underlying-bps-equiv, so
+the +1bps expectancy is an ORDER OF MAGNITUDE below cost. The trend-continuation
+edge is REAL in the underlying (s11 placebo 98th) but UNCAPTURABLE in 0DTE
+options at this size. To revive: (a) a sub-filter pushing captured move >15bps,
+or (b) a different instrument (underlying/futures, or longer-dated lower-spread%
+options). Saved the UW collection.
+
+TAKEAWAY: two independent edges now confirmed-but-uncapturable in the 0DTE
+options instrument — exit patience (s2b: +38.8pp real but whipsaw-eaten) and
+gatekeeper continuation (s13: +1bps vs ~10bps spread). The instrument (1-contract
+0DTE ATM) is the binding constraint, not signal discovery. Points to the
+execution-policy/sizing frontier (partial holds, instrument selection) as where
+remaining edge lives — an execution question, not a research one.
+
+---
+
 ## 2026-07-09 session 12 (user hypothesis): does 3DTE structure predict multi-day direction?
 
 USER Q: do 3DTE nodes affect 0DTE / signal a down-trend for the next 3 days?
