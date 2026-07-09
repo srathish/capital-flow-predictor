@@ -52,6 +52,31 @@ mark; one more dry conditioning session parks that whole approach.
 
 ---
 
+## 2026-07-09 session 12 (user hypothesis): does 3DTE structure predict multi-day direction?
+
+USER Q: do 3DTE nodes affect 0DTE / signal a down-trend for the next 3 days?
+RAN (s12a-d): extracted 3DTE surface (expirationIndex 3) at EOD, tested vs
+forward 1/2/3-day index returns AND forward 3-day range, all 3 tickers.
+
+VERDICT: **DIRECTION REJECTED.** 3DTE gamma structure (net GEX, COM bias,
+King-vs-spot) null for multi-day direction (com_bias->r3 placebo 3rd).
+A 3DTE VANNA lead appeared (SPY +0.24 corr, peaks specifically at 3DTE) —
+but REPLICATION KILLED IT: QQQ +0.02 (12th), SPXW -0.02 (14th), pooled
++0.05 (54th). SPY-only = multiple-comparison noise. So 3DTE structure does
+NOT predict the next 1-3 days' direction — F4 extends to longer expirations
+and multi-day horizons.
+VOLATILITY reframe (F4-consistent): 3DTE concentration null (placebo 7th);
+3DTE dual-wall trap -> less forward-3d range shows a WEAK but ticker-
+CONSISTENT negative corr (-0.10 pooled; SPY -0.05/QQQ -0.14/SPXW -0.12 all
+negative) = the s6 pin effect faintly echoing at multi-day, placebo 84th
+(below bar). Not confirmed, but the only directionally-coherent thread.
+
+TAKEAWAY: 3DTE nodes do not forecast a multi-day trend. The map is a
+volatility instrument at every horizon tested (0DTE 30-min through 3-day),
+never a direction instrument. Strongest re-confirmation of F4 yet.
+
+---
+
 ## 2026-07-09 session 11 (continuous): gatekeeper-break continuation — REPLICATES (weak), real-$ pending
 
 ENRICHMENT: read docs/findings.md (Phase 1, Apr 2026). Surfaced the documented
