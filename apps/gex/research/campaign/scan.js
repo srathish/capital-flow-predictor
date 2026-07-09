@@ -85,11 +85,15 @@ async function stage1(universe) {
     const sum7 = net.slice(0, 7).reduce((a, b) => a + b, 0);
     const posDays = net.filter(x => x > 0).length;
     const callPrem = hist.map(r => Number(r.call_premium) || 0).reduce((a, b) => a + b, 0);
-    if (sum20 < CFG.stage1.min_net_call_premium_20d) continue;
-    if (sum7 < CFG.stage1.min_net_call_premium_7d) continue;
+    // Soft sanity minimums only; selection is RANK-based (top shortlist_max
+    // by flowScore) so the funnel width doesn't depend on hand-tuned absolute
+    // dollar cuts that only mega-caps can clear. Absolute doctrine thresholds
+    // ($50M-class) get tested properly in the cohort backtest.
+    if (sum20 <= 0 || sum7 < CFG.stage1.min_net_call_premium_7d) continue;
     if (posDays < CFG.stage1.min_positive_days) continue;
     out.push({ ticker: t, sum20, sum7, posDays, callPrem,
                persistence: posDays / hist.length,
+               meetsDoctrine: sum20 >= CFG.stage1.min_net_call_premium_20d,
                flowScore: (sum20 / 1e6) * (posDays / hist.length) });
   }
   out.sort((a, b) => b.flowScore - a.flowScore);

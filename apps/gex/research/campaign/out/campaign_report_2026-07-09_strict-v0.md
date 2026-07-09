@@ -1,24 +1,3 @@
-[2026-07-09 10:42:38] [Pg] Postgres pool initialized.
-[2026-07-09 10:42:38] [Pg] loadSkylitCredentials failed: ECONNREFUSED,ECONNREFUSED
-[2026-07-09 10:42:38] [Auth] Auth initialized from .env | session sess_3GDAPn2vUVuBf9e... (Postgres returned no row — consider migrating with the bootstrap script).
-S1 flow screen: 376 tickers (1 UW call each)...
-  50/376
-  100/376
-  150/376
-  200/376
-  250/376
-  300/376
-  350/376
-S1 → 4 pass, shortlist 4
-S2 map structure: 4 Skylit pulls...
-[2026-07-09 10:46:07] [Pg] writeSkylitStatus failed: ECONNREFUSED,ECONNREFUSED
-S2 → 4 candidates with monthly magnets
-S3 accumulation confirmation: 4 candidates...
-S3 → 1 confirmed campaigns
-S4 quality gate...
-
-done in 3.8 min → /Users/saiyeeshrathish/the final plan/apps/gex/research/campaign/out/campaign_report_2026-07-09.md
-
 # Campaign Report — 2026-07-09
 
 Skylit universe × UW 20-day accumulation. RESEARCH/OBSERVATION ONLY — unvalidated v1; see PLAN.md. Earnings-in-window is flagged, not auto-rejected (per doctrine, event days can be the best days — but know the date).

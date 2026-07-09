@@ -1,10 +1,10 @@
 {
-  "_note": "Campaign System v1 thresholds — deliberately configurable; calibration happens in the cohort backtest, not by hand-tuning against live results.",
+  "_note": "Campaign System v1 thresholds \u2014 deliberately configurable; calibration happens in the cohort backtest, not by hand-tuning against live results.",
   "stage1": {
     "lookback_days": 20,
     "min_net_call_premium_20d": 25000000,
     "min_net_call_premium_7d": 0,
-    "min_positive_days": 11,
+    "min_positive_days": 10,
     "shortlist_max": 60
   },
   "stage2": {
@@ -12,7 +12,7 @@
     "expiry_max_days": 70,
     "magnet_min_relsig": 0.05,
     "magnet_min_dist_pct": 0.02,
-    "magnet_max_dist_pct": 0.20,
+    "magnet_max_dist_pct": 0.2,
     "max_gatekeepers": 2,
     "candidates_max": 25
   },
@@ -23,7 +23,7 @@
   },
   "stage4": {
     "max_spread_pct_of_mid": 8,
-    "min_premium": 0.30,
+    "min_premium": 0.3,
     "earnings_buffer_days": 3
   },
   "pacing_ms": 550
