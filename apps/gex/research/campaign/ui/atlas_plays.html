@@ -1,0 +1,250 @@
+<title>Atlas — Swing Setups</title>
+<style>
+:root{
+  --bg:#090c13; --bg2:#0d1220; --card:#111726; --card2:#0e1420; --line:#1e2839;
+  --ink:#e9edf6; --dim:#8b95ab; --faint:#5a6478;
+  --amber:#f5b53d; --amber-hi:#ffd77a; --violet:#8b6cf0; --violet-hi:#b49bff;
+  --cyan:#3fe4ff; --good:#37d39b; --warn:#f5b53d; --bad:#f2678a;
+  --accent:#b49bff;
+}
+:root[data-theme="light"]{
+  --bg:#f2f4f9; --bg2:#e9edf5; --card:#ffffff; --card2:#f5f8fc; --line:#dde3ee;
+  --ink:#131a27; --dim:#54607a; --faint:#98a2b8;
+  --amber:#b9791a; --amber-hi:#8a5a10; --violet:#6a4bd0; --violet-hi:#553bb0;
+  --cyan:#0090b8; --good:#0f9e6e; --warn:#b9791a; --bad:#d23a63; --accent:#6a4bd0;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f2f4f9; --bg2:#e9edf5; --card:#ffffff; --card2:#f5f8fc; --line:#dde3ee;
+  --ink:#131a27; --dim:#54607a; --faint:#98a2b8;
+  --amber:#b9791a; --amber-hi:#8a5a10; --violet:#6a4bd0; --violet-hi:#553bb0;
+  --cyan:#0090b8; --good:#0f9e6e; --warn:#b9791a; --bad:#d23a63; --accent:#6a4bd0;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:radial-gradient(130% 80% at 50% -10%,var(--bg2),var(--bg));
+  color:var(--ink);min-height:100vh;
+  font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  -webkit-font-smoothing:antialiased;
+}
+.sans{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 20px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:13px}
+.mark{width:42px;height:42px;border-radius:11px;background:
+  linear-gradient(145deg,var(--violet),var(--amber));display:grid;place-items:center;
+  font-family:system-ui,sans-serif;font-weight:800;font-size:20px;color:#0a0d14;flex:none;
+  box-shadow:0 4px 18px rgba(139,108,240,.35)}
+.brand h1{font-family:system-ui,sans-serif;font-size:23px;font-weight:750;letter-spacing:-.01em;line-height:1}
+.brand .tag{font-size:11.5px;color:var(--dim);letter-spacing:.03em;margin-top:4px}
+.asof{font-size:11.5px;color:var(--dim);text-align:right;letter-spacing:.04em}
+.asof b{color:var(--ink)}
+.disclaimer{
+  font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:8px;
+  padding:8px 12px;margin:14px 0 22px;letter-spacing:.02em;line-height:1.5}
+.disclaimer b{color:var(--warn)}
+.feedhead{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
+.feedhead h2{font-family:system-ui,sans-serif;font-size:14px;font-weight:650;letter-spacing:.02em}
+.feedhead span{font-size:11.5px;color:var(--dim)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);
+  border-radius:15px;padding:16px 17px;position:relative;overflow:hidden;
+}
+.card.hero{grid-column:1/-1;border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}
+.card.hero::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,var(--amber),var(--violet))}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tk{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tkrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.tkrow .sym{font-family:system-ui,sans-serif;font-weight:750;font-size:21px;letter-spacing:-.01em}
+.theme{font-size:10.5px;color:var(--dim);letter-spacing:.04em;text-transform:uppercase}
+.pill{font-size:10px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:5px;text-transform:uppercase}
+.pill.long{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.pill.confirmed{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.pill.watch{background:color-mix(in srgb,var(--violet) 20%,transparent);color:var(--violet-hi)}
+.pill.blocked{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.ring{width:58px;height:58px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;font-family:system-ui,sans-serif;
+  font-weight:750;font-size:18px}
+.ring .lbl{position:absolute;bottom:-14px;left:0;right:0;text-align:center;font-size:9px;color:var(--faint);letter-spacing:.08em}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0 13px}
+.t{font-size:9.5px;font-weight:600;letter-spacing:.05em;color:var(--dim);border:1px solid var(--line);
+  border-radius:4px;padding:3px 7px}
+.t.king{color:var(--amber-hi);border-color:color-mix(in srgb,var(--amber) 35%,var(--line))}
+
+.map{margin:6px 0 14px}
+.maptrack{position:relative;height:34px;border-radius:7px;background:var(--card2);
+  border:1px solid var(--line);overflow:hidden}
+.node{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:3px;
+  background:linear-gradient(180deg,var(--amber-hi),var(--amber));box-shadow:0 0 12px color-mix(in srgb,var(--amber) 55%,transparent)}
+.spotmk{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.spotmk::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--cyan)}
+.maplbl{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);margin-top:5px;font-variant-numeric:tabular-nums}
+.maplbl .kbadge{color:var(--amber-hi)}
+
+.contract{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:12px}
+.contract .occ{font-size:12.5px;font-weight:650;letter-spacing:.01em}
+.contract .occ small{color:var(--dim);font-weight:400;font-size:11px}
+.contract .entry{text-align:right;font-variant-numeric:tabular-nums}
+.contract .entry .v{font-weight:700;font-size:15px}
+.contract .entry .k{font-size:9.5px;color:var(--faint);letter-spacing:.06em}
+
+.rr{display:flex;align-items:center;gap:10px;margin-bottom:13px;font-size:11.5px;color:var(--dim)}
+.rrbar{flex:1;height:6px;border-radius:3px;background:var(--bad);position:relative;overflow:hidden}
+.rrbar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--good),var(--amber));border-radius:3px}
+.rr b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.stat{background:var(--card);padding:9px 10px}
+.stat .k{font-size:9.5px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+.stat .v{font-size:14px;font-weight:650;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat .v.pos{color:var(--good)} .stat .v.neg{color:var(--bad)} .stat .v.warnv{color:var(--warn)}
+.earn{margin-top:11px;font-size:10.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
+.earn.win{color:var(--warn)}
+footer{margin-top:34px;text-align:center;font-size:11px;color:var(--faint);letter-spacing:.03em;line-height:1.7}
+</style>
+
+<style>
+.rulebar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px;font-size:11.5px}
+.rulechip{background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:7px 12px;color:var(--dim)}
+.rulechip b{color:var(--ink)}
+.tp{display:flex;gap:8px;margin:0 0 12px}
+.tpbox{flex:1;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.tpbox.hot{border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
+.tpbox .k{font-size:9px;color:var(--faint);letter-spacing:.04em}
+.tpbox .v{font-size:15px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.tpbox.hot .v{color:var(--good)} .tpbox .v.good{color:var(--good)} .tpbox .v.bad{color:var(--bad)} .tpbox .v span{font-size:11px;color:var(--dim);font-weight:400}
+.skipsec{margin-top:26px;background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.skip{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.skip:last-child{border:none}
+.skip b{font-family:system-ui,sans-serif;font-size:16px}
+.skipreason{font-size:11.5px;color:var(--bad);text-align:right}
+</style><div class="wrap">
+ <header><div class="brand"><div class="mark">A</div><div><h1>Atlas</h1><div class="tag">swing plays · for 2026-07-10 · validated rules live</div></div></div>
+  <div class="asof">FLOW thru 07-09 · MAP 2026-07-08<br>3 tradeable · 4 flagged</div></header>
+ <div class="rulebar">
+  <div class="rulechip"><b>Intersection only</b> — flow + node (node-alone loses, 49% win)</div>
+  <div class="rulechip"><b>Take profit +100%</b> — setups spike +208% median then fade</div>
+  <div class="rulechip"><b>Backtested</b> — 70% win vs 54% placebo, 1,477 legs</div>
+ </div>
+ <div class="feedhead"><h2>Tradeable plays</h2><span>tight spread, clean data — flow-confirmed magnet targets</span></div>
+ <div class="grid"><div class="card hero">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">MU</span>
+   <span class="pill long">LONG</span><span class="pill confirmed">TRADEABLE</span></div><span class="theme">Memory / HBM</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--good)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="28.7"/></svg><div class="num" style="color:var(--good)">81</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:22%;height:61.2%"></div></div><div class="maplbl"><span>spot $938.43</span><span class="kbadge">👑 $1000 · 26.0% map · +6.6%</span></div></div>
+ <div class="contract"><div class="occ">MU $1000C <small>2026-07-31 · 23d · IV 102%</small></div>
+   <div class="entry"><div class="v">$94.47</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$1000 <span>+6.6%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$188.94</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v good">7.1%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$780M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v bad">$-84M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">13/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">49%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">26.0%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">MRVL</span>
+   <span class="pill long">LONG</span><span class="pill confirmed">TRADEABLE</span></div><span class="theme">AI Silicon</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--good)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="36.2"/></svg><div class="num" style="color:var(--good)">76</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:20.88%;height:57.84%"></div></div><div class="maplbl"><span>spot $232.84</span><span class="kbadge">👑 $280 · 23.2% map · +20.3%</span></div></div>
+ <div class="contract"><div class="occ">MRVL $280C <small>2026-07-31 · 23d · IV 95%</small></div>
+   <div class="entry"><div class="v">$10.15</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$280 <span>+20.3%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$20.3</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v good">11.8%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$149M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v pos">+$22M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">13/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">50%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">23.2%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">AAPL</span>
+   <span class="pill long">LONG</span><span class="pill confirmed">TRADEABLE</span></div><span class="theme">Mega-Cap Tech</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--good)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="37.7"/></svg><div class="num" style="color:var(--good)">75</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:57.6%;width:22%;height:92.88%"></div></div><div class="maplbl"><span>spot $309.01</span><span class="kbadge">👑 $320 · 52.4% map · +3.6%</span></div></div>
+ <div class="contract"><div class="occ">AAPL $320C <small>2026-07-31 · 23d · IV 30%</small></div>
+   <div class="entry"><div class="v">$7.53</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$320 <span>+3.6%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$15.06</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v good">2.0%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$85M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v pos">+$105M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">13/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">51%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">52.4%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div></div>
+ <div class="feedhead" style="margin-top:26px"><h2>Flagged</h2><span>real setups, but wide spread / suspect quote — cost eats the edge</span></div>
+ <div class="grid"><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">META</span>
+   <span class="pill long">LONG</span><span class="pill blocked">WIDE SPREAD</span></div><span class="theme">Mega-Cap AI</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--violet-hi)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="52.8"/></svg><div class="num" style="color:var(--violet-hi)">65</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:22%;height:84.96%"></div></div><div class="maplbl"><span>spot $605.64</span><span class="kbadge">👑 $655 · 45.8% map · +8.2%</span></div></div>
+ <div class="contract"><div class="occ">META $655C <small>2026-07-31 · 23d · IV 59%</small></div>
+   <div class="entry"><div class="v">$27.3</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$655 <span>+8.2%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$54.6</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v bad">12.1%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$61M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v pos">+$198M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">10/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">48%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">45.8%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">EWY</span>
+   <span class="pill long">LONG</span><span class="pill blocked">WIDE SPREAD</span></div><span class="theme">Korea ETF</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--violet-hi)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="54.3"/></svg><div class="num" style="color:var(--violet-hi)">64</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:15.75%;height:51.0%"></div></div><div class="maplbl"><span>spot $177.49</span><span class="kbadge">👑 $200 · 17.5% map · +12.7%</span></div></div>
+ <div class="contract"><div class="occ">EWY $200C <small>2026-07-31 · 23d · IV 78%</small></div>
+   <div class="entry"><div class="v">$8.55</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$200 <span>+12.7%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$17.1</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v bad">19.9%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$54M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v bad">$-1M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">12/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">50%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">17.5%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">DIA</span>
+   <span class="pill long">LONG</span><span class="pill blocked">SUSPECT DATA</span></div><span class="theme">Dow ETF</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--violet-hi)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="64.8"/></svg><div class="num" style="color:var(--violet-hi)">57</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:20.7%;height:57.599999999999994%"></div></div><div class="maplbl"><span>spot $523.59</span><span class="kbadge">👑 $550 · 23.0% map · +5.0%</span></div></div>
+ <div class="contract"><div class="occ">DIA $550C <small>2026-07-31 · 23d · IV 12%</small></div>
+   <div class="entry"><div class="v">$0.27</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$550 <span>+5.0%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$0.54</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v bad">44.4%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$22M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v pos">+$7M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">16/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">50%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">23.0%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div><div class="card ">
+ <div class="ctop"><div class="tk"><div class="tkrow"><span class="sym">CRDO</span>
+   <span class="pill long">LONG</span><span class="pill blocked">WIDE SPREAD</span></div><span class="theme">AI Connectivity</span></div><div class="ring"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--line)" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="var(--faint)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="76.9"/></svg><div class="num" style="color:var(--faint)">49</div><div class="lbl">CONVICTION</div></div></div>
+ <div class="map"><div class="maptrack"><div class="spotmk" style="left:12%"></div><div class="node" style="left:68.29629629629629%;width:12.69%;height:46.92%"></div></div><div class="maplbl"><span>spot $252.25</span><span class="kbadge">👑 $300 · 14.1% map · +18.9%</span></div></div>
+ <div class="contract"><div class="occ">CRDO $300C <small>2026-07-31 · 23d · IV 115%</small></div>
+   <div class="entry"><div class="v">$17.35</div><div class="k">ENTRY (MID)</div></div></div>
+ <div class="tp"><div class="tpbox"><div class="k">TARGET (underlying)</div><div class="v">$300 <span>+18.9%</span></div></div>
+   <div class="tpbox hot"><div class="k">TAKE PROFIT +100%</div><div class="v">$34.7</div></div>
+   <div class="tpbox"><div class="k">SPREAD</div><div class="v bad">21.3%</div></div></div>
+ <div class="stats"><div class="stat"><div class="k">20d ACCUM</div><div class="v pos">+$28M</div></div>
+   <div class="stat"><div class="k">7d</div><div class="v pos">+$6M</div></div>
+   <div class="stat"><div class="k">PERSIST</div><div class="v">10/20</div></div>
+   <div class="stat"><div class="k">ASK-SIDE</div><div class="v">50%</div></div>
+   <div class="stat"><div class="k">NODE</div><div class="v">14.1%</div></div>
+   <div class="stat"><div class="k">RULE</div><div class="v" style="color:var(--good);font-size:11px">FLOW×NODE ✓</div></div></div>
+</div></div>
+ <div class="skipsec"><div class="feedhead"><h2>Your watchlist — SKIP</h2><span>the validated rule says no, with the reason</span></div><div class="skip"><div><b>MSFT</b> <span class="theme">skip</span></div>
+  <div class="skipreason">❌ flow weak (20d $-278M, 6/20d, ask 48%)</div></div><div class="skip"><div><b>GOOG</b> <span class="theme">skip</span></div>
+  <div class="skipreason">❌ flow weak (20d $-52M, 7/20d, ask 49%); King at/below spot (+1.3%) — no upside target</div></div><div class="skip"><div><b>GOOGL</b> <span class="theme">skip</span></div>
+  <div class="skipreason">❌ flow weak (20d $-223M, 6/20d, ask 48%)</div></div></div>
+ <footer>Atlas · flow = direction, node = confirmation · never the node alone · take profits on the spike<br>Skylit GEX/VEX × Unusual Whales · research/observation only, no orders placed</footer>
+</div>

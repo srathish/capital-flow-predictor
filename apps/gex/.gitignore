@@ -15,3 +15,4 @@ research/uw/candles/
 research/campaign/backtest/flow_cache/
 research/campaign/backtest/price_cache/
 research/campaign/backtest/*.log
+research/campaign/play_prices.json
