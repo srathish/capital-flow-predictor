@@ -47,9 +47,10 @@ async function fetchFlow(t) {
   }
 }
 
+const FORCE = process.env.FLOW_FORCE === '1';   // daily re-pull overwrites cache
 for (const t of tickers) {
   const dest = path.join(OUT, `${t}.json`);
-  if (fs.existsSync(dest)) { done++; continue; }
+  if (!FORCE && fs.existsSync(dest)) { done++; continue; }
   const { rows, error } = await fetchFlow(t);
   if (error || !rows?.length) { errs++; fs.writeFileSync(dest, JSON.stringify({ error: error || 'empty' })); }
   else fs.writeFileSync(dest, JSON.stringify(rows));

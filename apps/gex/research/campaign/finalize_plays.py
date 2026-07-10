@@ -26,6 +26,7 @@ def finalize(p):
         ticker=p['ticker'], theme=THEME.get(p['ticker'], ''), score=p.get('score'),
         occ=p['occ'], strike=p['strike'], exp=p['exp'], dte=p['dte'],
         spot=p['spot'], king=p['king'], node_share=p['node_share'], dist=p['dist'],
+        node_persist=p.get('node_persist'), node_growth=p.get('node_growth'), node_days=p.get('node_days'),
         sum20=p['sum20'], sum7=p['sum7'], posdays=p['posdays'], askshare=p['askshare'],
         entry=entry, iv=round(pr['iv'] * 100), spread=spread,
         take_profit=round(entry * 2, 2),                    # +100% rule

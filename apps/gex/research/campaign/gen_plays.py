@@ -55,23 +55,71 @@ def dte(exp):
     return (date.fromisoformat(exp) - date.fromisoformat(ASOF)).days
 
 
-def magnet(surf):
-    spot = surf['spot']
-    best = None
+def _exp_block(surf, exp):
     for x in surf.get('allExpirations', []):
-        if EXP_MIN_DTE <= dte(x['expiration']) <= EXP_MAX_DTE and x.get('strikes'):
-            best = x; break
-    if not best:
-        return None
-    st = best['strikes']
+        if x['expiration'] == exp and x.get('strikes'):
+            return x
+    return None
+
+
+def _king(block):
+    """King magnet on an expiry block: strike, |gamma| share of that expiry, raw |gamma|."""
+    st = block['strikes']
     K = np.array([s['strike'] for s in st], float)
     G = np.array([s.get('gamma') or 0 for s in st], float)
-    V = np.array([s.get('vanna') or 0 for s in st], float)
-    totG = np.abs(G).sum() or 1
+    tot = np.abs(G).sum() or 1
     ki = int(np.argmax(np.abs(G)))
-    return dict(exp=best['expiration'], dte=dte(best['expiration']), spot=spot,
-                king=float(K[ki]), share=float(np.abs(G[ki]) / totG), sign=int(np.sign(G[ki])),
-                strikes=[float(k) for k in K])
+    return float(K[ki]), float(np.abs(G[ki]) / tot), float(abs(G[ki])), [float(k) for k in K]
+
+
+def load_surface(day, t):
+    p = os.path.join(DAILY, day, f'{t}.json.gz')
+    return json.load(gzip.open(p)) if os.path.exists(p) else None
+
+
+def magnet(t):
+    """20-DAY GEX/VEX picture (not a single snapshot). Pick the monthly target
+    expiry as-of the latest day, then track that expiry's King magnet across the
+    last ~20 archive days: robust strike (mode), persistence, and GROWTH — the
+    doctrine's test for a real node vs a one-day hedge fluke."""
+    latest = load_surface(ASOF, t)
+    if not latest:
+        return None
+    tgt = None
+    for x in latest.get('allExpirations', []):
+        if EXP_MIN_DTE <= dte(x['expiration']) <= EXP_MAX_DTE and x.get('strikes'):
+            tgt = x['expiration']; break
+    if not tgt:
+        return None
+    window = DAYS[-20:]
+    kings, shares, gammas, above = [], [], [], 0
+    n = 0
+    for d in window:
+        surf = load_surface(d, t)
+        blk = _exp_block(surf, tgt) if surf else None
+        if not blk:
+            continue
+        ks, sh, gm, strikes = _king(blk)
+        sp = surf['spot']
+        kings.append(ks); shares.append(sh); gammas.append(gm)
+        n += 1
+        # bullish structure = a strong King sitting above spot within reach that day
+        if sh >= 0.06 and 0.01 <= (ks - sp) / sp <= 0.30:
+            above += 1
+    if n < 8:
+        return None
+    spot = latest['spot']
+    king_now = kings[-1]                              # current pull (may roll)
+    # persistence = fraction of the 20d with a strong bullish node above spot
+    persist = above / n
+    share_avg = float(np.mean(shares))
+    # growth: recent-half avg |gamma| at the node vs older-half (rising = intent)
+    h = len(gammas) // 2
+    old = np.mean(gammas[:h]) or 1
+    growth = (np.mean(gammas[h:]) - old) / abs(old)
+    return dict(exp=tgt, dte=dte(tgt), spot=spot, king=king_now, share=share_avg,
+                share_now=shares[-1], persist=round(persist, 2), growth=round(float(growth), 2),
+                days=n, strikes=strikes)
 
 
 def occ(t, exp, strike):
@@ -84,49 +132,53 @@ def nearest(strikes, x):
 
 
 def score(ff, mg, dist):
-    # flow-weighted (backtest: flow drives), node confirms
+    # flow-weighted (backtest: flow drives), 20-day node persistence/growth confirms
     accum = min(1, ff['sum20'] / 100e6)
-    persist = ff['posdays'] / 20
+    fpersist = ff['posdays'] / 20
     ask = min(1, max(0, (ff['askshare'] - 0.45) / 0.20))
     node = min(1, mg['share'] / 0.15)
-    room = 1 - min(1, abs(dist - 0.08) / 0.17)     # sweet spot ~8% to magnet
-    w = {'accum': 30, 'persist': 16, 'ask': 14, 'node': 22, 'room': 8}
-    raw = accum * w['accum'] + persist * w['persist'] + ask * w['ask'] + node * w['node'] + room * w['room']
+    npersist = mg['persist']                        # King held its strike over 20d
+    ngrowth = min(1, max(0, mg['growth']))          # node magnitude rising (intent)
+    room = 1 - min(1, abs(dist - 0.08) / 0.17)      # sweet spot ~8% to magnet
+    w = {'accum': 28, 'fpersist': 12, 'ask': 12, 'node': 16, 'npersist': 14, 'ngrowth': 10, 'room': 8}
+    raw = (accum * w['accum'] + fpersist * w['fpersist'] + ask * w['ask'] + node * w['node'] +
+           npersist * w['npersist'] + ngrowth * w['ngrowth'] + room * w['room'])
     return round(raw / sum(w.values()) * 100)
 
 
 def evaluate(t, fr):
     ff = flow_features(fr)
-    p = os.path.join(DAILY, ASOF, f'{t}.json.gz')
-    surf = json.load(gzip.open(p)) if os.path.exists(p) else None
-    mg = magnet(surf) if surf else None
     out = {'ticker': t, 'flow': ff, 'reasons': []}
     if not ff:
         out['reasons'].append('no flow history'); return out
+    mg = magnet(t)                                  # 20-day GEX/VEX picture
     if not mg:
-        out['reasons'].append('no monthly surface'); return out
+        out['reasons'].append('no persistent monthly surface'); return out
     dist = (mg['king'] - mg['spot']) / mg['spot']
     flow_ok = ff['sum20'] > 20e6 and ff['posdays'] >= 10 and ff['askshare'] >= 0.48
-    node_ok = mg['share'] >= 0.06 and 0.02 <= dist <= 0.25
+    node_ok = mg['share'] >= 0.06 and mg['persist'] >= 0.5 and 0.02 <= dist <= 0.25
     if not flow_ok:
         out['reasons'].append(f"flow weak (20d ${ff['sum20']/1e6:.0f}M, {ff['posdays']}/20d, ask {ff['askshare']*100:.0f}%)")
     if not node_ok:
         if mg['share'] < 0.06:
-            out['reasons'].append(f"node weak ({mg['share']*100:.1f}% of map)")
+            out['reasons'].append(f"node weak ({mg['share']*100:.1f}% of map avg over 20d)")
+        elif mg['persist'] < 0.5:
+            out['reasons'].append(f"node not persistent (King held its strike only {mg['persist']*100:.0f}% of 20d)")
         elif dist < 0.02:
             out['reasons'].append(f"King at/below spot ({dist*100:+.1f}%) — no upside target")
         elif dist > 0.25:
             out['reasons'].append(f"King too far (+{dist*100:.0f}%)")
     strike = nearest(mg['strikes'], mg['king'])
     out.update(dict(spot=round(mg['spot'], 2), king=mg['king'], node_share=round(mg['share'] * 100, 1),
-                    dist=round(dist * 100, 1), exp=mg['exp'], dte=mg['dte'], strike=strike,
+                    node_persist=round(mg['persist'] * 100), node_growth=round(mg['growth'] * 100),
+                    node_days=mg['days'], dist=round(dist * 100, 1), exp=mg['exp'], dte=mg['dte'], strike=strike,
                     occ=occ(t, mg['exp'], strike), sum20=round(ff['sum20'] / 1e6), sum7=round(ff['sum7'] / 1e6),
                     posdays=ff['posdays'], askshare=round(ff['askshare'] * 100),
                     intersection=bool(flow_ok and node_ok)))
     if out['intersection']:
         out['score'] = score(ff, mg, dist)
-        out['target_pct'] = out['dist']          # underlying target = magnet
-        out['reasons'] = ['INTERSECTION ✓ flow + node']
+        out['target_pct'] = out['dist']
+        out['reasons'] = [f"INTERSECTION ✓ flow + 20d-persistent node ({out['node_persist']}%, growth {out['node_growth']:+}%)"]
     return out
 
 

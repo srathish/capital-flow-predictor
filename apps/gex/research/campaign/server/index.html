@@ -110,9 +110,12 @@ function ring(s){
 }
 function nodemap(p){
   const span=Math.max(p.dist*1.35,6),sp=12,mag=sp+(p.dist/span)*(100-24),w=Math.max(6,Math.min(22,p.node_share*0.9));
+  const persist=p.node_persist!=null?` · <b style="color:var(--good)">${p.node_persist}% held 20d</b>`:'';
+  const growth=p.node_growth!=null?` · growth ${p.node_growth>=0?'+':''}${p.node_growth}%`:'';
   return `<div class="map"><div class="maptrack"><div class="spotmk" style="left:${sp}%"></div>
     <div class="node" style="left:${mag}%;width:${w}%;height:${30+p.node_share*1.2}%"></div></div>
-    <div class="maplbl"><span>spot $${p.spot}</span><span class="kb">👑 $${Math.round(p.king)} · ${p.node_share}% map · +${p.dist}%</span></div></div>`;
+    <div class="maplbl"><span>spot $${p.spot}</span><span class="kb">👑 $${Math.round(p.king)} · ${p.node_share}% map · +${p.dist}%</span></div>
+    <div class="maplbl" style="margin-top:2px"><span style="color:var(--faint)">20-day GEX/VEX${persist}${growth}</span></div></div>`;
 }
 function card(p,hero){
   const badge=p.tradeable?'<span class="pill ok">TRADEABLE</span>':

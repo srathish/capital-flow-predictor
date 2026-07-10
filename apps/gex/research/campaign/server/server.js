@@ -5,10 +5,12 @@
  * live 0DTE tracker.
  *
  *   node research/campaign/server/server.js        # http://localhost:5178
- *   ATLAS_PORT=xxxx ATLAS_REFRESH_MIN=10 node ...
  *
- * Each refresh runs: gen_plays.py (funnel on flow cache + archive surface) ->
- * fetch_prices.js (live UW option prices) -> finalize_plays.py (rules + write).
+ * Cadence is BEGINNING-OF-DAY, not intraday: the morning cron runs
+ * morning_scan.sh (refreshes flow + full funnel) and writes plays_latest.json.
+ * The server just serves that file all day. Startup + the "Refresh now" button
+ * do a light re-scan (funnel on the existing flow cache + live prices); set
+ * ATLAS_REFRESH_MIN>0 only if you deliberately want an intraday timer.
  */
 import http from 'node:http';
 import fs from 'node:fs';
@@ -20,7 +22,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const GEX = path.resolve(__dirname, '..', '..', '..');
 const CAMPAIGN = path.resolve(__dirname, '..');
 const PORT = Number(process.env.ATLAS_PORT || 5178);
-const REFRESH_MS = Number(process.env.ATLAS_REFRESH_MIN || 10) * 60_000;
+const REFRESH_MS = Number(process.env.ATLAS_REFRESH_MIN || 0) * 60_000;  // 0 = no intraday timer (beginning-of-day only)
 const DATA = path.join(__dirname, 'plays_latest.json');
 const HTML = path.join(__dirname, 'index.html');
 
@@ -81,7 +83,8 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`[atlas] live at http://localhost:${PORT}  (refresh every ${REFRESH_MS / 60000}min)`);
-  refresh();
-  setInterval(refresh, REFRESH_MS);
+  const mode = REFRESH_MS > 0 ? `intraday timer ${REFRESH_MS / 60000}min` : 'beginning-of-day only (morning cron updates data)';
+  console.log(`[atlas] live at http://localhost:${PORT}  (${mode})`);
+  refresh();                                     // one light re-scan on startup
+  if (REFRESH_MS > 0) setInterval(refresh, REFRESH_MS);
 });
