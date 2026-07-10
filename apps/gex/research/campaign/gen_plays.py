@@ -110,16 +110,29 @@ def magnet(t):
         return None
     spot = latest['spot']
     king_now = kings[-1]                              # current pull (may roll)
-    # persistence = fraction of the 20d with a strong bullish node above spot
     persist = above / n
     share_avg = float(np.mean(shares))
-    # growth: recent-half avg |gamma| at the node vs older-half (rising = intent)
     h = len(gammas) // 2
     old = np.mean(gammas[:h]) or 1
     growth = (np.mean(gammas[h:]) - old) / abs(old)
+    # ---- VEX (vanna) direction + pin detection on the CURRENT target surface ----
+    blk = _exp_block(latest, tgt)
+    K = np.array([q['strike'] for q in blk['strikes']], float)
+    G = np.array([q.get('gamma') or 0 for q in blk['strikes']], float)
+    V = np.array([q.get('vanna') or 0 for q in blk['strikes']], float)
+    vi = int(np.argmax(np.abs(V)))
+    vex_strike = float(K[vi]); vex_dist = (vex_strike - spot) / spot
+    up_v = V[K > spot].sum(); dn_v = V[K < spot].sum()
+    # bullish vanna = the VEX magnet pulls UP (above spot) AND net vanna leans up
+    vex_bullish = vex_dist > 0.01 and up_v >= abs(dn_v) * 0.7
+    # pin: dominant gamma King sits AT spot (pinned, not trending) -> bad for a call
+    ki = int(np.argmax(np.abs(G)))
+    pinned = abs(K[ki] - spot) / spot < 0.02 and abs(G[ki]) / (np.abs(G).sum() or 1) >= 0.18
+    king_sign = 'pika' if G[ki] >= 0 else 'barney'
     return dict(exp=tgt, dte=dte(tgt), spot=spot, king=king_now, share=share_avg,
                 share_now=shares[-1], persist=round(persist, 2), growth=round(float(growth), 2),
-                days=n, strikes=strikes)
+                days=n, strikes=strikes, vex_strike=vex_strike, vex_dist=round(vex_dist * 100, 1),
+                vex_bullish=bool(vex_bullish), pinned=bool(pinned), king_sign=king_sign)
 
 
 def occ(t, exp, strike):
@@ -183,10 +196,16 @@ def evaluate(t, fr):
     aplus = ff['askshare'] >= 0.52 and mg['share'] >= 0.15
     node_ok = mg['share'] >= 0.06 and mg['persist'] >= 0.5 and 0.02 <= dist <= 0.25
     chase_ok = pop3 <= 0.08                                # anti-chase: not already popped >8% in 3d
+    vex_ok = mg['vex_bullish'] and not mg['pinned']       # VEX magnet pulls UP + not pinned at spot
     if not flow_ok:
         out['reasons'].append(f"flow weak (20d ${ff['sum20']/1e6:.0f}M, {ff['posdays']}/20d, ask {ff['askshare']*100:.0f}% <52)")
     if not chase_ok:
         out['reasons'].append(f"already popped +{pop3*100:.0f}% in 3d — chasing fades")
+    if not vex_ok:
+        if mg['pinned']:
+            out['reasons'].append(f"PINNED — GEX King at spot (pika wall), price stuck not trending")
+        else:
+            out['reasons'].append(f"VEX bearish — vanna magnet at ${mg['vex_strike']:.0f} ({mg['vex_dist']:+}%) pulls DOWN")
     if not node_ok:
         if mg['share'] < 0.06:
             out['reasons'].append(f"node weak ({mg['share']*100:.1f}% of map avg over 20d)")
@@ -202,15 +221,16 @@ def evaluate(t, fr):
                     node_days=mg['days'], dist=round(dist * 100, 1), exp=mg['exp'], dte=mg['dte'], strike=strike,
                     occ=occ(t, mg['exp'], strike), sum20=round(ff['sum20'] / 1e6), sum7=round(ff['sum7'] / 1e6),
                     posdays=ff['posdays'], askshare=round(ff['askshare'] * 100),
-                    pop3=round(pop3 * 100, 1),
-                    intersection=bool(flow_ok and node_ok and chase_ok)))
+                    pop3=round(pop3 * 100, 1), vex_strike=mg['vex_strike'], vex_dist=mg['vex_dist'],
+                    vex_bullish=mg['vex_bullish'], pinned=mg['pinned'], king_sign=mg['king_sign'],
+                    intersection=bool(flow_ok and node_ok and chase_ok and vex_ok)))
     if out['intersection']:
         out['score'] = score(ff, mg, dist)
         out['target_pct'] = out['dist']
         out['take_profit_pct'] = 100            # validated: limit-sell at +100% (70% win, PF 2.2)
         out['max_hold_days'] = 20               # hard time-stop
         out['aplus'] = bool(aplus)              # A+ = ask>=52% + strong node (backtest PF 2.8)
-        out['reasons'] = [f"{'A+ ' if aplus else ''}INTERSECTION ✓ flow + 20d node ({out['node_persist']}% persist) + ask {out['askshare']}% + not chasing"]
+        out['reasons'] = [f"{'A+ ' if aplus else ''}INTERSECTION ✓ flow + GEX node ({out['node_persist']}% persist, {mg['king_sign']}) + VEX bullish (${mg['vex_strike']:.0f} +{mg['vex_dist']}%) + not chasing"]
     return out
 
 

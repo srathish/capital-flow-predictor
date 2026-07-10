@@ -28,6 +28,7 @@ def finalize(p):
         spot=p['spot'], king=p['king'], node_share=p['node_share'], dist=p['dist'],
         node_persist=p.get('node_persist'), node_growth=p.get('node_growth'), node_days=p.get('node_days'),
         theme_bull=p.get('theme_bull'), aplus=p.get('aplus'),
+        king_sign=p.get('king_sign'), vex_strike=p.get('vex_strike'), vex_dist=p.get('vex_dist'), vex_bullish=p.get('vex_bullish'), pinned=p.get('pinned'),
         sum20=p['sum20'], sum7=p['sum7'], posdays=p['posdays'], askshare=p['askshare'],
         entry=entry, iv=round(pr['iv'] * 100), spread=spread,
         take_profit=round(entry * 2, 2),                    # +100% rule
