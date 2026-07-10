@@ -20,6 +20,8 @@ import { openDb, closeDb } from './store/db.js';
 import { closeAll as closeJsonl } from './store/jsonl-events.js';
 import { closePg } from './store/pg.js';
 import { startPoller, stopPoller } from './ingest/snapshot-poller.js';
+import { startFireLoop, stopFireLoop } from './tracker/fire-loop.js';
+import { startRefreshLoop, stopRefreshLoop } from './tracker/refresh-loop.js';
 import { runScheduler } from '../scripts/schedule.js';
 import { createLogger } from './utils/logger.js';
 
@@ -42,6 +44,20 @@ async function main() {
   openDb();
   startPoller();
 
+  // Falcon-style plays tracker: 5-min pattern → fire-state → openPlaysForFire,
+  // and 60s current-mark refresh with EOD close. Both are self-throttled and
+  // skip out-of-hours. Disable individually if you're debugging just one leg.
+  if (process.env.DISABLE_FIRE_LOOP !== '1') {
+    try { startFireLoop(); } catch (e) { log.warn(`startFireLoop: ${e.message}`); }
+  } else {
+    log.info('Fire loop disabled (DISABLE_FIRE_LOOP=1).');
+  }
+  if (process.env.DISABLE_REFRESH_LOOP !== '1') {
+    try { startRefreshLoop(); } catch (e) { log.warn(`startRefreshLoop: ${e.message}`); }
+  } else {
+    log.info('Refresh loop disabled (DISABLE_REFRESH_LOOP=1).');
+  }
+
   // Scheduler: fires brief at 09:31 ET + monitor at checkpoints. Runs in the
   // background; tick loop is internal. Errors are caught + logged inside.
   if (process.env.DISABLE_SCHEDULER === '1') {
@@ -59,6 +75,8 @@ async function main() {
 
 async function shutdown() {
   log.info('Shutting down...');
+  try { stopFireLoop(); } catch (e) { log.warn(`stopFireLoop: ${e.message}`); }
+  try { stopRefreshLoop(); } catch (e) { log.warn(`stopRefreshLoop: ${e.message}`); }
   try { stopPoller(); } catch (e) { log.warn(`stopPoller: ${e.message}`); }
   try { closeJsonl(); } catch (e) { log.warn(`closeJsonl: ${e.message}`); }
   try { closeDb(); } catch (e) { log.warn(`closeDb: ${e.message}`); }

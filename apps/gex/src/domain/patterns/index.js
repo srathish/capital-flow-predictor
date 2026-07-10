@@ -20,14 +20,20 @@ import * as reverseRug from './reverse-rug.js';
 import * as pikaCloud from './pika-cloud.js';
 import * as beachBall from './beach-ball.js';
 import * as rainbowRoad from './rainbow-road.js';
+import * as trapdoor from './trapdoor.js';
+import * as vannaPersistent from './vanna-persistent.js';
+import * as overnightCarryover from './overnight-carryover.js';
 
-const PER_TICKER_DETECTORS = [rugSetup, reverseRug, pikaCloud, beachBall, rainbowRoad];
+const PER_TICKER_DETECTORS = [
+  rugSetup, reverseRug, pikaCloud, beachBall, rainbowRoad,
+  trapdoor, vannaPersistent, overnightCarryover,
+];
 
-export function runPerTickerPatterns({ ticker, nodes, spot, structure, spotHistory }) {
+export function runPerTickerPatterns({ ticker, nodes, spot, structure, spotHistory, previousClose }) {
   const results = {};
   for (const det of PER_TICKER_DETECTORS) {
     try {
-      results[det.PATTERN] = det.detect({ ticker, nodes, spot, structure, spotHistory });
+      results[det.PATTERN] = det.detect({ ticker, nodes, spot, structure, spotHistory, previousClose });
     } catch (err) {
       results[det.PATTERN] = {
         detected: false,

@@ -10,11 +10,21 @@
 #   3. In Settings → Source, set Root Directory = / (we reference apps/gex from the Dockerfile path)
 #   4. In Settings → Build, set Dockerfile Path = apps/gex/Dockerfile
 #   5. In Settings → Variables, set:
-#        DATABASE_URL    (link to the shared Postgres plugin — same DB the API uses)
-#        DATA_DIR        /data
-#        TICKERS         SPXW,SPY,QQQ
+#        DATABASE_URL              (link to the shared Postgres plugin — same DB the API uses)
+#        DATA_DIR                  /data
+#        TICKERS                   SPXW,SPY,QQQ
+#        UNUSUAL_WHALES_API_KEY    (needed by the plays tracker refresh loop — link via
+#                                   Railway shared variables from the api service so both
+#                                   read the same key)
 #        # Optional. Leave unset to skip Discord; the UI is the primary surface now.
 #        DISCORD_BRIEF_WEBHOOK_URL
+#        # Optional kill switches for the Falcon-style plays tracker (default = both ON):
+#        #   DISABLE_FIRE_LOOP=1      skip the 5-min pattern → fire-state runner
+#        #   DISABLE_REFRESH_LOOP=1   skip the 60s current-mark refresher
+#        # Optional tuning:
+#        #   FIRE_LOOP_INTERVAL_MS    override 5-min pattern cadence
+#        #   REFRESH_LOOP_INTERVAL_MS override 60s current-mark cadence
+#        #   FIRE_LOOP_247=1 / REFRESH_LOOP_247=1  disable the market-hours gate (dev only)
 #   6. In Settings → Volumes, mount a volume at /data so SQLite + JSONL archives
 #      survive container restarts.
 #
