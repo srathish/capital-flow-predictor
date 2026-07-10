@@ -40,6 +40,7 @@ from cfp_api.routes import (
     macro,
     network,
     news,
+    plays,
     reddit,
     replay,
     scorecard,
@@ -144,6 +145,9 @@ app.include_router(confluence.router, dependencies=PROTECTED)
 # and the daemon needs it to long-poll the reauth queue. Same surface as
 # everything else.
 app.include_router(gex.router, dependencies=PROTECTED)
+# Falcon-style tracked plays feed backed by tracked_plays. Populated by the
+# gex fire-state machine when a bearish/bullish pattern enters an armed state.
+app.include_router(plays.router, dependencies=PROTECTED)
 # Catalyst calendar: earnings (pre/post), dividends, splits, analyst events,
 # economic calendar. Feeds the /explosive scoring + per-ticker drilldown.
 app.include_router(catalysts.router, dependencies=PROTECTED)
