@@ -77,62 +77,90 @@ def load_surface(day, t):
     return json.load(gzip.open(p)) if os.path.exists(p) else None
 
 
+def _agg(surf, lo=10, hi=75):
+    """Aggregate gamma + vanna PER STRIKE across all expiries in [lo,hi] DTE —
+    the monthly window where real dealer positioning sits, not near-term noise.
+    Finds the King node as a PRICE LEVEL regardless of which expiry it's on."""
+    aggG, aggV = {}, {}
+    for x in surf.get('allExpirations', []):
+        d = dte(x['expiration'])
+        if not (lo <= d <= hi and x.get('strikes')):
+            continue
+        for q in x['strikes']:
+            k = float(q['strike'])
+            aggG[k] = aggG.get(k, 0.0) + (q.get('gamma') or 0.0)
+            aggV[k] = aggV.get(k, 0.0) + (q.get('vanna') or 0.0)
+    return aggG, aggV
+
+
 def magnet(t):
-    """20-DAY GEX/VEX picture (not a single snapshot). Pick the monthly target
-    expiry as-of the latest day, then track that expiry's King magnet across the
-    last ~20 archive days: robust strike (mode), persistence, and GROWTH — the
-    doctrine's test for a real node vs a one-day hedge fluke."""
+    """Find the KING node on GEX and VEX REGARDLESS of expiry — aggregate
+    gamma/vanna per strike across the monthly window (10-75 DTE), so the
+    dominant magnet (e.g. MSFT vanna King $450 @ 8/21) is located wherever the
+    dealer positioning concentrates. Then track 20-day persistence + pick the
+    tradeable monthly contract aligned with that King."""
     latest = load_surface(ASOF, t)
     if not latest:
         return None
-    tgt = None
-    for x in latest.get('allExpirations', []):
-        if EXP_MIN_DTE <= dte(x['expiration']) <= EXP_MAX_DTE and x.get('strikes'):
-            tgt = x['expiration']; break
-    if not tgt:
+    spot = latest['spot']
+    aggG, aggV = _agg(latest)
+    if len(aggG) < 5:
         return None
-    window = DAYS[-20:]
-    kings, shares, gammas, above = [], [], [], 0
-    n = 0
-    for d in window:
-        surf = load_surface(d, t)
-        blk = _exp_block(surf, tgt) if surf else None
-        if not blk:
+    strikes = sorted(aggG)
+    totG = sum(abs(g) for g in aggG.values()) or 1
+    gk = max(aggG, key=lambda k: abs(aggG[k]))         # GEX King = max |aggregate gamma|
+    vk = max(aggV, key=lambda k: abs(aggV[k]))         # VEX King = max |aggregate vanna|
+    gk_share = abs(aggG[gk]) / totG
+    dist = (gk - spot) / spot
+    king_sign = 'pika' if aggG[gk] >= 0 else 'barney'
+    up_v = sum(v for k, v in aggV.items() if k > spot)
+    dn_v = sum(v for k, v in aggV.items() if k < spot)
+    vex_dist = (vk - spot) / spot
+    vex_bullish = vk > spot and up_v >= abs(dn_v) * 0.7
+    pinned = abs(gk - spot) / spot < 0.02 and gk_share >= 0.10
+    # tradeable contract expiry: the monthly (14-50 DTE) holding the most structure at the King strike
+    best_exp, best_dte, best_mag = None, None, -1.0
+    for x in latest.get('allExpirations', []):
+        d = dte(x['expiration'])
+        if not (14 <= d <= 50 and x.get('strikes')):
             continue
-        ks, sh, gm, strikes = _king(blk)
-        sp = surf['spot']
-        kings.append(ks); shares.append(sh); gammas.append(gm)
+        for q in x['strikes']:
+            if abs(float(q['strike']) - gk) < 1e-6:
+                m = abs(q.get('gamma') or 0) + abs(q.get('vanna') or 0) / 1e4
+                if m > best_mag:
+                    best_mag, best_exp, best_dte = m, x['expiration'], d
+    if not best_exp:
+        for x in latest.get('allExpirations', []):
+            d = dte(x['expiration'])
+            if 14 <= d <= 50 and x.get('strikes'):
+                best_exp, best_dte = x['expiration'], d; break
+    if not best_exp:
+        return None
+    # 20-day persistence + growth of the aggregate GEX King above spot
+    above, n, mags = 0, 0, []
+    for day in DAYS[-20:]:
+        s = load_surface(day, t)
+        if not s:
+            continue
+        gA, _ = _agg(s)
+        if not gA:
+            continue
+        k = max(gA, key=lambda kk: abs(gA[kk]))
         n += 1
-        # bullish structure = a strong King sitting above spot within reach that day
-        if sh >= 0.06 and 0.01 <= (ks - sp) / sp <= 0.30:
+        mags.append(abs(gA[k]))
+        tot = sum(abs(g) for g in gA.values()) or 1
+        if 0.01 <= (k - s['spot']) / s['spot'] <= 0.30 and abs(gA[k]) / tot >= 0.05:
             above += 1
     if n < 8:
         return None
-    spot = latest['spot']
-    king_now = kings[-1]                              # current pull (may roll)
     persist = above / n
-    share_avg = float(np.mean(shares))
-    h = len(gammas) // 2
-    old = np.mean(gammas[:h]) or 1
-    growth = (np.mean(gammas[h:]) - old) / abs(old)
-    # ---- VEX (vanna) direction + pin detection on the CURRENT target surface ----
-    blk = _exp_block(latest, tgt)
-    K = np.array([q['strike'] for q in blk['strikes']], float)
-    G = np.array([q.get('gamma') or 0 for q in blk['strikes']], float)
-    V = np.array([q.get('vanna') or 0 for q in blk['strikes']], float)
-    vi = int(np.argmax(np.abs(V)))
-    vex_strike = float(K[vi]); vex_dist = (vex_strike - spot) / spot
-    up_v = V[K > spot].sum(); dn_v = V[K < spot].sum()
-    # bullish vanna = the VEX magnet pulls UP (above spot) AND net vanna leans up
-    vex_bullish = vex_dist > 0.01 and up_v >= abs(dn_v) * 0.7
-    # pin: dominant gamma King sits AT spot (pinned, not trending) -> bad for a call
-    ki = int(np.argmax(np.abs(G)))
-    pinned = abs(K[ki] - spot) / spot < 0.02 and abs(G[ki]) / (np.abs(G).sum() or 1) >= 0.18
-    king_sign = 'pika' if G[ki] >= 0 else 'barney'
-    return dict(exp=tgt, dte=dte(tgt), spot=spot, king=king_now, share=share_avg,
-                share_now=shares[-1], persist=round(persist, 2), growth=round(float(growth), 2),
-                days=n, strikes=strikes, vex_strike=vex_strike, vex_dist=round(vex_dist * 100, 1),
-                vex_bullish=bool(vex_bullish), pinned=bool(pinned), king_sign=king_sign)
+    h = len(mags) // 2
+    old = np.mean(mags[:h]) or 1
+    growth = (np.mean(mags[h:]) - old) / abs(old)
+    return dict(exp=best_exp, dte=best_dte, spot=spot, king=gk, share=gk_share, share_now=gk_share,
+                persist=round(persist, 2), growth=round(float(growth), 2), days=n, strikes=strikes,
+                vex_strike=vk, vex_dist=round(vex_dist * 100, 1), vex_bullish=bool(vex_bullish),
+                pinned=bool(pinned), king_sign=king_sign)
 
 
 def occ(t, exp, strike):

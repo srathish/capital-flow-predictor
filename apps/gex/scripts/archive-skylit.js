@@ -49,6 +49,8 @@ const BACKOFF_CAP_MS = 300_000;
 
 let lastRequestAt = 0;
 let backoffMs = 0;
+let MAX_EXP = 10;   // set from --max-expirations in main(); 10 = front only, 20 = full 2026 monthlies
+let FORCE = false;  // --force: overwrite existing daily files (e.g. upgrade a 10-expiry file to 20)
 
 async function pacedFetch(ticker, ts) {
   for (;;) {
@@ -57,7 +59,7 @@ async function pacedFetch(ticker, ts) {
     if (wait > 0) await new Promise(r => setTimeout(r, wait));
     lastRequestAt = Date.now();
     try {
-      const snap = await fetchHistoricalSnapshot(ticker, ts);
+      const snap = await fetchHistoricalSnapshot(ticker, ts, MAX_EXP);
       backoffMs = 0; // success resets the backoff ladder
       return { snap, error: null };
     } catch (err) {
@@ -75,12 +77,16 @@ async function pacedFetch(ticker, ts) {
 }
 
 function parseArgs() {
-  const a = { mode: null, daysBack: 85, date: null, tickers: null };
+  // maxExp default 10 keeps 0DTE backfills lean; swing refresh passes 20 to
+  // archive the further-out 2026 monthlies (8/21, 9/18…) where the King lives.
+  const a = { mode: null, daysBack: 85, date: null, tickers: null, maxExp: 10, force: false };
   for (const x of process.argv.slice(2)) {
     if (x.startsWith('--mode=')) a.mode = x.slice(7);
     else if (x.startsWith('--days-back=')) a.daysBack = Number(x.slice(12));
     else if (x.startsWith('--date=')) a.date = x.slice(7);
     else if (x.startsWith('--tickers=')) a.tickers = x.slice(10).split(',').map(t => t.trim().toUpperCase());
+    else if (x.startsWith('--max-expirations=')) a.maxExp = Number(x.slice(18));
+    else if (x === '--force') a.force = true;
   }
   return a;
 }
@@ -144,7 +150,7 @@ async function archiveIndexIntraday(days, tickers = INDEX_TICKERS) {
     done++;
     const dir = path.join(ARCHIVE_ROOT, 'intraday', day);
     const file = path.join(dir, `${ticker}.jsonl.gz`);
-    if (fs.existsSync(file)) { skipped++; return; }
+    if (fs.existsSync(file) && !FORCE) { skipped++; return; }
 
     const lines = [];
     let dayErrors = 0;
@@ -173,8 +179,8 @@ async function archiveIndexIntraday(days, tickers = INDEX_TICKERS) {
     (lastError ? ` lastErr=${lastError.slice(0, 80)}` : ''));
 }
 
-async function archiveUniverseDaily(days) {
-  const universe = loadUniverse();
+async function archiveUniverseDaily(days, tickers = null) {
+  const universe = tickers ?? loadUniverse();
   const jobs = [];
   for (const day of days) for (const ticker of universe) jobs.push({ day, ticker });
   log.info(`universe-daily: ${jobs.length} snapshots (${days.length} days × ${universe.length} tickers)`);
@@ -186,7 +192,7 @@ async function archiveUniverseDaily(days) {
     done++;
     const dir = path.join(ARCHIVE_ROOT, 'daily', day);
     const file = path.join(dir, `${ticker}.json.gz`);
-    if (fs.existsSync(file)) { skipped++; return; }
+    if (fs.existsSync(file) && !FORCE) { skipped++; return; }
 
     const { snap, error } = await pacedFetch(ticker, `${day}T13:35:00Z`);
     if (error) { errored++; lastError = error; return; }
@@ -211,6 +217,9 @@ async function main() {
     console.error('usage: node scripts/archive-skylit.js --mode=index-intraday|universe-daily [--days-back=N] [--date=YYYY-MM-DD]');
     process.exit(1);
   }
+  MAX_EXP = args.maxExp;
+  FORCE = args.force;
+  log.info(`max_expirations=${MAX_EXP}${FORCE ? ' (force overwrite)' : ''}`);
   const authOk = await initAuth();
   if (!authOk) { log.error('Skylit auth failed. Run cfp-jobs skylit-login.'); process.exit(1); }
 
@@ -218,7 +227,7 @@ async function main() {
   log.info(`window: ${days[0]} → ${days[days.length - 1]}`);
 
   if (args.mode === 'index-intraday') await archiveIndexIntraday(days, args.tickers ?? INDEX_TICKERS);
-  else await archiveUniverseDaily(days);
+  else await archiveUniverseDaily(days, args.tickers);
 }
 
 main().catch(err => { log.error('fatal:', err); process.exit(1); });

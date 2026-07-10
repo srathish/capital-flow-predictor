@@ -11,8 +11,11 @@ export const CLERK_JS_VERSION = '5.124.0';
 // (observed 2026-06-25). Token is no longer in the URL — see client.js for the
 // header. URL builder kept as a function to preserve signature for callers
 // even though the token arg is now ignored.
-export const STREAM_URL = (symbol, _token) =>
-  `${HEATSEEKER_BASE}/api/stream?symbol=${encodeURIComponent(symbol)}&max_strikes=200&max_expirations=10`;
+// maxExpirations defaults to 10 (0DTE tracker only reads the front expiry).
+// Swing scans pass a higher value (~40 = Skylit's full ceiling) to reach the
+// further-out monthly OPEX where the biggest dealer magnets — the true King — sit.
+export const STREAM_URL = (symbol, _token, maxExpirations = 10) =>
+  `${HEATSEEKER_BASE}/api/stream?symbol=${encodeURIComponent(symbol)}&max_strikes=200&max_expirations=${maxExpirations}`;
 
 // SPX has the largest strike chain and takes the longest to stream; bump
 // both timeouts so the SSE connect (FETCH_TIMEOUT_MS) and the snapshot wait

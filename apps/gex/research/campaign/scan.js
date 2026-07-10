@@ -111,7 +111,9 @@ async function stage2(shortlist) {
   const out = [];
   for (const s of shortlist) {
     let snap;
-    try { snap = await fetchSnapshot(s.ticker); } catch { continue; }
+    // 40 = Skylit's full ceiling — pull the entire chain (monthlies + LEAPS) so
+    // the King node is found regardless of expiry, not truncated at ~5 weeks.
+    try { snap = await fetchSnapshot(s.ticker, 40); } catch { continue; }
     if (!snap?.spot || !snap.allExpirations?.length) continue;
     const spot = snap.spot;
     let best = null;

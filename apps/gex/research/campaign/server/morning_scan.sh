@@ -14,9 +14,11 @@ echo "=== morning scan $(date '+%Y-%m-%d %H:%M:%S %Z') ===" >> "$LOG"
 
 step() { echo "[$(date '+%H:%M:%S')] $1" >> "$LOG"; }
 
-# 1. Freshen the universe surface (last 2 days only — fast vs the 64d backfill)
-step "surface refresh (last 2 days)"
-node scripts/archive-skylit.js --mode=universe-daily --days-back=2 >> "$LOG" 2>&1 || step "surface refresh failed (using existing archive)"
+# 1. Freshen the universe surface (last 2 days only — fast vs the 64d backfill).
+#    --max-expirations=20 archives the further-out 2026 monthlies (8/21, 9/18…)
+#    so the swing scan finds the King node regardless of expiry, not truncated at 5wk.
+step "surface refresh (last 2 days, full monthly chain)"
+node scripts/archive-skylit.js --mode=universe-daily --days-back=2 --max-expirations=20 >> "$LOG" 2>&1 || step "surface refresh failed (using existing archive)"
 
 # 2. Re-pull the 90d flow for the universe (overwrites cache -> new completed day)
 step "flow refresh (force)"

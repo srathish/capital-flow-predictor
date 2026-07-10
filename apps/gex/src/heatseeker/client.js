@@ -14,9 +14,9 @@ import { createLogger } from '../utils/logger.js';
 
 const log = createLogger('HSClient');
 
-export async function fetchSnapshot(ticker) {
+export async function fetchSnapshot(ticker, maxExpirations = 10) {
   const token = await getFreshToken();
-  const url = STREAM_URL(ticker, token);
+  const url = STREAM_URL(ticker, token, maxExpirations);
 
   const resp = await fetch(url, {
     headers: {
@@ -62,13 +62,16 @@ export async function fetchSnapshot(ticker) {
  * Returns the same normalized shape as fetchSnapshot() so grader/backtester
  * code paths are identical.
  */
-export async function fetchHistoricalSnapshot(ticker, timestampIso) {
+export async function fetchHistoricalSnapshot(ticker, timestampIso, maxExpirations = 10) {
   const token = await getFreshToken();
   const url = new URL('https://app.skylit.ai/api/data');
   url.searchParams.set('symbol', ticker);
   url.searchParams.set('nocache', Math.random().toString());
   url.searchParams.set('max_strikes', '200');
-  url.searchParams.set('max_expirations', '10');
+  // Default 10 (0DTE tracker only ever reads expiration[0], so it's unaffected).
+  // Swing scans pass a higher value to reach the further-out monthly OPEX
+  // (8/21, 9/18, LEAPS) where the biggest dealer magnets — the true King — sit.
+  url.searchParams.set('max_expirations', String(maxExpirations));
   url.searchParams.set('timestamp', timestampIso);
 
   const resp = await fetch(url.toString(), {
