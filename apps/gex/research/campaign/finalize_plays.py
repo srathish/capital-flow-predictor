@@ -58,7 +58,7 @@ for t, w in cand['watch'].items():
     else:
         print(f"  {t}: ❌ SKIP — {'; '.join(w['reasons'])}")
 
-payload = {'asof': cand['asof'], 'plays': plays, 'watch': cand['watch']}
+payload = {'asof': cand['asof'], 'regime': cand.get('regime', {}), 'plays': plays, 'watch': cand['watch']}
 json.dump(payload, open(os.path.join(HERE, 'ui', 'plays_jul10.json'), 'w'), indent=1)
 os.makedirs(os.path.join(HERE, 'server'), exist_ok=True)
 json.dump(payload, open(os.path.join(HERE, 'server', 'plays_latest.json'), 'w'), indent=1)
