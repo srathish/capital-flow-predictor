@@ -677,6 +677,111 @@ def skylit_login_cmd(
     )
 
 
+@app.command("wellfound-login")
+def wellfound_login_cmd(
+    state_file: str = typer.Option(
+        "",
+        "--state-file",
+        help="Where to save the session (default: ~/.cfp-jobs/wellfound_state.json)",
+    ),
+) -> None:
+    """Open Chromium, sign in to Wellfound manually, save the session to disk.
+
+    Wellfound is a third party whose ToS restricts automation, so we do the
+    low-risk thing: you sign in by hand in a real browser, and we snapshot the
+    resulting session (all cookies + localStorage) so later runs can reuse it
+    without logging in again. Keep any downstream use human-paced.
+    """
+    from pathlib import Path
+
+    from cfp_jobs import wellfound_login
+
+    target = (
+        Path(state_file).expanduser() if state_file else wellfound_login.DEFAULT_STATE_FILE
+    )
+    console.print(f"Session file: [cyan]{target}[/cyan]")
+    console.print(
+        "[yellow]A Chromium window will open.[/yellow] Sign in fully, then press "
+        "Enter in this terminal to capture the session."
+    )
+    try:
+        counts = wellfound_login.capture_session(target)
+    except RuntimeError as e:
+        console.print(f"[red]Login capture failed:[/red] {e}")
+        raise typer.Exit(1) from e
+
+    console.print(
+        f"[green]Saved session to {target}[/green]\n"
+        f"  {counts['wellfound_cookies']} wellfound.com cookies "
+        f"({counts['cookies']} total) captured."
+    )
+
+
+@app.command("wellfound-fetch")
+def wellfound_fetch_cmd(
+    state_file: str = typer.Option(
+        "", "--state-file", help="Saved session (default: ~/.cfp-jobs/wellfound_state.json)"
+    ),
+    out: str = typer.Option(
+        "", "--out", help="Run output dir (default: ~/.cfp-jobs/wellfound-runs/<timestamp>)"
+    ),
+    min_salary: int = typer.Option(
+        200000, help="Recorded in the manifest for downstream filtering (fetch does not filter)"
+    ),
+    max_scroll: int = typer.Option(5, help="Times to scroll each page to lazy-load more cards"),
+) -> None:
+    """Load Wellfound searches with your saved session and dump results to disk.
+
+    Writes embedded JSON + HTML + visible text per search into a run dir. It does
+    NOT parse or rank — that's done by reading the dumped files afterward (the
+    files are what you hand to Claude to triage against your resume). Keep runs
+    small and human-paced; Wellfound's ToS restricts automated access.
+    """
+    from datetime import datetime
+    from pathlib import Path
+
+    from cfp_jobs import wellfound_fetch, wellfound_login
+
+    state = (
+        Path(state_file).expanduser() if state_file else wellfound_login.DEFAULT_STATE_FILE
+    )
+    if out:
+        run_dir = Path(out).expanduser()
+    else:
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        run_dir = wellfound_fetch.DEFAULT_OUT_DIR / stamp
+
+    console.print(f"Session: [cyan]{state}[/cyan]  →  run dir: [cyan]{run_dir}[/cyan]")
+    try:
+        wellfound_fetch.fetch_searches(
+            state_path=state,
+            out_dir=run_dir,
+            searches=wellfound_fetch.DEFAULT_SEARCHES,
+            max_scroll=max_scroll,
+        )
+    except FileNotFoundError as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+
+    # Stamp the salary floor into the manifest so the downstream ranking step
+    # knows the intended threshold.
+    manifest_path = run_dir / "manifest.json"
+    try:
+        import json
+
+        m = json.loads(manifest_path.read_text())
+        m["min_salary"] = min_salary
+        manifest_path.write_text(json.dumps(m, indent=2))
+        ok = sum(1 for s in m.get("searches", []) if s.get("ok"))
+        console.print(
+            f"[green]Fetched {ok}/{len(m.get('searches', []))} searches → {run_dir}[/green]\n"
+            f"Hand the files in that dir to Claude to rank vs your resume "
+            f"(min salary ${min_salary:,})."
+        )
+    except Exception as e:  # noqa: BLE001
+        console.print(f"[yellow]Run finished but manifest post-step failed: {e}[/yellow]")
+
+
 @app.command("skylit-bootstrap")
 def skylit_bootstrap_cmd(
     env_file: str = typer.Option(
