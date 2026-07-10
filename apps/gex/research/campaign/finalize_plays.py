@@ -23,10 +23,11 @@ def finalize(p):
     # data sanity: IV floor (illiquid/stale quotes like DIA IV 12% on a 5% OTM call)
     suspect = pr['iv'] < 0.15 or spread > 30
     return dict(
-        ticker=p['ticker'], theme=THEME.get(p['ticker'], ''), score=p.get('score'),
+        ticker=p['ticker'], theme=p.get('theme') or THEME.get(p['ticker'], ''), score=p.get('score'),
         occ=p['occ'], strike=p['strike'], exp=p['exp'], dte=p['dte'],
         spot=p['spot'], king=p['king'], node_share=p['node_share'], dist=p['dist'],
         node_persist=p.get('node_persist'), node_growth=p.get('node_growth'), node_days=p.get('node_days'),
+        theme_bull=p.get('theme_bull'), aplus=p.get('aplus'),
         sum20=p['sum20'], sum7=p['sum7'], posdays=p['posdays'], askshare=p['askshare'],
         entry=entry, iv=round(pr['iv'] * 100), spread=spread,
         take_profit=round(entry * 2, 2),                    # +100% rule
@@ -35,7 +36,8 @@ def finalize(p):
 
 
 plays = [f for f in (finalize(p) for p in cand['plays']) if f]
-plays.sort(key=lambda x: (x['tradeable'], x['score']), reverse=True)
+# bull-theme first (trade the leaders), then tradeable, then score
+plays.sort(key=lambda x: (bool(x.get('theme_bull')), x['tradeable'], x['score']), reverse=True)
 
 print("JULY 10 SWING PLAYS — validated intersection rule + +100% take-profit\n")
 print(f"{'tkr':5} {'sc':>3} {'contract':22} {'entry':>7} {'spread':>6} {'target(mag)':>12} {'TP+100%':>8}  flow/node")

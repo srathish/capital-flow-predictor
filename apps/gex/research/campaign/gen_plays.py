@@ -139,16 +139,18 @@ def recent_pop(t):
 
 
 def market_regime():
-    """The validated edge concentrates in up-trending tape (backtest H1 +68%/87%
-    win vs H2 +4%/54% in chop). Gate on QQQ 5-day return > 0 AND above its
-    10-day average — only fire the strategy when the market is constructive."""
-    q = [s['spot'] for d in DAYS[-11:] if (s := load_surface(d, 'QQQ'))]
-    if len(q) < 6:
-        return dict(ok=True, r5=None, note='insufficient QQQ data — not gating')
-    r5 = (q[-1] - q[-6]) / q[-6]
-    up = r5 > 0 and q[-1] >= sum(q[-10:]) / len(q[-10:])
-    return dict(ok=up, r5=round(r5 * 100, 1),
-                note='UP-TREND ✓ (edge live)' if up else 'CHOP/DOWN ⚠ — backtest edge weak here, size down or wait')
+    """'There's always a bull somewhere.' Don't gate on QQQ (it misses sector
+    rotations — 7/09 QQQ +1.7% while optical/semis ripped; a 5-day gate wrongly
+    read chop). Report the actual last-session QQQ move + rank THEMES; the gate
+    is per-theme, so we trade the leaders even when the index is mixed."""
+    from themes import theme_strength
+    q = [s['spot'] for d in DAYS[-3:] if (s := load_surface(d, 'QQQ'))]
+    q1 = round((q[-1] - q[-2]) / q[-2] * 100, 1) if len(q) >= 2 else None   # yesterday's real QQQ move
+    ranked, bulls = theme_strength()
+    leaders = [(th, v['r1'], v['breadth']) for th, v in list(ranked.items())[:4]]
+    return dict(qqq_1d=q1, bull_themes=sorted(bulls), leaders=leaders,
+                note=(f"Bull themes: {', '.join(sorted(bulls)[:4])} — trade the leaders"
+                      if bulls else "no clear bull theme — stand down"))
 
 
 def score(ff, mg, dist):
@@ -224,15 +226,21 @@ def main():
             plays.append(ev)
         if t in WATCH:
             watch[t] = ev
-    plays.sort(key=lambda x: x.get('score', 0), reverse=True)
+    from themes import TICKER_THEME, theme_strength
+    _, bulls = theme_strength()
+    for p in plays:                              # tag theme + is-it-in-a-bull-theme
+        p['theme'] = TICKER_THEME.get(p['ticker'], 'other')
+        p['theme_bull'] = p['theme'] in bulls
+    plays.sort(key=lambda x: (x.get('theme_bull', False), x.get('score', 0)), reverse=True)
     regime = market_regime()
-    print(f"as-of surface {ASOF} · flow thru latest cache")
-    print(f"MARKET REGIME: QQQ 5d {regime.get('r5')}% — {regime['note']}")
+    print(f"as-of surface {ASOF} (=yesterday) · flow thru latest cache")
+    print(f"QQQ last session {regime.get('qqq_1d')}% · {regime['note']}")
+    print("LEADERS: " + " | ".join(f"{th} {r1:+.1f}% ({br:.0f}%up)" for th, r1, br in regime['leaders']))
     print(f"\n=== {len(plays)} INTERSECTION plays (validated rule) — top 12 ===")
     for p in plays[:12]:
-        print(f"  {p['ticker']:6} score {p.get('score'):3} | ${p['strike']:.0f}C {p['exp']} ({p['dte']}d) | "
-              f"spot ${p['spot']} King ${p['king']:.0f} (+{p['dist']}%, {p['node_share']}% map) | "
-              f"20d ${p['sum20']}M {p['posdays']}/20 ask{p['askshare']}%")
+        bull = '🐂' if p.get('theme_bull') else '  '
+        print(f"  {bull} {p['ticker']:5} [{p.get('theme','?')[:14]:14}] score {p.get('score'):3} | ${p['strike']:.0f}C ({p['dte']}d) | "
+              f"King ${p['king']:.0f} +{p['dist']}% ({p['node_share']}%) | 20d ${p['sum20']}M ask{p['askshare']}%")
     print(f"\n=== WATCHLIST (GOOGL/GOOG/MSFT) — honest pass/fail ===")
     for t in WATCH:
         w = watch.get(t)
