@@ -131,6 +131,26 @@ def nearest(strikes, x):
     return min(strikes, key=lambda k: abs(k - x))
 
 
+def recent_pop(t):
+    """Anti-chase: fractional move over the last ~3 archive days. The prediction
+    backtest showed already-popped names FADE — don't chase them."""
+    px = [s['spot'] for d in DAYS[-4:] if (s := load_surface(d, t))]
+    return (px[-1] - px[0]) / px[0] if len(px) >= 2 else 0.0
+
+
+def market_regime():
+    """The validated edge concentrates in up-trending tape (backtest H1 +68%/87%
+    win vs H2 +4%/54% in chop). Gate on QQQ 5-day return > 0 AND above its
+    10-day average — only fire the strategy when the market is constructive."""
+    q = [s['spot'] for d in DAYS[-11:] if (s := load_surface(d, 'QQQ'))]
+    if len(q) < 6:
+        return dict(ok=True, r5=None, note='insufficient QQQ data — not gating')
+    r5 = (q[-1] - q[-6]) / q[-6]
+    up = r5 > 0 and q[-1] >= sum(q[-10:]) / len(q[-10:])
+    return dict(ok=up, r5=round(r5 * 100, 1),
+                note='UP-TREND ✓ (edge live)' if up else 'CHOP/DOWN ⚠ — backtest edge weak here, size down or wait')
+
+
 def score(ff, mg, dist):
     # flow-weighted (backtest: flow drives), 20-day node persistence/growth confirms
     accum = min(1, ff['sum20'] / 100e6)
@@ -155,10 +175,16 @@ def evaluate(t, fr):
     if not mg:
         out['reasons'].append('no persistent monthly surface'); return out
     dist = (mg['king'] - mg['spot']) / mg['spot']
-    flow_ok = ff['sum20'] > 20e6 and ff['posdays'] >= 10 and ff['askshare'] >= 0.48
+    pop3 = recent_pop(t)
+    # ask-side >=50% qualifies; >=52% is the A+ tier (backtest: PF 2.2 -> 2.8)
+    flow_ok = ff['sum20'] > 20e6 and ff['posdays'] >= 10 and ff['askshare'] >= 0.50
+    aplus = ff['askshare'] >= 0.52 and mg['share'] >= 0.15
     node_ok = mg['share'] >= 0.06 and mg['persist'] >= 0.5 and 0.02 <= dist <= 0.25
+    chase_ok = pop3 <= 0.08                                # anti-chase: not already popped >8% in 3d
     if not flow_ok:
-        out['reasons'].append(f"flow weak (20d ${ff['sum20']/1e6:.0f}M, {ff['posdays']}/20d, ask {ff['askshare']*100:.0f}%)")
+        out['reasons'].append(f"flow weak (20d ${ff['sum20']/1e6:.0f}M, {ff['posdays']}/20d, ask {ff['askshare']*100:.0f}% <52)")
+    if not chase_ok:
+        out['reasons'].append(f"already popped +{pop3*100:.0f}% in 3d — chasing fades")
     if not node_ok:
         if mg['share'] < 0.06:
             out['reasons'].append(f"node weak ({mg['share']*100:.1f}% of map avg over 20d)")
@@ -174,11 +200,15 @@ def evaluate(t, fr):
                     node_days=mg['days'], dist=round(dist * 100, 1), exp=mg['exp'], dte=mg['dte'], strike=strike,
                     occ=occ(t, mg['exp'], strike), sum20=round(ff['sum20'] / 1e6), sum7=round(ff['sum7'] / 1e6),
                     posdays=ff['posdays'], askshare=round(ff['askshare'] * 100),
-                    intersection=bool(flow_ok and node_ok)))
+                    pop3=round(pop3 * 100, 1),
+                    intersection=bool(flow_ok and node_ok and chase_ok)))
     if out['intersection']:
         out['score'] = score(ff, mg, dist)
         out['target_pct'] = out['dist']
-        out['reasons'] = [f"INTERSECTION ✓ flow + 20d-persistent node ({out['node_persist']}%, growth {out['node_growth']:+}%)"]
+        out['take_profit_pct'] = 100            # validated: limit-sell at +100% (70% win, PF 2.2)
+        out['max_hold_days'] = 20               # hard time-stop
+        out['aplus'] = bool(aplus)              # A+ = ask>=52% + strong node (backtest PF 2.8)
+        out['reasons'] = [f"{'A+ ' if aplus else ''}INTERSECTION ✓ flow + 20d node ({out['node_persist']}% persist) + ask {out['askshare']}% + not chasing"]
     return out
 
 
@@ -195,7 +225,9 @@ def main():
         if t in WATCH:
             watch[t] = ev
     plays.sort(key=lambda x: x.get('score', 0), reverse=True)
+    regime = market_regime()
     print(f"as-of surface {ASOF} · flow thru latest cache")
+    print(f"MARKET REGIME: QQQ 5d {regime.get('r5')}% — {regime['note']}")
     print(f"\n=== {len(plays)} INTERSECTION plays (validated rule) — top 12 ===")
     for p in plays[:12]:
         print(f"  {p['ticker']:6} score {p.get('score'):3} | ${p['strike']:.0f}C {p['exp']} ({p['dte']}d) | "
@@ -213,7 +245,7 @@ def main():
             if 'spot' in w:
                 extra = f" [spot ${w['spot']}, King ${w['king']:.0f} ({w['dist']:+}%), 20d ${w.get('sum20','?')}M, {w.get('posdays','?')}/20, ask {w.get('askshare','?')}%]"
             print(f"  {t}: ❌ fails — {'; '.join(w['reasons'])}{extra}")
-    json.dump({'asof': ASOF, 'plays': plays, 'watch': watch},
+    json.dump({'asof': ASOF, 'regime': market_regime(), 'plays': plays, 'watch': watch},
               open(os.path.join(HERE, 'play_candidates.json'), 'w'))
     print(f"\nwrote play_candidates.json ({len(plays)} intersection plays)")
 
