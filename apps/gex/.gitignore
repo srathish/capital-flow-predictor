@@ -12,3 +12,6 @@ scripts/out/
 research/**/outputs/*.parquet
 research/**/*.parquet
 research/uw/candles/
+research/campaign/backtest/flow_cache/
+research/campaign/backtest/price_cache/
+research/campaign/backtest/*.log
