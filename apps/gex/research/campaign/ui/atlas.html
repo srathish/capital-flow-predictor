@@ -119,6 +119,10 @@ footer{margin-top:34px;text-align:center;font-size:11px;color:var(--faint);lette
     <div class="asof" id="asof"></div>
   </header>
   <div class="disclaimer"><b>Research / observation only.</b> Unvalidated v1 — Skylit node structure × Unusual Whales 20-day option accumulation. Not a recommendation; no orders are placed. Earnings-in-window is flagged, not auto-rejected.</div>
+  <div class="tracked-sec">
+    <div class="feedhead"><h2>Tracked · real forward P&L</h2><span>honest max AND now — from live UW option prices</span></div>
+    <div class="tracked-grid" id="tracked"></div>
+  </div>
   <div class="feedhead"><h2>Surfaced setups</h2><span id="count"></span></div>
   <div class="grid" id="feed"></div>
   <footer>Atlas · multi-week swing engine · scores are composite conviction (accumulation, node strength, persistence, OI opening, ask-side, tradeability)<br>Skylit Heatseeker × Unusual Whales · sibling to the 0DTE index system, separate cadence</footer>
@@ -192,4 +196,57 @@ const feed=document.getElementById('feed');
 feed.innerHTML = D.cards.map((c,i)=>card(c, i===0)).join('');
 new MutationObserver(()=>{}).observe(document.documentElement,{attributes:true});
 </script>
+
+<script>
+// TRACKED cards — real UW option price history, honest max AND now.
+const TRACKED = [{"tk":"NBIS","strike":240,"exp":"2026-08-21","occ":"NBIS260821C00240000","theme":"AI Neocloud","surfaced":"2026-06-09","entryPx":36.42,"maxPx":89.3,"maxDate":"2026-06-17","maxGain":145,"nowPx":31.96,"nowDate":"2026-07-09","nowGain":-12,"days":21,"spark":[36.42,38.29,36.62,46.97,57.11,66.26,75.59,80.49,77.43,76.99,59.95,60.51,45.64,47.02,71.77,43.15,34.53,32.06,23.22,27.43,31.96]},{"tk":"MRVL","strike":280,"exp":"2026-07-24","occ":"MRVL260724C00280000","theme":"AI Silicon","surfaced":"2026-06-09","entryPx":30.82,"maxPx":69.05,"maxDate":"2026-06-18","maxGain":124,"nowPx":8.18,"nowDate":"2026-07-09","nowGain":-73,"days":21,"spark":[30.82,32.67,34.56,38.61,50.23,45.22,44.95,59.91,49.09,37.82,27.64,29.22,22.34,21.1,34.17,26.14,13.95,12.92,5.12,5.28,8.18]}];
+function sparkline(spark, w, h){
+  if(!spark||spark.length<2) return '';
+  const min=Math.min(...spark), max=Math.max(...spark), rng=(max-min)||1;
+  const pts=spark.map((v,i)=>`${(i/(spark.length-1)*w).toFixed(1)},${(h-((v-min)/rng)*h).toFixed(1)}`).join(' ');
+  const maxI=spark.indexOf(max), lastI=spark.length-1;
+  const mx=(maxI/(spark.length-1)*w).toFixed(1), my=(h-((max-min)/rng)*h).toFixed(1);
+  const lx=(lastI/(spark.length-1)*w).toFixed(1), ly=(h-((spark[lastI]-min)/rng)*h).toFixed(1);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block">
+    <polyline points="${pts}" fill="none" stroke="var(--violet-hi)" stroke-width="1.6"/>
+    <circle cx="${mx}" cy="${my}" r="3" fill="var(--amber-hi)"/>
+    <circle cx="${lx}" cy="${ly}" r="3" fill="var(--cyan)"/></svg>`;
+}
+function trackedCard(t){
+  const nowCls = t.nowGain>=0?'pos':'neg';
+  const fmt=g=>(g>=0?'+':'')+g+'%';
+  return `<div class="tcard">
+    <div class="ttop">
+      <div><span class="tsym">${t.tk}</span> <span class="theme">${t.theme}</span>
+        <div class="tocc">${t.tk} $${t.strike}C · ${t.exp}</div></div>
+      <span class="tflag">TRACKED · ${t.days}d</span>
+    </div>
+    <div class="tgains">
+      <div class="g"><div class="k">SURFACED ${t.surfaced}</div><div class="v">$${t.entryPx}</div></div>
+      <div class="g"><div class="k">MAX ${t.maxDate}</div><div class="v max">+${t.maxGain}%</div></div>
+      <div class="g"><div class="k">NOW ${t.nowDate}</div><div class="v ${nowCls}">${fmt(t.nowGain)}</div></div>
+    </div>
+    <div class="tspark">${sparkline(t.spark,240,44)}</div>
+    <div class="tspark-lbl"><span style="color:var(--amber-hi)">● max</span> <span style="color:var(--cyan)">● now</span> · avg option price, entry → today</div>
+  </div>`;
+}
+document.getElementById('tracked').innerHTML = TRACKED.map(trackedCard).join('');
+</script>
+<style>
+.tracked-sec{margin:26px 0 6px}
+.tracked-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:720px){.tracked-grid{grid-template-columns:1fr 1fr}}
+.tcard{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid color-mix(in srgb,var(--violet) 30%,var(--line));border-radius:15px;padding:15px 17px}
+.ttop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.tsym{font-family:system-ui,sans-serif;font-weight:750;font-size:19px}
+.tocc{font-size:11px;color:var(--dim);margin-top:4px}
+.tflag{font-size:9.5px;font-weight:700;letter-spacing:.06em;color:var(--violet-hi);border:1px solid color-mix(in srgb,var(--violet) 35%,var(--line));border-radius:5px;padding:3px 8px}
+.tgains{display:flex;gap:8px;margin-bottom:12px}
+.tgains .g{flex:1;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.tgains .k{font-size:9px;color:var(--faint);letter-spacing:.04em}
+.tgains .v{font-size:18px;font-weight:750;margin-top:4px;font-variant-numeric:tabular-nums;font-family:system-ui,sans-serif}
+.tgains .v.max{color:var(--amber-hi)} .tgains .v.pos{color:var(--good)} .tgains .v.neg{color:var(--bad)}
+.tspark{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px}
+.tspark-lbl{font-size:10px;color:var(--faint);margin-top:6px;letter-spacing:.02em}
+</style>
 
