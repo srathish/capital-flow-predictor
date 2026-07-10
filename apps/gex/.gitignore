@@ -16,3 +16,6 @@ research/campaign/backtest/flow_cache/
 research/campaign/backtest/price_cache/
 research/campaign/backtest/*.log
 research/campaign/play_prices.json
+research/campaign/server/plays_latest.json
+research/campaign/server/*.log
+research/campaign/play_candidates.json
