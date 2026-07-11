@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS cycles (
     gate_reasons TEXT,
     alerted INTEGER NOT NULL DEFAULT 0,
     error TEXT,
+    -- Clause 8b live scorecard: does the thesis direction agree with the sign of
+    -- the vanna imbalance? (1 agree, 0 contradict, NULL stand-aside/unknown)
+    vanna_agree INTEGER,
     -- paper-tracking outcome fields, filled by later review
     outcome_pnl_pct REAL,
     outcome_note TEXT
@@ -84,12 +87,22 @@ def record(
     error: str | None = None,
     db_path: Path | None = None,
 ) -> int:
+    # Clause 8b scorecard: thesis direction vs vanna-imbalance sign
+    vanna_agree = None
+    try:
+        direction = (json.loads(thesis_json or "null") or {}).get("direction")
+        level = json.loads(features_json or "{}").get("vanna_ab_level")
+        if direction in ("long", "short") and level:
+            vanna_agree = int((direction == "long") == (level > 0))
+    except (ValueError, TypeError):
+        pass
     conn = connect(db_path)
     with conn:
         cur = conn.execute(
             """INSERT INTO cycles
-               (ts, ticker, features_json, thesis_json, approved, gate_reasons, alerted, error)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+               (ts, ticker, features_json, thesis_json, approved, gate_reasons, alerted,
+                error, vanna_agree)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 datetime.now(UTC).isoformat(timespec="seconds"),
                 ticker,
@@ -99,6 +112,7 @@ def record(
                 json.dumps(gate_reasons),
                 int(alerted),
                 error,
+                vanna_agree,
             ),
         )
         row_id = cur.lastrowid
@@ -233,12 +247,17 @@ def daily_report(db_path: Path | None = None) -> dict:
     today = datetime.now(UTC).date().isoformat()
     rows = conn.execute("SELECT * FROM cycles WHERE ts >= ? ORDER BY id", (today,)).fetchall()
     conn.close()
+    scored = [r for r in rows if r["vanna_agree"] is not None]
     report = {
         "date": today,
         "cycles": len(rows),
         "alerted": sum(r["alerted"] for r in rows),
         "rejected": sum(1 for r in rows if r["approved"] == 0),
         "errors": sum(1 for r in rows if r["error"]),
+        "vanna_agree_rate": (
+            round(sum(r["vanna_agree"] for r in scored) / len(scored), 3) if scored else None
+        ),
+        "vanna_scored": len(scored),
         "by_ticker": {},
     }
     for r in rows:

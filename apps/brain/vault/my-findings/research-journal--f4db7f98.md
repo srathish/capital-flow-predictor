@@ -2,7 +2,7 @@
 title: Research Journal
 source_url: repo://apps/gex/research/JOURNAL.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:10:20Z'
+fetched_at: '2026-07-11T18:12:58Z'
 trust_tier: 1
 category: my-findings
 topics:
