@@ -79,9 +79,14 @@ growing pika WALL repels price (58% — dealers build a ceiling/floor, price rej
 Velocity/acceleration of vanna did NOT beat the cumulative build (55/48%) at 5-min frames.
 **Mechanism:** gamma = where the pin is NOW (coincident map); vanna = forward hedging pressure
 (the compass). **Calibration:** IN-SAMPLE, ~9 features tested, borderline after multiple-
-comparisons — a strong LEAD needing OOS/walk-forward before sizing. This is the first time the
-topography forecast rather than mirrored; refines Clause 1 (gamma-structure≠direction still
-holds; vanna-FLOW is the partial exception). Forward-log vanna_flow_above_minus_below per cycle.
+comparisons. **WALK-FORWARD (vanna_wf): HELD BOTH HALVES** across the bull→chop transition —
+ALL train 58%/test 56%, TREND train 65%/test 59%. This is the ONLY signal in the whole study to
+survive the split that flipped every beta/exit edge negative in test → evidence it is STRUCTURAL,
+not regime-beta. Still modest (56-59% OOS), multiple-features caveat, and it's a directional
+HIT-RATE not net-P&L (cost/execution analysis pending). But it is the first genuine board-FORECAST
+that clears the gauntlet. Refines Clause 1: gamma-structure≠direction holds; **vanna-FLOW is a real
+partial direction compass**, strongest on trend days. Forward-log vanna_flow_above_minus_below +
+run a cost-aware P&L sim next.
 
 ## Clause 8 — What IS robust (pos-gamma → lower vol)
 Positive total gamma → smaller realized range holds on UW (SPY 0.7 vs 1.1%, QQQ 1.1
