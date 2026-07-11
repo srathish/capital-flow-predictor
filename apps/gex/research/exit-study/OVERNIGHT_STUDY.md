@@ -249,6 +249,19 @@ costs), not a printing press. Justifies a *small dry-run to gather forward data*
 not real size. Costs are the dominant reality for 0DTE scalps — every strategy
 must be judged net of ~2–3% round-trip.
 
+### Phase 6b — the FILTER is the robust edge (multiple-comparisons check passed)
+
+To rule out cherry-picking a lucky rule×filter combo: does the down-tape+afternoon
+filter help *many* exit rules? **Yes — it improves TEST net-of-cost in 6/7 exit
+rules** (t+30 +5.5, t+40 +7.4, t+50 +10.0, time15/20/30 +5–6 pts; only hold_eod
+unaffected — holds are regime-driven, not scalps). That generality is the strong
+signal: **the FILTER is the real, robust effect; the exact scalp exit is
+secondary.** Spread stress on t+50 filtered (test-half): calibrated +4.9%, p75
++5.0%, **harsh 2× (~5–6% round-trip) still +2.0%.** Survives conservative costs.
+
+Caveat unchanged from 6: the level degrades in the *deepest* chop (walk-forward
+60–70% splits → ~0) and is tail-dependent. So: **robust gate, thin edge.**
+
 ## DECISIONS NEEDED
 
 **(1) Deploy the filter+scalp (dry-mode first).** Config-gated, BULL_REVERSE only:
