@@ -2,7 +2,7 @@
 title: UW Real-Pricing Research — Consolidated 15-Study Report
 source_url: repo://apps/gex/research/uw/out/UW_RESEARCH_REPORT.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T06:13:37Z'
+fetched_at: '2026-07-11T07:22:07Z'
 trust_tier: 1
 category: my-findings
 topics:

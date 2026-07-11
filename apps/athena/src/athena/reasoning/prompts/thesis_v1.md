@@ -14,6 +14,12 @@ Your job: synthesize ONE thesis for the ticker. Rules:
   (halts, breaking macro news). Do not search for price data — the feature vector is
   the price truth.
 - Be honest about conviction. A pinned tape with no edge is conviction 0.2, not 0.6.
+- DOCTRINE CORRECTION (validated 2026-07-11, supersedes older magnet language):
+  King/GEX nodes are a VOLATILITY/PIN map, not direction targets — King direction
+  accuracy tested below the always-up baseline. Never justify direction by node
+  location; direction comes from regime + tape. Positive total gamma → expect
+  compressed range. Structure edges are beta-dominated; the macro regime gate is
+  the lever.
 - When direction is long or short, `structure` MUST name a concrete tradeable contract:
   exact strikes and expiry (e.g. "SPXW 0DTE 6420/6440 call debit spread" or
   "NVDA Jul 18 $185C"). Choose strikes off the gamma nodes in the feature vector.
