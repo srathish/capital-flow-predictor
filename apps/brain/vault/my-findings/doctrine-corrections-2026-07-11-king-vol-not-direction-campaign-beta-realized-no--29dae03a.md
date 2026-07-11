@@ -43,6 +43,17 @@ ZONE-based (mean-reversion), a LEAN not proof** (n=21, one regime, not yet
 significant). Cite as "dominant-pika King = pin zone (leaning real)" — never
 as a direction signal, never as proven exact-touch magnet.
 
+**GROUND-TRUTH RECEIPT (12:34, MSG 17 — verified on real price paths, not
+aggregates):** SPY 2026-04-29 — King \$710 pika at 41% share; price glued
+within 0.15% of the King at essentially every bar, all session (textbook pin).
+Contrast SPY 04-24 and 04-13: opened near the King, then TRENDED AWAY.
+**Reframe: the King pin is real & strong CONDITIONAL on pika + pin-regime
+(chop) days — the WALL; price breaks away on trend days — the ESCALATOR.
+Averaging over trend days dilutes the aggregate to a weak lean; the effect is
+neither a hallucination nor a direction signal. This is the wall-vs-escalator
+hypothesis made concrete.** Pooled evidence: 60 archive pika sessions
+(bellwether-archive) + live athena cycles in journal `king_zone_obs`.
+
 **What DOES transfer (validated on Skylit's own data):**
 - GEX does NOT predict direction (up/down) — F1/F4 on the 64-day Skylit
   archive; the campaign used Skylit's King and still came out 0.72-correlated

@@ -34,6 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_cycles_ts ON cycles (ts);
 CREATE TABLE IF NOT EXISTS king_zone_obs (
     id INTEGER PRIMARY KEY,
     cycle_id INTEGER REFERENCES cycles(id),
+    source TEXT NOT NULL DEFAULT 'athena-live',
     ts TEXT NOT NULL,
     ticker TEXT NOT NULL,
     king_strike REAL,
