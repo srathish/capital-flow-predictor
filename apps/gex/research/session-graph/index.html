@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Session Mesh · Bellwether</title>
+<style>
+  :root { --bg:#080b11; --panel:#0e131c; --line:#1c2634; --ink:#e6edf3; --dim:#7d8ba0; --accentA:#38e1c4; --accentB:#f5c451; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { height:100%; }
+  body { background:radial-gradient(1200px 800px at 30% -10%, #0d1420, var(--bg)); color:var(--ink);
+    font:14px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
+  .top { height:56px; display:flex; align-items:center; gap:16px; padding:0 20px; border-bottom:1px solid var(--line);
+    background:rgba(14,19,28,.7); backdrop-filter:blur(6px); }
+  .top h1 { font-size:15px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+  .top h1 span { color:var(--accentA); }
+  .live { display:flex; align-items:center; gap:7px; color:var(--dim); font-size:12px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--accentA); box-shadow:0 0 10px var(--accentA); animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .stat { margin-left:auto; display:flex; gap:22px; color:var(--dim); font-size:12px; }
+  .stat b { color:var(--ink); font-variant-numeric:tabular-nums; }
+  .wrap { display:grid; grid-template-columns:1fr 420px; height:calc(100% - 56px); }
+  canvas { display:block; width:100%; height:100%; }
+  .feed { border-left:1px solid var(--line); background:var(--panel); display:flex; flex-direction:column; min-height:0; }
+  .feed .fh { padding:12px 16px; border-bottom:1px solid var(--line); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+  .feed .list { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+  .msg { border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:#0b1017; animation:rise .35s ease; }
+  @keyframes rise { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+  .msg .h { display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:6px; }
+  .badge { padding:1px 8px; border-radius:20px; font-weight:600; font-size:11px; }
+  .arrow { color:var(--dim); }
+  .msg .id { margin-left:auto; color:var(--dim); font-variant-numeric:tabular-nums; }
+  .msg .ts { color:var(--dim); font-size:11px; }
+  .msg .body { color:#c6d1de; font-size:12.5px; white-space:pre-wrap; max-height:4.6em; overflow:hidden; position:relative; cursor:pointer; }
+  .msg .body.open { max-height:none; }
+  .msg .body.trunc::after { content:""; position:absolute; bottom:0; left:0; right:0; height:1.4em; background:linear-gradient(transparent,#0b1017); }
+  .pill { margin-top:7px; display:inline-block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; padding:1px 7px; border-radius:6px; border:1px solid var(--line); color:var(--dim); }
+  .pill.answered { color:var(--accentA); border-color:rgba(56,225,196,.4); }
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1><span>◆</span> Session&nbsp;Mesh</h1>
+    <div class="live"><i class="dot"></i> live · polling mailbox</div>
+    <div class="stat"><span><b id="s-msgs">0</b> messages</span><span><b id="s-sessions">0</b> sessions</span><span>updated <b id="s-upd">—</b></span></div>
+  </div>
+  <div class="wrap">
+    <canvas id="cv"></canvas>
+    <div class="feed"><div class="fh">Conversation stream</div><div class="list" id="feed"></div></div>
+  </div>
+<script>
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const PAL = ['#38e1c4','#f5c451','#8b7cff','#ff7a90','#63b3ff'];
+let G = { sessions:[], edges:[], messages:[] }, nodes={}, packets=[], lastCount=0, t=0;
+
+function color(name){ const i = G.sessions.findIndex(s=>s.name===name); return PAL[(i<0?0:i)%PAL.length]; }
+function resize(){ const r=cv.getBoundingClientRect(), d=devicePixelRatio||1; cv.width=r.width*d; cv.height=r.height*d; ctx.setTransform(d,0,0,d,0,0); layout(); }
+function layout(){
+  const w=cv.getBoundingClientRect().width, h=cv.getBoundingClientRect().height;
+  const cx=w/2, cy=h/2, R=Math.min(w,h)*0.32;
+  nodes={}; const cc=G.commandCenter;
+  const ccS=G.sessions.find(s=>s.name===cc); if(ccS) nodes[cc]={x:cx,y:cy,s:ccS};
+  const others=G.sessions.filter(s=>s.name!==cc);
+  others.forEach((s,i)=>{ const a=-Math.PI/2 + i/Math.max(1,others.length)*2*Math.PI; nodes[s.name]={x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),s}; });
+}
+function edgeKey(a,b){ return [a,b].sort().join('|'); }
+function activity(name){ // recent sender glows
+  const idx = G.sessions.find(s=>s.name===name)?.lastIdx ?? -1;
+  return idx === G.messages.length-1 ? 1 : 0;
+}
+function draw(){
+  t+=0.016; const w=cv.getBoundingClientRect().width, h=cv.getBoundingClientRect().height;
+  ctx.clearRect(0,0,w,h);
+  // grid
+  ctx.strokeStyle='rgba(255,255,255,.03)'; ctx.lineWidth=1;
+  for(let x=0;x<w;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for(let y=0;y<h;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  // spokes: Command Center <-> every session (bright if they've messaged, dashed if just linked)
+  const cc=G.commandCenter, cn=nodes[cc];
+  const pairCount=(a,b)=>G.edges.filter(x=>edgeKey(x.from,x.to)===edgeKey(a,b)).reduce((s,x)=>s+x.count,0);
+  if(cn){ for(const name in nodes){ if(name===cc) continue; const b=nodes[name]; const cnt=pairCount(cc,name); const pulse=0.35+0.25*Math.sin(t*2);
+    if(cnt>0){ ctx.setLineDash([]); ctx.strokeStyle=`rgba(120,165,195,${pulse+0.15})`; ctx.lineWidth=1.7; }
+    else { ctx.setLineDash([4,7]); ctx.strokeStyle='rgba(120,150,180,.22)'; ctx.lineWidth=1.2; }
+    ctx.beginPath(); ctx.moveTo(cn.x,cn.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(125,139,160,.9)'; ctx.font='11px ui-monospace,monospace'; ctx.textAlign='center';
+    ctx.fillText(cnt>0? cnt+' msgs':'linked', (cn.x+b.x)/2, (cn.y+b.y)/2-8);
+  }}
+  // packets
+  packets = packets.filter(p=>p.p<1);
+  for(const p of packets){ p.p+=0.018; const a=nodes[p.from], b=nodes[p.to]; if(!a||!b) continue;
+    const x=a.x+(b.x-a.x)*ease(p.p), y=a.y+(b.y-a.y)*ease(p.p);
+    ctx.beginPath(); ctx.arc(x,y,4,0,7); ctx.fillStyle=p.color; ctx.shadowBlur=14; ctx.shadowColor=p.color; ctx.fill(); ctx.shadowBlur=0;
+  }
+  // nodes
+  for(const name in nodes){ const {x,y,s}=nodes[name]; const c=color(name); const cmd=s.command; const rad=cmd?46:32; const glow=activity(name)?1:0.4;
+    if(cmd){ ctx.beginPath(); ctx.arc(x,y,rad+13,0,7); ctx.strokeStyle='rgba(56,225,196,.22)'; ctx.lineWidth=1; ctx.stroke();
+      for(let k=0;k<3;k++){ const a=t*0.6+k*2.094; ctx.beginPath(); ctx.arc(x,y,rad+13, a, a+0.55); ctx.strokeStyle=c; ctx.lineWidth=2.4; ctx.stroke(); } }
+    ctx.beginPath(); ctx.arc(x,y,rad,0,7); ctx.fillStyle='#0c121b'; ctx.fill();
+    ctx.lineWidth=cmd?3:2.5; ctx.strokeStyle=c; ctx.shadowBlur=(cmd?32:22)*(0.5+0.5*Math.abs(Math.sin(t*1.5))*glow); ctx.shadowColor=c; ctx.stroke(); ctx.shadowBlur=0;
+    ctx.beginPath(); ctx.arc(x,y,cmd?8:6,0,7); ctx.fillStyle=c; ctx.fill();
+    if(cmd){ ctx.fillStyle=c; ctx.font='700 9px ui-monospace,monospace'; ctx.textAlign='center'; ctx.fillText('◆ COMMAND CENTER ◆', x, y-rad-19); }
+    ctx.textAlign='center'; ctx.fillStyle='#e6edf3'; ctx.font=`700 ${cmd?16:15}px ui-sans-serif,sans-serif`; ctx.fillText(name, x, y+rad+22);
+    ctx.fillStyle='rgba(125,139,160,.9)'; ctx.font='11px ui-sans-serif,sans-serif'; wrapText(s.role, x, y+rad+40, 230, 14);
+    ctx.fillStyle=c; ctx.font='12px ui-monospace,monospace'; ctx.fillText(`↑${s.sent}  ↓${s.recv}`, x, y-rad-7);
+  }
+  requestAnimationFrame(draw);
+}
+const ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+function wrapText(txt,x,y,maxW,lh){ const words=(txt||'').split(' '); let line='', yy=y;
+  for(const w of words){ const test=line+w+' '; if(ctx.measureText(test).width>maxW && line){ ctx.fillText(line.trim(),x,yy); line=w+' '; yy+=lh; } else line=test; }
+  ctx.fillText(line.trim(),x,yy);
+}
+function renderFeed(){
+  const el=document.getElementById('feed'); const atBottom = el.scrollHeight-el.scrollTop-el.clientHeight < 60;
+  el.innerHTML = G.messages.map(m=>{
+    const cf=color(m.from), ct=color(m.to);
+    const body = m.body.length>240;
+    return `<div class="msg"><div class="h">
+      <span class="badge" style="background:${cf}22;color:${cf}">${m.from}</span>
+      <span class="arrow">→</span>
+      <span class="badge" style="background:${ct}22;color:${ct}">${m.to}</span>
+      <span class="id">${m.id}</span></div>
+      <div class="ts">${m.ts}</div>
+      <div class="body ${body?'trunc':''}" onclick="this.classList.toggle('open');this.classList.toggle('trunc')">${esc(m.body)}</div>
+      <span class="pill ${m.status}">${m.status}</span></div>`;
+  }).join('');
+  if(atBottom) el.scrollTop = el.scrollHeight;
+}
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+async function poll(){
+  try{
+    const g = await (await fetch('/api/graph')).json();
+    const grew = g.count>lastCount;
+    const newMsgs = grew ? g.messages.slice(lastCount) : [];
+    G=g; layout();
+    document.getElementById('s-msgs').textContent=g.count;
+    document.getElementById('s-sessions').textContent=g.sessions.length;
+    document.getElementById('s-upd').textContent=new Date(g.updatedAt).toLocaleTimeString();
+    renderFeed();
+    for(const m of newMsgs) packets.push({from:m.from,to:m.to,p:0,color:color(m.from)});
+    lastCount=g.count;
+  }catch(e){}
+}
+addEventListener('resize',resize); resize(); draw(); poll(); setInterval(poll,2000);
+</script>
+</body>
+</html>
