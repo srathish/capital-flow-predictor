@@ -4,6 +4,25 @@
 below are research artifacts; any change to the live tracker waits in
 **DECISIONS NEEDED** for explicit approval.
 
+## TL;DR (after full robustness)
+
+- **No robust, cost-surviving, ex-ante edge** was found in the 0DTE bull-reverse
+  signal. Every apparent edge dissolved under scrutiny:
+  - Exits (trail/EMA/VWAP/ATR/time): all invert train→test.
+  - Filter+scalp "+6%": mid-price illusion → **~+1% OOS** after real ~2–3% costs,
+    tail-dependent, threshold-sensitive, needs a 2-condition conjunction (overfit).
+  - Surface "escalator" signal: **circular** (spot-rise-only is just as good; the
+    surface adds nothing; classification is coincident with outcome).
+  - Trend-day hold (+65%): real but **unpredictable** ex-ante (all classifiers fail).
+- **The dataset is a 32%-faithful proxy** of live fires (5-min replay vs 1-min live).
+- **What IS real & useful:** (1) the EOD summary reports *peak*, not *realized* —
+  overstates by ~45 pts, fix it; (2) costs (~2–3% round-trip) dominate 0DTE scalps
+  and must be in every calc; (3) the discipline that stopped us shipping ~6 overfit
+  "edges."
+- **Recommendation:** don't deploy any of tonight's strategies as an edge; fix the
+  reporting; port this same robustness battery to the **stock-swing flow×node
+  system**, where a durable edge is more plausible.
+
 ## Why this study
 
 The live 0DTE index tracker (SPXW/SPY/QQQ) shows a specific failure signature:
