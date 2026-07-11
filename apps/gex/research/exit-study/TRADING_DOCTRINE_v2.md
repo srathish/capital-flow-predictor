@@ -69,6 +69,20 @@ with SPY's forward return**; collapses 81%/+57% (bull-forward) → 51%/−0%
 (chop-forward). Deploy either **only when the multi-week tape is bullish**; stand
 down in chop/rotation. No structure-picks-direction edge survived costs+robustness.
 
+## Clause 8b — VANNA FLOW leads direction (GAMMA is coincident) — first real board-forecast
+Whole-board reshuffle study (node_board/flow/velocity, 183 sessions): the GAMMA board
+reshuffles WITH price (King migrates in the price direction 83%, 94% on trend days) but
+does NOT lead it (mid-King/fastest-growing-node predict late-half price 45-47% = coincident
+mirror). The LEAD lives in VANNA: cumulative first-half **vanna flow** (net Δvanna above−below
+spot) predicts the 2nd-half direction **57% all / 62% trend days** (single-test p≈0.01). A
+growing pika WALL repels price (58% — dealers build a ceiling/floor, price rejects it).
+Velocity/acceleration of vanna did NOT beat the cumulative build (55/48%) at 5-min frames.
+**Mechanism:** gamma = where the pin is NOW (coincident map); vanna = forward hedging pressure
+(the compass). **Calibration:** IN-SAMPLE, ~9 features tested, borderline after multiple-
+comparisons — a strong LEAD needing OOS/walk-forward before sizing. This is the first time the
+topography forecast rather than mirrored; refines Clause 1 (gamma-structure≠direction still
+holds; vanna-FLOW is the partial exception). Forward-log vanna_flow_above_minus_below per cycle.
+
 ## Clause 8 — What IS robust (pos-gamma → lower vol)
 Positive total gamma → smaller realized range holds on UW (SPY 0.7 vs 1.1%, QQQ 1.1
 vs 1.6%, full year). This is the one durable structural signal — a **volatility**
