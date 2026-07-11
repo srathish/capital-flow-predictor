@@ -375,6 +375,12 @@ print in bull tape and die in chop. Their "edge" is **substantially beta**
 (being long gamma/calls in a rising market), not regime-independent alpha. This
 is the single most important result of the study.
 
+**Quantitative proof (the capstone number):** across the 21 cohorts, the
+correlation between SPY's forward-20d return and the intersection's mean return is
+**0.72 (R² ≈ 0.52)** — over half the intersection's performance variance is
+explained by market direction alone. It's ~52% beta with option leverage on top;
+the residual alpha (a few cohorts beat a down market) is real but swamped.
+
 **The real lever for both = MACRO REGIME.** Not intraday trend (that failed), but
 the multi-week market state, which is more persistent/detectable. Run either
 system **only when the macro tape is bullish**; stand down in chop/rotation. A
