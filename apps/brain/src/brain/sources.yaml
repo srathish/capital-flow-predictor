@@ -1,0 +1,120 @@
+# Curated source registry. tier: 1 own findings, 2 primary/academic, 3 education, 4 community.
+# fetcher: plain (scrapling Fetcher) | stealth (StealthyFetcher) | dynamic | api (search_feeds).
+# discovery: seed = crawl once, feed = re-polled by `brain sweep`.
+# Dead URLs log a fetch_error and are skipped — the batch never aborts. Growth beyond this
+# list happens through `/brain learn` (WebSearch-verified URLs) and the sweep.
+
+- name: investopedia-greeks
+  domain: investopedia.com
+  trust_tier: 3
+  category: greeks-mechanics
+  topics: [greeks, options-mechanics]
+  seed_urls:
+    - https://www.investopedia.com/terms/g/gamma.asp
+    - https://www.investopedia.com/terms/d/delta.asp
+    - https://www.investopedia.com/terms/t/theta.asp
+    - https://www.investopedia.com/terms/v/vega.asp
+    - https://www.investopedia.com/terms/r/rho.asp
+    - https://www.investopedia.com/terms/i/iv.asp
+    - https://www.investopedia.com/terms/v/volatilityskew.asp
+    - https://www.investopedia.com/terms/v/vix.asp
+    - https://www.investopedia.com/terms/o/openinterest.asp
+    - https://www.investopedia.com/terms/s/strikeprice.asp
+    - https://www.investopedia.com/terms/e/expirationdate.asp
+    - https://www.investopedia.com/terms/i/inthemoney.asp
+    - https://www.investopedia.com/terms/o/outofthemoney.asp
+    - https://www.investopedia.com/terms/c/calloption.asp
+    - https://www.investopedia.com/terms/p/putoption.asp
+
+- name: investopedia-strategies
+  domain: investopedia.com
+  trust_tier: 3
+  category: strategies
+  topics: [strategies, spreads]
+  seed_urls:
+    - https://www.investopedia.com/terms/i/ironcondor.asp
+    - https://www.investopedia.com/terms/s/straddle.asp
+    - https://www.investopedia.com/terms/s/strangle.asp
+    - https://www.investopedia.com/terms/b/butterflyspread.asp
+    - https://www.investopedia.com/terms/c/coveredcall.asp
+    - https://www.investopedia.com/terms/b/bullcallspread.asp
+    - https://www.investopedia.com/terms/b/bearputspread.asp
+    - https://www.investopedia.com/terms/c/calendarspread.asp
+    - https://www.investopedia.com/terms/c/creditspread.asp
+    - https://www.investopedia.com/terms/d/debitspread.asp
+
+- name: investopedia-technicals
+  domain: investopedia.com
+  trust_tier: 3
+  category: technicals
+  topics: [technicals, indicators]
+  seed_urls:
+    - https://www.investopedia.com/terms/t/technicalanalysis.asp
+    - https://www.investopedia.com/terms/r/rsi.asp
+    - https://www.investopedia.com/terms/m/macd.asp
+    - https://www.investopedia.com/terms/b/bollingerbands.asp
+    - https://www.investopedia.com/terms/m/movingaverage.asp
+    - https://www.investopedia.com/terms/v/vwap.asp
+    - https://www.investopedia.com/terms/a/atr.asp
+    - https://www.investopedia.com/terms/s/support.asp
+    - https://www.investopedia.com/terms/r/resistance.asp
+    - https://www.investopedia.com/terms/f/fibonacciretracement.asp
+    - https://www.investopedia.com/terms/c/candlestick.asp
+    - https://www.investopedia.com/terms/o/onbalancevolume.asp
+
+- name: investopedia-equities
+  domain: investopedia.com
+  trust_tier: 3
+  category: equities
+  topics: [fundamentals, equities]
+  seed_urls:
+    - https://www.investopedia.com/terms/f/fundamentalanalysis.asp
+    - https://www.investopedia.com/terms/p/price-earningsratio.asp
+    - https://www.investopedia.com/terms/e/eps.asp
+    - https://www.investopedia.com/terms/m/marketcapitalization.asp
+    - https://www.investopedia.com/terms/s/shortinterest.asp
+    - https://www.investopedia.com/terms/s/shortselling.asp
+
+- name: investopedia-risk
+  domain: investopedia.com
+  trust_tier: 3
+  category: risk-management
+  topics: [risk, position-sizing]
+  seed_urls:
+    - https://www.investopedia.com/terms/p/positionsizing.asp
+    - https://www.investopedia.com/terms/s/stop-lossorder.asp
+    - https://www.investopedia.com/terms/r/riskmanagement.asp
+    - https://www.investopedia.com/terms/k/kellycriterion.asp
+    - https://www.investopedia.com/terms/r/riskrewardratio.asp
+    - https://www.investopedia.com/terms/d/drawdown.asp
+
+- name: cboe-spx
+  domain: cboe.com
+  trust_tier: 2
+  category: index-options
+  topics: [spx, spxw, contract-specs, 0dte]
+  seed_urls:
+    - https://www.cboe.com/tradable_products/sp_500/spx_options/
+    - https://www.cboe.com/tradable_products/sp_500/spx_options/specifications/
+    - https://www.cboe.com/tradable_products/sp_500/mini_spx_options/
+
+- name: squeezemetrics
+  domain: squeezemetrics.com
+  trust_tier: 2
+  category: market-structure
+  topics: [gex, dix, dealer-positioning]
+  seed_urls:
+    - https://squeezemetrics.com/monitor/download/pdf/The_Implied_Order_Book.pdf
+
+- name: arxiv-qfin
+  domain: arxiv.org
+  trust_tier: 2
+  category: papers
+  fetcher: api
+  discovery: feed
+  topics: [academic, 0dte, gamma]
+  seed_urls:  # arXiv API search queries, not URLs
+    - "0DTE options"
+    - "gamma exposure dealer hedging"
+    - "option market maker hedging intraday"
+    - "zero days to expiration"

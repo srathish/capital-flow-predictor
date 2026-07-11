@@ -1,0 +1,5 @@
+# Athena v1 universe — indexes only. Stocks join in v2, gated on the paper record.
+tickers:
+  - SPXW
+  - SPY
+  - QQQ
