@@ -1,0 +1,58 @@
+{
+  "ticker": "LW",
+  "updated": "2026-07-11",
+  "verdict": "A-TIER CANDIDATE \u2014 pending verification",
+  "domains": {
+    "catalysts_events": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "WSJ/GuruFocus 13F + activist letter",
+      "as_of": "2026-04-30",
+      "fields": {
+        "next_earnings_date": "pending",
+        "dated_catalysts": "Starboard $258M/6.1M sh (13F 3/31) + letter 2026-04-30 demanding $500M cost cuts by FY2028; Jana 10%+ director-affiliated buyer",
+        "guidance": "turnaround",
+        "regulatory_ma_index_lockup": "dual-activist campaign"
+      }
+    },
+    "valuation": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "UW 10-Q + insider filings",
+      "as_of": "2026-05-11",
+      "fields": {
+        "pe_ttm": "depressed (turnaround)",
+        "pe_vs_own_history": "cheap vs history (was $100+, now ~$42-46)",
+        "ev_ebitda_or_ps": "pending",
+        "p_b": "pending",
+        "peer_multiple_compare": "cheap food-processing",
+        "reverse_dcf_implied_growth": "pending"
+      }
+    },
+    "ownership": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "UW get_insider_transactions (code-P) + Form 4",
+      "as_of": "2026-05-11",
+      "fields": {
+        "form4_insider_cluster": "CFO Gray +14,556 Apr-May 2026 ($40.9-43.9); Exec Chair Craps +50k @ $48.65 (2/6); dirs Bensen/Prestage",
+        "inst_13f_delta": "Jana +386k sh Apr 2026",
+        "activist_13dg": "Starboard + Jana dual campaign",
+        "fund_flow_note": "heavy insider code-P cluster (contradicts ainvest 'not buying' claim)"
+      }
+    },
+    "sentiment_narrative": {
+      "status": "filled",
+      "owner": "Athena",
+      "source": "web(tipranks/seekingalpha/fooddive/simplywall); EXACT firm counts pending UW get_analyst_ratings",
+      "as_of": "2026-07-11",
+      "fields": {
+        "analyst_rating_dist": "Moderate Buy: 3 Buy / 6 Hold (TipRanks web); pending UW confirm",
+        "analyst_revisions": "consensus PT ~$63.73 (range $57-80) \u2014 wide dispersion = genuine disagreement on turnaround",
+        "news_tone": "MIXED / cautiously-optimistic \u2014 DUAL activist (Starboard 4/30 letter: cost cuts, 25% EBITDA margin by FY29, ZBB, APAC sale; + Jana stake) with insider buying support, BUT years-of-underperformance backdrop + execution risk",
+        "short_interest": "PENDING UW get_short_data_by_ticker (not fabricated)",
+        "narrative_summary": "Dual-activist turnaround (Starboard + Jana) + insider code-P buys = catalyst real; but it's a SHOW-ME story (execution risk, mixed analyst tape). Narrative supports a value-with-catalyst thesis, not a momentum long."
+      }
+    }
+  }
+}

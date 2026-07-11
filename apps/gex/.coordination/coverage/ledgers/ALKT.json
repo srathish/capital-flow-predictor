@@ -1,0 +1,58 @@
+{
+  "ticker": "ALKT",
+  "updated": "2026-07-11",
+  "verdict": "A-TIER CANDIDATE \u2014 pending verification",
+  "domains": {
+    "catalysts_events": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "SEC SC 13D + Bloomberg/Hedgeweek",
+      "as_of": "2026-06-29",
+      "fields": {
+        "next_earnings_date": "pending",
+        "dated_catalysts": "Jana SC 13D filed 2026-06-29, 6.3% (6,747,707 sh), explicitly exploring a SALE / engaging parties; sale-restart push 2026-05-28",
+        "guidance": "~$493M ARR",
+        "regulatory_ma_index_lockup": "activist-driven sale process (restarted after prior stall)"
+      }
+    },
+    "valuation": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "UW insider filings + 10-K",
+      "as_of": "2026-05-14",
+      "fields": {
+        "pe_ttm": "n/a (unprofitable, FY25 net loss -$47.6M)",
+        "pe_vs_own_history": "down ~40% YTD",
+        "ev_ebitda_or_ps": "~3.5x EV/ARR ($493M ARR)",
+        "p_b": "pending",
+        "peer_multiple_compare": "cheap for SaaS",
+        "reverse_dcf_implied_growth": "pending"
+      }
+    },
+    "ownership": {
+      "status": "filled",
+      "owner": "Prospector",
+      "source": "UW get_insider_transactions (code-P)",
+      "as_of": "2026-05-14",
+      "fields": {
+        "form4_insider_cluster": "General Atlantic (10%+ owner/dir) ~$4.7M+ across 2026-05-05\u219205-14 at $16.49-16.87 (6 code-P buys)",
+        "inst_13f_delta": "Jana 5.1%\u21926.3%",
+        "activist_13dg": "Jana SC 13D 2026-06-29 (sale push)",
+        "fund_flow_note": "activist-aligned insider buying"
+      }
+    },
+    "sentiment_narrative": {
+      "status": "filled",
+      "owner": "Athena",
+      "source": "web(seekingalpha/gurufocus/simplywall/yahoo); EXACT firm counts pending UW get_analyst_ratings",
+      "as_of": "2026-07-11",
+      "fields": {
+        "analyst_rating_dist": "JPMorgan Overweight + named 'high-conviction takeout candidate' (web; full firm dist pending UW pull \u2014 VST lesson: no 'consensus' claim without it)",
+        "analyst_revisions": "JPM PT $20->$19 on 2026-06-22 (maintained OW) \u2014 target trimmed even as takeout thesis held",
+        "news_tone": "POSITIVE, activist-driven \u2014 Jana 10%+ stake (2026-06-29) publicly pushing a SALE, multiple parties cited; Q GAAP rev +28.9% YoY $126.1M (beat), adj EBITDA +85% YoY $22.3M",
+        "short_interest": "PENDING UW get_short_data_by_ticker (not fabricated)",
+        "narrative_summary": "M&A/activist-catalyst is the whole thesis; sale-exploration tone. Valuation MIXED: DCF ~12.5% undervalued (Simply Wall St) BUT P/S 4.3x vs fair ~3.4x = rich on multiples. Sentiment axis = event-driven, not fundamental-cheap."
+      }
+    }
+  }
+}
