@@ -26,7 +26,19 @@ Source: `apps/gex/research/exit-study/OVERNIGHT_STUDY.md` + 1-year UW GEX/VEX
 walkforward (SPY+QQQ, 247 days, multi-regime) by the Bellwether session.
 These corrections SUPERSEDE the cited lines below wherever they conflict.
 
-## 0. VANNA COMPASS (Clause 8b) — REFUTED on independent replication (15:13)
+## 0. VANNA COMPASS (Clause 8b) — DEAD, both sources (15:37 final verdict)
+
+**FINAL (Vega, Skylit sign-normalized re-test across {5,10,20,expanding} windows):
+Clause 8b DOES NOT SURVIVE on Skylit either — same base-rate artifact as UW.**
+Net-vanna imbalance was positive 85-92% of sessions (so the "56-58%" was up-tape
+base rate); sign-normalized (de-meaned to allow flips) it was 41-43% ANTI-
+predictive in train, halves disagreed (regime luck), placebo random split
+46-52% = indistinguishable. FAILS pre-registration on both definitions, both
+sources. **Clause 8b is DEAD — struck from active doctrine. Never cite vanna
+imbalance for direction. The four vanna loggers remain as null-result evidence,
+not signal.** Original refutation trail below.
+
+### Original refutation notice (15:13) — UW-daily
 
 The vanna-imbalance directional lead — briefly the program's highest-conviction
 predictive item — **FAILED hostile replication** (independent UW-daily re-pull,
