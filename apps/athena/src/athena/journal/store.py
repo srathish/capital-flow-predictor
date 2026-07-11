@@ -44,6 +44,17 @@ CREATE TABLE IF NOT EXISTS king_zone_obs (
     regime TEXT,                 -- raw 5-mode regime at observation time
     regime_label TEXT,           -- chop | trend (wall-vs-escalator split key);
                                  -- EOD pass may overwrite with the full-day label
+    -- node dynamics (handoff precursor, MSG 21): rival = 2nd-largest |gamma| node
+    rival_strike REAL,
+    rival_share REAL,
+    rival_side TEXT,             -- ceiling (above spot) | floor (below)
+    rival_sign TEXT,             -- pika | barney
+    -- day-level dynamics, filled by the EOD pass over the day's observations
+    king_share_open REAL,
+    king_share_late REAL,
+    rival_share_open REAL,
+    rival_share_late REAL,
+    handoff_flag INTEGER,        -- king share decayed AND rival grew
     final_window_zone_frac REAL,
     dead_strike_zone_frac REAL
 );
@@ -102,26 +113,78 @@ def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) 
     if not features.get("king_strike"):
         return
     regime = features.get("regime", "")
+    # rival = 2nd-largest |gamma| node; share scaled off the King's known share
+    rival_strike = rival_share = rival_side = rival_sign = None
+    tops = features.get("top_gamma_strikes") or []
+    king_share = features.get("king_share") or 0.0
+    if len(tops) >= 2 and tops[0][1]:
+        r_strike, r_gamma = tops[1][0], tops[1][1]
+        rival_strike = r_strike
+        rival_share = round(king_share * abs(r_gamma) / abs(tops[0][1]), 4)
+        rival_side = "ceiling" if r_strike > features.get("spot", 0) else "floor"
+        rival_sign = "pika" if r_gamma > 0 else "barney" if r_gamma < 0 else "zero"
     conn = connect(db_path)
     with conn:
         conn.execute(
             """INSERT INTO king_zone_obs
                (cycle_id, ts, ticker, king_strike, king_share, king_sign,
-                dist_at_entry_pct, regime, regime_label)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                dist_at_entry_pct, regime, regime_label,
+                rival_strike, rival_share, rival_side, rival_sign)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 cycle_id,
                 datetime.now(UTC).isoformat(timespec="seconds"),
                 features.get("ticker", ""),
                 features.get("king_strike"),
-                features.get("king_share"),
+                king_share,
                 features.get("king_sign"),
                 features.get("dist_at_entry_pct"),
                 regime,
                 _REGIME_LABEL.get(regime),
+                rival_strike,
+                rival_share,
+                rival_side,
+                rival_sign,
             ),
         )
     conn.close()
+
+
+def eod_king_pass(trading_day: str, db_path: Path | None = None) -> int:
+    """Fill day-level node-dynamics fields from the day's observation series.
+
+    open = first observation of the day, late = last. handoff_flag = King share
+    decayed while the rival grew (the operator's handoff precursor). Returns the
+    number of (ticker, day) groups stamped. Zone fracs need bars and are filled
+    separately.
+    """
+    conn = connect(db_path)
+    day_rows = conn.execute(
+        "SELECT id, ticker, king_share, rival_share FROM king_zone_obs "
+        "WHERE ts LIKE ? AND source = 'athena-live' ORDER BY ts",
+        (trading_day + "%",),
+    ).fetchall()
+    by_ticker: dict[str, list] = {}
+    for r in day_rows:
+        by_ticker.setdefault(r["ticker"], []).append(r)
+    stamped = 0
+    with conn:
+        for ticker, rows in by_ticker.items():
+            first, last = rows[0], rows[-1]
+            handoff = int(
+                (last["king_share"] or 0) < (first["king_share"] or 0)
+                and (last["rival_share"] or 0) > (first["rival_share"] or 0)
+            )
+            conn.execute(
+                "UPDATE king_zone_obs SET king_share_open=?, king_share_late=?, "
+                "rival_share_open=?, rival_share_late=?, handoff_flag=? "
+                "WHERE ticker=? AND ts LIKE ? AND source='athena-live'",
+                (first["king_share"], last["king_share"], first["rival_share"],
+                 last["rival_share"], handoff, ticker, trading_day + "%"),
+            )
+            stamped += 1
+    conn.close()
+    return stamped
 
 
 def alerts_today(db_path: Path | None = None) -> int:

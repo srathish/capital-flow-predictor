@@ -74,6 +74,19 @@ def journal(limit: int = typer.Option(20, "--limit")) -> None:
 
 
 @app.command()
+def eod(
+    day: str = typer.Option(None, "--day", help="Trading day YYYY-MM-DD (default: today ET)"),
+) -> None:
+    """End-of-day pass: stamp node-dynamics (handoff precursor) on king_zone_obs."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    day = day or datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    n = store.eod_king_pass(day)
+    console.print(f"[green]stamped {n} ticker-day groups[/green] for {day}")
+
+
+@app.command()
 def kill() -> None:
     """Activate the kill switch — blocks every alert until `athena unkill`."""
     gatekeeper.kill(True)
