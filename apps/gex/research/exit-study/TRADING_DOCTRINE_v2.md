@@ -83,3 +83,11 @@ noisy/inverted — use the cleaner near-term/UW read; frame matters.)
   forward data. Collect via the live observation log.
 - Intraday pin vs breakout ("wall vs escalator") on the Skylit surface — untested at
   node level with predictive lead.
+- **WALL-vs-ESCALATOR MECHANISM (operator's model, sharpest lead):** the King is a WALL
+  when it STAYS dominant; price BREAKS (escalator/HANDOFF) when a competing node (ceiling
+  above / floor below) GROWS toward the King's strength while the King's share DECAYS —
+  dealers rolling the ceiling up / dropping the floor. Directionally validated on archive
+  (node_dynamics.mjs): HANDOFF sessions (King decay + rival grow) → price moved to the
+  rival **75%** vs **36%** when the King held; high initial dominance → more pinning
+  (38 vs 31%). n=4 handoff (strong effect, tiny sample) → forward-log the precursor
+  {king_share Δ, rival strike/share Δ, side, sign, handoff flag} to confirm.
