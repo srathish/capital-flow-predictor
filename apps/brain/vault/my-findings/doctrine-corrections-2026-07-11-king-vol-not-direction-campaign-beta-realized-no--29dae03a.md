@@ -53,7 +53,23 @@ sign-normalized. Do not cite vanna imbalance for direction until/unless the
 Skylit re-test clears. This is the graduation gate working in reverse: an edge
 the mesh believed, killed by a session that had to reproduce it and couldn't.
 
-## 1. GEX does not pick DIRECTION; Skylit King magnet is OPEN (not disproven)
+## 1. GEX does not pick DIRECTION; King EOD-pin is an ARTIFACT (intraday untested)
+
+**FINAL EOD VERDICT (15:44, Vega n=192, pre-registered, distance-matched MIRROR
+control): the King close-pin is an ARTIFACT.** High king_share does correlate
+with close-pinning (45.8% vs 22.9% low-share, OOS-stable) — BUT the
+distance-matched mirror strike pins MORE (53.1%); on high-share sessions King
+16 vs mirror 23, i.e. **the King loses to its own placebo.** Mechanism: high
+king_share just tags a LOW-VOL day — the dominant strike sits near-ATM (0.167%
+from spot vs 0.322%), the close barely moves, so it lands near ANY near-money
+level. **king_share is a low-volatility REGIME TAG, not a structural magnet.**
+This supersedes the earlier "conditional pika-zone lean" (which used a weaker
+control). WHAT SURVIVES: king_share as a low-vol proxy (consistent with Clause
+8's pos-gamma→compressed-range). WHAT'S DEAD: King-as-magnet at the EOD close.
+SCOPE CAVEAT: only EOD close-pin was tested — intraday reference-level pinning
+(the SPY 4/29 all-session glue, the operator's live observation) is a DIFFERENT
+measurement and remains UNTESTED, not refuted. Do not cite the King as an
+EOD price target; intraday pin stays open pending a proper intraday-control study.
 
 **RETRACTION NOTICE (03:26, Bellwether MSG 6):** the 1-yr walkforward's
 "price moves away from the King (42%)" finding used **UW's King**, and UW
