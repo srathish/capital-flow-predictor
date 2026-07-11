@@ -2,7 +2,7 @@
 title: TRADING DOCTRINE v2 — evidence-backed spine (Bellwether ⇄ Athena)
 source_url: repo://apps/gex/research/exit-study/TRADING_DOCTRINE_v2.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T16:26:49Z'
+fetched_at: '2026-07-11T18:10:20Z'
 trust_tier: 1
 category: my-findings
 topics:
@@ -12,7 +12,7 @@ topics:
 - exits
 summary: '**Status:** canonical shared doctrine. Supersedes stale "node → direction/target" lines in Skylit-Academy L329/L1738 and KNOWLEDGE_BASE L112. Seed as **T1**; cite by clause number. **This is knowledge, NOT a mandate to change live trading logic** — see Clause'
 url_sha1: 3d7d59e4cf0baa19e0c49d8ecf9d1a9a79dc0299
-simhash: '3100625505279481766'
+simhash: '4145291294005221364'
 status: vault
 ingested_by: seed
 ---
@@ -62,6 +62,7 @@ use:** a dominant (high relative_significance) **pika** King is a real **pin ZON
 expect mean-reversion around it, not an exact-strike target; do NOT expect weak or
 barney nodes to pull. Direction still never comes from the node (Clause 1/2). Confirm
 with more regimes + the operator's live cross-check before sizing on it.
+**Dose-response (pin_dose):** robustness on 60 pika sessions — the pin edge is concentrated in the top-2 share bins (share >~0.21: +10 to +18% zone edge, stable across ±0.3/0.4/0.5% widths); weak pika Kings show negative edge; middle is noisy (share↔edge corr only 0.20, non-monotonic). => THRESHOLD effect (dominant pika only), not a smooth gradient. n=12/bin — real-but-underpowered; needs more regimes.
 
 ## Clause 4 — ENTRIES catch MOVES (this part is real)
 The bull-reverse signal reliably detects "something is about to move" (high MFE:
@@ -87,6 +88,25 @@ with SPY's forward return**; collapses 81%/+57% (bull-forward) → 51%/−0%
 (chop-forward). Deploy either **only when the multi-week tape is bullish**; stand
 down in chop/rotation. No structure-picks-direction edge survived costs+robustness.
 
+## Clause 8b — VANNA FLOW leads direction (GAMMA is coincident) — first real board-forecast
+Whole-board reshuffle study (node_board/flow/velocity, 183 sessions): the GAMMA board
+reshuffles WITH price (King migrates in the price direction 83%, 94% on trend days) but
+does NOT lead it (mid-King/fastest-growing-node predict late-half price 45-47% = coincident
+mirror). The LEAD lives in VANNA: cumulative first-half **vanna flow** (net Δvanna above−below
+spot) predicts the 2nd-half direction **57% all / 62% trend days** (single-test p≈0.01). A
+growing pika WALL repels price (58% — dealers build a ceiling/floor, price rejects it).
+Velocity/acceleration of vanna did NOT beat the cumulative build (55/48%) at 5-min frames.
+**Mechanism:** gamma = where the pin is NOW (coincident map); vanna = forward hedging pressure
+(the compass). **Calibration:** IN-SAMPLE, ~9 features tested, borderline after multiple-
+comparisons. **WALK-FORWARD (vanna_wf): HELD BOTH HALVES** across the bull→chop transition —
+ALL train 58%/test 56%, TREND train 65%/test 59%. This is the ONLY signal in the whole study to
+survive the split that flipped every beta/exit edge negative in test → evidence it is STRUCTURAL,
+not regime-beta. Still modest (56-59% OOS), multiple-features caveat, and it's a directional
+HIT-RATE not net-P&L (cost/execution analysis pending). But it is the first genuine board-FORECAST
+that clears the gauntlet. Refines Clause 1: gamma-structure≠direction holds; **vanna-FLOW is a real
+partial direction compass**, strongest on trend days. Forward-log vanna_flow_above_minus_below +
+run a cost-aware P&L sim next.
+
 ## Clause 8 — What IS robust (pos-gamma → lower vol)
 Positive total gamma → smaller realized range holds on UW (SPY 0.7 vs 1.1%, QQQ 1.1
 vs 1.6%, full year). This is the one durable structural signal — a **volatility**
@@ -101,3 +121,11 @@ noisy/inverted — use the cleaner near-term/UW read; frame matters.)
   forward data. Collect via the live observation log.
 - Intraday pin vs breakout ("wall vs escalator") on the Skylit surface — untested at
   node level with predictive lead.
+- **WALL-vs-ESCALATOR MECHANISM (operator's model, sharpest lead):** the King is a WALL
+  when it STAYS dominant; price BREAKS (escalator/HANDOFF) when a competing node (ceiling
+  above / floor below) GROWS toward the King's strength while the King's share DECAYS —
+  dealers rolling the ceiling up / dropping the floor. Directionally validated on archive
+  (node_dynamics.mjs): HANDOFF sessions (King decay + rival grow) → price moved to the
+  rival **75%** vs **36%** when the King held; high initial dominance → more pinning
+  (38 vs 31%). n=4 handoff (strong effect, tiny sample) → forward-log the precursor
+  {king_share Δ, rival strike/share Δ, side, sign, handoff flag} to confirm.

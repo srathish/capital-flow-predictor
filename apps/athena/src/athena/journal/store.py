@@ -55,6 +55,9 @@ CREATE TABLE IF NOT EXISTS king_zone_obs (
     rival_share_open REAL,
     rival_share_late REAL,
     handoff_flag INTEGER,        -- king share decayed AND rival grew
+    -- Clause 8b (vanna leads): level per cycle; flow = Δ vs prior cycle same ticker/day
+    vanna_ab_level REAL,
+    vanna_flow_ab REAL,
     final_window_zone_frac REAL,
     dead_strike_zone_frac REAL
 );
@@ -124,16 +127,31 @@ def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) 
         rival_side = "ceiling" if r_strike > features.get("spot", 0) else "floor"
         rival_sign = "pika" if r_gamma > 0 else "barney" if r_gamma < 0 else "zero"
     conn = connect(db_path)
+    # vanna flow = Δ level vs the previous live observation for this ticker today
+    # (db lookup, so it survives one-shot CLI cycles and process restarts)
+    level = features.get("vanna_ab_level")
+    ts_now = datetime.now(UTC).isoformat(timespec="seconds")
+    prev = conn.execute(
+        "SELECT vanna_ab_level FROM king_zone_obs WHERE ticker=? AND source='athena-live' "
+        "AND ts LIKE ? ORDER BY ts DESC LIMIT 1",
+        (features.get("ticker", ""), ts_now[:10] + "%"),
+    ).fetchone()
+    flow = (
+        round(level - prev["vanna_ab_level"], 2)
+        if level is not None and prev and prev["vanna_ab_level"] is not None
+        else None
+    )
     with conn:
         conn.execute(
             """INSERT INTO king_zone_obs
                (cycle_id, ts, ticker, king_strike, king_share, king_sign,
                 dist_at_entry_pct, regime, regime_label,
-                rival_strike, rival_share, rival_side, rival_sign)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                rival_strike, rival_share, rival_side, rival_sign,
+                vanna_ab_level, vanna_flow_ab)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 cycle_id,
-                datetime.now(UTC).isoformat(timespec="seconds"),
+                ts_now,
                 features.get("ticker", ""),
                 features.get("king_strike"),
                 king_share,
@@ -145,6 +163,8 @@ def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) 
                 rival_share,
                 rival_side,
                 rival_sign,
+                level,
+                flow,
             ),
         )
     conn.close()

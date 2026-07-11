@@ -33,6 +33,9 @@ class FeatureVector(BaseModel):
     king_share: float = 0.0
     king_sign: str = "zero"  # pika (+) | barney (-) | zero
     dist_at_entry_pct: float | None = None  # |spot - king| / spot * 100
+    # Clause 8b (vanna leads): net vanna above minus below spot, ±2.5% band.
+    # Level per cycle; the flow (Δ) is diffed across cycles at journal time.
+    vanna_ab_level: float = 0.0
     # tape
     vwap: float | None
     vwap_side: int  # +1 above, -1 below, 0 unknown
@@ -134,6 +137,11 @@ def build(client: UWClient, ticker: str) -> FeatureVector:
         total_vanna=profile.total_vanna,
         king_strike=profile.king_strike,
         king_share=round(profile.king_share, 4),
+        vanna_ab_level=round(
+            sum(r.net_vanna for r in exposures if spot < r.strike <= spot * 1.025)
+            - sum(r.net_vanna for r in exposures if spot * 0.975 <= r.strike < spot),
+            2,
+        ),
         king_sign=("pika" if profile.king_gamma > 0 else "barney" if profile.king_gamma < 0 else "zero"),
         dist_at_entry_pct=(
             round(abs(spot - profile.king_strike) / spot * 100, 3) if profile.king_strike else None

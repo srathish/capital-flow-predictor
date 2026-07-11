@@ -2,7 +2,7 @@
 title: GEX/VEX Knowledge Base — Doctrine ↔ Empirics
 source_url: repo://apps/gex/research/gexvex-structure/KNOWLEDGE_BASE.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T16:26:49Z'
+fetched_at: '2026-07-11T18:10:20Z'
 trust_tier: 1
 category: my-findings
 topics:
