@@ -147,7 +147,76 @@ system: its core job is **trend-up-day classification**, which separates +65%
 from the GEX surface (pin-hold vs wall-escape — the "wall vs escalator" idea),
 tested out-of-sample against this +65% target.
 
+### Phase 3d/3e — Trend-day identification is unsolved with current features
+
+The +65% trend-up-day hold edge (3c) is real but **not predictable ex-ante**:
+- **Intraday (3d):** efficiency-ratio, VWAP-hold, ORB, and their combined gate all
+  flip negative in test. The "trend-confirmation" gate makes it *worse* (PASS −40%
+  vs FAIL −14% test) — in a chop regime, breakouts are traps.
+- **Macro (3e):** SPY trailing-5d return at the open also fails/inverts. Buying
+  after a rally loses (−9%); the naive trend filter is counterproductive.
+
+**Culminating finding:** across exits, instrument, entry features, intraday trend
+signals, and macro filters, **no realizable signal robustly selects the
+profitable (trend-up) days.** The system's P&L is dominated by which days happen
+to trend up, which is not forecastable from the price/tape/return features
+available. The −23% realized is therefore **not** an exit/entry-tuning problem —
+it's that the edge is regime-luck that can't be timed with the current feature set.
+
+### Phase 3f/4 — CHOP SCALP + filter: the deployable, realizable edge ⭐
+
+Chop days pay via *fast scalps*, not holds (the pin that kills hold-to-close
+makes the scalp work). Best realizable strategy:
+
+**Fire BULL_REVERSE only when SPY ≥ its open at fire (not down-tape) AND not in
+the 1:30–3:00 ET window; take profit +50% (25-min time-stop, −50% stop).**
+
+| | avg | train | test | win |
+|---|---|---|---|---|
+| scalp everything (no filter) | +1% | +4% | −3% | 48% |
+| **filter + scalp** | **+6%** | **+8%** | **+4%** ✅ | 52% |
+| rejected by filter | −10% | −6% | −14% | 39% |
+
+Robust in **both** halves, realizable, ~5.5 trades/active day. The down-tape
+filter (a tighter bull-tape gate) removes the trend-down scalp-killers; it even
+beats the hindsight "chop day" label. This forgoes the trend-up hold upside
+(scalp +50% vs ride +65%) in exchange for robustness without needing to predict
+trend days.
+
+## CONCLUSION
+
+1. **Exits, instrument, entry-features, and trend-day *prediction* are dead ends**
+   — all overfit or regime-flip out-of-sample. Rigorously ruled out (this is the
+   value: it stops us shipping overfit changes).
+2. **A deployable edge DOES exist** (Phase 4): **down-tape+afternoon filter + a
+   +50% take-profit scalp** → +6%/trade, +8%/+4% train/test, robust. vs the
+   live −23%. Small per-trade but real, realizable, and survives OOS.
+3. **The big prize (trend-up-day hold, +65%) is real but unpredictable** with
+   current features — leave it as upside, don't build on it.
+4. **One un-mined vein (data gap):** node-level GEX surface dynamics (pin-escape
+   vs stay-pinned — the "wall vs escalator" idea). Untestable on the big dataset
+   until we instrument the replay to emit per-fire surface features. Best next
+   research build.
+5. **Reporting bug to fix:** the EOD summary shows PEAK (best_mark), not realized
+   (close_mark) — flatters the system by ~45 pts. Fix so we're not flying blind.
+
 ## DECISIONS NEEDED
+
+**(1) Deploy the filter+scalp (dry-mode first).** Config-gated, BULL_REVERSE only:
+down-tape filter (SPY≥open) + afternoon suppression + TP+50%/25m/−50% exit. Run
+in dry/tracking mode alongside live to confirm the +4–6% OOS edge forward. LOWEST
+regret — it strictly rejects the −10% trades the system currently takes.
+
+**(2) Fix the EOD summary to report realized P&L** (close_mark), not peak. Pure
+reporting correctness; no strategy change.
+
+**(3) Afternoon suppression (1:30–3:00 ET)** as a standalone gate if (1) is too
+big a step — it's the single most robust filter on its own.
+
+**(4) Build the GEX-surface instrumentation** (research) to test pin-escape — the
+one realizable signal that could unlock trend-day identification.
+
+_None approved — await review. No live code touched tonight._
 
 _(proposals for live-code changes — none approved yet; await morning review)_
 
