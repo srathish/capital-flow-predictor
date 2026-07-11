@@ -26,19 +26,26 @@ Source: `apps/gex/research/exit-study/OVERNIGHT_STUDY.md` + 1-year UW GEX/VEX
 walkforward (SPY+QQQ, 247 days, multi-regime) by the Bellwether session.
 These corrections SUPERSEDE the cited lines below wherever they conflict.
 
-## 1. King/GEX nodes are NOT directional magnets
+## 1. GEX does not pick DIRECTION; Skylit King magnet is OPEN (not disproven)
 
-**Superseded claims:**
-- Skylit Academy ("Nodes act like magnets. The bigger they are, the stronger the
-  pull."; "Price moves where positioning builds.")
-- GEX/VEX Knowledge Base ("Nodes pull like magnets (verified: pull not push)").
+**RETRACTION NOTICE (03:26, Bellwether MSG 6):** the 1-yr walkforward's
+"price moves away from the King (42%)" finding used **UW's King**, and UW
+computes GEX/VEX with a different dealer model + sign conventions than Skylit.
+It is NOT a valid test of the Skylit King our live logic runs on. Do NOT cite
+"King magnet failed" — the **Skylit King magnet/pin effect is UNSETTLED**
+(today's tape moved TO the Skylit King). Bellwether is re-running the
+walkforward on the Skylit archive King; treat as open until then.
 
-**Corrected doctrine:** GEX-King and VEX-King DIRECTION accuracy is 45-49% —
-below the ~55% always-up baseline, in every quarter tested; price moved toward
-the King only ~42% of the time. Independent of Skylit (UW computes GEX
-differently). What SURVIVES: positive total gamma -> compressed next-day range
-(0.7% vs 1.1%), all year. GEX is a volatility/pin map, not a direction signal.
-Cite "King -> pin/vol"; direction comes from regime/tape, never node location.
+**What DOES transfer (validated on Skylit's own data):**
+- GEX does NOT predict direction (up/down) — F1/F4 on the 64-day Skylit
+  archive; the campaign used Skylit's King and still came out 0.72-correlated
+  with SPY beta. **Direction = regime/flow, never node position.**
+- Positive total gamma -> lower realized vol / compressed range (holds on BOTH
+  Skylit and UW data).
+
+So: "nodes are magnets" remains T1 doctrine for PIN/structure/exit purposes,
+pending the Skylit-King re-test; what is corrected is using node location as a
+DIRECTION signal. Nothing in the live trading logic changes (operator directive).
 
 ## 2. Campaign swing "+70% intersection" is mostly beta
 
