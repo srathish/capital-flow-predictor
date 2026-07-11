@@ -2,7 +2,7 @@
 title: Forecast Ensemble — Study Design (pre-registered)
 source_url: repo://apps/gex/research/forecast-ensemble/DESIGN.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T07:35:07Z'
+fetched_at: '2026-07-11T07:40:39Z'
 trust_tier: 1
 category: my-findings
 topics:

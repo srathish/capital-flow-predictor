@@ -2,7 +2,7 @@
 title: Overnight Exit + Entry Study — 2026-07-10 → 07-11
 source_url: repo://apps/gex/research/exit-study/OVERNIGHT_STUDY.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T07:35:07Z'
+fetched_at: '2026-07-11T07:40:39Z'
 trust_tier: 1
 category: my-findings
 topics:
