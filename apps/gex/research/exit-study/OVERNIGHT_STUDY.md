@@ -106,6 +106,47 @@ are *suggestive filters*, not proven printing presses; they need more live days
 to confirm. MFE is huge in every bucket (+73–170%) — the entry always catches a
 move; the edge is purely in *which regime lets it convert*.
 
+### Phase 2 — Instrument: 0DTE wins *intraday*; overnight hold still open
+
+Same BULL_REVERSE signal, same strike/entry, alternate expiries, same-day exits:
+
+| | MFE | exit30 (tr/te) | EOD |
+|---|---|---|---|
+| 0DTE | +107% | +5% (+13/−5) | +12% |
+| 1-DTE | +40% | +1% (+3/−1) | +3% |
+| 2-DTE | +28% | +1% (+2/−0) | +3% |
+
+For an **intraday** hold, **0DTE is best** — its gamma catches ~2.5× the MFE of
+1-2DTE, and theta doesn't bite in 30 min. Naively rolling to 1-2 DTE for the same
+scalp *loses* edge. Regime-dependence persists across every DTE (all negative in
+test), reconfirming the lever is regime, not instrument.
+
+**Caveat / still open:** 1-2 DTE's actual advantage is the **overnight/multi-day
+hold** (let the directional move play out without 0DTE's terminal decay). That's
+a different strategy (swing, not scalp) and is tested next.
+
+### Phase 3c — TREND-DAY HOLD is the biggest edge (user hypothesis, validated)
+
+Segmenting BULL_REVERSE calls by DAY type (SPY close-open):
+
+| Day type | HOLD to close (tr/te) | SCALP 30m (tr/te) |
+|---|---|---|
+| **trendUP** | **+124% / +65%** ✅ | +29% / +9% |
+| chop | −21% / −23% ❌ | +4% / +4% |
+| trendDOWN | −27% / −73% ❌ | −7% / −34% |
+
+**On trend-UP days, holding to close is a large, out-of-sample-robust edge
+(+65% test) that crushes scalping.** Chop days bleed; trend-DOWN days holding a
+call is a −73% catastrophe. This is the strongest robust signal in the study.
+
+**The open problem — realizability.** The naive early proxy (SPY already up
+>0.4% at fire) does NOT survive: HOLD +65% train → **−34% test**. So the edge is
+real but early trend-up-day *identification* is unsolved. This reframes the
+system: its core job is **trend-up-day classification**, which separates +65%
+(hold on trend days) from −23% (fire blindly). Next: a realizable classifier
+from the GEX surface (pin-hold vs wall-escape — the "wall vs escalator" idea),
+tested out-of-sample against this +65% target.
+
 ## DECISIONS NEEDED
 
 _(proposals for live-code changes — none approved yet; await morning review)_
