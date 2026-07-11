@@ -31,6 +31,7 @@ async function snap(ticker, token) {
   url.searchParams.set('symbol', ticker); url.searchParams.set('max_strikes', '250');
   url.searchParams.set('max_expirations', '3'); url.searchParams.set('nocache', 'v' + Date.now());
   const r = await fetch(url.toString(), { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: `Bearer ${token}`, Accept: 'application/json' }, signal: AbortSignal.timeout(15000) });
+  if (r.status === 401 || r.status === 403) throw new Error('AUTH');   // surface auth errors for backoff
   if (!r.ok) return null;
   const raw = await r.json(); const spot = raw.CurrentSpot; if (spot == null) return null;
   const K = raw.Strikes || [], G = raw.GammaValues || [], V = raw.VannaValues || [];
@@ -45,17 +46,30 @@ async function snap(ticker, token) {
 async function main() {
   if (!(await initAuth())) { console.error('auth failed'); process.exit(1); }
   console.log(`[velocity-capture] started; polling ${TICKERS.join('/')} every ${POLL_MS / 1000}s during market hours -> ${OUT}`);
+  // DEFENSIVE (Athena's ops note): shared Clerk session — never hammer a flapping auth.
+  // Back off exponentially on consecutive AUTH errors so the poller is a good citizen and
+  // NOT the cause of auth flakiness for the fire-loop / bridge.
+  let authFails = 0;
   for (;;) {
     if (marketOpen()) {
       let token; try { token = await getFreshToken(); } catch { token = null; }
-      const day = new Date().toISOString().slice(0, 10);
-      const file = path.join(OUT, `${day}.jsonl`);
-      for (const t of TICKERS) {
-        try { const s = token && await snap(t, token); if (s) fs.appendFileSync(file, JSON.stringify(s) + '\n'); } catch {}
-        await sleep(400);
+      if (!token) { authFails++; }
+      else {
+        const day = new Date().toISOString().slice(0, 10);
+        const file = path.join(OUT, `${day}.jsonl`);
+        let authHit = false;
+        for (const t of TICKERS) {
+          try { const s = await snap(t, token); if (s) fs.appendFileSync(file, JSON.stringify(s) + '\n'); }
+          catch (e) { if (String(e.message).includes('AUTH')) authHit = true; }
+          await sleep(400);
+        }
+        authFails = authHit ? authFails + 1 : 0;
       }
     }
-    await sleep(POLL_MS);
+    // healthy → POLL_MS; on repeated auth trouble back off up to ~16 min so we don't add pressure
+    const backoff = authFails > 0 ? Math.min(POLL_MS * 2 ** authFails, 16 * 60_000) : POLL_MS;
+    if (authFails > 0) console.warn(`[velocity-capture] auth trouble x${authFails} — backing off ${Math.round(backoff / 1000)}s (yielding the shared session)`);
+    await sleep(backoff);
   }
 }
 main();
