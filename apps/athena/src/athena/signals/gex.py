@@ -21,6 +21,10 @@ class GexProfile:
     top_gamma_strikes: list[tuple[float, float]]  # (strike, net_gamma) by |gamma|
     mass_below_spot: float  # fraction of |gamma| mass strictly below spot
     total_vanna: float
+    # King node (doctrine: argmax |gamma|, sign-agnostic, per-expiry surface)
+    king_strike: float | None = None
+    king_gamma: float = 0.0
+    king_share: float = 0.0  # |king_gamma| / total |gamma| mass (relative significance)
 
 
 def build_profile(rows: list[StrikeExposure], spot: float, top_n: int = 5) -> GexProfile:
@@ -40,6 +44,7 @@ def build_profile(rows: list[StrikeExposure], spot: float, top_n: int = 5) -> Ge
     below = sum(abs(r.net_gamma) for r in rows if r.strike < spot)
     mass_below_spot = below / mass if mass else 0.0
 
+    king_strike, king_gamma = (top_gamma_strikes[0] if top_gamma_strikes else (None, 0.0))
     return GexProfile(
         spot=spot,
         total_gamma=total_gamma,
@@ -49,6 +54,9 @@ def build_profile(rows: list[StrikeExposure], spot: float, top_n: int = 5) -> Ge
         top_gamma_strikes=top_gamma_strikes,
         mass_below_spot=mass_below_spot,
         total_vanna=total_vanna,
+        king_strike=king_strike,
+        king_gamma=king_gamma,
+        king_share=abs(king_gamma) / mass if mass else 0.0,
     )
 
 

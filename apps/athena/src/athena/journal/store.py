@@ -28,6 +28,21 @@ CREATE TABLE IF NOT EXISTS cycles (
     outcome_note TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_cycles_ts ON cycles (ts);
+-- King pin-zone observations (pooled schema agreed with Bellwether, MSG 15).
+-- Entry fields land at cycle time; *_zone_frac are filled by an end-of-day pass
+-- (fraction of the final window spent within ±0.4% of the strike).
+CREATE TABLE IF NOT EXISTS king_zone_obs (
+    id INTEGER PRIMARY KEY,
+    cycle_id INTEGER REFERENCES cycles(id),
+    ts TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    king_strike REAL,
+    king_share REAL,
+    king_sign TEXT,
+    dist_at_entry_pct REAL,
+    final_window_zone_frac REAL,
+    dead_strike_zone_frac REAL
+);
 """
 
 
@@ -71,6 +86,29 @@ def record(
         row_id = cur.lastrowid
     conn.close()
     return int(row_id or 0)
+
+
+def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) -> None:
+    """Log a King pin-zone observation at cycle time (zone fracs filled at EOD)."""
+    if not features.get("king_strike"):
+        return
+    conn = connect(db_path)
+    with conn:
+        conn.execute(
+            """INSERT INTO king_zone_obs
+               (cycle_id, ts, ticker, king_strike, king_share, king_sign, dist_at_entry_pct)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (
+                cycle_id,
+                datetime.now(UTC).isoformat(timespec="seconds"),
+                features.get("ticker", ""),
+                features.get("king_strike"),
+                features.get("king_share"),
+                features.get("king_sign"),
+                features.get("dist_at_entry_pct"),
+            ),
+        )
+    conn.close()
 
 
 def alerts_today(db_path: Path | None = None) -> int:

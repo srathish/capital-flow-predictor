@@ -56,7 +56,7 @@ def run_cycle(ticker: str, client: UWClient | None = None, no_llm: bool = False)
     alerted = False
     if verdict.approved:
         alerted = discord.send(t)
-    store.record(
+    cycle_id = store.record(
         ticker,
         features.model_dump_json(),
         thesis_mod.to_json(t),
@@ -64,6 +64,7 @@ def run_cycle(ticker: str, client: UWClient | None = None, no_llm: bool = False)
         verdict.reasons,
         alerted,
     )
+    store.record_king_obs(cycle_id, features.model_dump())
     log.info("%s: %s conviction=%.2f approved=%s alerted=%s",
              ticker, t.direction, t.conviction, verdict.approved, alerted)
     return {

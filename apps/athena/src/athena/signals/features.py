@@ -28,6 +28,11 @@ class FeatureVector(BaseModel):
     top_gamma_strikes: list[tuple[float, float]]
     mass_below_spot: float
     total_vanna: float
+    # King node — pooled-schema fields for the pin-zone study (Bellwether MSG 15)
+    king_strike: float | None = None
+    king_share: float = 0.0
+    king_sign: str = "zero"  # pika (+) | barney (-) | zero
+    dist_at_entry_pct: float | None = None  # |spot - king| / spot * 100
     # tape
     vwap: float | None
     vwap_side: int  # +1 above, -1 below, 0 unknown
@@ -127,6 +132,12 @@ def build(client: UWClient, ticker: str) -> FeatureVector:
         top_gamma_strikes=profile.top_gamma_strikes,
         mass_below_spot=profile.mass_below_spot,
         total_vanna=profile.total_vanna,
+        king_strike=profile.king_strike,
+        king_share=round(profile.king_share, 4),
+        king_sign=("pika" if profile.king_gamma > 0 else "barney" if profile.king_gamma < 0 else "zero"),
+        dist_at_entry_pct=(
+            round(abs(spot - profile.king_strike) / spot * 100, 3) if profile.king_strike else None
+        ),
         vwap=vw,
         vwap_side=(1 if vw and spot > vw else (-1 if vw and spot < vw else 0)),
         ema9_vs_21=(1 if e9 and e21 and e9 > e21 else (-1 if e9 and e21 and e9 < e21 else 0)),
