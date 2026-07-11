@@ -6,6 +6,7 @@ The LLM never sees raw prices to do math on; everything numeric is computed here
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel
 
@@ -44,12 +45,29 @@ class FeatureVector(BaseModel):
     regime_evidence: list[str]
 
 
+# Options roots whose price/tape lives on a different underlying ticker.
+# SPXW has the 0DTE chain; the index itself (price, state) is SPX.
+PRICE_ROOT = {"SPXW": "SPX"}
+
+
 def build(client: UWClient, ticker: str) -> FeatureVector:
-    state = client.stock_state(ticker)
+    price_ticker = PRICE_ROOT.get(ticker, ticker)
+    state = client.stock_state(price_ticker)
     spot = state.close
-    exposures = client.strike_exposures(ticker)
+    # 0DTE doctrine reads TODAY's expiry surface; fall back to the aggregate
+    # when today isn't an expiry (weekends) or the expiry slice is empty.
+    today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    try:
+        exposures = client.strike_exposures(ticker, expiry=today, spot=spot)
+    except Exception:
+        exposures = []
+    if not exposures:
+        exposures = client.strike_exposures(ticker, spot=spot)
     profile = gex.build_profile(exposures, spot)
-    bars = client.bars(ticker, "5m", limit=100)
+    try:
+        bars = client.bars(price_ticker, "5m", limit=100)
+    except Exception:
+        bars = []  # index roots have no OHLC candles — indicators degrade to None
     bars = list(reversed(bars)) if _looks_reversed(bars) else bars
     closes = [b.close for b in bars]
 

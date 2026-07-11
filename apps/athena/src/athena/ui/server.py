@@ -155,24 +155,25 @@ class CycleRequest(BaseModel):
 
 @app.post("/api/cycle")
 def run_cycle(req: CycleRequest) -> JSONResponse:
-    if req.ticker not in athena_config.watchlist():
-        raise HTTPException(400, f"{req.ticker} not in watchlist")
+    """Universe is locked to the validated watchlist (SPXW/SPY/QQQ) until the
+    paper record justifies expansion — the user's standing 0DTE scope rule."""
+    ticker = req.ticker.strip().upper()
+    if ticker == "SPX":
+        ticker = "SPXW"  # the 0DTE chain lives on the weekly root
+    if ticker not in athena_config.watchlist():
+        raise HTTPException(400, f"{ticker} outside validated universe {athena_config.watchlist()}")
     if not req.llm:
-        result = orchestrator.run_cycle(req.ticker, no_llm=True)
-        return JSONResponse(result)
+        return JSONResponse(orchestrator.run_cycle(ticker, no_llm=True))
+    # full cycle is synchronous — the console waits for its trade
     if not _cycle_lock.acquire(blocking=False):
         raise HTTPException(409, "a cycle is already running")
-
-    def _run() -> None:
-        try:
-            _cycle_state.update(running=True, ticker=req.ticker)
-            orchestrator.run_cycle(req.ticker)
-        finally:
-            _cycle_state.update(running=False, ticker=None)
-            _cycle_lock.release()
-
-    threading.Thread(target=_run, daemon=True).start()
-    return JSONResponse({"started": req.ticker, "note": "result lands in the journal"})
+    try:
+        _cycle_state.update(running=True, ticker=ticker)
+        result = orchestrator.run_cycle(ticker)
+    finally:
+        _cycle_state.update(running=False, ticker=None)
+        _cycle_lock.release()
+    return JSONResponse(result)
 
 
 class KillRequest(BaseModel):

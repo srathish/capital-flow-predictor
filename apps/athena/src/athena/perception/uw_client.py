@@ -56,11 +56,21 @@ class UWClient:
 
     # Typed conveniences -------------------------------------------------
 
-    def strike_exposures(self, ticker: str, expiry: str | None = None) -> list[StrikeExposure]:
+    def strike_exposures(
+        self, ticker: str, expiry: str | None = None, spot: float | None = None,
+        window_pct: float = 0.08,
+    ) -> list[StrikeExposure]:
+        """Per-strike exposures, windowed around spot — the endpoint paginates at 50
+        rows, so an unwindowed call returns the far low-strike tail, not the market."""
+        params: dict = {"limit": 500}
+        if spot:
+            params["min_strike"] = round(spot * (1 - window_pct), 2)
+            params["max_strike"] = round(spot * (1 + window_pct), 2)
         if expiry:
-            rows = self.get("spot_exposures_expiry_strike", ticker=ticker, expiry=expiry)
+            rows = self.get("spot_exposures_expiry_strike", params=params,
+                            ticker=ticker, expiry=expiry)
         else:
-            rows = self.get("spot_exposures_strike", ticker=ticker)
+            rows = self.get("spot_exposures_strike", params=params, ticker=ticker)
         return [StrikeExposure.model_validate(r) for r in rows]
 
     def flow_alerts(self, ticker: str, limit: int = 50) -> list[FlowAlert]:
