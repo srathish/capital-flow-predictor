@@ -194,8 +194,25 @@ intraday-filterable. **Deployable edge remains the 0DTE filter+scalp (Phase 4).*
 The 2-DTE swing is a higher-return *lead* that needs a macro/multi-day regime
 signal (not the intraday tape) to become robust.
 
+### Phase 5/5b — GEX surface DOES carry signal (unlike price): "bank the pop"
+
+Instrumented the replay to emit per-fire King-share + spot-escape trajectory.
+Classifying at +15m from the surface: **escalator (pin share falling + spot
+escaping the King) → cut at +15m = +19% train / +25% test / 68% win ✅**, robust.
+Crucially, for the SAME escalator fires, **cutting beats holding by 34 pts in
+test (+25% vs −9%)** — the fast pin-escape pops then FADE. This overturns the
+"escalator → hold the trend" hypothesis: the surface signal means **take profit
+fast on a confirmed real reversal**, not ride it. (Partly mechanical — spot-rise
+is in the definition — but the robust *take-profit-timing* edge is real and
+actionable as a management rule.) The surface carries predictive signal where
+price/tape did not, and it *reinforces* the scalp thesis rather than the hold one.
+
 ## CONCLUSION
 
+0. **The unifying answer: this is a SCALP edge, not a hold edge.** Every robust,
+   realizable finding — chop scalp, down-tape filter, surface escalator — says
+   *take profit fast on confirmed reversals*. The "hold for the trend day" upside
+   is real but unpredictable; stop chasing it.
 1. **Exits, instrument, entry-features, and trend-day *prediction* are dead ends**
    — all overfit or regime-flip out-of-sample. Rigorously ruled out (this is the
    value: it stops us shipping overfit changes).

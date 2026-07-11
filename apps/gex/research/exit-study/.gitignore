@@ -1,4 +1,7 @@
 cache/
 cache_underlying/
+cache_alt/
 build.log
+instrument.log
+overnight_hold.log
 fires_index.json
