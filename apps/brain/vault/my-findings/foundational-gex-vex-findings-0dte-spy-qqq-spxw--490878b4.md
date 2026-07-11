@@ -2,7 +2,7 @@
 title: Foundational GEX/VEX Findings (0DTE SPY/QQQ/SPXW)
 source_url: repo://apps/gex/research/gexvex-structure/FOUNDATIONAL_FINDINGS.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:53:48Z'
+fetched_at: '2026-07-11T19:10:43Z'
 trust_tier: 1
 category: my-findings
 topics:

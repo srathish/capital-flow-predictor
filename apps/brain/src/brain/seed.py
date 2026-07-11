@@ -45,6 +45,13 @@ def _topics_for(rel: Path) -> list[str]:
     return topics
 
 
+# Mesh coordination docs that are T1 knowledge despite living outside research/
+# (SYNTHESIS.md is the collective-brain ledger — graduation states for every finding).
+EXTRA_T1_PATHS = [
+    Path("apps/gex/.coordination/SYNTHESIS.md"),
+]
+
+
 def seed_paths() -> list[Path]:
     docs_dir = config.REPO_ROOT / "apps" / "gex" / "docs"
     research_dir = config.REPO_ROOT / "apps" / "gex" / "research"
@@ -53,6 +60,7 @@ def seed_paths() -> list[Path]:
         p for p in research_dir.rglob("*.md")
         if p.name not in EXCLUDE_NAMES and "node_modules" not in p.parts
     )
+    paths += [config.REPO_ROOT / rel for rel in EXTRA_T1_PATHS if (config.REPO_ROOT / rel).exists()]
     return paths
 
 

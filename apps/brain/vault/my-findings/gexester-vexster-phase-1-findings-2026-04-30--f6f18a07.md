@@ -2,7 +2,7 @@
 title: gexester-vexster — Phase 1 findings (2026-04-30)
 source_url: repo://apps/gex/docs/findings.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:53:47Z'
+fetched_at: '2026-07-11T19:10:43Z'
 trust_tier: 1
 category: my-findings
 topics:

@@ -17,12 +17,24 @@ SPINE_GLOB = "trading-doctrine-v2*.md"
 
 
 def spine_block() -> str | None:
+    """Doctrine v2 + the SYNTHESIS ledger (graduation states) — always first."""
     my_findings = brain_config.VAULT_DIR / "my-findings"
-    matches = sorted(my_findings.glob(SPINE_GLOB)) if my_findings.exists() else []
-    if not matches:
+    if not my_findings.exists():
         return None
-    body = matches[0].read_text(encoding="utf-8")[:MAX_DOC_CHARS * 2]
-    return f'<doc tier="T1" title="TRADING DOCTRINE v2 — THE SPINE (cite by clause)">\n{body}\n</doc>'
+    blocks = []
+    doctrine = sorted(my_findings.glob(SPINE_GLOB))
+    if doctrine:
+        body = doctrine[0].read_text(encoding="utf-8")[:MAX_DOC_CHARS * 2]
+        blocks.append(
+            f'<doc tier="T1" title="TRADING DOCTRINE v2 — THE SPINE (cite by clause)">\n{body}\n</doc>'
+        )
+    synthesis = sorted(my_findings.glob("synthesis-command-center*.md"))
+    if synthesis:
+        body = synthesis[0].read_text(encoding="utf-8")[:MAX_DOC_CHARS]
+        blocks.append(
+            f'<doc tier="T1" title="SYNTHESIS LEDGER — graduation states (leans are NOT confirmed)">\n{body}\n</doc>'
+        )
+    return "\n\n".join(blocks) if blocks else None
 
 
 def context_for(query_terms: list[str], limit: int = 6) -> str:

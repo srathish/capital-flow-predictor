@@ -2,7 +2,7 @@
 title: VIX Research Module — ISOLATED, REVERSIBLE
 source_url: repo://apps/gex/research/vix/README.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:53:48Z'
+fetched_at: '2026-07-11T19:10:43Z'
 trust_tier: 1
 category: my-findings
 topics:
