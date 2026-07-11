@@ -329,6 +329,26 @@ Fidelity vs scale was the core tradeoff: only 16 clean live fires exist, so scal
 required the 5-min replay proxy. No historical 1-min fire data is archived to do
 better retrospectively.
 
+### Phase 7 — Robustness battery ported to the STOCK-SWING system
+
+Applied the same scrutiny to the campaign flow×node backtest (286 intersection
+legs, already net of 6% cost). **It's meaningfully more robust than the 0DTE
+scalp:**
+- **NOT tail-dependent:** drop top-10 winners → +33% (vs +35%). Broad 70% win,
+  not moonshot-driven. (The 0DTE scalp died when you dropped its top winners.)
+- Coherent, interpretable arm structure: intersection 70% > flow_only 66% >
+  placebo 54% > node_only 49%/−6% (node-alone is a *trap* — structure≠direction,
+  reconfirmed on real stock dollars). A+ flow (ask≥52%) lifts to 73%/+44%.
+
+**But the same warning sign:** train +68% / test +3% *within the bull sample* —
+the edge front-loads into the early bull run and fades as later cohorts' 20-day
+forward windows reach the chop. **The 70%/+35% is a bull-regime headline; the
+late-cohort reality is +3%.** All 286 cohorts are 04-13→06-08 (bull). The
+definitive test — extending cohorts fully into the June–July chop — is the next
+build. Net: the stock-swing system is the more promising Glitch-competitor
+(robust structure, not tail-dependent, cost-adjusted), **but it needs
+regime-awareness** — trade it when the tape is bullish, stand down in chop/rotation.
+
 ## HONEST BOTTOM LINE (post-robustness)
 
 Robustness did its job: it turned a "+6% deployable edge" into an honest **~+1%
