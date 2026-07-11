@@ -349,6 +349,32 @@ build. Net: the stock-swing system is the more promising Glitch-competitor
 (robust structure, not tail-dependent, cost-adjusted), **but it needs
 regime-awareness** — trade it when the tape is bullish, stand down in chop/rotation.
 
+### Phase 8 — DEFINITIVE cross-system finding: both edges are regime (beta), not alpha
+
+Extended the campaign cohorts into June (chop-forward windows) and split by regime:
+
+| cohort forward window | intersection | flow_only |
+|---|---|---|
+| **BULL-forward** (≤05-15) | **81% win / +57%** | 74% / +45% |
+| **CHOP-forward** (>05-15) | **51% win / −0%** | 52% / +2% |
+
+Cohort-by-cohort: April +65→+94%, June (deep chop) −38%, −52%, −56%. **The
+stock-swing flow×node edge collapses in chop exactly like the 0DTE signal.** The
+70%/+35% headline was a bull-blend; the honest chop number is 51%/breakeven.
+
+**Unified conclusion across BOTH systems:** the 0DTE bull-reverse and the
+stock-swing flow×node are *the same trade in different clothes* — long calls that
+print in bull tape and die in chop. Their "edge" is **substantially beta**
+(being long gamma/calls in a rising market), not regime-independent alpha. This
+is the single most important result of the study.
+
+**The real lever for both = MACRO REGIME.** Not intraday trend (that failed), but
+the multi-week market state, which is more persistent/detectable. Run either
+system **only when the macro tape is bullish**; stand down in chop/rotation. A
+macro-regime gate is the highest-value build for beating Glitch — it turns an
+81%-in-bull / 51%-in-chop blend into a deployed-only-in-bull strategy. (Whether a
+*realizable* macro filter at formation cleanly separates the two is the next test.)
+
 ## HONEST BOTTOM LINE (post-robustness)
 
 Robustness did its job: it turned a "+6% deployable edge" into an honest **~+1%
