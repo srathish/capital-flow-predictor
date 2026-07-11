@@ -1,0 +1,41 @@
+[project]
+name = "brain"
+version = "0.1.0"
+description = "Trading knowledge brain — scraped markdown corpus + FTS5 index + query CLI"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "scrapling>=0.4.10",
+    "trafilatura>=1.12",
+    "pymupdf4llm>=0.0.17",
+    "pyyaml>=6.0",
+    "python-slugify>=8.0",
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+    "typer>=0.12",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-mock>=3.14",
+    "ruff>=0.7",
+    "mypy>=1.13",
+]
+
+[project.scripts]
+brain = "brain.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brain"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning",
+]

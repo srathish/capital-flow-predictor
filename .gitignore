@@ -49,6 +49,14 @@ talon_analysis/cache/
 talon_analysis/output/scan_*.json
 talon_analysis/output/*.csv
 
+# Brain — PDFs are re-fetchable, index.db regenerates from vault/ markdown
+apps/brain/papers/
+apps/brain/index.db
+apps/brain/index.db-*
+
+# Athena — local signal journal
+apps/athena/data/
+
 # Claude Code working state (per-machine)
 .claude/
 
