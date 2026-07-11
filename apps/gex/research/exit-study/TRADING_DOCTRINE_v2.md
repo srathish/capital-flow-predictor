@@ -28,11 +28,19 @@ Node position does not forecast direction. The campaign edge that *works* is
 conviction = macro regime + 20-day flow accumulation + the live 3-index tape.
 
 ## Clause 3 — The King/node is a STRUCTURE MARKER, magnet UNSETTLED
-Do not size on "price will reach the King" alone. Controlled intraday test
-(mirror-placebo, 121 Skylit sessions): price approached the King 41% vs placebo —
-**not distinguishable from chance**. Caveats: one regime, King-def may differ from
-the live node, may be conditional on high-share pika pins. Treat the magnet as
-**open, not proven** — a level to watch, not a target to bet.
+Do not size on "price will reach the King" alone. Tested extensively on the Skylit
+archive with the CORRECT King (0DTE-column max|gamma| — verified == what the live
+tracker reads), across frames (daily/intraday/into-close), share terciles, and sign
+(pika/barney). Result: the King does **not beat a mirror placebo on exact-touch** in
+any bucket — incl. HIGH-share × PIKA (the operator's case): 43% pin>placebo, price at
+placebo 26% vs at-King 15% (n=21). BUT this is **NOT conclusive** — two real gaps:
+(1) the mirror placebo is a weak control under symmetric dual-wall structure (the
+mirror is often the *other real wall*, so "hits both" reads as null when it's actually
+pinning); (2) exact-touch (±0.15%) ≠ zone-pin (mean-reversion within ±0.5%). Plus one
+regime (64d). The operator watched price pin to a high-share pika King live. So:
+**magnet OPEN, not disproven.** Resolution = a live cross-check (operator annotates a
+real pin day + the displayed King) with a DEAD-strike control + zone metric — not more
+archive variants. A level to watch, not a target to bet, until then.
 
 ## Clause 4 — ENTRIES catch MOVES (this part is real)
 The bull-reverse signal reliably detects "something is about to move" (high MFE:
