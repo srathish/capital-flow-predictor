@@ -87,6 +87,15 @@ def unkill() -> None:
 
 
 @app.command()
+def ui(port: int = typer.Option(8321, "--port")) -> None:
+    """Serve the Athena Console (local dashboard) at http://127.0.0.1:PORT."""
+    from athena.ui.server import serve
+
+    console.print(f"[bold]🦉 Athena Console[/bold] -> http://127.0.0.1:{port}")
+    serve(port)
+
+
+@app.command()
 def endpoints() -> None:
     """Show the spec-verified UW endpoint whitelist."""
     from athena.perception.endpoints import WHITELIST

@@ -131,8 +131,14 @@ def crawl(only: str | None = None, to: str = "vault") -> list[IngestResult]:
 
 
 def sweep(feeds_only: bool = True) -> list[IngestResult]:
-    """Scheduled discovery of new material -> inbox only, never straight to vault."""
+    """Scheduled discovery of new material -> inbox only, never straight to vault.
+
+    Also hunts open knowledge gaps: every weakly-answered question becomes an
+    arXiv query, so the brain grows toward what the user actually asks it.
+    """
     results: list[IngestResult] = []
+    for gap in index_mod.open_gaps():
+        results.extend(_feed_batch(gap["query"], max_results=5, ingested_by="sweep", to="inbox"))
     for src in sources.load_sources():
         if src.discovery != "feed":
             continue
