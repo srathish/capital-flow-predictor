@@ -262,21 +262,54 @@ secondary.** Spread stress on t+50 filtered (test-half): calibrated +4.9%, p75
 Caveat unchanged from 6: the level degrades in the *deepest* chop (walk-forward
 60–70% splits → ~0) and is tail-dependent. So: **robust gate, thin edge.**
 
+### Phase 6c — Threshold sensitivity: the filter edge is fragile / likely overfit
+
+Swept the filter parameters. The tape cutoff is NOT a robust plateau — test net
+is negative for most cutoffs and only ~breakeven in a narrow −0.1/−0.2% band.
+Component decomposition (test net, calibrated cost): none −5.8%, tape-only −0.7%,
+afternoon-only −4.5%, **BOTH +0.9%**. **Neither filter works alone — only the
+conjunction is positive.** Requiring two conditions (each neutral alone, at a
+sensitive threshold) to produce a small +0.9% test is a classic overfitting
+signature. With the tail-dependence (Phase 6) and walk-forward degradation, the
+honest read: **there is no strong, robust, cost-surviving edge** in the 0DTE
+bull-reverse scalp. The bootstrap said edge>0 in 97% *on the full sample*, but
+that leans on the favorable train half; true OOS after honest scrutiny is
+marginal (~+1%) and fragile.
+
+## HONEST BOTTOM LINE (post-robustness)
+
+Robustness did its job: it turned a "+6% deployable edge" into an honest **~+1%
+OOS, fragile, tail-dependent, threshold-sensitive, likely-overfit** result. The
+responsible stance: treat it as an *unproven hypothesis*, not an edge. The 0DTE
+index bull-reverse signal, net of ~2–3% costs, does not offer a robust
+exploitable edge with any exit/filter tested tonight. The real value of the night
+is the **rigor that stopped us shipping overfit changes** — and the strategic
+signal to invest effort where a durable edge is more plausible (the stock-swing
+flow×node campaign system).
+
 ## DECISIONS NEEDED
 
-**(1) Deploy the filter+scalp (dry-mode first).** Config-gated, BULL_REVERSE only:
-down-tape filter (SPY≥open) + afternoon suppression + TP+50%/25m/−50% exit. Run
-in dry/tracking mode alongside live to confirm the +4–6% OOS edge forward. LOWEST
-regret — it strictly rejects the −10% trades the system currently takes.
+**(1) Fix the EOD summary to report realized P&L** (close_mark), not peak
+(best_mark). Pure reporting correctness — the summary currently overstates by
+~45 pts. Highest-value, zero strategy risk. **Do this first.**
 
-**(2) Fix the EOD summary to report realized P&L** (close_mark), not peak. Pure
-reporting correctness; no strategy change.
+**(2) Do NOT deploy the filter+scalp as an edge.** Post-robustness it's ~+1% OOS,
+fragile, tail-dependent, and needs a 2-condition conjunction at a sensitive
+threshold. IF you want forward data, run it in **dry/tracking mode only**, sized
+at zero, explicitly as an *unproven hypothesis* — not because it's proven. Its
+one defensible use: it does reject the worst (down-tape/afternoon) fires, so as a
+*risk gate* (not a profit engine) it's mildly defensible.
 
-**(3) Afternoon suppression (1:30–3:00 ET)** as a standalone gate if (1) is too
-big a step — it's the single most robust filter on its own.
+**(3) Reconsider the 0DTE index scalp premise.** Net of ~2–3% costs, no tested
+exit/entry/filter yields a robust edge. The signal catches volatility, not
+direction; costs eat the small moves; the big moves (trend days) aren't
+predictable. Effort likely better spent on the **stock-swing flow×node campaign
+system**, where the earlier backtest showed a more durable edge — apply this same
+robustness battery (costs, walk-forward, bootstrap, threshold sweep) there.
 
-**(4) Build the GEX-surface instrumentation** (research) to test pin-escape — the
-one realizable signal that could unlock trend-day identification.
+**(4) Optional research:** deeper GEX-surface features (multi-frame pin-escape,
+wall-break) on more history if UW retention allows — the surface was the only
+input with *any* predictive signal (Phase 5), worth one more rigorous pass.
 
 _None approved — await review. No live code touched tonight._
 
