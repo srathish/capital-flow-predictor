@@ -2,7 +2,7 @@
 title: Uw Deep Raw
 source_url: repo://apps/gex/research/uw/out/UW_DEEP_RAW.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:16:47Z'
+fetched_at: '2026-07-11T18:53:48Z'
 trust_tier: 1
 category: my-findings
 topics:
