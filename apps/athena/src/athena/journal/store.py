@@ -41,6 +41,9 @@ CREATE TABLE IF NOT EXISTS king_zone_obs (
     king_share REAL,
     king_sign TEXT,
     dist_at_entry_pct REAL,
+    regime TEXT,                 -- raw 5-mode regime at observation time
+    regime_label TEXT,           -- chop | trend (wall-vs-escalator split key);
+                                 -- EOD pass may overwrite with the full-day label
     final_window_zone_frac REAL,
     dead_strike_zone_frac REAL
 );
@@ -89,16 +92,23 @@ def record(
     return int(row_id or 0)
 
 
+# wall-vs-escalator split key: pin-like regimes are "chop"; motion regimes "trend"
+_REGIME_LABEL = {"pinned": "chop", "squeeze": "chop",
+                 "trend": "trend", "breakout": "trend", "defensive": "trend"}
+
+
 def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) -> None:
     """Log a King pin-zone observation at cycle time (zone fracs filled at EOD)."""
     if not features.get("king_strike"):
         return
+    regime = features.get("regime", "")
     conn = connect(db_path)
     with conn:
         conn.execute(
             """INSERT INTO king_zone_obs
-               (cycle_id, ts, ticker, king_strike, king_share, king_sign, dist_at_entry_pct)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+               (cycle_id, ts, ticker, king_strike, king_share, king_sign,
+                dist_at_entry_pct, regime, regime_label)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 cycle_id,
                 datetime.now(UTC).isoformat(timespec="seconds"),
@@ -107,6 +117,8 @@ def record_king_obs(cycle_id: int, features: dict, db_path: Path | None = None) 
                 features.get("king_share"),
                 features.get("king_sign"),
                 features.get("dist_at_entry_pct"),
+                regime,
+                _REGIME_LABEL.get(regime),
             ),
         )
     conn.close()
