@@ -34,7 +34,10 @@ def send(thesis: Thesis) -> bool:
                     {"name": "Invalidation", "value": thesis.invalidation[:200] or "—"},
                     {"name": "Size", "value": thesis.size_guidance[:200] or "—"},
                 ],
-                "footer": {"text": "ADVISORY ONLY — you execute. Athena places no orders."},
+                "footer": {
+                    "text": "ADVISORY ONLY — you execute. Athena places no orders. "
+                    "SINGLE-SESSION READ: not yet mesh-verified per PLAY_VALIDATION."
+                },
             }
         ]
     }
