@@ -43,6 +43,7 @@ use:** a dominant (high relative_significance) **pika** King is a real **pin ZON
 expect mean-reversion around it, not an exact-strike target; do NOT expect weak or
 barney nodes to pull. Direction still never comes from the node (Clause 1/2). Confirm
 with more regimes + the operator's live cross-check before sizing on it.
+**Dose-response (pin_dose):** robustness on 60 pika sessions — the pin edge is concentrated in the top-2 share bins (share >~0.21: +10 to +18% zone edge, stable across ±0.3/0.4/0.5% widths); weak pika Kings show negative edge; middle is noisy (share↔edge corr only 0.20, non-monotonic). => THRESHOLD effect (dominant pika only), not a smooth gradient. n=12/bin — real-but-underpowered; needs more regimes.
 
 ## Clause 4 — ENTRIES catch MOVES (this part is real)
 The bull-reverse signal reliably detects "something is about to move" (high MFE:
