@@ -183,6 +183,17 @@ beats the hindsight "chop day" label. This forgoes the trend-up hold upside
 (scalp +50% vs ride +65%) in exchange for robustness without needing to predict
 trend days.
 
+### Phase 2b/4b — Swing (2-DTE) hold: higher return, not robust, filter won't fix
+
+Holding 2-DTE to expiry converts the catch much better than 0DTE (+38% avg, 53%
+win vs 0DTE +12%/39%) and is *less* chop-fragile (test −6% vs −14%). But it's
+still not positive in test, and the down-tape filter does NOT rescue it (test
+−6% → −19%): the intraday entry-tape is irrelevant to a 2-day forward move. So
+the two edges don't stack — the swing's regime-dependence is macro/multi-day, not
+intraday-filterable. **Deployable edge remains the 0DTE filter+scalp (Phase 4).**
+The 2-DTE swing is a higher-return *lead* that needs a macro/multi-day regime
+signal (not the intraday tape) to become robust.
+
 ## CONCLUSION
 
 1. **Exits, instrument, entry-features, and trend-day *prediction* are dead ends**
