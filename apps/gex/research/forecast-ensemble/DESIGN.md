@@ -44,6 +44,28 @@ incrementally on top of bull tape gate + nflags.
   — three tickers ≈ one bet per day, not three. Primary evaluation is on
   SPY; SPX/QQQ are stability cuts, not independent samples.
 
+## Amendment A1 (2026-07-11, pre-computation — user request)
+
+Added BEFORE any feature matrix or model was built; primary bar unchanged.
+
+1. **Chop class (secondary target).** User asked to learn up vs down vs
+   chop. Label extension: a session is CHOP when |open→close log return|
+   is below the trailing-60-session 30th percentile of |open→close|
+   (adaptive to vol regime, trailing = no lookahead). Else UP/DOWN by
+   sign. Secondary models: (a) multinomial logistic on 3 classes,
+   (b) binary chop-vs-trend classifier scored by AUC. Pre-registered
+   secondary bars: 3-class macro accuracy > base-rate baseline AND
+   chop-AUC ≥ 0.55 OOS with the same placebo protocol. The PRIMARY
+   verdict still rides on the binary up/down bars in this design.
+2. **Local skylit archive joins as tier-B features** (65 sessions,
+   2026-04-13→2026-07-10): per-strike GEX/VEX structure aggregates
+   (mass above/below spot, net gamma sign, distance-weighted vanna).
+   Tier-B rows are too few for the walk-forward; they are used only for
+   a named exploratory cut in the report, never for the verdict.
+3. **Interpretability deliverable**: standardized logistic coefficients +
+   drop-one family ablations reported as "what moved up/down/chop days";
+   correlational language only, no causal claims.
+
 ## Phase 0 — history-depth inventory (gate for everything else)
 
 For each candidate endpoint, record: max lookback, granularity, revision
