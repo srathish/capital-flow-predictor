@@ -4,24 +4,31 @@
 below are research artifacts; any change to the live tracker waits in
 **DECISIONS NEEDED** for explicit approval.
 
-## TL;DR (after full robustness)
+## TL;DR (after full robustness — BOTH systems)
 
-- **No robust, cost-surviving, ex-ante edge** was found in the 0DTE bull-reverse
-  signal. Every apparent edge dissolved under scrutiny:
-  - Exits (trail/EMA/VWAP/ATR/time): all invert train→test.
-  - Filter+scalp "+6%": mid-price illusion → **~+1% OOS** after real ~2–3% costs,
-    tail-dependent, threshold-sensitive, needs a 2-condition conjunction (overfit).
-  - Surface "escalator" signal: **circular** (spot-rise-only is just as good; the
-    surface adds nothing; classification is coincident with outcome).
-  - Trend-day hold (+65%): real but **unpredictable** ex-ante (all classifiers fail).
-- **The dataset is a 32%-faithful proxy** of live fires (5-min replay vs 1-min live).
-- **What IS real & useful:** (1) the EOD summary reports *peak*, not *realized* —
-  overstates by ~45 pts, fix it; (2) costs (~2–3% round-trip) dominate 0DTE scalps
-  and must be in every calc; (3) the discipline that stopped us shipping ~6 overfit
-  "edges."
-- **Recommendation:** don't deploy any of tonight's strategies as an edge; fix the
-  reporting; port this same robustness battery to the **stock-swing flow×node
-  system**, where a durable edge is more plausible.
+**The single biggest finding: the 0DTE bull-reverse signal AND the stock-swing
+flow×node system are the same trade — long calls that print in bull tape and die
+in chop. Their edge is substantially BETA, not regime-independent alpha.**
+- 0DTE: every apparent edge dissolved — exits invert train→test; the "+6%
+  filter+scalp" is a mid-price illusion (~+1% OOS after ~2–3% costs,
+  tail-dependent, threshold-sensitive, 2-condition-conjunction = overfit); the
+  surface "escalator" is **circular** (spot-rise-only is just as good); the +65%
+  trend-day hold is real but **unpredictable ex-ante**.
+- Stock-swing flow×node: more robust *structurally* (70% win NOT tail-dependent,
+  coherent arm structure, node-alone is a trap) BUT the same regime collapse —
+  **BULL-forward 81% win/+57%, CHOP-forward 51%/−0%.** The 70% headline is a
+  bull-blend.
+- **Macro-regime gate** (trade only when the multi-week tape is bullish) is the
+  right lever and shows promise (gate-off cohorts −38%), but the data has only
+  ~one bull→chop cycle, so it's under-powered — **validate forward, don't deploy
+  on backtest.**
+- Data caveats: the 0DTE dataset is a 32%-faithful proxy of live fires (5-min vs
+  1-min); costs (~2–3%) dominate 0DTE scalps.
+
+**Real, actionable takeaways:** (1) fix the EOD summary — it reports *peak* not
+*realized*, overstating by ~45 pts; (2) gate BOTH systems on macro regime and
+collect forward data to validate; (3) the night's true value: rigor that stopped
+us shipping ~7 overfit/beta "edges" as if they were alpha.
 
 ## Why this study
 
@@ -374,6 +381,24 @@ system **only when the macro tape is bullish**; stand down in chop/rotation. A
 macro-regime gate is the highest-value build for beating Glitch — it turns an
 81%-in-bull / 51%-in-chop blend into a deployed-only-in-bull strategy. (Whether a
 *realizable* macro filter at formation cleanly separates the two is the next test.)
+
+### Phase 9 — Macro gate: directionally promising, statistically under-powered
+
+Tested a realizable macro gate (only trade intersection when SPY's trailing-10d
+return > 0 at cohort formation): GATE ON 68% win / +31% (n=205) vs GATE OFF 33% /
+−38% (n=15). The gate correctly flags the losing cohorts — but **n=15 gate-off is
+far too small** to confirm: the 64-day window was almost all bull, so there's
+barely any bearish regime to test against. Directionally consistent with the beta
+thesis; not statistically established. (Also: SPY-10d "up" 61% < "flat" 70% —
+chasing strong momentum underperforms, same as the 0DTE finding.)
+
+**The binding limitation of the whole study: too few regime cycles.** 64 trading
+days / ~92-day option retention = roughly one bull→chop transition. Every
+regime-dependent conclusion is drawn from a single cycle. A macro gate is the
+right idea and shows promise, but validating it needs multiple bull/chop/bear
+cycles — i.e., forward data collection or a longer history than UW retention
+allows. This is why the honest recommendation is **collect forward data**, not
+**deploy on backtest**.
 
 ## HONEST BOTTOM LINE (post-robustness)
 
