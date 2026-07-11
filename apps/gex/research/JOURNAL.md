@@ -13,6 +13,45 @@ DECISIONS NEEDED: <anything requiring the user — proposals only, nothing acted
 
 ---
 
+## 2026-07-11 session 1 (interactive — forecast ensemble Phase 1)
+
+PRE-REGISTERED (research/forecast-ensemble/DESIGN.md + Amendment A1, both
+written before compute): thesis = L2-logistic ensemble of z-scored daily
+features from ≥10 UW families predicts SPY next-session open→close at
+≥52.5% OOS + logloss < base + both placebos ≥95th + no single family
+clears alone + stability cuts. A1 (user request): 3-class chop label
+(|ret| < trailing-60 30th pctile), chop bar AUC ≥0.55. Interpretability
+deliverable: what tilts up/down/chop days.
+
+RAN: backfilled 250 sessions × 10 families (1,361 paced UW calls, 0
+errors); 440-row × 47-feature matrix (SPY+QQQ); walk-forward (train 120
+step 20, C frozen at 0.01 from first window); 400 placebo runs; 10 single-
+family + 10 drop-one ablations; ONE follow-up (rule 2): placebo + cuts on
+the shortvol single-family anomaly. Report: forecast-ensemble/REPORT.md.
+
+VERDICTS:
+- Ensemble binary direction: **rejected** — OOS hit 50.0% (base 56%),
+  logloss 0.729 > 0.691, placebos 46th/40th pctile. Second convergent
+  negative on daily direction-from-positioning (extends s4/s5 GEX-sign).
+- Chop (A1 secondary): **rejected** — AUC 0.537 < 0.55 bar.
+- Shortvol factor (post-hoc, ablation-discovered): **research_more** —
+  SPY 58.0% OOS, QQQ 58.0%, both placebos 99.5th, halves hold, but
+  even-days cut = 50% and n_oos=100. Direction: rising short-volume
+  ratio (5d delta strongest) → next session down.
+
+BACKLOG: forecast-ensemble item resolved → replaced by pre-registered
+shortvol forward test (new item). Forward-capture job for 4 snapshot-only
+families waits on DECISIONS NEEDED.
+
+DECISIONS NEEDED:
+1. Stand up a daily forward-capture cron (research-side, writes CSV under
+   research/forecast-ensemble/data/forward/) for sector tides, yield
+   curve, crypto whales, OI changes? Recurring process = user sign-off.
+2. Shortvol factor: approve the pre-registered forward test (item queued);
+   no live use before it passes.
+
+---
+
 ## 2026-07-09 session 3 (continuous run — pure GEX/VEX conditioning)
 
 PRE-REGISTERED (before compute):

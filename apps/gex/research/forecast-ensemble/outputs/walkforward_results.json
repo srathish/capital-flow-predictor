@@ -1,0 +1,82 @@
+{
+ "primary": {
+  "oos_n": 100,
+  "hit": 0.5,
+  "base": 0.56,
+  "logloss": 0.7287905450370744,
+  "logloss_base": 0.6912859035264749,
+  "C": 0.01
+ },
+ "cuts": {
+  "odd": 0.56,
+  "even": 0.44,
+  "h1": 0.52,
+  "h2": 0.48,
+  "qqq": 0.51
+ },
+ "single": {
+  "calendar": 0.56,
+  "congress": 0.56,
+  "darkpool": 0.52,
+  "flow": 0.53,
+  "greeks": 0.49,
+  "insider": 0.52,
+  "momentum": 0.47,
+  "shortvol": 0.58,
+  "tide": 0.56,
+  "vix": 0.53
+ },
+ "drop": {
+  "calendar": 0.49,
+  "congress": 0.51,
+  "darkpool": 0.49,
+  "flow": 0.47,
+  "greeks": 0.46,
+  "insider": 0.53,
+  "momentum": 0.49,
+  "shortvol": 0.51,
+  "tide": 0.51,
+  "vix": 0.51
+ },
+ "placebo": {
+  "perm": 0.46,
+  "shift": 0.4,
+  "perm_mean": 0.49995000000000006,
+  "shift_mean": 0.5001000000000001
+ },
+ "chop_auc": 0.5366666666666666,
+ "top_coefs_up": {
+  "sv_shortvol_ratio_5dd": -0.1044,
+  "td_tide_flips": 0.0782,
+  "sv_shortvol_ratio_5dm": -0.0756,
+  "fl_np_call": 0.0649,
+  "cg_cg_buyshare": -0.0613,
+  "grk_own_net_charm": 0.0591,
+  "dpx_dp_big_share": 0.0588,
+  "cg_cg_n": -0.0534,
+  "td_tide_eod_put": 0.0476,
+  "ins_ins_net_prem": -0.0412,
+  "vx_vix_chg1": 0.0402,
+  "cal_dow_fri": 0.0387,
+  "td_tide_pm_slope": 0.0385,
+  "fl_np_net": 0.0381,
+  "fl_np_put": 0.0326
+ },
+ "top_coefs_chop": {
+  "dpx_dp_big_share": -0.0871,
+  "cg_cg_buyshare": 0.0832,
+  "grk_own_net_gamma": 0.0736,
+  "grk_own_net_delta": 0.0675,
+  "grk_own_net_vanna": -0.0594,
+  "sv_shortvol_ratio_5dm": 0.0578,
+  "vx_vix_close": -0.0557,
+  "cg_cg_n": 0.0555,
+  "sv_shortvol_ratio_5dd": -0.0513,
+  "td_tide_eod_put": -0.0497,
+  "td_tide_pm_slope": 0.049,
+  "fl_np_put_askshare": -0.0458,
+  "vx_vix_chg1": -0.0431,
+  "fl_np_call_askshare": -0.0396,
+  "ins_ins_txn": 0.0385
+ }
+}
