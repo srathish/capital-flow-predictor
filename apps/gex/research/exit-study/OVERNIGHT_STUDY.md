@@ -228,6 +228,27 @@ price/tape did not, and it *reinforces* the scalp thesis rather than the hold on
 5. **Reporting bug to fix:** the EOD summary shows PEAK (best_mark), not realized
    (close_mark) — flatters the system by ~45 pts. Fix so we're not flying blind.
 
+### Phase 6 — ROBUSTNESS: costs make the scalp edge thin & fragile
+
+The Phase-4 "+6%/trade" was mid-price. Under scrutiny:
+- **Transaction costs:** calibrated from live logs (round-trip QQQ ~2.1%, SPY
+  ~2.9%, SPXW ~3.3%, incl. 1.5× exit-widening). Net edge drops to **+3.5%
+  full-sample**. (At an 8% strawman it goes negative — breakeven ~6%; the actual
+  spreads are tighter, so it survives, but barely.)
+- **Walk-forward (5 split points):** train +5–6% consistently, but **test only
+  +2.3% → −0.7%**, degrading as the window moves into the June chop. The single
+  50% split (test +0.9% net) flattered nothing but wasn't the whole story.
+- **Block bootstrap by day (1000×):** mean net p50 **+3.8%**, p5 +0.4% — edge>0
+  in **97%** of resamples on the full sample. Statistically positive, but small.
+- **Tail-dependence:** drop top-10 winners (of 317) → **−0.2%**. The edge is still
+  carried by a few outliers — a real fragility.
+- **Per-day:** +19%/day (unit/trade), 62% positive days, **daily Sharpe ~0.20**.
+
+**Verdict:** a *thin, fragile, tail-dependent* positive edge (~+1–2% OOS after
+costs), not a printing press. Justifies a *small dry-run to gather forward data*,
+not real size. Costs are the dominant reality for 0DTE scalps — every strategy
+must be judged net of ~2–3% round-trip.
+
 ## DECISIONS NEEDED
 
 **(1) Deploy the filter+scalp (dry-mode first).** Config-gated, BULL_REVERSE only:
