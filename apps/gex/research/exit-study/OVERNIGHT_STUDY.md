@@ -286,6 +286,30 @@ nothing beyond "did the underlying rise in 15 min" — and that is itself circul
 up," not knowable at entry). **Phase 5's "surface carries predictive signal" was
 an artifact.** No genuine ex-ante edge from the surface either.
 
+### Phase 6e — DATA-INTEGRITY caveat: the dataset is a 32%-faithful proxy ⚠️
+
+Cross-checked the replay fires against the live engine on the one overlapping day
+(7/08): live logged **37** unique fire events, replay produced **26**, and only
+**12/37 (32%) match** within ±2 min. Cause: the replay runs on **5-min** archive
+frames; the live engine polls at **1-min**. So the 1,339-fire dataset is a
+*related but different* population from what the live system actually fires
+(similar state mix, different specific fires and timing).
+
+**What this does and doesn't invalidate:**
+- **Still valid (structural, fire-set-independent):** costs dominate 0DTE scalps;
+  edges are regime-dependent; the filter is threshold-sensitive/overfit-prone; the
+  surface "signal" is circular; realized ≠ peak. These are about the signal *type*
+  and market structure, not the exact fires.
+- **NOT directly transferable:** the specific numbers (+6% mid, +0.9% filtered
+  net) are on the proxy population. The live system's real edge must be measured
+  on live fires forward.
+- This *strengthens* the "dry-run to collect real forward data" recommendation —
+  the historical backtest isn't even on the live fire set.
+
+Fidelity vs scale was the core tradeoff: only 16 clean live fires exist, so scale
+required the 5-min replay proxy. No historical 1-min fire data is archived to do
+better retrospectively.
+
 ## HONEST BOTTOM LINE (post-robustness)
 
 Robustness did its job: it turned a "+6% deployable edge" into an honest **~+1%
