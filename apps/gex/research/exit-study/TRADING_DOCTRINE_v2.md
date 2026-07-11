@@ -85,8 +85,14 @@ survive the split that flipped every beta/exit edge negative in test → evidenc
 not regime-beta. Still modest (56-59% OOS), multiple-features caveat, and it's a directional
 HIT-RATE not net-P&L (cost/execution analysis pending). But it is the first genuine board-FORECAST
 that clears the gauntlet. Refines Clause 1: gamma-structure≠direction holds; **vanna-FLOW is a real
-partial direction compass**, strongest on trend days. Forward-log vanna_flow_above_minus_below +
-run a cost-aware P&L sim next.
+partial direction compass**, strongest on trend days. **UW CROSS-CHECK (structural squared, uw_vanna_wf): CONFIRMED on a different dealer model +
+different vanna math + daily frequency + 1yr/2regimes** — vanna LEVEL (net vanna above−below
+spot) predicts NEXT-DAY direction: SPY train56/test54, QQQ train57/test57 (both halves). The
+day-over-day FLOW is null at daily freq (50%). So the invariant signal = the net-vanna
+IMBALANCE (above vs below spot) is directional; intraday the FLOW (build) leads, daily the
+LEVEL leads — two windows on one force. Held OOS across TWO independent sources — nothing else
+in the program cleared even one walk-forward. Strongest, most robust predictive item we have.
+Still modest (54-59% hit-rate, not net-P&L) — cost-aware sim next; forward-log level + flow.
 
 ## Clause 8 — What IS robust (pos-gamma → lower vol)
 Positive total gamma → smaller realized range holds on UW (SPY 0.7 vs 1.1%, QQQ 1.1
