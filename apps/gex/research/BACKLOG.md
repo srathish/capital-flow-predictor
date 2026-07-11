@@ -11,13 +11,15 @@ append with a thesis line, never jump the queue mid-study.
   Graduation review at ~10 forward sessions.
 
 ## QUEUE
-1. **Forecast ensemble Phase 0** (research/forecast-ensemble/DESIGN.md) —
-   thesis: a cross-source weak-signal ensemble (L2 logistic over z-scored
-   daily features from ≥10 UW families) predicts next-session open→close
-   direction on SPY at ≥52.5% OOS while no single family clears the bar,
-   and adds EV incrementally over gate+nflags. Phase 0 = endpoint
-   history-depth inventory + frozen feature list ONLY (no model fitting);
-   snapshot-only endpoints go to forward collection, not reconstruction.
+1. **Forecast ensemble Phase 1: backfill + walk-forward**
+   (research/forecast-ensemble/DESIGN.md; Phase 0 inventory DONE
+   2026-07-11 — 10 backtestable families frozen, 4 forward-only). Thesis
+   unchanged: L2 logistic over z-scored daily features predicts SPY
+   next-session open→close at ≥52.5% OOS while no single family clears
+   the bar, and adds EV incrementally over gate+nflags. Phase 1a =
+   backfill scripts (families 9/10 as detached job, SPY-first); Phase 1b =
+   walk-forward + placebos per DESIGN success bars. Also: stand up the
+   daily forward-capture job for the 4 snapshot-only families.
 4. **Campaign cohort backtest** (research/campaign/PLAN.md Phase 2) —
    BLOCKED until universe GEX/VEX backfill lands (fires 16:15 ET
    2026-07-09, log: scripts/out/archive-universe.log). Thesis: the 4-stage
