@@ -21,6 +21,13 @@ Your job: synthesize ONE thesis for the ticker. Rules:
   ZONE (±0.4%, leaning-real at n=21 — treat as a lean, not proof); weak or
   barney Kings carry no pin edge. Positive total gamma → expect compressed
   range. Structure edges are beta-dominated; the macro regime gate is the lever.
+- VANNA CONFIRMATION FILTER (Clause 8b, cost-aware final form): the feature
+  vector's vanna_ab_level sign is a faint-but-real directional compass (~56-59%
+  OOS, two independent sources) — too small to trade alone against option costs,
+  free win-rate as a filter. When your direction AGREES with the vanna sign, note
+  it as confirmation. When it CONTRADICTS, either lower conviction below the
+  alert floor or state explicitly why the contradiction is justified (e.g.
+  overwhelming flow/regime evidence). Never cite vanna as a standalone trade.
 - When direction is long or short, `structure` MUST name a concrete tradeable contract:
   exact strikes and expiry (e.g. "SPXW 0DTE 6420/6440 call debit spread" or
   "NVDA Jul 18 $185C"). Choose strikes off the gamma nodes in the feature vector.

@@ -2,7 +2,7 @@
 title: TRADING DOCTRINE v2 — evidence-backed spine (Bellwether ⇄ Athena)
 source_url: repo://apps/gex/research/exit-study/TRADING_DOCTRINE_v2.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T18:12:58Z'
+fetched_at: '2026-07-11T18:16:47Z'
 trust_tier: 1
 category: my-findings
 topics:
@@ -12,7 +12,7 @@ topics:
 - exits
 summary: '**Status:** canonical shared doctrine. Supersedes stale "node → direction/target" lines in Skylit-Academy L329/L1738 and KNOWLEDGE_BASE L112. Seed as **T1**; cite by clause number. **This is knowledge, NOT a mandate to change live trading logic** — see Clause'
 url_sha1: 3d7d59e4cf0baa19e0c49d8ecf9d1a9a79dc0299
-simhash: '4289406482085141492'
+simhash: '4257315038885398516'
 status: vault
 ingested_by: seed
 ---
@@ -111,7 +111,15 @@ day-over-day FLOW is null at daily freq (50%). So the invariant signal = the net
 IMBALANCE (above vs below spot) is directional; intraday the FLOW (build) leads, daily the
 LEVEL leads — two windows on one force. Held OOS across TWO independent sources — nothing else
 in the program cleared even one walk-forward. Strongest, most robust predictive item we have.
-Still modest (54-59% hit-rate, not net-P&L) — cost-aware sim next; forward-log level + flow.
+**COST-AWARE P&L (vanna_pnl): real edge, too small to trade RAW through options.** Underlying
+1-day directional (long above>below, short below>above): SPY Sharpe 1.32 (train1.29/test1.36),
+QQQ 1.23 (0.88/1.51), moves symmetric (avgWin≈avgLoss → 55-57% is true positive expectancy).
+BUT edge is ~7-9 bps/day — underperforms buy&hold in a bull year, and a 7-9bp tilt CANNOT beat
+a 1-3% option round-trip. NOT a standalone 0DTE/options play. USE IT AS: (1) a directional
+CONFIRMATION filter on trades already being taken (fire only when signal agrees with vanna
+imbalance — free win-rate lift, cost already paid); (2) Athena's directional-lean input;
+(3) a low-cost futures/underlying tilt (Sharpe 1.3, no option decay). The compass is real but
+faint — a filter, not a printing press. Forward-log level; grade fire×vanna-agree win rate.
 
 ## Clause 8 — What IS robust (pos-gamma → lower vol)
 Positive total gamma → smaller realized range holds on UW (SPY 0.7 vs 1.1%, QQQ 1.1
