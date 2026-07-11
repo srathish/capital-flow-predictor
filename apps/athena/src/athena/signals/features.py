@@ -18,6 +18,8 @@ class FeatureVector(BaseModel):
     ticker: str
     as_of: str
     spot: float
+    gex_source: str = "skylit"  # skylit (doctrine-calibrated) | uw-fallback
+    expiry: str | None = None  # the 0DTE chain being read
     # GEX structure
     total_gamma: float
     flip_level: float | None
@@ -52,17 +54,29 @@ PRICE_ROOT = {"SPXW": "SPX"}
 
 def build(client: UWClient, ticker: str) -> FeatureVector:
     price_ticker = PRICE_ROOT.get(ticker, ticker)
-    state = client.stock_state(price_ticker)
-    spot = state.close
-    # 0DTE doctrine reads TODAY's expiry surface; fall back to the aggregate
-    # when today isn't an expiry (weekends) or the expiry slice is empty.
-    today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    # GEX/VEX surface: Skylit is primary — the T1 doctrine (and the live
+    # fire-loop) are calibrated to it. UW spot-exposures is the fallback only.
+    gex_source = "skylit"
+    expiry = None
     try:
-        exposures = client.strike_exposures(ticker, expiry=today, spot=spot)
+        from athena.perception import skylit
+
+        surface = skylit.fetch_surface(ticker)
+        spot = surface.spot
+        exposures = surface.rows
+        expiry = surface.expiration
     except Exception:
-        exposures = []
-    if not exposures:
-        exposures = client.strike_exposures(ticker, spot=spot)
+        gex_source = "uw-fallback"
+        state = client.stock_state(price_ticker)
+        spot = state.close
+        # nearest-expiry 0DTE slice; aggregate when today isn't an expiry
+        today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+        try:
+            exposures = client.strike_exposures(ticker, expiry=today, spot=spot)
+        except Exception:
+            exposures = []
+        if not exposures:
+            exposures = client.strike_exposures(ticker, spot=spot)
     profile = gex.build_profile(exposures, spot)
     try:
         bars = client.bars(price_ticker, "5m", limit=100)
@@ -104,6 +118,8 @@ def build(client: UWClient, ticker: str) -> FeatureVector:
         ticker=ticker,
         as_of=datetime.now(UTC).isoformat(timespec="seconds"),
         spot=spot,
+        gex_source=gex_source,
+        expiry=expiry,
         total_gamma=profile.total_gamma,
         flip_level=profile.flip_level,
         call_wall=profile.call_wall,

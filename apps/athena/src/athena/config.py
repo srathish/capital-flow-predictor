@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = Path(os.environ.get("ATHENA_HOME", PACKAGE_ROOT / "data"))
 JOURNAL_DB = DATA_DIR / "journal.db"
 KILL_FILE = DATA_DIR / "KILL"  # presence blocks every alert — the kill switch
