@@ -26,6 +26,21 @@ Source: `apps/gex/research/exit-study/OVERNIGHT_STUDY.md` + 1-year UW GEX/VEX
 walkforward (SPY+QQQ, 247 days, multi-regime) by the Bellwether session.
 These corrections SUPERSEDE the cited lines below wherever they conflict.
 
+## 0. VANNA COMPASS (Clause 8b) — REFUTED on independent replication (15:13)
+
+The vanna-imbalance directional lead — briefly the program's highest-conviction
+predictive item — **FAILED hostile replication** (independent UW-daily re-pull,
+pre-registered, placebo-controlled). Kill shot: the ±2.5% net-vanna imbalance
+sign was POSITIVE on 100% of days (47/47 SPY, 46/46 QQQ), so it NEVER predicted
+down — the apparent 56-57% was merely the bull-tape up-day base rate, and a
+RANDOM strike split scored identically (0.53-0.56). Test halves SPY 45.8% /
+QQQ 52.2%, both below the 54% bar; sign-normalized rescue ~50% OOS (corr≈0).
+**Status: vanna-as-direction is SUSPENDED.** The same always-positive degeneracy
+likely explains the Skylit-intraday "survivor" too — Vega is re-testing that
+sign-normalized. Do not cite vanna imbalance for direction until/unless the
+Skylit re-test clears. This is the graduation gate working in reverse: an edge
+the mesh believed, killed by a session that had to reproduce it and couldn't.
+
 ## 1. GEX does not pick DIRECTION; Skylit King magnet is OPEN (not disproven)
 
 **RETRACTION NOTICE (03:26, Bellwether MSG 6):** the 1-yr walkforward's

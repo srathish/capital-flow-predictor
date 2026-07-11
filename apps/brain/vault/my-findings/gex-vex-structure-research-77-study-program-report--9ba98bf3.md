@@ -2,7 +2,7 @@
 title: GEX/VEX Structure Research — 77-Study Program Report
 source_url: repo://apps/gex/research/gexvex-structure/GEXVEX_STRUCTURE_REPORT.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T19:10:43Z'
+fetched_at: '2026-07-11T19:14:57Z'
 trust_tier: 1
 category: my-findings
 topics:

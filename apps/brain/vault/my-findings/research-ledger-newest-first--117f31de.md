@@ -2,7 +2,7 @@
 title: Research Ledger (newest first)
 source_url: repo://apps/gex/research/runner/outputs/LEDGER.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T19:10:43Z'
+fetched_at: '2026-07-11T19:14:57Z'
 trust_tier: 1
 category: my-findings
 topics:
