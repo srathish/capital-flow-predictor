@@ -66,10 +66,18 @@ level. **king_share is a low-volatility REGIME TAG, not a structural magnet.**
 This supersedes the earlier "conditional pika-zone lean" (which used a weaker
 control). WHAT SURVIVES: king_share as a low-vol proxy (consistent with Clause
 8's pos-gamma→compressed-range). WHAT'S DEAD: King-as-magnet at the EOD close.
-SCOPE CAVEAT: only EOD close-pin was tested — intraday reference-level pinning
-(the SPY 4/29 all-session glue, the operator's live observation) is a DIFFERENT
-measurement and remains UNTESTED, not refuted. Do not cite the King as an
-EOD price target; intraday pin stays open pending a proper intraday-control study.
+INTRADAY DOOR NOW CLOSED (15:52, Vega, 64 days, distance-matched mirror per
+frame, 6 band/K settings, OOS): intraday King reference is ALSO an artifact.
+Reaction rates 81-97% for King/mirror/random alike; King−mirror edge NEGATIVE
+in all 6 settings (−0.4 to −5.5pp), flips sign OOS; price approaches the King
+LESS than its mirror (QQQ materially worse). Any near-money level on a slow
+index reacts ~90% from baseline low-vol mean-reversion — the King adds ZERO
+excess. **BOTH King doors (close-pin + intraday) are now closed against fair
+controls. FINAL: the King is a low-vol REGIME TAG, not a structural magnet or
+pin level — at any horizon.** The SPY 4/29 "all-session glue" the operator saw
+was a quiet low-range day where price sat near ATM; the King being there was
+incidental, not causal. Cite the King only as a low-vol regime marker; never as
+a price target, magnet, or reference level.
 
 **RETRACTION NOTICE (03:26, Bellwether MSG 6):** the 1-yr walkforward's
 "price moves away from the King (42%)" finding used **UW's King**, and UW
