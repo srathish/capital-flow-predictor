@@ -2,7 +2,7 @@
 title: TRADING DOCTRINE v2 — evidence-backed spine (Bellwether ⇄ Athena)
 source_url: repo://apps/gex/research/exit-study/TRADING_DOCTRINE_v2.md
 source_domain: bellwether-repo
-fetched_at: '2026-07-11T07:40:39Z'
+fetched_at: '2026-07-11T16:26:49Z'
 trust_tier: 1
 category: my-findings
 topics:
@@ -12,7 +12,7 @@ topics:
 - exits
 summary: '**Status:** canonical shared doctrine. Supersedes stale "node → direction/target" lines in Skylit-Academy L329/L1738 and KNOWLEDGE_BASE L112. Seed as **T1**; cite by clause number. **This is knowledge, NOT a mandate to change live trading logic** — see Clause'
 url_sha1: 3d7d59e4cf0baa19e0c49d8ecf9d1a9a79dc0299
-simhash: '11603491873860318182'
+simhash: '3100625505279481766'
 status: vault
 ingested_by: seed
 ---
@@ -46,20 +46,22 @@ Node position does not forecast direction. The campaign edge that *works* is
 **flow** (66% win) confirmed by node — node-alone is a **trap** (49%/−6%). Direction
 conviction = macro regime + 20-day flow accumulation + the live 3-index tape.
 
-## Clause 3 — The King/node is a STRUCTURE MARKER, magnet UNSETTLED
-Do not size on "price will reach the King" alone. Tested extensively on the Skylit
-archive with the CORRECT King (0DTE-column max|gamma| — verified == what the live
-tracker reads), across frames (daily/intraday/into-close), share terciles, and sign
-(pika/barney). Result: the King does **not beat a mirror placebo on exact-touch** in
-any bucket — incl. HIGH-share × PIKA (the operator's case): 43% pin>placebo, price at
-placebo 26% vs at-King 15% (n=21). BUT this is **NOT conclusive** — two real gaps:
-(1) the mirror placebo is a weak control under symmetric dual-wall structure (the
-mirror is often the *other real wall*, so "hits both" reads as null when it's actually
-pinning); (2) exact-touch (±0.15%) ≠ zone-pin (mean-reversion within ±0.5%). Plus one
-regime (64d). The operator watched price pin to a high-share pika King live. So:
-**magnet OPEN, not disproven.** Resolution = a live cross-check (operator annotates a
-real pin day + the displayed King) with a DEAD-strike control + zone metric — not more
-archive variants. A level to watch, not a target to bet, until then.
+## Clause 3 — The King pins as a ZONE, CONDITIONAL on a dominant pika (LEANING real)
+The pin is real but **conditional and zone-based**, not a universal exact-touch magnet.
+Method matters: crude tests (mirror-placebo + exact-touch ±0.15%) showed NULL across
+all buckets — but the mirror placebo degenerates under dual-wall structure (it's often
+the *other wall*) and exact-touch is the wrong metric for a mean-reversion zone. With
+a proper **distance-matched DEAD-strike control** + a **±0.4% ZONE metric** (pin_test_v4),
+a signal appears exactly where doctrine + the operator say it should:
+- HIGH-share × PIKA King (operator's case, n=21): price sits in the King's ±0.4% zone
+  **76% vs 64%** at the dead strike (+12 pts); 12/21 sessions favor the King.
+- Weak or barney Kings: no edge (correctly — barney accelerates, doesn't pin).
+**Calibration:** a LEAN, not proof (n=21, one regime, 57% vs 50% not yet significant).
+But it reverses the earlier "null," and it's consistent with the live tape. **Doctrine
+use:** a dominant (high relative_significance) **pika** King is a real **pin ZONE** —
+expect mean-reversion around it, not an exact-strike target; do NOT expect weak or
+barney nodes to pull. Direction still never comes from the node (Clause 1/2). Confirm
+with more regimes + the operator's live cross-check before sizing on it.
 
 ## Clause 4 — ENTRIES catch MOVES (this part is real)
 The bull-reverse signal reliably detects "something is about to move" (high MFE:

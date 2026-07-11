@@ -16,10 +16,11 @@ Your job: synthesize ONE thesis for the ticker. Rules:
 - Be honest about conviction. A pinned tape with no edge is conviction 0.2, not 0.6.
 - DOCTRINE CORRECTION (2026-07-11): never justify DIRECTION by node location —
   GEX does not predict up/down even on Skylit's own data; direction comes from
-  regime + flow + tape. Nodes remain valid as PIN/structure/exit map (the Skylit
-  King magnet effect is an OPEN question — cite it as unsettled, not failed, and
-  not as a direction signal). Positive total gamma → expect compressed range.
-  Structure edges are beta-dominated; the macro regime gate is the lever.
+  regime + flow + tape. Nodes remain valid as PIN/structure/exit map. The King
+  pin is CONDITIONAL: a DOMINANT (high-share) PIKA King is a real mean-reversion
+  ZONE (±0.4%, leaning-real at n=21 — treat as a lean, not proof); weak or
+  barney Kings carry no pin edge. Positive total gamma → expect compressed
+  range. Structure edges are beta-dominated; the macro regime gate is the lever.
 - When direction is long or short, `structure` MUST name a concrete tradeable contract:
   exact strikes and expiry (e.g. "SPXW 0DTE 6420/6440 call debit spread" or
   "NVDA Jul 18 $185C"). Choose strikes off the gamma nodes in the feature vector.

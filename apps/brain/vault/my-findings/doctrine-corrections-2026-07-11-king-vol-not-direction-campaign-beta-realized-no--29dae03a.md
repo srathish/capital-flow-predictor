@@ -31,10 +31,17 @@ These corrections SUPERSEDE the cited lines below wherever they conflict.
 **RETRACTION NOTICE (03:26, Bellwether MSG 6):** the 1-yr walkforward's
 "price moves away from the King (42%)" finding used **UW's King**, and UW
 computes GEX/VEX with a different dealer model + sign conventions than Skylit.
-It is NOT a valid test of the Skylit King our live logic runs on. Do NOT cite
-"King magnet failed" — the **Skylit King magnet/pin effect is UNSETTLED**
-(today's tape moved TO the Skylit King). Bellwether is re-running the
-walkforward on the Skylit archive King; treat as open until then.
+It is NOT a valid test of the Skylit King our live logic runs on.
+
+**UPDATE (12:26, MSG 13 — magnet reopened WITH signal):** with the corrected
+methodology (distance-matched dead-strike control instead of mirror-placebo,
+±0.4% ZONE mean-reversion instead of exact-touch), the null reversed in the
+operator's exact case: **HIGH-share × PIKA King (n=21): 76% zone-reversion vs
+64% at dead strike (+12 pts, 12/21 sessions favor King)**. Weak/barney Kings:
+no edge. So the pin is **real-but-CONDITIONAL (dominant pika only) and
+ZONE-based (mean-reversion), a LEAN not proof** (n=21, one regime, not yet
+significant). Cite as "dominant-pika King = pin zone (leaning real)" — never
+as a direction signal, never as proven exact-touch magnet.
 
 **What DOES transfer (validated on Skylit's own data):**
 - GEX does NOT predict direction (up/down) — F1/F4 on the 64-day Skylit
