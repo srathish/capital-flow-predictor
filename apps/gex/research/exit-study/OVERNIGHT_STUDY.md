@@ -276,6 +276,16 @@ bull-reverse scalp. The bootstrap said edge>0 in 97% *on the full sample*, but
 that leans on the favorable train half; true OOS after honest scrutiny is
 marginal (~+1%) and fragile.
 
+### Phase 6d — the surface "signal" was CIRCULAR (Phase 5 corrected)
+
+Decomposed the escalator classifier: **spot-rise-only (+23%/+16% test, 72% win)
+is as good as the full escalator (+15%/+22%, 68%); the surface component alone
+(share-falling) is worthless (−2% test, 47% win).** So the GEX surface adds
+nothing beyond "did the underlying rise in 15 min" — and that is itself circular
+(classifying at +15m with +15m info to explain +15m P&L: "trades that are up are
+up," not knowable at entry). **Phase 5's "surface carries predictive signal" was
+an artifact.** No genuine ex-ante edge from the surface either.
+
 ## HONEST BOTTOM LINE (post-robustness)
 
 Robustness did its job: it turned a "+6% deployable edge" into an honest **~+1%
