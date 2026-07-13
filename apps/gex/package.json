@@ -20,6 +20,7 @@
     "plays:brief": "node scripts/plays-tracker.js --brief-only",
     "plays:silent": "node scripts/plays-tracker.js --no-tail",
     "auth:check": "node scripts/auth-preflight.js",
+    "ghost:ab": "node scripts/ghost-exit-ab.js",
     "plays:view": "node scripts/plays-view.js",
     "plays:live": "node scripts/plays-view.js --live",
     "grade": "node scripts/grade-universe.js",
