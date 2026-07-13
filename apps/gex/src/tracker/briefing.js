@@ -8,7 +8,9 @@
  * stdout only; does NOT open plays (fire-loop handles that automatically).
  *
  * EOD summary: after market close, prints every fire + close for the day
- * with best-mark % gain. Fed from the local SQLite tracked_plays table.
+ * with REALIZED % (close_mark; current_mark for still-live) as the headline,
+ * plus peak (best_mark) as a secondary read so the give-back gap is visible.
+ * Fed from the local SQLite tracked_plays table.
  */
 
 import { fetchSnapshot } from '../heatseeker/client.js';
@@ -236,7 +238,8 @@ export async function printEodSummary({ tradingDay } = {}) {
   let n_fires = 0;
   let n_plays = 0;
   let n_winners = 0;
-  const bestGains = [];
+  const realizedGains = [];
+  const peakGains = [];
 
   for (const [key, plays] of [...buckets].sort((a, b) => a[1][0].fire_ts_ms - b[1][0].fire_ts_ms)) {
     const [ts, ticker, state] = key.split('|');
@@ -245,10 +248,17 @@ export async function printEodSummary({ tradingDay } = {}) {
     n_fires += 1;
     for (const r of plays) {
       n_plays += 1;
-      const gain = r.best_pct_gain != null ? r.best_pct_gain : null;
-      if (gain != null && gain > 0.15) n_winners += 1;
-      if (gain != null) bestGains.push(gain);
-      const arrow = gain != null && gain > 0.15 ? '↑' : gain != null && gain < -0.05 ? '↓' : '·';
+      const peak = r.best_pct_gain != null ? r.best_pct_gain : null;
+      // REALIZED is the headline: close_mark for closed plays, else the latest
+      // current_mark for still-live ones. Peak (best_mark) is kept only as a
+      // secondary read so the give-back gap is visible.
+      const exitMark = r.close_mark != null ? r.close_mark : r.current_mark;
+      const realized = (exitMark != null && r.entry_mark > 0)
+        ? (exitMark - r.entry_mark) / r.entry_mark : null;
+      if (realized != null && realized > 0) n_winners += 1;
+      if (realized != null) realizedGains.push(realized);
+      if (peak != null) peakGains.push(peak);
+      const arrow = realized != null && realized > 0.05 ? '↑' : realized != null && realized < -0.05 ? '↓' : '·';
       // TRUE day high of the contract (incl. after our exit) — exit-quality read.
       const dh = await fetchDayHigh(r.option_symbol, day, r.close_ts_ms);
       let dayHighStr = '';
@@ -259,21 +269,24 @@ export async function printEodSummary({ tradingDay } = {}) {
           dayHighStr += ` ⚠ ran to ${fmtMoney(dh.highAfterExit)} after exit`;
         }
       }
+      const exitLabel = r.status === 'live' ? 'cur ' : 'exit';
       console.log(
         `    ${arrow} ${r.option_type === 'put' ? 'PUT ' : 'CALL'} $${r.strike}  ` +
-        `entry ${fmtMoney(r.entry_mark)}  best ${fmtMoney(r.best_mark)}  ` +
-        `(${fmtPct(gain, 0)})  ${r.status.toUpperCase()}` + dayHighStr
+        `entry ${fmtMoney(r.entry_mark)}  ${exitLabel} ${fmtMoney(exitMark)}  ` +
+        `realized ${fmtPct(realized, 0)} (peak ${fmtPct(peak, 0)})  ${r.status.toUpperCase()}` + dayHighStr
       );
     }
   }
 
-  const avgGain = bestGains.length ? bestGains.reduce((s, g) => s + g, 0) / bestGains.length : null;
-  const maxGain = bestGains.length ? Math.max(...bestGains) : null;
+  const mean = a => (a.length ? a.reduce((s, g) => s + g, 0) / a.length : null);
+  const avgRealized = mean(realizedGains);
+  const avgPeak = mean(peakGains);
+  const winRate = realizedGains.length ? n_winners / realizedGains.length : null;
 
   console.log('');
   console.log('  ───────────────────────────────────────────────────────────');
-  console.log(`  ${n_fires} fire${n_fires === 1 ? '' : 's'} · ${n_plays} play${n_plays === 1 ? '' : 's'} · ${n_winners} winner${n_winners === 1 ? '' : 's'} (>15%)`);
-  console.log(`  best gain: ${fmtPct(maxGain, 0)}   avg gain: ${fmtPct(avgGain, 0)}`);
+  console.log(`  ${n_fires} fire${n_fires === 1 ? '' : 's'} · ${n_plays} play${n_plays === 1 ? '' : 's'} · ${n_winners} winner${n_winners === 1 ? '' : 's'} (realized > 0) · win ${fmtPct(winRate, 0)}`);
+  console.log(`  avg REALIZED: ${fmtPct(avgRealized, 0)}   (avg peak ${fmtPct(avgPeak, 0)} — the gap is give-back)`);
   console.log('  ═══════════════════════════════════════════════════════════');
   console.log('');
 }

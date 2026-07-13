@@ -23,9 +23,32 @@ export function openDb() {
 
   const schema = readFileSync(join(__dirname, 'schema.sql'), 'utf-8');
   db.exec(schema);
+  migrateTrackedPlays(db);
 
   log.info(`DB opened at ${dbPath}`);
   return db;
+}
+
+// Idempotent, additive migration: bring pre-existing DBs up to the current
+// schema without a migration framework. ONLY adds nullable columns and
+// backfills them once from the JSON blob — never drops or rewrites. Safe on
+// every open, and does not touch the fire/exit decision path. (Research-only:
+// enables a later confidence→MFE study.)
+function migrateTrackedPlays(db) {
+  const cols = new Set(db.prepare(`PRAGMA table_info(tracked_plays)`).all().map(c => c.name));
+  let added = false;
+  if (!cols.has('fire_confidence')) { db.exec(`ALTER TABLE tracked_plays ADD COLUMN fire_confidence REAL`); added = true; }
+  if (!cols.has('fire_score'))      { db.exec(`ALTER TABLE tracked_plays ADD COLUMN fire_score REAL`); added = true; }
+  if (added) {
+    try {
+      db.exec(`
+        UPDATE tracked_plays
+        SET fire_confidence = COALESCE(fire_confidence, json_extract(supporting_state, '$.patternDetection.confidence')),
+            fire_score      = COALESCE(fire_score,      json_extract(supporting_state, '$.patternDetection.score'))
+        WHERE supporting_state IS NOT NULL
+      `);
+    } catch (e) { log.warn(`tracked_plays confidence/score backfill skipped: ${e.message}`); }
+  }
 }
 
 export function closeDb() {

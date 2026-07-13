@@ -219,7 +219,9 @@ CREATE TABLE IF NOT EXISTS tracked_plays (
   close_ts_ms       INTEGER,
   close_mark        REAL,
   close_reason      TEXT,
-  supporting_state  TEXT                  -- JSON blob: fire event context
+  supporting_state  TEXT,                 -- JSON blob: fire event context
+  fire_confidence   REAL,                 -- patternDetection.confidence at fire (research: confidence->MFE cut)
+  fire_score        REAL                  -- patternDetection.score at fire
 );
 
 CREATE INDEX IF NOT EXISTS idx_plays_day_ticker ON tracked_plays(trading_day, ticker, fire_ts_ms);

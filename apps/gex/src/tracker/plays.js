@@ -100,8 +100,8 @@ export async function openPlaysForFire(fireEvent, { db, quoteFetcher, expiration
       fire_ts_ms, trading_day, ticker, state, pattern_name,
       option_symbol, option_type, strike, expiration,
       spot_at_fire, entry_mark, entry_bid, entry_ask,
-      status, supporting_state
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'live', ?)
+      status, supporting_state, fire_confidence, fire_score
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'live', ?, ?, ?)
   `);
 
   let opened = 0;
@@ -122,6 +122,8 @@ export async function openPlaysForFire(fireEvent, { db, quoteFetcher, expiration
         // timeframes outperform fires against them?
         regimes: fireEvent.regimes ?? null,
       }),
+      patternDetection?.confidence ?? null,
+      patternDetection?.score ?? null,
     );
     opened++;
   }
