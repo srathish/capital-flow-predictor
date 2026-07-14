@@ -1,0 +1,184 @@
+<title>Node Terrain — 1-min GEX/VEX</title>
+<style>
+.vz{
+  color-scheme: light;
+  --pg:#f9f9f7; --sf:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --mut:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.12);
+  --pika:#b07800; --barney:#6d55d0; --good:#0ca30c; --crit:#d03b3b;
+  --sfr:252,252,251;
+  font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--pg); color:var(--ink); min-height:100vh; margin:0; padding:18px 20px 30px;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .vz{
+    color-scheme:dark; --pg:#0f1014; --sf:#15171c; --ink:#fff; --ink2:#c3c2b7; --mut:#898781;
+    --grid:#23252b; --axis:#383835; --ring:rgba(255,255,255,.12);
+    --pika:#c98500; --barney:#9b7bf0; --sfr:21,23,28;
+  }
+}
+:root[data-theme="dark"] .vz{
+  color-scheme:dark; --pg:#0f1014; --sf:#15171c; --ink:#fff; --ink2:#c3c2b7; --mut:#898781;
+  --grid:#23252b; --axis:#383835; --ring:rgba(255,255,255,.12);
+  --pika:#c98500; --barney:#9b7bf0; --sfr:21,23,28;
+}
+.vz h1{font-size:17px; font-weight:650; margin:0 0 2px}
+.vz .sub{color:var(--ink2); font-size:12.5px; margin:0 0 14px}
+.vz .bar{display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-bottom:12px}
+.vz .seg{display:flex; gap:4px; background:var(--sf); border:1px solid var(--ring); border-radius:8px; padding:3px}
+.vz .seg button{border:0; background:transparent; color:var(--ink2); font:inherit; font-size:12.5px; padding:4px 10px; border-radius:6px; cursor:pointer}
+.vz .seg button[aria-pressed="true"]{background:var(--grid); color:var(--ink); font-weight:600}
+.vz .seg button:focus-visible{outline:2px solid var(--pika); outline-offset:1px}
+.vz .legend{display:flex; gap:16px; align-items:center; font-size:12px; color:var(--ink2); flex-wrap:wrap}
+.vz .lg{display:flex; align-items:center; gap:6px}
+.vz .grad{width:110px; height:10px; border-radius:5px; border:1px solid var(--ring);
+  background:linear-gradient(90deg, var(--barney), rgb(var(--sfr)) 50%, var(--pika))}
+.vz .sw{width:14px;height:3px;background:var(--ink);border-radius:2px}
+.vz .tri{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--good)}
+.vz .trid{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid var(--crit)}
+.vz .wrap{position:relative; background:var(--sf); border:1px solid var(--ring); border-radius:10px; padding:10px 8px 6px}
+.vz canvas{display:block; width:100%; height:560px; cursor:crosshair}
+.vz .tip{position:absolute; pointer-events:none; background:var(--sf); border:1px solid var(--ring);
+  border-radius:8px; padding:8px 10px; font-size:12px; box-shadow:0 4px 14px rgba(0,0,0,.25);
+  display:none; min-width:190px; z-index:5}
+.vz .tip b{font-weight:650}
+.vz .tip .r{display:flex; justify-content:space-between; gap:14px}
+.vz .tip .r span:last-child{font-variant-numeric:tabular-nums}
+.vz .note{color:var(--mut); font-size:12px; margin-top:10px; max-width:70ch}
+.vz details{margin-top:14px; font-size:12.5px}
+.vz summary{cursor:pointer; color:var(--ink2)}
+.vz table{border-collapse:collapse; margin-top:8px; font-variant-numeric:tabular-nums}
+.vz td,.vz th{padding:3px 12px 3px 0; text-align:right; border-bottom:1px solid var(--grid)}
+.vz th{color:var(--mut); font-weight:600; font-size:11.5px}
+.vz td:first-child,.vz th:first-child{text-align:left}
+</style>
+<div class="vz">
+<h1>Node Terrain — price vs GEX/VEX nodes at 1-minute</h1>
+<p class="sub">Each column is one minute · each row a strike. Amber = pika (dealers long gamma: pin/dampen) · violet = barney (dealers short gamma: accelerate). The white line is spot — watch it ride, bounce off, or punch through bands. ◦ = King node. Triangles = our live fires (▲ call · ▼ put), ✕ = exit.</p>
+<div class="bar">
+  <div class="seg" id="tseg" role="tablist" aria-label="ticker"></div>
+  <div class="seg" id="dseg" role="tablist" aria-label="day"></div>
+  <div class="seg" id="mseg" role="tablist" aria-label="surface">
+    <button aria-pressed="true" data-m="G">GEX (gamma)</button><button aria-pressed="false" data-m="V">VEX (vanna)</button>
+  </div>
+  <div class="legend">
+    <span class="lg"><span class="grad"></span><span>barney&nbsp;−&nbsp;·&nbsp;0&nbsp;·&nbsp;+&nbsp;pika</span></span>
+    <span class="lg"><span class="sw"></span> spot</span>
+    <span class="lg"><span class="tri"></span> call fire</span>
+    <span class="lg"><span class="trid"></span> put fire</span>
+  </div>
+</div>
+<div class="wrap"><canvas id="cv"></canvas><div class="tip" id="tip"></div></div>
+<p class="note" id="note"></p>
+<details><summary>King ledger (30-min table view)</summary><div id="tbl"></div></details>
+</div>
+<script>
+const DATA = __DATA__;
+const $=s=>document.querySelector(s);
+const cv=$('#cv'), tip=$('#tip');
+let TK='SPXW', DY=DATA.days[DATA.days.length-1], MODE='G';
+function css(v){return getComputedStyle($('.vz')).getPropertyValue(v).trim()}
+function hexRGB(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function seg(el, items, cur, fn){
+  el.innerHTML='';
+  items.forEach(it=>{const b=document.createElement('button');b.textContent=it;
+    b.setAttribute('aria-pressed', String(it===cur));
+    b.onclick=()=>{fn(it); [...el.children].forEach(c=>c.setAttribute('aria-pressed', String(c.textContent===it))); draw();};
+    el.appendChild(b);});
+}
+seg($('#tseg'), DATA.tickers, TK, v=>TK=v);
+seg($('#dseg'), DATA.days, DY, v=>DY=v);
+[...$('#mseg').children].forEach(b=>b.onclick=()=>{MODE=b.dataset.m;[...$('#mseg').children].forEach(c=>c.setAttribute('aria-pressed',String(c===b)));draw();});
+const PAD={l:56,r:14,t:8,b:24};
+let cur=null, geom=null;
+function draw(){
+  const key=DY+'|'+TK, d=DATA.data[key]; cur=d;
+  const dpr=devicePixelRatio||1, W=cv.clientWidth, H=cv.clientHeight;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const sf=hexRGB(css('--sf')), pika=hexRGB(css('--pika')), barney=hexRGB(css('--barney'));
+  ctx.fillStyle=css('--sf'); ctx.fillRect(0,0,W,H);
+  if(!d){ctx.fillStyle=css('--mut');ctx.fillText('no data for '+key,W/2-60,H/2);geom=null;$('#note').textContent='';return;}
+  const ks=d.strikes, n=ks.length, m=d.mins.length;
+  const kLo=ks[0]-(ks[1]-ks[0])/2, kHi=ks[n-1]+(ks[n-1]-ks[n-2])/2;
+  const pw=W-PAD.l-PAD.r, ph=H-PAD.t-PAD.b;
+  const X=i=>PAD.l+pw*(d.mins[i]/390), Y=k=>PAD.t+ph*(1-(k-kLo)/(kHi-kLo));
+  const cw=Math.max(1,pw/391);
+  const M=MODE==='G'?d.G:d.V, mx=MODE==='G'?d.gmax:d.vmax;
+  geom={X,Y,kLo,kHi,pw,ph};
+  // heatmap
+  for(let i=0;i<m;i++){
+    for(let j=0;j<n;j++){
+      const g=M[i][j]; if(!g) continue;
+      const w=0.22+0.78*Math.sqrt(Math.min(1,Math.abs(g)/mx));
+      const pole=g>0?pika:barney;
+      ctx.fillStyle=`rgb(${sf[0]+(pole[0]-sf[0])*w|0},${sf[1]+(pole[1]-sf[1])*w|0},${sf[2]+(pole[2]-sf[2])*w|0})`;
+      const y1=Y(j+1<n?(ks[j]+ks[j+1])/2:kHi), y0=Y(j>0?(ks[j-1]+ks[j])/2:kLo);
+      ctx.fillRect(X(i)-cw/2, y1, cw+0.5, y0-y1);
+    }
+  }
+  // grid ticks (time)
+  ctx.fillStyle=css('--mut'); ctx.font='11px system-ui'; ctx.textAlign='center';
+  [['09:30',0],['10:30',60],['11:30',120],['12:30',180],['13:30',240],['14:30',300],['15:30',360]].forEach(([lab,mn])=>{
+    const x=PAD.l+pw*(mn/390); ctx.fillText(lab,x,H-8);
+    ctx.strokeStyle=css('--grid'); ctx.globalAlpha=.5; ctx.beginPath();ctx.moveTo(x,PAD.t);ctx.lineTo(x,PAD.t+ph);ctx.stroke(); ctx.globalAlpha=1;
+  });
+  // strike labels
+  ctx.textAlign='right';
+  const step=Math.max(1,Math.round(n/9));
+  for(let j=0;j<n;j+=step){ctx.fillText(ks[j],PAD.l-6,Y(ks[j])+3);}
+  // king ring
+  ctx.fillStyle=css('--ink'); ctx.globalAlpha=.55;
+  for(let i=0;i<m;i+=1){const kk=d.king[i]; if(kk>=kLo&&kk<=kHi){ctx.fillRect(X(i)-.7,Y(kk)-.7,1.4,1.4);}}
+  ctx.globalAlpha=1;
+  // spot line (halo + core for separation)
+  ctx.strokeStyle=`rgba(${sf.join(',')},0.9)`; ctx.lineWidth=4; ctx.beginPath();
+  for(let i=0;i<m;i++){const x=X(i),y=Y(d.spot[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+  ctx.stroke();
+  ctx.strokeStyle=css('--ink'); ctx.lineWidth=2; ctx.beginPath();
+  for(let i=0;i<m;i++){const x=X(i),y=Y(d.spot[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+  ctx.stroke();
+  // fires
+  (d.fires||[]).forEach(f=>{
+    if(f.em==null)return;
+    const x=PAD.l+pw*(f.em/390), y=Y(f.k);
+    ctx.fillStyle=f.typ==='call'?css('--good'):css('--crit');
+    ctx.beginPath();
+    if(f.typ==='call'){ctx.moveTo(x,y-7);ctx.lineTo(x-6,y+4);ctx.lineTo(x+6,y+4);}
+    else{ctx.moveTo(x,y+7);ctx.lineTo(x-6,y-4);ctx.lineTo(x+6,y-4);}
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle=`rgb(${sf.join(',')})`;ctx.lineWidth=1.5;ctx.stroke();
+    if(f.xm!=null){const x2=PAD.l+pw*(f.xm/390);
+      ctx.strokeStyle=f.typ==='call'?css('--good'):css('--crit'); ctx.setLineDash([3,3]); ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y);ctx.stroke();ctx.setLineDash([]);
+      ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(x2-4,y-4);ctx.lineTo(x2+4,y+4);ctx.moveTo(x2+4,y-4);ctx.lineTo(x2-4,y+4);ctx.stroke();
+    }
+  });
+  // note + table
+  const kchg=d.king.filter((k,i)=>i&&k!==d.king[i-1]).length;
+  $('#note').textContent=`${TK} ${DY} — ${n} strikes in band, King changed ${kchg}× at 1-min. Fires shown: ${(d.fires||[]).length}. Realized per fire: ${(d.fires||[]).map(f=>(f.r>0?'+':'')+f.r+'%').join(' · ')||'none'}`;
+  let rows='<table><tr><th>ET</th><th>spot</th><th>King</th><th>sign</th></tr>';
+  for(let i=0;i<m;i+=30){const t=Math.floor((d.mins[i]+570)/60),mn=String((d.mins[i]+570)%60).padStart(2,'0');
+    rows+=`<tr><td>${t}:${mn}</td><td>${d.spot[i]}</td><td>${d.king[i]}</td><td>${d.ksign[i]>0?'pika':'barney'}</td></tr>`;}
+  $('#tbl').innerHTML=rows+'</table>';
+}
+cv.addEventListener('mousemove',e=>{
+  if(!cur||!geom)return;
+  const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+  const i=Math.max(0,Math.min(cur.mins.length-1,Math.round((x-PAD.l)/geom.pw*390)));
+  const t=Math.floor((cur.mins[i]+570)/60), mn=String((cur.mins[i]+570)%60).padStart(2,'0');
+  const M=MODE==='G'?cur.G:cur.V;
+  const tops=cur.strikes.map((k,j)=>({k,g:M[i][j]})).filter(o=>o.g).sort((a,b)=>Math.abs(b.g)-Math.abs(a.g)).slice(0,3);
+  tip.style.display='block';
+  tip.style.left=Math.min(x+16, r.width-210)+'px'; tip.style.top=Math.max(4,y-20)+'px';
+  tip.innerHTML=`<b>${t}:${mn} ET</b>
+    <div class="r"><span>spot</span><span>${cur.spot[i]}</span></div>
+    <div class="r"><span>King</span><span>${cur.king[i]} (${cur.ksign[i]>0?'pika':'barney'})</span></div>
+    ${tops.map(o=>`<div class="r"><span>${o.k} ${o.g>0?'pika':'barney'}</span><span>${o.g>0?'+':''}${o.g}M</span></div>`).join('')}`;
+});
+cv.addEventListener('mouseleave',()=>tip.style.display='none');
+new ResizeObserver(()=>draw()).observe(cv);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+new MutationObserver(()=>draw()).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+draw();
+</script>
