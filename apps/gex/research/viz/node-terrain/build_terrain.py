@@ -75,7 +75,9 @@ for day in days:
             "G":G,"V":V,"gmax":max(gmax,1),"vmax":max(vmax,1),"king":king,"ksign":ksign,"fires":frs,"sig":[]}
 
 # EXTREME-PROBE system entries (operator: show ONLY this system on the map)
-EV=f"{BASE}/research/velocity-capture/probe_events.jsonl"
+# Prefer Variant-B cycle legs (operator: pika-touch system only) when the study has landed
+_CY=f"{BASE}/research/velocity-capture/cycle_events.jsonl"
+EV=_CY if os.path.exists(_CY) else f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
     for l in open(EV):
@@ -83,6 +85,7 @@ if os.path.exists(EV):
         except: continue
         key=f"{e['day']}|{e['ticker']}"
         if key in out["data"]:
+            if e.get("kind")=="cycle" and e.get("variant")!="B": continue
             def m_of(t):
                 if not t: return None
                 hh,mm=t.split(":"); v=(int(hh)*60+int(mm))-(13*60+30)
