@@ -21,7 +21,7 @@ for (let mins = 13*60+30; mins <= 20*60; mins++) {
 for (const T of ['SPXW','SPY','QQQ']) {
   const f = path.join(OUT, `${T}.jsonl`);
   if (fs.existsSync(f + '.gz')) { console.log(`${T}: exists, skip`); continue; }
-  let ok = 0, miss = 0;
+  let ok = 0, miss = 0, consecErr = 0;
   const ws = fs.createWriteStream(f);
   for (const ts of stamps) {
     try {
@@ -30,8 +30,8 @@ for (const T of ['SPXW','SPY','QQQ']) {
         ws.write(JSON.stringify({ requestedTs: ts, spot: s.spot,
           strikes: (s.strikes||[]).map(x => ({ strike: x.strike, gamma: x.gamma, vanna: x.vanna, relSig: x.relativeSignificance })) }) + '\n');
         ok++;
-      } else miss++;
-    } catch (e) { miss++; }
+      consecErr = 0; } else miss++;
+    } catch (e) { miss++; consecErr++; if (consecErr >= 15) { console.log(`${T}: aborting after 15 consecutive errors (auth guard)`); break; } }
     await new Promise(r => setTimeout(r, 280));
   }
   await new Promise(r => ws.end(r));

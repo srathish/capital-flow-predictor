@@ -1,0 +1,169 @@
+{
+  "engineDays": [
+    "2026-04-13",
+    "2026-05-06",
+    "2026-05-12",
+    "2026-05-15",
+    "2026-05-21",
+    "2026-05-28",
+    "2026-06-03",
+    "2026-07-06",
+    "2026-07-10"
+  ],
+  "engine": {
+    "would_enters_total": 11,
+    "scored": 10,
+    "dropped": [
+      {
+        "day": "2026-04-13",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "drop": "no_entry_bar_or_too_late"
+      }
+    ],
+    "trail": {
+      "n": 10,
+      "avg_net": 0.035245651727198825,
+      "total_net": 0.35245651727198823,
+      "winpct": 70,
+      "pf": 1.1611552777986858,
+      "maxDD_by_day": -1.3994858272907054
+    },
+    "plan": {
+      "n": 10,
+      "avg_net": 0.04919594813093174,
+      "total_net": 0.49195948130931744,
+      "winpct": 40,
+      "pf": 1.1988484164815467,
+      "maxDD_by_day": -2.1298587005088647
+    },
+    "perTrade": [
+      {
+        "day": "2026-05-06",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260506C07340000",
+        "entry": 5.5,
+        "trail_net": 0.26090909090909087,
+        "trail_exit": "trail",
+        "plan_net": 2.621818181818182,
+        "plan_exit": "target"
+      },
+      {
+        "day": "2026-05-12",
+        "ticker": "SPXW",
+        "dir": "puts",
+        "sym": "SPXW260512P07390000",
+        "entry": 1.65,
+        "trail_net": -0.7875757575757576,
+        "trail_exit": "stop",
+        "plan_net": -0.42393939393939395,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-05-15",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260515C07435000",
+        "entry": 5.2,
+        "trail_net": 0.06615384615384615,
+        "trail_exit": "trail",
+        "plan_net": 0.08538461538461531,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-05-21",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260521C07405000",
+        "entry": 15.77,
+        "trail_net": 0.9199048826886493,
+        "trail_exit": "trail",
+        "plan_net": -0.16126188966391886,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-05-28",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260528C07555000",
+        "entry": 7.8,
+        "trail_net": 0.3417948717948718,
+        "trail_exit": "trail",
+        "plan_net": 0.0738461538461538,
+        "plan_exit": "eod"
+      },
+      {
+        "day": "2026-05-28",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260528C07550000",
+        "entry": 10.7,
+        "trail_net": 0.32700934579439256,
+        "trail_exit": "trail",
+        "plan_net": 0.18495327102803746,
+        "plan_exit": "eod"
+      },
+      {
+        "day": "2026-06-03",
+        "ticker": "SPXW",
+        "dir": "puts",
+        "sym": "SPXW260603P07555000",
+        "entry": 3.57,
+        "trail_net": 0.37056022408963596,
+        "trail_exit": "trail",
+        "plan_net": -0.0776190476190476,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-07-06",
+        "ticker": "SPY",
+        "dir": "puts",
+        "sym": "SPY260706P00749000",
+        "entry": 1.13,
+        "trail_net": 0.2531858407079647,
+        "trail_exit": "trail",
+        "plan_net": -0.5875221238938053,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-07-10",
+        "ticker": "SPY",
+        "dir": "calls",
+        "sym": "SPY260710C00753000",
+        "entry": 1.11,
+        "trail_net": -0.7597297297297297,
+        "trail_exit": "stop",
+        "plan_net": -0.2912612612612614,
+        "plan_exit": "stop"
+      },
+      {
+        "day": "2026-07-10",
+        "ticker": "SPXW",
+        "dir": "calls",
+        "sym": "SPXW260710C07575000",
+        "entry": 4.1,
+        "trail_net": -0.6397560975609756,
+        "trail_exit": "stop",
+        "plan_net": -0.932439024390244,
+        "plan_exit": "eod"
+      }
+    ]
+  },
+  "pattern_matcher_all": {
+    "n": 1295,
+    "avg_net": -0.04548256462842545,
+    "total_net": -58.899921193810954,
+    "winpct": 47.25868725868726,
+    "pf": 0.8643948274787223,
+    "maxDD_by_day": -69.91744766937651
+  },
+  "pattern_matcher_same_days": {
+    "n": 185,
+    "avg_net": -0.007309566958101878,
+    "total_net": -1.3522698872488474,
+    "winpct": 49.189189189189186,
+    "pf": 0.9772060855785379,
+    "maxDD_by_day": -8.63284915365449
+  }
+}
