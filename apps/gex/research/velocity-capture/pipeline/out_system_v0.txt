@@ -1,0 +1,280 @@
+[complete days used: 9] ['2026-07-01', '2026-07-02', '2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10', '2026-07-13', '2026-07-14']
+[median daily range / width-gate 0.30x]
+  SPXW: median_range=67.84  width_gate=20.35  (days: [70.1, 112.3, 67.8, 55.7, 80.5, 64.1, 57.3, 68.9, 40.8])
+  SPY: median_range=6.75  width_gate=2.03  (days: [6.8, 11.1, 7.4, 5.7, 8.0, 6.6, 5.1, 6.8, 3.8])
+  QQQ: median_range=12.82  width_gate=3.84  (days: [11.0, 22.9, 13.3, 17.3, 10.8, 12.8, 6.5, 15.4, 10.3])
+[wrote price_structure.csv for 9 days]
+
+===== CONFIRMED COMPOSITE FLIPS (KingFlip-v0) : 13 =====
+date        tkr  et    cls          spot   pos    rng  aShr  bShr dom vel bucket          
+2026-07-01  SPY  10:08 BEARISH    746.17  0.88    4.0  0.13  0.15   Y   n taken           
+2026-07-01  SPY  14:57 BULLISH    746.57  0.58    6.8  0.20  0.19   n   n no_dom          
+2026-07-07  SPXW 09:34 BULLISH   7525.98  0.00   11.4  0.09  0.07   n   n no_dom          
+2026-07-09  QQQ  09:44 BEARISH    721.01  0.99    9.8  0.09  0.11   Y   Y taken           
+2026-07-09  QQQ  10:27 BEARISH    716.31  0.44   11.2  0.08  0.10   Y   n rej_midrange    
+2026-07-10  SPXW 11:03 BULLISH   7535.67  0.37   36.8  0.16  0.18   Y   n rej_midrange    
+2026-07-10  SPXW 11:10 BEARISH   7542.92  0.57   36.8  0.19  0.18   n   n no_dom          
+2026-07-13  SPXW 09:33 BULLISH   7561.33  0.32   20.7  0.19  0.10   n   n no_dom          
+2026-07-13  QQQ  10:32 BEARISH    717.56  0.36   12.5  0.14  0.15   Y   n rej_midrange    
+2026-07-14  SPXW 09:33 BEARISH   7526.83  0.77   14.8  0.15  0.12   n   n no_dom          
+2026-07-14  SPXW 12:05 BULLISH   7529.31  0.34   40.8  0.12  0.12   n   n no_dom          
+2026-07-14  SPXW 12:39 BEARISH   7539.51  0.59   40.8  0.11  0.14   Y   n rej_midrange    
+2026-07-14  SPXW 12:49 BULLISH   7537.44  0.54   40.8  0.12  0.13   Y   n rej_midrange    
+  bucket counts: {'taken': 2, 'no_dom': 6, 'rej_midrange': 5}
+  taken(System-v0)=2  rejected(all)=5  midrange=5
+
+===== SYSTEM-v0b EVENTS (extreme + pika-King support) : 222 =====
+  2026-07-01 SPXW 09:31 BULLISH pos=0.00 pika_king=7445 spot=7466.41
+  2026-07-01 SPXW 11:04 BEARISH pos=1.00 pika_king=7525 spot=7503.11
+  2026-07-01 SPXW 11:34 BEARISH pos=0.93 pika_king=7525 spot=7516.20
+  2026-07-01 SPXW 12:04 BEARISH pos=0.95 pika_king=7525 spot=7517.35
+  2026-07-01 SPXW 12:34 BEARISH pos=0.95 pika_king=7525 spot=7518.63
+  2026-07-01 SPXW 13:13 BEARISH pos=0.76 pika_king=7525 spot=7504.81
+  2026-07-01 SPXW 14:05 BEARISH pos=0.75 pika_king=7500 spot=7504.50
+  2026-07-01 SPXW 15:10 BEARISH pos=0.75 pika_king=7510 spot=7504.53
+  2026-07-01 SPY  10:09 BEARISH pos=0.88 pika_king=747 spot=746.17
+  2026-07-01 SPY  10:48 BEARISH pos=0.83 pika_king=747 spot=746.24
+  2026-07-01 QQQ  09:39 BULLISH pos=0.04 pika_king=727 spot=726.32
+  2026-07-01 QQQ  10:45 BULLISH pos=0.24 pika_king=730 spot=728.36
+  2026-07-01 QQQ  12:53 BULLISH pos=0.23 pika_king=730 spot=728.21
+  2026-07-01 QQQ  13:33 BULLISH pos=0.21 pika_king=728 spot=728.01
+  2026-07-01 QQQ  14:03 BULLISH pos=0.17 pika_king=728 spot=727.60
+  2026-07-01 QQQ  14:33 BULLISH pos=0.10 pika_king=728 spot=726.95
+  2026-07-01 QQQ  15:03 BULLISH pos=0.15 pika_king=728 spot=727.23
+  2026-07-01 QQQ  15:36 BULLISH pos=0.21 pika_king=728 spot=727.84
+  2026-07-02 SPXW 09:31 BEARISH pos=1.00 pika_king=7525 spot=7506.54
+  2026-07-02 SPXW 10:01 BEARISH pos=0.89 pika_king=7525 spot=7533.31
+  2026-07-02 SPXW 11:04 BULLISH pos=0.20 pika_king=7500 spot=7494.60
+  2026-07-02 SPXW 11:43 BULLISH pos=0.22 pika_king=7500 spot=7485.69
+  2026-07-02 SPXW 14:13 BULLISH pos=0.23 pika_king=7475 spot=7453.27
+  2026-07-02 SPXW 14:46 BULLISH pos=0.23 pika_king=7440 spot=7453.27
+  2026-07-02 SPXW 15:16 BULLISH pos=0.17 pika_king=7440 spot=7446.40
+  2026-07-02 SPY  09:32 BEARISH pos=1.00 pika_king=748 spot=748.05
+  2026-07-02 SPY  10:10 BEARISH pos=0.83 pika_king=748 spot=750.22
+  2026-07-02 SPY  10:43 BULLISH pos=0.22 pika_king=748 spot=746.98
+  2026-07-02 SPY  11:18 BULLISH pos=0.06 pika_king=743 spot=744.73
+  2026-07-02 SPY  11:50 BULLISH pos=0.07 pika_king=743 spot=744.84
+  2026-07-02 SPY  12:20 BULLISH pos=0.03 pika_king=743 spot=744.05
+  2026-07-02 SPY  12:50 BULLISH pos=0.08 pika_king=743 spot=742.99
+  2026-07-02 SPY  13:20 BULLISH pos=0.06 pika_king=741 spot=741.46
+  2026-07-02 SPY  13:50 BULLISH pos=0.03 pika_king=741 spot=740.67
+  2026-07-02 SPY  14:20 BULLISH pos=0.14 pika_king=741 spot=741.67
+  2026-07-02 SPY  14:57 BULLISH pos=0.23 pika_king=743 spot=742.67
+  2026-07-02 SPY  15:27 BULLISH pos=0.15 pika_king=741 spot=741.72
+  2026-07-02 QQQ  09:54 BEARISH pos=0.82 pika_king=727 spot=728.92
+  2026-07-02 QQQ  11:16 BULLISH pos=0.07 pika_king=714 spot=716.11
+  2026-07-02 QQQ  11:49 BULLISH pos=0.13 pika_king=719 spot=717.04
+  2026-07-02 QQQ  12:33 BULLISH pos=0.00 pika_king=710 spot=712.12
+  2026-07-02 QQQ  13:03 BULLISH pos=0.00 pika_king=710 spot=709.89
+  2026-07-02 QQQ  13:33 BULLISH pos=0.07 pika_king=710 spot=710.84
+  2026-07-02 QQQ  14:03 BULLISH pos=0.03 pika_king=710 spot=708.32
+  2026-07-02 QQQ  14:33 BULLISH pos=0.19 pika_king=711 spot=711.94
+  2026-07-02 QQQ  15:03 BULLISH pos=0.14 pika_king=710 spot=710.85
+  2026-07-02 QQQ  15:33 BULLISH pos=0.11 pika_king=710 spot=710.26
+  2026-07-06 SPXW 09:50 BEARISH pos=0.90 pika_king=7530 spot=7516.11
+  2026-07-06 SPXW 10:20 BEARISH pos=0.93 pika_king=7530 spot=7519.65
+  2026-07-06 SPXW 10:50 BEARISH pos=0.93 pika_king=7540 spot=7525.06
+  2026-07-06 SPXW 11:20 BEARISH pos=0.93 pika_king=7540 spot=7527.39
+  2026-07-06 SPXW 11:50 BEARISH pos=0.99 pika_king=7545 spot=7536.34
+  2026-07-06 SPXW 12:20 BEARISH pos=0.98 pika_king=7545 spot=7537.60
+  2026-07-06 SPXW 12:50 BEARISH pos=0.99 pika_king=7545 spot=7537.94
+  2026-07-06 SPXW 13:20 BEARISH pos=0.94 pika_king=7545 spot=7538.31
+  2026-07-06 SPXW 13:51 BEARISH pos=0.83 pika_king=7540 spot=7532.23
+  2026-07-06 SPXW 14:21 BEARISH pos=0.98 pika_king=7540 spot=7541.29
+  2026-07-06 SPXW 14:51 BEARISH pos=1.00 pika_king=7540 spot=7544.07
+  2026-07-06 SPXW 15:21 BEARISH pos=1.00 pika_king=7540 spot=7550.05
+  2026-07-06 SPXW 15:51 BEARISH pos=0.88 pika_king=7540 spot=7543.09
+  2026-07-06 SPY  09:31 BEARISH pos=1.00 pika_king=750 spot=749.31
+  2026-07-06 SPY  10:01 BEARISH pos=0.78 pika_king=749 spot=748.40
+  2026-07-06 SPY  10:31 BEARISH pos=0.99 pika_king=749 spot=749.87
+  2026-07-06 SPY  11:01 BEARISH pos=0.96 pika_king=749 spot=750.08
+  2026-07-06 SPY  11:31 BEARISH pos=0.99 pika_king=749 spot=750.72
+  2026-07-06 SPY  12:01 BEARISH pos=0.97 pika_king=751 spot=750.75
+  2026-07-06 SPY  12:31 BEARISH pos=0.91 pika_king=749 spot=750.53
+  2026-07-06 SPY  13:01 BEARISH pos=0.92 pika_king=749 spot=750.56
+  2026-07-06 SPY  13:31 BEARISH pos=0.85 pika_king=749 spot=750.49
+  2026-07-06 SPY  14:01 BEARISH pos=0.81 pika_king=749 spot=750.26
+  2026-07-06 SPY  14:34 BEARISH pos=0.96 pika_king=749 spot=751.25
+  2026-07-06 SPY  15:06 BEARISH pos=1.00 pika_king=752 spot=751.96
+  2026-07-06 SPY  15:36 BEARISH pos=0.95 pika_king=752 spot=751.97
+  2026-07-06 QQQ  10:35 BEARISH pos=0.99 pika_king=727 spot=724.90
+  2026-07-06 QQQ  11:05 BEARISH pos=0.94 pika_king=725 spot=724.45
+  2026-07-06 QQQ  12:39 BEARISH pos=0.85 pika_king=725 spot=723.98
+  2026-07-06 QQQ  13:09 BEARISH pos=0.88 pika_king=725 spot=724.45
+  2026-07-06 QQQ  14:09 BEARISH pos=0.78 pika_king=725 spot=723.05
+  2026-07-06 QQQ  14:39 BEARISH pos=0.77 pika_king=722 spot=722.94
+  2026-07-06 QQQ  15:09 BEARISH pos=0.85 pika_king=726 spot=723.96
+  2026-07-06 QQQ  15:39 BEARISH pos=0.86 pika_king=726 spot=724.19
+  2026-07-07 SPXW 09:55 BULLISH pos=0.00 pika_king=7520 spot=7515.84
+  2026-07-07 SPXW 10:42 BULLISH pos=0.00 pika_king=7460 spot=7481.73
+  2026-07-07 SPXW 11:46 BULLISH pos=0.24 pika_king=7500 spot=7494.87
+  2026-07-07 SPXW 15:09 BULLISH pos=0.23 pika_king=7500 spot=7494.65
+  2026-07-07 SPXW 15:39 BULLISH pos=0.24 pika_king=7500 spot=7495.19
+  2026-07-07 SPY  15:17 BULLISH pos=0.17 pika_king=746 spot=746.50
+  2026-07-07 SPY  15:47 BULLISH pos=0.24 pika_king=746 spot=746.89
+  2026-07-07 QQQ  09:36 BULLISH pos=0.00 pika_king=713 spot=712.34
+  2026-07-07 QQQ  10:06 BULLISH pos=0.03 pika_king=711 spot=710.51
+  2026-07-07 QQQ  11:11 BULLISH pos=0.15 pika_king=710 spot=707.88
+  2026-07-07 QQQ  11:46 BULLISH pos=0.17 pika_king=710 spot=708.32
+  2026-07-07 QQQ  14:54 BULLISH pos=0.25 pika_king=710 spot=709.66
+  2026-07-07 QQQ  15:27 BULLISH pos=0.09 pika_king=707 spot=706.83
+  2026-07-07 QQQ  15:57 BULLISH pos=0.22 pika_king=710 spot=709.09
+  2026-07-08 SPXW 09:56 BULLISH pos=0.06 pika_king=7460 spot=7461.03
+  2026-07-08 SPXW 10:43 BULLISH pos=0.01 pika_king=7430 spot=7449.24
+  2026-07-08 SPXW 11:19 BULLISH pos=0.05 pika_king=7430 spot=7434.88
+  2026-07-08 SPXW 15:58 BEARISH pos=0.80 pika_king=7490 spot=7487.64
+  2026-07-08 SPY  09:31 BULLISH pos=0.00 pika_king=744 spot=743.13
+  2026-07-08 SPY  10:02 BULLISH pos=0.20 pika_king=745 spot=744.04
+  2026-07-08 SPY  10:32 BULLISH pos=0.10 pika_king=742 spot=743.23
+  2026-07-08 SPY  11:16 BULLISH pos=0.00 pika_king=740 spot=741.09
+  2026-07-08 SPY  11:46 BULLISH pos=0.12 pika_king=742 spot=740.72
+  2026-07-08 SPY  13:31 BEARISH pos=0.77 pika_king=745 spot=745.91
+  2026-07-08 SPY  15:58 BEARISH pos=0.79 pika_king=745 spot=746.02
+  2026-07-08 QQQ  11:15 BULLISH pos=0.00 pika_king=702 spot=703.45
+  2026-07-08 QQQ  11:52 BULLISH pos=0.08 pika_king=700 spot=701.84
+  2026-07-08 QQQ  12:31 BEARISH pos=0.76 pika_king=709 spot=707.56
+  2026-07-08 QQQ  13:01 BEARISH pos=0.89 pika_king=710 spot=708.67
+  2026-07-08 QQQ  13:31 BEARISH pos=1.00 pika_king=711 spot=710.92
+  2026-07-08 QQQ  14:01 BEARISH pos=0.82 pika_king=710 spot=709.13
+  2026-07-08 QQQ  14:31 BEARISH pos=0.77 pika_king=707 spot=708.64
+  2026-07-08 QQQ  15:01 BEARISH pos=0.94 pika_king=710 spot=710.30
+  2026-07-08 QQQ  15:31 BEARISH pos=0.89 pika_king=710 spot=709.82
+  2026-07-09 SPXW 09:36 BEARISH pos=1.00 pika_king=7500 spot=7506.06
+  2026-07-09 SPXW 10:17 BULLISH pos=0.23 pika_king=7500 spot=7491.01
+  2026-07-09 SPXW 11:42 BEARISH pos=1.00 pika_king=7550 spot=7528.47
+  2026-07-09 SPXW 12:12 BEARISH pos=0.97 pika_king=7550 spot=7530.69
+  2026-07-09 SPXW 12:42 BEARISH pos=0.98 pika_king=7550 spot=7534.36
+  2026-07-09 SPXW 13:12 BEARISH pos=0.99 pika_king=7550 spot=7540.25
+  2026-07-09 SPXW 13:42 BEARISH pos=0.97 pika_king=7550 spot=7543.54
+  2026-07-09 SPXW 14:12 BEARISH pos=0.97 pika_king=7550 spot=7544.83
+  2026-07-09 SPXW 14:42 BEARISH pos=0.88 pika_king=7550 spot=7539.15
+  2026-07-09 SPXW 15:12 BEARISH pos=0.82 pika_king=7550 spot=7535.51
+  2026-07-09 SPXW 15:42 BEARISH pos=0.89 pika_king=7550 spot=7539.54
+  2026-07-09 SPY  09:36 BEARISH pos=1.00 pika_king=747 spot=747.85
+  2026-07-09 SPY  10:06 BEARISH pos=0.86 pika_king=749 spot=748.65
+  2026-07-09 SPY  10:40 BEARISH pos=0.81 pika_king=749 spot=748.47
+  2026-07-09 SPY  11:10 BEARISH pos=1.00 pika_king=749 spot=749.49
+  2026-07-09 SPY  11:40 BEARISH pos=0.99 pika_king=749 spot=749.87
+  2026-07-09 SPY  12:10 BEARISH pos=0.98 pika_king=749 spot=750.44
+  2026-07-09 SPY  12:40 BEARISH pos=0.95 pika_king=750 spot=750.60
+  2026-07-09 SPY  13:10 BEARISH pos=0.99 pika_king=750 spot=751.12
+  2026-07-09 SPY  13:40 BEARISH pos=0.98 pika_king=750 spot=751.72
+  2026-07-09 SPY  14:10 BEARISH pos=0.96 pika_king=751 spot=751.71
+  2026-07-09 SPY  14:42 BEARISH pos=0.88 pika_king=751 spot=751.19
+  2026-07-09 SPY  15:12 BEARISH pos=0.84 pika_king=751 spot=750.90
+  2026-07-09 SPY  15:42 BEARISH pos=0.89 pika_king=751 spot=751.24
+  2026-07-09 QQQ  13:07 BEARISH pos=1.00 pika_king=725 spot=722.89
+  2026-07-09 QQQ  13:37 BEARISH pos=0.99 pika_king=725 spot=723.95
+  2026-07-09 QQQ  14:07 BEARISH pos=0.97 pika_king=725 spot=723.85
+  2026-07-09 QQQ  14:37 BEARISH pos=0.92 pika_king=725 spot=723.20
+  2026-07-09 QQQ  15:18 BEARISH pos=0.90 pika_king=725 spot=722.84
+  2026-07-10 SPXW 10:34 BULLISH pos=0.00 pika_king=7500 spot=7522.10
+  2026-07-10 SPXW 13:46 BEARISH pos=0.98 pika_king=7575 spot=7569.17
+  2026-07-10 SPXW 14:16 BEARISH pos=0.96 pika_king=7575 spot=7568.34
+  2026-07-10 SPXW 14:46 BEARISH pos=0.98 pika_king=7575 spot=7571.04
+  2026-07-10 SPXW 15:16 BEARISH pos=0.98 pika_king=7575 spot=7576.54
+  2026-07-10 SPXW 15:46 BEARISH pos=0.97 pika_king=7575 spot=7576.52
+  2026-07-10 SPY  10:35 BULLISH pos=0.22 pika_king=753 spot=750.97
+  2026-07-10 SPY  11:05 BULLISH pos=0.23 pika_king=753 spot=751.00
+  2026-07-10 SPY  11:35 BEARISH pos=0.90 pika_king=753 spot=753.02
+  2026-07-10 SPY  12:05 BEARISH pos=0.95 pika_king=753 spot=753.16
+  2026-07-10 SPY  12:35 BEARISH pos=0.97 pika_king=753 spot=753.48
+  2026-07-10 SPY  13:05 BEARISH pos=0.91 pika_king=754 spot=753.71
+  2026-07-10 SPY  13:35 BEARISH pos=0.98 pika_king=754 spot=754.01
+  2026-07-10 SPY  14:05 BEARISH pos=0.93 pika_king=754 spot=754.06
+  2026-07-10 SPY  14:35 BEARISH pos=1.00 pika_king=754 spot=754.53
+  2026-07-10 SPY  15:13 BEARISH pos=1.00 pika_king=754 spot=755.11
+  2026-07-10 SPY  15:44 BEARISH pos=0.99 pika_king=754 spot=755.13
+  2026-07-10 QQQ  10:34 BULLISH pos=0.00 pika_king=720 spot=719.92
+  2026-07-10 QQQ  11:04 BULLISH pos=0.15 pika_king=720 spot=720.52
+  2026-07-10 QQQ  11:34 BEARISH pos=0.96 pika_king=722 spot=724.12
+  2026-07-10 QQQ  12:04 BEARISH pos=0.89 pika_king=722 spot=723.78
+  2026-07-10 QQQ  12:34 BEARISH pos=1.00 pika_king=724 spot=725.12
+  2026-07-10 QQQ  13:04 BEARISH pos=0.85 pika_king=724 spot=724.73
+  2026-07-10 QQQ  13:34 BEARISH pos=0.97 pika_king=724 spot=725.65
+  2026-07-10 QQQ  14:04 BEARISH pos=0.93 pika_king=724 spot=725.77
+  2026-07-10 QQQ  14:34 BEARISH pos=0.95 pika_king=724 spot=725.87
+  2026-07-10 QQQ  15:06 BEARISH pos=0.97 pika_king=724 spot=726.17
+  2026-07-10 QQQ  15:36 BEARISH pos=0.92 pika_king=724 spot=725.84
+  2026-07-13 SPXW 09:35 BULLISH pos=0.25 pika_king=7560 spot=7559.80
+  2026-07-13 SPXW 10:06 BULLISH pos=0.21 pika_king=7560 spot=7551.46
+  2026-07-13 SPXW 10:37 BULLISH pos=0.24 pika_king=7550 spot=7547.83
+  2026-07-13 SPXW 11:16 BULLISH pos=0.21 pika_king=7565 spot=7545.44
+  2026-07-13 SPXW 11:46 BULLISH pos=0.14 pika_king=7550 spot=7542.90
+  2026-07-13 SPXW 12:16 BULLISH pos=0.04 pika_king=7550 spot=7538.04
+  2026-07-13 SPXW 12:46 BULLISH pos=0.22 pika_king=7515 spot=7530.38
+  2026-07-13 SPXW 13:16 BULLISH pos=0.11 pika_king=7515 spot=7523.82
+  2026-07-13 SPXW 13:46 BULLISH pos=0.16 pika_king=7540 spot=7527.00
+  2026-07-13 SPXW 14:16 BULLISH pos=0.08 pika_king=7515 spot=7522.27
+  2026-07-13 SPXW 14:46 BULLISH pos=0.12 pika_king=7515 spot=7523.21
+  2026-07-13 SPXW 15:16 BULLISH pos=0.02 pika_king=7515 spot=7517.31
+  2026-07-13 SPXW 15:46 BULLISH pos=0.10 pika_king=7515 spot=7513.04
+  2026-07-13 SPY  09:41 BULLISH pos=0.00 pika_king=754 spot=752.75
+  2026-07-13 SPY  12:58 BULLISH pos=0.14 pika_king=751 spot=750.05
+  2026-07-13 SPY  13:28 BULLISH pos=0.10 pika_king=751 spot=749.82
+  2026-07-13 SPY  13:58 BULLISH pos=0.02 pika_king=751 spot=749.32
+  2026-07-13 SPY  14:28 BULLISH pos=0.03 pika_king=751 spot=749.34
+  2026-07-13 SPY  14:58 BULLISH pos=0.13 pika_king=751 spot=749.81
+  2026-07-13 SPY  15:28 BULLISH pos=0.00 pika_king=747 spot=748.46
+  2026-07-13 SPY  15:58 BULLISH pos=0.20 pika_king=751 spot=749.48
+  2026-07-13 QQQ  09:51 BULLISH pos=0.04 pika_king=716 spot=714.30
+  2026-07-13 QQQ  10:21 BULLISH pos=0.12 pika_king=716 spot=714.62
+  2026-07-13 QQQ  11:48 BULLISH pos=0.23 pika_king=714 spot=715.95
+  2026-07-13 QQQ  12:18 BULLISH pos=0.13 pika_king=714 spot=714.67
+  2026-07-13 QQQ  12:50 BULLISH pos=0.07 pika_king=714 spot=712.94
+  2026-07-13 QQQ  13:20 BULLISH pos=0.12 pika_king=714 spot=713.66
+  2026-07-13 QQQ  13:50 BULLISH pos=0.03 pika_king=714 spot=712.40
+  2026-07-13 QQQ  14:20 BULLISH pos=0.01 pika_king=714 spot=712.13
+  2026-07-13 QQQ  15:09 BULLISH pos=0.06 pika_king=714 spot=712.42
+  2026-07-13 QQQ  15:39 BULLISH pos=0.00 pika_king=709 spot=710.22
+  2026-07-14 SPXW 15:26 BEARISH pos=0.85 pika_king=7555 spot=7550.21
+  2026-07-14 SPY  10:35 BEARISH pos=1.00 pika_king=754 spot=752.03
+  2026-07-14 SPY  11:05 BEARISH pos=1.00 pika_king=754 spot=752.35
+  2026-07-14 SPY  13:02 BEARISH pos=0.76 pika_king=753 spot=752.02
+  2026-07-14 SPY  13:32 BEARISH pos=0.87 pika_king=754 spot=752.44
+  2026-07-14 SPY  14:02 BEARISH pos=0.79 pika_king=753 spot=752.13
+  2026-07-14 SPY  14:32 BEARISH pos=0.87 pika_king=753 spot=752.46
+  2026-07-14 SPY  15:02 BEARISH pos=0.76 pika_king=753 spot=752.01
+  2026-07-14 SPY  15:34 BEARISH pos=0.76 pika_king=753 spot=752.03
+  2026-07-14 QQQ  09:42 BEARISH pos=0.92 pika_king=719 spot=719.08
+  2026-07-14 QQQ  10:33 BEARISH pos=0.81 pika_king=720 spot=718.27
+  2026-07-14 QQQ  11:03 BEARISH pos=0.92 pika_king=720 spot=719.18
+  2026-07-14 QQQ  11:33 BEARISH pos=0.94 pika_king=723 spot=721.44
+  2026-07-14 QQQ  13:02 BEARISH pos=0.89 pika_king=723 spot=720.87
+  2026-07-14 QQQ  13:32 BEARISH pos=0.94 pika_king=722 spot=721.43
+  2026-07-14 QQQ  14:02 BEARISH pos=0.92 pika_king=722 spot=721.25
+  2026-07-14 QQQ  14:32 BEARISH pos=0.93 pika_king=722 spot=721.35
+  2026-07-14 QQQ  15:02 BEARISH pos=0.82 pika_king=722 spot=720.17
+  2026-07-14 QQQ  15:32 BEARISH pos=0.77 pika_king=720 spot=719.70
+
+[velocity-precondition] dom_ok flips=7  with vel_pre=True: 1
+
+===== DESCRIPTIVE: forward underlying drift by pos-in-range bucket (all minutes) =====
+
+--- forward drift (ALL tickers pooled) [+bps favors UP over next N min] ---
+bucket              n  mean30bps  med30bps    n60  mean60bps  med60bps
+[0.00,0.25)      2919       -1.7      -3.9   2428       -2.6      -6.2
+[0.25,0.50)      1200       -2.0      -2.3   1085       -4.0      -2.3
+[0.50,0.75)      1616        2.8       2.8   1361        5.1       4.0
+[0.75,1.00)      4426        0.2       1.8   3667        0.8       3.9
+
+--- forward drift (SPXW only) [+bps favors UP over next N min] ---
+bucket              n  mean30bps  med30bps    n60  mean60bps  med60bps
+[0.00,0.25)       883       -0.6      -3.4    755       -1.5      -5.6
+[0.25,0.50)       339        0.5      -1.5    284        1.5       1.4
+[0.50,0.75)       710        0.9       2.1    587        1.6       2.8
+[0.75,1.00)      1477        0.9       2.1   1243        1.6       4.3
+
+--- forward drift (SPY only) [+bps favors UP over next N min] ---
+bucket              n  mean30bps  med30bps    n60  mean60bps  med60bps
+[0.00,0.25)       882       -0.8      -3.5    751       -1.8      -5.9
+[0.25,0.50)       363        1.3      -0.3    311        3.4       7.9
+[0.50,0.75)       692        0.6       1.6    561        0.7       1.6
+[0.75,1.00)      1462        0.9       2.3   1236        1.8       4.6
+
+--- forward drift (QQQ only) [+bps favors UP over next N min] ---
+bucket              n  mean30bps  med30bps    n60  mean60bps  med60bps
+[0.00,0.25)      1154       -3.4      -5.0    922       -4.1      -7.5
+[0.25,0.50)       498       -5.6      -3.6    490      -11.8     -11.4
+[0.50,0.75)       214       15.2      21.7    213       26.3      32.6
+[0.75,1.00)      1487       -1.2       0.9   1188       -1.0       2.4

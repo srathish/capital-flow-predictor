@@ -74,8 +74,8 @@ for day in days:
         out["data"][f"{day}|{t}"]={"strikes":strikes,"mins":mins,"spot":[round(s,2) for s in spots],
             "G":G,"V":V,"gmax":max(gmax,1),"vmax":max(vmax,1),"king":king,"ksign":ksign,"fires":frs,"sig":[]}
 
-# hypothetical system entries (bounce/break/flip events) emitted by the studies
-EV=f"{BASE}/research/velocity-capture/terrain_events.jsonl"
+# EXTREME-PROBE system entries (operator: show ONLY this system on the map)
+EV=f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
     for l in open(EV):
@@ -83,14 +83,19 @@ if os.path.exists(EV):
         except: continue
         key=f"{e['day']}|{e['ticker']}"
         if key in out["data"]:
-            if e.get("kind") not in ("bounce","break") or not e.get("implied"): continue
-            hh,mm=e["minute"].split(":")               # UTC HH:MM -> minutes since 13:30 UTC (09:30 ET)
-            m=(int(hh)*60+int(mm))-(13*60+30)
-            if m<0 or m>390: continue
-            d="call" if e["implied"]=="up" else "put"
-            out["data"][key]["sig"].append({"m":m,"k":e["strike"],"d":d,"kind":e["kind"]})
+            def m_of(t):
+                if not t: return None
+                hh,mm=t.split(":"); v=(int(hh)*60+int(mm))-(13*60+30)
+                return v if 0<=v<=390 else None
+            m=m_of(e.get("minute"))
+            if m is None: continue
+            out["data"][key]["sig"].append({"m":m,"k":e["strike"],
+                "d":"call" if e.get("implied")=="up" else "put",
+                "xm":m_of(e.get("exit_minute")),"out":e.get("outcome"),"r":e.get("pnl_pct")})
             n+=1
-    print("system entries attached:", n)
+    print("probe entries attached:", n)
+for k in out["data"]: out["data"][k]["fires"]=[]   # probes-only view
+
 print("built:", len(out["data"]), "ticker-days")
 json.dump(out,open("terrain_data.json","w"),separators=(",",":"))
 print("size:", os.path.getsize("terrain_data.json")//1024, "KB")

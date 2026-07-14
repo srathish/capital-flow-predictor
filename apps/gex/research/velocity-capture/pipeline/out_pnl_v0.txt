@@ -1,0 +1,292 @@
+days=['2026-07-01', '2026-07-02', '2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10', '2026-07-13', '2026-07-14']
+flips: total=13 dom_ok=7 taken=2 rejected=5 v0b=222
+
+===== cohort (a) KingFlip-v0 unconditioned [dom_ok] (n=7) =====
+  2026-07-01 SPY  10:08 BEARISH pos=0.875 K=746 P entry=1.28 exit=0.90@16:14 [EOD] gross=-30% net=-32% mfe=+4% | ext_net=-33%
+  2026-07-09 QQQ  09:44 BEARISH pos=0.986 K=721 P entry=2.69 exit=4.52@10:24 [TRAIL] gross=+68% net=+63% mfe=+125% | ext_net=+52%
+  2026-07-09 QQQ  10:27 BEARISH pos=0.439 K=716 P entry=1.54 exit=0.01@16:10 [EOD] gross=-99% net=-99% mfe=+27% | ext_net=-100%
+  2026-07-10 SPXW 11:03 BULLISH pos=0.369 K=7535 C entry=14.10 exit=20.10@11:39 [TRAIL] gross=+43% net=+38% mfe=+86% | ext_net=+34%
+  2026-07-13 QQQ  10:32 BEARISH pos=0.358 K=718 P entry=1.97 exit=2.85@10:46 [TRAIL] gross=+45% net=+40% mfe=+71% | ext_net=+30%
+  2026-07-14 SPXW 12:39 BEARISH pos=0.593 K=7540 P entry=9.90 exit=0.10@15:59 [EOD] gross=-99% net=-99% mfe=+2% | ext_net=-99%
+  2026-07-14 SPXW 12:49 BULLISH pos=0.542 K=7535 C entry=11.30 exit=14.30@13:34 [TRAIL] gross=+27% net=+23% mfe=+57% | ext_net=+23%
+  [close/gross] n=7 mean=-6.6% med=+26.5% hit=57% [-99%,+68%]
+  [close/net] n=7 mean=-9.4% med=+22.8% hit=57% [-99%,+63%]
+  [close/mfe] n=7 mean=+53.1% med=+56.6% hit=100% [+2%,+125%]
+  [ext/gross] n=7 mean=-10.5% med=+26.5% hit=57% [-100%,+57%]
+  [ext/net] n=7 mean=-13.2% med=+22.8% hit=57% [-100%,+52%]
+  [ext/mfe] n=7 mean=+43.9% med=+56.6% hit=71% [+0%,+110%]
+  [day-block bootstrap net] 90%CI mean=[-27.8%,+19.9%] med=-9.4% P(mean>0)=29%
+
+===== cohort (b) System-v0 [flips at extremes] (n=2) =====
+  2026-07-01 SPY  10:08 BEARISH pos=0.875 K=746 P entry=1.28 exit=0.90@16:14 [EOD] gross=-30% net=-32% mfe=+4% | ext_net=-33%
+  2026-07-09 QQQ  09:44 BEARISH pos=0.986 K=721 P entry=2.69 exit=4.52@10:24 [TRAIL] gross=+68% net=+63% mfe=+125% | ext_net=+52%
+  [close/gross] n=2 mean=+19.2% med=+19.2% hit=50% [-30%,+68%]
+  [close/net] n=2 mean=+15.6% med=+15.6% hit=50% [-32%,+63%]
+  [close/mfe] n=2 mean=+64.6% med=+64.6% hit=100% [+4%,+125%]
+  [ext/gross] n=2 mean=+13.1% med=+13.1% hit=50% [-31%,+57%]
+  [ext/net] n=2 mean=+9.7% med=+9.7% hit=50% [-33%,+52%]
+  [ext/mfe] n=2 mean=+56.4% med=+56.4% hit=100% [+2%,+110%]
+  [day-block bootstrap net] 90%CI mean=[-31.8%,+63.1%] med=+15.6% P(mean>0)=75%
+
+===== cohort (c) rejected [mid-range flips] (n=5) =====
+  2026-07-09 QQQ  10:27 BEARISH pos=0.439 K=716 P entry=1.54 exit=0.01@16:10 [EOD] gross=-99% net=-99% mfe=+27% | ext_net=-100%
+  2026-07-10 SPXW 11:03 BULLISH pos=0.369 K=7535 C entry=14.10 exit=20.10@11:39 [TRAIL] gross=+43% net=+38% mfe=+86% | ext_net=+34%
+  2026-07-13 QQQ  10:32 BEARISH pos=0.358 K=718 P entry=1.97 exit=2.85@10:46 [TRAIL] gross=+45% net=+40% mfe=+71% | ext_net=+30%
+  2026-07-14 SPXW 12:39 BEARISH pos=0.593 K=7540 P entry=9.90 exit=0.10@15:59 [EOD] gross=-99% net=-99% mfe=+2% | ext_net=-99%
+  2026-07-14 SPXW 12:49 BULLISH pos=0.542 K=7535 C entry=11.30 exit=14.30@13:34 [TRAIL] gross=+27% net=+23% mfe=+57% | ext_net=+23%
+  [close/gross] n=5 mean=-16.9% med=+26.5% hit=60% [-99%,+45%]
+  [close/net] n=5 mean=-19.4% med=+22.8% hit=60% [-99%,+40%]
+  [close/mfe] n=5 mean=+48.5% med=+56.6% hit=100% [+2%,+86%]
+  [ext/gross] n=5 mean=-20.0% med=+26.5% hit=60% [-100%,+38%]
+  [ext/net] n=5 mean=-22.3% med=+22.8% hit=60% [-100%,+34%]
+  [ext/mfe] n=5 mean=+39.0% med=+56.6% hit=60% [+0%,+80%]
+  [day-block bootstrap net] 90%CI mean=[-64.4%,+38.9%] med=-19.4% P(mean>0)=32%
+
+===== cohort (d) random control (same flip contracts, random entry minute) =====
+  n=360 random entries  mean=-11.1% med=+13.1% hit=57% [p5=-99%, p95=+77%]
+
+===== cohort System-v0b [extreme + pika-King support] (n=222) =====
+  2026-07-01 SPXW 09:31 BULLISH pos=0.0 K=7465 C entry=19.60 exit=29.01@10:32 [TRAIL] gross=+48% net=+44% mfe=+80% | ext_net=+28%
+  2026-07-01 SPXW 11:04 BEARISH pos=1.0 K=7505 P entry=10.30 exit=21.20@15:59 [EOD] gross=+106% net=+100% mfe=+122% | ext_net=+80%
+  2026-07-01 SPXW 11:34 BEARISH pos=0.934 K=7515 P entry=9.50 exit=12.20@13:01 [TRAIL] gross=+28% net=+25% mfe=+58% | ext_net=+23%
+  2026-07-01 SPXW 12:04 BEARISH pos=0.951 K=7515 P entry=7.80 exit=12.20@13:01 [TRAIL] gross=+56% net=+52% mfe=+92% | ext_net=+44%
+  2026-07-01 SPXW 12:34 BEARISH pos=0.955 K=7520 P entry=8.20 exit=10.40@12:47 [TRAIL] gross=+27% net=+23% mfe=+51% | ext_net=+78%
+  2026-07-01 SPXW 13:13 BEARISH pos=0.757 K=7505 P entry=7.50 exit=8.40@14:19 [TRAIL] gross=+12% net=+9% mfe=+51% | ext_net=+27%
+  2026-07-01 SPXW 14:05 BEARISH pos=0.753 K=7505 P entry=6.40 exit=8.40@14:19 [TRAIL] gross=+31% net=+27% mfe=+77% | ext_net=+22%
+  2026-07-01 SPXW 15:10 BEARISH pos=0.753 K=7505 P entry=5.30 exit=6.00@15:30 [TRAIL] gross=+13% net=+10% mfe=+58% | ext_net=+267%
+  2026-07-01 SPY  10:09 BEARISH pos=0.876 K=746 P entry=1.32 exit=0.90@16:14 [EOD] gross=-32% net=-34% mfe=+1% | ext_net=-37%
+  2026-07-01 SPY  10:48 BEARISH pos=0.829 K=746 P entry=1.21 exit=0.90@16:14 [EOD] gross=-26% net=-28% mfe=+8% | ext_net=-33%
+  2026-07-01 QQQ  09:39 BULLISH pos=0.039 K=726 C entry=3.43 exit=4.85@10:16 [TRAIL] gross=+41% net=+37% mfe=+69% | ext_net=+25%
+  2026-07-01 QQQ  10:45 BULLISH pos=0.242 K=728 C entry=1.84 exit=2.41@11:08 [TRAIL] gross=+31% net=+27% mfe=+66% | ext_net=+44%
+  2026-07-01 QQQ  12:53 BULLISH pos=0.228 K=728 C entry=1.52 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+14% | ext_net=-99%
+  2026-07-01 QQQ  13:33 BULLISH pos=0.208 K=728 C entry=1.18 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+10% | ext_net=-99%
+  2026-07-01 QQQ  14:03 BULLISH pos=0.167 K=728 C entry=0.87 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+37% | ext_net=-99%
+  2026-07-01 QQQ  14:33 BULLISH pos=0.103 K=727 C entry=0.99 exit=1.35@15:11 [TRAIL] gross=+36% net=+32% mfe=+76% | ext_net=+28%
+  2026-07-01 QQQ  15:03 BULLISH pos=0.147 K=727 C entry=0.98 exit=1.35@15:11 [TRAIL] gross=+38% net=+34% mfe=+78% | ext_net=+27%
+  2026-07-01 QQQ  15:36 BULLISH pos=0.206 K=728 C entry=0.50 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+0% | ext_net=-98%
+  2026-07-02 SPXW 09:31 BEARISH pos=1.0 K=7505 P entry=15.23 exit=18.20@10:46 [TRAIL] gross=+20% net=+16% mfe=+50% | ext_net=+68%
+  2026-07-02 SPXW 10:01 BEARISH pos=0.886 K=7535 P entry=12.80 exit=23.45@10:31 [TRAIL] gross=+83% net=+78% mfe=+145% | ext_net=+55%
+  2026-07-02 SPXW 11:04 BULLISH pos=0.199 K=7495 C entry=13.00 exit=0.05@15:59 [EOD] gross=-100% net=-100% mfe=+8% | ext_net=-100%
+  2026-07-02 SPXW 11:43 BULLISH pos=0.221 K=7485 C entry=13.28 exit=0.13@16:00 [EOD] gross=-99% net=-99% mfe=+2% | ext_net=-99%
+  2026-07-02 SPXW 14:13 BULLISH pos=0.226 K=7455 C entry=7.90 exit=27.65@15:59 [EOD] gross=+250% net=+240% mfe=+250% | ext_net=+198%
+  2026-07-02 SPXW 14:46 BULLISH pos=0.226 K=7455 C entry=7.28 exit=27.65@15:59 [EOD] gross=+280% net=+269% mfe=+280% | ext_net=+253%
+  2026-07-02 SPXW 15:16 BULLISH pos=0.165 K=7445 C entry=6.20 exit=11.50@15:36 [TRAIL] gross=+85% net=+80% mfe=+127% | ext_net=+59%
+  2026-07-02 SPY  09:32 BEARISH pos=1.0 K=748 P entry=1.61 exit=1.98@10:46 [TRAIL] gross=+23% net=+19% mfe=+53% | ext_net=+80%
+  2026-07-02 SPY  10:10 BEARISH pos=0.826 K=750 P entry=1.44 exit=1.98@10:31 [TRAIL] gross=+38% net=+33% mfe=+91% | ext_net=+20%
+  2026-07-02 SPY  10:43 BULLISH pos=0.222 K=747 C entry=1.61 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+21% | ext_net=-99%
+  2026-07-02 SPY  11:18 BULLISH pos=0.056 K=745 C entry=1.74 exit=0.10@16:14 [EOD] gross=-94% net=-94% mfe=+39% | ext_net=-95%
+  2026-07-02 SPY  11:50 BULLISH pos=0.072 K=745 C entry=1.27 exit=0.10@16:14 [EOD] gross=-92% net=-92% mfe=+5% | ext_net=-93%
+  2026-07-02 SPY  12:20 BULLISH pos=0.025 K=744 C entry=1.27 exit=0.60@16:14 [EOD] gross=-53% net=-54% mfe=+2% | ext_net=-59%
+  2026-07-02 SPY  12:50 BULLISH pos=0.078 K=743 C entry=1.17 exit=1.81@15:59 [TRAIL] gross=+55% net=+50% mfe=+103% | ext_net=+36%
+  2026-07-02 SPY  13:20 BULLISH pos=0.06 K=741 C entry=1.48 exit=1.96@14:45 [TRAIL] gross=+32% net=+29% mfe=+67% | ext_net=+20%
+  2026-07-02 SPY  13:50 BULLISH pos=0.026 K=741 C entry=0.95 exit=1.75@14:16 [TRAIL] gross=+84% net=+79% mfe=+118% | ext_net=+70%
+  2026-07-02 SPY  14:20 BULLISH pos=0.142 K=742 C entry=1.04 exit=1.25@14:45 [TRAIL] gross=+20% net=+17% mfe=+61% | ext_net=+13%
+  2026-07-02 SPY  14:57 BULLISH pos=0.232 K=743 C entry=0.76 exit=1.81@15:59 [TRAIL] gross=+138% net=+131% mfe=+212% | ext_net=+117%
+  2026-07-02 SPY  15:27 BULLISH pos=0.146 K=742 C entry=0.60 exit=1.05@15:36 [TRAIL] gross=+75% net=+70% mfe=+112% | ext_net=+64%
+  2026-07-02 QQQ  09:54 BEARISH pos=0.824 K=729 P entry=2.24 exit=3.10@10:19 [TRAIL] gross=+38% net=+34% mfe=+65% | ext_net=+136%
+  2026-07-02 QQQ  11:16 BULLISH pos=0.072 K=716 C entry=2.71 exit=3.44@11:42 [TRAIL] gross=+27% net=+23% mfe=+54% | ext_net=-100%
+  2026-07-02 QQQ  11:49 BULLISH pos=0.132 K=717 C entry=2.02 exit=0.01@16:14 [EOD] gross=-100% net=-100% mfe=+0% | ext_net=-100%
+  2026-07-02 QQQ  12:33 BULLISH pos=0.0 K=712 C entry=2.16 exit=0.93@16:14 [EOD] gross=-57% net=-58% mfe=+12% | ext_net=-63%
+  2026-07-02 QQQ  13:03 BULLISH pos=0.001 K=710 C entry=1.89 exit=2.59@15:59 [TRAIL] gross=+37% net=+33% mfe=+87% | ext_net=+25%
+  2026-07-02 QQQ  13:33 BULLISH pos=0.068 K=711 C entry=1.59 exit=1.97@15:59 [TRAIL] gross=+24% net=+20% mfe=+52% | ext_net=-11%
+  2026-07-02 QQQ  14:03 BULLISH pos=0.028 K=708 C entry=1.83 exit=3.26@14:15 [TRAIL] gross=+78% net=+73% mfe=+119% | ext_net=+70%
+  2026-07-02 QQQ  14:33 BULLISH pos=0.186 K=712 C entry=1.41 exit=0.93@16:14 [EOD] gross=-34% net=-36% mfe=+10% | ext_net=-43%
+  2026-07-02 QQQ  15:03 BULLISH pos=0.138 K=711 C entry=1.02 exit=1.97@15:59 [TRAIL] gross=+93% net=+87% mfe=+137% | ext_net=+61%
+  2026-07-02 QQQ  15:33 BULLISH pos=0.113 K=710 C entry=1.33 exit=2.59@15:59 [TRAIL] gross=+95% net=+89% mfe=+165% | ext_net=+71%
+  2026-07-06 SPXW 09:50 BEARISH pos=0.899 K=7515 P entry=11.57 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+40% | ext_net=-100%
+  2026-07-06 SPXW 10:20 BEARISH pos=0.934 K=7520 P entry=10.90 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+0% | ext_net=-100%
+  2026-07-06 SPXW 10:50 BEARISH pos=0.927 K=7525 P entry=8.10 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+18% | ext_net=-100%
+  2026-07-06 SPXW 11:20 BEARISH pos=0.925 K=7525 P entry=7.60 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+4% | ext_net=-100%
+  2026-07-06 SPXW 11:50 BEARISH pos=0.992 K=7535 P entry=5.67 exit=10.10@13:44 [TRAIL] gross=+78% net=+73% mfe=+120% | ext_net=+58%
+  2026-07-06 SPXW 12:20 BEARISH pos=0.983 K=7540 P entry=7.80 exit=13.70@13:44 [TRAIL] gross=+76% net=+70% mfe=+112% | ext_net=+70%
+  2026-07-06 SPXW 12:50 BEARISH pos=0.989 K=7540 P entry=6.70 exit=7.40@13:03 [TRAIL] gross=+10% net=+7% mfe=+58% | ext_net=+87%
+  2026-07-06 SPXW 13:20 BEARISH pos=0.935 K=7540 P entry=7.00 exit=13.70@13:44 [TRAIL] gross=+96% net=+90% mfe=+136% | ext_net=+90%
+  2026-07-06 SPXW 13:51 BEARISH pos=0.831 K=7530 P entry=4.70 exit=5.90@14:00 [TRAIL] gross=+26% net=+22% mfe=+62% | ext_net=-99%
+  2026-07-06 SPXW 14:21 BEARISH pos=0.985 K=7540 P entry=4.30 exit=2.25@15:59 [EOD] gross=-48% net=-49% mfe=+30% | ext_net=-54%
+  2026-07-06 SPXW 14:51 BEARISH pos=1.0 K=7545 P entry=4.63 exit=5.97@15:57 [TRAIL] gross=+29% net=+25% mfe=+79% | ext_net=+16%
+  2026-07-06 SPXW 15:21 BEARISH pos=1.0 K=7550 P entry=4.60 exit=11.00@15:57 [TRAIL] gross=+139% net=+132% mfe=+185% | ext_net=+122%
+  2026-07-06 SPXW 15:51 BEARISH pos=0.882 K=7545 P entry=3.80 exit=5.97@15:57 [TRAIL] gross=+57% net=+52% mfe=+118% | ext_net=+52%
+  2026-07-06 SPY  09:31 BEARISH pos=1.0 K=749 P entry=1.81 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+24% | ext_net=-99%
+  2026-07-06 SPY  10:01 BEARISH pos=0.777 K=748 P entry=0.87 exit=0.01@16:13 [EOD] gross=-99% net=-99% mfe=+41% | ext_net=-99%
+  2026-07-06 SPY  10:31 BEARISH pos=0.986 K=750 P entry=0.98 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+42% | ext_net=-99%
+  2026-07-06 SPY  11:01 BEARISH pos=0.963 K=750 P entry=0.68 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+46% | ext_net=-99%
+  2026-07-06 SPY  11:31 BEARISH pos=0.986 K=751 P entry=0.79 exit=1.19@13:44 [TRAIL] gross=+51% net=+46% mfe=+84% | ext_net=+30%
+  2026-07-06 SPY  12:01 BEARISH pos=0.972 K=751 P entry=0.80 exit=1.19@13:44 [TRAIL] gross=+49% net=+44% mfe=+81% | ext_net=+41%
+  2026-07-06 SPY  12:31 BEARISH pos=0.914 K=751 P entry=0.85 exit=1.19@13:44 [TRAIL] gross=+40% net=+36% mfe=+71% | ext_net=+26%
+  2026-07-06 SPY  13:01 BEARISH pos=0.918 K=751 P entry=0.83 exit=1.19@13:44 [TRAIL] gross=+43% net=+39% mfe=+75% | ext_net=+30%
+  2026-07-06 SPY  13:31 BEARISH pos=0.847 K=750 P entry=0.44 exit=0.64@13:44 [TRAIL] gross=+45% net=+41% mfe=+89% | ext_net=+29%
+  2026-07-06 SPY  14:01 BEARISH pos=0.813 K=750 P entry=0.37 exit=0.01@16:14 [EOD] gross=-97% net=-97% mfe=+0% | ext_net=-98%
+  2026-07-06 SPY  14:34 BEARISH pos=0.961 K=751 P entry=0.49 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+4% | ext_net=-98%
+  2026-07-06 SPY  15:06 BEARISH pos=1.0 K=752 P entry=0.53 exit=0.77@15:57 [TRAIL] gross=+45% net=+41% mfe=+94% | ext_net=+29%
+  2026-07-06 SPY  15:36 BEARISH pos=0.954 K=752 P entry=0.49 exit=0.77@15:57 [TRAIL] gross=+57% net=+52% mfe=+110% | ext_net=+38%
+  2026-07-06 QQQ  10:35 BEARISH pos=0.994 K=725 P entry=1.95 exit=2.47@11:19 [TRAIL] gross=+27% net=+23% mfe=+51% | ext_net=+48%
+  2026-07-06 QQQ  11:05 BEARISH pos=0.935 K=724 P entry=1.29 exit=1.88@11:19 [TRAIL] gross=+46% net=+41% mfe=+79% | ext_net=+22%
+  2026-07-06 QQQ  12:39 BEARISH pos=0.848 K=724 P entry=1.06 exit=2.44@13:46 [TRAIL] gross=+130% net=+123% mfe=+199% | ext_net=+89%
+  2026-07-06 QQQ  13:09 BEARISH pos=0.884 K=724 P entry=0.85 exit=2.44@13:46 [TRAIL] gross=+187% net=+179% mfe=+273% | ext_net=+157%
+  2026-07-06 QQQ  14:09 BEARISH pos=0.778 K=723 P entry=1.00 exit=0.26@16:14 [EOD] gross=-74% net=-75% mfe=+14% | ext_net=-77%
+  2026-07-06 QQQ  14:39 BEARISH pos=0.77 K=723 P entry=0.93 exit=0.26@16:14 [EOD] gross=-72% net=-73% mfe=+0% | ext_net=-75%
+  2026-07-06 QQQ  15:09 BEARISH pos=0.847 K=724 P entry=0.71 exit=0.95@15:57 [TRAIL] gross=+34% net=+30% mfe=+76% | ext_net=+18%
+  2026-07-06 QQQ  15:39 BEARISH pos=0.864 K=724 P entry=0.61 exit=0.79@15:53 [TRAIL] gross=+30% net=+26% mfe=+64% | ext_net=+24%
+  2026-07-07 SPXW 09:55 BULLISH pos=0.0 K=7515 C entry=13.50 exit=0.05@15:59 [EOD] gross=-100% net=-100% mfe=+4% | ext_net=-100%
+  2026-07-07 SPXW 10:42 BULLISH pos=0.0 K=7480 C entry=15.98 exit=33.00@13:16 [TRAIL] gross=+107% net=+100% mfe=+150% | ext_net=+95%
+  2026-07-07 SPXW 11:46 BULLISH pos=0.236 K=7495 C entry=9.60 exit=12.60@12:08 [TRAIL] gross=+31% net=+27% mfe=+61% | ext_net=+76%
+  2026-07-07 SPXW 15:09 BULLISH pos=0.232 K=7495 C entry=5.90 exit=8.50@15:56 [TRAIL] gross=+44% net=+40% mfe=+77% | ext_net=+29%
+  2026-07-07 SPXW 15:39 BULLISH pos=0.242 K=7495 C entry=4.00 exit=8.50@15:56 [TRAIL] gross=+112% net=+106% mfe=+161% | ext_net=+96%
+  2026-07-07 SPY  15:17 BULLISH pos=0.166 K=746 C entry=1.01 exit=1.42@16:00 [TRAIL] gross=+41% net=+36% mfe=+83% | ext_net=+25%
+  2026-07-07 SPY  15:47 BULLISH pos=0.237 K=747 C entry=0.34 exit=0.78@15:56 [TRAIL] gross=+129% net=+123% mfe=+179% | ext_net=+76%
+  2026-07-07 QQQ  09:36 BULLISH pos=0.0 K=712 C entry=3.70 exit=0.01@16:14 [EOD] gross=-100% net=-100% mfe=+14% | ext_net=-100%
+  2026-07-07 QQQ  10:06 BULLISH pos=0.026 K=711 C entry=2.47 exit=0.03@16:14 [EOD] gross=-99% net=-99% mfe=+32% | ext_net=-99%
+  2026-07-07 QQQ  11:11 BULLISH pos=0.147 K=708 C entry=1.95 exit=4.61@12:33 [TRAIL] gross=+136% net=+129% mfe=+178% | ext_net=+115%
+  2026-07-07 QQQ  11:46 BULLISH pos=0.172 K=708 C entry=2.01 exit=4.61@12:33 [TRAIL] gross=+129% net=+123% mfe=+170% | ext_net=+104%
+  2026-07-07 QQQ  14:54 BULLISH pos=0.249 K=710 C entry=1.02 exit=0.25@16:14 [EOD] gross=-75% net=-76% mfe=+0% | ext_net=-79%
+  2026-07-07 QQQ  15:27 BULLISH pos=0.086 K=707 C entry=1.30 exit=1.65@15:35 [TRAIL] gross=+27% net=+23% mfe=+65% | ext_net=+18%
+  2026-07-07 QQQ  15:57 BULLISH pos=0.216 K=709 C entry=0.48 exit=0.69@16:03 [TRAIL] gross=+44% net=+40% mfe=+77% | ext_net=+20%
+  2026-07-08 SPXW 09:56 BULLISH pos=0.058 K=7460 C entry=21.50 exit=22.80@15:59 [EOD] gross=+6% net=+3% mfe=+32% | ext_net=+3%
+  2026-07-08 SPXW 10:43 BULLISH pos=0.013 K=7450 C entry=16.17 exit=31.00@13:40 [TRAIL] gross=+92% net=+86% mfe=+130% | ext_net=+80%
+  2026-07-08 SPXW 11:19 BULLISH pos=0.046 K=7435 C entry=18.30 exit=25.50@12:36 [TRAIL] gross=+39% net=+35% mfe=+66% | ext_net=+30%
+  2026-07-08 SPXW 15:58 BEARISH pos=0.799 K=7490 P entry=4.40 exit=6.20@15:59 [EOD] gross=+41% net=+37% mfe=+41% | ext_net=+8%
+  2026-07-08 SPY  09:31 BULLISH pos=0.0 K=743 C entry=2.48 exit=1.90@16:14 [EOD] gross=-23% net=-26% mfe=+27% | ext_net=-27%
+  2026-07-08 SPY  10:02 BULLISH pos=0.198 K=744 C entry=1.75 exit=1.01@16:14 [EOD] gross=-42% net=-44% mfe=+32% | ext_net=-47%
+  2026-07-08 SPY  10:32 BULLISH pos=0.095 K=743 C entry=1.83 exit=2.63@13:39 [TRAIL] gross=+44% net=+39% mfe=+73% | ext_net=+35%
+  2026-07-08 SPY  11:16 BULLISH pos=0.0 K=741 C entry=1.45 exit=2.46@12:36 [TRAIL] gross=+70% net=+65% mfe=+107% | ext_net=+43%
+  2026-07-08 SPY  11:46 BULLISH pos=0.123 K=741 C entry=1.40 exit=2.46@12:36 [TRAIL] gross=+76% net=+71% mfe=+114% | ext_net=+51%
+  2026-07-08 SPY  13:31 BEARISH pos=0.773 K=746 P entry=1.14 exit=1.78@13:51 [TRAIL] gross=+56% net=+52% mfe=+85% | ext_net=+48%
+  2026-07-08 SPY  15:58 BEARISH pos=0.786 K=746 P entry=0.35 exit=0.85@16:04 [TRAIL] gross=+143% net=+136% mfe=+206% | ext_net=+87%
+  2026-07-08 QQQ  11:15 BULLISH pos=0.0 K=703 C entry=2.78 exit=4.28@12:36 [TRAIL] gross=+54% net=+49% mfe=+87% | ext_net=+36%
+  2026-07-08 QQQ  11:52 BULLISH pos=0.079 K=702 C entry=2.16 exit=5.08@12:36 [TRAIL] gross=+135% net=+128% mfe=+178% | ext_net=+109%
+  2026-07-08 QQQ  12:31 BEARISH pos=0.761 K=708 P entry=2.33 exit=0.01@16:11 [EOD] gross=-100% net=-100% mfe=+22% | ext_net=-100%
+  2026-07-08 QQQ  13:01 BEARISH pos=0.893 K=709 P entry=1.88 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+11% | ext_net=-100%
+  2026-07-08 QQQ  13:31 BEARISH pos=1.0 K=711 P entry=1.61 exit=2.40@13:52 [TRAIL] gross=+49% net=+45% mfe=+87% | ext_net=+38%
+  2026-07-08 QQQ  14:01 BEARISH pos=0.816 K=709 P entry=1.18 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+23% | ext_net=-99%
+  2026-07-08 QQQ  14:31 BEARISH pos=0.766 K=709 P entry=1.28 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+10% | ext_net=-99%
+  2026-07-08 QQQ  15:01 BEARISH pos=0.935 K=710 P entry=1.08 exit=0.09@16:14 [EOD] gross=-92% net=-92% mfe=+13% | ext_net=-92%
+  2026-07-08 QQQ  15:31 BEARISH pos=0.887 K=710 P entry=0.67 exit=0.09@16:14 [EOD] gross=-87% net=-87% mfe=+28% | ext_net=-91%
+  2026-07-09 SPXW 09:36 BEARISH pos=1.0 K=7505 P entry=17.50 exit=19.80@10:24 [TRAIL] gross=+13% net=+10% mfe=+53% | ext_net=-100%
+  2026-07-09 SPXW 10:17 BULLISH pos=0.231 K=7490 C entry=16.50 exit=19.60@10:31 [TRAIL] gross=+19% net=+15% mfe=+56% | ext_net=+138%
+  2026-07-09 SPXW 11:42 BEARISH pos=1.0 K=7530 P entry=9.70 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+11% | ext_net=-100%
+  2026-07-09 SPXW 12:12 BEARISH pos=0.971 K=7530 P entry=7.50 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+0% | ext_net=-100%
+  2026-07-09 SPXW 12:42 BEARISH pos=0.982 K=7535 P entry=7.40 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+22% | ext_net=-100%
+  2026-07-09 SPXW 13:12 BEARISH pos=0.995 K=7540 P entry=6.20 exit=0.05@15:59 [EOD] gross=-99% net=-99% mfe=+15% | ext_net=-99%
+  2026-07-09 SPXW 13:42 BEARISH pos=0.969 K=7545 P entry=5.70 exit=7.10@14:44 [TRAIL] gross=+25% net=+21% mfe=+51% | ext_net=+38%
+  2026-07-09 SPXW 14:12 BEARISH pos=0.969 K=7545 P entry=4.75 exit=6.40@14:29 [TRAIL] gross=+35% net=+31% mfe=+66% | ext_net=+27%
+  2026-07-09 SPXW 14:42 BEARISH pos=0.88 K=7540 P entry=4.70 exit=5.80@15:11 [TRAIL] gross=+23% net=+20% mfe=+51% | ext_net=-99%
+  2026-07-09 SPXW 15:12 BEARISH pos=0.824 K=7535 P entry=2.80 exit=0.03@15:59 [EOD] gross=-99% net=-99% mfe=+14% | ext_net=-99%
+  2026-07-09 SPXW 15:42 BEARISH pos=0.887 K=7540 P entry=2.95 exit=2.10@15:55 [TRAIL] gross=-29% net=-31% mfe=+66% | ext_net=-99%
+  2026-07-09 SPY  09:36 BEARISH pos=1.0 K=748 P entry=1.83 exit=2.06@10:24 [TRAIL] gross=+13% net=+9% mfe=+55% | ext_net=-99%
+  2026-07-09 SPY  10:06 BEARISH pos=0.864 K=749 P entry=1.75 exit=2.67@10:24 [TRAIL] gross=+53% net=+48% mfe=+104% | ext_net=+48%
+  2026-07-09 SPY  10:40 BEARISH pos=0.815 K=748 P entry=1.23 exit=0.01@16:12 [EOD] gross=-99% net=-99% mfe=+30% | ext_net=-99%
+  2026-07-09 SPY  11:10 BEARISH pos=1.0 K=749 P entry=0.99 exit=0.01@16:10 [EOD] gross=-99% net=-99% mfe=+10% | ext_net=-99%
+  2026-07-09 SPY  11:40 BEARISH pos=0.986 K=750 P entry=0.99 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+0% | ext_net=-99%
+  2026-07-09 SPY  12:10 BEARISH pos=0.984 K=750 P entry=0.67 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+0% | ext_net=-99%
+  2026-07-09 SPY  12:40 BEARISH pos=0.954 K=751 P entry=0.87 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+21% | ext_net=-99%
+  2026-07-09 SPY  13:10 BEARISH pos=0.989 K=751 P entry=0.51 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+8% | ext_net=-98%
+  2026-07-09 SPY  13:40 BEARISH pos=0.985 K=752 P entry=0.78 exit=1.08@15:12 [TRAIL] gross=+38% net=+34% mfe=+67% | ext_net=+23%
+  2026-07-09 SPY  14:10 BEARISH pos=0.962 K=752 P entry=0.66 exit=1.08@15:12 [TRAIL] gross=+64% net=+59% mfe=+97% | ext_net=+52%
+  2026-07-09 SPY  14:42 BEARISH pos=0.884 K=751 P entry=0.39 exit=0.01@16:14 [EOD] gross=-97% net=-98% mfe=+41% | ext_net=-98%
+  2026-07-09 SPY  15:12 BEARISH pos=0.84 K=751 P entry=0.40 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+10% | ext_net=-98%
+  2026-07-09 SPY  15:42 BEARISH pos=0.891 K=751 P entry=0.21 exit=0.14@15:55 [TRAIL] gross=-33% net=-35% mfe=+62% | ext_net=-96%
+  2026-07-09 QQQ  13:07 BEARISH pos=1.0 K=723 P entry=1.02 exit=0.04@16:14 [EOD] gross=-96% net=-96% mfe=+6% | ext_net=-97%
+  2026-07-09 QQQ  13:37 BEARISH pos=0.986 K=724 P entry=0.93 exit=1.43@15:06 [TRAIL] gross=+54% net=+49% mfe=+91% | ext_net=+46%
+  2026-07-09 QQQ  14:07 BEARISH pos=0.974 K=724 P entry=0.89 exit=1.43@15:06 [TRAIL] gross=+61% net=+56% mfe=+100% | ext_net=+49%
+  2026-07-09 QQQ  14:37 BEARISH pos=0.924 K=723 P entry=0.68 exit=0.78@15:06 [TRAIL] gross=+15% net=+11% mfe=+51% | ext_net=-29%
+  2026-07-09 QQQ  15:18 BEARISH pos=0.895 K=723 P entry=0.59 exit=0.71@15:31 [TRAIL] gross=+20% net=+17% mfe=+54% | ext_net=-30%
+  2026-07-10 SPXW 10:34 BULLISH pos=0.0 K=7520 C entry=26.00 exit=32.90@11:39 [TRAIL] gross=+27% net=+23% mfe=+54% | ext_net=+88%
+  2026-07-10 SPXW 13:46 BEARISH pos=0.979 K=7570 P entry=5.20 exit=0.03@15:59 [EOD] gross=-99% net=-99% mfe=+23% | ext_net=-99%
+  2026-07-10 SPXW 14:16 BEARISH pos=0.962 K=7570 P entry=4.80 exit=0.03@15:59 [EOD] gross=-99% net=-99% mfe=+4% | ext_net=-99%
+  2026-07-10 SPXW 14:46 BEARISH pos=0.98 K=7570 P entry=2.60 exit=0.03@15:59 [EOD] gross=-99% net=-99% mfe=+15% | ext_net=-99%
+  2026-07-10 SPXW 15:16 BEARISH pos=0.984 K=7575 P entry=2.50 exit=0.33@15:59 [EOD] gross=-87% net=-87% mfe=+14% | ext_net=-87%
+  2026-07-10 SPXW 15:46 BEARISH pos=0.966 K=7575 P entry=1.25 exit=0.33@15:59 [EOD] gross=-74% net=-74% mfe=+16% | ext_net=-80%
+  2026-07-10 SPY  10:35 BULLISH pos=0.222 K=751 C entry=1.39 exit=2.14@11:35 [TRAIL] gross=+54% net=+49% mfe=+85% | ext_net=+126%
+  2026-07-10 SPY  11:05 BULLISH pos=0.232 K=751 C entry=1.16 exit=2.14@11:35 [TRAIL] gross=+84% net=+79% mfe=+122% | ext_net=+65%
+  2026-07-10 SPY  11:35 BEARISH pos=0.904 K=753 P entry=1.12 exit=1.51@11:44 [TRAIL] gross=+35% net=+31% mfe=+72% | ext_net=+25%
+  2026-07-10 SPY  12:05 BEARISH pos=0.952 K=753 P entry=0.87 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+1% | ext_net=-99%
+  2026-07-10 SPY  12:35 BEARISH pos=0.967 K=753 P entry=0.53 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+23% | ext_net=-98%
+  2026-07-10 SPY  13:05 BEARISH pos=0.905 K=754 P entry=0.73 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+11% | ext_net=-99%
+  2026-07-10 SPY  13:35 BEARISH pos=0.98 K=754 P entry=0.51 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+0% | ext_net=-98%
+  2026-07-10 SPY  14:05 BEARISH pos=0.927 K=754 P entry=0.39 exit=0.01@16:14 [EOD] gross=-97% net=-98% mfe=+8% | ext_net=-98%
+  2026-07-10 SPY  14:35 BEARISH pos=0.998 K=755 P entry=0.76 exit=0.08@16:14 [EOD] gross=-89% net=-90% mfe=+12% | ext_net=-90%
+  2026-07-10 SPY  15:13 BEARISH pos=1.0 K=755 P entry=0.40 exit=0.08@16:14 [EOD] gross=-80% net=-81% mfe=+7% | ext_net=-82%
+  2026-07-10 SPY  15:44 BEARISH pos=0.992 K=755 P entry=0.24 exit=0.08@16:14 [EOD] gross=-67% net=-68% mfe=+8% | ext_net=-68%
+  2026-07-10 QQQ  10:34 BULLISH pos=0.0 K=720 C entry=3.24 exit=5.77@16:12 [EOD] gross=+78% net=+73% mfe=+97% | ext_net=+60%
+  2026-07-10 QQQ  11:04 BULLISH pos=0.154 K=721 C entry=1.50 exit=3.20@11:35 [TRAIL] gross=+113% net=+107% mfe=+155% | ext_net=+78%
+  2026-07-10 QQQ  11:34 BEARISH pos=0.965 K=724 P entry=1.47 exit=3.03@11:44 [TRAIL] gross=+106% net=+100% mfe=+159% | ext_net=+86%
+  2026-07-10 QQQ  12:04 BEARISH pos=0.888 K=724 P entry=1.29 exit=0.01@16:10 [EOD] gross=-99% net=-99% mfe=+11% | ext_net=-99%
+  2026-07-10 QQQ  12:34 BEARISH pos=0.998 K=725 P entry=1.11 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+11% | ext_net=-99%
+  2026-07-10 QQQ  13:04 BEARISH pos=0.855 K=725 P entry=1.10 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+4% | ext_net=-99%
+  2026-07-10 QQQ  13:34 BEARISH pos=0.974 K=726 P entry=1.01 exit=0.27@16:14 [EOD] gross=-73% net=-74% mfe=+11% | ext_net=-77%
+  2026-07-10 QQQ  14:04 BEARISH pos=0.932 K=726 P entry=0.87 exit=0.27@16:14 [EOD] gross=-69% net=-70% mfe=+25% | ext_net=-72%
+  2026-07-10 QQQ  14:34 BEARISH pos=0.947 K=726 P entry=0.72 exit=0.27@16:14 [EOD] gross=-62% net=-64% mfe=+40% | ext_net=-66%
+  2026-07-10 QQQ  15:06 BEARISH pos=0.975 K=726 P entry=0.54 exit=0.27@16:14 [EOD] gross=-50% net=-51% mfe=+48% | ext_net=-56%
+  2026-07-10 QQQ  15:36 BEARISH pos=0.923 K=726 P entry=0.50 exit=0.27@16:14 [EOD] gross=-46% net=-48% mfe=+22% | ext_net=-52%
+  2026-07-13 SPXW 09:35 BULLISH pos=0.246 K=7560 C entry=14.60 exit=0.03@15:58 [EOD] gross=-100% net=-100% mfe=+0% | ext_net=-100%
+  2026-07-13 SPXW 10:06 BULLISH pos=0.215 K=7550 C entry=12.90 exit=0.02@15:59 [EOD] gross=-100% net=-100% mfe=+25% | ext_net=-100%
+  2026-07-13 SPXW 10:37 BULLISH pos=0.238 K=7550 C entry=10.30 exit=0.02@15:59 [EOD] gross=-100% net=-100% mfe=+27% | ext_net=-100%
+  2026-07-13 SPXW 11:16 BULLISH pos=0.211 K=7545 C entry=10.30 exit=0.05@15:59 [EOD] gross=-100% net=-100% mfe=+22% | ext_net=-100%
+  2026-07-13 SPXW 11:46 BULLISH pos=0.145 K=7545 C entry=7.80 exit=0.05@15:59 [EOD] gross=-99% net=-99% mfe=+0% | ext_net=-99%
+  2026-07-13 SPXW 12:16 BULLISH pos=0.036 K=7540 C entry=6.50 exit=0.05@15:59 [EOD] gross=-99% net=-99% mfe=+2% | ext_net=-99%
+  2026-07-13 SPXW 12:46 BULLISH pos=0.222 K=7530 C entry=9.90 exit=0.05@15:59 [EOD] gross=-99% net=-100% mfe=+0% | ext_net=-100%
+  2026-07-13 SPXW 13:16 BULLISH pos=0.109 K=7525 C entry=8.80 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+19% | ext_net=-100%
+  2026-07-13 SPXW 13:46 BULLISH pos=0.164 K=7525 C entry=7.80 exit=0.03@15:59 [EOD] gross=-100% net=-100% mfe=+5% | ext_net=-100%
+  2026-07-13 SPXW 14:16 BULLISH pos=0.082 K=7520 C entry=7.70 exit=0.05@15:59 [EOD] gross=-99% net=-99% mfe=+18% | ext_net=-99%
+  2026-07-13 SPXW 14:46 BULLISH pos=0.121 K=7525 C entry=4.90 exit=0.03@15:59 [EOD] gross=-99% net=-99% mfe=+18% | ext_net=-99%
+  2026-07-13 SPXW 15:16 BULLISH pos=0.022 K=7515 C entry=6.80 exit=0.80@15:59 [EOD] gross=-88% net=-89% mfe=+10% | ext_net=-90%
+  2026-07-13 SPXW 15:46 BULLISH pos=0.095 K=7515 C entry=2.20 exit=4.10@15:53 [TRAIL] gross=+86% net=+81% mfe=+141% | ext_net=+47%
+  2026-07-13 SPY  09:41 BULLISH pos=0.0 K=753 C entry=1.25 exit=0.01@16:11 [EOD] gross=-99% net=-99% mfe=+28% | ext_net=-99%
+  2026-07-13 SPY  12:58 BULLISH pos=0.145 K=750 C entry=0.98 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+17% | ext_net=-99%
+  2026-07-13 SPY  13:28 BULLISH pos=0.105 K=750 C entry=0.86 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+1% | ext_net=-99%
+  2026-07-13 SPY  13:58 BULLISH pos=0.019 K=749 C entry=1.05 exit=0.14@16:14 [EOD] gross=-87% net=-87% mfe=+42% | ext_net=-87%
+  2026-07-13 SPY  14:28 BULLISH pos=0.028 K=749 C entry=0.91 exit=0.14@16:14 [EOD] gross=-85% net=-85% mfe=+37% | ext_net=-86%
+  2026-07-13 SPY  14:58 BULLISH pos=0.13 K=750 C entry=0.42 exit=0.01@16:14 [EOD] gross=-98% net=-98% mfe=+21% | ext_net=-98%
+  2026-07-13 SPY  15:28 BULLISH pos=0.0 K=748 C entry=0.92 exit=1.16@15:54 [TRAIL] gross=+26% net=+22% mfe=+59% | ext_net=+18%
+  2026-07-13 SPY  15:58 BULLISH pos=0.195 K=749 C entry=0.74 exit=0.14@16:14 [EOD] gross=-81% net=-82% mfe=+0% | ext_net=-82%
+  2026-07-13 QQQ  09:51 BULLISH pos=0.039 K=714 C entry=2.12 exit=2.78@10:02 [TRAIL] gross=+31% net=+27% mfe=+70% | ext_net=+35%
+  2026-07-13 QQQ  10:21 BULLISH pos=0.123 K=715 C entry=2.10 exit=2.96@10:37 [TRAIL] gross=+41% net=+37% mfe=+74% | ext_net=+23%
+  2026-07-13 QQQ  11:48 BULLISH pos=0.23 K=716 C entry=1.30 exit=0.01@16:11 [EOD] gross=-99% net=-99% mfe=+9% | ext_net=-99%
+  2026-07-13 QQQ  12:18 BULLISH pos=0.128 K=715 C entry=1.19 exit=0.01@16:12 [EOD] gross=-99% net=-99% mfe=+8% | ext_net=-99%
+  2026-07-13 QQQ  12:50 BULLISH pos=0.067 K=713 C entry=1.15 exit=1.54@13:04 [TRAIL] gross=+34% net=+30% mfe=+61% | ext_net=-99%
+  2026-07-13 QQQ  13:20 BULLISH pos=0.12 K=714 C entry=1.00 exit=0.01@16:12 [EOD] gross=-99% net=-99% mfe=+0% | ext_net=-99%
+  2026-07-13 QQQ  13:50 BULLISH pos=0.027 K=712 C entry=1.25 exit=1.53@14:09 [TRAIL] gross=+22% net=+19% mfe=+56% | ext_net=-92%
+  2026-07-13 QQQ  14:20 BULLISH pos=0.015 K=712 C entry=1.18 exit=0.12@16:14 [EOD] gross=-90% net=-90% mfe=+25% | ext_net=-91%
+  2026-07-13 QQQ  15:09 BULLISH pos=0.058 K=712 C entry=0.85 exit=0.12@16:14 [EOD] gross=-86% net=-86% mfe=+0% | ext_net=-89%
+  2026-07-13 QQQ  15:39 BULLISH pos=0.0 K=710 C entry=0.81 exit=1.26@15:46 [TRAIL] gross=+56% net=+51% mfe=+91% | ext_net=+47%
+  2026-07-14 SPXW 15:26 BEARISH pos=0.855 K=7550 P entry=2.90 exit=4.90@15:33 [TRAIL] gross=+69% net=+64% mfe=+114% | ext_net=+44%
+  2026-07-14 SPY  10:35 BEARISH pos=1.0 K=752 P entry=1.43 exit=1.94@12:14 [TRAIL] gross=+36% net=+32% mfe=+62% | ext_net=-86%
+  2026-07-14 SPY  11:05 BEARISH pos=1.0 K=752 P entry=1.03 exit=1.31@11:44 [TRAIL] gross=+27% net=+23% mfe=+61% | ext_net=+62%
+  2026-07-14 SPY  13:02 BEARISH pos=0.759 K=752 P entry=0.81 exit=0.22@16:14 [EOD] gross=-73% net=-74% mfe=+17% | ext_net=-75%
+  2026-07-14 SPY  13:32 BEARISH pos=0.868 K=752 P entry=0.63 exit=0.22@16:14 [EOD] gross=-65% net=-66% mfe=+25% | ext_net=-67%
+  2026-07-14 SPY  14:02 BEARISH pos=0.788 K=752 P entry=0.48 exit=0.22@16:14 [EOD] gross=-54% net=-56% mfe=+25% | ext_net=-63%
+  2026-07-14 SPY  14:32 BEARISH pos=0.871 K=752 P entry=0.33 exit=0.51@14:44 [TRAIL] gross=+55% net=+50% mfe=+82% | ext_net=+27%
+  2026-07-14 SPY  15:02 BEARISH pos=0.755 K=752 P entry=0.47 exit=0.22@16:14 [EOD] gross=-53% net=-55% mfe=+9% | ext_net=-59%
+  2026-07-14 SPY  15:34 BEARISH pos=0.76 K=752 P entry=0.30 exit=0.22@16:14 [EOD] gross=-27% net=-29% mfe=+10% | ext_net=-39%
+  2026-07-14 QQQ  09:42 BEARISH pos=0.924 K=719 P entry=3.03 exit=3.82@10:20 [TRAIL] gross=+26% net=+22% mfe=+60% | ext_net=+16%
+  2026-07-14 QQQ  10:33 BEARISH pos=0.806 K=718 P entry=1.93 exit=0.01@16:14 [EOD] gross=-99% net=-99% mfe=+28% | ext_net=-100%
+  2026-07-14 QQQ  11:03 BEARISH pos=0.918 K=719 P entry=1.82 exit=0.05@16:14 [EOD] gross=-97% net=-97% mfe=+16% | ext_net=-97%
+  2026-07-14 QQQ  11:33 BEARISH pos=0.942 K=721 P entry=1.52 exit=2.87@12:19 [TRAIL] gross=+89% net=+83% mfe=+129% | ext_net=+79%
+  2026-07-14 QQQ  13:02 BEARISH pos=0.886 K=721 P entry=1.24 exit=1.28@16:14 [EOD] gross=+3% net=+0% mfe=+31% | ext_net=-2%
+  2026-07-14 QQQ  13:32 BEARISH pos=0.941 K=721 P entry=1.07 exit=1.13@16:05 [TRAIL] gross=+6% net=+2% mfe=+51% | ext_net=+2%
+  2026-07-14 QQQ  14:02 BEARISH pos=0.924 K=721 P entry=0.72 exit=0.91@14:44 [TRAIL] gross=+26% net=+23% mfe=+50% | ext_net=+21%
+  2026-07-14 QQQ  14:32 BEARISH pos=0.933 K=721 P entry=0.60 exit=0.91@14:44 [TRAIL] gross=+52% net=+47% mfe=+80% | ext_net=+26%
+  2026-07-14 QQQ  15:02 BEARISH pos=0.819 K=720 P entry=0.66 exit=0.37@16:14 [EOD] gross=-44% net=-46% mfe=+20% | ext_net=-53%
+  2026-07-14 QQQ  15:32 BEARISH pos=0.773 K=720 P entry=0.66 exit=0.37@16:14 [EOD] gross=-44% net=-46% mfe=+0% | ext_net=-51%
+  [close/gross] n=222 mean=-13.1% med=+4.4% hit=50% [-100%,+280%]
+  [close/net] n=222 mean=-15.7% med=+1.3% hit=50% [-100%,+269%]
+  [close/mfe] n=222 mean=+56.4% med=+49.1% hit=92% [+0%,+280%]
+  [ext/gross] n=222 mean=-19.2% med=-50.5% hit=45% [-100%,+279%]
+  [ext/net] n=222 mean=-21.6% med=-51.9% hit=45% [-100%,+267%]
+  [ext/mfe] n=222 mean=+51.3% med=+35.8% hit=77% [+0%,+308%]
+  [day-block bootstrap net] 90%CI mean=[-33.5%,+2.5%] med=-15.0% P(mean>0)=8%
+  --- v0b splits ---
+    BULLISH (buy call at low + pika floor): n=94 mean_net=-6.2% med=+19.5% hit=54%
+    BEARISH (buy put at high + pika ceiling): n=128 mean_net=-22.7% med=-32.4% hit=48%
+    SPXW: n=68 mean_net=-11.4% med=+9.2% hit=54%
+    SPY: n=76 mean_net=-24.4% med=-39.6% hit=43%
+    QQQ: n=78 mean_net=-10.8% med=+14.0% hit=54%
+    day 2026-07-01: n=18 mean_net=-2.1% med=+23.9% hit=67%
+    day 2026-07-02: n=29 mean_net=+25.4% med=+28.5% hit=69%
+    day 2026-07-06: n=34 mean_net=+0.2% med=+25.4% hit=62%
+    day 2026-07-07: n=14 mean_net=+26.7% med=+38.0% hit=71%
+    day 2026-07-08: n=20 mean_net=+5.0% med=+36.0% hit=60%
+    day 2026-07-09: n=29 mean_net=-36.8% med=-35.3% hit=45%
+    day 2026-07-10: n=28 mean_net=-47.5% med=-77.5% hit=25%
+    day 2026-07-13: n=31 mean_net=-65.8% med=-99.0% hit=23%
+    day 2026-07-14: n=19 mean_net=-11.6% med=+0.2% hit=53%

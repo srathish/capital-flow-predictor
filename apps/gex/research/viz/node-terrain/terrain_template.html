@@ -53,7 +53,7 @@
 </style>
 <div class="vz">
 <h1>Node Terrain — price vs GEX/VEX nodes at 1-minute</h1>
-<p class="sub">Each column is one minute · each row a strike. Amber = pika (dealers long gamma: pin/dampen) · violet = barney (dealers short gamma: accelerate). The white line is spot — watch it ride, bounce off, or punch through bands. ◦ = King node. Triangles = our live fires (▲ call · ▼ put), ✕ = exit.</p>
+<p class="sub">Each column is one minute · each row a strike. Amber = pika (dealers long gamma: pin/dampen) · violet = barney (dealers short gamma: accelerate). The white line is spot — watch it ride, bounce off, or punch through bands. ◦ = King node. Triangles = Extreme-Probe entries at session extremes (▲ long · ▼ short); line runs to the ✕ exit; faded = aborted probe, bright = caught reversal.</p>
 <div class="bar">
   <div class="seg" id="tseg" role="tablist" aria-label="ticker"></div>
   <div class="seg" id="dseg" role="tablist" aria-label="day"></div>
@@ -63,8 +63,9 @@
   <div class="legend">
     <span class="lg"><span class="grad"></span><span>barney&nbsp;−&nbsp;·&nbsp;0&nbsp;·&nbsp;+&nbsp;pika</span></span>
     <span class="lg"><span class="sw"></span> spot</span>
-    <span class="lg"><span class="tri"></span> call fire</span>
-    <span class="lg"><span class="trid"></span> put fire</span>
+    <span class="lg"><span class="tri"></span> probe long</span>
+    <span class="lg"><span class="trid"></span> probe short</span>
+    <span class="lg">bright = caught reversal · faded ✕ = quick abort</span>
     <span class="lg"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid transparent;box-sizing:border-box;border-bottom-color:transparent;position:relative"><svg width="14" height="11"><polygon points="7,1 1,10 13,10" fill="none" stroke="var(--good)" stroke-width="2"/></svg></span> system entry (hypothetical)</span>
   </div>
 </div>
@@ -155,19 +156,28 @@ function draw(){
       ctx.beginPath();ctx.moveTo(x2-4,y-4);ctx.lineTo(x2+4,y+4);ctx.moveTo(x2+4,y-4);ctx.lineTo(x2-4,y+4);ctx.stroke();
     }
   });
-  // SYSTEM ENTRIES (hypothetical — hollow triangles)
+  // SYSTEM ENTRIES — Extreme-Probe with outcomes
   (d.sig||[]).forEach(s=>{
     const x=PAD.l+pw*(s.m/390), y=Y(s.k);
-    ctx.strokeStyle=s.d==='call'?css('--good'):css('--crit'); ctx.lineWidth=2;
-    ctx.fillStyle=`rgba(${sf.join(',')},0.85)`;
+    const col=s.d==='call'?css('--good'):css('--crit');
+    const win=(s.out==='win');
+    ctx.globalAlpha=win?1:0.42;
+    if(s.xm!=null){const x2=PAD.l+pw*(s.xm/390);
+      ctx.strokeStyle=col; ctx.setLineDash(win?[]:[2,3]); ctx.lineWidth=win?2:1;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y);ctx.stroke();ctx.setLineDash([]);
+      ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(x2-4,y-4);ctx.lineTo(x2+4,y+4);ctx.moveTo(x2+4,y-4);ctx.lineTo(x2-4,y+4);ctx.stroke();
+    }
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.fillStyle=`rgba(${sf.join(',')},0.85)`;
     ctx.beginPath();
     if(s.d==='call'){ctx.moveTo(x,y-8);ctx.lineTo(x-7,y+5);ctx.lineTo(x+7,y+5);}
     else{ctx.moveTo(x,y+8);ctx.lineTo(x-7,y-5);ctx.lineTo(x+7,y-5);}
     ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.globalAlpha=1;
   });
   // note + table
   const kchg=d.king.filter((k,i)=>i&&k!==d.king[i-1]).length;
-  $('#note').textContent=`${TK} ${DY} — ${n} strikes in band, King changed ${kchg}× at 1-min. Fires shown: ${(d.fires||[]).length}. System entries: ${(d.sig||[]).length}. Realized per fire: ${(d.fires||[]).map(f=>(f.r>0?'+':'')+f.r+'%').join(' · ')||'none'}`;
+  $('#note').textContent=`${TK} ${DY} — ${n} strikes in band, King changed ${kchg}× at 1-min. Probes: ${(d.sig||[]).length} (caught: ${(d.sig||[]).filter(s=>s.out==='win').length} · aborted: ${(d.sig||[]).filter(s=>s.out==='abort').length}) · P&L: ${(d.sig||[]).filter(s=>s.r!=null).map(s=>(s.r>0?'+':'')+Math.round(s.r)+'%').join(' ')||'—'} Realized per fire: ${(d.fires||[]).map(f=>(f.r>0?'+':'')+f.r+'%').join(' · ')||'none'}`;
   let rows='<table><tr><th>ET</th><th>spot</th><th>King</th><th>sign</th></tr>';
   for(let i=0;i<m;i+=30){const t=Math.floor((d.mins[i]+570)/60),mn=String((d.mins[i]+570)%60).padStart(2,'0');
     rows+=`<tr><td>${t}:${mn}</td><td>${d.spot[i]}</td><td>${d.king[i]}</td><td>${d.ksign[i]>0?'pika':'barney'}</td></tr>`;}

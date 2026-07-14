@@ -1,0 +1,8066 @@
+{
+ "prereg": {
+  "start_et": "10:00",
+  "end_et_entry": "15:30",
+  "uptick_confirm": 2,
+  "abort_sweep": [
+   0.15,
+   0.25
+  ],
+  "trail_arm": 0.5,
+  "trail_giveback": [
+   0.25,
+   0.4
+  ],
+  "cooldown_min": 10,
+  "max_probes_side_day": 6,
+  "haircut": 0.015,
+  "grid": "A in {0.15,0.25} x G in {0.25,0.40} = 4 cells; Bonferroni m=4",
+  "control_c_trail": "live trail arm 0.50 / gb 0.15 (no abort)",
+  "swing_reversal_frac": 0.0025
+ },
+ "days": [
+  "2026-06-30",
+  "2026-07-01",
+  "2026-07-02",
+  "2026-07-06",
+  "2026-07-07",
+  "2026-07-08",
+  "2026-07-09",
+  "2026-07-10",
+  "2026-07-13",
+  "2026-07-14"
+ ],
+ "n_series": 30,
+ "partA": [
+  {
+   "date": "2026-06-30",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 7440.43,
+    "mfe": 0.008940343501652395,
+    "atm_strike": 7440,
+    "entry_price": 21.46,
+    "live_trail_net": 0.46968354459436523,
+    "loose_runner_net": 1.5545361056657132,
+    "node": null,
+    "king": {
+     "strike": 7430,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.12667049437351655
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 348,
+    "et": "15:18",
+    "kind": "high",
+    "spot": 7506.95,
+    "mfe": 0.0014439952310858798,
+    "atm_strike": 7505,
+    "entry_price": 5.0,
+    "live_trail_net": 0.5138916256157637,
+    "loose_runner_net": -0.010147783251231557,
+    "node": {
+     "strike": 7505,
+     "sign": "barney",
+     "strength": 0.21211983201046725,
+     "dist_frac": 0.00025975928972483075,
+     "node_vel_15": 4399976.920138208,
+     "gamma_now": -85235474.18575867
+    },
+    "king": {
+     "strike": 7505,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.27289749906772875
+    },
+    "approach_vel": 0.00037312686979873563,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 7440.43,
+     "mfe": 0.008940343501652395,
+     "atm_strike": 7440,
+     "entry_price": 21.46,
+     "live_trail_net": 0.46968354459436523,
+     "loose_runner_net": 1.5545361056657132,
+     "node": null,
+     "king": {
+      "strike": 7430,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.12667049437351655
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 348,
+     "et": "15:18",
+     "kind": "high",
+     "spot": 7506.95,
+     "mfe": 0.0014439952310858798,
+     "atm_strike": 7505,
+     "entry_price": 5.0,
+     "live_trail_net": 0.5138916256157637,
+     "loose_runner_net": -0.010147783251231557,
+     "node": {
+      "strike": 7505,
+      "sign": "barney",
+      "strength": 0.21211983201046725,
+      "dist_frac": 0.00025975928972483075,
+      "node_vel_15": 4399976.920138208,
+      "gamma_now": -85235474.18575867
+     },
+     "king": {
+      "strike": 7505,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.27289749906772875
+     },
+     "approach_vel": 0.00037312686979873563,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.00031288019809298546,
+     "median": 0.0002328209702190845,
+     "pos": 0.9970588235294118,
+     "p10": 4.404780655270217e-05,
+     "p90": 0.0007216765389517103
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0008320432431178584,
+     "median": 0.0004436295488015258,
+     "pos": 1.0,
+     "p10": 0.00011868075011572406,
+     "p90": 0.0024062764044312248
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.15435853658834334,
+     "median": 0.14391107909538792,
+     "pos": 1.0,
+     "p10": 0.12137224148467883,
+     "p90": 0.17694152582470127
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-06-30",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 741.02,
+    "mfe": 0.009216962990452469,
+    "atm_strike": 741,
+    "entry_price": 2.27,
+    "live_trail_net": 0.48345305006401795,
+    "loose_runner_net": 1.4068705106225994,
+    "node": null,
+    "king": {
+     "strike": 735,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.21681533984635426
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 348,
+    "et": "15:18",
+    "kind": "high",
+    "spot": 747.86,
+    "mfe": 0.001577845972815671,
+    "atm_strike": 748,
+    "entry_price": 0.83,
+    "live_trail_net": 0.30951391773992554,
+    "loose_runner_net": -0.04124873879755464,
+    "node": {
+     "strike": 747,
+     "sign": "pika",
+     "strength": 0.1039765424169277,
+     "dist_frac": 0.0011432697514892835,
+     "node_vel_15": 2268366.2811733405,
+     "gamma_now": 816430326.7365847
+    },
+    "king": {
+     "strike": 747,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.4097398259979114
+    },
+    "approach_vel": 0.00033440118779301905,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 741.02,
+     "mfe": 0.009216962990452469,
+     "atm_strike": 741,
+     "entry_price": 2.27,
+     "live_trail_net": 0.48345305006401795,
+     "loose_runner_net": 1.4068705106225994,
+     "node": null,
+     "king": {
+      "strike": 735,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.21681533984635426
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 348,
+     "et": "15:18",
+     "kind": "high",
+     "spot": 747.86,
+     "mfe": 0.001577845972815671,
+     "atm_strike": 748,
+     "entry_price": 0.83,
+     "live_trail_net": 0.30951391773992554,
+     "loose_runner_net": -0.04124873879755464,
+     "node": {
+      "strike": 747,
+      "sign": "pika",
+      "strength": 0.1039765424169277,
+      "dist_frac": 0.0011432697514892835,
+      "node_vel_15": 2268366.2811733405,
+      "gamma_now": 816430326.7365847
+     },
+     "king": {
+      "strike": 747,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.4097398259979114
+     },
+     "approach_vel": 0.00033440118779301905,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0003142234595927251,
+     "median": 0.0002310195442064762,
+     "pos": 0.9911764705882353,
+     "p10": 4.686286586504588e-05,
+     "p90": 0.0007292433264199626
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.00047439285190384783,
+     "median": 0.0004286671381181262,
+     "pos": 0.9970588235294118,
+     "p10": 9.371694804056113e-05,
+     "p90": 0.0009345228890875109
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.2521663798617885,
+     "median": 0.2311533707300557,
+     "pos": 1.0,
+     "p10": 0.14290612954637805,
+     "p90": 0.38219184900032116
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-06-30",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 724.07,
+    "mfe": 0.018423633074150333,
+    "atm_strike": 724,
+    "entry_price": 4.21,
+    "live_trail_net": 0.283935738272703,
+    "loose_runner_net": 1.7638042193697863,
+    "node": null,
+    "king": {
+     "strike": 715,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.1180733497780579
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 388,
+    "et": "15:58",
+    "kind": "high",
+    "spot": 737.41,
+    "mfe": 0.001979902632185518,
+    "atm_strike": 737,
+    "entry_price": 0.66,
+    "live_trail_net": 0.6615166442752649,
+    "loose_runner_net": 0.6615166442752649,
+    "node": {
+     "strike": 737,
+     "sign": "pika",
+     "strength": 0.11115272915220767,
+     "dist_frac": 0.0005560000542438646,
+     "node_vel_15": 7938035.402735619,
+     "gamma_now": 305841675.83275723
+    },
+    "king": {
+     "strike": 737,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.33424153930811484
+    },
+    "approach_vel": 0.001065671135245163,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 724.07,
+     "mfe": 0.018423633074150333,
+     "atm_strike": 724,
+     "entry_price": 4.21,
+     "live_trail_net": 0.283935738272703,
+     "loose_runner_net": 1.7638042193697863,
+     "node": null,
+     "king": {
+      "strike": 715,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.1180733497780579
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 388,
+     "et": "15:58",
+     "kind": "high",
+     "spot": 737.41,
+     "mfe": 0.001979902632185518,
+     "atm_strike": 737,
+     "entry_price": 0.66,
+     "live_trail_net": 0.6615166442752649,
+     "loose_runner_net": 0.6615166442752649,
+     "node": {
+      "strike": 737,
+      "sign": "pika",
+      "strength": 0.11115272915220767,
+      "dist_frac": 0.0005560000542438646,
+      "node_vel_15": 7938035.402735619,
+      "gamma_now": 305841675.83275723
+     },
+     "king": {
+      "strike": 737,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.33424153930811484
+     },
+     "approach_vel": 0.001065671135245163,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 348,
+     "mean": 0.0004456124549393107,
+     "median": 0.00033232844125785285,
+     "pos": 0.9971264367816092,
+     "p10": 7.461370450253006e-05,
+     "p90": 0.0009359612593427308
+    },
+    "node_dist": {
+     "n": 348,
+     "mean": 0.000783199335104008,
+     "median": 0.0003327652959810752,
+     "pos": 0.9913793103448276,
+     "p10": 5.435077993364261e-05,
+     "p90": 0.002087682672233945
+    },
+    "king_share": {
+     "n": 348,
+     "mean": 0.16269442274710674,
+     "median": 0.170604150821894,
+     "pos": 1.0,
+     "p10": 0.09595266073217643,
+     "p90": 0.2120655641170239
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-01",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 5,
+    "et": "09:35",
+    "kind": "low",
+    "spot": 7451.72,
+    "mfe": 0.009405882131910504,
+    "atm_strike": 7450,
+    "entry_price": 22.8,
+    "live_trail_net": 0.7323265059199724,
+    "loose_runner_net": 0.7280701754385965,
+    "node": {
+     "strike": 7445,
+     "sign": "pika",
+     "strength": 0.13028884848679434,
+     "dist_frac": 0.000901805220808116,
+     "node_vel_15": 2464673.562703979,
+     "gamma_now": 14239272.375197362
+    },
+    "king": {
+     "strike": 7445,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.1303971680017737
+    },
+    "approach_vel": -0.006352542083591056,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 174,
+    "et": "12:24",
+    "kind": "high",
+    "spot": 7521.81,
+    "mfe": 0.005313880568639763,
+    "atm_strike": 7520,
+    "entry_price": 7.5,
+    "live_trail_net": 0.34568144499179,
+    "loose_runner_net": 0.6432840722495896,
+    "node": {
+     "strike": 7525,
+     "sign": "pika",
+     "strength": 0.11039862545392976,
+     "dist_frac": 0.00042410005038675527,
+     "node_vel_15": -356888.24407752353,
+     "gamma_now": 45252592.66255869
+    },
+    "king": {
+     "strike": 7525,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.2643839149832972
+    },
+    "approach_vel": 0.0006026115829130557,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 5,
+     "et": "09:35",
+     "kind": "low",
+     "spot": 7451.72,
+     "mfe": 0.009405882131910504,
+     "atm_strike": 7450,
+     "entry_price": 22.8,
+     "live_trail_net": 0.7323265059199724,
+     "loose_runner_net": 0.7280701754385965,
+     "node": {
+      "strike": 7445,
+      "sign": "pika",
+      "strength": 0.13028884848679434,
+      "dist_frac": 0.000901805220808116,
+      "node_vel_15": 2464673.562703979,
+      "gamma_now": 14239272.375197362
+     },
+     "king": {
+      "strike": 7445,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1303971680017737
+     },
+     "approach_vel": -0.006352542083591056,
+     "side": "call"
+    },
+    {
+     "i": 174,
+     "et": "12:24",
+     "kind": "high",
+     "spot": 7521.81,
+     "mfe": 0.005313880568639763,
+     "atm_strike": 7520,
+     "entry_price": 7.5,
+     "live_trail_net": 0.34568144499179,
+     "loose_runner_net": 0.6432840722495896,
+     "node": {
+      "strike": 7525,
+      "sign": "pika",
+      "strength": 0.11039862545392976,
+      "dist_frac": 0.00042410005038675527,
+      "node_vel_15": -356888.24407752353,
+      "gamma_now": 45252592.66255869
+     },
+     "king": {
+      "strike": 7525,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2643839149832972
+     },
+     "approach_vel": 0.0006026115829130557,
+     "side": "put"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 7499.36,
+     "mfe": 0.006352542083591056,
+     "atm_strike": 7500,
+     "entry_price": 32.93,
+     "live_trail_net": 0.26720510292769095,
+     "loose_runner_net": -0.09232750767039799,
+     "node": null,
+     "king": {
+      "strike": 7540,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.11751448209831919
+     },
+     "approach_vel": null,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0003806957142231453,
+     "median": 0.0003401234821213199,
+     "pos": 0.9970588235294118,
+     "p10": 4.8028496908243165e-05,
+     "p90": 0.0008146302246509048
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.00129429721993925,
+     "median": 0.00047137226006369894,
+     "pos": 1.0,
+     "p10": 8.66591562064136e-05,
+     "p90": 0.004135302728445756
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.20368359040521866,
+     "median": 0.18609624165088565,
+     "pos": 1.0,
+     "p10": 0.14562367681452273,
+     "p90": 0.27968602261468467
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-01",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 5,
+    "et": "09:35",
+    "kind": "low",
+    "spot": 742.63,
+    "mfe": 0.009095989281410108,
+    "atm_strike": 743,
+    "entry_price": 1.88,
+    "live_trail_net": 0.8582957761240961,
+    "loose_runner_net": 0.9202389686615662,
+    "node": {
+     "strike": 744,
+     "sign": "barney",
+     "strength": 0.12261270205741329,
+     "dist_frac": 0.0018380496475388435,
+     "node_vel_15": 2064742.288912207,
+     "gamma_now": -52329850.599659726
+    },
+    "king": {
+     "strike": 744,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.1082373810507004
+    },
+    "approach_vel": -0.005410653898951972,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 174,
+    "et": "12:24",
+    "kind": "high",
+    "spot": 749.39,
+    "mfe": 0.005284297895621669,
+    "atm_strike": 749,
+    "entry_price": 0.79,
+    "live_trail_net": 0.8426139552285341,
+    "loose_runner_net": 0.48637525721768404,
+    "node": {
+     "strike": 749,
+     "sign": "barney",
+     "strength": 0.14285218827984017,
+     "dist_frac": 0.0005204232775990957,
+     "node_vel_15": 1030797.3433044592,
+     "gamma_now": -363272362.99243027
+    },
+    "king": {
+     "strike": 749,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.408375056404909
+    },
+    "approach_vel": 0.0005607701243039896,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 5,
+     "et": "09:35",
+     "kind": "low",
+     "spot": 742.63,
+     "mfe": 0.009095989281410108,
+     "atm_strike": 743,
+     "entry_price": 1.88,
+     "live_trail_net": 0.8582957761240961,
+     "loose_runner_net": 0.9202389686615662,
+     "node": {
+      "strike": 744,
+      "sign": "barney",
+      "strength": 0.12261270205741329,
+      "dist_frac": 0.0018380496475388435,
+      "node_vel_15": 2064742.288912207,
+      "gamma_now": -52329850.599659726
+     },
+     "king": {
+      "strike": 744,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.1082373810507004
+     },
+     "approach_vel": -0.005410653898951972,
+     "side": "call"
+    },
+    {
+     "i": 174,
+     "et": "12:24",
+     "kind": "high",
+     "spot": 749.39,
+     "mfe": 0.005284297895621669,
+     "atm_strike": 749,
+     "entry_price": 0.79,
+     "live_trail_net": 0.8426139552285341,
+     "loose_runner_net": 0.48637525721768404,
+     "node": {
+      "strike": 749,
+      "sign": "barney",
+      "strength": 0.14285218827984017,
+      "dist_frac": 0.0005204232775990957,
+      "node_vel_15": 1030797.3433044592,
+      "gamma_now": -363272362.99243027
+     },
+     "king": {
+      "strike": 749,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.408375056404909
+     },
+     "approach_vel": 0.0005607701243039896,
+     "side": "put"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 746.67,
+     "mfe": 0.005410653898951972,
+     "atm_strike": 747,
+     "entry_price": 3.28,
+     "live_trail_net": -0.45264628138892204,
+     "loose_runner_net": -0.45264628138892204,
+     "node": null,
+     "king": {
+      "strike": 744,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.12739529768223948
+     },
+     "approach_vel": null,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.000364959063271048,
+     "median": 0.00031769295352951333,
+     "pos": 0.9823529411764705,
+     "p10": 4.684749800893873e-05,
+     "p90": 0.0007910968087959665
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0005442131783440229,
+     "median": 0.0005017561465127947,
+     "pos": 1.0,
+     "p10": 0.00012049644535490465,
+     "p90": 0.0011232349165597344
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.3326307914874611,
+     "median": 0.3175246607524587,
+     "pos": 1.0,
+     "p10": 0.18829442973595925,
+     "p90": 0.4980789084991873
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-01",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 388,
+    "et": "15:58",
+    "kind": "low",
+    "spot": 724.97,
+    "mfe": 0.0007379615708235763,
+    "atm_strike": 725,
+    "entry_price": 0.7,
+    "live_trail_net": -0.5840957072484165,
+    "loose_runner_net": -0.5840957072484165,
+    "node": {
+     "strike": 727,
+     "sign": "pika",
+     "strength": 0.11372641665454951,
+     "dist_frac": 0.002800115866863419,
+     "node_vel_15": -11344021.228056526,
+     "gamma_now": -63819874.67955172
+    },
+    "king": {
+     "strike": 724,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.20591406460074912
+    },
+    "approach_vel": -0.0014943771477367916,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 735.95,
+    "mfe": 0.014919491813302557,
+    "atm_strike": 736,
+    "entry_price": 7.52,
+    "live_trail_net": 0.4543745414526781,
+    "loose_runner_net": 0.4543745414526781,
+    "node": null,
+    "king": {
+     "strike": 738,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.276680213644599
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 388,
+     "et": "15:58",
+     "kind": "low",
+     "spot": 724.97,
+     "mfe": 0.0007379615708235763,
+     "atm_strike": 725,
+     "entry_price": 0.7,
+     "live_trail_net": -0.5840957072484165,
+     "loose_runner_net": -0.5840957072484165,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.11372641665454951,
+      "dist_frac": 0.002800115866863419,
+      "node_vel_15": -11344021.228056526,
+      "gamma_now": -63819874.67955172
+     },
+     "king": {
+      "strike": 724,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.20591406460074912
+     },
+     "approach_vel": -0.0014943771477367916,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 735.95,
+     "mfe": 0.014919491813302557,
+     "atm_strike": 736,
+     "entry_price": 7.52,
+     "live_trail_net": 0.4543745414526781,
+     "loose_runner_net": 0.4543745414526781,
+     "node": null,
+     "king": {
+      "strike": 738,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.276680213644599
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 6,
+     "et": "09:36",
+     "kind": "low",
+     "spot": 725.92,
+     "mfe": 0.00813444915108322,
+     "atm_strike": 726,
+     "entry_price": 3.61,
+     "live_trail_net": 0.3037812316635511,
+     "loose_runner_net": -0.19622559120123328,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.11372641665454951,
+      "dist_frac": 0.0014808692358026594,
+      "node_vel_15": 1368074.2534921782,
+      "gamma_now": 14985064.274065029
+     },
+     "king": {
+      "strike": 738,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.12854911730634602
+     },
+     "approach_vel": -0.004764189744996074,
+     "side": "call"
+    },
+    {
+     "i": 44,
+     "et": "10:14",
+     "kind": "high",
+     "spot": 731.07,
+     "mfe": 0.008337151963231761,
+     "atm_strike": 731,
+     "entry_price": 2.49,
+     "live_trail_net": 0.40305062614992004,
+     "loose_runner_net": 0.0756721467149386,
+     "node": {
+      "strike": 730,
+      "sign": "pika",
+      "strength": 0.10446521624886364,
+      "dist_frac": 0.0014567788089979064,
+      "node_vel_15": -64847.86820199887,
+      "gamma_now": 24237594.839021377
+     },
+     "king": {
+      "strike": 735,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1734361299433931
+     },
+     "approach_vel": 0.0007254956983580152,
+     "side": "put"
+    },
+    {
+     "i": 76,
+     "et": "10:46",
+     "kind": "low",
+     "spot": 727.07,
+     "mfe": 0.0065468249274486705,
+     "atm_strike": 727,
+     "entry_price": 2.46,
+     "live_trail_net": 0.20713684969362034,
+     "loose_runner_net": 0.20713684969362034,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.11372641665454951,
+      "dist_frac": 9.627683716827312e-05,
+      "node_vel_15": 558568.2592049894,
+      "gamma_now": 29680687.873631835
+     },
+     "king": {
+      "strike": 730,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13597441578990802
+     },
+     "approach_vel": -0.0032422354287907893,
+     "side": "call"
+    },
+    {
+     "i": 82,
+     "et": "10:52",
+     "kind": "high",
+     "spot": 729.02,
+     "mfe": 0.005555403143946606,
+     "atm_strike": 729,
+     "entry_price": 2.26,
+     "live_trail_net": 0.8807707397881344,
+     "loose_runner_net": 0.8807707397881344,
+     "node": {
+      "strike": 730,
+      "sign": "pika",
+      "strength": 0.10446521624886364,
+      "dist_frac": 0.00134427039038712,
+      "node_vel_15": 830501.3838055998,
+      "gamma_now": 42642987.27695164
+     },
+     "king": {
+      "strike": 730,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.12809846013824486
+     },
+     "approach_vel": 0.0023097863447630405,
+     "side": "put"
+    },
+    {
+     "i": 89,
+     "et": "10:59",
+     "kind": "low",
+     "spot": 726.96,
+     "mfe": 0.006699130626169259,
+     "atm_strike": 727,
+     "entry_price": 2.66,
+     "live_trail_net": 0.572410089262565,
+     "loose_runner_net": 0.1163746805437238,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.11372641665454951,
+      "dist_frac": 5.502366017382472e-05,
+      "node_vel_15": 150286.1439378197,
+      "gamma_now": 34432690.69138795
+     },
+     "king": {
+      "strike": 730,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.14831726193198386
+     },
+     "approach_vel": -0.002695750591624541,
+     "side": "call"
+    },
+    {
+     "i": 122,
+     "et": "11:32",
+     "kind": "high",
+     "spot": 731.83,
+     "mfe": 0.009373761665960692,
+     "atm_strike": 732,
+     "entry_price": 2.03,
+     "live_trail_net": 0.376786624281104,
+     "loose_runner_net": 0.7544468441359902,
+     "node": {
+      "strike": 731,
+      "sign": "pika",
+      "strength": 0.128332451598405,
+      "dist_frac": 0.0011341431753276593,
+      "node_vel_15": 1512706.319394802,
+      "gamma_now": 69001211.76672558
+     },
+     "king": {
+      "strike": 731,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.15749096002385013
+     },
+     "approach_vel": 0.001087499230542941,
+     "side": "put"
+    },
+    {
+     "i": 326,
+     "et": "14:56",
+     "kind": "low",
+     "spot": 725.73,
+     "mfe": 0.004216473181990504,
+     "atm_strike": 726,
+     "entry_price": 0.94,
+     "live_trail_net": 1.188659469657269,
+     "loose_runner_net": 0.641494602242952,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.11372641665454951,
+      "dist_frac": 0.0017568638258293116,
+      "node_vel_15": -2788623.721873938,
+      "gamma_now": -3737496.8591491226
+     },
+     "king": {
+      "strike": 728,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2694636269013529
+     },
+     "approach_vel": -0.00068161163283854,
+     "side": "call"
+    },
+    {
+     "i": 361,
+     "et": "15:31",
+     "kind": "high",
+     "spot": 728.79,
+     "mfe": 0.00523474001248661,
+     "atm_strike": 729,
+     "entry_price": 1.07,
+     "live_trail_net": 2.972469039178675,
+     "loose_runner_net": 2.972469039178675,
+     "node": {
+      "strike": 729,
+      "sign": "pika",
+      "strength": 0.11395380566569777,
+      "dist_frac": 0.0002950115603366125,
+      "node_vel_15": 3033355.29543069,
+      "gamma_now": 229031654.61084443
+     },
+     "king": {
+      "strike": 728,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.24036546358670816
+     },
+     "approach_vel": 0.001594227795911468,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 230,
+     "mean": 0.0005639742210212503,
+     "median": 0.0004762569689166354,
+     "pos": 0.9956521739130435,
+     "p10": 9.581953075798223e-05,
+     "p90": 0.0011925649742296368
+    },
+    "node_dist": {
+     "n": 230,
+     "mean": 0.0006706949419132484,
+     "median": 0.0005688840548762449,
+     "pos": 0.9956521739130435,
+     "p10": 0.00011005337588720524,
+     "p90": 0.001577828085340044
+    },
+    "king_share": {
+     "n": 230,
+     "mean": 0.20414534558837946,
+     "median": 0.19514787662114924,
+     "pos": 1.0,
+     "p10": 0.1633900008471366,
+     "p90": 0.2834916827960572
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-02",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 269,
+    "et": "13:59",
+    "kind": "low",
+    "spot": 7427.91,
+    "mfe": 0.007302188637180551,
+    "atm_strike": 7430,
+    "entry_price": 10.3,
+    "live_trail_net": 0.7053421971399878,
+    "loose_runner_net": 0.6205461762877231,
+    "node": {
+     "strike": 7430,
+     "sign": "pika",
+     "strength": 0.1044114115610807,
+     "dist_frac": 0.0002813712067055397,
+     "node_vel_15": 11364.602109144627,
+     "gamma_now": 29299636.859397694
+    },
+    "king": {
+     "strike": 7400,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.279633459193013
+    },
+    "approach_vel": -0.0008662492349701735,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 44,
+    "et": "10:14",
+    "kind": "high",
+    "spot": 7540.24,
+    "mfe": 0.01489740379616563,
+    "atm_strike": 7540,
+    "entry_price": 13.3,
+    "live_trail_net": 0.918996999888885,
+    "loose_runner_net": 3.377939923700878,
+    "node": {
+     "strike": 7525,
+     "sign": "pika",
+     "strength": 0.20316115602835058,
+     "dist_frac": 0.0020211558252787422,
+     "node_vel_15": -207140.64655499955,
+     "gamma_now": 29223321.703671537
+    },
+    "king": {
+     "strike": 7525,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.16741231774999027
+    },
+    "approach_vel": 0.0009969825016959612,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 269,
+     "et": "13:59",
+     "kind": "low",
+     "spot": 7427.91,
+     "mfe": 0.007302188637180551,
+     "atm_strike": 7430,
+     "entry_price": 10.3,
+     "live_trail_net": 0.7053421971399878,
+     "loose_runner_net": 0.6205461762877231,
+     "node": {
+      "strike": 7430,
+      "sign": "pika",
+      "strength": 0.1044114115610807,
+      "dist_frac": 0.0002813712067055397,
+      "node_vel_15": 11364.602109144627,
+      "gamma_now": 29299636.859397694
+     },
+     "king": {
+      "strike": 7400,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.279633459193013
+     },
+     "approach_vel": -0.0008662492349701735,
+     "side": "call"
+    },
+    {
+     "i": 44,
+     "et": "10:14",
+     "kind": "high",
+     "spot": 7540.24,
+     "mfe": 0.01489740379616563,
+     "atm_strike": 7540,
+     "entry_price": 13.3,
+     "live_trail_net": 0.918996999888885,
+     "loose_runner_net": 3.377939923700878,
+     "node": {
+      "strike": 7525,
+      "sign": "pika",
+      "strength": 0.20316115602835058,
+      "dist_frac": 0.0020211558252787422,
+      "node_vel_15": -207140.64655499955,
+      "gamma_now": 29223321.703671537
+     },
+     "king": {
+      "strike": 7525,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.16741231774999027
+     },
+     "approach_vel": 0.0009969825016959612,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 319,
+     "mean": 0.0006836653420054455,
+     "median": 0.000539474663293453,
+     "pos": 1.0,
+     "p10": 0.00010842444556295044,
+     "p90": 0.0014892172118216869
+    },
+    "node_dist": {
+     "n": 319,
+     "mean": 0.0021591104890974827,
+     "median": 0.001709052604424223,
+     "pos": 1.0,
+     "p10": 0.0003638907575775935,
+     "p90": 0.004999537700212712
+    },
+    "king_share": {
+     "n": 319,
+     "mean": 0.1642990484894512,
+     "median": 0.14736781185842635,
+     "pos": 1.0,
+     "p10": 0.11874565609355574,
+     "p90": 0.23134586331659515
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-02",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 269,
+    "et": "13:59",
+    "kind": "low",
+    "spot": 740.11,
+    "mfe": 0.007086832273798994,
+    "atm_strike": 740,
+    "entry_price": 1.26,
+    "live_trail_net": 0.6020017202283212,
+    "loose_runner_net": 0.5249824067558058,
+    "node": {
+     "strike": 740,
+     "sign": "pika",
+     "strength": 0.10745223460439064,
+     "dist_frac": 0.0001418717614392798,
+     "node_vel_15": -86522.00624281168,
+     "gamma_now": 116268715.56220749
+    },
+    "king": {
+     "strike": 741,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.20844763900706284
+    },
+    "approach_vel": -0.0008774831084501317,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 44,
+    "et": "10:14",
+    "kind": "high",
+    "spot": 751.17,
+    "mfe": 0.014736912170932122,
+    "atm_strike": 751,
+    "entry_price": 1.28,
+    "live_trail_net": 0.9181419334975369,
+    "loose_runner_net": 3.548953201970444,
+    "node": {
+     "strike": 752,
+     "sign": "barney",
+     "strength": 0.11072698517852621,
+     "dist_frac": 0.0010982793623324067,
+     "node_vel_15": 1711961.4917621862,
+     "gamma_now": -118568682.59897298
+    },
+    "king": {
+     "strike": 748,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.1615672432245194
+    },
+    "approach_vel": 0.000959417953108484,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 269,
+     "et": "13:59",
+     "kind": "low",
+     "spot": 740.11,
+     "mfe": 0.007086832273798994,
+     "atm_strike": 740,
+     "entry_price": 1.26,
+     "live_trail_net": 0.6020017202283212,
+     "loose_runner_net": 0.5249824067558058,
+     "node": {
+      "strike": 740,
+      "sign": "pika",
+      "strength": 0.10745223460439064,
+      "dist_frac": 0.0001418717614392798,
+      "node_vel_15": -86522.00624281168,
+      "gamma_now": 116268715.56220749
+     },
+     "king": {
+      "strike": 741,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.20844763900706284
+     },
+     "approach_vel": -0.0008774831084501317,
+     "side": "call"
+    },
+    {
+     "i": 44,
+     "et": "10:14",
+     "kind": "high",
+     "spot": 751.17,
+     "mfe": 0.014736912170932122,
+     "atm_strike": 751,
+     "entry_price": 1.28,
+     "live_trail_net": 0.9181419334975369,
+     "loose_runner_net": 3.548953201970444,
+     "node": {
+      "strike": 752,
+      "sign": "barney",
+      "strength": 0.11072698517852621,
+      "dist_frac": 0.0010982793623324067,
+      "node_vel_15": 1711961.4917621862,
+      "gamma_now": -118568682.59897298
+     },
+     "king": {
+      "strike": 748,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1615672432245194
+     },
+     "approach_vel": 0.000959417953108484,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 319,
+     "mean": 0.000664772821752907,
+     "median": 0.0005137031996370598,
+     "pos": 1.0,
+     "p10": 0.00010659560293128214,
+     "p90": 0.00140935297885965
+    },
+    "node_dist": {
+     "n": 319,
+     "mean": 0.0009773759363799596,
+     "median": 0.0007147384461855525,
+     "pos": 0.9968652037617555,
+     "p10": 9.420377622557274e-05,
+     "p90": 0.0023213063721872853
+    },
+    "king_share": {
+     "n": 319,
+     "mean": 0.20284730412451207,
+     "median": 0.20189524490404429,
+     "pos": 1.0,
+     "p10": 0.14721824094271657,
+     "p90": 0.247678792927722
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-02",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 269,
+    "et": "13:59",
+    "kind": "low",
+    "spot": 707.68,
+    "mfe": 0.008118075966538393,
+    "atm_strike": 708,
+    "entry_price": 1.55,
+    "live_trail_net": 1.0410614969013188,
+    "loose_runner_net": 0.3774034641665345,
+    "node": {
+     "strike": 708,
+     "sign": "pika",
+     "strength": 0.11320168398447313,
+     "dist_frac": 0.0004521817770742939,
+     "node_vel_15": -680534.9823823929,
+     "gamma_now": 40300405.06284778
+    },
+    "king": {
+     "strike": 710,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.21370782338997837
+    },
+    "approach_vel": -0.0012560509194573194,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 33,
+    "et": "10:03",
+    "kind": "high",
+    "spot": 730.56,
+    "mfe": 0.031311810883506375,
+    "atm_strike": 731,
+    "entry_price": 2.56,
+    "live_trail_net": 0.23579895320197042,
+    "loose_runner_net": 0.061422413793103425,
+    "node": {
+     "strike": 729,
+     "sign": "pika",
+     "strength": 0.11679089207611484,
+     "dist_frac": 0.002128518728911668,
+     "node_vel_15": 912898.8414885158,
+     "gamma_now": 32103901.066337936
+    },
+    "king": {
+     "strike": 729,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.159957869055467
+    },
+    "approach_vel": 0.002091820638382633,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 269,
+     "et": "13:59",
+     "kind": "low",
+     "spot": 707.68,
+     "mfe": 0.008118075966538393,
+     "atm_strike": 708,
+     "entry_price": 1.55,
+     "live_trail_net": 1.0410614969013188,
+     "loose_runner_net": 0.3774034641665345,
+     "node": {
+      "strike": 708,
+      "sign": "pika",
+      "strength": 0.11320168398447313,
+      "dist_frac": 0.0004521817770742939,
+      "node_vel_15": -680534.9823823929,
+      "gamma_now": 40300405.06284778
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.21370782338997837
+     },
+     "approach_vel": -0.0012560509194573194,
+     "side": "call"
+    },
+    {
+     "i": 33,
+     "et": "10:03",
+     "kind": "high",
+     "spot": 730.56,
+     "mfe": 0.031311810883506375,
+     "atm_strike": 731,
+     "entry_price": 2.56,
+     "live_trail_net": 0.23579895320197042,
+     "loose_runner_net": 0.061422413793103425,
+     "node": {
+      "strike": 729,
+      "sign": "pika",
+      "strength": 0.11679089207611484,
+      "dist_frac": 0.002128518728911668,
+      "node_vel_15": 912898.8414885158,
+      "gamma_now": 32103901.066337936
+     },
+     "king": {
+      "strike": 729,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.159957869055467
+     },
+     "approach_vel": 0.002091820638382633,
+     "side": "put"
+    },
+    {
+     "i": 8,
+     "et": "09:38",
+     "kind": "high",
+     "spot": 726.96,
+     "mfe": 0.02652809970218629,
+     "atm_strike": 727,
+     "entry_price": 4.06,
+     "live_trail_net": 0.3218107694921015,
+     "loose_runner_net": 2.463478851707152,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 4.8145371510432905e-05,
+      "node_vel_15": 2173799.236182807,
+      "gamma_now": 31886181.54113146
+     },
+     "king": {
+      "strike": 727,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1911071509267122
+     },
+     "approach_vel": 0.002295601819936528,
+     "side": "put"
+    },
+    {
+     "i": 10,
+     "et": "09:40",
+     "kind": "low",
+     "spot": 724.91,
+     "mfe": 0.0077871735801685465,
+     "atm_strike": 725,
+     "entry_price": 3.26,
+     "live_trail_net": 0.4229200036265832,
+     "loose_runner_net": 0.11035389404333773,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.0028831165248098633,
+      "node_vel_15": 1822500.4620609484,
+      "gamma_now": 32720792.27227849
+     },
+     "king": {
+      "strike": 727,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.19683156029809196
+     },
+     "approach_vel": -0.0028062452713391067,
+     "side": "call"
+    },
+    {
+     "i": 41,
+     "et": "10:11",
+     "kind": "low",
+     "spot": 727.26,
+     "mfe": 0.0032725347706819325,
+     "atm_strike": 727,
+     "entry_price": 2.99,
+     "live_trail_net": -0.9967543700677134,
+     "loose_runner_net": -0.9967543700677134,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.0003643788715254912,
+      "node_vel_15": -487603.44494368456,
+      "gamma_now": 25142116.164738413
+     },
+     "king": {
+      "strike": 729,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13778323176632282
+     },
+     "approach_vel": -0.0032413689130107166,
+     "side": "call"
+    },
+    {
+     "i": 44,
+     "et": "10:14",
+     "kind": "high",
+     "spot": 729.64,
+     "mfe": 0.03010368055698308,
+     "atm_strike": 730,
+     "entry_price": 2.75,
+     "live_trail_net": 1.4490461262875058,
+     "loose_runner_net": 5.224952978056426,
+     "node": {
+      "strike": 729,
+      "sign": "pika",
+      "strength": 0.11679089207611484,
+      "dist_frac": 0.0008839915301276399,
+      "node_vel_15": 571835.2418821062,
+      "gamma_now": 38686398.512352824
+     },
+     "king": {
+      "strike": 729,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1705406015967032
+     },
+     "approach_vel": 0.0018398885082484921,
+     "side": "put"
+    },
+    {
+     "i": 84,
+     "et": "10:54",
+     "kind": "low",
+     "spot": 717.84,
+     "mfe": 0.0027791902038767835,
+     "atm_strike": 718,
+     "entry_price": 2.98,
+     "live_trail_net": -0.9967434786921017,
+     "loose_runner_net": -0.9967434786921017,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.012767558004276697,
+      "node_vel_15": -767705.348629415,
+      "gamma_now": 12714801.03145758
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.09237306794445563
+     },
+     "approach_vel": -0.00043862702777978767,
+     "side": "call"
+    },
+    {
+     "i": 91,
+     "et": "11:01",
+     "kind": "high",
+     "spot": 719.83,
+     "mfe": 0.016878985315977195,
+     "atm_strike": 720,
+     "entry_price": 2.87,
+     "live_trail_net": 0.5655584353169361,
+     "loose_runner_net": 0.1597981497056351,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.00996068516177441,
+      "node_vel_15": 39029.12567684775,
+      "gamma_now": 17692368.64756297
+     },
+     "king": {
+      "strike": 724,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.07049414702442215
+     },
+     "approach_vel": 0.0016210612733331437,
+     "side": "put"
+    },
+    {
+     "i": 98,
+     "et": "11:08",
+     "kind": "low",
+     "spot": 714.99,
+     "mfe": 0.005685433960152928,
+     "atm_strike": 715,
+     "entry_price": 3.48,
+     "live_trail_net": -0.9944227393692316,
+     "loose_runner_net": -0.9944227393692316,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.016804548347168102,
+      "node_vel_15": -435007.3310072786,
+      "gamma_now": 8071687.978119677
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.10122612774487084
+     },
+     "approach_vel": -0.005591059867455695,
+     "side": "call"
+    },
+    {
+     "i": 102,
+     "et": "11:12",
+     "kind": "high",
+     "spot": 718.1,
+     "mfe": 0.014503652023757252,
+     "atm_strike": 718,
+     "entry_price": 2.96,
+     "live_trail_net": 0.23928238583411,
+     "loose_runner_net": -0.14102649447477011,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.012400866180658509,
+      "node_vel_15": -408468.2173522963,
+      "gamma_now": 9732696.637247685
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.07860545026715474
+     },
+     "approach_vel": 0.0033113276747355736,
+     "side": "put"
+    },
+    {
+     "i": 110,
+     "et": "11:20",
+     "kind": "low",
+     "spot": 714.99,
+     "mfe": 0.005678401096518756,
+     "atm_strike": 715,
+     "entry_price": 2.98,
+     "live_trail_net": 0.3644824280093897,
+     "loose_runner_net": -0.08491751248057644,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.016797437726401757,
+      "node_vel_15": 52926.11207417883,
+      "gamma_now": 9984752.138287809
+     },
+     "king": {
+      "strike": 714,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.09090396763327896
+     },
+     "approach_vel": -0.002705982452959221,
+     "side": "call"
+    },
+    {
+     "i": 129,
+     "et": "11:39",
+     "kind": "high",
+     "spot": 719.05,
+     "mfe": 0.015812530422084543,
+     "atm_strike": 719,
+     "entry_price": 2.51,
+     "live_trail_net": 0.7939669891861127,
+     "loose_runner_net": 1.5285655407924952,
+     "node": {
+      "strike": 727,
+      "sign": "pika",
+      "strength": 0.14849289365474239,
+      "dist_frac": 0.011056254780613374,
+      "node_vel_15": 293601.0828295365,
+      "gamma_now": 14954714.353132237
+     },
+     "king": {
+      "strike": 719,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.07900388273721849
+     },
+     "approach_vel": 0.0023139436011095334,
+     "side": "put"
+    },
+    {
+     "i": 188,
+     "et": "12:38",
+     "kind": "low",
+     "spot": 710.6,
+     "mfe": 0.003982577980424753,
+     "atm_strike": 711,
+     "entry_price": 2.22,
+     "live_trail_net": -0.27435317090489497,
+     "loose_runner_net": -0.27435317090489497,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.11213799382005614,
+      "dist_frac": 0.0008373264658490803,
+      "node_vel_15": 217205.2179043293,
+      "gamma_now": 48099957.18717496
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1446502923867412
+     },
+     "approach_vel": -0.0021414930067965754,
+     "side": "call"
+    },
+    {
+     "i": 195,
+     "et": "12:45",
+     "kind": "high",
+     "spot": 712.66,
+     "mfe": 0.006994871363122786,
+     "atm_strike": 713,
+     "entry_price": 2.4,
+     "live_trail_net": 0.3545771756978655,
+     "loose_runner_net": 0.2898809523809527,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.11213799382005614,
+      "dist_frac": 0.003739484891218123,
+      "node_vel_15": -65774.46580648173,
+      "gamma_now": 47279902.12342593
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.13943357135478762
+     },
+     "approach_vel": 0.0018767660579476792,
+     "side": "put"
+    },
+    {
+     "i": 323,
+     "et": "14:53",
+     "kind": "high",
+     "spot": 712.13,
+     "mfe": 0.00544142221223653,
+     "atm_strike": 712,
+     "entry_price": 1.38,
+     "live_trail_net": 0.8143071321482118,
+     "loose_runner_net": 0.39940743913757437,
+     "node": {
+      "strike": 711,
+      "sign": "pika",
+      "strength": 0.10490467480779116,
+      "dist_frac": 0.0015867889289876785,
+      "node_vel_15": -2135766.977408745,
+      "gamma_now": 100585219.92928666
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.21942215867484646
+     },
+     "approach_vel": 0.0015681806994226693,
+     "side": "put"
+    },
+    {
+     "i": 356,
+     "et": "15:26",
+     "kind": "low",
+     "spot": 708.25,
+     "mfe": 0.007299630782698264,
+     "atm_strike": 708,
+     "entry_price": 1.3,
+     "live_trail_net": 0.8065176203107236,
+     "loose_runner_net": 2.299507389162562,
+     "node": {
+      "strike": 708,
+      "sign": "pika",
+      "strength": 0.11320168398447313,
+      "dist_frac": 0.0003600398161678992,
+      "node_vel_15": -355237.35422332585,
+      "gamma_now": 63117662.214564204
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.34200524960532064
+     },
+     "approach_vel": -0.0007548074888189283,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 179,
+     "mean": 0.0011122704310698836,
+     "median": 0.0009083739402303775,
+     "pos": 0.994413407821229,
+     "p10": 0.00014779157165782476,
+     "p90": 0.002301126854847676
+    },
+    "node_dist": {
+     "n": 179,
+     "mean": 0.002893745173611448,
+     "median": 0.0007329311608501745,
+     "pos": 0.994413407821229,
+     "p10": 0.0002112229810604674,
+     "p90": 0.007155374843281308
+    },
+    "king_share": {
+     "n": 179,
+     "mean": 0.2067679075062093,
+     "median": 0.1919276342034715,
+     "pos": 1.0,
+     "p10": 0.10767332497032903,
+     "p90": 0.35803064239871163
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-06",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 7483.24,
+    "mfe": 0.009065591909386862,
+    "atm_strike": 7485,
+    "entry_price": 39.3,
+    "live_trail_net": 0.3087403953421328,
+    "loose_runner_net": 0.3280011030471681,
+    "node": null,
+    "king": {
+     "strike": 7500,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.10480456007520011
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 356,
+    "et": "15:26",
+    "kind": "high",
+    "spot": 7551.08,
+    "mfe": 0.001993092378838548,
+    "atm_strike": 7550,
+    "entry_price": 3.95,
+    "live_trail_net": 0.20384111741597577,
+    "loose_runner_net": -0.1646816736297313,
+    "node": {
+     "strike": 7550,
+     "sign": "pika",
+     "strength": 0.1095858526336532,
+     "dist_frac": 0.00014302589828209041,
+     "node_vel_15": -2959426.9439526596,
+     "gamma_now": 36780888.7773087
+    },
+    "king": {
+     "strike": 7540,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.2195557988261611
+    },
+    "approach_vel": 0.00013642293759640603,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 7483.24,
+     "mfe": 0.009065591909386862,
+     "atm_strike": 7485,
+     "entry_price": 39.3,
+     "live_trail_net": 0.3087403953421328,
+     "loose_runner_net": 0.3280011030471681,
+     "node": null,
+     "king": {
+      "strike": 7500,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.10480456007520011
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 356,
+     "et": "15:26",
+     "kind": "high",
+     "spot": 7551.08,
+     "mfe": 0.001993092378838548,
+     "atm_strike": 7550,
+     "entry_price": 3.95,
+     "live_trail_net": 0.20384111741597577,
+     "loose_runner_net": -0.1646816736297313,
+     "node": {
+      "strike": 7550,
+      "sign": "pika",
+      "strength": 0.1095858526336532,
+      "dist_frac": 0.00014302589828209041,
+      "node_vel_15": -2959426.9439526596,
+      "gamma_now": 36780888.7773087
+     },
+     "king": {
+      "strike": 7540,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.2195557988261611
+     },
+     "approach_vel": 0.00013642293759640603,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0002947391058871926,
+     "median": 0.0002401191889375067,
+     "pos": 1.0,
+     "p10": 5.7057025179436525e-05,
+     "p90": 0.0006262513417302654
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.00045318625764472934,
+     "median": 0.0003773003522726056,
+     "pos": 1.0,
+     "p10": 8.233053852138216e-05,
+     "p90": 0.0007748362942357665
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.20705443660967177,
+     "median": 0.19040361904705494,
+     "pos": 1.0,
+     "p10": 0.11490131424970755,
+     "p90": 0.29534250278899676
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-06",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 744.88,
+    "mfe": 0.009981473525937144,
+    "atm_strike": 745,
+    "entry_price": 4.66,
+    "live_trail_net": 0.2640753504302418,
+    "loose_runner_net": 0.34529271231949954,
+    "node": null,
+    "king": {
+     "strike": 740,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.16223665103598475
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 356,
+    "et": "15:26",
+    "kind": "high",
+    "spot": 752.32,
+    "mfe": 0.001847630314429594,
+    "atm_strike": 752,
+    "entry_price": 0.33,
+    "live_trail_net": 1.264367816091954,
+    "loose_runner_net": 0.7644424540976267,
+    "node": {
+     "strike": 752,
+     "sign": "barney",
+     "strength": 0.12197246079871908,
+     "dist_frac": 0.0004187075892412813,
+     "node_vel_15": 15057282.66893978,
+     "gamma_now": 599218273.2251587
+    },
+    "king": {
+     "strike": 752,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.33618401530374425
+    },
+    "approach_vel": 0.00013958867869347415,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 744.88,
+     "mfe": 0.009981473525937144,
+     "atm_strike": 745,
+     "entry_price": 4.66,
+     "live_trail_net": 0.2640753504302418,
+     "loose_runner_net": 0.34529271231949954,
+     "node": null,
+     "king": {
+      "strike": 740,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.16223665103598475
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 356,
+     "et": "15:26",
+     "kind": "high",
+     "spot": 752.32,
+     "mfe": 0.001847630314429594,
+     "atm_strike": 752,
+     "entry_price": 0.33,
+     "live_trail_net": 1.264367816091954,
+     "loose_runner_net": 0.7644424540976267,
+     "node": {
+      "strike": 752,
+      "sign": "barney",
+      "strength": 0.12197246079871908,
+      "dist_frac": 0.0004187075892412813,
+      "node_vel_15": 15057282.66893978,
+      "gamma_now": 599218273.2251587
+     },
+     "king": {
+      "strike": 752,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.33618401530374425
+     },
+     "approach_vel": 0.00013958867869347415,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0002863749368515395,
+     "median": 0.00021978462910723172,
+     "pos": 0.9794117647058823,
+     "p10": 4.671306831448328e-05,
+     "p90": 0.000599832047026893
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.00031206488715440416,
+     "median": 0.00031281822598789146,
+     "pos": 0.9970588235294118,
+     "p10": 5.98440066226823e-05,
+     "p90": 0.0005728979309059298
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.338751700023758,
+     "median": 0.321713942338436,
+     "pos": 1.0,
+     "p10": 0.25838660012107495,
+     "p90": 0.46212117027927024
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-06",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 712.71,
+    "mfe": 0.018632973909627395,
+    "atm_strike": 713,
+    "entry_price": 8.32,
+    "live_trail_net": 0.24221414361500582,
+    "loose_runner_net": 0.15006868131868134,
+    "node": null,
+    "king": {
+     "strike": 720,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.16807091513716946
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 161,
+    "et": "12:11",
+    "kind": "high",
+    "spot": 726.0,
+    "mfe": 0.006714922279079057,
+    "atm_strike": 726,
+    "entry_price": 1.24,
+    "live_trail_net": 0.5652312092801526,
+    "loose_runner_net": 1.073931352296202,
+    "node": {
+     "strike": 725,
+     "sign": "barney",
+     "strength": 0.14579476991444262,
+     "dist_frac": 0.0013705328549094753,
+     "node_vel_15": 303578.90663194534,
+     "gamma_now": 25732411.132010043
+    },
+    "king": {
+     "strike": 724,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.13355077025417744
+    },
+    "approach_vel": 0.0006547028338295605,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 712.71,
+     "mfe": 0.018632973909627395,
+     "atm_strike": 713,
+     "entry_price": 8.32,
+     "live_trail_net": 0.24221414361500582,
+     "loose_runner_net": 0.15006868131868134,
+     "node": null,
+     "king": {
+      "strike": 720,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.16807091513716946
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 161,
+     "et": "12:11",
+     "kind": "high",
+     "spot": 726.0,
+     "mfe": 0.006714922279079057,
+     "atm_strike": 726,
+     "entry_price": 1.24,
+     "live_trail_net": 0.5652312092801526,
+     "loose_runner_net": 1.073931352296202,
+     "node": {
+      "strike": 725,
+      "sign": "barney",
+      "strength": 0.14579476991444262,
+      "dist_frac": 0.0013705328549094753,
+      "node_vel_15": 303578.90663194534,
+      "gamma_now": 25732411.132010043
+     },
+     "king": {
+      "strike": 724,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.13355077025417744
+     },
+     "approach_vel": 0.0006547028338295605,
+     "side": "put"
+    },
+    {
+     "i": 6,
+     "et": "09:36",
+     "kind": "high",
+     "spot": 721.46,
+     "mfe": 0.0032919357968563745,
+     "atm_strike": 721,
+     "entry_price": 3.73,
+     "live_trail_net": -0.9921948256051981,
+     "loose_runner_net": -0.9921948256051981,
+     "node": {
+      "strike": 720,
+      "sign": "barney",
+      "strength": 0.16739048075748938,
+      "dist_frac": 0.002023674216172811,
+      "node_vel_15": 1238504.606836658,
+      "gamma_now": -24313333.94726904
+     },
+     "king": {
+      "strike": 720,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.16879734168051255
+     },
+     "approach_vel": 0.0014366519762641246,
+     "side": "put"
+    },
+    {
+     "i": 8,
+     "et": "09:38",
+     "kind": "low",
+     "spot": 719.09,
+     "mfe": 0.009609434211532666,
+     "atm_strike": 719,
+     "entry_price": 3.18,
+     "live_trail_net": 0.4709235678656629,
+     "loose_runner_net": 0.24814883663289633,
+     "node": {
+      "strike": 720,
+      "sign": "barney",
+      "strength": 0.16739048075748938,
+      "dist_frac": 0.00127245040572389,
+      "node_vel_15": 958157.1930004591,
+      "gamma_now": -24547563.850252766
+     },
+     "king": {
+      "strike": 720,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.17579840003224817
+     },
+     "approach_vel": -0.0035612584960956917,
+     "side": "call"
+    },
+    {
+     "i": 22,
+     "et": "09:52",
+     "kind": "high",
+     "spot": 723.76,
+     "mfe": 0.0036476179949154228,
+     "atm_strike": 724,
+     "entry_price": 3.28,
+     "live_trail_net": -0.61833173134687,
+     "loose_runner_net": -0.61833173134687,
+     "node": {
+      "strike": 725,
+      "sign": "barney",
+      "strength": 0.14579476991444262,
+      "dist_frac": 0.001713275118823932,
+      "node_vel_15": -52127.25680559042,
+      "gamma_now": -14591246.735974379
+     },
+     "king": {
+      "strike": 720,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.12802011932226312
+     },
+     "approach_vel": 0.0029724991858539273,
+     "side": "put"
+    },
+    {
+     "i": 36,
+     "et": "10:06",
+     "kind": "low",
+     "spot": 721.89,
+     "mfe": 0.005679496325642958,
+     "atm_strike": 722,
+     "entry_price": 2.88,
+     "live_trail_net": -0.774237137383689,
+     "loose_runner_net": -0.774237137383689,
+     "node": {
+      "strike": 720,
+      "sign": "barney",
+      "strength": 0.16739048075748938,
+      "dist_frac": 0.00262503549685201,
+      "node_vel_15": 31791.630735863993,
+      "gamma_now": -21380146.0861389
+     },
+     "king": {
+      "strike": 720,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.13589481194638867
+     },
+     "approach_vel": -0.0003046606149990338,
+     "side": "call"
+    },
+    {
+     "i": 81,
+     "et": "10:51",
+     "kind": "high",
+     "spot": 725.27,
+     "mfe": 0.00572200697671209,
+     "atm_strike": 725,
+     "entry_price": 1.72,
+     "live_trail_net": 0.393601787146294,
+     "loose_runner_net": -0.11983045022339323,
+     "node": {
+      "strike": 725,
+      "sign": "barney",
+      "strength": 0.14579476991444262,
+      "dist_frac": 0.0003722751527017274,
+      "node_vel_15": 641424.6614241167,
+      "gamma_now": 22506680.89572364
+     },
+     "king": {
+      "strike": 727,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.12831540665790866
+     },
+     "approach_vel": 0.00022755325090843893,
+     "side": "put"
+    },
+    {
+     "i": 107,
+     "et": "11:17",
+     "kind": "low",
+     "spot": 722.7,
+     "mfe": 0.004552341550148508,
+     "atm_strike": 723,
+     "entry_price": 1.53,
+     "live_trail_net": 0.5539779130042823,
+     "loose_runner_net": 0.17341189349302955,
+     "node": {
+      "strike": 723,
+      "sign": "barney",
+      "strength": 0.11755978248778826,
+      "dist_frac": 0.00040818868002860475,
+      "node_vel_15": 67674.50163423097,
+      "gamma_now": -13748961.66683457
+     },
+     "king": {
+      "strike": 724,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.150631875630681
+     },
+     "approach_vel": -0.0014162740248436446,
+     "side": "call"
+    },
+    {
+     "i": 253,
+     "et": "13:43",
+     "kind": "low",
+     "spot": 721.12,
+     "mfe": 0.00551919236742847,
+     "atm_strike": 721,
+     "entry_price": 1.54,
+     "live_trail_net": 0.5438871473354234,
+     "loose_runner_net": 0.5123792463693941,
+     "node": {
+      "strike": 721,
+      "sign": "pika",
+      "strength": 0.11489613566751916,
+      "dist_frac": 0.00016640781007322574,
+      "node_vel_15": 3487343.2476555123,
+      "gamma_now": 115444115.19158794
+     },
+     "king": {
+      "strike": 721,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.20201005258812932
+     },
+     "approach_vel": -0.001322577294602418,
+     "side": "call"
+    },
+    {
+     "i": 355,
+     "et": "15:25",
+     "kind": "high",
+     "spot": 725.1,
+     "mfe": 0.0033857398979451675,
+     "atm_strike": 725,
+     "entry_price": 0.64,
+     "live_trail_net": 0.25854371921182273,
+     "loose_runner_net": 0.03109605911330071,
+     "node": {
+      "strike": 725,
+      "sign": "barney",
+      "strength": 0.14579476991444262,
+      "dist_frac": 0.0001379120121362884,
+      "node_vel_15": 2573063.9524451336,
+      "gamma_now": 179652726.6977741
+     },
+     "king": {
+      "strike": 726,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.3853689337584986
+     },
+     "approach_vel": 0.000517437648763324,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 239,
+     "mean": 0.0005668581277844425,
+     "median": 0.0004844089518774622,
+     "pos": 0.99581589958159,
+     "p10": 6.909942716568594e-05,
+     "p90": 0.0011660479942594937
+    },
+    "node_dist": {
+     "n": 239,
+     "mean": 0.0004163176311332536,
+     "median": 0.00043549490885721234,
+     "pos": 0.9916317991631799,
+     "p10": 8.28797966681568e-05,
+     "p90": 0.0006652991073903895
+    },
+    "king_share": {
+     "n": 239,
+     "mean": 0.1925871216505305,
+     "median": 0.1922808733529829,
+     "pos": 1.0,
+     "p10": 0.12046936964055857,
+     "p90": 0.24937341227648974
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-07",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 72,
+    "et": "10:42",
+    "kind": "low",
+    "spot": 7481.73,
+    "mfe": 0.005144532080147332,
+    "atm_strike": 7480,
+    "entry_price": 15.98,
+    "live_trail_net": 1.0040444644475546,
+    "loose_runner_net": 0.43926829719415283,
+    "node": {
+     "strike": 7460,
+     "sign": "pika",
+     "strength": 0.11303837146901671,
+     "dist_frac": 0.0029044084723719734,
+     "node_vel_15": 180321.09660122643,
+     "gamma_now": 18751732.612257063
+    },
+    "king": {
+     "strike": 7460,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.1274806366954379
+    },
+    "approach_vel": -0.001204151787204277,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 7537.43,
+    "mfe": 0.007389786704486904,
+    "atm_strike": 7535,
+    "entry_price": 15.4,
+    "live_trail_net": 0.1973002367091039,
+    "loose_runner_net": 0.9976009212462416,
+    "node": null,
+    "king": {
+     "strike": 7550,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.09234177005780586
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 72,
+     "et": "10:42",
+     "kind": "low",
+     "spot": 7481.73,
+     "mfe": 0.005144532080147332,
+     "atm_strike": 7480,
+     "entry_price": 15.98,
+     "live_trail_net": 1.0040444644475546,
+     "loose_runner_net": 0.43926829719415283,
+     "node": {
+      "strike": 7460,
+      "sign": "pika",
+      "strength": 0.11303837146901671,
+      "dist_frac": 0.0029044084723719734,
+      "node_vel_15": 180321.09660122643,
+      "gamma_now": 18751732.612257063
+     },
+     "king": {
+      "strike": 7460,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1274806366954379
+     },
+     "approach_vel": -0.001204151787204277,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 7537.43,
+     "mfe": 0.007389786704486904,
+     "atm_strike": 7535,
+     "entry_price": 15.4,
+     "live_trail_net": 0.1973002367091039,
+     "loose_runner_net": 0.9976009212462416,
+     "node": null,
+     "king": {
+      "strike": 7550,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.09234177005780586
+     },
+     "approach_vel": null,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.00038786121664982696,
+     "median": 0.0003132616145455708,
+     "pos": 1.0,
+     "p10": 5.853235442399505e-05,
+     "p90": 0.0008014391232976377
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0011368220124437483,
+     "median": 0.0005395196589652058,
+     "pos": 0.9970588235294118,
+     "p10": 0.0001815424702590281,
+     "p90": 0.0036155665701001474
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.1907243578895678,
+     "median": 0.16613032045766768,
+     "pos": 1.0,
+     "p10": 0.09708761848050707,
+     "p90": 0.32030115137285364
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-07",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 72,
+    "et": "10:42",
+    "kind": "low",
+    "spot": 745.55,
+    "mfe": 0.004976192072966315,
+    "atm_strike": 746,
+    "entry_price": 1.28,
+    "live_trail_net": 0.41017549261083763,
+    "loose_runner_net": 0.4935729679802956,
+    "node": {
+     "strike": 746,
+     "sign": "pika",
+     "strength": 0.10506259599460338,
+     "dist_frac": 0.0006035812487426001,
+     "node_vel_15": 626149.500078706,
+     "gamma_now": 52892720.525997
+    },
+    "king": {
+     "strike": 745,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.30797772177017646
+    },
+    "approach_vel": -0.001192326241894995,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 751.24,
+    "mfe": 0.007567538786132247,
+    "atm_strike": 751,
+    "entry_price": 1.66,
+    "live_trail_net": 0.4907412902842898,
+    "loose_runner_net": 0.8122737254436467,
+    "node": null,
+    "king": {
+     "strike": 753,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.2102643217378037
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 72,
+     "et": "10:42",
+     "kind": "low",
+     "spot": 745.55,
+     "mfe": 0.004976192072966315,
+     "atm_strike": 746,
+     "entry_price": 1.28,
+     "live_trail_net": 0.41017549261083763,
+     "loose_runner_net": 0.4935729679802956,
+     "node": {
+      "strike": 746,
+      "sign": "pika",
+      "strength": 0.10506259599460338,
+      "dist_frac": 0.0006035812487426001,
+      "node_vel_15": 626149.500078706,
+      "gamma_now": 52892720.525997
+     },
+     "king": {
+      "strike": 745,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.30797772177017646
+     },
+     "approach_vel": -0.001192326241894995,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 751.24,
+     "mfe": 0.007567538786132247,
+     "atm_strike": 751,
+     "entry_price": 1.66,
+     "live_trail_net": 0.4907412902842898,
+     "loose_runner_net": 0.8122737254436467,
+     "node": null,
+     "king": {
+      "strike": 753,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.2102643217378037
+     },
+     "approach_vel": null,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0003767048957845066,
+     "median": 0.0002945784773855188,
+     "pos": 0.9970588235294118,
+     "p10": 6.703266501775456e-05,
+     "p90": 0.0007694366385654112
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.000491423942310946,
+     "median": 0.00026755933768134974,
+     "pos": 0.9941176470588236,
+     "p10": 4.6731155661437005e-05,
+     "p90": 0.001118051510708572
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.21414723841076524,
+     "median": 0.2033346439900039,
+     "pos": 1.0,
+     "p10": 0.14681025891440266,
+     "p90": 0.30997947336520254
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-07",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 72,
+    "et": "10:42",
+    "kind": "low",
+    "spot": 705.35,
+    "mfe": 0.011866449280499049,
+    "atm_strike": 705,
+    "entry_price": 2.75,
+    "live_trail_net": 0.2845141065830721,
+    "loose_runner_net": 0.8314912673533368,
+    "node": {
+     "strike": 710,
+     "sign": "pika",
+     "strength": 0.11868333380562325,
+     "dist_frac": 0.006592471822499436,
+     "node_vel_15": 533637.8913752397,
+     "gamma_now": 27737464.438235007
+    },
+    "king": {
+     "strike": 710,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.13601098437227063
+    },
+    "approach_vel": -0.0018608534454089857,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 722.64,
+    "mfe": 0.023932913117782534,
+    "atm_strike": 723,
+    "entry_price": 8.31,
+    "live_trail_net": 0.2635616178501776,
+    "loose_runner_net": 0.19349350595460413,
+    "node": null,
+    "king": {
+     "strike": 724,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.3120868774049493
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 72,
+     "et": "10:42",
+     "kind": "low",
+     "spot": 705.35,
+     "mfe": 0.011866449280499049,
+     "atm_strike": 705,
+     "entry_price": 2.75,
+     "live_trail_net": 0.2845141065830721,
+     "loose_runner_net": 0.8314912673533368,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.11868333380562325,
+      "dist_frac": 0.006592471822499436,
+      "node_vel_15": 533637.8913752397,
+      "gamma_now": 27737464.438235007
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13601098437227063
+     },
+     "approach_vel": -0.0018608534454089857,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 722.64,
+     "mfe": 0.023932913117782534,
+     "atm_strike": 723,
+     "entry_price": 8.31,
+     "live_trail_net": 0.2635616178501776,
+     "loose_runner_net": 0.19349350595460413,
+     "node": null,
+     "king": {
+      "strike": 724,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.3120868774049493
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 9,
+     "et": "09:39",
+     "kind": "low",
+     "spot": 711.8,
+     "mfe": 0.003484149228359314,
+     "atm_strike": 712,
+     "entry_price": 3.54,
+     "live_trail_net": -0.9945172692104312,
+     "loose_runner_net": -0.9945172692104312,
+     "node": {
+      "strike": 724,
+      "sign": "barney",
+      "strength": 0.2083743259378519,
+      "dist_frac": 0.017146790859727767,
+      "node_vel_15": -4401332.938799848,
+      "gamma_now": -7574562.774464022
+     },
+     "king": {
+      "strike": 713,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.07966722099627836
+     },
+     "approach_vel": -0.0022358036978369668,
+     "side": "call"
+    },
+    {
+     "i": 15,
+     "et": "09:45",
+     "kind": "high",
+     "spot": 714.28,
+     "mfe": 0.012495187427811512,
+     "atm_strike": 714,
+     "entry_price": 3.03,
+     "live_trail_net": 0.22026044969028935,
+     "loose_runner_net": 0.6654473329106312,
+     "node": {
+      "strike": 724,
+      "sign": "barney",
+      "strength": 0.2083743259378519,
+      "dist_frac": 0.013615204228063293,
+      "node_vel_15": -2181206.6809480307,
+      "gamma_now": -14468459.009442195
+     },
+     "king": {
+      "strike": 724,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.0951457378771933
+     },
+     "approach_vel": 0.0016688052616449015,
+     "side": "put"
+    },
+    {
+     "i": 104,
+     "et": "11:14",
+     "kind": "high",
+     "spot": 708.46,
+     "mfe": 0.0032605933997685954,
+     "atm_strike": 708,
+     "entry_price": 2.2,
+     "live_trail_net": -0.9823555754590237,
+     "loose_runner_net": -0.9823555754590237,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.11868333380562325,
+      "dist_frac": 0.0021737289331789566,
+      "node_vel_15": 537968.4282101864,
+      "gamma_now": 49723093.10451992
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.17269107165657027
+     },
+     "approach_vel": 0.0012719769348183772,
+     "side": "put"
+    },
+    {
+     "i": 130,
+     "et": "11:40",
+     "kind": "low",
+     "spot": 706.15,
+     "mfe": 0.01072010196133973,
+     "atm_strike": 706,
+     "entry_price": 2.16,
+     "live_trail_net": 0.34783798576902014,
+     "loose_runner_net": 0.99480021893815,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.11868333380562325,
+      "dist_frac": 0.0054520994123062,
+      "node_vel_15": -116044.12009477169,
+      "gamma_now": 51386805.808627486
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1903668041292637
+     },
+     "approach_vel": -0.0011033624262658062,
+     "side": "call"
+    },
+    {
+     "i": 220,
+     "et": "13:10",
+     "kind": "high",
+     "spot": 713.72,
+     "mfe": 0.010003923107100963,
+     "atm_strike": 714,
+     "entry_price": 1.91,
+     "live_trail_net": 2.165372810976711,
+     "loose_runner_net": 1.1644443298171407,
+     "node": {
+      "strike": 715,
+      "sign": "barney",
+      "strength": 0.1256621878018841,
+      "dist_frac": 0.0017934203889480086,
+      "node_vel_15": -870966.8595843111,
+      "gamma_now": -3847561.1898124367
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.21702101421869707
+     },
+     "approach_vel": 0.0007782210287942674,
+     "side": "put"
+    },
+    {
+     "i": 349,
+     "et": "15:19",
+     "kind": "low",
+     "spot": 706.58,
+     "mfe": 0.004224574711993161,
+     "atm_strike": 707,
+     "entry_price": 1.24,
+     "live_trail_net": 0.2913157476561259,
+     "loose_runner_net": -0.029556650246305383,
+     "node": {
+      "strike": 707,
+      "sign": "pika",
+      "strength": 0.10545241699256988,
+      "dist_frac": 0.0005944125222905727,
+      "node_vel_15": -163037.32753873567,
+      "gamma_now": 71870333.20663075
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1703176324254055
+     },
+     "approach_vel": -0.002315664623987038,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 256,
+     "mean": 0.0007685576945066927,
+     "median": 0.0005982948235365435,
+     "pos": 1.0,
+     "p10": 0.00013375007039481232,
+     "p90": 0.0016400712339951762
+    },
+    "node_dist": {
+     "n": 256,
+     "mean": 0.003253388437941212,
+     "median": 0.0014039508503989337,
+     "pos": 1.0,
+     "p10": 0.0001760253476500616,
+     "p90": 0.005402267111309437
+    },
+    "king_share": {
+     "n": 256,
+     "mean": 0.24400464704517952,
+     "median": 0.24928288878333815,
+     "pos": 1.0,
+     "p10": 0.11617794739807188,
+     "p90": 0.3546825999343568
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-08",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 118,
+    "et": "11:28",
+    "kind": "low",
+    "spot": 7423.36,
+    "mfe": 0.008659151651004485,
+    "atm_strike": 7425,
+    "entry_price": 16.2,
+    "live_trail_net": 0.9768290457945634,
+    "loose_runner_net": 2.5235480143526123,
+    "node": {
+     "strike": 7430,
+     "sign": "pika",
+     "strength": 0.1278435195041545,
+     "dist_frac": 0.0008944736615225892,
+     "node_vel_15": 405681.13518867205,
+     "gamma_now": 17539602.593520723
+    },
+    "king": {
+     "strike": 7380,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.1454083050400017
+    },
+    "approach_vel": -0.0011988261998017785,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 7503.85,
+    "mfe": 0.010726493733217041,
+    "atm_strike": 7505,
+    "entry_price": 51.3,
+    "live_trail_net": 0.26365722735958697,
+    "loose_runner_net": -0.07684921115048149,
+    "node": null,
+    "king": {
+     "strike": 7500,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.3217119314759581
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 118,
+     "et": "11:28",
+     "kind": "low",
+     "spot": 7423.36,
+     "mfe": 0.008659151651004485,
+     "atm_strike": 7425,
+     "entry_price": 16.2,
+     "live_trail_net": 0.9768290457945634,
+     "loose_runner_net": 2.5235480143526123,
+     "node": {
+      "strike": 7430,
+      "sign": "pika",
+      "strength": 0.1278435195041545,
+      "dist_frac": 0.0008944736615225892,
+      "node_vel_15": 405681.13518867205,
+      "gamma_now": 17539602.593520723
+     },
+     "king": {
+      "strike": 7380,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1454083050400017
+     },
+     "approach_vel": -0.0011988261998017785,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 7503.85,
+     "mfe": 0.010726493733217041,
+     "atm_strike": 7505,
+     "entry_price": 51.3,
+     "live_trail_net": 0.26365722735958697,
+     "loose_runner_net": -0.07684921115048149,
+     "node": null,
+     "king": {
+      "strike": 7500,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.3217119314759581
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 241,
+     "et": "13:31",
+     "kind": "high",
+     "spot": 7486.23,
+     "mfe": 0.0025112773719214174,
+     "atm_strike": 7485,
+     "entry_price": 9.9,
+     "live_trail_net": 0.4899736279046625,
+     "loose_runner_net": 0.22530725979001853,
+     "node": {
+      "strike": 7475,
+      "sign": "barney",
+      "strength": 0.11160906667242058,
+      "dist_frac": 0.0015000874939722082,
+      "node_vel_15": -119923.03834588653,
+      "gamma_now": -23811615.182434276
+     },
+     "king": {
+      "strike": 7475,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.12626865601553233
+     },
+     "approach_vel": 0.0005653568564554348,
+     "side": "put"
+    },
+    {
+     "i": 267,
+     "et": "13:57",
+     "kind": "low",
+     "spot": 7467.43,
+     "mfe": 0.0027064197454813818,
+     "atm_strike": 7465,
+     "entry_price": 11.8,
+     "live_trail_net": 0.2911831009434749,
+     "loose_runner_net": -0.10357351590548558,
+     "node": {
+      "strike": 7475,
+      "sign": "barney",
+      "strength": 0.11160906667242058,
+      "dist_frac": 0.0010137356493465234,
+      "node_vel_15": 19674.096272754916,
+      "gamma_now": -27669337.652335767
+     },
+     "king": {
+      "strike": 7475,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.12386979638349936
+     },
+     "approach_vel": -0.0008255726825091084,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 298,
+     "mean": 0.0005005713413513011,
+     "median": 0.0004208129106328414,
+     "pos": 0.9966442953020134,
+     "p10": 8.42684230167974e-05,
+     "p90": 0.0010538085929644979
+    },
+    "node_dist": {
+     "n": 220,
+     "mean": 0.001261782124752754,
+     "median": 0.0004782641780464161,
+     "pos": 1.0,
+     "p10": 0.00016050934966959393,
+     "p90": 0.0042216712457280705
+    },
+    "king_share": {
+     "n": 298,
+     "mean": 0.14444397707548093,
+     "median": 0.10858117861580087,
+     "pos": 1.0,
+     "p10": 0.06899958598224476,
+     "p90": 0.2698713559031954
+    }
+   },
+   "fires": [
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 7460.0,
+     "spot": 7457.77,
+     "realiz": -0.1580135440180587,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 7455.0,
+     "spot": 7457.77,
+     "realiz": -0.14143920595533507,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 7450.0,
+     "spot": 7457.77,
+     "realiz": -0.17597765363128484,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 7435.0,
+     "spot": 7457.77,
+     "realiz": -0.17254901960784308,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:52",
+     "type": "call",
+     "strike": 7465.0,
+     "spot": 7463.92,
+     "realiz": 0.3196721311475411,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:52",
+     "type": "call",
+     "strike": 7470.0,
+     "spot": 7463.92,
+     "realiz": 0.29073482428115044,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:52",
+     "type": "call",
+     "strike": 7475.0,
+     "spot": 7463.92,
+     "realiz": 0.21851851851851847,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:52",
+     "type": "call",
+     "strike": 7490.0,
+     "spot": 7463.92,
+     "realiz": 0.02614379084967311,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:02",
+     "type": "put",
+     "strike": 7465.0,
+     "spot": 7463.12,
+     "realiz": -0.8257372654155496,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:02",
+     "type": "put",
+     "strike": 7460.0,
+     "spot": 7463.12,
+     "realiz": -0.8521341463414633,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:02",
+     "type": "put",
+     "strike": 7455.0,
+     "spot": 7463.12,
+     "realiz": -0.8711340206185567,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:02",
+     "type": "put",
+     "strike": 7440.0,
+     "spot": 7463.12,
+     "realiz": -0.9083769633507853,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:24",
+     "type": "call",
+     "strike": 7465.0,
+     "spot": 7464.38,
+     "realiz": 0.45945945945945943,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:24",
+     "type": "call",
+     "strike": 7470.0,
+     "spot": 7464.38,
+     "realiz": 0.4590747330960853,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:24",
+     "type": "call",
+     "strike": 7475.0,
+     "spot": 7464.38,
+     "realiz": 0.4525862068965519,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:24",
+     "type": "call",
+     "strike": 7490.0,
+     "spot": 7464.38,
+     "realiz": 0.2880000000000001,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:18",
+     "type": "put",
+     "strike": 7430.0,
+     "spot": 7434.81,
+     "realiz": -0.9557692307692308,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:18",
+     "type": "put",
+     "strike": 7425.0,
+     "spot": 7434.81,
+     "realiz": -0.9577777777777778,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:18",
+     "type": "put",
+     "strike": 7420.0,
+     "spot": 7434.81,
+     "realiz": -0.9576719576719577,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:36",
+     "type": "call",
+     "strike": 7435.0,
+     "spot": 7436.55,
+     "realiz": 2.2802547770700636,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:36",
+     "type": "call",
+     "strike": 7440.0,
+     "spot": 7436.55,
+     "realiz": 2.589353612167301,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:36",
+     "type": "call",
+     "strike": 7445.0,
+     "spot": 7436.55,
+     "realiz": 2.934883720930232,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:36",
+     "type": "call",
+     "strike": 7460.0,
+     "spot": 7436.55,
+     "realiz": 4.321100917431193,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:42",
+     "type": "put",
+     "strike": 7430.0,
+     "spot": 7432.43,
+     "realiz": -0.9590747330960855,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:42",
+     "type": "put",
+     "strike": 7425.0,
+     "spot": 7432.43,
+     "realiz": -0.9602510460251046,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:42",
+     "type": "put",
+     "strike": 7420.0,
+     "spot": 7432.43,
+     "realiz": -0.9630541871921182,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:42",
+     "type": "put",
+     "strike": 7405.0,
+     "spot": 7432.43,
+     "realiz": -0.9625,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:50",
+     "type": "put",
+     "strike": 7425.0,
+     "spot": 7428.89,
+     "realiz": -0.9624505928853755,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:50",
+     "type": "put",
+     "strike": 7420.0,
+     "spot": 7428.89,
+     "realiz": -0.9647887323943662,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:50",
+     "type": "put",
+     "strike": 7415.0,
+     "spot": 7428.89,
+     "realiz": -0.962857142857143,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:37",
+     "type": "call",
+     "strike": 7455.0,
+     "spot": 7453.11,
+     "realiz": 1.8749999999999993,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:37",
+     "type": "call",
+     "strike": 7460.0,
+     "spot": 7453.11,
+     "realiz": 2.1475409836065578,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:37",
+     "type": "call",
+     "strike": 7465.0,
+     "spot": 7453.11,
+     "realiz": 2.393103448275862,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:37",
+     "type": "call",
+     "strike": 7480.0,
+     "spot": 7453.11,
+     "realiz": 3.3015873015873014,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:39",
+     "type": "put",
+     "strike": 7460.0,
+     "spot": 7458.31,
+     "realiz": -0.8249097472924188,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:39",
+     "type": "put",
+     "strike": 7450.0,
+     "spot": 7458.31,
+     "realiz": -0.851063829787234,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:39",
+     "type": "put",
+     "strike": 7435.0,
+     "spot": 7458.31,
+     "realiz": -0.8689320388349515,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "13:44",
+     "type": "call",
+     "strike": 7475.0,
+     "spot": 7476.64,
+     "realiz": 0.0,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "13:44",
+     "type": "call",
+     "strike": 7480.0,
+     "spot": 7476.64,
+     "realiz": -0.005847953216374352,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "13:44",
+     "type": "call",
+     "strike": 7485.0,
+     "spot": 7476.64,
+     "realiz": -0.03125000000000017,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "13:44",
+     "type": "call",
+     "strike": 7500.0,
+     "spot": 7476.64,
+     "realiz": -0.14130434782608686,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:02",
+     "type": "put",
+     "strike": 7475.0,
+     "spot": 7476.31,
+     "realiz": -0.13989637305699462,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:02",
+     "type": "put",
+     "strike": 7470.0,
+     "spot": 7476.31,
+     "realiz": -0.16556291390728464,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:02",
+     "type": "put",
+     "strike": 7465.0,
+     "spot": 7476.31,
+     "realiz": -0.15517241379310348,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:02",
+     "type": "put",
+     "strike": 7450.0,
+     "spot": 7476.31,
+     "realiz": -0.1584158415841584,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:16",
+     "type": "call",
+     "strike": 7475.0,
+     "spot": 7476.68,
+     "realiz": -0.043478260869565064,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:16",
+     "type": "call",
+     "strike": 7480.0,
+     "spot": 7476.68,
+     "realiz": -0.09022556390977451,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:16",
+     "type": "call",
+     "strike": 7485.0,
+     "spot": 7476.68,
+     "realiz": -0.15053763440860218,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:16",
+     "type": "call",
+     "strike": 7500.0,
+     "spot": 7476.68,
+     "realiz": -0.3061224489795918,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:51",
+     "type": "call",
+     "strike": 7480.0,
+     "spot": 7480.31,
+     "realiz": -0.3093525179856114,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:51",
+     "type": "call",
+     "strike": 7485.0,
+     "spot": 7480.31,
+     "realiz": -0.3461538461538461,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:51",
+     "type": "call",
+     "strike": 7490.0,
+     "spot": 7480.31,
+     "realiz": -0.4102564102564102,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:51",
+     "type": "call",
+     "strike": 7505.0,
+     "spot": 7480.31,
+     "realiz": -0.4347826086956522,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:52",
+     "type": "put",
+     "strike": 7480.0,
+     "spot": 7479.75,
+     "realiz": 0.18750000000000022,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:52",
+     "type": "put",
+     "strike": 7475.0,
+     "spot": 7479.75,
+     "realiz": 0.23000000000000007,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:52",
+     "type": "put",
+     "strike": 7470.0,
+     "spot": 7479.75,
+     "realiz": 0.23188405797101444,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "14:52",
+     "type": "put",
+     "strike": 7455.0,
+     "spot": 7479.75,
+     "realiz": 0.21428571428571416,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "15:49",
+     "type": "put",
+     "strike": 7475.0,
+     "spot": 7474.74,
+     "realiz": -0.9875,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:49",
+     "type": "put",
+     "strike": 7470.0,
+     "spot": 7474.74,
+     "realiz": -0.9733333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:49",
+     "type": "put",
+     "strike": 7465.0,
+     "spot": 7474.74,
+     "realiz": -0.9657142857142856,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:49",
+     "type": "put",
+     "strike": 7450.0,
+     "spot": 7474.74,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-08",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 118,
+    "et": "11:28",
+    "kind": "low",
+    "spot": 739.74,
+    "mfe": 0.008489469272987769,
+    "atm_strike": 740,
+    "entry_price": 1.61,
+    "live_trail_net": 0.9529418963987395,
+    "loose_runner_net": 2.1162683964140374,
+    "node": {
+     "strike": 740,
+     "sign": "pika",
+     "strength": 0.10601101743159748,
+     "dist_frac": 0.0003514748425122217,
+     "node_vel_15": -1508009.1505108546,
+     "gamma_now": 61782150.74098416
+    },
+    "king": {
+     "strike": 742,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.23586363090233575
+    },
+    "approach_vel": -0.0011881936755691117,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 747.73,
+    "mfe": 0.010679059814771491,
+    "atm_strike": 748,
+    "entry_price": 5.27,
+    "live_trail_net": 0.2834895916097253,
+    "loose_runner_net": -0.07190996532094462,
+    "node": null,
+    "king": {
+     "strike": 751,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.13373545042946086
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 118,
+     "et": "11:28",
+     "kind": "low",
+     "spot": 739.74,
+     "mfe": 0.008489469272987769,
+     "atm_strike": 740,
+     "entry_price": 1.61,
+     "live_trail_net": 0.9529418963987395,
+     "loose_runner_net": 2.1162683964140374,
+     "node": {
+      "strike": 740,
+      "sign": "pika",
+      "strength": 0.10601101743159748,
+      "dist_frac": 0.0003514748425122217,
+      "node_vel_15": -1508009.1505108546,
+      "gamma_now": 61782150.74098416
+     },
+     "king": {
+      "strike": 742,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.23586363090233575
+     },
+     "approach_vel": -0.0011881936755691117,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 747.73,
+     "mfe": 0.010679059814771491,
+     "atm_strike": 748,
+     "entry_price": 5.27,
+     "live_trail_net": 0.2834895916097253,
+     "loose_runner_net": -0.07190996532094462,
+     "node": null,
+     "king": {
+      "strike": 751,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13373545042946086
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 241,
+     "et": "13:31",
+     "kind": "high",
+     "spot": 745.91,
+     "mfe": 0.0025069880616424185,
+     "atm_strike": 746,
+     "entry_price": 1.14,
+     "live_trail_net": 0.515253651369804,
+     "loose_runner_net": 0.1577218909342324,
+     "node": {
+      "strike": 745,
+      "sign": "pika",
+      "strength": 0.10780631826541323,
+      "dist_frac": 0.0012266813242795274,
+      "node_vel_15": 2045140.6098605215,
+      "gamma_now": 257317585.95557338
+     },
+     "king": {
+      "strike": 745,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.2446682998852724
+     },
+     "approach_vel": 0.0005633840602552117,
+     "side": "put"
+    },
+    {
+     "i": 268,
+     "et": "13:58",
+     "kind": "low",
+     "spot": 744.04,
+     "mfe": 0.00265440934352092,
+     "atm_strike": 744,
+     "entry_price": 1.27,
+     "live_trail_net": 0.03157363950195902,
+     "loose_runner_net": -0.18238237461696594,
+     "node": {
+      "strike": 744,
+      "sign": "pika",
+      "strength": 0.1553174668489808,
+      "dist_frac": 6.048021289029437e-05,
+      "node_vel_15": 2375070.5883307355,
+      "gamma_now": 90792623.38256288
+     },
+     "king": {
+      "strike": 745,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.24061752241780462
+     },
+     "approach_vel": -0.0010405198571466626,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 298,
+     "mean": 0.0004927653947216307,
+     "median": 0.0003994842987283529,
+     "pos": 1.0,
+     "p10": 6.742679136121817e-05,
+     "p90": 0.0010373933135285273
+    },
+    "node_dist": {
+     "n": 298,
+     "mean": 0.0004350939328492167,
+     "median": 0.00037981009581248654,
+     "pos": 0.9966442953020134,
+     "p10": 6.039903629976589e-05,
+     "p90": 0.0009156029514731292
+    },
+    "king_share": {
+     "n": 298,
+     "mean": 0.2439478961909206,
+     "median": 0.22069128966957124,
+     "pos": 1.0,
+     "p10": 0.15313943770195476,
+     "p90": 0.3635657505440763
+    }
+   },
+   "fires": [
+    {
+     "et": "09:57",
+     "type": "put",
+     "strike": 744.0,
+     "spot": 744.175,
+     "realiz": -0.9749303621169917,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "09:57",
+     "type": "put",
+     "strike": 739.0,
+     "spot": 744.175,
+     "realiz": -0.978494623655914,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "09:57",
+     "type": "put",
+     "strike": 734.0,
+     "spot": 744.175,
+     "realiz": -0.9130434782608696,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "09:57",
+     "type": "put",
+     "strike": 719.0,
+     "spot": 744.175,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:05",
+     "type": "call",
+     "strike": 741.0,
+     "spot": 741.45,
+     "realiz": 1.435158501440922,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:05",
+     "type": "call",
+     "strike": 746.0,
+     "spot": 741.45,
+     "realiz": -0.7804878048780489,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:05",
+     "type": "call",
+     "strike": 751.0,
+     "spot": 741.45,
+     "realiz": -0.7142857142857143,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:05",
+     "type": "call",
+     "strike": 766.0,
+     "spot": 741.45,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:11",
+     "type": "put",
+     "strike": 742.0,
+     "spot": 742.065,
+     "realiz": -0.9894736842105264,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:11",
+     "type": "put",
+     "strike": 737.0,
+     "spot": 742.065,
+     "realiz": -0.9512195121951219,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:11",
+     "type": "put",
+     "strike": 732.0,
+     "spot": 742.065,
+     "realiz": -0.7142857142857143,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:11",
+     "type": "put",
+     "strike": 717.0,
+     "spot": 742.065,
+     "realiz": 0.3333333333333334,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:32",
+     "type": "call",
+     "strike": 746.0,
+     "spot": 745.71,
+     "realiz": -0.9613259668508287,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:32",
+     "type": "call",
+     "strike": 751.0,
+     "spot": 745.71,
+     "realiz": -0.7142857142857143,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:32",
+     "type": "call",
+     "strike": 756.0,
+     "spot": 745.71,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 745.0,
+     "spot": 744.935,
+     "realiz": -0.7488584474885845,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 740.0,
+     "spot": 744.935,
+     "realiz": -0.9130434782608696,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 735.0,
+     "spot": 744.935,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 720.0,
+     "spot": 744.935,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:03",
+     "type": "call",
+     "strike": 745.0,
+     "spot": 745.215,
+     "realiz": -0.6956521739130435,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:03",
+     "type": "call",
+     "strike": 750.0,
+     "spot": 745.215,
+     "realiz": -0.7777777777777777,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:03",
+     "type": "call",
+     "strike": 755.0,
+     "spot": 745.215,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:03",
+     "type": "call",
+     "strike": 770.0,
+     "spot": 745.215,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:16",
+     "type": "put",
+     "strike": 745.0,
+     "spot": 744.9200000000001,
+     "realiz": -0.7889447236180904,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:16",
+     "type": "put",
+     "strike": 740.0,
+     "spot": 744.9200000000001,
+     "realiz": -0.8823529411764707,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:16",
+     "type": "put",
+     "strike": 735.0,
+     "spot": 744.9200000000001,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:16",
+     "type": "put",
+     "strike": 720.0,
+     "spot": 744.9200000000001,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:45",
+     "type": "call",
+     "strike": 745.0,
+     "spot": 744.98,
+     "realiz": -0.5403726708074534,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:45",
+     "type": "call",
+     "strike": 750.0,
+     "spot": 744.98,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:45",
+     "type": "call",
+     "strike": 755.0,
+     "spot": 744.98,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:45",
+     "type": "call",
+     "strike": 770.0,
+     "spot": 744.98,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:46",
+     "type": "put",
+     "strike": 745.0,
+     "spot": 745.065,
+     "realiz": -0.6601307189542484,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:46",
+     "type": "put",
+     "strike": 740.0,
+     "spot": 745.065,
+     "realiz": -0.7777777777777777,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:46",
+     "type": "put",
+     "strike": 735.0,
+     "spot": 745.065,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:46",
+     "type": "put",
+     "strike": 720.0,
+     "spot": 745.065,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:16",
+     "type": "put",
+     "strike": 745.0,
+     "spot": 744.79,
+     "realiz": -0.6778523489932886,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:16",
+     "type": "put",
+     "strike": 740.0,
+     "spot": 744.79,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:16",
+     "type": "put",
+     "strike": 735.0,
+     "spot": 744.79,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:16",
+     "type": "put",
+     "strike": 720.0,
+     "spot": 744.79,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:17",
+     "type": "call",
+     "strike": 745.0,
+     "spot": 744.9,
+     "realiz": -0.42016806722689076,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:17",
+     "type": "call",
+     "strike": 750.0,
+     "spot": 744.9,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:17",
+     "type": "call",
+     "strike": 755.0,
+     "spot": 744.9,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:17",
+     "type": "call",
+     "strike": 770.0,
+     "spot": 744.9,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-08",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 118,
+    "et": "11:28",
+    "kind": "low",
+    "spot": 701.17,
+    "mfe": 0.015445502192747948,
+    "atm_strike": 701,
+    "entry_price": 2.75,
+    "live_trail_net": 1.0538110165696377,
+    "loose_runner_net": 2.698271383788626,
+    "node": {
+     "strike": 709,
+     "sign": "pika",
+     "strength": 0.11346532108669213,
+     "dist_frac": 0.011159838841943945,
+     "node_vel_15": -511385.931541688,
+     "gamma_now": 17155734.31400183
+    },
+    "king": {
+     "strike": 700,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.08526716845104779
+    },
+    "approach_vel": -0.0014170357605709702,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 388,
+    "et": "15:58",
+    "kind": "high",
+    "spot": 712.0,
+    "mfe": 0.0008988700922043895,
+    "atm_strike": 712,
+    "entry_price": 0.49,
+    "live_trail_net": 1.1785462953654373,
+    "loose_runner_net": 1.1785462953654373,
+    "node": {
+     "strike": 712,
+     "sign": "pika",
+     "strength": 0.17473083787388277,
+     "dist_frac": 7.022422595340556e-06,
+     "node_vel_15": 3671068.586984998,
+     "gamma_now": 110655888.82411271
+    },
+    "king": {
+     "strike": 713,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.2763210544229922
+    },
+    "approach_vel": 0.001829169627341961,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 118,
+     "et": "11:28",
+     "kind": "low",
+     "spot": 701.17,
+     "mfe": 0.015445502192747948,
+     "atm_strike": 701,
+     "entry_price": 2.75,
+     "live_trail_net": 1.0538110165696377,
+     "loose_runner_net": 2.698271383788626,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.011159838841943945,
+      "node_vel_15": -511385.931541688,
+      "gamma_now": 17155734.31400183
+     },
+     "king": {
+      "strike": 700,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.08526716845104779
+     },
+     "approach_vel": -0.0014170357605709702,
+     "side": "call"
+    },
+    {
+     "i": 388,
+     "et": "15:58",
+     "kind": "high",
+     "spot": 712.0,
+     "mfe": 0.0008988700922043895,
+     "atm_strike": 712,
+     "entry_price": 0.49,
+     "live_trail_net": 1.1785462953654373,
+     "loose_runner_net": 1.1785462953654373,
+     "node": {
+      "strike": 712,
+      "sign": "pika",
+      "strength": 0.17473083787388277,
+      "dist_frac": 7.022422595340556e-06,
+      "node_vel_15": 3671068.586984998,
+      "gamma_now": 110655888.82411271
+     },
+     "king": {
+      "strike": 713,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2763210544229922
+     },
+     "approach_vel": 0.001829169627341961,
+     "side": "put"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 709.57,
+     "mfe": 0.011824145779456568,
+     "atm_strike": 710,
+     "entry_price": 5.79,
+     "live_trail_net": 0.21347320418251292,
+     "loose_runner_net": -0.12844465997941068,
+     "node": null,
+     "king": {
+      "strike": 699,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.10125322594663363
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 1,
+     "et": "09:31",
+     "kind": "low",
+     "spot": 706.12,
+     "mfe": 0.008327137546468395,
+     "atm_strike": 706,
+     "entry_price": 4.28,
+     "live_trail_net": 0.12235854702822158,
+     "loose_runner_net": 0.12235854702822158,
+     "node": null,
+     "king": {
+      "strike": 699,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.11365183486126464
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 17,
+     "et": "09:47",
+     "kind": "high",
+     "spot": 709.55,
+     "mfe": 0.011796291989937379,
+     "atm_strike": 710,
+     "entry_price": 3.79,
+     "live_trail_net": 0.2981920272430689,
+     "loose_runner_net": 0.3314790023005836,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.0007680978655336486,
+      "node_vel_15": 632001.2236126591,
+      "gamma_now": 18442879.554647885
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.13096531157115213
+     },
+     "approach_vel": 0.0008816227500987417,
+     "side": "put"
+    },
+    {
+     "i": 46,
+     "et": "10:16",
+     "kind": "low",
+     "spot": 706.12,
+     "mfe": 0.008327137546468395,
+     "atm_strike": 706,
+     "entry_price": 3.14,
+     "live_trail_net": 0.2547770700636942,
+     "loose_runner_net": -0.045009569828370455,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.004071517082669499,
+      "node_vel_15": 216107.61799913694,
+      "gamma_now": 25693324.89825782
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13992326362564
+     },
+     "approach_vel": -0.0013223771674256012,
+     "side": "call"
+    },
+    {
+     "i": 52,
+     "et": "10:22",
+     "kind": "high",
+     "spot": 708.94,
+     "mfe": 0.010952972042768216,
+     "atm_strike": 709,
+     "entry_price": 2.9,
+     "live_trail_net": 0.5460166468489893,
+     "loose_runner_net": 0.6296755563105148,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 8.463339633811807e-05,
+      "node_vel_15": 505616.40518522786,
+      "gamma_now": 32928137.480987065
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.16382374649074324
+     },
+     "approach_vel": 0.003780423917198908,
+     "side": "put"
+    },
+    {
+     "i": 81,
+     "et": "10:51",
+     "kind": "low",
+     "spot": 704.24,
+     "mfe": 0.0110260706577303,
+     "atm_strike": 704,
+     "entry_price": 3.19,
+     "live_trail_net": 0.43589110057599956,
+     "loose_runner_net": 1.1629630773507116,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.006759059411564227,
+      "node_vel_15": -923423.0526579574,
+      "gamma_now": 20844960.996777683
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.11075665654562149
+     },
+     "approach_vel": -0.0016019961155138373,
+     "side": "call"
+    },
+    {
+     "i": 84,
+     "et": "10:54",
+     "kind": "high",
+     "spot": 706.43,
+     "mfe": 0.007445837196628127,
+     "atm_strike": 706,
+     "entry_price": 2.64,
+     "live_trail_net": 0.40420211971936104,
+     "loose_runner_net": 0.15791536050156751,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.0036309073021580963,
+      "node_vel_15": -363734.14633216884,
+      "gamma_now": 27222540.5975264
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.11776551974890029
+     },
+     "approach_vel": 0.0023411394964419838,
+     "side": "put"
+    },
+    {
+     "i": 128,
+     "et": "11:38",
+     "kind": "high",
+     "spot": 703.6,
+     "mfe": 0.002828331639650664,
+     "atm_strike": 704,
+     "entry_price": 2.77,
+     "live_trail_net": -0.9929931888104426,
+     "loose_runner_net": -0.9929931888104426,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.007681976136840046,
+      "node_vel_15": 484374.6875720012,
+      "gamma_now": 27196924.814488783
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.11245627034743773
+     },
+     "approach_vel": 0.002293496299778505,
+     "side": "put"
+    },
+    {
+     "i": 143,
+     "et": "11:53",
+     "kind": "low",
+     "spot": 701.61,
+     "mfe": 0.014823155479222607,
+     "atm_strike": 702,
+     "entry_price": 2.2,
+     "live_trail_net": 1.2408419167039857,
+     "loose_runner_net": 3.062628750559785,
+     "node": {
+      "strike": 700,
+      "sign": "pika",
+      "strength": 0.10857065963389138,
+      "dist_frac": 0.002287611975399289,
+      "node_vel_15": 209176.05841893528,
+      "gamma_now": 23358328.947124228
+     },
+     "king": {
+      "strike": 700,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.09489558755833286
+     },
+     "approach_vel": -0.0011531644398253818,
+     "side": "call"
+    },
+    {
+     "i": 241,
+     "et": "13:31",
+     "kind": "high",
+     "spot": 710.92,
+     "mfe": 0.0039385307873544394,
+     "atm_strike": 711,
+     "entry_price": 1.61,
+     "live_trail_net": 0.4466236269620292,
+     "loose_runner_net": 0.21757488602637465,
+     "node": {
+      "strike": 711,
+      "sign": "pika",
+      "strength": 0.11137744023727901,
+      "dist_frac": 0.00010549636037563101,
+      "node_vel_15": 1602780.1912316228,
+      "gamma_now": 56335169.2408766
+     },
+     "king": {
+      "strike": 711,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.13968076884083472
+     },
+     "approach_vel": 0.0006122535151795879,
+     "side": "put"
+    },
+    {
+     "i": 267,
+     "et": "13:57",
+     "kind": "low",
+     "spot": 708.12,
+     "mfe": 0.005479258605472191,
+     "atm_strike": 708,
+     "entry_price": 1.7,
+     "live_trail_net": 0.3186612576064911,
+     "loose_runner_net": 0.758215010141988,
+     "node": {
+      "strike": 709,
+      "sign": "pika",
+      "strength": 0.11346532108669213,
+      "dist_frac": 0.001235657546337158,
+      "node_vel_15": -635977.7096674241,
+      "gamma_now": -3791885.4836409767
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.12382801369305081
+     },
+     "approach_vel": -0.0013256894642946055,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 209,
+     "mean": 0.000692444416713607,
+     "median": 0.0005288431028282529,
+     "pos": 0.9952153110047847,
+     "p10": 8.45624246865136e-05,
+     "p90": 0.0015764358348009056
+    },
+    "node_dist": {
+     "n": 209,
+     "mean": 0.0015595995162872767,
+     "median": 0.0005072994757905609,
+     "pos": 1.0,
+     "p10": 0.00010562264549525821,
+     "p90": 0.005293260861842211
+    },
+    "king_share": {
+     "n": 209,
+     "mean": 0.1455145301383215,
+     "median": 0.13124508987734632,
+     "pos": 1.0,
+     "p10": 0.09190812349739193,
+     "p90": 0.25299747534537764
+    }
+   },
+   "fires": [
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 706.0,
+     "spot": 706.125,
+     "realiz": -0.2907133243606999,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 701.0,
+     "spot": 706.125,
+     "realiz": -0.3425692695214105,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 696.0,
+     "spot": 706.125,
+     "realiz": -0.3811881188118812,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "09:30",
+     "type": "put",
+     "strike": 681.0,
+     "spot": 706.125,
+     "realiz": -0.4444444444444444,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:13",
+     "type": "put",
+     "strike": 707.0,
+     "spot": 706.54,
+     "realiz": 0.8481421647819064,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:13",
+     "type": "put",
+     "strike": 702.0,
+     "spot": 706.54,
+     "realiz": 0.7266187050359716,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:13",
+     "type": "put",
+     "strike": 697.0,
+     "spot": 706.54,
+     "realiz": 0.31932773109243706,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:13",
+     "type": "put",
+     "strike": 682.0,
+     "spot": 706.54,
+     "realiz": -0.5454545454545454,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:15",
+     "type": "call",
+     "strike": 706.0,
+     "spot": 706.06,
+     "realiz": -0.7816666666666666,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:15",
+     "type": "call",
+     "strike": 711.0,
+     "spot": 706.06,
+     "realiz": -0.883248730964467,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:15",
+     "type": "call",
+     "strike": 716.0,
+     "spot": 706.06,
+     "realiz": -0.8048780487804877,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "10:15",
+     "type": "call",
+     "strike": 731.0,
+     "spot": 706.06,
+     "realiz": 0.0,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:24",
+     "type": "put",
+     "strike": 702.0,
+     "spot": 701.71,
+     "realiz": -0.14391143911439103,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:24",
+     "type": "put",
+     "strike": 697.0,
+     "spot": 701.71,
+     "realiz": -0.22885572139303473,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:24",
+     "type": "put",
+     "strike": 692.0,
+     "spot": 701.71,
+     "realiz": -0.3076923076923077,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:24",
+     "type": "put",
+     "strike": 677.0,
+     "spot": 701.71,
+     "realiz": -0.4000000000000001,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "12:40",
+     "type": "put",
+     "strike": 708.0,
+     "spot": 708.105,
+     "realiz": -0.9949494949494949,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:40",
+     "type": "put",
+     "strike": 703.0,
+     "spot": 708.105,
+     "realiz": -0.9826086956521739,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:40",
+     "type": "put",
+     "strike": 698.0,
+     "spot": 708.105,
+     "realiz": -0.9444444444444444,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "12:40",
+     "type": "put",
+     "strike": 683.0,
+     "spot": 708.105,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:10",
+     "type": "put",
+     "strike": 709.0,
+     "spot": 708.775,
+     "realiz": -0.9914040114613181,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:10",
+     "type": "put",
+     "strike": 704.0,
+     "spot": 708.775,
+     "realiz": -0.9506172839506173,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:10",
+     "type": "put",
+     "strike": 699.0,
+     "spot": 708.775,
+     "realiz": -0.9130434782608696,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:10",
+     "type": "put",
+     "strike": 684.0,
+     "spot": 708.775,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 710.0,
+     "spot": 709.615,
+     "realiz": -0.9610778443113773,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 705.0,
+     "spot": 709.615,
+     "realiz": -0.9682539682539683,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 700.0,
+     "spot": 709.615,
+     "realiz": -0.8666666666666668,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "13:41",
+     "type": "put",
+     "strike": 685.0,
+     "spot": 709.615,
+     "realiz": -0.3333333333333333,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:12",
+     "type": "put",
+     "strike": 710.0,
+     "spot": 709.9100000000001,
+     "realiz": -0.9395017793594306,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:12",
+     "type": "put",
+     "strike": 705.0,
+     "spot": 709.9100000000001,
+     "realiz": -0.9574468085106382,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:12",
+     "type": "put",
+     "strike": 700.0,
+     "spot": 709.9100000000001,
+     "realiz": -0.8181818181818181,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:12",
+     "type": "put",
+     "strike": 685.0,
+     "spot": 709.9100000000001,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:43",
+     "type": "put",
+     "strike": 710.0,
+     "spot": 709.625,
+     "realiz": -0.9104477611940299,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:43",
+     "type": "put",
+     "strike": 705.0,
+     "spot": 709.625,
+     "realiz": -0.9354838709677419,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:43",
+     "type": "put",
+     "strike": 700.0,
+     "spot": 709.625,
+     "realiz": -0.6,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "14:43",
+     "type": "put",
+     "strike": 685.0,
+     "spot": 709.625,
+     "realiz": 0.0,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:59",
+     "type": "call",
+     "strike": 711.0,
+     "spot": 711.355,
+     "realiz": null,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:59",
+     "type": "call",
+     "strike": 716.0,
+     "spot": 711.355,
+     "realiz": null,
+     "reason": "closed_eod"
+    },
+    {
+     "et": "15:59",
+     "type": "call",
+     "strike": 721.0,
+     "spot": 711.355,
+     "realiz": null,
+     "reason": "closed_eod"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-09",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 7482.71,
+    "mfe": 0.008566415108964581,
+    "atm_strike": 7485,
+    "entry_price": 22.36,
+    "live_trail_net": 0.27598544198383834,
+    "loose_runner_net": -0.14934303867744103,
+    "node": null,
+    "king": {
+     "strike": 7500,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.10710144521481745
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 258,
+    "et": "13:48",
+    "kind": "high",
+    "spot": 7546.81,
+    "mfe": 0.0016364530178976763,
+    "atm_strike": 7545,
+    "entry_price": 4.7,
+    "live_trail_net": 0.32145477413269075,
+    "loose_runner_net": 0.35242637040142566,
+    "node": {
+     "strike": 7545,
+     "sign": "pika",
+     "strength": 0.11321254111168155,
+     "dist_frac": 0.0002398364342020536,
+     "node_vel_15": -138369.8895240606,
+     "gamma_now": -1012288.3823970875
+    },
+    "king": {
+     "strike": 7550,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.5221514950251346
+    },
+    "approach_vel": 0.00028496976669598707,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 7482.71,
+     "mfe": 0.008566415108964581,
+     "atm_strike": 7485,
+     "entry_price": 22.36,
+     "live_trail_net": 0.27598544198383834,
+     "loose_runner_net": -0.14934303867744103,
+     "node": null,
+     "king": {
+      "strike": 7500,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.10710144521481745
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 258,
+     "et": "13:48",
+     "kind": "high",
+     "spot": 7546.81,
+     "mfe": 0.0016364530178976763,
+     "atm_strike": 7545,
+     "entry_price": 4.7,
+     "live_trail_net": 0.32145477413269075,
+     "loose_runner_net": 0.35242637040142566,
+     "node": {
+      "strike": 7545,
+      "sign": "pika",
+      "strength": 0.11321254111168155,
+      "dist_frac": 0.0002398364342020536,
+      "node_vel_15": -138369.8895240606,
+      "gamma_now": -1012288.3823970875
+     },
+     "king": {
+      "strike": 7550,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.5221514950251346
+     },
+     "approach_vel": 0.00028496976669598707,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.00033178880388169435,
+     "median": 0.0002117470304166492,
+     "pos": 0.9970588235294118,
+     "p10": 4.118320681680383e-05,
+     "p90": 0.0007582422129993541
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.000800395191321328,
+     "median": 0.0007593568457128937,
+     "pos": 1.0,
+     "p10": 0.00010343757542319831,
+     "p90": 0.0015759698454699683
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.3171130151694826,
+     "median": 0.2822579014932216,
+     "pos": 1.0,
+     "p10": 0.1630522331459217,
+     "p90": 0.5075680825173148
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-09",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 745.38,
+    "mfe": 0.00882777125607921,
+    "atm_strike": 745,
+    "entry_price": 2.77,
+    "live_trail_net": 0.30326688125766954,
+    "loose_runner_net": -0.09962476214187888,
+    "node": null,
+    "king": {
+     "strike": 746,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.12031516353633379
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 258,
+    "et": "13:48",
+    "kind": "high",
+    "spot": 751.96,
+    "mfe": 0.0015958401766063733,
+    "atm_strike": 752,
+    "entry_price": 0.61,
+    "live_trail_net": 0.2886214972139225,
+    "loose_runner_net": 0.20907696034886558,
+    "node": {
+     "strike": 752,
+     "sign": "barney",
+     "strength": 0.10908002001268138,
+     "dist_frac": 5.98440066226823e-05,
+     "node_vel_15": 12479791.615185628,
+     "gamma_now": -276805150.43919396
+    },
+    "king": {
+     "strike": 750,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.19120806761107156
+    },
+    "approach_vel": 0.0003192699360795103,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 745.38,
+     "mfe": 0.00882777125607921,
+     "atm_strike": 745,
+     "entry_price": 2.77,
+     "live_trail_net": 0.30326688125766954,
+     "loose_runner_net": -0.09962476214187888,
+     "node": null,
+     "king": {
+      "strike": 746,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.12031516353633379
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 258,
+     "et": "13:48",
+     "kind": "high",
+     "spot": 751.96,
+     "mfe": 0.0015958401766063733,
+     "atm_strike": 752,
+     "entry_price": 0.61,
+     "live_trail_net": 0.2886214972139225,
+     "loose_runner_net": 0.20907696034886558,
+     "node": {
+      "strike": 752,
+      "sign": "barney",
+      "strength": 0.10908002001268138,
+      "dist_frac": 5.98440066226823e-05,
+      "node_vel_15": 12479791.615185628,
+      "gamma_now": -276805150.43919396
+     },
+     "king": {
+      "strike": 750,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.19120806761107156
+     },
+     "approach_vel": 0.0003192699360795103,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0003225083213652316,
+     "median": 0.00019964729234333266,
+     "pos": 0.9911764705882353,
+     "p10": 3.334711680840207e-05,
+     "p90": 0.0007486230682850455
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0004959197049041752,
+     "median": 0.00042609861264864804,
+     "pos": 0.9970588235294118,
+     "p10": 0.000139833132461953,
+     "p90": 0.0010269816076930015
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.2513275067593213,
+     "median": 0.232644231616198,
+     "pos": 1.0,
+     "p10": 0.18858819327916992,
+     "p90": 0.35282681379218905
+    }
+   },
+   "fires": [
+    {
+     "et": "09:52",
+     "type": "call",
+     "strike": 749.0,
+     "spot": 748.8,
+     "realiz": -0.06498194945848366,
+     "reason": "closed_structure_invalidated:pin_forming_$749_13.6%\u219220.6%"
+    },
+    {
+     "et": "12:03",
+     "type": "call",
+     "strike": 750.0,
+     "spot": 750.38,
+     "realiz": 0.17840375586854457,
+     "reason": "closed_structure_invalidated:opposing_pika_$751_hardened_8.5%\u219214.5%"
+    },
+    {
+     "et": "13:10",
+     "type": "call",
+     "strike": 751.0,
+     "spot": 751.12,
+     "realiz": 0.2589928057553958,
+     "reason": "closed_trail_stop"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-09",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 711.37,
+    "mfe": 0.01801466195272477,
+    "atm_strike": 711,
+    "entry_price": 7.31,
+    "live_trail_net": 0.2943669849655983,
+    "loose_runner_net": -0.06407310317872128,
+    "node": null,
+    "king": {
+     "strike": 710,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.1632588865996977
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 258,
+    "et": "13:48",
+    "kind": "high",
+    "spot": 724.18,
+    "mfe": 0.0030172056670994215,
+    "atm_strike": 724,
+    "entry_price": 0.8,
+    "live_trail_net": 0.322229064039409,
+    "loose_runner_net": 0.2858374384236455,
+    "node": {
+     "strike": 724,
+     "sign": "barney",
+     "strength": 0.10870245818569275,
+     "dist_frac": 0.00024855698859408386,
+     "node_vel_15": -1191993.521521606,
+     "gamma_now": -114445048.13827592
+    },
+    "king": {
+     "strike": 725,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.3249056851232315
+    },
+    "approach_vel": 0.0006010404216955684,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 711.37,
+     "mfe": 0.01801466195272477,
+     "atm_strike": 711,
+     "entry_price": 7.31,
+     "live_trail_net": 0.2943669849655983,
+     "loose_runner_net": -0.06407310317872128,
+     "node": null,
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1632588865996977
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 258,
+     "et": "13:48",
+     "kind": "high",
+     "spot": 724.18,
+     "mfe": 0.0030172056670994215,
+     "atm_strike": 724,
+     "entry_price": 0.8,
+     "live_trail_net": 0.322229064039409,
+     "loose_runner_net": 0.2858374384236455,
+     "node": {
+      "strike": 724,
+      "sign": "barney",
+      "strength": 0.10870245818569275,
+      "dist_frac": 0.00024855698859408386,
+      "node_vel_15": -1191993.521521606,
+      "gamma_now": -114445048.13827592
+     },
+     "king": {
+      "strike": 725,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.3249056851232315
+     },
+     "approach_vel": 0.0006010404216955684,
+     "side": "put"
+    },
+    {
+     "i": 45,
+     "et": "10:15",
+     "kind": "high",
+     "spot": 719.73,
+     "mfe": 0.005439577616450835,
+     "atm_strike": 720,
+     "entry_price": 4.06,
+     "live_trail_net": -0.9976097454439564,
+     "loose_runner_net": -0.9976097454439564,
+     "node": {
+      "strike": 724,
+      "sign": "barney",
+      "strength": 0.10870245818569275,
+      "dist_frac": 0.005939768661641568,
+      "node_vel_15": 262242.17207451334,
+      "gamma_now": -11386498.354025912
+     },
+     "king": {
+      "strike": 726,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.11403718134856888
+     },
+     "approach_vel": -0.0016437558086306828,
+     "side": "put"
+    },
+    {
+     "i": 52,
+     "et": "10:22",
+     "kind": "low",
+     "spot": 715.81,
+     "mfe": 0.011693047037621881,
+     "atm_strike": 716,
+     "entry_price": 2.75,
+     "live_trail_net": 0.15747424988804304,
+     "loose_runner_net": 1.5725570980743395,
+     "node": {
+      "strike": 710,
+      "sign": "pika",
+      "strength": 0.1394203670683659,
+      "dist_frac": 0.008116679006998988,
+      "node_vel_15": 539374.6228125928,
+      "gamma_now": 13735100.111238252
+     },
+     "king": {
+      "strike": 710,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1009905335222117
+     },
+     "approach_vel": -0.003001539072239018,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 312,
+     "mean": 0.0004722432744836555,
+     "median": 0.00037708298976658135,
+     "pos": 0.9967948717948718,
+     "p10": 8.979450872050363e-05,
+     "p90": 0.0009666270280044367
+    },
+    "node_dist": {
+     "n": 312,
+     "mean": 0.001962482555557053,
+     "median": 0.0007963991679192773,
+     "pos": 1.0,
+     "p10": 0.00015216699636184431,
+     "p90": 0.005737146984872262
+    },
+    "king_share": {
+     "n": 312,
+     "mean": 0.2256980905755973,
+     "median": 0.2224729402662677,
+     "pos": 1.0,
+     "p10": 0.12540988814727483,
+     "p90": 0.3125873891442422
+    }
+   },
+   "fires": [
+    {
+     "et": "09:32",
+     "type": "call",
+     "strike": 717.0,
+     "spot": 716.87,
+     "realiz": 0.87758346581876,
+     "reason": "closed_structure_invalidated:opposing_pika_$725_hardened_2.8%\u21928.7%"
+    },
+    {
+     "et": "10:21",
+     "type": "call",
+     "strike": 715.0,
+     "spot": 715.25,
+     "realiz": 0.4378029079159934,
+     "reason": "closed_structure_invalidated:opposing_pika_$719_hardened_4.3%\u219210.1%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-10",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 64,
+    "et": "10:34",
+    "kind": "low",
+    "spot": 7522.1,
+    "mfe": 0.00761223594474938,
+    "atm_strike": 7520,
+    "entry_price": 26.0,
+    "live_trail_net": 0.2279840848806367,
+    "loose_runner_net": 0.9782114437286853,
+    "node": {
+     "strike": 7500,
+     "sign": "pika",
+     "strength": 0.12062962906758005,
+     "dist_frac": 0.002938009332500281,
+     "node_vel_15": 1662841.3472161903,
+     "gamma_now": 38346601.37709239
+    },
+    "king": {
+     "strike": 7500,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.2411365981060011
+    },
+    "approach_vel": -0.0038220305762445665,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 381,
+    "et": "15:51",
+    "kind": "high",
+    "spot": 7579.36,
+    "mfe": 0.0005251102995503002,
+    "atm_strike": 7580,
+    "entry_price": 2.15,
+    "live_trail_net": 0.24126474968495826,
+    "loose_runner_net": 0.8957497995188457,
+    "node": {
+     "strike": 7580,
+     "sign": "pika",
+     "strength": 0.13352115497395087,
+     "dist_frac": 8.443984716391983e-05,
+     "node_vel_15": -988418.3858359277,
+     "gamma_now": 91197060.37351488
+    },
+    "king": {
+     "strike": 7575,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.3429673042673916
+    },
+    "approach_vel": 0.00037484227587325524,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 64,
+     "et": "10:34",
+     "kind": "low",
+     "spot": 7522.1,
+     "mfe": 0.00761223594474938,
+     "atm_strike": 7520,
+     "entry_price": 26.0,
+     "live_trail_net": 0.2279840848806367,
+     "loose_runner_net": 0.9782114437286853,
+     "node": {
+      "strike": 7500,
+      "sign": "pika",
+      "strength": 0.12062962906758005,
+      "dist_frac": 0.002938009332500281,
+      "node_vel_15": 1662841.3472161903,
+      "gamma_now": 38346601.37709239
+     },
+     "king": {
+      "strike": 7500,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.2411365981060011
+     },
+     "approach_vel": -0.0038220305762445665,
+     "side": "call"
+    },
+    {
+     "i": 381,
+     "et": "15:51",
+     "kind": "high",
+     "spot": 7579.36,
+     "mfe": 0.0005251102995503002,
+     "atm_strike": 7580,
+     "entry_price": 2.15,
+     "live_trail_net": 0.24126474968495826,
+     "loose_runner_net": 0.8957497995188457,
+     "node": {
+      "strike": 7580,
+      "sign": "pika",
+      "strength": 0.13352115497395087,
+      "dist_frac": 8.443984716391983e-05,
+      "node_vel_15": -988418.3858359277,
+      "gamma_now": 91197060.37351488
+     },
+     "king": {
+      "strike": 7575,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.3429673042673916
+     },
+     "approach_vel": 0.00037484227587325524,
+     "side": "put"
+    },
+    {
+     "i": 63,
+     "et": "10:33",
+     "kind": "high",
+     "spot": 7555.23,
+     "mfe": 0.004385041884892876,
+     "atm_strike": 7555,
+     "entry_price": 28.3,
+     "live_trail_net": -0.9989712614666922,
+     "loose_runner_net": -0.9989712614666922,
+     "node": {
+      "strike": 7550,
+      "sign": "barney",
+      "strength": 0.2643885862058621,
+      "dist_frac": 0.0006922357095680162,
+      "node_vel_15": 2054975.6956213738,
+      "gamma_now": -60883113.8490047
+     },
+     "king": {
+      "strike": 7550,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.29175327601004364
+     },
+     "approach_vel": 0.0005654910104145071,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 319,
+     "mean": 0.00028974027501372655,
+     "median": 0.00019422478546092113,
+     "pos": 0.9937304075235109,
+     "p10": 3.962362836208889e-05,
+     "p90": 0.0006152869023282384
+    },
+    "node_dist": {
+     "n": 319,
+     "mean": 0.0005737746166971825,
+     "median": 0.0005518917180508393,
+     "pos": 1.0,
+     "p10": 0.00011227273027471998,
+     "p90": 0.0009725981055479947
+    },
+    "king_share": {
+     "n": 319,
+     "mean": 0.21283532501354596,
+     "median": 0.1856408811406012,
+     "pos": 1.0,
+     "p10": 0.14620945765920693,
+     "p90": 0.368909792237616
+    }
+   },
+   "fires": [
+    {
+     "et": "10:34",
+     "type": "call",
+     "strike": 7520.0,
+     "spot": 7522.1,
+     "realiz": 0.31528046421663436,
+     "reason": "closed_structure_invalidated:opposing_pika_$7580_hardened_2.2%\u21928.1%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-10",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 64,
+    "et": "10:34",
+    "kind": "low",
+    "spot": 750.3,
+    "mfe": 0.006737349975676167,
+    "atm_strike": 750,
+    "entry_price": 2.17,
+    "live_trail_net": 0.22982452157726296,
+    "loose_runner_net": 1.2762933872102797,
+    "node": {
+     "strike": 751,
+     "sign": "pika",
+     "strength": 0.11396133933454985,
+     "dist_frac": 0.0009396304120378347,
+     "node_vel_15": 108370.90602705131,
+     "gamma_now": 47360254.22353395
+    },
+    "king": {
+     "strike": 753,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.19817454968735765
+    },
+    "approach_vel": -0.002950107306830978,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 381,
+    "et": "15:51",
+    "kind": "high",
+    "spot": 755.35,
+    "mfe": 0.0006354670020520529,
+    "atm_strike": 755,
+    "entry_price": 0.15,
+    "live_trail_net": -0.15894909688013126,
+    "loose_runner_net": -0.15894909688013126,
+    "node": {
+     "strike": 755,
+     "sign": "barney",
+     "strength": 0.12726742184772524,
+     "dist_frac": 0.0004633613556629678,
+     "node_vel_15": -32428750.984880578,
+     "gamma_now": -311506344.27556425
+    },
+    "king": {
+     "strike": 754,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.27713765764076437
+    },
+    "approach_vel": 0.0003708265458832776,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 64,
+     "et": "10:34",
+     "kind": "low",
+     "spot": 750.3,
+     "mfe": 0.006737349975676167,
+     "atm_strike": 750,
+     "entry_price": 2.17,
+     "live_trail_net": 0.22982452157726296,
+     "loose_runner_net": 1.2762933872102797,
+     "node": {
+      "strike": 751,
+      "sign": "pika",
+      "strength": 0.11396133933454985,
+      "dist_frac": 0.0009396304120378347,
+      "node_vel_15": 108370.90602705131,
+      "gamma_now": 47360254.22353395
+     },
+     "king": {
+      "strike": 753,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.19817454968735765
+     },
+     "approach_vel": -0.002950107306830978,
+     "side": "call"
+    },
+    {
+     "i": 381,
+     "et": "15:51",
+     "kind": "high",
+     "spot": 755.35,
+     "mfe": 0.0006354670020520529,
+     "atm_strike": 755,
+     "entry_price": 0.15,
+     "live_trail_net": -0.15894909688013126,
+     "loose_runner_net": -0.15894909688013126,
+     "node": {
+      "strike": 755,
+      "sign": "barney",
+      "strength": 0.12726742184772524,
+      "dist_frac": 0.0004633613556629678,
+      "node_vel_15": -32428750.984880578,
+      "gamma_now": -311506344.27556425
+     },
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.27713765764076437
+     },
+     "approach_vel": 0.0003708265458832776,
+     "side": "put"
+    },
+    {
+     "i": 63,
+     "et": "10:33",
+     "kind": "high",
+     "spot": 753.04,
+     "mfe": 0.00364522468925939,
+     "atm_strike": 753,
+     "entry_price": 2.89,
+     "live_trail_net": -0.9966420645337243,
+     "loose_runner_net": -0.9966420645337243,
+     "node": {
+      "strike": 753,
+      "sign": "pika",
+      "strength": 0.18378296279944176,
+      "dist_frac": 5.3118028258742726e-05,
+      "node_vel_15": -3053616.359431563,
+      "gamma_now": 233806058.7688475
+     },
+     "king": {
+      "strike": 753,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.2413707932119952
+     },
+     "approach_vel": 0.0007508555101497603,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 319,
+     "mean": 0.0002790558777961726,
+     "median": 0.0001922070003114838,
+     "pos": 0.9905956112852664,
+     "p10": 3.316001697789853e-05,
+     "p90": 0.0005842362438919971
+    },
+    "node_dist": {
+     "n": 319,
+     "mean": 0.0002720835331982044,
+     "median": 0.00025238772067328355,
+     "pos": 0.9937304075235109,
+     "p10": 3.9733520522327214e-05,
+     "p90": 0.0005838951112055505
+    },
+    "king_share": {
+     "n": 319,
+     "mean": 0.2972438198040413,
+     "median": 0.2954262860361232,
+     "pos": 1.0,
+     "p10": 0.25298559115754765,
+     "p90": 0.3505879454510376
+    }
+   },
+   "fires": [
+    {
+     "et": "09:50",
+     "type": "call",
+     "strike": 753.0,
+     "spot": 753.01,
+     "realiz": 0.01632653061224491,
+     "reason": "closed_structure_invalidated:opposing_pika_$754_hardened_8.4%\u219214.4%"
+    },
+    {
+     "et": "10:33",
+     "type": "put",
+     "strike": 749.0,
+     "spot": 748.7049999999999,
+     "realiz": -0.8104089219330856,
+     "reason": "closed_structure_invalidated:opposing_pika_$750_hardened_2.7%\u21928.8%"
+    },
+    {
+     "et": "11:25",
+     "type": "call",
+     "strike": 753.0,
+     "spot": 753.16,
+     "realiz": 0.019323671497584554,
+     "reason": "closed_structure_invalidated:pin_forming_$754_19.4%\u219229.1%"
+    },
+    {
+     "et": "13:30",
+     "type": "call",
+     "strike": 754.0,
+     "spot": 754.05,
+     "realiz": 0.8434782608695655,
+     "reason": "closed_structure_invalidated:opposing_pika_$756_hardened_4.5%\u21929.8%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-10",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 96,
+    "et": "11:06",
+    "kind": "low",
+    "spot": 719.86,
+    "mfe": 0.009001812865090912,
+    "atm_strike": 720,
+    "entry_price": 2.0,
+    "live_trail_net": 0.9117733990147785,
+    "loose_runner_net": 0.1014532019704435,
+    "node": {
+     "strike": 720,
+     "sign": "pika",
+     "strength": 0.2080117240154733,
+     "dist_frac": 0.00020142945454290352,
+     "node_vel_15": -337952.6269927084,
+     "gamma_now": 74692321.1479274
+    },
+    "king": {
+     "strike": 720,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.16942183971368863
+    },
+    "approach_vel": -0.0005345440408752512,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 334,
+    "et": "15:04",
+    "kind": "high",
+    "spot": 726.34,
+    "mfe": 0.0011702589025725356,
+    "atm_strike": 726,
+    "entry_price": 0.49,
+    "live_trail_net": 0.28732281089775813,
+    "loose_runner_net": -0.16819141449683328,
+    "node": {
+     "strike": 726,
+     "sign": "barney",
+     "strength": 0.13327290133774916,
+     "dist_frac": 0.0004612196851315665,
+     "node_vel_15": 650763.8222691059,
+     "gamma_now": -12133922.598137408
+    },
+    "king": {
+     "strike": 724,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.14962396640818773
+    },
+    "approach_vel": 0.0010198526726341954,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 96,
+     "et": "11:06",
+     "kind": "low",
+     "spot": 719.86,
+     "mfe": 0.009001812865090912,
+     "atm_strike": 720,
+     "entry_price": 2.0,
+     "live_trail_net": 0.9117733990147785,
+     "loose_runner_net": 0.1014532019704435,
+     "node": {
+      "strike": 720,
+      "sign": "pika",
+      "strength": 0.2080117240154733,
+      "dist_frac": 0.00020142945454290352,
+      "node_vel_15": -337952.6269927084,
+      "gamma_now": 74692321.1479274
+     },
+     "king": {
+      "strike": 720,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.16942183971368863
+     },
+     "approach_vel": -0.0005345440408752512,
+     "side": "call"
+    },
+    {
+     "i": 334,
+     "et": "15:04",
+     "kind": "high",
+     "spot": 726.34,
+     "mfe": 0.0011702589025725356,
+     "atm_strike": 726,
+     "entry_price": 0.49,
+     "live_trail_net": 0.28732281089775813,
+     "loose_runner_net": -0.16819141449683328,
+     "node": {
+      "strike": 726,
+      "sign": "barney",
+      "strength": 0.13327290133774916,
+      "dist_frac": 0.0004612196851315665,
+      "node_vel_15": 650763.8222691059,
+      "gamma_now": -12133922.598137408
+     },
+     "king": {
+      "strike": 724,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.14962396640818773
+     },
+     "approach_vel": 0.0010198526726341954,
+     "side": "put"
+    },
+    {
+     "i": 54,
+     "et": "10:24",
+     "kind": "high",
+     "spot": 723.35,
+     "mfe": 0.004824806973159432,
+     "atm_strike": 723,
+     "entry_price": 2.44,
+     "live_trail_net": 0.45566502463054204,
+     "loose_runner_net": 0.006238391342970218,
+     "node": {
+      "strike": 722,
+      "sign": "pika",
+      "strength": 0.11246488344342905,
+      "dist_frac": 0.0018594170140113324,
+      "node_vel_15": 289367.57933920773,
+      "gamma_now": 38700611.224840984
+     },
+     "king": {
+      "strike": 720,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.22354954413336126
+     },
+     "approach_vel": -8.985222764415001e-05,
+     "side": "put"
+    },
+    {
+     "i": 64,
+     "et": "10:34",
+     "kind": "low",
+     "spot": 719.92,
+     "mfe": 0.008910712301366768,
+     "atm_strike": 720,
+     "entry_price": 3.24,
+     "live_trail_net": 0.7312230128322084,
+     "loose_runner_net": 0.7312230128322084,
+     "node": {
+      "strike": 720,
+      "sign": "pika",
+      "strength": 0.2080117240154733,
+      "dist_frac": 0.00011112345816191692,
+      "node_vel_15": -347807.90134675155,
+      "gamma_now": 63486866.25806924
+     },
+     "king": {
+      "strike": 720,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.19642899597026034
+     },
+     "approach_vel": -0.003012069049086276,
+     "side": "call"
+    },
+    {
+     "i": 75,
+     "et": "10:45",
+     "kind": "high",
+     "spot": 722.02,
+     "mfe": 0.002998531896623312,
+     "atm_strike": 722,
+     "entry_price": 2.03,
+     "live_trail_net": 0.19990778713387858,
+     "loose_runner_net": -0.31638719697153517,
+     "node": {
+      "strike": 722,
+      "sign": "pika",
+      "strength": 0.11246488344342905,
+      "dist_frac": 2.7700063710121342e-05,
+      "node_vel_15": 961821.3632709543,
+      "gamma_now": 54947961.95945491
+     },
+     "king": {
+      "strike": 720,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.19720066519243065
+     },
+     "approach_vel": 0.0009426899936230679,
+     "side": "put"
+    },
+    {
+     "i": 123,
+     "et": "11:33",
+     "kind": "high",
+     "spot": 724.27,
+     "mfe": 0.004887646266956562,
+     "atm_strike": 724,
+     "entry_price": 1.44,
+     "live_trail_net": 1.0419745484400655,
+     "loose_runner_net": 0.5365353037766831,
+     "node": {
+      "strike": 722.5,
+      "sign": "pika",
+      "strength": 0.10372753446325826,
+      "dist_frac": 0.0024507265886575917,
+      "node_vel_15": 732801.7109183694,
+      "gamma_now": 46114330.24434173
+     },
+     "king": {
+      "strike": 722,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.19821596337746203
+     },
+     "approach_vel": 0.00021405291940558568,
+     "side": "put"
+    },
+    {
+     "i": 133,
+     "et": "11:43",
+     "kind": "low",
+     "spot": 720.74,
+     "mfe": 0.007769846059924969,
+     "atm_strike": 721,
+     "entry_price": 1.84,
+     "live_trail_net": 1.0727404155065328,
+     "loose_runner_net": 1.4788498607838938,
+     "node": {
+      "strike": 721,
+      "sign": "pika",
+      "strength": 0.10520185923834835,
+      "dist_frac": 0.0003676802153357147,
+      "node_vel_15": 1402503.2122695195,
+      "gamma_now": 48391950.37949388
+     },
+     "king": {
+      "strike": 722,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.16490084040617325
+     },
+     "approach_vel": -0.003980016997989256,
+     "side": "call"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 246,
+     "mean": 0.00036165260265770934,
+     "median": 0.0002584421702665679,
+     "pos": 0.9959349593495935,
+     "p10": 4.822863127140065e-05,
+     "p90": 0.0007444887154813359
+    },
+    "node_dist": {
+     "n": 246,
+     "mean": 0.000909632010092226,
+     "median": 0.0009439353028390957,
+     "pos": 1.0,
+     "p10": 0.00017220595832615808,
+     "p90": 0.0016547159404302887
+    },
+    "king_share": {
+     "n": 246,
+     "mean": 0.195915046972966,
+     "median": 0.20461199464166446,
+     "pos": 1.0,
+     "p10": 0.1500982159307117,
+     "p90": 0.22687201660792483
+    }
+   },
+   "fires": [
+    {
+     "et": "09:31",
+     "type": "call",
+     "strike": 722.0,
+     "spot": 721.97,
+     "realiz": -0.24701873935264057,
+     "reason": "closed_structure_invalidated:opposing_pika_$722_hardened_3.4%\u219210.6%"
+    },
+    {
+     "et": "10:34",
+     "type": "put",
+     "strike": 720.0,
+     "spot": 719.74,
+     "realiz": -0.7247474747474748,
+     "reason": "closed_structure_invalidated:opposing_pika_$722_hardened_11.8%\u219219.5%"
+    },
+    {
+     "et": "10:35",
+     "type": "call",
+     "strike": 721.0,
+     "spot": 721.3,
+     "realiz": 0.05576208178438641,
+     "reason": "closed_structure_invalidated:opposing_pika_$722.5_hardened_2.7%\u21929.6%"
+    },
+    {
+     "et": "12:05",
+     "type": "call",
+     "strike": 724.0,
+     "spot": 724.24,
+     "realiz": -0.05723905723905722,
+     "reason": "closed_structure_invalidated:pin_forming_$724_11.2%\u219222.3%"
+    },
+    {
+     "et": "13:40",
+     "type": "call",
+     "strike": 726.0,
+     "spot": 726.16,
+     "realiz": -0.5284090909090909,
+     "reason": "closed_structure_invalidated:opposing_pika_$726_hardened_1.5%\u21928.0%"
+    },
+    {
+     "et": "15:10",
+     "type": "call",
+     "strike": 726.0,
+     "spot": 725.715,
+     "realiz": 0.10975609756097557,
+     "reason": "closed_structure_invalidated:opposing_pika_$727.5_hardened_4.2%\u21929.6%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-13",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 369,
+    "et": "15:39",
+    "kind": "low",
+    "spot": 7506.53,
+    "mfe": 0.001885025437852183,
+    "atm_strike": 7505,
+    "entry_price": 6.3,
+    "live_trail_net": 0.2631167409492534,
+    "loose_runner_net": 0.524982406755806,
+    "node": {
+     "strike": 7505,
+     "sign": "pika",
+     "strength": 0.10638342269274599,
+     "dist_frac": 0.0002038225385097702,
+     "node_vel_15": -234769.70385834723,
+     "gamma_now": 43282761.65028226
+    },
+    "king": {
+     "strike": 7515,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.2621597754073726
+    },
+    "approach_vel": -0.0006909203218438,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 7575.39,
+    "mfe": 0.009089961044909976,
+    "atm_strike": 7575,
+    "entry_price": 24.5,
+    "live_trail_net": 0.2801930230220169,
+    "loose_runner_net": -0.07312757615361398,
+    "node": null,
+    "king": {
+     "strike": 7600,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.1865940058315637
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 369,
+     "et": "15:39",
+     "kind": "low",
+     "spot": 7506.53,
+     "mfe": 0.001885025437852183,
+     "atm_strike": 7505,
+     "entry_price": 6.3,
+     "live_trail_net": 0.2631167409492534,
+     "loose_runner_net": 0.524982406755806,
+     "node": {
+      "strike": 7505,
+      "sign": "pika",
+      "strength": 0.10638342269274599,
+      "dist_frac": 0.0002038225385097702,
+      "node_vel_15": -234769.70385834723,
+      "gamma_now": 43282761.65028226
+     },
+     "king": {
+      "strike": 7515,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2621597754073726
+     },
+     "approach_vel": -0.0006909203218438,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 7575.39,
+     "mfe": 0.009089961044909976,
+     "atm_strike": 7575,
+     "entry_price": 24.5,
+     "live_trail_net": 0.2801930230220169,
+     "loose_runner_net": -0.07312757615361398,
+     "node": null,
+     "king": {
+      "strike": 7600,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.1865940058315637
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 22,
+     "et": "09:52",
+     "kind": "low",
+     "spot": 7544.89,
+     "mfe": 0.0025050066998988235,
+     "atm_strike": 7545,
+     "entry_price": 15.8,
+     "live_trail_net": -0.9969289767412858,
+     "loose_runner_net": -0.9969289767412858,
+     "node": {
+      "strike": 7560,
+      "sign": "pika",
+      "strength": 0.11963649890397048,
+      "dist_frac": 0.002002679959548737,
+      "node_vel_15": -66214.14818167166,
+      "gamma_now": 9428350.668281715
+     },
+     "king": {
+      "strike": 7495,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.11485831000456082
+     },
+     "approach_vel": -0.0011716050592156277,
+     "side": "call"
+    },
+    {
+     "i": 31,
+     "et": "10:01",
+     "kind": "high",
+     "spot": 7563.79,
+     "mfe": 0.007570278921017138,
+     "atm_strike": 7565,
+     "entry_price": 14.11,
+     "live_trail_net": 0.7586276720908558,
+     "loose_runner_net": 0.21047505001169586,
+     "node": {
+      "strike": 7560,
+      "sign": "pika",
+      "strength": 0.11963649890397048,
+      "dist_frac": 0.0005010715527533106,
+      "node_vel_15": -3196.9648846135783,
+      "gamma_now": 11806157.639728857
+     },
+     "king": {
+      "strike": 7585,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1221850382537452
+     },
+     "approach_vel": 0.001378190955572188,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 328,
+     "mean": 0.0004485744702407544,
+     "median": 0.0003862072319994348,
+     "pos": 1.0,
+     "p10": 6.911465456622275e-05,
+     "p90": 0.000909229879633282
+    },
+    "node_dist": {
+     "n": 328,
+     "mean": 0.0007430086512758909,
+     "median": 0.0007205046160678294,
+     "pos": 0.9969512195121951,
+     "p10": 0.0001695651713137784,
+     "p90": 0.001427199558576225
+    },
+    "king_share": {
+     "n": 328,
+     "mean": 0.17466182418772166,
+     "median": 0.15735575529295975,
+     "pos": 1.0,
+     "p10": 0.10884847866885944,
+     "p90": 0.2546101902232573
+    }
+   },
+   "fires": [
+    {
+     "et": "10:11",
+     "type": "put",
+     "strike": 7555.0,
+     "spot": 7556.63,
+     "realiz": 1.0926829268292686,
+     "reason": "closed_structure_invalidated:opposing_pika_$7495_hardened_6.5%\u219211.6%"
+    },
+    {
+     "et": "10:25",
+     "type": "put",
+     "strike": 7555.0,
+     "spot": 7553.57,
+     "realiz": 0.39215686274509803,
+     "reason": "closed_trail_stop"
+    },
+    {
+     "et": "10:40",
+     "type": "call",
+     "strike": 7550.0,
+     "spot": 7548.53,
+     "realiz": -0.02512562814070352,
+     "reason": "closed_structure_invalidated:opposing_pika_$7565_hardened_5.1%\u219210.2%"
+    },
+    {
+     "et": "10:58",
+     "type": "put",
+     "strike": 7550.0,
+     "spot": 7549.96,
+     "realiz": 0.31627906976744175,
+     "reason": "closed_trail_stop"
+    },
+    {
+     "et": "11:36",
+     "type": "call",
+     "strike": 7545.0,
+     "spot": 7545.52,
+     "realiz": -0.6835106382978724,
+     "reason": "closed_structure_invalidated:opposing_pika_$7540_hardened_8.8%\u219217.8%"
+    },
+    {
+     "et": "13:52",
+     "type": "put",
+     "strike": 7520.0,
+     "spot": 7519.76,
+     "realiz": -0.509933774834437,
+     "reason": "closed_structure_invalidated:pin_forming_$7515_17.3%\u219226.2%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-13",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 369,
+    "et": "15:39",
+    "kind": "low",
+    "spot": 748.15,
+    "mfe": 0.001871269990844113,
+    "atm_strike": 748,
+    "entry_price": 0.64,
+    "live_trail_net": 0.34952278325123176,
+    "loose_runner_net": 0.4708282019704433,
+    "node": {
+     "strike": 748,
+     "sign": "pika",
+     "strength": 0.10504016753552506,
+     "dist_frac": 0.00020717632041485082,
+     "node_vel_15": 10699420.08569301,
+     "gamma_now": 290158870.5855033
+    },
+    "king": {
+     "strike": 748,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.19973516174092854
+    },
+    "approach_vel": -0.0006812125583538578,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 754.96,
+    "mfe": 0.009013722581328897,
+    "atm_strike": 755,
+    "entry_price": 2.48,
+    "live_trail_net": 0.2326195773081201,
+    "loose_runner_net": -0.10390513268711254,
+    "node": null,
+    "king": {
+     "strike": 754,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.23569362614212477
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 369,
+     "et": "15:39",
+     "kind": "low",
+     "spot": 748.15,
+     "mfe": 0.001871269990844113,
+     "atm_strike": 748,
+     "entry_price": 0.64,
+     "live_trail_net": 0.34952278325123176,
+     "loose_runner_net": 0.4708282019704433,
+     "node": {
+      "strike": 748,
+      "sign": "pika",
+      "strength": 0.10504016753552506,
+      "dist_frac": 0.00020717632041485082,
+      "node_vel_15": 10699420.08569301,
+      "gamma_now": 290158870.5855033
+     },
+     "king": {
+      "strike": 748,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.19973516174092854
+     },
+     "approach_vel": -0.0006812125583538578,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 754.96,
+     "mfe": 0.009013722581328897,
+     "atm_strike": 755,
+     "entry_price": 2.48,
+     "live_trail_net": 0.2326195773081201,
+     "loose_runner_net": -0.10390513268711254,
+     "node": null,
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.23569362614212477
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 46,
+     "et": "10:16",
+     "kind": "high",
+     "spot": 753.14,
+     "mfe": 0.0066189553071142335,
+     "atm_strike": 753,
+     "entry_price": 2.21,
+     "live_trail_net": 0.39199340213539013,
+     "loose_runner_net": 0.7652408443483494,
+     "node": {
+      "strike": 754,
+      "sign": "pika",
+      "strength": 0.27159199617431157,
+      "dist_frac": 0.0011418859707358706,
+      "node_vel_15": 144025.4130383988,
+      "gamma_now": 175923476.62280545
+     },
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2656200724532966
+     },
+     "approach_vel": 7.967281032567473e-05,
+     "side": "put"
+    },
+    {
+     "i": 47,
+     "et": "10:17",
+     "kind": "low",
+     "spot": 751.05,
+     "mfe": 0.002669595899074774,
+     "atm_strike": 751,
+     "entry_price": 1.8,
+     "live_trail_net": -0.994608648056924,
+     "loose_runner_net": -0.994608648056924,
+     "node": {
+      "strike": 751,
+      "sign": "pika",
+      "strength": 0.1059801877024907,
+      "dist_frac": 6.657346381726187e-05,
+      "node_vel_15": 1034238.4542097728,
+      "gamma_now": 65451924.15947595
+     },
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.2652083086738683
+     },
+     "approach_vel": -0.0026823535660695313,
+     "side": "call"
+    },
+    {
+     "i": 60,
+     "et": "10:30",
+     "kind": "high",
+     "spot": 753.06,
+     "mfe": 0.006506828850482488,
+     "atm_strike": 753,
+     "entry_price": 1.13,
+     "live_trail_net": 0.6145429181742887,
+     "loose_runner_net": 0.013383320981734448,
+     "node": {
+      "strike": 754,
+      "sign": "pika",
+      "strength": 0.27159199617431157,
+      "dist_frac": 0.001254888421164372,
+      "node_vel_15": -4954500.743607298,
+      "gamma_now": 106579907.19192861
+     },
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.18003606693533256
+     },
+     "approach_vel": 0.00038524639163627067,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 305,
+     "mean": 0.00041124769267219873,
+     "median": 0.0003524756426031324,
+     "pos": 1.0,
+     "p10": 5.997560991873006e-05,
+     "p90": 0.0008834919854656632
+    },
+    "node_dist": {
+     "n": 305,
+     "mean": 0.0003705135615575899,
+     "median": 0.0003532085329849938,
+     "pos": 0.9967213114754099,
+     "p10": 0.00010001000100016066,
+     "p90": 0.0006337346986425039
+    },
+    "king_share": {
+     "n": 305,
+     "mean": 0.21215416625856337,
+     "median": 0.21046447926852338,
+     "pos": 1.0,
+     "p10": 0.17639135065334435,
+     "p90": 0.24860378886350556
+    }
+   },
+   "fires": [
+    {
+     "et": "09:57",
+     "type": "call",
+     "strike": 753.0,
+     "spot": 752.745,
+     "realiz": 0.2739726027397258,
+     "reason": "closed_trail_stop"
+    },
+    {
+     "et": "10:17",
+     "type": "put",
+     "strike": 752.0,
+     "spot": 751.505,
+     "realiz": -0.18322981366459637,
+     "reason": "closed_structure_invalidated:opposing_pika_$748_hardened_0.5%\u21928.1%"
+    },
+    {
+     "et": "10:31",
+     "type": "call",
+     "strike": 753.0,
+     "spot": 752.975,
+     "realiz": -0.8687782805429864,
+     "reason": "closed_structure_invalidated:pin_forming_$751_7.5%\u219227.0%"
+    },
+    {
+     "et": "15:12",
+     "type": "put",
+     "strike": 749.0,
+     "spot": 749.215,
+     "realiz": 0.4356435643564356,
+     "reason": "closed_structure_invalidated:opposing_pika_$747_hardened_12.5%\u219219.4%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-13",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 369,
+    "et": "15:39",
+    "kind": "low",
+    "spot": 710.22,
+    "mfe": 0.003322937420358643,
+    "atm_strike": 710,
+    "entry_price": 0.81,
+    "live_trail_net": 0.509578544061303,
+    "loose_runner_net": 1.5039834580064464,
+    "node": {
+     "strike": 711,
+     "sign": "barney",
+     "strength": 0.13648170544125726,
+     "dist_frac": 0.0011052990995683958,
+     "node_vel_15": 1130872.762873491,
+     "gamma_now": -50356463.006693274
+    },
+    "king": {
+     "strike": 709,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.12343428166642897
+    },
+    "approach_vel": -0.0012866845724409934,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "high",
+    "spot": 725.6,
+    "mfe": 0.021196397439342877,
+    "atm_strike": 726,
+    "entry_price": 8.34,
+    "live_trail_net": 0.26134363445204434,
+    "loose_runner_net": -0.12031753907219056,
+    "node": null,
+    "king": {
+     "strike": 722,
+     "sign": "barney",
+     "side": "below",
+     "share": 0.2111325149374209
+    },
+    "approach_vel": null,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 369,
+     "et": "15:39",
+     "kind": "low",
+     "spot": 710.22,
+     "mfe": 0.003322937420358643,
+     "atm_strike": 710,
+     "entry_price": 0.81,
+     "live_trail_net": 0.509578544061303,
+     "loose_runner_net": 1.5039834580064464,
+     "node": {
+      "strike": 711,
+      "sign": "barney",
+      "strength": 0.13648170544125726,
+      "dist_frac": 0.0011052990995683958,
+      "node_vel_15": 1130872.762873491,
+      "gamma_now": -50356463.006693274
+     },
+     "king": {
+      "strike": 709,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.12343428166642897
+     },
+     "approach_vel": -0.0012866845724409934,
+     "side": "call"
+    },
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "high",
+     "spot": 725.6,
+     "mfe": 0.021196397439342877,
+     "atm_strike": 726,
+     "entry_price": 8.34,
+     "live_trail_net": 0.26134363445204434,
+     "loose_runner_net": -0.12031753907219056,
+     "node": null,
+     "king": {
+      "strike": 722,
+      "sign": "barney",
+      "side": "below",
+      "share": 0.2111325149374209
+     },
+     "approach_vel": null,
+     "side": "put"
+    },
+    {
+     "i": 22,
+     "et": "09:52",
+     "kind": "low",
+     "spot": 713.23,
+     "mfe": 0.007445055908023338,
+     "atm_strike": 713,
+     "entry_price": 2.83,
+     "live_trail_net": 0.19333669863705216,
+     "loose_runner_net": 0.13504151508294315,
+     "node": {
+      "strike": 722,
+      "sign": "barney",
+      "strength": 0.19753983016070123,
+      "dist_frac": 0.012303270356479339,
+      "node_vel_15": -692070.6422254776,
+      "gamma_now": -16701913.795783382
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.10339925096077685
+     },
+     "approach_vel": -0.0020009655008359976,
+     "side": "call"
+    },
+    {
+     "i": 31,
+     "et": "10:01",
+     "kind": "high",
+     "spot": 716.45,
+     "mfe": 0.008702631027985224,
+     "atm_strike": 716,
+     "entry_price": 2.24,
+     "live_trail_net": 0.4773267065446867,
+     "loose_runner_net": 0.08741643209007721,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.000628096866494585,
+      "node_vel_15": 570385.085145321,
+      "gamma_now": 26129029.885117915
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.09939685487634307
+     },
+     "approach_vel": 0.003417319085166951,
+     "side": "put"
+    },
+    {
+     "i": 36,
+     "et": "10:06",
+     "kind": "low",
+     "spot": 714.43,
+     "mfe": 0.005738800590676581,
+     "atm_strike": 714,
+     "entry_price": 2.49,
+     "live_trail_net": 0.4108453518507529,
+     "loose_runner_net": 0.10685104951827018,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.0021905421766851493,
+      "node_vel_15": 805540.6681215689,
+      "gamma_now": 31116180.34214378
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1283147718244866
+     },
+     "approach_vel": -0.002812478191081164,
+     "side": "call"
+    },
+    {
+     "i": 45,
+     "et": "10:15",
+     "kind": "high",
+     "spot": 716.29,
+     "mfe": 0.008474280488911605,
+     "atm_strike": 716,
+     "entry_price": 1.92,
+     "live_trail_net": 0.39501231527093617,
+     "loose_runner_net": -0.14580767651888327,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.00039788631620106774,
+      "node_vel_15": 599177.4355247731,
+      "gamma_now": 32468896.861907214
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.1223551743138962
+     },
+     "approach_vel": 0.0010411717024905922,
+     "side": "put"
+    },
+    {
+     "i": 47,
+     "et": "10:17",
+     "kind": "low",
+     "spot": 713.07,
+     "mfe": 0.00766404420323395,
+     "atm_strike": 713,
+     "entry_price": 3.02,
+     "live_trail_net": 0.4010374188497048,
+     "loose_runner_net": 0.06363161843865206,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.004108993506948917,
+      "node_vel_15": -227115.00030887674,
+      "gamma_now": 25997398.715624824
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.10946295374099099
+     },
+     "approach_vel": -0.004106087903800302,
+     "side": "call"
+    },
+    {
+     "i": 61,
+     "et": "10:31",
+     "kind": "high",
+     "spot": 717.83,
+     "mfe": 0.01060836131117381,
+     "atm_strike": 718,
+     "entry_price": 1.99,
+     "live_trail_net": 0.38983092803921093,
+     "loose_runner_net": -0.019803450751293528,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.0025493501246812303,
+      "node_vel_15": -116245.95835921243,
+      "gamma_now": 29758451.3501333
+     },
+     "king": {
+      "strike": 722,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.15489634114145281
+     },
+     "approach_vel": 0.0018981953187152288,
+     "side": "put"
+    },
+    {
+     "i": 76,
+     "et": "10:46",
+     "kind": "low",
+     "spot": 715.48,
+     "mfe": 0.0042768789964707996,
+     "atm_strike": 715,
+     "entry_price": 2.56,
+     "live_trail_net": 0.30403325123152714,
+     "loose_runner_net": -0.10537253694581283,
+     "node": {
+      "strike": 716,
+      "sign": "pika",
+      "strength": 0.10469193935403516,
+      "dist_frac": 0.0007337782591984028,
+      "node_vel_15": -331628.87559938605,
+      "gamma_now": 24784018.21614251
+     },
+     "king": {
+      "strike": 714,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.14244181251914687
+     },
+     "approach_vel": -0.001430565247731999,
+     "side": "call"
+    },
+    {
+     "i": 91,
+     "et": "11:01",
+     "kind": "high",
+     "spot": 718.53,
+     "mfe": 0.011579115839868533,
+     "atm_strike": 719,
+     "entry_price": 1.93,
+     "live_trail_net": 0.21682534010566878,
+     "loose_runner_net": 2.6806452436254125,
+     "node": {
+      "strike": 720,
+      "sign": "pika",
+      "strength": 0.11364343378986785,
+      "dist_frac": 0.0020388707578615265,
+      "node_vel_15": 2297997.37978855,
+      "gamma_now": 67362964.74781674
+     },
+     "king": {
+      "strike": 720,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.19902865993184585
+     },
+     "approach_vel": 0.002945179188330968,
+     "side": "put"
+    },
+    {
+     "i": 188,
+     "et": "12:38",
+     "kind": "low",
+     "spot": 712.04,
+     "mfe": 0.0030194932868941224,
+     "atm_strike": 712,
+     "entry_price": 2.0,
+     "live_trail_net": -0.8641379310344828,
+     "loose_runner_net": -0.8641379310344828,
+     "node": {
+      "strike": 713,
+      "sign": "pika",
+      "strength": 0.10252620007634794,
+      "dist_frac": 0.0013482388629852766,
+      "node_vel_15": -460450.79516927054,
+      "gamma_now": 24710144.318664223
+     },
+     "king": {
+      "strike": 716,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.16751399237117184
+     },
+     "approach_vel": -0.0018014229138192013,
+     "side": "call"
+    },
+    {
+     "i": 220,
+     "et": "13:10",
+     "kind": "high",
+     "spot": 714.19,
+     "mfe": 0.005565745809938563,
+     "atm_strike": 714,
+     "entry_price": 1.22,
+     "live_trail_net": 0.3602115803924737,
+     "loose_runner_net": 0.1056690624242913,
+     "node": {
+      "strike": 714,
+      "sign": "pika",
+      "strength": 0.1248756450210034,
+      "dist_frac": 0.0002660356487770125,
+      "node_vel_15": 1224949.2280642032,
+      "gamma_now": 91308444.83495465
+     },
+     "king": {
+      "strike": 714,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.18268489914281366
+     },
+     "approach_vel": 0.0011494736251875604,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 226,
+     "mean": 0.0005899053275783335,
+     "median": 0.0005045417716503362,
+     "pos": 0.9867256637168141,
+     "p10": 0.00011918616879570982,
+     "p90": 0.001187358128164865
+    },
+    "node_dist": {
+     "n": 226,
+     "mean": 0.00066996033670484,
+     "median": 0.0004933445127923964,
+     "pos": 0.995575221238938,
+     "p10": 9.818635770683845e-05,
+     "p90": 0.0016035696855608691
+    },
+    "king_share": {
+     "n": 226,
+     "mean": 0.19857905396636255,
+     "median": 0.1852203693859423,
+     "pos": 1.0,
+     "p10": 0.1350869477425834,
+     "p90": 0.28243384446503444
+    }
+   },
+   "fires": [
+    {
+     "et": "10:37",
+     "type": "put",
+     "strike": 717.0,
+     "spot": 716.9100000000001,
+     "realiz": -0.3710526315789474,
+     "reason": "closed_structure_invalidated:pin_forming_$720_13.8%\u219221.0%"
+    },
+    {
+     "et": "11:03",
+     "type": "call",
+     "strike": 718.0,
+     "spot": 718.25,
+     "realiz": -0.8985507246376812,
+     "reason": "closed_structure_invalidated:opposing_pika_$716_hardened_7.0%\u219215.4%"
+    },
+    {
+     "et": "13:11",
+     "type": "call",
+     "strike": 714.0,
+     "spot": 713.965,
+     "realiz": -0.9407114624505929,
+     "reason": "closed_structure_invalidated:opposing_pika_$713_hardened_0.5%\u219210.6%"
+    },
+    {
+     "et": "13:48",
+     "type": "put",
+     "strike": 713.0,
+     "spot": 712.59,
+     "realiz": 0.19245283018867915,
+     "reason": "closed_structure_invalidated:opposing_pika_$709_hardened_4.0%\u219211.1%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-14",
+   "ticker": "SPXW",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 7515.34,
+    "mfe": 0.005424904262481741,
+    "atm_strike": 7515,
+    "entry_price": 30.0,
+    "live_trail_net": -0.0758144499178981,
+    "loose_runner_net": -0.0758144499178981,
+    "node": null,
+    "king": {
+     "strike": 7500,
+     "sign": "pika",
+     "side": "below",
+     "share": 0.15012854151510457
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 99,
+    "et": "11:09",
+    "kind": "high",
+    "spot": 7556.11,
+    "mfe": 0.0037241384786615623,
+    "atm_strike": 7555,
+    "entry_price": 11.1,
+    "live_trail_net": 0.5649491856388409,
+    "loose_runner_net": 0.4469222917498783,
+    "node": {
+     "strike": 7560,
+     "sign": "barney",
+     "strength": 0.10974529526879809,
+     "dist_frac": 0.0005148151628285358,
+     "node_vel_15": 914512.0772120259,
+     "gamma_now": -25594338.474961974
+    },
+    "king": {
+     "strike": 7560,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.13146524759874398
+    },
+    "approach_vel": 0.00202497334514451,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 7515.34,
+     "mfe": 0.005424904262481741,
+     "atm_strike": 7515,
+     "entry_price": 30.0,
+     "live_trail_net": -0.0758144499178981,
+     "loose_runner_net": -0.0758144499178981,
+     "node": null,
+     "king": {
+      "strike": 7500,
+      "sign": "pika",
+      "side": "below",
+      "share": 0.15012854151510457
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 99,
+     "et": "11:09",
+     "kind": "high",
+     "spot": 7556.11,
+     "mfe": 0.0037241384786615623,
+     "atm_strike": 7555,
+     "entry_price": 11.1,
+     "live_trail_net": 0.5649491856388409,
+     "loose_runner_net": 0.4469222917498783,
+     "node": {
+      "strike": 7560,
+      "sign": "barney",
+      "strength": 0.10974529526879809,
+      "dist_frac": 0.0005148151628285358,
+      "node_vel_15": 914512.0772120259,
+      "gamma_now": -25594338.474961974
+     },
+     "king": {
+      "strike": 7560,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.13146524759874398
+     },
+     "approach_vel": 0.00202497334514451,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.00030414112579021344,
+     "median": 0.00022085768439376147,
+     "pos": 0.9088235294117647,
+     "p10": 7.951232441081391e-06,
+     "p90": 0.0007163722169402637
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0006902120430465849,
+     "median": 0.00029612471783022087,
+     "pos": 1.0,
+     "p10": 6.493945389892263e-05,
+     "p90": 0.002057203530426704
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.1833598149030817,
+     "median": 0.15256853212709123,
+     "pos": 1.0,
+     "p10": 0.09792818556657151,
+     "p90": 0.2977123757859984
+    }
+   },
+   "fires": [
+    {
+     "et": "09:30",
+     "type": "call",
+     "strike": 7530.0,
+     "spot": 7530.18,
+     "realiz": 0.029850746268656785,
+     "reason": "closed_state_clear"
+    },
+    {
+     "et": "11:51",
+     "type": "call",
+     "strike": 7540.0,
+     "spot": 7537.79,
+     "realiz": 0.3262032085561496,
+     "reason": "closed_structure_invalidated:opposing_pika_$7555_hardened_1.1%\u21928.3%"
+    }
+   ]
+  },
+  {
+   "date": "2026-07-14",
+   "ticker": "SPY",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 749.11,
+    "mfe": 0.005126082951769475,
+    "atm_strike": 749,
+    "entry_price": 2.84,
+    "live_trail_net": -0.04322486644001933,
+    "loose_runner_net": -0.04322486644001933,
+    "node": null,
+    "king": {
+     "strike": 755,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.1111923070272139
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 99,
+    "et": "11:09",
+    "kind": "high",
+    "spot": 752.95,
+    "mfe": 0.003765190251676786,
+    "atm_strike": 753,
+    "entry_price": 1.22,
+    "live_trail_net": 0.5431640151821044,
+    "loose_runner_net": 0.4397561172575306,
+    "node": {
+     "strike": 753,
+     "sign": "pika",
+     "strength": 0.10831401690488082,
+     "dist_frac": 6.640547181081681e-05,
+     "node_vel_15": -2191496.4593305723,
+     "gamma_now": 59939618.50059331
+    },
+    "king": {
+     "strike": 754,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.19607460267979474
+    },
+    "approach_vel": 0.002069484092920586,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 749.11,
+     "mfe": 0.005126082951769475,
+     "atm_strike": 749,
+     "entry_price": 2.84,
+     "live_trail_net": -0.04322486644001933,
+     "loose_runner_net": -0.04322486644001933,
+     "node": null,
+     "king": {
+      "strike": 755,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1111923070272139
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 99,
+     "et": "11:09",
+     "kind": "high",
+     "spot": 752.95,
+     "mfe": 0.003765190251676786,
+     "atm_strike": 753,
+     "entry_price": 1.22,
+     "live_trail_net": 0.5431640151821044,
+     "loose_runner_net": 0.4397561172575306,
+     "node": {
+      "strike": 753,
+      "sign": "pika",
+      "strength": 0.10831401690488082,
+      "dist_frac": 6.640547181081681e-05,
+      "node_vel_15": -2191496.4593305723,
+      "gamma_now": 59939618.50059331
+     },
+     "king": {
+      "strike": 754,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.19607460267979474
+     },
+     "approach_vel": 0.002069484092920586,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.00037206020644327416,
+     "median": 0.0002858006309851758,
+     "pos": 0.9941176470588236,
+     "p10": 4.6591499048159854e-05,
+     "p90": 0.0008398600233294391
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0005318047296620329,
+     "median": 0.0004585662162970808,
+     "pos": 1.0,
+     "p10": 7.314364747430154e-05,
+     "p90": 0.0012115725146120547
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.24083589066020525,
+     "median": 0.24236753756094218,
+     "pos": 1.0,
+     "p10": 0.14031432546902842,
+     "p90": 0.3374172572830749
+    }
+   },
+   "fires": []
+  },
+  {
+   "date": "2026-07-14",
+   "ticker": "QQQ",
+   "true_low": {
+    "i": 0,
+    "et": "09:30",
+    "kind": "low",
+    "spot": 711.74,
+    "mfe": 0.014471576699356442,
+    "atm_strike": 712,
+    "entry_price": 8.02,
+    "live_trail_net": -0.0840079603945798,
+    "loose_runner_net": -0.0840079603945798,
+    "node": null,
+    "king": {
+     "strike": 716,
+     "sign": "barney",
+     "side": "above",
+     "share": 0.15929302422667987
+    },
+    "approach_vel": null,
+    "side": "call"
+   },
+   "true_high": {
+    "i": 120,
+    "et": "11:30",
+    "kind": "high",
+    "spot": 722.04,
+    "mfe": 0.005539859287574096,
+    "atm_strike": 722,
+    "entry_price": 1.53,
+    "live_trail_net": 0.3954087382079272,
+    "loose_runner_net": 0.509578544061303,
+    "node": {
+     "strike": 722,
+     "sign": "pika",
+     "strength": 0.12356648224681817,
+     "dist_frac": 5.539859287569057e-05,
+     "node_vel_15": 377593.61853402184,
+     "gamma_now": 20324265.82708328
+    },
+    "king": {
+     "strike": 723,
+     "sign": "pika",
+     "side": "above",
+     "share": 0.1517590910866508
+    },
+    "approach_vel": 0.00040180117769305664,
+    "side": "put"
+   },
+   "extremes": [
+    {
+     "i": 0,
+     "et": "09:30",
+     "kind": "low",
+     "spot": 711.74,
+     "mfe": 0.014471576699356442,
+     "atm_strike": 712,
+     "entry_price": 8.02,
+     "live_trail_net": -0.0840079603945798,
+     "loose_runner_net": -0.0840079603945798,
+     "node": null,
+     "king": {
+      "strike": 716,
+      "sign": "barney",
+      "side": "above",
+      "share": 0.15929302422667987
+     },
+     "approach_vel": null,
+     "side": "call"
+    },
+    {
+     "i": 120,
+     "et": "11:30",
+     "kind": "high",
+     "spot": 722.04,
+     "mfe": 0.005539859287574096,
+     "atm_strike": 722,
+     "entry_price": 1.53,
+     "live_trail_net": 0.3954087382079272,
+     "loose_runner_net": 0.509578544061303,
+     "node": {
+      "strike": 722,
+      "sign": "pika",
+      "strength": 0.12356648224681817,
+      "dist_frac": 5.539859287569057e-05,
+      "node_vel_15": 377593.61853402184,
+      "gamma_now": 20324265.82708328
+     },
+     "king": {
+      "strike": 723,
+      "sign": "pika",
+      "side": "above",
+      "share": 0.1517590910866508
+     },
+     "approach_vel": 0.00040180117769305664,
+     "side": "put"
+    }
+   ],
+   "control": {
+    "approach_speed": {
+     "n": 340,
+     "mean": 0.0006676712924689584,
+     "median": 0.0004682412676595582,
+     "pos": 0.9970588235294118,
+     "p10": 6.947918403655747e-05,
+     "p90": 0.0016263892074481296
+    },
+    "node_dist": {
+     "n": 340,
+     "mean": 0.0005199688328801127,
+     "median": 0.00048520135856383546,
+     "pos": 1.0,
+     "p10": 0.00011790571704020083,
+     "p90": 0.0010045764036165131
+    },
+    "king_share": {
+     "n": 340,
+     "mean": 0.21897315971328463,
+     "median": 0.20824360757118704,
+     "pos": 1.0,
+     "p10": 0.12333788745993333,
+     "p90": 0.3221977821735081
+    }
+   },
+   "fires": [
+    {
+     "et": "09:45",
+     "type": "call",
+     "strike": 720.0,
+     "spot": 719.905,
+     "realiz": -0.6298568507157465,
+     "reason": "closed_structure_invalidated:opposing_pika_$720_hardened_2.4%\u219210.6%"
+    },
+    {
+     "et": "11:51",
+     "type": "call",
+     "strike": 720.0,
+     "spot": 719.89,
+     "realiz": -0.35987261146496824,
+     "reason": "closed_structure_invalidated:opposing_pika_$720_hardened_11.4%\u219217.6%"
+    },
+    {
+     "et": "15:11",
+     "type": "call",
+     "strike": 720.0,
+     "spot": 719.99,
+     "realiz": 0.5984251968503939,
+     "reason": "closed_structure_invalidated:pin_forming_$722_18.2%\u219228.7%"
+    }
+   ]
+  }
+ ],
+ "terrain_cmp": {
+  "turn_approach_speed": {
+   "n": 112,
+   "mean": 0.001634313682617871,
+   "median": 0.0013045308699332972,
+   "pos": 1.0,
+   "p10": 0.00037312686979873563,
+   "p90": 0.0032422354287907893
+  },
+  "ctrl_approach_speed": {
+   "n": 9170,
+   "mean": 0.00044866753611884477,
+   "median": 0.00031966729663674424,
+   "pos": 0.9920392584514722,
+   "p10": 5.607581450131401e-05,
+   "p90": 0.0009818951378800355
+  },
+  "turn_node_dist": {
+   "n": 112,
+   "mean": 0.002464133680875031,
+   "median": 0.001056007505839465,
+   "pos": 1.0,
+   "p10": 8.463339633811807e-05,
+   "p90": 0.007681976136840046
+  },
+  "ctrl_node_dist": {
+   "n": 9092,
+   "mean": 0.0008954043947605925,
+   "median": 0.00047835086439601505,
+   "pos": 0.9978002639683238,
+   "p10": 9.334204525747247e-05,
+   "p90": 0.0018885095785902987
+  },
+  "turn_king_share": {
+   "n": 137,
+   "mean": 0.18065252900288606,
+   "median": 0.16223665103598475,
+   "pos": 1.0,
+   "p10": 0.10125322594663363,
+   "p90": 0.279633459193013
+  },
+  "ctrl_king_share": {
+   "n": 9170,
+   "mean": 0.21987951557399865,
+   "median": 0.202102935968083,
+   "pos": 1.0,
+   "p10": 0.12073071273821669,
+   "p90": 0.33753850687798076
+  }
+ },
+ "cells": {
+  "A15_G25": {
+   "A": 0.15,
+   "G": 0.25,
+   "call": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.04303164844514884,
+    "median": -0.1953691550400447,
+    "abort_rate": 0.8222222222222222,
+    "avg_abort_cost": -0.19023187091022167,
+    "median_abort_cost": -0.20221391065418204,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 13,
+    "sweep_aborts": 135,
+    "winner_rate": 0.17777777777777778,
+    "avg_winner": 0.637769380455813,
+    "median_winner": 0.4181348231016059,
+    "best_winner": 1.978677757140165,
+    "total_pnl_per_day": -0.7745696720126791,
+    "boot": {
+     "lo": -0.14212379609147416,
+     "hi": 0.07473987835972103,
+     "med": -0.04962753811306833,
+     "p_pos": 0.24966666666666668
+    },
+    "hit": 0.21666666666666667
+   },
+   "put": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": 0.0013629664125538478,
+    "median": -0.18546824685987234,
+    "abort_rate": 0.6944444444444444,
+    "avg_abort_cost": -0.19937745882539437,
+    "median_abort_cost": -0.20600089565606805,
+    "worst_abort": -0.3506592292089249,
+    "struct_aborts": 19,
+    "sweep_aborts": 106,
+    "winner_rate": 0.3055555555555556,
+    "avg_winner": 0.45759120558970884,
+    "median_winner": 0.2856829092278248,
+    "best_winner": 4.1232903101521865,
+    "total_pnl_per_day": 0.024533395425969263,
+    "boot": {
+     "lo": -0.08345130783668436,
+     "hi": 0.0891425666221216,
+     "med": -0.002704741267437959,
+     "p_pos": 0.481
+    },
+    "hit": 0.3111111111111111
+   },
+   "all": {
+    "n_total": 360,
+    "n_priced": 360,
+    "n_noprice": 0,
+    "expectancy": -0.020834341016297494,
+    "median": -0.19033895597587447,
+    "abort_rate": 0.7583333333333333,
+    "avg_abort_cost": -0.19441941116442163,
+    "median_abort_cost": -0.20423645320197037,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 32,
+    "sweep_aborts": 241,
+    "winner_rate": 0.24166666666666667,
+    "avg_winner": 0.5238636377243678,
+    "median_winner": 0.3021138616948307,
+    "best_winner": 4.1232903101521865,
+    "total_pnl_per_day": -0.7500362765867099,
+    "boot": {
+     "lo": -0.07905555053998488,
+     "hi": 0.04595387980567234,
+     "med": -0.023677972875901915,
+     "p_pos": 0.279
+    },
+    "hit": 0.2638888888888889
+   }
+  },
+  "A15_G40": {
+   "A": 0.15,
+   "G": 0.4,
+   "call": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.05110430066658963,
+    "median": -0.1953691550400447,
+    "abort_rate": 0.8222222222222222,
+    "avg_abort_cost": -0.19023187091022167,
+    "median_abort_cost": -0.20221391065418204,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 13,
+    "sweep_aborts": 135,
+    "winner_rate": 0.17777777777777778,
+    "avg_winner": 0.5923607117102085,
+    "median_winner": 0.3305208268379374,
+    "best_winner": 2.194733859366145,
+    "total_pnl_per_day": -0.9198774119986133,
+    "boot": {
+     "lo": -0.161761600822137,
+     "hi": 0.10829307756071604,
+     "med": -0.057389341099957074,
+     "p_pos": 0.25766666666666665
+    },
+    "hit": 0.17222222222222222
+   },
+   "put": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": 0.009443722954814283,
+    "median": -0.18739006703240235,
+    "abort_rate": 0.7277777777777777,
+    "avg_abort_cost": -0.20087881606442137,
+    "median_abort_cost": -0.20694952063138927,
+    "worst_abort": -0.3506592292089249,
+    "struct_aborts": 19,
+    "sweep_aborts": 112,
+    "winner_rate": 0.2722222222222222,
+    "avg_winner": 0.5717345925776688,
+    "median_winner": 0.17474721285973582,
+    "best_winner": 7.321958334480007,
+    "total_pnl_per_day": 0.16998701318665707,
+    "boot": {
+     "lo": -0.13104703085613922,
+     "hi": 0.22574052144400358,
+     "med": 0.0010727626894092648,
+     "p_pos": 0.5046666666666667
+    },
+    "hit": 0.23333333333333334
+   },
+   "all": {
+    "n_total": 360,
+    "n_priced": 360,
+    "n_noprice": 0,
+    "expectancy": -0.020830288855887672,
+    "median": -0.19129720853858778,
+    "abort_rate": 0.775,
+    "avg_abort_cost": -0.19523097419050897,
+    "median_abort_cost": -0.20423645320197037,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 32,
+    "sweep_aborts": 247,
+    "winner_rate": 0.225,
+    "avg_winner": 0.5798831828522524,
+    "median_winner": 0.2710231483499721,
+    "best_winner": 7.321958334480007,
+    "total_pnl_per_day": -0.7498903988119563,
+    "boot": {
+     "lo": -0.11495029565289977,
+     "hi": 0.0857613790284202,
+     "med": -0.026132873115115147,
+     "p_pos": 0.339
+    },
+    "hit": 0.20277777777777778
+   }
+  },
+  "A25_G25": {
+   "A": 0.25,
+   "G": 0.25,
+   "call": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.027007204261534676,
+    "median": -0.28541832786259713,
+    "abort_rate": 0.7222222222222222,
+    "avg_abort_cost": -0.2651457432227953,
+    "median_abort_cost": -0.29898311253248966,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 24,
+    "sweep_aborts": 106,
+    "winner_rate": 0.2777777777777778,
+    "avg_winner": 0.592152997037743,
+    "median_winner": 0.38609584859584867,
+    "best_winner": 1.978677757140165,
+    "total_pnl_per_day": -0.4861296767076241,
+    "boot": {
+     "lo": -0.14093818712482997,
+     "hi": 0.10519614242875645,
+     "med": -0.030431516728020545,
+     "p_pos": 0.3436666666666667
+    },
+    "hit": 0.32222222222222224
+   },
+   "put": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.03381435770888338,
+    "median": -0.2765122932160854,
+    "abort_rate": 0.6722222222222223,
+    "avg_abort_cost": -0.26688713291848004,
+    "median_abort_cost": -0.3029964891271807,
+    "worst_abort": -0.42297962987618154,
+    "struct_aborts": 29,
+    "sweep_aborts": 92,
+    "winner_rate": 0.3277777777777778,
+    "avg_winner": 0.4441823507718149,
+    "median_winner": 0.27271258984091085,
+    "best_winner": 4.1232903101521865,
+    "total_pnl_per_day": -0.6086584387599008,
+    "boot": {
+     "lo": -0.13229672651731084,
+     "hi": 0.06925376273456828,
+     "med": -0.03936675031134658,
+     "p_pos": 0.275
+    },
+    "hit": 0.3333333333333333
+   },
+   "all": {
+    "n_total": 360,
+    "n_priced": 360,
+    "n_noprice": 0,
+    "expectancy": -0.030410780985209027,
+    "median": -0.28105295630029076,
+    "abort_rate": 0.6972222222222222,
+    "avg_abort_cost": -0.2659852179366513,
+    "median_abort_cost": -0.3003780501775689,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 53,
+    "sweep_aborts": 198,
+    "winner_rate": 0.30277777777777776,
+    "avg_winner": 0.5120587940130663,
+    "median_winner": 0.30181424966959036,
+    "best_winner": 4.1232903101521865,
+    "total_pnl_per_day": -1.094788115467525,
+    "boot": {
+     "lo": -0.08263358437019383,
+     "hi": 0.02730077800896982,
+     "med": -0.03127772296862272,
+     "p_pos": 0.172
+    },
+    "hit": 0.3277777777777778
+   }
+  },
+  "A25_G40": {
+   "A": 0.25,
+   "G": 0.4,
+   "call": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.05563949404237248,
+    "median": -0.28541832786259713,
+    "abort_rate": 0.7222222222222222,
+    "avg_abort_cost": -0.2651457432227953,
+    "median_abort_cost": -0.29898311253248966,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 24,
+    "sweep_aborts": 106,
+    "winner_rate": 0.2777777777777778,
+    "avg_winner": 0.489076753826727,
+    "median_winner": 0.316184731898394,
+    "best_winner": 2.194733859366145,
+    "total_pnl_per_day": -1.0015108927627048,
+    "boot": {
+     "lo": -0.17860537330149912,
+     "hi": 0.09020613542917641,
+     "med": -0.06556368983437615,
+     "p_pos": 0.23233333333333334
+    },
+    "hit": 0.24444444444444444
+   },
+   "put": {
+    "n_total": 180,
+    "n_priced": 180,
+    "n_noprice": 0,
+    "expectancy": -0.027400070799908492,
+    "median": -0.2768348067919425,
+    "abort_rate": 0.6777777777777778,
+    "avg_abort_cost": -0.26726513162549553,
+    "median_abort_cost": -0.30313396516482816,
+    "worst_abort": -0.42297962987618154,
+    "struct_aborts": 29,
+    "sweep_aborts": 93,
+    "winner_rate": 0.32222222222222224,
+    "avg_winner": 0.4771436778332228,
+    "median_winner": 0.15280526052023213,
+    "best_winner": 7.321958334480007,
+    "total_pnl_per_day": -0.4932012743983528,
+    "boot": {
+     "lo": -0.1821936817436433,
+     "hi": 0.18624026137924807,
+     "med": -0.042011818529235856,
+     "p_pos": 0.35133333333333333
+    },
+    "hit": 0.25
+   },
+   "all": {
+    "n_total": 360,
+    "n_priced": 360,
+    "n_noprice": 0,
+    "expectancy": -0.04151978242114049,
+    "median": -0.2812668158586971,
+    "abort_rate": 0.7,
+    "avg_abort_cost": -0.2661717963383883,
+    "median_abort_cost": -0.3006649372537673,
+    "worst_abort": -0.6728842641279681,
+    "struct_aborts": 53,
+    "sweep_aborts": 199,
+    "winner_rate": 0.3,
+    "avg_winner": 0.4826682500524377,
+    "median_winner": 0.26057202180911887,
+    "best_winner": 7.321958334480007,
+    "total_pnl_per_day": -1.4947121671610575,
+    "boot": {
+     "lo": -0.12977112851361675,
+     "hi": 0.05706999040752079,
+     "med": -0.04494735083850947,
+     "p_pos": 0.23133333333333334
+    },
+    "hit": 0.24722222222222223
+   }
+  }
+ },
+ "rand_cells": {
+  "A15_G25": {
+   "call": {
+    "n": 3600,
+    "expectancy": -0.04659840438023269,
+    "median": -0.1855443694907259,
+    "hit": 0.28055555555555556,
+    "boot": {
+     "lo": -0.09873103490800392,
+     "hi": 0.006548061995573616,
+     "med": -0.04609371501409519,
+     "p_pos": 0.07633333333333334
+    }
+   },
+   "put": {
+    "n": 3600,
+    "expectancy": -0.05277720886190522,
+    "median": -0.19129720853858767,
+    "hit": 0.2388888888888889,
+    "boot": {
+     "lo": -0.09967068937006372,
+     "hi": -0.002394249965189227,
+     "med": -0.05376279271964017,
+     "p_pos": 0.042666666666666665
+    }
+   },
+   "all": {
+    "n": 7200,
+    "expectancy": -0.054841926748202395,
+    "median": -0.19008111411533757,
+    "hit": 0.24902777777777776,
+    "boot": {
+     "lo": -0.07001547278862627,
+     "hi": -0.04029509273622684,
+     "med": -0.054537773035023884,
+     "p_pos": 0.0
+    }
+   }
+  },
+  "A15_G40": {
+   "call": {
+    "n": 3600,
+    "expectancy": -0.051101736630855286,
+    "median": -0.1883564711150918,
+    "hit": 0.20972222222222223,
+    "boot": {
+     "lo": -0.11281604891281635,
+     "hi": 0.012283024100759411,
+     "med": -0.052116693372507766,
+     "p_pos": 0.09366666666666666
+    }
+   },
+   "put": {
+    "n": 3600,
+    "expectancy": -0.04385679718168672,
+    "median": -0.19245302897454913,
+    "hit": 0.1825,
+    "boot": {
+     "lo": -0.11788593140826319,
+     "hi": 0.03649397132536396,
+     "med": -0.046374860225921626,
+     "p_pos": 0.17166666666666666
+    }
+   },
+   "all": {
+    "n": 7200,
+    "expectancy": -0.04625603876077933,
+    "median": -0.19060895084372698,
+    "hit": 0.195,
+    "boot": {
+     "lo": -0.07864945856406479,
+     "hi": -0.015067379738024201,
+     "med": -0.04555526455423926,
+     "p_pos": 0.005333333333333333
+    }
+   }
+  },
+  "A25_G25": {
+   "call": {
+    "n": 3600,
+    "expectancy": -0.053234137582977056,
+    "median": -0.27299459678669835,
+    "hit": 0.3333333333333333,
+    "boot": {
+     "lo": -0.11993844422140665,
+     "hi": 0.013666151045537945,
+     "med": -0.05486648660876264,
+     "p_pos": 0.09766666666666667
+    }
+   },
+   "put": {
+    "n": 3600,
+    "expectancy": -0.064987205261439,
+    "median": -0.27441042833284207,
+    "hit": 0.29694444444444446,
+    "boot": {
+     "lo": -0.13179632507240127,
+     "hi": 0.00871544901371714,
+     "med": -0.06857039136667564,
+     "p_pos": 0.06666666666666667
+    }
+   },
+   "all": {
+    "n": 7200,
+    "expectancy": -0.05961638150660899,
+    "median": -0.2739646049990877,
+    "hit": 0.3070833333333333,
+    "boot": {
+     "lo": -0.08316088477614897,
+     "hi": -0.038508652634822456,
+     "med": -0.05919994576813216,
+     "p_pos": 0.0
+    }
+   }
+  },
+  "A25_G40": {
+   "call": {
+    "n": 3600,
+    "expectancy": -0.05993113334141507,
+    "median": -0.27365286634534186,
+    "hit": 0.255,
+    "boot": {
+     "lo": -0.14661831055248387,
+     "hi": 0.031375935501900494,
+     "med": -0.06239580201471172,
+     "p_pos": 0.13133333333333333
+    }
+   },
+   "put": {
+    "n": 3600,
+    "expectancy": -0.04199785207652635,
+    "median": -0.27538804858112154,
+    "hit": 0.22277777777777777,
+    "boot": {
+     "lo": -0.1468567131915728,
+     "hi": 0.0758873774098631,
+     "med": -0.044158326150728774,
+     "p_pos": 0.2713333333333333
+    }
+   },
+   "all": {
+    "n": 7200,
+    "expectancy": -0.03679905013718994,
+    "median": -0.2745791262278545,
+    "hit": 0.25277777777777777,
+    "boot": {
+     "lo": -0.08275188743441919,
+     "hi": 0.006097006317113829,
+     "med": -0.03561237193744425,
+     "p_pos": 0.07733333333333334
+    }
+   }
+  }
+ },
+ "noabort": {
+  "call": {
+   "n": 180,
+   "expectancy": 0.16255305308161233,
+   "median": 0.2988592037800343,
+   "hit": 0.7444444444444445,
+   "total_pnl_per_day": 2.925954955469022,
+   "boot": {
+    "lo": -0.10753573339361683,
+    "hi": 0.4040366147247023,
+    "med": 0.17494267726463059,
+    "p_pos": 0.853
+   }
+  },
+  "put": {
+   "n": 180,
+   "expectancy": -0.1189689598063603,
+   "median": 0.20520300626025878,
+   "hit": 0.5722222222222222,
+   "total_pnl_per_day": -2.1414412765144855,
+   "boot": {
+    "lo": -0.3755586223421464,
+    "hi": 0.13802880175991278,
+    "med": -0.11939474841512192,
+    "p_pos": 0.22666666666666666
+   }
+  },
+  "all": {
+   "n": 360,
+   "expectancy": 0.02179204663762602,
+   "median": 0.2622899159663866,
+   "hit": 0.6583333333333333,
+   "total_pnl_per_day": 0.7845136789545368,
+   "boot": {
+    "lo": -0.09757245345357948,
+    "hi": 0.13671420931726663,
+    "med": 0.019862879955425822,
+    "p_pos": 0.6096666666666667
+   }
+  }
+ },
+ "live_ctrl": {
+  "call": {
+   "n": 76,
+   "expectancy": 0.1434949202278298,
+   "median": -0.029556650246305383,
+   "hit": 0.35526315789473684,
+   "total_pnl_per_day": 1.0905613937315066,
+   "boot": {
+    "lo": -0.19733940081388332,
+    "hi": 0.234577333610803,
+    "med": 0.1434949202278298,
+    "p_pos": 0.7573333333333333
+   }
+  },
+  "put": {
+   "n": 99,
+   "expectancy": -0.5105680572504979,
+   "median": -0.6118226600985222,
+   "hit": 0.13131313131313133,
+   "total_pnl_per_day": -5.05462376677993,
+   "boot": {
+    "lo": -0.571863809861205,
+    "hi": 0.03486146939645678,
+    "med": -0.5105680572504979,
+    "p_pos": 0.145
+   }
+  },
+  "all": {
+   "n": 175,
+   "expectancy": -0.22651784988848134,
+   "median": -0.3530377668308702,
+   "hit": 0.22857142857142856,
+   "total_pnl_per_day": -3.964062373048423,
+   "boot": {
+    "lo": -0.2576441191776525,
+    "hi": 0.005184154344954582,
+    "med": -0.22651784988848134,
+    "p_pos": 0.063
+   }
+  }
+ },
+ "n_probes_logged": 360
+}
