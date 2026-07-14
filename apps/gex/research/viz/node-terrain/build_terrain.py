@@ -72,7 +72,21 @@ for day in days:
                 realized=round((f["close_mark"]-f["entry_mark"])/f["entry_mark"]*100)
             frs.append({"typ":f["typ"],"k":f["strike"],"em":em,"xm":xm,"r":realized})
         out["data"][f"{day}|{t}"]={"strikes":strikes,"mins":mins,"spot":[round(s,2) for s in spots],
-            "G":G,"V":V,"gmax":max(gmax,1),"vmax":max(vmax,1),"king":king,"ksign":ksign,"fires":frs}
+            "G":G,"V":V,"gmax":max(gmax,1),"vmax":max(vmax,1),"king":king,"ksign":ksign,"fires":frs,"sig":[]}
+
+# hypothetical system entries (bounce/break/flip events) emitted by the studies
+EV=f"{BASE}/research/velocity-capture/terrain_events.jsonl"
+if os.path.exists(EV):
+    n=0
+    for l in open(EV):
+        try: e=json.loads(l)
+        except: continue
+        key=f"{e['day']}|{e['ticker']}"
+        if key in out["data"]:
+            d="call" if e.get("dir","").lower() in ("call","up","bull","long") else "put"
+            out["data"][key]["sig"].append({"m":e["minute"],"k":e["strike"],"d":d,"kind":e.get("kind","event")})
+            n+=1
+    print("system entries attached:", n)
 print("built:", len(out["data"]), "ticker-days")
 json.dump(out,open("terrain_data.json","w"),separators=(",",":"))
 print("size:", os.path.getsize("terrain_data.json")//1024, "KB")
