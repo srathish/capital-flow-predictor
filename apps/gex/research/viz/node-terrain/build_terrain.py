@@ -83,8 +83,12 @@ if os.path.exists(EV):
         except: continue
         key=f"{e['day']}|{e['ticker']}"
         if key in out["data"]:
-            d="call" if e.get("dir","").lower() in ("call","up","bull","long") else "put"
-            out["data"][key]["sig"].append({"m":e["minute"],"k":e["strike"],"d":d,"kind":e.get("kind","event")})
+            if e.get("kind") not in ("bounce","break") or not e.get("implied"): continue
+            hh,mm=e["minute"].split(":")               # UTC HH:MM -> minutes since 13:30 UTC (09:30 ET)
+            m=(int(hh)*60+int(mm))-(13*60+30)
+            if m<0 or m>390: continue
+            d="call" if e["implied"]=="up" else "put"
+            out["data"][key]["sig"].append({"m":m,"k":e["strike"],"d":d,"kind":e["kind"]})
             n+=1
     print("system entries attached:", n)
 print("built:", len(out["data"]), "ticker-days")
