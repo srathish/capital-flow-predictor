@@ -1,0 +1,2 @@
+{"day":"2026-06-25","ticker":"SPXW","minute":"14:32","strike":7385,"spot":7385.77,"occ":"SPXW260625C07385000","kind":"cf","implied":"up","entry_px":25.1,"exit_minute":"14:42","exit_px":21.4,"outcome":"loss","pnl_pct":-17.26}
+{"day":"2026-06-25","ticker":"SPXW","minute":"16:39","strike":7360,"spot":7358.84,"occ":"SPXW260625P07360000","kind":"cf","implied":"down","entry_px":17.9,"exit_minute":"16:42","exit_px":18.8,"outcome":"win","pnl_pct":1.92}

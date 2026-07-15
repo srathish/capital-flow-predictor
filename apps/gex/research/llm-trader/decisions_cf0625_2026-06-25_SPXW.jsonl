@@ -1,0 +1,29 @@
+{"m": 30, "et": "10:00", "spot": 7325.84, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7369.31, "action": "hold", "why": ""}
+{"m": 57, "et": "10:27", "spot": 7383.18, "action": "hold", "why": ""}
+{"m": 62, "et": "10:32", "spot": 7385.77, "action": "enter_long", "why": "CHART: uptrend HH+HL, cleared 7375 ceiling and held it with higher-low retest (7377->7382), higher closes 7380->7385, above VWAP 7371, 15m momo +0.32%. GEX CONFIRM: 7375 ceiling absorbed off the board, nearest resistance now 7450 = ~65pt air pocket overhead (no wall), floor 7320. Long the breakout into the air pocket; target 7400-7416 first, exit fast on loss of 7375/VWAP or gamma flip to pin. Positive-gamma = manage tight, cap winner."}
+{"m": 63, "et": "10:33", "spot": 7391.91, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7386.48, "action": "hold", "why": ""}
+{"m": 72, "et": "10:42", "spot": 7387.31, "action": "exit", "why": "CHART: 3rd rejection at ~7394 (7391.6/7393.5/7394.6 all sold back to 7387), pinned in 7382-7394 box, momentum dead flat. GEX: positive gamma ramped +11M->+18M since entry = pin regime dominating, air-pocket run wont travel. Breakout-run thesis invalidated, now chop; exit flat, dont bleed 0DTE theta in a strengthening pin.", "closed": {"side": "long", "m": 62, "spot": 7385.77}}
+{"m": 73, "et": "10:43", "spot": 7385.02, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7386.63, "action": "hold", "why": ""}
+{"m": 113, "et": "11:23", "spot": 7369.04, "action": "hold", "why": ""}
+{"m": 131, "et": "11:41", "spot": 7370.86, "action": "hold", "why": ""}
+{"m": 161, "et": "12:11", "spot": 7385.92, "action": "hold", "why": ""}
+{"m": 186, "et": "12:36", "spot": 7360.31, "action": "hold", "why": ""}
+{"m": 189, "et": "12:39", "spot": 7358.84, "action": "enter_short", "why": "CHART: rolled over off 7390 rejection, 5 red candles 7387->7358, lower lows (7360.3->7358.8), below VWAP 7375, 15m momo -0.19%. GEX CONFIRM: regime FLIPPED to negative gamma (-15M = trending/levels break = fuel), barney resistance 7370 overhead, air pocket down to strong 7310 pika floor (~48pts). WITH-regime short (vs fought-pin morning long). Target 7330-7325 above the 7310 floor, exit fast if reclaim 7370 barney or gamma flips back positive. Cap 0DTE winner."}
+{"m": 190, "et": "12:40", "spot": 7356.09, "action": "hold", "why": ""}
+{"m": 192, "et": "12:42", "spot": 7352.4, "action": "exit", "why": "Negative-gamma confirmation that justified the short flipped back to positive gamma and strengthened over 2 bars (-15M->+19M), 7310 floor building a wall (+30M, +2.0/min) 42pts below = trending-slide thesis invalidated; positive gamma will cushion/revert the down-move near the floor. Banking +0.09% (7358.84->7352.4) while chart still favorable, per pre-stated exit-on-gamma-flip rule. Dont round-trip a green 0DTE short once the regime edge is gone.", "closed": {"side": "short", "m": 189, "spot": 7358.84}}
+{"m": 193, "et": "12:43", "spot": 7352.95, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7353.57, "action": "hold", "why": ""}
+{"m": 237, "et": "13:27", "spot": 7364.04, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7362.53, "action": "hold", "why": ""}
+{"m": 247, "et": "13:37", "spot": 7361.65, "action": "hold", "why": ""}
+{"m": 265, "et": "13:55", "spot": 7353.66, "action": "hold", "why": ""}
+{"m": 285, "et": "14:15", "spot": 7360.53, "action": "hold", "why": ""}
+{"m": 300, "et": "14:30", "spot": 7386.58, "action": "hold", "why": ""}
+{"m": 305, "et": "14:35", "spot": 7368.11, "action": "hold", "why": ""}
+{"m": 312, "et": "14:42", "spot": 7368.02, "action": "hold", "why": ""}
+{"m": 325, "et": "14:55", "spot": 7365.34, "action": "hold", "why": ""}
+{"m": 338, "et": "15:08", "spot": 7359.54, "action": "hold", "why": ""}
+{"m": 358, "et": "15:28", "spot": 7350.87, "action": "hold", "why": ""}
