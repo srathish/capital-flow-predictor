@@ -1,0 +1,5 @@
+{"day":"2026-06-23","ticker":"SPXW","minute":"14:05","strike":"7410:7407.82@entry","kind":"cf","implied":"up","exit_minute":"14:17","outcome":"win","pnl_pct":21.95}
+{"day":"2026-06-23","ticker":"SPXW","minute":"15:10","strike":"7390:7387.50@entry","kind":"cf","implied":"down","exit_minute":"15:29","outcome":"win","pnl_pct":29.80}
+{"day":"2026-06-23","ticker":"SPXW","minute":"15:57","strike":"7385:7385.62@entry","kind":"cf","implied":"down","exit_minute":"16:03","outcome":"loss","pnl_pct":-26.46}
+{"day":"2026-06-23","ticker":"SPXW","minute":"16:13","strike":"7405:7403.00@entry","kind":"cf","implied":"up","exit_minute":"16:21","outcome":"loss","pnl_pct":-19.00}
+{"day":"2026-06-23","ticker":"SPXW","minute":"18:09","strike":"7385:7384.40@entry","kind":"cf","implied":"down","exit_minute":"18:15","outcome":"loss","pnl_pct":-13.98}

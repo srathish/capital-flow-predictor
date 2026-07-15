@@ -1,9 +1,13 @@
 # Charts-First 0DTE System — Candidate Spec (RESEARCH, Clause 0)
 
-**Status: CANDIDATE / IN-SAMPLE LEAD. Not validated. Paper only.** Built from 8 blind
-charts-first days (2026-06-03…07-14), 19 trades. The pin-release gate threshold is
-post-hoc-fit to these trades — the *same shape* as leads that dissolved OOS this
-program. Do not size real money on it until it survives the OOS battery below.
+**Status: WEAK CANDIDATE / MOSTLY REGRESSED. Not validated. Paper only.** Built from
+10 blind charts-first days (2026-06-03…07-14), 25 trades. HONEST UPDATE at 10 days:
+the UNGATED method regressed to break-even (−0.4%/trade, 48% win) — the +2.4 to +7.9%
+seen at 5–8 days was small-sample optimism. The pin-release gate is the ONLY component
+still adding value (−0.4% → +3.3%/trade, 48% → 56% win) but is modest and its +40M
+threshold is post-hoc/in-sample. The gate governs WHEN to hunt; it does NOT stop a bad
+entry inside the allowed zone (6/10 missed a −51% low-gamma bear-trap short). Do not
+size real money; this may still be regressing toward zero. 2 OOS days pending (6/23, 5/29).
 
 ## The one-line thesis
 GEX does not predict direction (18 hypotheses dead). It predicts *tradeability*:
