@@ -1,0 +1,21 @@
+{"m": 30, "et": "10:00", "spot": 7387.85, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7391.57, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7412.71, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7425, "action": "enter_long", "why": "CHART: confirmed range-breakout trend leg - 3 straight green bars 7404->7425, new HOD, 7410 old-ceiling held as floor on retest, both momentum TFs positive, above VWAP. GEX CONFIRM: king/magnet migrated UP to 7450 (+27M pika) pulling price toward node above with ~25pts open air; 7410 pika floor (+19.9M) 15pts below = stop ref. Real floor + magnet above (not blocking wall) + clean air = long. Manage tight, cap under 7450, bail below 7410."}
+{"m": 91, "et": "11:01", "spot": 7424.48, "action": "hold", "why": ""}
+{"m": 95, "et": "11:05", "spot": 7421.59, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7418.09, "action": "exit", "why": "THESIS BROKEN: continuation-to-7450 failed. Magnet/king flipped back DOWN to 7410 (+23M, below spot), 7450 node shrank and lost king status. Price fading off HOD 7426.6->7418, 5-min momentum negative, +26M near-spot gamma re-pinning. Exit fast for small loss vs riding down to 7410 pin. Entry too extended (chased 100%-of-range top into heavy positive gamma) - the pin won, as feared.", "closed": {"side": "long", "m": 90, "spot": 7425}}
+{"m": 99, "et": "11:09", "spot": 7415.43, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7411.17, "action": "hold", "why": ""}
+{"m": 140, "et": "11:50", "spot": 7415.22, "action": "hold", "why": ""}
+{"m": 200, "et": "12:50", "spot": 7392.4, "action": "hold", "why": ""}
+{"m": 206, "et": "12:56", "spot": 7386.46, "action": "enter_short", "why": "CHART: decisive breakdown - 12:55 broke below 7388.6 prior low, closed on low 7386.5, below VWAP, 5-min momentum -0.13% accelerating. 7410-pin regime broken down. GEX CONFIRM (all 3 short conditions): (1) 7390 pika floor COLLAPSED off map, next floor 7360 = ~26pt air pocket; (2) NEGATIVE-gamma regime = levels break/trend/fuel; (3) strong 7410 ceiling overhead +28.7M caps bounces. Waited for the actual break vs anticipating. Target 7360-7365 air pocket, invalidate on reclaim above 7393."}
+{"m": 207, "et": "12:57", "spot": 7385.76, "action": "hold", "why": ""}
+{"m": 212, "et": "13:02", "spot": 7387.44, "action": "hold", "why": ""}
+{"m": 216, "et": "13:06", "spot": 7389.11, "action": "exit", "why": "THESIS FAILED: no downside follow-through. Breakdown to 7385.8 did NOT cascade to 7360 - instead 13:00 reclaimed 7392 shelf and price chopping 7389-7392. Regime firmly POSITIVE-gamma (levels hold/chop), 7410 ceiling ballooned +34M, negative-gamma fuel evaporated. Both exit conditions hit (reclaim 7392 + chop). Same failed-break chop as all day. Cut small loss vs bleeding theta.", "closed": {"side": "short", "m": 206, "spot": 7386.46}}
+{"m": 217, "et": "13:07", "spot": 7383.35, "action": "hold", "why": ""}
+{"m": 257, "et": "13:47", "spot": 7349.64, "action": "hold", "why": ""}
+{"m": 297, "et": "14:27", "spot": 7370.74, "action": "hold", "why": ""}
+{"m": 310, "et": "14:40", "spot": 7364.16, "action": "hold", "why": ""}
+{"m": 335, "et": "15:05", "spot": 7354.09, "action": "hold", "why": ""}
+{"m": 370, "et": "15:40", "spot": 7345.61, "action": "hold", "why": ""}

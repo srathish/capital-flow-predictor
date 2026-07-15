@@ -1,0 +1,23 @@
+{"m": 30, "et": "10:00", "spot": 7555.36, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7553.48, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7550.96, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7536.72, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7547.45, "action": "enter_short", "why": "CHART: made LL to 7522 then bounced straight back to underside of 7550 = classic retest of broken support as resistance; price below VWAP 7551; 15-min trend down. GEX CONFIRM: strong barney rejection ceiling 7550 (-28.8M) + VWAP confluence directly overhead = tight risk line ~4pts; negative-gamma continuation regime; 7500 pika king is target. Target 7522 then 7500, invalidate on reclaim of 7551."}
+{"m": 76, "et": "10:46", "spot": 7547.7, "action": "hold", "why": ""}
+{"m": 79, "et": "10:49", "spot": 7545.01, "action": "hold", "why": ""}
+{"m": 84, "et": "10:54", "spot": 7545.01, "action": "hold", "why": ""}
+{"m": 89, "et": "10:59", "spot": 7539.67, "action": "hold", "why": ""}
+{"m": 92, "et": "11:02", "spot": 7536.36, "action": "exit", "why": "BANK +0.15%. Regime FLIPPED negative->POSITIVE gamma (net +32M, king 7500 pika +31M): pins/chop, levels now HOLD, so the violent downside continuation thesis is broken and 7500 will pin/suppress further downside. Chart at 7536, 14pts short of 7522 target but momentum weak (-0.03%). Cap the 0DTE winner rather than reach into a positive-gamma pin.", "closed": {"side": "short", "m": 75, "spot": 7547.45}}
+{"m": 93, "et": "11:03", "spot": 7535.67, "action": "hold", "why": ""}
+{"m": 113, "et": "11:23", "spot": 7552.65, "action": "hold", "why": ""}
+{"m": 128, "et": "11:38", "spot": 7555.19, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7554.31, "action": "hold", "why": ""}
+{"m": 173, "et": "12:23", "spot": 7560.9, "action": "hold", "why": ""}
+{"m": 188, "et": "12:38", "spot": 7558.05, "action": "hold", "why": ""}
+{"m": 213, "et": "13:03", "spot": 7564, "action": "hold", "why": ""}
+{"m": 238, "et": "13:28", "spot": 7565.51, "action": "hold", "why": ""}
+{"m": 263, "et": "13:53", "spot": 7570.1, "action": "hold", "why": ""}
+{"m": 288, "et": "14:18", "spot": 7568.77, "action": "hold", "why": ""}
+{"m": 313, "et": "14:43", "spot": 7572.03, "action": "hold", "why": ""}
+{"m": 338, "et": "15:08", "spot": 7576.1, "action": "hold", "why": ""}
+{"m": 363, "et": "15:33", "spot": 7575.67, "action": "hold", "why": ""}

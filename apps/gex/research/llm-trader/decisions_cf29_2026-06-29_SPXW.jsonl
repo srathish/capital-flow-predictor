@@ -1,0 +1,51 @@
+{"m": 30, "et": "10:00", "spot": 7396.81, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7391.04, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7362.92, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7361.86, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7367.31, "action": "enter_long", "why": "CHART: downtrend off 7427 exhausted at 7359 base; higher low 7359->7362; first green candle (10:20 close 7367.3) with 5-min momentum flipping +0.07%. Reversion thesis toward VWAP 7395. GEX CONFIRM: growing pika floor 7340 (+7.1M, 1mDelta+0.5) just 20pts below = defended support/defined risk; strong positive-gamma +26M dampens downside and favors mean reversion; clear air overhead to 7425 pika king, no wall blocking move to VWAP."}
+{"m": 56, "et": "10:26", "spot": 7375.84, "action": "hold", "why": ""}
+{"m": 61, "et": "10:31", "spot": 7389.01, "action": "exit", "why": "CHART: reversion target VWAP 7393.76 reached (spot 7389, +22pts from entry); bounce approaching exhaustion into overhead. GEX: barney wall 7400 (-11M) just 11pts up in positive-gamma regime where levels hold = reversion caps here. Banking +0.29% underlying before the wall round-trips. Thesis complete.", "closed": {"side": "long", "m": 55, "spot": 7367.31}}
+{"m": 62, "et": "10:32", "spot": 7395.44, "action": "hold", "why": ""}
+{"m": 67, "et": "10:37", "spot": 7401.61, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7400.35, "action": "hold", "why": ""}
+{"m": 76, "et": "10:46", "spot": 7397.81, "action": "hold", "why": ""}
+{"m": 81, "et": "10:51", "spot": 7397.14, "action": "hold", "why": ""}
+{"m": 84, "et": "10:54", "spot": 7402.25, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7402.63, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7401.22, "action": "hold", "why": ""}
+{"m": 108, "et": "11:18", "spot": 7403.87, "action": "hold", "why": ""}
+{"m": 118, "et": "11:28", "spot": 7402.72, "action": "hold", "why": ""}
+{"m": 128, "et": "11:38", "spot": 7407.57, "action": "hold", "why": ""}
+{"m": 131, "et": "11:41", "spot": 7407.45, "action": "hold", "why": ""}
+{"m": 136, "et": "11:46", "spot": 7410.63, "action": "hold", "why": ""}
+{"m": 141, "et": "11:51", "spot": 7410.28, "action": "hold", "why": ""}
+{"m": 151, "et": "12:01", "spot": 7415.64, "action": "hold", "why": ""}
+{"m": 154, "et": "12:04", "spot": 7416.24, "action": "enter_long", "why": "CHART: persistent higher-highs grind off 7395 base, price 7416 above VWAP 7400, broke the 7409 midday ceiling, now pressing the 7427 day high. GEX CONFIRM (escalator): pika FLOOR building right under price at 7410 (+6.0M, 1mDelta+0.7) = defined ~6pt risk defended by extreme positive gamma +76M; escalating pika KING magnet at 7440 (+26M) now ABOVE the day high = breakout-favored target with NO barney wall between spot and 7440. Regime supports the drift up. Target 7427 then 7440; cut on 7410 floor break."}
+{"m": 155, "et": "12:05", "spot": 7417.85, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7416.78, "action": "hold", "why": ""}
+{"m": 160, "et": "12:10", "spot": 7416.25, "action": "exit", "why": "CHART: escalator-continuation thesis failed to confirm \u2014 price stalled at entry (7416) into a pin, no push toward 7427, 5-min momentum rolled negative -0.02%. GEX: +70M positive gamma re-pinning at 7416, not advancing to the 7440 magnet. Cutting flat to avoid 0DTE theta bleed and rollback risk; thesis did not trigger. Disciplined scratch.", "closed": {"side": "long", "m": 154, "spot": 7416.24}}
+{"m": 161, "et": "12:11", "spot": 7415.27, "action": "hold", "why": ""}
+{"m": 171, "et": "12:21", "spot": 7414.97, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7411.53, "action": "hold", "why": ""}
+{"m": 193, "et": "12:43", "spot": 7412.41, "action": "hold", "why": ""}
+{"m": 205, "et": "12:55", "spot": 7417.82, "action": "hold", "why": ""}
+{"m": 217, "et": "13:07", "spot": 7421.16, "action": "hold", "why": ""}
+{"m": 222, "et": "13:12", "spot": 7423.99, "action": "hold", "why": ""}
+{"m": 227, "et": "13:17", "spot": 7429.38, "action": "enter_long", "why": "CHART: confirmed DAY-HIGH BREAKOUT \u2014 13:10 impulse candle +7pts broke 7427, new HOD 7429.5, holding above (7429.4), 5/15-min momentum turning up. GEX CONFIRM: strong pika FLOOR jumped up to 7425 (+15.7M, growing) right under the breakout = tight ~4pt defined risk defended by +83M positive gamma; strong pika KING magnet 7440 (+42M) 11pts above with NO barney wall between = clear pull target. Escalated floor confirms breakout defense. Target 7440 magnet; cut on break back below 7425."}
+{"m": 228, "et": "13:18", "spot": 7430.72, "action": "hold", "why": ""}
+{"m": 231, "et": "13:21", "spot": 7431.53, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7425.43, "action": "hold", "why": ""}
+{"m": 236, "et": "13:26", "spot": 7426.5, "action": "hold", "why": ""}
+{"m": 239, "et": "13:29", "spot": 7429.82, "action": "hold", "why": ""}
+{"m": 242, "et": "13:32", "spot": 7435.12, "action": "hold", "why": ""}
+{"m": 244, "et": "13:34", "spot": 7429.88, "action": "exit", "why": "CHART: breakout run stalled \u2014 price rejected 7435 twice (upper wick, closed 7429.9), failed to reach the 7440 target, 5/15-min momentum dead (0.00%/-0.01%). GEX: extreme +114M positive gamma is CAPPING price below the 7440 magnet, turning the run into a pin. Floor 7425 held (structure ok) but the move to target isnt delivering; banking near-flat to avoid 0DTE theta bleed in the pin rather than round-trip. Thesis pinned short of target.", "closed": {"side": "long", "m": 227, "spot": 7429.38}}
+{"m": 245, "et": "13:35", "spot": 7431.76, "action": "hold", "why": ""}
+{"m": 257, "et": "13:47", "spot": 7432.35, "action": "hold", "why": ""}
+{"m": 270, "et": "14:00", "spot": 7433.15, "action": "hold", "why": ""}
+{"m": 283, "et": "14:13", "spot": 7433.92, "action": "hold", "why": ""}
+{"m": 296, "et": "14:26", "spot": 7431.34, "action": "hold", "why": ""}
+{"m": 309, "et": "14:39", "spot": 7436.26, "action": "hold", "why": ""}
+{"m": 322, "et": "14:52", "spot": 7436.84, "action": "hold", "why": ""}
+{"m": 335, "et": "15:05", "spot": 7434.68, "action": "hold", "why": ""}
+{"m": 348, "et": "15:18", "spot": 7434.69, "action": "hold", "why": ""}
+{"m": 361, "et": "15:31", "spot": 7436.36, "action": "hold", "why": ""}

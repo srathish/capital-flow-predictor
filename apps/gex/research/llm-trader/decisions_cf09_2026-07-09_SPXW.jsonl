@@ -1,0 +1,37 @@
+{"m": 30, "et": "10:00", "spot": 7513.6, "action": "hold", "why": ""}
+{"m": 40, "et": "10:10", "spot": 7507.59, "action": "hold", "why": ""}
+{"m": 43, "et": "10:13", "spot": 7500.27, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7502.88, "action": "hold", "why": ""}
+{"m": 48, "et": "10:18", "spot": 7490.39, "action": "hold", "why": ""}
+{"m": 51, "et": "10:21", "spot": 7484.45, "action": "hold", "why": ""}
+{"m": 53, "et": "10:23", "spot": 7488.75, "action": "enter_long", "why": "CHART: 33pt down-leg (7517->7484) exhausted at the open/LOD 7482.71 which held; 10:20 candle turned green off the low (7484.4->7488.8); 5-min momentum flattened to -0.02%. GEX CONFIRM: strengthening POSITIVE-gamma (+12M) = mean-reversion regime, and king pika 7500 sits 11pts overhead as an upside magnet/pin. Bounce-to-pin long targeting 7499-7500, stop on break back below LOD 7482."}
+{"m": 54, "et": "10:24", "spot": 7488.75, "action": "hold", "why": ""}
+{"m": 56, "et": "10:26", "spot": 7488.61, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7507.66, "action": "exit", "why": "CHART: bounce ripped 7488.6->7507.7 (+19pts, one candle), hit my 7500 target zone and overshot; move is fast/extended, back at VWAP. GEX: pin thesis CONSUMED \u2014 7500 king pika collapsed +20M->+8M (1m\u0394-9.3) as price passed through, regime flipped to NEGATIVE-gamma (whippy). Structural reason for the long is gone; next node 7550 is 42pts away. Banking the round-trip: +0.25% underlying, discipline over greed on a 0DTE bounce.", "closed": {"side": "long", "m": 53, "spot": 7488.75}}
+{"m": 60, "et": "10:30", "spot": 7506.22, "action": "hold", "why": ""}
+{"m": 66, "et": "10:36", "spot": 7504.18, "action": "hold", "why": ""}
+{"m": 74, "et": "10:44", "spot": 7508.57, "action": "hold", "why": ""}
+{"m": 82, "et": "10:52", "spot": 7503.68, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7513.61, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7512.99, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7521.13, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7519.27, "action": "hold", "why": ""}
+{"m": 107, "et": "11:17", "spot": 7520.35, "action": "hold", "why": ""}
+{"m": 117, "et": "11:27", "spot": 7525.85, "action": "hold", "why": ""}
+{"m": 123, "et": "11:33", "spot": 7521.88, "action": "hold", "why": ""}
+{"m": 135, "et": "11:45", "spot": 7527.86, "action": "hold", "why": ""}
+{"m": 147, "et": "11:57", "spot": 7526.14, "action": "hold", "why": ""}
+{"m": 162, "et": "12:12", "spot": 7530.69, "action": "hold", "why": ""}
+{"m": 174, "et": "12:24", "spot": 7534.21, "action": "hold", "why": ""}
+{"m": 184, "et": "12:34", "spot": 7535.28, "action": "hold", "why": ""}
+{"m": 199, "et": "12:49", "spot": 7531.4, "action": "hold", "why": ""}
+{"m": 214, "et": "13:04", "spot": 7534.69, "action": "hold", "why": ""}
+{"m": 232, "et": "13:22", "spot": 7542.08, "action": "hold", "why": ""}
+{"m": 235, "et": "13:25", "spot": 7541.8, "action": "hold", "why": ""}
+{"m": 250, "et": "13:40", "spot": 7544.68, "action": "hold", "why": ""}
+{"m": 268, "et": "13:58", "spot": 7543.48, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7544.91, "action": "hold", "why": ""}
+{"m": 306, "et": "14:36", "spot": 7539.15, "action": "hold", "why": ""}
+{"m": 321, "et": "14:51", "spot": 7540.42, "action": "hold", "why": ""}
+{"m": 341, "et": "15:11", "spot": 7534.46, "action": "hold", "why": ""}
+{"m": 361, "et": "15:31", "spot": 7536.6, "action": "hold", "why": ""}
