@@ -76,7 +76,7 @@ for day in days:
 
 # EXTREME-PROBE system entries (operator: show ONLY this system on the map)
 # Prefer Variant-B cycle legs (operator: pika-touch system only) when the study has landed
-_CY=f"{BASE}/research/llm-trader/llm_events_aggressive_2026-07-14_SPXW.jsonl"
+_CY=f"{BASE}/research/llm-trader/hitrate70_events_2026-07-14.jsonl"
 EV=_CY if os.path.exists(_CY) else f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
