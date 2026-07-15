@@ -1,0 +1,44 @@
+{"m": 30, "et": "10:00", "spot": 7370.49, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7379.7, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7395.63, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7385.79, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7369.82, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7341.49, "action": "hold", "why": ""}
+{"m": 95, "et": "11:05", "spot": 7343.13, "action": "hold", "why": ""}
+{"m": 105, "et": "11:15", "spot": 7319.58, "action": "hold", "why": ""}
+{"m": 110, "et": "11:20", "spot": 7314.92, "action": "hold", "why": ""}
+{"m": 115, "et": "11:25", "spot": 7330.74, "action": "enter_long", "why": "CHART: oversold extreme (-0.97% into 7309 day low), 11:20 engulfing reversal candle 7314.9->7331.7, 11:25 holding 7330.7, 5-min momentum flipped +0.22%. Base held just above thin 7295 floor. GEX CONFIRM: strong positive-gamma reasserted 61M->121M (mean-reversion regime), 7345 king pika magnet strengthened to 56M just 14pts overhead pulling price up, floor held. Mean-reversion long targeting 7345 node magnet then VWAP 7361; cap winner at node."}
+{"m": 116, "et": "11:26", "spot": 7336.03, "action": "hold", "why": ""}
+{"m": 120, "et": "11:30", "spot": 7327.92, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7319.78, "action": "exit", "why": "Thesis broke: bounce failed to reach 7345 magnet, printed lower high 7336, 11:30 candle rolled over 7327.9->7319.8, price back at 7319.8 re-testing 7309 day low and hitting my stop (lose 7320). Cutting small loss (underlying -0.15%) rather than risk a break of 7309 into the air pocket. Exit fast when thesis breaks.", "closed": {"side": "long", "m": 115, "spot": 7330.74}}
+{"m": 125, "et": "11:35", "spot": 7323.42, "action": "hold", "why": ""}
+{"m": 140, "et": "11:50", "spot": 7312.47, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7330.82, "action": "hold", "why": ""}
+{"m": 160, "et": "12:10", "spot": 7319.43, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7315.6, "action": "hold", "why": ""}
+{"m": 190, "et": "12:40", "spot": 7331.17, "action": "hold", "why": ""}
+{"m": 195, "et": "12:45", "spot": 7321, "action": "hold", "why": ""}
+{"m": 210, "et": "13:00", "spot": 7315.94, "action": "hold", "why": ""}
+{"m": 225, "et": "13:15", "spot": 7301.75, "action": "hold", "why": ""}
+{"m": 228, "et": "13:18", "spot": 7299.88, "action": "hold", "why": ""}
+{"m": 231, "et": "13:21", "spot": 7302.84, "action": "hold", "why": ""}
+{"m": 235, "et": "13:25", "spot": 7306.25, "action": "hold", "why": ""}
+{"m": 243, "et": "13:33", "spot": 7300.44, "action": "hold", "why": ""}
+{"m": 249, "et": "13:39", "spot": 7294.65, "action": "enter_short", "why": "CHART: descending triangle at the 7300 floor (lower highs 7334->7324->7308 into flat triple-bottom 7299.9), 13:35 broke down decisively 7300.5->7294.6 = new day low, downtrend, below VWAP 7337. GEX CONFIRM: the 7295 floor NODE broke and vanished from the map \u2014 nearest support below jumped to 7225 (70pts of air pocket), near-spot gamma collapsed to +19M (weakest all day, pin nearly gone), king 7345 far above. Air-pocket short = transition out of the pin. Target 7275-7280 then 7225 magnet; cap winner. Stop = reclaim 7302-7305."}
+{"m": 250, "et": "13:40", "spot": 7293.33, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7293.35, "action": "hold", "why": ""}
+{"m": 258, "et": "13:48", "spot": 7309.95, "action": "exit", "why": "FALSE BREAK / bear trap. 13:45 candle marginal new low 7291.59 then reversed hard to 7311.6 close 7309.9, reclaiming the 7300 floor and blowing through my 7302-7305 stop. GEX invalidation: near-spot gamma snapped back 16M->86M and the 7295 floor NODE reappeared \u2014 air pocket closed, dealers defended. Thesis dead, cutting the loss (underlying -0.21%) immediately.", "closed": {"side": "short", "m": 249, "spot": 7294.65}}
+{"m": 259, "et": "13:49", "spot": 7315.9, "action": "hold", "why": ""}
+{"m": 265, "et": "13:55", "spot": 7310.85, "action": "hold", "why": ""}
+{"m": 277, "et": "14:07", "spot": 7324.95, "action": "enter_long", "why": "CHART: grind up off the bear-trap lows, 14:00 closed 7327 (higher high vs prior chop), 14:05 small pullback to 7324.9 near support = good entry (not chasing), 15-min momentum +0.18%. GEX CONFIRM (A+ confluence, best of day): near-spot gamma SURGED to +191M (max pin of the day), king 7345 ballooned to +88M (biggest node all day = strong up-magnet) just 20pts above, and floor MIGRATED UP 7295->7320 (support building 25pts higher, 5pts below spot). Whole structure lifted = pin toward 7345 king into the afternoon. Entry ~7325, target 7345 king, tight stop below 7320 floor (~7317)."}
+{"m": 278, "et": "14:08", "spot": 7318.92, "action": "hold", "why": ""}
+{"m": 281, "et": "14:11", "spot": 7319.49, "action": "hold", "why": ""}
+{"m": 284, "et": "14:14", "spot": 7318.03, "action": "exit", "why": "Pin-UP thesis failed to confirm: price stalled dead flat at 7318 (entry-minus-7) for ~9 min, never migrated toward the 7345 king as required. Structural driver receding \u2014 near-spot gamma faded 191M->115M, the 7320 floor node I entered on vanished, momentum flat-to-down. Cutting small (-0.09%) rather than sit on the 7317 stop hoping. Exit when thesis does not confirm.", "closed": {"side": "long", "m": 277, "spot": 7324.95}}
+{"m": 285, "et": "14:15", "spot": 7319.32, "action": "hold", "why": ""}
+{"m": 305, "et": "14:35", "spot": 7302.56, "action": "hold", "why": ""}
+{"m": 320, "et": "14:50", "spot": 7291.69, "action": "hold", "why": ""}
+{"m": 325, "et": "14:55", "spot": 7289.48, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7286.48, "action": "hold", "why": ""}
+{"m": 340, "et": "15:10", "spot": 7289.78, "action": "hold", "why": ""}
+{"m": 355, "et": "15:25", "spot": 7273.06, "action": "hold", "why": ""}
+{"m": 370, "et": "15:40", "spot": 7287.28, "action": "hold", "why": ""}
