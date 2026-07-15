@@ -1,0 +1,50 @@
+{"m": 30, "et": "10:00", "spot": 7117.3, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7117.81, "action": "hold", "why": ""}
+{"m": 40, "et": "10:10", "spot": 7119.33, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7124.88, "action": "enter_long", "why": "CHART: consolidation (7113-7122) resolved UP \u2014 10:15 breaks to fresh HOD 7124.9 after higher lows, above rising VWAP-proxy 7114, 5-min momentum turning +0.08%. GEX CONFIRM: king 7150 pika magnet strengthening (+21M->+29M) 25pts above with no wall between, negative-gamma regime means a break trends/accelerates rather than reverting. Target the 7150 magnet, cap winner there."}
+{"m": 46, "et": "10:16", "spot": 7127.35, "action": "hold", "why": ""}
+{"m": 48, "et": "10:18", "spot": 7126.3, "action": "hold", "why": ""}
+{"m": 51, "et": "10:21", "spot": 7128.33, "action": "hold", "why": ""}
+{"m": 54, "et": "10:24", "spot": 7127.65, "action": "hold", "why": ""}
+{"m": 57, "et": "10:27", "spot": 7127.58, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7129.04, "action": "hold", "why": ""}
+{"m": 63, "et": "10:33", "spot": 7123.95, "action": "exit", "why": "CHART: breakout thesis failed \u2014 10:30 candle rolled 7129->7124 (double rejection at 7129.7), 5-min and 15-min momentum both flipped negative, price back at entry/breakout zone. GEX: king magnet stopped building (35M->30M) and negative-gamma + no floor below risks a downside flush. Cut at breakeven, no reason to hold a stalled long into negative-gamma downside.", "closed": {"side": "long", "m": 45, "spot": 7124.88}}
+{"m": 64, "et": "10:34", "spot": 7123.15, "action": "hold", "why": ""}
+{"m": 67, "et": "10:37", "spot": 7124.09, "action": "hold", "why": ""}
+{"m": 72, "et": "10:42", "spot": 7125.99, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7123.67, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7126.04, "action": "hold", "why": ""}
+{"m": 87, "et": "10:57", "spot": 7121.97, "action": "hold", "why": ""}
+{"m": 89, "et": "10:59", "spot": 7122.06, "action": "hold", "why": ""}
+{"m": 92, "et": "11:02", "spot": 7120.25, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7120.38, "action": "hold", "why": ""}
+{"m": 97, "et": "11:07", "spot": 7120.04, "action": "hold", "why": ""}
+{"m": 102, "et": "11:12", "spot": 7125.15, "action": "hold", "why": ""}
+{"m": 107, "et": "11:17", "spot": 7120.72, "action": "hold", "why": ""}
+{"m": 115, "et": "11:25", "spot": 7126.13, "action": "hold", "why": ""}
+{"m": 118, "et": "11:28", "spot": 7122.88, "action": "hold", "why": ""}
+{"m": 128, "et": "11:38", "spot": 7124.22, "action": "hold", "why": ""}
+{"m": 138, "et": "11:48", "spot": 7120.46, "action": "hold", "why": ""}
+{"m": 140, "et": "11:50", "spot": 7122.12, "action": "hold", "why": ""}
+{"m": 150, "et": "12:00", "spot": 7120.41, "action": "hold", "why": ""}
+{"m": 160, "et": "12:10", "spot": 7123.99, "action": "hold", "why": ""}
+{"m": 172, "et": "12:22", "spot": 7121.74, "action": "hold", "why": ""}
+{"m": 184, "et": "12:34", "spot": 7116.02, "action": "enter_short", "why": "CHART: multi-hour pin (7118-7124) broke DOWN \u2014 12:30 candle sliced to 7113.9, decisive lower low below range and below VWAP 7120.7, momentum negative both 5m(-0.04%) and 15m(-0.07%). GEX CONFIRM: structural flip \u2014 the 7120 pika FLOOR gave way and is now resistance overhead (+15.7M), and the KING flipped from 7150 pika(above) to 7080 BARNEY(-18M) below = dominant negative-gamma magnet/fuel now BELOW price, no floor under spot, negative-gamma regime flushes. This GEX flip is absent from the morning fake probes. Target the 7080 barney."}
+{"m": 185, "et": "12:35", "spot": 7116.42, "action": "hold", "why": ""}
+{"m": 187, "et": "12:37", "spot": 7115.8, "action": "hold", "why": ""}
+{"m": 190, "et": "12:40", "spot": 7119.22, "action": "exit", "why": "CHART: breakdown failing \u2014 price recovered from 7113.9 low back to 7119.2 (toward VWAP), 5-min momentum flipped positive, no follow-through flush. GEX: the confirmation reversed \u2014 the 7120 pika that was overhead resistance dissolved (nearest resistance now 7140), and a new pika FLOOR formed at 7085; the no-floor-below/floor-as-resistance basis for the short is gone. Cut small loss, consistent with the day full of failed probes, before a squeeze back into the range.", "closed": {"side": "short", "m": 184, "spot": 7116.02}}
+{"m": 191, "et": "12:41", "spot": 7119.63, "action": "hold", "why": ""}
+{"m": 201, "et": "12:51", "spot": 7116.19, "action": "hold", "why": ""}
+{"m": 211, "et": "13:01", "spot": 7114.98, "action": "hold", "why": ""}
+{"m": 214, "et": "13:04", "spot": 7119.84, "action": "hold", "why": ""}
+{"m": 224, "et": "13:14", "spot": 7123.38, "action": "hold", "why": ""}
+{"m": 229, "et": "13:19", "spot": 7121.36, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7126.73, "action": "hold", "why": ""}
+{"m": 256, "et": "13:46", "spot": 7124.22, "action": "hold", "why": ""}
+{"m": 271, "et": "14:01", "spot": 7124.95, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7122.82, "action": "hold", "why": ""}
+{"m": 301, "et": "14:31", "spot": 7119.45, "action": "hold", "why": ""}
+{"m": 316, "et": "14:46", "spot": 7123, "action": "hold", "why": ""}
+{"m": 331, "et": "15:01", "spot": 7118.03, "action": "hold", "why": ""}
+{"m": 346, "et": "15:16", "spot": 7124.27, "action": "hold", "why": ""}
+{"m": 361, "et": "15:31", "spot": 7128.59, "action": "hold", "why": ""}

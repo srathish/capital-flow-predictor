@@ -1,0 +1,86 @@
+{"m": 30, "et": "10:00", "spot": 7125.77, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7123.7, "action": "hold", "why": ""}
+{"m": 38, "et": "10:08", "spot": 7122.8, "action": "hold", "why": ""}
+{"m": 41, "et": "10:11", "spot": 7124.94, "action": "hold", "why": ""}
+{"m": 46, "et": "10:16", "spot": 7128.88, "action": "hold", "why": ""}
+{"m": 48, "et": "10:18", "spot": 7129.14, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7124.81, "action": "hold", "why": ""}
+{"m": 53, "et": "10:23", "spot": 7127.27, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7132.3, "action": "enter_long", "why": "CHART: range breakout, 3 rising 5-min closes 7126.2>7129.5>7132.3, 5-min momo +0.11% accelerating, above VWAP 7126.85, pushing 70% of range toward 7137.9 day high. GEX CONFIRM: pika FLOOR reformed at 7120 under price (+9.8M growing), NO wall overhead, nearest node above is 7155 pika MAGNET/king (+12.8M growing), positive-gamma regime supports orderly grind. Target the 7155 magnet, first hurdle 7137.9 day high."}
+{"m": 56, "et": "10:26", "spot": 7131.76, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7130.52, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7128.49, "action": "exit", "why": "CHART: breakout failed \u2014 price fully retraced the 7132.3 push back to VWAP 7127 (underlying -0.05%), 5-min momo rolled negative, no continuation. Thesis was breakout-continuation; it is broken (bull trap on a chop day). GEX: regime slipped back to negative-gamma (net -4M), risk of flush to 7100 if VWAP/7120 lose. Exit fast per discipline, cap the small loss.", "closed": {"side": "long", "m": 55, "spot": 7132.3}}
+{"m": 60, "et": "10:30", "spot": 7128.74, "action": "hold", "why": ""}
+{"m": 64, "et": "10:34", "spot": 7132.53, "action": "hold", "why": ""}
+{"m": 66, "et": "10:36", "spot": 7132.18, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7133.87, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7130.36, "action": "hold", "why": ""}
+{"m": 76, "et": "10:46", "spot": 7136.33, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7134.17, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7138.56, "action": "enter_long", "why": "CHART: CONFIRMED range breakout \u2014 cleared 7137.9 day high with two up-closes 7138.4>7138.6, new day high 100% of range, 15-min momo accelerating +0.12%, above VWAP 7129. Waited for this exact break (rejected 4x prior). GEX CONFIRM: positive-gamma +20M supports orderly grind, 7155 pika MAGNET (+19M) directly overhead with NO wall between, floor 7120 below. Path open 7138.6->7155 (~16pts) vs tight ~5pt invalidation under 7134/7137.9. Target the 7155 magnet, cap into it."}
+{"m": 86, "et": "10:56", "spot": 7140.91, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7144.39, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7141.65, "action": "exit", "why": "CHART: breakout thrust ran 7138.6->7144.4 then stalled and pulled back to 7141.6, 15-min momo decelerating +0.20%->+0.11%. Banking the green. GEX: positive gamma re-strengthened to +16M (pin reasserting at the new local high = dealers sell to pin, caps upside). Cap 0DTE winner into the stall per discipline \u2014 this tape round-trips every push; take the gain rather than risk giving it back to breakeven.", "closed": {"side": "long", "m": 85, "spot": 7138.56}}
+{"m": 91, "et": "11:01", "spot": 7143.02, "action": "hold", "why": ""}
+{"m": 99, "et": "11:09", "spot": 7139.11, "action": "hold", "why": ""}
+{"m": 109, "et": "11:19", "spot": 7145.4, "action": "hold", "why": ""}
+{"m": 117, "et": "11:27", "spot": 7145.83, "action": "hold", "why": ""}
+{"m": 127, "et": "11:37", "spot": 7143.88, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7135.48, "action": "hold", "why": ""}
+{"m": 142, "et": "11:52", "spot": 7132.68, "action": "hold", "why": ""}
+{"m": 145, "et": "11:55", "spot": 7130.99, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7133.81, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7129.43, "action": "hold", "why": ""}
+{"m": 168, "et": "12:18", "spot": 7132.71, "action": "hold", "why": ""}
+{"m": 180, "et": "12:30", "spot": 7130.95, "action": "hold", "why": ""}
+{"m": 192, "et": "12:42", "spot": 7131.79, "action": "hold", "why": ""}
+{"m": 207, "et": "12:57", "spot": 7135.03, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7115.95, "action": "enter_short", "why": "CHART: PIN BREAK-FLUSH \u2014 price sliced through the 7130 floor AND the 7119.15 day low to a new low 7115.95, strongest down momentum of day (5-min -0.23%), below VWAP, pos 0% of range. Transition OUT of the midday pin = where 0DTE moves. GEX CONFIRM: +80M positive-gamma pin COLLAPSED and flipped to NEGATIVE-gamma (net -8M, levels break/trend = fuel), 7130 pika now overhead resistance (broken floor), and nearest floor below is way down at 7065 = ~51pt air pocket. Short the flush, target continuation to 7090-7085, invalidate on reclaim of 7125."}
+{"m": 216, "et": "13:06", "spot": 7113.21, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7111.6, "action": "hold", "why": ""}
+{"m": 220, "et": "13:10", "spot": 7103.52, "action": "hold", "why": ""}
+{"m": 222, "et": "13:12", "spot": 7100.78, "action": "hold", "why": ""}
+{"m": 223, "et": "13:13", "spot": 7099.6, "action": "exit", "why": "CHART: strongest down-flush of the day rode from entry 7115.95 to 7099.60 (~20pts, position +0.23% = big 0DTE put gain). Move is now very extended (~38pts from midday pin) and a 7100 barney formed just overhead. GEX: negative gamma at an EXTREME -86M \u2014 mean-reversion/snapback risk elevated exactly here; 7080 barney king target only ~19pts further. Bank the big 0DTE winner per discipline (they round-trip violently) rather than chase the last leg.", "closed": {"side": "short", "m": 215, "spot": 7115.95}}
+{"m": 224, "et": "13:14", "spot": 7098.16, "action": "hold", "why": ""}
+{"m": 226, "et": "13:16", "spot": 7095.42, "action": "hold", "why": ""}
+{"m": 228, "et": "13:18", "spot": 7091.6, "action": "hold", "why": ""}
+{"m": 230, "et": "13:20", "spot": 7088.32, "action": "hold", "why": ""}
+{"m": 232, "et": "13:22", "spot": 7089.62, "action": "hold", "why": ""}
+{"m": 236, "et": "13:26", "spot": 7085.59, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7085.85, "action": "hold", "why": ""}
+{"m": 245, "et": "13:35", "spot": 7096.57, "action": "hold", "why": ""}
+{"m": 247, "et": "13:37", "spot": 7083.31, "action": "hold", "why": ""}
+{"m": 251, "et": "13:41", "spot": 7074.17, "action": "enter_short", "why": "CHART: decisive breakdown of the 7080 base that held 4x (7084.9/7085.5/7084.4/7083.3) \u2014 13:40 candle 7080.8->7074.2, new day low, 5-min momo re-accelerated to -0.30% (strongest since the primary flush). Base-break releases coiled stops + continuation. GEX CONFIRM: negative-gamma -83M (levels break = fuel), 7080 barney flips to overhead resistance (-28.4M), target the strong building 7050 floor (+21.7M). Extended 2nd leg into a close floor so managing tight: target ~7055, invalidate on reclaim of 7082."}
+{"m": 252, "et": "13:42", "spot": 7067.39, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7061.05, "action": "exit", "why": "CHART: short rode 7074.17->7061.05 (~13pts, +0.19% favorable) on the base-break continuation leg. GEX: approaching the strong building 7050 floor (+22.0M) just ~11pts below (the target/opposing node), and negative gamma is easing (-83M->-56M) = momentum fading into support. Bank the 0DTE gain into the floor rather than risk a sharp bounce off +22M support on this whippy tape.", "closed": {"side": "short", "m": 251, "spot": 7074.17}}
+{"m": 255, "et": "13:45", "spot": 7060.2, "action": "hold", "why": ""}
+{"m": 257, "et": "13:47", "spot": 7048.26, "action": "hold", "why": ""}
+{"m": 258, "et": "13:48", "spot": 7062.02, "action": "hold", "why": ""}
+{"m": 262, "et": "13:52", "spot": 7058.28, "action": "hold", "why": ""}
+{"m": 270, "et": "14:00", "spot": 7090.54, "action": "hold", "why": ""}
+{"m": 272, "et": "14:02", "spot": 7100.04, "action": "enter_long", "why": "CHART: negative-gamma squeeze broke the 7095 barney \u2014 14:00 candle closed at its high 7100.0, 15-min momo surging +0.73%, V-bounce off the 7050 floor now extending. GEX CONFIRM: deeply negative gamma -113M (dealers short gamma forced to BUY into rally = squeeze fuel; levels break/extend), the 7095 barney is now GONE \u2014 nearest node above is the 7130 pika with ~30pts clear air and NO wall between, 7080 barney flips to support below. Stronger than the earlier 7096 fakeout (closed at highs on strong momo, barney cleared). Target 7125-7128 under the 7130 pika, tight stop under 7092, manage fast."}
+{"m": 273, "et": "14:03", "spot": 7098.5, "action": "hold", "why": ""}
+{"m": 274, "et": "14:04", "spot": 7096.44, "action": "exit", "why": "CHART: breakout FAILED \u2014 the 7100 barney re-formed and rejected price, which faded below my 7100.04 entry to 7096.4 (-0.05%), 5-min momo weakening. Entry premise (clean 7095 break with clear air to 7130) is invalidated; 7100 is a wall, not open air (whippy neg-gamma structure flickered). GEX: 7100 barney (-22.5M) holding as resistance in violent -112M gamma; failed breakout risks a sharp reversal to 7080/7050. Cut the small loss fast per exit discipline.", "closed": {"side": "long", "m": 272, "spot": 7100.04}}
+{"m": 275, "et": "14:05", "spot": 7096.26, "action": "hold", "why": ""}
+{"m": 280, "et": "14:10", "spot": 7097.59, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7101.89, "action": "hold", "why": ""}
+{"m": 289, "et": "14:19", "spot": 7104.48, "action": "hold", "why": ""}
+{"m": 292, "et": "14:22", "spot": 7102.99, "action": "hold", "why": ""}
+{"m": 297, "et": "14:27", "spot": 7105.32, "action": "hold", "why": ""}
+{"m": 303, "et": "14:33", "spot": 7112.8, "action": "enter_long", "why": "CHART: 30-min consolidation above 7100 resolved UP \u2014 3 higher closes 7106.6>7108.1>7112.8, 14:30 solid green candle, momo improving (5-min +0.10%, 15-min +0.14%), new local high 7112.8. GEX CONFIRM: 7130 pika is a STRONG magnet (+28.4M, growing) directly overhead with CLEAR air/no wall, 7090 barney support below, negative gamma EASING -140M->-83M as price squeezes up (dealers covering = squeeze fuel). Cleaner than the 7100 fakeouts (held 30min, now breaking out on momo toward the magnet). Target 7127-7128 under the 7130 pika, tight stop under 7106."}
+{"m": 304, "et": "14:34", "spot": 7114.65, "action": "hold", "why": ""}
+{"m": 306, "et": "14:36", "spot": 7117.16, "action": "hold", "why": ""}
+{"m": 308, "et": "14:38", "spot": 7118.47, "action": "hold", "why": ""}
+{"m": 310, "et": "14:40", "spot": 7112.91, "action": "exit", "why": "CHART: squeeze stalled at 7118.5, pulled back to 7112.9 (breakeven), 5-min momo rolled negative. GEX confirmation FLIPPED: negative gamma re-strengthened -18M->-89M (violent regime reasserting) and the 7130 pika lost KING status (7090 barney king again) \u2014 the easing-gamma + magnet-king squeeze thesis I entered on has reversed. Method: exit when the confirming regime flips. In this tape -80M+ gamma preceded the two prior violent 7100 fakeouts. Exit flat/breakeven to protect the strongly-positive day, no third fakeout.", "closed": {"side": "long", "m": 303, "spot": 7112.8}}
+{"m": 311, "et": "14:41", "spot": 7112.6, "action": "hold", "why": ""}
+{"m": 319, "et": "14:49", "spot": 7108.37, "action": "hold", "why": ""}
+{"m": 327, "et": "14:57", "spot": 7102.57, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7094.77, "action": "hold", "why": ""}
+{"m": 332, "et": "15:02", "spot": 7095.93, "action": "hold", "why": ""}
+{"m": 334, "et": "15:04", "spot": 7095.75, "action": "hold", "why": ""}
+{"m": 337, "et": "15:07", "spot": 7101.46, "action": "hold", "why": ""}
+{"m": 342, "et": "15:12", "spot": 7103.44, "action": "hold", "why": ""}
+{"m": 347, "et": "15:17", "spot": 7109.48, "action": "hold", "why": ""}
+{"m": 352, "et": "15:22", "spot": 7106.7, "action": "hold", "why": ""}
+{"m": 358, "et": "15:28", "spot": 7106.5, "action": "hold", "why": ""}
+{"m": 366, "et": "15:36", "spot": 7099.57, "action": "hold", "why": ""}

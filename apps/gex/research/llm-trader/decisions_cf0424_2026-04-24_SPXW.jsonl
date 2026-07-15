@@ -1,0 +1,37 @@
+{"m": 30, "et": "10:00", "spot": 7119.07, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7119.5, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7122.98, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7127.72, "action": "enter_long", "why": "CHART: breakout of the morning 7108-7127 range to new session highs at 7127.7 (96% of range), HH forming, momentum accelerating positive (5m +0.07%, 15m +0.12%), price above VWAP-proxy 7122. GEX CONFIRM: rising pika FLOOR at 7125 (+12.9M, growing 1m\u0394+0.6) directly beneath price = support; king pika MAGNET at 7150 (+26.7M) overhead with clean air / no wall between 7127-7150; positive-gamma regime supports an orderly grind toward the large king strike. Risk = lose 7125 floor / VWAP; target = drift to 7150 magnet."}
+{"m": 51, "et": "10:21", "spot": 7128.41, "action": "hold", "why": ""}
+{"m": 56, "et": "10:26", "spot": 7125.38, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7122.97, "action": "exit", "why": "CHART: breakout thesis dead \u2014 triple rejection at the 7128.5 day high, price back to 7123 on VWAP, momentum negative (5m -0.05%). GEX: the 7125 pika floor I entered on DISSOLVED \u2014 nearest floor now 7075 (48-pt air pocket beneath), net near-spot gamma fading +35M->+25M. Support structure gone; exit fast per method rather than hold a failed breakout into theta. Small loss.", "closed": {"side": "long", "m": 50, "spot": 7127.72}}
+{"m": 60, "et": "10:30", "spot": 7121.08, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7129.52, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7133.54, "action": "enter_long", "why": "CHART: confirmed breakout \u2014 price cleared the 7128-7130 ceiling that rejected 4x and is holding/extending to a fresh session high 7133.5, three consecutive green candles (7130->7132->7133.5), 15-min momentum accelerating to +0.17% (best of day), above VWAP. GEX CONFIRM: king pika MAGNET at 7150 (+37.4M and growing) with clean air 7133-7150; strong positive gamma (+70M) draws price toward the largest strike which now sits ABOVE; pika floor 7125 below as support. Target = 7150 magnet, cap the winner; risk = fall back below 7130 = failed breakout, exit."}
+{"m": 76, "et": "10:46", "spot": 7133.96, "action": "hold", "why": ""}
+{"m": 81, "et": "10:51", "spot": 7134.95, "action": "hold", "why": ""}
+{"m": 86, "et": "10:56", "spot": 7136.29, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7138.05, "action": "hold", "why": ""}
+{"m": 95, "et": "11:05", "spot": 7138.64, "action": "exit", "why": "CHART: grind stalled at 7138-7139, capped 11 pts short of target, momentum died (15m +0.15%->+0.04%, near flat); price frozen 2 candles at ~7139. GEX: net gamma pinned to an extreme +107M \u2014 the strong positive-gamma pin is suppressing further upside toward the 7150 king and will bleed 0DTE theta if held. Up ~5 pts from 7133.54 entry. CAP the 0DTE winner per method rather than wait for a magnet the pin is capping / risk a round-trip.", "closed": {"side": "long", "m": 75, "spot": 7133.54}}
+{"m": 96, "et": "11:06", "spot": 7137.92, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7139.6, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7141.7, "action": "hold", "why": ""}
+{"m": 126, "et": "11:36", "spot": 7142.92, "action": "hold", "why": ""}
+{"m": 141, "et": "11:51", "spot": 7162.49, "action": "hold", "why": ""}
+{"m": 144, "et": "11:54", "spot": 7162.63, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7160.84, "action": "hold", "why": ""}
+{"m": 156, "et": "12:06", "spot": 7161.72, "action": "hold", "why": ""}
+{"m": 171, "et": "12:21", "spot": 7157.96, "action": "hold", "why": ""}
+{"m": 186, "et": "12:36", "spot": 7160.7, "action": "hold", "why": ""}
+{"m": 201, "et": "12:51", "spot": 7160.63, "action": "hold", "why": ""}
+{"m": 216, "et": "13:06", "spot": 7160.23, "action": "hold", "why": ""}
+{"m": 231, "et": "13:21", "spot": 7160.16, "action": "hold", "why": ""}
+{"m": 246, "et": "13:36", "spot": 7155.88, "action": "hold", "why": ""}
+{"m": 261, "et": "13:51", "spot": 7158.7, "action": "hold", "why": ""}
+{"m": 276, "et": "14:06", "spot": 7156.85, "action": "hold", "why": ""}
+{"m": 291, "et": "14:21", "spot": 7154.46, "action": "hold", "why": ""}
+{"m": 306, "et": "14:36", "spot": 7158.35, "action": "hold", "why": ""}
+{"m": 321, "et": "14:51", "spot": 7156.8, "action": "hold", "why": ""}
+{"m": 336, "et": "15:06", "spot": 7160.72, "action": "hold", "why": ""}
+{"m": 351, "et": "15:21", "spot": 7165.56, "action": "hold", "why": ""}
+{"m": 366, "et": "15:36", "spot": 7158.44, "action": "hold", "why": ""}

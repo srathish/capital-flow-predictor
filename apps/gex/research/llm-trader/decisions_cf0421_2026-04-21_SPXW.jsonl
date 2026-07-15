@@ -1,0 +1,47 @@
+{"m": 30, "et": "10:00", "spot": 7131.64, "action": "hold", "why": ""}
+{"m": 33, "et": "10:03", "spot": 7132.89, "action": "hold", "why": ""}
+{"m": 36, "et": "10:06", "spot": 7132.25, "action": "hold", "why": ""}
+{"m": 42, "et": "10:12", "spot": 7135.87, "action": "hold", "why": ""}
+{"m": 44, "et": "10:14", "spot": 7134.33, "action": "hold", "why": ""}
+{"m": 52, "et": "10:22", "spot": 7129.42, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7126.72, "action": "enter_short", "why": "CHART: rollover from HOD 7135.9 \u2014 lower closes 10:10 7134.3>10:15 7133.8>10:20 7126.4, just broke below VWAP-proxy 7126.9 (bearish), 15-min momentum accelerating down -0.12%. GEX CONFIRM: positive-gamma pin COLLAPSED, regime flipped to NEGATIVE gamma -17M = fuel; near 7100 floor dissolved (now 7070, ~57pts of air below); king pika 7165 far overhead not helping bulls. Pin-transition short with room to run."}
+{"m": 56, "et": "10:26", "spot": 7128.29, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7129.32, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7128.07, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7129.41, "action": "exit", "why": "THESIS BROKEN + REGIME FLIP. Short was predicated on pin-collapse + negative-gamma fuel + VWAP-loss flush. None confirmed: VWAP 7127 held as support, price chopped back UP to 7129.4 (never broke 7126.4 swing low), and regime flipped from -19M NEGATIVE back to +9M POSITIVE gamma (pin/chop, levels hold) = fuel gone. Cut at ~breakeven per manage rule (exit when confirming regime flips).", "closed": {"side": "short", "m": 55, "spot": 7126.72}}
+{"m": 61, "et": "10:31", "spot": 7129.55, "action": "hold", "why": ""}
+{"m": 71, "et": "10:41", "spot": 7123.66, "action": "hold", "why": ""}
+{"m": 79, "et": "10:49", "spot": 7115.58, "action": "hold", "why": ""}
+{"m": 81, "et": "10:51", "spot": 7113.73, "action": "hold", "why": ""}
+{"m": 83, "et": "10:53", "spot": 7113.02, "action": "hold", "why": ""}
+{"m": 84, "et": "10:54", "spot": 7115.45, "action": "enter_long", "why": "CHART: exhaustion flush bottomed at 7112.4, held the 7109 open/day-low, 10:50 candle turned GREEN (C7115.4), 5-min momentum bottomed (flat). Bounce underway off support. GEX CONFIRM: POSITIVE gamma +10M (levels hold, supports bounce) + strong 7070 pika KING floor (+26M) below. Capped scalp long targeting the 7125 barney cap (~7123 exit); stop below 7109 open."}
+{"m": 85, "et": "10:55", "spot": 7114.04, "action": "hold", "why": ""}
+{"m": 87, "et": "10:57", "spot": 7111.03, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7107.01, "action": "exit", "why": "STOP HIT. Long bounce thesis broken: price broke the 7109 open/day-low to new low 7107, negating the 10:50 reversal; 15-min momentum accelerating down -0.26%. Despite massive positive-gamma floor +37M, the dominant magnet is the 7070 pika king far below and price is gravitating to it, not bouncing off 7109. Cut at stop, -8pts underlying.", "closed": {"side": "long", "m": 84, "spot": 7115.45}}
+{"m": 89, "et": "10:59", "spot": 7103.07, "action": "hold", "why": ""}
+{"m": 92, "et": "11:02", "spot": 7091.71, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7087.11, "action": "hold", "why": ""}
+{"m": 96, "et": "11:06", "spot": 7086.71, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7097.27, "action": "enter_long", "why": "CHART: exhaustion-V off day-low 7086.7 after a 45pt flush (7135>7086) \u2014 11:05 candle strong green C7097.3 (+10.6), 5-min momentum flipped POSITIVE. GEX CONFIRM: bounced in extreme positive gamma (+69M, levels hold = 7086 low holds); overhead 7100 pika DISSOLVED leaving clean air to VWAP 7121 / 7125 barney (~24pts room). Mean-reversion scalp long targeting 7118-7121; stop below 7089 (V negation)."}
+{"m": 99, "et": "11:09", "spot": 7098.25, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7103.96, "action": "hold", "why": ""}
+{"m": 103, "et": "11:13", "spot": 7102.33, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7101.92, "action": "exit", "why": "CAP THE WINNER. Exhaustion-V long worked +5pts (7097.3>7104) but has STALLED: 3 candles flat at 7102, 5-min momentum died to +0.05%, 15-min near flat -0.02%, re-pinning in positive gamma (+64M) well short of the 7120 VWAP target. 0DTE bounces round-trip \u2014 banking the gain before the stall fades back to 7090. Barney 7125 cap unreached but momentum gone.", "closed": {"side": "long", "m": 98, "spot": 7097.27}}
+{"m": 105, "et": "11:15", "spot": 7102.86, "action": "hold", "why": ""}
+{"m": 113, "et": "11:23", "spot": 7099.37, "action": "hold", "why": ""}
+{"m": 123, "et": "11:33", "spot": 7096.1, "action": "hold", "why": ""}
+{"m": 133, "et": "11:43", "spot": 7091.95, "action": "hold", "why": ""}
+{"m": 145, "et": "11:55", "spot": 7088.68, "action": "hold", "why": ""}
+{"m": 160, "et": "12:10", "spot": 7097.82, "action": "hold", "why": ""}
+{"m": 175, "et": "12:25", "spot": 7089.27, "action": "hold", "why": ""}
+{"m": 190, "et": "12:40", "spot": 7088.68, "action": "hold", "why": ""}
+{"m": 210, "et": "13:00", "spot": 7079.94, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7083.85, "action": "hold", "why": ""}
+{"m": 235, "et": "13:25", "spot": 7068, "action": "hold", "why": ""}
+{"m": 243, "et": "13:33", "spot": 7073.69, "action": "hold", "why": ""}
+{"m": 263, "et": "13:53", "spot": 7086.97, "action": "hold", "why": ""}
+{"m": 283, "et": "14:13", "spot": 7081.14, "action": "hold", "why": ""}
+{"m": 303, "et": "14:33", "spot": 7078.76, "action": "hold", "why": ""}
+{"m": 323, "et": "14:53", "spot": 7075.48, "action": "hold", "why": ""}
+{"m": 343, "et": "15:13", "spot": 7094.67, "action": "hold", "why": ""}
+{"m": 363, "et": "15:33", "spot": 7100.82, "action": "hold", "why": ""}

@@ -1,0 +1,4 @@
+{"day": "2026-04-29", "ticker": "SPXW", "minute": "14:26", "strike:spot@entry": "7140:7137.75", "kind": "cf", "implied": "up", "exit_minute": "14:31", "outcome": "win", "pnl_pct": 0.0629}
+{"day": "2026-04-29", "ticker": "SPXW", "minute": "14:35", "strike:spot@entry": "7140:7142.46", "kind": "cf", "implied": "up", "exit_minute": "14:41", "outcome": "loss", "pnl_pct": -0.1308}
+{"day": "2026-04-29", "ticker": "SPXW", "minute": "15:04", "strike:spot@entry": "7135:7133.08", "kind": "cf", "implied": "down", "exit_minute": "15:13", "outcome": "win", "pnl_pct": 0.278}
+{"day": "2026-04-29", "ticker": "SPXW", "minute": "15:55", "strike:spot@entry": "7120:7117.85", "kind": "cf", "implied": "down", "exit_minute": "16:00", "outcome": "loss", "pnl_pct": -0.1152}

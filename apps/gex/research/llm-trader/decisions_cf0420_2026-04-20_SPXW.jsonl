@@ -1,0 +1,68 @@
+{"m": 30, "et": "10:00", "spot": 7121.56, "action": "hold", "why": ""}
+{"m": 32, "et": "10:02", "spot": 7118.28, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7115.73, "action": "hold", "why": ""}
+{"m": 37, "et": "10:07", "spot": 7120.02, "action": "hold", "why": ""}
+{"m": 42, "et": "10:12", "spot": 7112.58, "action": "enter_short", "why": "Chart rolled over: lost VWAP 7115.3, LH at 7122 then LL, momentum negative both 5m(-0.10%) and 15m(-0.14%), 10:10 closed on low. GEX confirms: 7115 barney flipped to overhead resistance, 7110 barney king = negative-node fuel below spot, neg-gamma levels-break regime. Target 7107 range low then 7100 pika floor; exit on reclaim of 7115."}
+{"m": 43, "et": "10:13", "spot": 7114.53, "action": "hold", "why": ""}
+{"m": 44, "et": "10:14", "spot": 7115.64, "action": "exit", "why": "Short thesis broke: price reclaimed 7115 barney and VWAP (7115.64 > 7115.31), 5m momentum flipped +, overhead resistance cleared back to 7140, net gamma decaying to -16M. False breakdown in an established range; cut per exit-fast rule.", "closed": {"side": "short", "m": 42, "spot": 7112.58}}
+{"m": 45, "et": "10:15", "spot": 7116.19, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7114.75, "action": "hold", "why": ""}
+{"m": 56, "et": "10:26", "spot": 7118.04, "action": "hold", "why": ""}
+{"m": 64, "et": "10:34", "spot": 7109.15, "action": "hold", "why": ""}
+{"m": 66, "et": "10:36", "spot": 7107.42, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7109.92, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7109.12, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7104.81, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7104.58, "action": "hold", "why": ""}
+{"m": 78, "et": "10:48", "spot": 7105.52, "action": "enter_long", "why": "Chart double-bottom 7103.7 (10:40+10:45) off session low held, price lifting to 7105.5, 5m momentum flipped +. GEX confirms strongly: king is now a +37M pika FLOOR at 7100 directly under spot (dominant node on the board), overhead barney 7110. Long the floor bounce, target 7110 barney then VWAP 7113.6, cap into resistance; stop below 7103.66."}
+{"m": 79, "et": "10:49", "spot": 7106.95, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7110.11, "action": "hold", "why": ""}
+{"m": 81, "et": "10:51", "spot": 7107.45, "action": "exit", "why": "Bounce reached and was rejected at the 7110 barney (10:50 high 7110.1 -> close 7107.4), the opposing node I targeted. Still green; cap the 0DTE winner per rule rather than round-trip toward 7100. Momentum fading (5m +0.05%). Range keeps rejecting 7110-7115.", "closed": {"side": "long", "m": 78, "spot": 7105.52}}
+{"m": 82, "et": "10:52", "spot": 7099.39, "action": "enter_short", "why": "BREAK-FLUSH: 7100 floor that held all morning collapsed (10:50 candle 7110.1->7099.4), new session low 7099.39. GEX confirms violently: 7100 pika floor GONE, nearest floor now 7050 = ~50pt air pocket; net near-spot gamma SPIKED -18M->-62M (negative-gamma levels-break fuel); barney 7110 now overhead resistance; momentum negative both 5m and 15m. Transition out of the morning pin. Target 7085->7070->7050, stop on reclaim above 7107."}
+{"m": 83, "et": "10:53", "spot": 7099.91, "action": "hold", "why": ""}
+{"m": 84, "et": "10:54", "spot": 7100.51, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7100.84, "action": "hold", "why": ""}
+{"m": 86, "et": "10:56", "spot": 7096.98, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7096.81, "action": "exit", "why": "Bank the winner. Flush stalled at 7094 (6.7pt down-wick, closed back at 7096.8), 5m momentum decelerated -0.15%->-0.04%, and a +37M pika reasserted at 7100 directly overhead as a strong magnet. This tape snaps back to 7100 on every break; cap the 0DTE gain (~+2.6pt) before the round-trip rather than hold for the distant 7050.", "closed": {"side": "short", "m": 82, "spot": 7099.39}}
+{"m": 89, "et": "10:59", "spot": 7094.18, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7095.06, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7094.71, "action": "hold", "why": ""}
+{"m": 99, "et": "11:09", "spot": 7089.71, "action": "hold", "why": ""}
+{"m": 105, "et": "11:15", "spot": 7090.64, "action": "hold", "why": ""}
+{"m": 107, "et": "11:17", "spot": 7088.59, "action": "hold", "why": ""}
+{"m": 115, "et": "11:25", "spot": 7100.48, "action": "hold", "why": ""}
+{"m": 117, "et": "11:27", "spot": 7103.87, "action": "hold", "why": ""}
+{"m": 119, "et": "11:29", "spot": 7101.85, "action": "hold", "why": ""}
+{"m": 121, "et": "11:31", "spot": 7103.76, "action": "hold", "why": ""}
+{"m": 123, "et": "11:33", "spot": 7101.72, "action": "hold", "why": ""}
+{"m": 128, "et": "11:38", "spot": 7098.45, "action": "enter_short", "why": "With-trend continuation: price rejected VWAP (11:30 high 7107.4) and broke back below the 7100 pika (spot 7098.45), downtrend LH/LL intact. GEX confirms the EXTEND condition (not chop): 7100 pika floor collapsed, nearest floor now 7050 (air pocket reopened), net gamma SPIKED -32M->-56M, 7115 barney well overhead. Same setup as the 10:52 flush. Target 7085 prior low then 7070/7050; stop on reclaim of 7104."}
+{"m": 129, "et": "11:39", "spot": 7099.53, "action": "hold", "why": ""}
+{"m": 130, "et": "11:40", "spot": 7100.39, "action": "hold", "why": ""}
+{"m": 131, "et": "11:41", "spot": 7102.46, "action": "exit", "why": "False break / bull trap: the 7100 pika reformed and held (+32.2M), price reclaimed to 7102.5, momentum flipped positive, gamma receded -56M->-37M. The floor-collapse thesis reversed within 3 min. Cut per rule (not below 7097) before it hits the 7104 stop. Late-stage break after a VWAP bounce = lower quality than the 10:52 flush.", "closed": {"side": "short", "m": 128, "spot": 7098.45}}
+{"m": 132, "et": "11:42", "spot": 7103.26, "action": "hold", "why": ""}
+{"m": 142, "et": "11:52", "spot": 7096.39, "action": "hold", "why": ""}
+{"m": 150, "et": "12:00", "spot": 7099.72, "action": "hold", "why": ""}
+{"m": 162, "et": "12:12", "spot": 7100.37, "action": "hold", "why": ""}
+{"m": 175, "et": "12:25", "spot": 7100.22, "action": "hold", "why": ""}
+{"m": 190, "et": "12:40", "spot": 7099.22, "action": "hold", "why": ""}
+{"m": 203, "et": "12:53", "spot": 7100.67, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7100.82, "action": "hold", "why": ""}
+{"m": 233, "et": "13:23", "spot": 7105.94, "action": "hold", "why": ""}
+{"m": 236, "et": "13:26", "spot": 7106.53, "action": "hold", "why": ""}
+{"m": 238, "et": "13:28", "spot": 7105.21, "action": "hold", "why": ""}
+{"m": 250, "et": "13:40", "spot": 7102.83, "action": "hold", "why": ""}
+{"m": 265, "et": "13:55", "spot": 7104.08, "action": "hold", "why": ""}
+{"m": 280, "et": "14:10", "spot": 7105.35, "action": "hold", "why": ""}
+{"m": 295, "et": "14:25", "spot": 7109.99, "action": "hold", "why": ""}
+{"m": 297, "et": "14:27", "spot": 7108.84, "action": "hold", "why": ""}
+{"m": 298, "et": "14:28", "spot": 7109.21, "action": "hold", "why": ""}
+{"m": 300, "et": "14:30", "spot": 7107.21, "action": "enter_short", "why": "With-structure range fade: price rejected 7110 (repelled by the colossal -84M barney at 7115, couldnt tag it), rolling down 14:25 close 7107.8 -> 7107.2, 5m momentum turned negative. GEX: fade the enormous barney ceiling toward the +73.2M pika FLOOR at 7100 (the two dominant nodes define a 7100-7110 range). This is the right play in a pin (fade the edge), not a break chase. Target 7100-7102 pika, cap there; stop above 7111."}
+{"m": 301, "et": "14:31", "spot": 7105.54, "action": "hold", "why": ""}
+{"m": 302, "et": "14:32", "spot": 7105.17, "action": "hold", "why": ""}
+{"m": 303, "et": "14:33", "spot": 7104.76, "action": "hold", "why": ""}
+{"m": 304, "et": "14:34", "spot": 7105.92, "action": "exit", "why": "Fade stalled: price bounced off VWAP 7104 support back to 7106 instead of reaching the 7100 target. Structure rebalanced to a symmetric pin (7100 pika +82M vs 7110 barney -82M, net gamma neutral +2M), centering price at ~7105, so the pika wont pull it to 7100. Bank the marginal gain before it round-trips through my 7107 entry into a loss.", "closed": {"side": "short", "m": 300, "spot": 7107.21}}
+{"m": 305, "et": "14:35", "spot": 7107.06, "action": "hold", "why": ""}
+{"m": 320, "et": "14:50", "spot": 7107.27, "action": "hold", "why": ""}
+{"m": 335, "et": "15:05", "spot": 7106.42, "action": "hold", "why": ""}
+{"m": 350, "et": "15:20", "spot": 7106.82, "action": "hold", "why": ""}
+{"m": 365, "et": "15:35", "spot": 7102.05, "action": "hold", "why": ""}

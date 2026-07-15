@@ -1,0 +1,68 @@
+{"m": 30, "et": "10:00", "spot": 7131.93, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7130.23, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7135.66, "action": "hold", "why": ""}
+{"m": 46, "et": "10:16", "spot": 7135.55, "action": "hold", "why": ""}
+{"m": 47, "et": "10:17", "spot": 7135.4, "action": "hold", "why": ""}
+{"m": 49, "et": "10:19", "spot": 7134.35, "action": "hold", "why": ""}
+{"m": 54, "et": "10:24", "spot": 7137.01, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7137.1, "action": "hold", "why": ""}
+{"m": 56, "et": "10:26", "spot": 7137.75, "action": "enter_long", "why": "CHART: price pressing day-high 7138.80 for 3rd time with rising intraday lows (7120>7126>7133) and rising minute-closes (7137.1>7137.8), above VWAP-proxy 7129.8, 5m+15m momentum positive = ascending compression, up thesis. GEX CONFIRM: negative-gamma regime (breakouts trend/accelerate), NO wall overhead until 7200 barney = ~62pts clean air above breakout. Risk: no pika floor beneath, exit fast on rejection under 7133."}
+{"m": 57, "et": "10:27", "spot": 7137.53, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7138.29, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7139.64, "action": "hold", "why": ""}
+{"m": 61, "et": "10:31", "spot": 7138.02, "action": "exit", "why": "Failed breakout: price tagged 7139.64 then rejected back below the 7138.80 breakout level to 7138.02 within 2 min with momentum flattening to 0.00%. Thesis (clean break running to 7200) invalidated by immediate rejection back into range. No pika floor beneath in negative gamma = flush risk. Cut at ~break-even to preserve capital.", "closed": {"side": "long", "m": 56, "spot": 7137.75}}
+{"m": 62, "et": "10:32", "spot": 7139.28, "action": "hold", "why": ""}
+{"m": 65, "et": "10:35", "spot": 7142.46, "action": "enter_long", "why": "CHART: confirmed breakout WITH follow-through now \u2014 3 consecutive rising candles (7139.6>7141.7>7142.5) to fresh day-high 7142.46, cleared old range-high 7138.80, 15m momentum expanding to +0.12%, above VWAP 7131. Up-trend, not chop. GEX CONFIRM: negative-gamma fuels trend; king flipped UP to 7200 barney = upside target/magnet, ~58pts air to it, no wall between. Manage: cap into 7200, exit on momentum roll."}
+{"m": 66, "et": "10:36", "spot": 7143.4, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7143.11, "action": "hold", "why": ""}
+{"m": 69, "et": "10:39", "spot": 7143.9, "action": "hold", "why": ""}
+{"m": 71, "et": "10:41", "spot": 7141.72, "action": "exit", "why": "Momentum roll: uptrend topped at 7143.90 and stalled, 5-min momentum flipped negative (-0.02%), first red candle (10:40) after the run, price backed to 7141.72. Continuation-to-7200 thesis stalled; no floor beneath in negative gamma = flush risk. Exit near break-even per pre-stated plan (cap into 7200 OR exit on momentum roll).", "closed": {"side": "long", "m": 65, "spot": 7142.46}}
+{"m": 72, "et": "10:42", "spot": 7140.72, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7142.31, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7138.4, "action": "hold", "why": ""}
+{"m": 82, "et": "10:52", "spot": 7138.58, "action": "hold", "why": ""}
+{"m": 86, "et": "10:56", "spot": 7138.33, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7133.08, "action": "enter_short", "why": "CHART: first decisive breakdown of the day \u2014 price cracked BELOW VWAP-proxy 7133.74 on expanding-momentum red candle (11:00: 7137.9>7133.1) and held below for 4 min, now 7133.08 at 54% range, momentum negative+expanding (5m -0.07%, 15m -0.11%) after failed 7143.9 top. Down thesis. GEX CONFIRM: net gamma deepened to -32M (downside fuel), barney ceiling 7135 capping just overhead, clean air down to 7085 pika floor (~48pts). Manage: cover into 7085, exit if reclaims above ~7136."}
+{"m": 95, "et": "11:05", "spot": 7134.34, "action": "hold", "why": ""}
+{"m": 96, "et": "11:06", "spot": 7134.47, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7132.38, "action": "hold", "why": ""}
+{"m": 100, "et": "11:10", "spot": 7129.35, "action": "hold", "why": ""}
+{"m": 102, "et": "11:12", "spot": 7126.76, "action": "hold", "why": ""}
+{"m": 103, "et": "11:13", "spot": 7126.45, "action": "exit", "why": "Cap winner into opposing node: flush ran from 7133.08 entry to 7126.45 (~7pt, +0.09% underlying) straight into the day-low support 7120.42 while 5-min momentum decelerated (-0.12%>-0.08%). Day-low is the next opposing node; on this choppy grind day 0DTE winners round-trip, so bank the biggest edge of the day here rather than risk a bounce off the day-low. Pika floor building at 7060 also warns dealers may defend lower.", "closed": {"side": "short", "m": 94, "spot": 7133.08}}
+{"m": 104, "et": "11:14", "spot": 7126.44, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7127.61, "action": "hold", "why": ""}
+{"m": 110, "et": "11:20", "spot": 7129.64, "action": "hold", "why": ""}
+{"m": 112, "et": "11:22", "spot": 7131.13, "action": "hold", "why": ""}
+{"m": 114, "et": "11:24", "spot": 7131.08, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7132.45, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7131.89, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7129.62, "action": "hold", "why": ""}
+{"m": 144, "et": "11:54", "spot": 7120.28, "action": "hold", "why": ""}
+{"m": 145, "et": "11:55", "spot": 7117.85, "action": "enter_short", "why": "CHART: day-low break CONFIRMED with continuation \u2014 broke prior day-low 7120.42 on hard 11:50 candle (-13pt) and made NEW low 7117.85 with strongest momentum of the day (5m -0.20%, 15m -0.17%), far below VWAP 7132.5. Genuine down impulse, not flush-and-reverse. GEX CONFIRM: negative gamma (-37M) fuels flush; nearest floor is 7060 pika (~58pts air below), ceiling 7135 far overhead. Manage: cover into 7100/7060 support zone, exit if momentum reverses above ~7125."}
+{"m": 146, "et": "11:56", "spot": 7120.87, "action": "hold", "why": ""}
+{"m": 147, "et": "11:57", "spot": 7119.9, "action": "hold", "why": ""}
+{"m": 149, "et": "11:59", "spot": 7122.88, "action": "hold", "why": ""}
+{"m": 150, "et": "12:00", "spot": 7123.59, "action": "exit", "why": "Failed breakdown / cut loss: after entering the day-low break at 7117.85 (chased 2 candles into the flush), price immediately snapped back 6pts to 7123.59 with 5-min momentum flipping positive (+0.08%) and approaching my 7125 stop. Continuation-to-7100 thesis invalidated \u2014 the flush exhausted at the low and is reverting toward VWAP/7135 barney. Cut small rather than bleed. Lesson: chasing the extended move at the low was poor R:R.", "closed": {"side": "short", "m": 145, "spot": 7117.85}}
+{"m": 151, "et": "12:01", "spot": 7123.46, "action": "hold", "why": ""}
+{"m": 166, "et": "12:16", "spot": 7127.21, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7117.56, "action": "hold", "why": ""}
+{"m": 183, "et": "12:33", "spot": 7117.71, "action": "hold", "why": ""}
+{"m": 191, "et": "12:41", "spot": 7121.86, "action": "hold", "why": ""}
+{"m": 203, "et": "12:53", "spot": 7122.4, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7120.49, "action": "hold", "why": ""}
+{"m": 233, "et": "13:23", "spot": 7120.89, "action": "hold", "why": ""}
+{"m": 248, "et": "13:38", "spot": 7124.1, "action": "hold", "why": ""}
+{"m": 263, "et": "13:53", "spot": 7128.91, "action": "hold", "why": ""}
+{"m": 268, "et": "13:58", "spot": 7126.79, "action": "hold", "why": ""}
+{"m": 283, "et": "14:13", "spot": 7112.59, "action": "hold", "why": ""}
+{"m": 284, "et": "14:14", "spot": 7114.67, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7115.12, "action": "hold", "why": ""}
+{"m": 301, "et": "14:31", "spot": 7113.29, "action": "hold", "why": ""}
+{"m": 316, "et": "14:46", "spot": 7112.53, "action": "hold", "why": ""}
+{"m": 321, "et": "14:51", "spot": 7121.26, "action": "hold", "why": ""}
+{"m": 331, "et": "15:01", "spot": 7129.28, "action": "hold", "why": ""}
+{"m": 332, "et": "15:02", "spot": 7128.98, "action": "hold", "why": ""}
+{"m": 333, "et": "15:03", "spot": 7126.9, "action": "hold", "why": ""}
+{"m": 348, "et": "15:18", "spot": 7134.92, "action": "hold", "why": ""}
+{"m": 358, "et": "15:28", "spot": 7135.44, "action": "hold", "why": ""}
+{"m": 373, "et": "15:43", "spot": 7130.19, "action": "hold", "why": ""}

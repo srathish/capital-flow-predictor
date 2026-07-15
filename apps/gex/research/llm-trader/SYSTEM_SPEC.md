@@ -35,8 +35,25 @@ NOT trustworthy (still deflating). GATE BLIND SPOTS confirmed OOS: catches stron
 MISSES near-zero-gamma whipsaw (6/11 −48%) and negative-gamma barney-wall chop (5/22 −40%).
 Only the FORWARD test (live, unseen days) can settle where +3-6%/day truly lands.
 
-### (superseded 11-day figures, kept for the regression record)
-Earlier: 63% win, +7.0%/day, +77% over 11 days. Regressed to the above at 26 days.
+### CROSS-REGIME (34 blind days, 2 regimes) — THE KEY FINDING: the edge is REGIME-DEPENDENT
+- MAY-JUL (26 days, varied regime): one-shot gate≤40 = 47% win, +3.6%/day; gate≤20 = 52% win, +6.2%/day. REAL modest edge.
+- APRIL (8 days, persistent positive-gamma pin regime ~7100, gamma peaked +400-817M, everything reverted):
+  one-shot = 14-16% win, −0.1%/day (~FLAT). NO edge — but NO blow-up either; it went harmlessly ~flat.
+- Combined 34 days: gate≤40 = 39% win, +2.7%/day; gate≤20 = 44% win, +4.7%/day.
+INTERPRETATION: the system needs the market to OFFER transitions. April was one long pin with no real
+transitions (all "transitions" = fakeouts), so a "trade-the-transition" method had nothing to catch and
+went flat. This is consistent with the core thesis (money is in the transition OUT of a pin; no transition
+→ no money). IMPLICATION: the daily gamma gate is NOT sufficient — there is a REGIME LAYER above it. The
+real system needs a regime detector ("is this period producing tradeable moves, or a dead-pin stretch?")
+to STAND DOWN entirely in April-like regimes. With that filter the combined number returns toward the
+May-Jul +3.6-6.2%/day. Without it, dead-pin months dilute to ~flat (harmless, not harmful).
+NEXT: (1) build/test a regime detector (persistent high +gamma + tight realized range + low transition
+count → skip the period); (2) FORWARD test in a live/normal regime — the only test hindsight can't taint.
+
+### (superseded early figures, kept for the regression record)
+11 days: 63% win, +7.0%/day. 18 days: 56%, +4.8%/day. 26 days: 47%, +3.6%/day (May-Jul). April diluted
+the 34-day combined to 39%, +2.7%/day. The trajectory = small-sample optimism deflating to a modest,
+regime-conditional edge.
 - **Rule: one trade per day.** The first clean transition (exhaustion-V or break-flush)
   where the gate is open (net near-spot gamma ≤ +40M). Take it, size it, DONE for the day.
 - **SIZING:** because it is ONE concentrated +EV shot (~+14%/trade expectancy), size it as a
