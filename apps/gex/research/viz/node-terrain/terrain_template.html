@@ -53,7 +53,7 @@
 </style>
 <div class="vz">
 <h1>Node Terrain — price vs GEX/VEX nodes at 1-minute</h1>
-<p class="sub">Each column is one minute · each row a strike. Amber = pika (dealers long gamma: pin/dampen) · violet = barney (dealers short gamma: accelerate). The white line is spot — watch it ride, bounce off, or punch through bands. ◦ = King node. Triangles = Extreme-Probe entries at session extremes (▲ long · ▼ short); line runs to the ✕ exit; faded = aborted probe, bright = caught reversal.</p>
+<p class="sub">Each column is one minute · each row a strike. Amber = pika (dealers long gamma: pin/dampen) · violet = barney (dealers short gamma: accelerate). The white line is spot — watch it ride, bounce off, or punch through bands. ◦ = King node. Triangles = Claude's live calls/puts (▲ call · ▼ put) reading the GEX/VEX surface each minute; line runs to the ✕ exit; bright = winner, faded = loser.</p>
 <div class="bar">
   <div class="seg" id="tseg" role="tablist" aria-label="ticker"></div>
   <div class="seg" id="dseg" role="tablist" aria-label="day"></div>
@@ -63,9 +63,9 @@
   <div class="legend">
     <span class="lg"><span class="grad"></span><span>barney&nbsp;−&nbsp;·&nbsp;0&nbsp;·&nbsp;+&nbsp;pika</span></span>
     <span class="lg"><span class="sw"></span> spot</span>
-    <span class="lg"><span class="tri"></span> probe long</span>
-    <span class="lg"><span class="trid"></span> probe short</span>
-    <span class="lg">bright = caught reversal · faded ✕ = quick abort</span>
+    <span class="lg"><span class="tri"></span> Claude call</span>
+    <span class="lg"><span class="trid"></span> Claude put</span>
+    <span class="lg">bright = winning trade · faded ✕ = losing trade</span>
     <span class="lg"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid transparent;box-sizing:border-box;border-bottom-color:transparent;position:relative"><svg width="14" height="11"><polygon points="7,1 1,10 13,10" fill="none" stroke="var(--good)" stroke-width="2"/></svg></span> system entry (hypothetical)</span>
   </div>
 </div>

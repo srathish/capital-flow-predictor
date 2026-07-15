@@ -76,7 +76,7 @@ for day in days:
 
 # EXTREME-PROBE system entries (operator: show ONLY this system on the map)
 # Prefer Variant-B cycle legs (operator: pika-touch system only) when the study has landed
-_CY=f"{BASE}/research/swing-system/swing_v2_events.jsonl"
+_CY=f"{BASE}/research/llm-trader/llm_events_aggressive_2026-07-14_SPXW.jsonl"
 EV=_CY if os.path.exists(_CY) else f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
@@ -92,9 +92,12 @@ if os.path.exists(EV):
                 return v if 0<=v<=390 else None
             m=m_of(e.get("minute"))
             if m is None: continue
-            out["data"][key]["sig"].append({"m":m,"k":e["strike"],
+            _sk=e.get("strike", e.get("strike:spot@entry",""))
+            _k=float(str(_sk).split(":")[-1])   # spot@entry -> marker sits on the price line
+            out["data"][key]["sig"].append({"m":m,"k":_k,
                 "d":"call" if e.get("implied")=="up" else "put",
-                "xm":m_of(e.get("exit_minute")),"out":e.get("outcome"),"r":e.get("pnl_pct")})
+                "xm":m_of(e.get("exit_minute")),
+                "out":("win" if (e.get("pnl_pct") or 0)>0 else "loss"),"r":e.get("pnl_pct")})
             n+=1
     print("probe entries attached:", n)
 for k in out["data"]: out["data"][k]["fires"]=[]   # probes-only view

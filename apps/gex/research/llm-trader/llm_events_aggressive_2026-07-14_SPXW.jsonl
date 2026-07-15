@@ -1,0 +1,8 @@
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "14:35", "strike:spot@entry": "7545:7545.36", "kind": "llm", "implied": "up", "exit_minute": "14:43", "outcome": "loss", "pnl_pct": -25.7}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "14:44", "strike:spot@entry": "7540:7539.34", "kind": "llm", "implied": "down", "exit_minute": "14:50", "outcome": "win", "pnl_pct": 4.2}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "15:07", "strike:spot@entry": "7550:7551.9", "kind": "llm", "implied": "up", "exit_minute": "15:12", "outcome": "loss", "pnl_pct": -5.4}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "15:41", "strike:spot@entry": "7540:7541.55", "kind": "llm", "implied": "down", "exit_minute": "16:03", "outcome": "win", "pnl_pct": 51.7}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "17:05", "strike:spot@entry": "7545:7543.78", "kind": "llm", "implied": "down", "exit_minute": "17:10", "outcome": "loss", "pnl_pct": -33.0}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "17:16", "strike:spot@entry": "7545:7543.82", "kind": "llm", "implied": "down", "exit_minute": "17:21", "outcome": "loss", "pnl_pct": -33.6}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "17:24", "strike:spot@entry": "7550:7551.0", "kind": "llm", "implied": "up", "exit_minute": "17:29", "outcome": "loss", "pnl_pct": -13.6}
+{"day": "2026-07-14", "ticker": "SPXW", "minute": "18:23", "strike:spot@entry": "7555:7554.03", "kind": "llm", "implied": "up", "exit_minute": "18:25", "outcome": "loss", "pnl_pct": -13.2}

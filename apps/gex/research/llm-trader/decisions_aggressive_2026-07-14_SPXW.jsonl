@@ -9,3 +9,93 @@
 {"m": 66, "et": "10:36", "spot": 7545.02, "action": "hold", "why": ""}
 {"m": 68, "et": "10:38", "spot": 7544.2, "action": "hold", "why": ""}
 {"m": 70, "et": "10:40", "spot": 7545.26, "action": "hold", "why": ""}
+{"m": 72, "et": "10:42", "spot": 7547.93, "action": "hold", "why": ""}
+{"m": 73, "et": "10:43", "spot": 7545.16, "action": "exit", "why": "Momentum long stalled: double rejection at 7548 under the 7560 barney wall (-13M), 8 min flat, deepening barney trapdoor below (7535 -13.2M). Not delivering; preserve for a cleaner break. Re-long if it cracks 7560 toward growing 7585 king; short if 7535 gives into fuel.", "closed": {"side": "long", "m": 65, "spot": 7545.36}}
+{"m": 74, "et": "10:44", "spot": 7539.34, "action": "enter_short", "why": "Rejection rollover: double-topped 7548 under the 7560 barney wall, broke the 7544-48 shelf down to 7539. Upside king 7585 now DECAYING (1m-2.9) = bull intent fading. Downside 7500 pika floor rebuilding/growing to +10.2M = strong magnet. Falling into deep barney fuel (7535 -12M, 7530 -9.8M) = acceleration lower. Short toward 7500, stop on reclaim of 7550."}
+{"m": 75, "et": "10:45", "spot": 7539.34, "action": "hold", "why": ""}
+{"m": 76, "et": "10:46", "spot": 7538.7, "action": "hold", "why": ""}
+{"m": 78, "et": "10:48", "spot": 7534.99, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7537.38, "action": "exit", "why": "Range chop reasserted: price oscillating 7535-7548 in the barney midpoint band between building walls (floor 7500/7510/7520 growing, ceiling 7565/7585). Short not accelerating - supports defending downside, bounced off 7535. Exit ~flat, stop trading the midpoint, wait for a range extreme (7500 or 7565/7585) or a decisive range break.", "closed": {"side": "short", "m": 74, "spot": 7539.34}}
+{"m": 81, "et": "10:51", "spot": 7532.61, "action": "hold", "why": ""}
+{"m": 83, "et": "10:53", "spot": 7536.45, "action": "hold", "why": ""}
+{"m": 89, "et": "10:59", "spot": 7544.02, "action": "hold", "why": ""}
+{"m": 97, "et": "11:07", "spot": 7551.9, "action": "enter_long", "why": "New HOD 7551.9 (+0.49%). Strongest directional read yet: 7585 king EXPLODED to +18.4M/15m+9.5 (up from +13.5M), 7580/7565 stack all building, downside floor now DECAYING (7500/7475 15m -3.7/-3.6) = gravity draining up. Huge 7560 barney (-20.4M) = acceleration fuel into the growing 7585 magnet. One-directional up velocity - position WITH it. Target 7580-7585, stop break+hold below 7540; cut fast if 7560 rejects back below 7548."}
+{"m": 98, "et": "11:08", "spot": 7552.15, "action": "hold", "why": ""}
+{"m": 99, "et": "11:09", "spot": 7556.11, "action": "hold", "why": ""}
+{"m": 100, "et": "11:10", "spot": 7555.02, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7553.31, "action": "hold", "why": ""}
+{"m": 102, "et": "11:12", "spot": 7551.43, "action": "exit", "why": "Breakout failed - 3rd rejection at the 7560 barney wall, 7585 king explosive growth reversed (1m-2.2 from +23M peak), price 4 bars down off 7556 HOD back to entry, now sitting on the 7550 barney trapdoor (-19.8M). Cut at flat per hard rule before the barney accelerates the drop. Re-enter only on a genuine 7560 crack.", "closed": {"side": "long", "m": 97, "spot": 7551.9}}
+{"m": 103, "et": "11:13", "spot": 7552.02, "action": "hold", "why": ""}
+{"m": 105, "et": "11:15", "spot": 7552.09, "action": "hold", "why": ""}
+{"m": 110, "et": "11:20", "spot": 7546.01, "action": "hold", "why": ""}
+{"m": 114, "et": "11:24", "spot": 7549.29, "action": "hold", "why": ""}
+{"m": 117, "et": "11:27", "spot": 7551.66, "action": "hold", "why": ""}
+{"m": 123, "et": "11:33", "spot": 7550.37, "action": "hold", "why": ""}
+{"m": 131, "et": "11:41", "spot": 7541.55, "action": "enter_short", "why": "Coil broke DOWN with a real structural flip. Upside king 7585 COLLAPSED (+11.7M, 15m -7.6, from +20M) and whole upper stack decaying. King FLIPPED to downside: 7520 exploded to +15.5M = now biggest node, growing (15m +4.1); 7510/7500/7475 all building = one-directional down velocity. Barney fuel (7540/7535/7530) below into the 7520 magnet. Unlike earlier fakeouts the king actually flipped. Short, target 7520 growing floor, extend 7510/7500 if it gives; stop reclaim above 7550."}
+{"m": 132, "et": "11:42", "spot": 7538.96, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7537.93, "action": "hold", "why": ""}
+{"m": 136, "et": "11:46", "spot": 7542.66, "action": "hold", "why": ""}
+{"m": 138, "et": "11:48", "spot": 7545.34, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7545.32, "action": "hold", "why": ""}
+{"m": 141, "et": "11:51", "spot": 7540.12, "action": "hold", "why": ""}
+{"m": 143, "et": "11:53", "spot": 7536.78, "action": "hold", "why": ""}
+{"m": 145, "et": "11:55", "spot": 7536.77, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7534.39, "action": "hold", "why": ""}
+{"m": 150, "et": "12:00", "spot": 7536.6, "action": "hold", "why": ""}
+{"m": 153, "et": "12:03", "spot": 7529.66, "action": "exit", "why": "Reached target: price delivered from 7541 down to 7529.66, into the 7525 pika / 7520 king floor complex (7520 +20.6M/12%, growing; 7510 +14.6M building). This is a huge growing pika floor = strong bounce zone. Best trade of day (+0.16% underlying). Cover the short into support rather than get greedy for the last 10pts into a floor that will bounce. King flip to 7520 thesis paid off.", "closed": {"side": "short", "m": 131, "spot": 7541.55}}
+{"m": 154, "et": "12:04", "spot": 7528.1, "action": "hold", "why": ""}
+{"m": 155, "et": "12:05", "spot": 7529.31, "action": "hold", "why": ""}
+{"m": 157, "et": "12:07", "spot": 7530.95, "action": "hold", "why": ""}
+{"m": 162, "et": "12:12", "spot": 7529.58, "action": "hold", "why": ""}
+{"m": 167, "et": "12:17", "spot": 7529.01, "action": "hold", "why": ""}
+{"m": 173, "et": "12:23", "spot": 7529.24, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7534.96, "action": "hold", "why": ""}
+{"m": 186, "et": "12:36", "spot": 7537.82, "action": "hold", "why": ""}
+{"m": 189, "et": "12:39", "spot": 7539.51, "action": "hold", "why": ""}
+{"m": 191, "et": "12:41", "spot": 7539.67, "action": "hold", "why": ""}
+{"m": 194, "et": "12:44", "spot": 7543.52, "action": "hold", "why": ""}
+{"m": 195, "et": "12:45", "spot": 7541.18, "action": "hold", "why": ""}
+{"m": 198, "et": "12:48", "spot": 7538.68, "action": "hold", "why": ""}
+{"m": 204, "et": "12:54", "spot": 7542.17, "action": "hold", "why": ""}
+{"m": 211, "et": "13:01", "spot": 7546.29, "action": "hold", "why": ""}
+{"m": 212, "et": "13:02", "spot": 7547.13, "action": "hold", "why": ""}
+{"m": 213, "et": "13:03", "spot": 7546.8, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7543.78, "action": "enter_short", "why": "Range-fade from 5th cap rejection. 7520-7550 range held all day; cap (7545/7550 barney ~-30M) just rejected price at 7547 for the 5th time, 7565 upside magnet stalled (1m-3.1), and the 7520 floor is rebuilding hard (+24.6M/1m+2.6) with 7525 (+16.7M) = clear downside target. Path: 7530 barney (-18.7M) fuel into the 7525/7520 pika floor. Short toward 7525-7520, cover into the floor before the bounce, stop reclaim above 7551. ~2.7:1."}
+{"m": 216, "et": "13:06", "spot": 7544.04, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7544.67, "action": "hold", "why": ""}
+{"m": 220, "et": "13:10", "spot": 7547.4, "action": "exit", "why": "Range-fade short failing. Price making higher highs into the cap (7544.7->7547.4), refusing to roll toward the 7520 floor; cap defending at -33M but floor decaying (7520 15m-2.2) and buyers persistently pressing higher = bullish coil winning. Cut the small loser fast rather than risk the up-crack spiking it. Prepare to flip LONG on a confirmed 7550 crack toward 7565/7585.", "closed": {"side": "short", "m": 215, "spot": 7543.78}}
+{"m": 221, "et": "13:11", "spot": 7548.27, "action": "hold", "why": ""}
+{"m": 222, "et": "13:12", "spot": 7547.79, "action": "hold", "why": ""}
+{"m": 224, "et": "13:14", "spot": 7547.33, "action": "hold", "why": ""}
+{"m": 226, "et": "13:16", "spot": 7543.82, "action": "enter_short", "why": "Failed-breakout rollover short. Price rejected the -37M cap for the 6th+ time and rolled over (7548.3->7543.8). Upside magnets now DECAYING (7565 15m-3.1, 7585 -2.3) = up-thrust spent. Fresh barney deepening fast right below spot (7540 -15.3M, 1m-7.7) = new downside fuel, 7530 barney (-17.7M) beneath, 7520 floor (+23.1M) the target. Unlike my 13:05 short (higher highs then), momentum has clearly flipped down. Target 7525/7520, cover into floor, stop reclaim above 7549."}
+{"m": 227, "et": "13:17", "spot": 7544.76, "action": "hold", "why": ""}
+{"m": 229, "et": "13:19", "spot": 7545.43, "action": "hold", "why": ""}
+{"m": 231, "et": "13:21", "spot": 7548.19, "action": "exit", "why": "Third time caught short on the wrong side of this cap coil. Price refuses to fall to the floor - keeps grinding to higher highs into the cap (7545->7548) while the floor DECAYS (7520 15m-4.1). Market clearly wants UP; the -36M cap is the only resistance. Cut the small loser fast, stop fighting the up-grind. Go LONG on a confirmed crack of 7550 (squeeze to 7565/7585), not front-run the wall a 7th time.", "closed": {"side": "short", "m": 226, "spot": 7543.82}}
+{"m": 232, "et": "13:22", "spot": 7549.06, "action": "hold", "why": ""}
+{"m": 233, "et": "13:23", "spot": 7550.02, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7551, "action": "enter_long", "why": "Afternoon up-break confirmed. Price ground above the -36M cap (7549->7550->7551, relentless higher highs). DECISIVE new tell: the floor is decaying for the first time all day (7520 15m-5.0, 7525 -4.3, 7510 -2.9) = all-day support giving way, balance tips up. 7585 magnet building strongly (+13.6M, 1m+2.0, 15m+3.8), 7565 (+14.8M) just above. Break of the all-day range. Long, target 7565 then 7585, stop decisive drop below 7545, cut fast if it round-trips."}
+{"m": 235, "et": "13:25", "spot": 7550.99, "action": "hold", "why": ""}
+{"m": 236, "et": "13:26", "spot": 7550.67, "action": "hold", "why": ""}
+{"m": 237, "et": "13:27", "spot": 7551.26, "action": "hold", "why": ""}
+{"m": 239, "et": "13:29", "spot": 7549.88, "action": "exit", "why": "Up-break failed to follow through. Price cracked to 7551 but couldnt hold, slipped back below 7550 into the twin -37M barney, upside magnets now decaying (7565 15m-1.6). Same round-trip pattern as earlier longs. Cut at ~flat per round-trip rule, before the 7545 barney trapdoor. The -37M cap is an extreme pin that chops every entry - stepping back, will only re-engage on a decisively followed-through break (clearly >7560 or <7530) or into the close.", "closed": {"side": "long", "m": 234, "spot": 7551}}
+{"m": 240, "et": "13:30", "spot": 7549.58, "action": "hold", "why": ""}
+{"m": 246, "et": "13:36", "spot": 7545.79, "action": "hold", "why": ""}
+{"m": 251, "et": "13:41", "spot": 7547.66, "action": "hold", "why": ""}
+{"m": 259, "et": "13:49", "spot": 7548.5, "action": "hold", "why": ""}
+{"m": 263, "et": "13:53", "spot": 7548.54, "action": "hold", "why": ""}
+{"m": 271, "et": "14:01", "spot": 7546.23, "action": "hold", "why": ""}
+{"m": 279, "et": "14:09", "spot": 7550.62, "action": "hold", "why": ""}
+{"m": 285, "et": "14:15", "spot": 7552.33, "action": "hold", "why": ""}
+{"m": 287, "et": "14:17", "spot": 7552.3, "action": "hold", "why": ""}
+{"m": 288, "et": "14:18", "spot": 7551.96, "action": "hold", "why": ""}
+{"m": 293, "et": "14:23", "spot": 7554.03, "action": "enter_long", "why": "Bullish resolution above the cap. Price cleared the 7550 barney (now below spot) and is grinding up (7552->7554). 7565 pika building strongly (+20.7M, 15m+5.8) = powerful up-magnet just above; immediate path hollow (7555 pika collapsed to +3.0M, 7560 barney weak -7.3M) = air-pocket to 7565. Floor decaying (7520 15m-3.7) = down-support gone. Long toward the 7565 magnet, cover into it, stop tight below 7549 (back into the -62.7M barney)."}
+{"m": 294, "et": "14:24", "spot": 7553.18, "action": "hold", "why": ""}
+{"m": 295, "et": "14:25", "spot": 7550.54, "action": "exit", "why": "Long failed. Price fell back from 7554 to 7550.5, up-move to 7565 rejected (magnet softened 1m-3.3), downside fuel deepening (7540 barney -22.3M, 7530 -13.0M). Price now sitting right on the -60M barney amplifier - a break below 7550 flushes down violently. Cut the small loser now; asymmetry favors exiting before the amplifier triggers rather than risk a large loss.", "closed": {"side": "long", "m": 293, "spot": 7554.03}}
+{"m": 296, "et": "14:26", "spot": 7551.61, "action": "hold", "why": ""}
+{"m": 306, "et": "14:36", "spot": 7551.72, "action": "hold", "why": ""}
+{"m": 318, "et": "14:48", "spot": 7548.19, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7548.4, "action": "hold", "why": ""}
+{"m": 342, "et": "15:12", "spot": 7544.41, "action": "hold", "why": ""}
+{"m": 348, "et": "15:18", "spot": 7547.95, "action": "hold", "why": ""}
+{"m": 360, "et": "15:30", "spot": 7547.68, "action": "hold", "why": ""}
+{"m": 372, "et": "15:42", "spot": 7546.54, "action": "hold", "why": ""}
