@@ -76,7 +76,7 @@ for day in days:
 
 # EXTREME-PROBE system entries (operator: show ONLY this system on the map)
 # Prefer Variant-B cycle legs (operator: pika-touch system only) when the study has landed
-_CY=f"{BASE}/research/swing-system/swing_v2_events.jsonl"
+_CY=f"{BASE}/research/llm-trader/cf_events_all.jsonl"
 EV=_CY if os.path.exists(_CY) else f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
@@ -92,8 +92,9 @@ if os.path.exists(EV):
                 return v if 0<=v<=390 else None
             m=m_of(e.get("minute"))
             if m is None: continue
-            _sk=e.get("strike", e.get("strike:spot@entry",""))
-            _k=float(str(_sk).split(":")[-1])   # spot@entry -> marker sits on the price line
+            _sk=e.get("strike") or e.get("strike:spot@entry") or e.get("strike_spot_at_entry") or ""
+            try: _k=float(str(_sk).split(":")[-1])
+            except (ValueError, TypeError): continue   # skip malformed strike
             out["data"][key]["sig"].append({"m":m,"k":_k,
                 "d":"call" if e.get("implied")=="up" else "put",
                 "xm":m_of(e.get("exit_minute")),
