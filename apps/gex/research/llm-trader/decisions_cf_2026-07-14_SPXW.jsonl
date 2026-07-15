@@ -1,0 +1,67 @@
+{"m": 30, "et": "10:00", "spot": 7534.5, "action": "hold", "why": ""}
+{"m": 40, "et": "10:10", "spot": 7534.5, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7534.5, "action": "hold", "why": ""}
+{"m": 65, "et": "10:35", "spot": 7545.36, "action": "enter_long", "why": "CHART: 45-min consolidation at 7534.5 resolved UP \u2014 10:30/10:35 candles broke to fresh day high 7545.36, 100% of range, momentum flipped +0.15%/+0.14%. Clean breakout, buy the break. GEX CONFIRM: negative-gamma regime (-37M) = breakouts extend not fade; no pika ceiling overhead, barney magnet at 7560 (king -14M) 15pts up pulls price toward it as target; pika floor 7500 below. Chart+GEX agree = long."}
+{"m": 66, "et": "10:36", "spot": 7545.02, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7544.2, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7545.26, "action": "exit", "why": "Thesis degraded on BOTH legs: (1) 5-min momentum stalled to -0.00%, breakout not following through, price pinned at day highs. (2) GEX confirmation GONE \u2014 the 7560 barney magnet I targeted vanished; near-spot re-formed as pika +15M at 7585, a positive-gamma PIN/wall that caps upside not a magnet. Structure that justified entry no longer exists + overhead resistance hardened. Take the breakeven, stand down, wait for cleaner setup.", "closed": {"side": "long", "m": 65, "spot": 7545.36}}
+{"m": 71, "et": "10:41", "spot": 7547.93, "action": "hold", "why": ""}
+{"m": 76, "et": "10:46", "spot": 7538.7, "action": "hold", "why": ""}
+{"m": 79, "et": "10:49", "spot": 7537.38, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7540.52, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7540.84, "action": "hold", "why": ""}
+{"m": 103, "et": "11:13", "spot": 7552.02, "action": "hold", "why": ""}
+{"m": 105, "et": "11:15", "spot": 7552.09, "action": "hold", "why": ""}
+{"m": 108, "et": "11:18", "spot": 7548.14, "action": "enter_short", "why": "CHART: 3rd failed breakout at the 7548-7556 range top (10:40, 11:10, now). Price faded 7556->7552->7548, 5-min momentum negative, rolling over. Range-day play: fade the poke at the top back to the middle, entering near resistance not chasing. GEX CONFIRM: barney strengthening into KING at 7550 (-23M) capping right overhead = classic short trigger; net gamma -36M (levels break) means a move down accelerates. Target VWAP 7538 then cover into rising pika floor 7520. Chart+GEX agree = short."}
+{"m": 109, "et": "11:19", "spot": 7545.73, "action": "hold", "why": ""}
+{"m": 111, "et": "11:21", "spot": 7546.53, "action": "hold", "why": ""}
+{"m": 113, "et": "11:23", "spot": 7548.17, "action": "hold", "why": ""}
+{"m": 115, "et": "11:25", "spot": 7551.31, "action": "exit", "why": "Short INVALIDATED: price reclaimed the 7550 barney (now 7551.3, above my stop line) and 5-min momentum flipped +0.07%. My fade-the-failed-breakout thesis required price to hold below 7550 and head to VWAP; instead it bounced back through resistance with no downside follow-through. Range day whipsaw. Take the small loss per plan, do not marry it.", "closed": {"side": "short", "m": 108, "spot": 7548.14}}
+{"m": 116, "et": "11:26", "spot": 7549.96, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7547.33, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7537.93, "action": "hold", "why": ""}
+{"m": 137, "et": "11:47", "spot": 7542.44, "action": "hold", "why": ""}
+{"m": 149, "et": "11:59", "spot": 7533.73, "action": "hold", "why": ""}
+{"m": 154, "et": "12:04", "spot": 7528.1, "action": "hold", "why": ""}
+{"m": 156, "et": "12:06", "spot": 7529.81, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7528.88, "action": "enter_long", "why": "CHART: selloff 7550->7528 EXHAUSTED at strong support; 8-min base built at 7528-30 right above floor, down-momentum decayed -0.23%->-0.10%, 5-min flat. Buy the support hold at range low (mean-revert day). GEX CONFIRM (the differentiator): regime FLIPPED to POSITIVE-gamma +12M = levels HOLD (my 2 losers were negative-gamma levels-break chop); KING pika floor 7520 (+21M) directly beneath as strong support; no pika ceiling capping bounce, only 7550 barney above = my target. Chart+GEX strongly agree = long. Stop: close below 7518. Target VWAP 7539 then 7550."}
+{"m": 159, "et": "12:09", "spot": 7531.39, "action": "hold", "why": ""}
+{"m": 161, "et": "12:11", "spot": 7528.51, "action": "hold", "why": ""}
+{"m": 164, "et": "12:14", "spot": 7531.83, "action": "hold", "why": ""}
+{"m": 167, "et": "12:17", "spot": 7529.01, "action": "hold", "why": ""}
+{"m": 170, "et": "12:20", "spot": 7530.75, "action": "exit", "why": "Support read was RIGHT \u2014 price held the 7528 base ~17min, 7520 pika floor caught it exactly (positive-gamma levels-hold confirmed). But the tradeable BOUNCE to VWAP never started; price dead-pinned flat at 7530, momentum flat, net gamma now neutral 0M, and the pin magnet (7520 pika) sits BELOW me. A 0DTE long in a flat pin is theta decay with no upside progress. Take the breakeven, dont marry a non-progressing trade, wait for a real momentum trigger.", "closed": {"side": "long", "m": 158, "spot": 7528.88}}
+{"m": 171, "et": "12:21", "spot": 7530.89, "action": "hold", "why": ""}
+{"m": 183, "et": "12:33", "spot": 7534.39, "action": "hold", "why": ""}
+{"m": 195, "et": "12:45", "spot": 7541.18, "action": "hold", "why": ""}
+{"m": 198, "et": "12:48", "spot": 7538.68, "action": "hold", "why": ""}
+{"m": 208, "et": "12:58", "spot": 7542.33, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7544.67, "action": "hold", "why": ""}
+{"m": 226, "et": "13:16", "spot": 7543.82, "action": "hold", "why": ""}
+{"m": 232, "et": "13:22", "spot": 7549.06, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7551, "action": "hold", "why": ""}
+{"m": 236, "et": "13:26", "spot": 7550.67, "action": "hold", "why": ""}
+{"m": 238, "et": "13:28", "spot": 7550.42, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7550.36, "action": "hold", "why": ""}
+{"m": 249, "et": "13:39", "spot": 7547.03, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7546.92, "action": "hold", "why": ""}
+{"m": 256, "et": "13:46", "spot": 7545.53, "action": "hold", "why": ""}
+{"m": 259, "et": "13:49", "spot": 7548.5, "action": "hold", "why": ""}
+{"m": 261, "et": "13:51", "spot": 7548.07, "action": "hold", "why": ""}
+{"m": 266, "et": "13:56", "spot": 7547.76, "action": "hold", "why": ""}
+{"m": 272, "et": "14:02", "spot": 7547.8, "action": "hold", "why": ""}
+{"m": 278, "et": "14:08", "spot": 7550.32, "action": "hold", "why": ""}
+{"m": 280, "et": "14:10", "spot": 7550.75, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7552.68, "action": "hold", "why": ""}
+{"m": 288, "et": "14:18", "spot": 7551.96, "action": "hold", "why": ""}
+{"m": 296, "et": "14:26", "spot": 7551.61, "action": "hold", "why": ""}
+{"m": 304, "et": "14:34", "spot": 7550.94, "action": "hold", "why": ""}
+{"m": 314, "et": "14:44", "spot": 7545.14, "action": "hold", "why": ""}
+{"m": 316, "et": "14:46", "spot": 7545.87, "action": "hold", "why": ""}
+{"m": 319, "et": "14:49", "spot": 7547.42, "action": "hold", "why": ""}
+{"m": 325, "et": "14:55", "spot": 7549.1, "action": "hold", "why": ""}
+{"m": 333, "et": "15:03", "spot": 7546.13, "action": "hold", "why": ""}
+{"m": 339, "et": "15:09", "spot": 7547.06, "action": "hold", "why": ""}
+{"m": 345, "et": "15:15", "spot": 7547.18, "action": "hold", "why": ""}
+{"m": 353, "et": "15:23", "spot": 7549.8, "action": "hold", "why": ""}
+{"m": 361, "et": "15:31", "spot": 7545.39, "action": "hold", "why": ""}
+{"m": 371, "et": "15:41", "spot": 7545.49, "action": "hold", "why": ""}

@@ -1,0 +1,3 @@
+{"day":"2026-07-14","ticker":"SPXW","minute":"14:35","strike":7545,"spot_at_entry":7545.36,"kind":"cf","implied":"up","exit_minute":"14:40","outcome":"win","pnl_pct":5.13}
+{"day":"2026-07-14","ticker":"SPXW","minute":"15:18","strike":7550,"spot_at_entry":7548.14,"kind":"cf","implied":"down","exit_minute":"15:25","outcome":"loss","pnl_pct":-25.41}
+{"day":"2026-07-14","ticker":"SPXW","minute":"16:08","strike":7530,"spot_at_entry":7528.88,"kind":"cf","implied":"up","exit_minute":"16:20","outcome":"loss","pnl_pct":-13.93}
