@@ -1,5 +1,7 @@
 /**
- * OPERATOR-EYE SWING SYSTEM — GHOST ONLY (Clause 0: no live trading logic; paper fires only).
+ * OPERATOR-EYE SWING SYSTEM — GHOST ONLY (Clause 0). FROZEN CONFIG per SWING_V2_VALIDATION.md: V-reclaim LONG-only,
+ * R0.25/S12/CONFIRM2, flips/shorts/higher-low/node-gates OFF. +10.4%/trade in-sample,
+ * +4.7% OOS (n=13). PAPER ONLY until OOS >= 10 days / n >= 60 stays positive vs random.
  *
  * A transcription of the operator's annotated trading style (operator_trades.json,
  * 2026-07-14/-10) into four causal rules on 1-min spot:
@@ -30,17 +32,17 @@ const BF = path.join(HERE, '..', 'velocity-capture', 'backfill');
 const LOG = path.join(HERE, 'swing_ghost_log.jsonl');
 
 export const P = {
-  R: 0.0020,        // * swing reversal threshold (0.20% of spot)
+  R: 0.0025,        //   FROZEN (SWING_V2_VALIDATION): swing reversal threshold 0.25%
   PULL: 0.6,        // * pullback fraction of R for higher-low / flip triggers
   CONFIRM: 2,       //   consecutive closes to confirm a turn (the causal lag we pay)
-  S: 10,            // * stall exit: minutes without a new favorable extreme
+  S: 12,            //   FROZEN: stall exit minutes
   STOP_PCT: 0.0010, //   structural stop: 0.10% beyond the entry pivot...
   STOP_MIN: 2,      //   ...for 2 consecutive minutes (validated lean)
   BUDGET: 6,        //   max entries/side/day
   COOL: 5,          //   minutes between entries
-  FLIPS_MAX: 2,     //   failed-high flip shorts per day
+  FLIPS_MAX: 0,     //   FROZEN OFF — flips tested inert-to-harmful (SWING_V2_VALIDATION)
   PIN_ZONE: 0.0012, //   within 0.12% of a dominant pika = pin territory (v2)
-  PIN_STALL_X: 2.5, //   stall patience multiplier while the pin holds (v2: stay in longer)
+  PIN_STALL_X: 1,   //   FROZEN OFF — pin-hold tested harmful (pin cohort resolves worse)
 };
 
 const et = m => `${String(Math.floor((m + 570) / 60)).padStart(2, '0')}:${String((m + 570) % 60).padStart(2, '0')}`;
@@ -114,8 +116,8 @@ export function runDay(frames, params = P) {
         rising(i) && !deadLevels.some(L => Math.abs(L - runLow) / s < 0.0005)) {
       open(i, 'long', 'vreclaim', runLow); continue;
     }
-    // higher-low pullback long
-    if (longs < p.BUDGET && !downDay && hadUpSwing && dir === 1 && pivotLow && pivotHigh &&
+    // higher-low pullback long — FROZEN OFF (subtracted value in validation)
+    if (false && longs < p.BUDGET && !downDay && hadUpSwing && dir === 1 && pivotLow && pivotHigh &&
         s > pivotLow && (pivotHigh - Math.min(...closes.slice(Math.max(0, i - 15), i + 1))) / pivotHigh >= p.PULL * p.R &&
         Math.min(...closes.slice(Math.max(0, i - 15), i + 1)) > pivotLow * (1 - 0.0002) && rising(i)) {
       open(i, 'long', 'higherlow', pivotLow); continue;

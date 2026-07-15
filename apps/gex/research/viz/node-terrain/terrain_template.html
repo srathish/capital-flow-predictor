@@ -69,7 +69,18 @@
     <span class="lg"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid transparent;box-sizing:border-box;border-bottom-color:transparent;position:relative"><svg width="14" height="11"><polygon points="7,1 1,10 13,10" fill="none" stroke="var(--good)" stroke-width="2"/></svg></span> system entry (hypothetical)</span>
   </div>
 </div>
+<div class="bar" style="margin-top:2px">
+  <div class="seg" id="aseg" role="tablist" aria-label="annotate">
+    <button aria-pressed="true" data-a="off">✍ off</button>
+    <button aria-pressed="false" data-a="long">▲ enter LONG</button>
+    <button aria-pressed="false" data-a="short">▼ enter SHORT</button>
+  </div>
+  <div class="seg"><button id="copyTr">copy my trades</button><button id="clearTr">clear day</button></div>
+  <span class="legend" id="astat">annotate: off — pick LONG/SHORT, then click entry and exit on the chart</span>
+</div>
 <div class="wrap"><canvas id="cv"></canvas><div class="tip" id="tip"></div></div>
+<div id="trades" class="note" style="font-variant-numeric:tabular-nums"></div>
+<textarea id="trExport" style="display:none;width:100%;height:120px;margin-top:8px;background:var(--sf);color:var(--ink);border:1px solid var(--ring);border-radius:8px;padding:8px;font:12px/1.4 ui-monospace,monospace" readonly></textarea>
 <p class="note" id="note"></p>
 <details><summary>King ledger (30-min table view)</summary><div id="tbl"></div></details>
 </div>
@@ -84,7 +95,7 @@ function seg(el, items, cur, fn){
   el.innerHTML='';
   items.forEach(it=>{const b=document.createElement('button');b.textContent=it;
     b.setAttribute('aria-pressed', String(it===cur));
-    b.onclick=()=>{fn(it); [...el.children].forEach(c=>c.setAttribute('aria-pressed', String(c.textContent===it))); draw();};
+    b.onclick=()=>{fn(it); [...el.children].forEach(c=>c.setAttribute('aria-pressed', String(c.textContent===it))); draw(); if(typeof renderTrades==='function')renderTrades();};
     el.appendChild(b);});
 }
 seg($('#tseg'), DATA.tickers, TK, v=>TK=v);
@@ -175,6 +186,22 @@ function draw(){
     ctx.closePath();ctx.fill();ctx.stroke();
     ctx.globalAlpha=1;
   });
+  // MANUAL TRADES layer
+  (typeof TRADES!=='undefined'?TRADES:[]).filter(x=>x.day===DY&&x.tk===TK).forEach(x=>{
+    const x1=PAD.l+pw*(x.m1/390), x2=PAD.l+pw*(x.m2/390), y1=Y(x.s1), y2=Y(x.s2);
+    const col=x.dir==='long'?css('--good'):css('--crit');
+    ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    ctx.fillStyle=col; ctx.strokeStyle=`rgb(${sf.join(',')})`; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    if(x.dir==='long'){ctx.moveTo(x1,y1-9);ctx.lineTo(x1-8,y1+6);ctx.lineTo(x1+8,y1+6);}
+    else{ctx.moveTo(x1,y1+9);ctx.lineTo(x1-8,y1-6);ctx.lineTo(x1+8,y1-6);}
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle=col; ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.moveTo(x2-5,y2-5);ctx.lineTo(x2+5,y2+5);ctx.moveTo(x2+5,y2-5);ctx.lineTo(x2-5,y2+5);ctx.stroke();
+    ctx.font='11px system-ui'; ctx.fillStyle=css('--ink'); ctx.textAlign='left';
+    const um=((x.s2-x.s1)/x.s1*100*(x.dir==='long'?1:-1)).toFixed(2);
+    ctx.fillText(`${um>=0?'+':''}${um}% (est ${(x.est>=0?'+':'')+x.est}%)`, x2+7, y2+4);
+  });
   // note + table
   const kchg=d.king.filter((k,i)=>i&&k!==d.king[i-1]).length;
   $('#note').textContent=`${TK} ${DY} — ${n} strikes in band, King changed ${kchg}× at 1-min. Probes: ${(d.sig||[]).length} (caught: ${(d.sig||[]).filter(s=>s.out==='win').length} · aborted: ${(d.sig||[]).filter(s=>s.out==='abort').length}) · P&L: ${(d.sig||[]).filter(s=>s.r!=null).map(s=>(s.r>0?'+':'')+Math.round(s.r)+'%').join(' ')||'—'} Realized per fire: ${(d.fires||[]).map(f=>(f.r>0?'+':'')+f.r+'%').join(' · ')||'none'}`;
@@ -183,6 +210,55 @@ function draw(){
     rows+=`<tr><td>${t}:${mn}</td><td>${d.spot[i]}</td><td>${d.king[i]}</td><td>${d.ksign[i]>0?'pika':'barney'}</td></tr>`;}
   $('#tbl').innerHTML=rows+'</table>';
 }
+
+// ---- MANUAL TRADES (operator annotations) ----
+let AMODE='off', pending=null;
+const LS='terrain_trades_v1';
+const loadTr=()=>{try{return JSON.parse(localStorage.getItem(LS)||'[]')}catch(e){return[]}};
+let TRADES=loadTr();
+const saveTr=()=>localStorage.setItem(LS,JSON.stringify(TRADES));
+[...document.querySelectorAll('#aseg button')].forEach(b=>b.onclick=()=>{
+  AMODE=b.dataset.a; pending=null;
+  [...document.querySelectorAll('#aseg button')].forEach(c=>c.setAttribute('aria-pressed',String(c===b)));
+  $('#astat').textContent='annotate: '+AMODE+(AMODE!=='off'?' — click ENTRY, then EXIT':'');
+});
+$('#copyTr').onclick=()=>{
+  const txt=JSON.stringify(TRADES);
+  const ta=$('#trExport'); ta.style.display='block'; ta.value=txt; ta.focus(); ta.select();
+  let ok=false; try{ok=document.execCommand('copy');}catch(e){}
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>{$('#astat').textContent='copied '+TRADES.length+' trades — paste in the chat';}).catch(()=>{});
+  $('#astat').textContent=(ok?'copied — also shown below: ':'clipboard blocked — SELECT the box below, Cmd-C, paste in the chat: ')+TRADES.length+' trades';
+};
+$('#clearTr').onclick=()=>{TRADES=TRADES.filter(x=>!(x.day===DY&&x.tk===TK));saveTr();draw();renderTrades();};
+// ATM 0DTE estimate: intrinsic + sqrt-time value (rough — real scoring happens offline on UW prints)
+function atmEst(dir,s1,s2,m1,m2){
+  const c=0.0024, K=s1;
+  const tv=m=>s1*c*Math.sqrt(Math.max(1,390-m)/390);
+  const prem=(S,m)=>Math.max(dir==='long'?S-K:K-S,0)+tv(m);
+  return (prem(s2,m2)-prem(s1,m1))/prem(s1,m1)*100;
+}
+function renderTrades(){
+  const rows=TRADES.filter(x=>x.day===DY&&x.tk===TK);
+  $('#trades').innerHTML = rows.length? '<b>your trades ('+DY+' '+TK+'):</b> '+rows.map(x=>{
+    const um=((x.s2-x.s1)/x.s1*100*(x.dir==='long'?1:-1));
+    return `${x.dir==='long'?'▲':'▼'} ${x.e1}→${x.e2} · underlying ${um>=0?'+':''}${um.toFixed(2)}% · ATM est ${(x.est>=0?'+':'')+Math.round(x.est)}%`;
+  }).join(' &nbsp;|&nbsp; ') : '';
+}
+function minuteAt(px){const r=cv.getBoundingClientRect();return Math.max(0,Math.min(390,Math.round((px-PAD.l)/geom.pw*390)))}
+function etStr(m){const t=m+570;return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
+cv.addEventListener('click',e=>{
+  if(AMODE==='off'||!cur||!geom)return;
+  const r=cv.getBoundingClientRect(), m=minuteAt(e.clientX-r.left);
+  const i=Math.min(cur.mins.length-1, Math.max(0, cur.mins.findIndex(x=>x>=m)===-1?cur.mins.length-1:cur.mins.findIndex(x=>x>=m)));
+  const s=cur.spot[i];
+  if(!pending){pending={m,i,s}; $('#astat').textContent='entry set '+etStr(m)+' @ '+s+' — now click the EXIT';}
+  else{
+    const est=atmEst(AMODE,pending.s,s,pending.m,m);
+    TRADES.push({day:DY,tk:TK,dir:AMODE,m1:pending.m,m2:m,s1:pending.s,s2:s,e1:etStr(pending.m),e2:etStr(m),est:Math.round(est)});
+    saveTr(); pending=null; $('#astat').textContent='trade saved — click next entry, or copy my trades';
+    draw(); renderTrades();
+  }
+});
 cv.addEventListener('mousemove',e=>{
   if(!cur||!geom)return;
   const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
@@ -201,5 +277,5 @@ cv.addEventListener('mouseleave',()=>tip.style.display='none');
 new ResizeObserver(()=>draw()).observe(cv);
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
 new MutationObserver(()=>draw()).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-draw();
+draw(); renderTrades();
 </script>

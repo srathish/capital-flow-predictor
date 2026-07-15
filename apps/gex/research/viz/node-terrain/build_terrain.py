@@ -76,7 +76,7 @@ for day in days:
 
 # EXTREME-PROBE system entries (operator: show ONLY this system on the map)
 # Prefer Variant-B cycle legs (operator: pika-touch system only) when the study has landed
-_CY=f"{BASE}/research/velocity-capture/cycle_events.jsonl"
+_CY=f"{BASE}/research/swing-system/swing_v2_events.jsonl"
 EV=_CY if os.path.exists(_CY) else f"{BASE}/research/velocity-capture/probe_events.jsonl"
 if os.path.exists(EV):
     n=0
@@ -88,7 +88,7 @@ if os.path.exists(EV):
             if e.get("kind")=="cycle" and e.get("variant")!="B": continue
             def m_of(t):
                 if not t: return None
-                hh,mm=t.split(":"); v=(int(hh)*60+int(mm))-(13*60+30)
+                t=t.split('T')[1] if 'T' in t else t; p=t.split(':'); hh,mm=int(p[0]),int(p[1]); v=(hh*60+mm)-(13*60+30)
                 return v if 0<=v<=390 else None
             m=m_of(e.get("minute"))
             if m is None: continue
