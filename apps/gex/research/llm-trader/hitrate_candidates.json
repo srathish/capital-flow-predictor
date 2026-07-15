@@ -1,0 +1,1934 @@
+[
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 74,
+  "m": 74,
+  "et": "10:44",
+  "spot": 7539.34,
+  "strike": 7540,
+  "cp": "P",
+  "pivot": 7547.93,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:44",
+   "entry_px": 15.0,
+   "spot0": 7539.34,
+   "node_target": 7535.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": -0.0897241379310344,
+     "exit_et": "10:48"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.566535303776683,
+     "exit_et": "11:07"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.566535303776683,
+     "exit_et": "11:07"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.566535303776683,
+     "exit_et": "11:07"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 101,
+  "m": 101,
+  "et": "11:11",
+  "spot": 7553.31,
+  "strike": 7555,
+  "cp": "P",
+  "pivot": 7556.11,
+  "gates": {
+   "G1": true,
+   "G2": true,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "11:11",
+   "entry_px": 12.7,
+   "spot0": 7553.31,
+   "node_target": 7550.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.1003452154687563,
+     "exit_et": "11:17"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "11:20"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "11:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "11:42"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "long",
+  "i": 135,
+  "m": 135,
+  "et": "11:45",
+  "spot": 7542.37,
+  "strike": 7540,
+  "cp": "C",
+  "pivot": 7537.04,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "11:45",
+   "entry_px": 12.0,
+   "spot0": 7542.37,
+   "node_target": 7545.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.03271346469622327,
+     "exit_et": "11:48"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.47434318555008215,
+     "exit_et": "12:01"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.47434318555008215,
+     "exit_et": "12:01"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.47434318555008215,
+     "exit_et": "12:01"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "long",
+  "i": 156,
+  "m": 156,
+  "et": "12:06",
+  "spot": 7529.81,
+  "strike": 7530,
+  "cp": "C",
+  "pivot": 7528.1,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "12:06",
+   "entry_px": 11.4,
+   "spot0": 7529.81,
+   "node_target": 7545.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.5918676000345691,
+     "exit_et": "13:01"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "12:41"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "13:00"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566503,
+     "exit_et": "13:22"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "long",
+  "i": 176,
+  "m": 176,
+  "et": "12:26",
+  "spot": 7530.27,
+  "strike": 7530,
+  "cp": "C",
+  "pivot": 7527.97,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "12:26",
+   "entry_px": 10.4,
+   "spot0": 7530.27,
+   "node_target": 7535.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.1197423266388784,
+     "exit_et": "12:32"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "12:36"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "12:42"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566508,
+     "exit_et": "13:02"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 214,
+  "m": 214,
+  "et": "13:04",
+  "spot": 7545.54,
+  "strike": 7545,
+  "cp": "P",
+  "pivot": 7547.13,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:04",
+   "entry_px": 8.55,
+   "spot0": 7545.54,
+   "node_target": 7545.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": -0.046581972171808705,
+     "exit_et": "13:05"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.46653991300089304,
+     "exit_et": "13:24"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.46653991300089304,
+     "exit_et": "13:24"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.46653991300089304,
+     "exit_et": "13:24"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 225,
+  "m": 225,
+  "et": "13:15",
+  "spot": 7544.78,
+  "strike": 7545,
+  "cp": "P",
+  "pivot": 7548.27,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:15",
+   "entry_px": 8.3,
+   "spot0": 7544.78,
+   "node_target": 7530.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.7310819633212654,
+     "exit_et": "14:15"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.7310819633212654,
+     "exit_et": "14:15"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.7310819633212654,
+     "exit_et": "14:15"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.7310819633212654,
+     "exit_et": "14:15"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 236,
+  "m": 236,
+  "et": "13:26",
+  "spot": 7550.67,
+  "strike": 7550,
+  "cp": "P",
+  "pivot": 7551.0,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:26",
+   "entry_px": 6.3,
+   "spot0": 7550.67,
+   "node_target": 7550.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.06286652592071329,
+     "exit_et": "13:29"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "13:35"
+    },
+    "+60%": {
+     "reason": "eod",
+     "pnl": -0.645711158026429,
+     "exit_et": "15:45"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.645711158026429,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 244,
+  "m": 244,
+  "et": "13:34",
+  "spot": 7547.82,
+  "strike": 7550,
+  "cp": "P",
+  "pivot": 7551.26,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:34",
+   "entry_px": 8.3,
+   "spot0": 7547.82,
+   "node_target": 7545.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": -0.06463291590005349,
+     "exit_et": "13:37"
+    },
+    "+40%": {
+     "reason": "eod",
+     "pnl": -0.7310819633212654,
+     "exit_et": "15:45"
+    },
+    "+60%": {
+     "reason": "eod",
+     "pnl": -0.7310819633212654,
+     "exit_et": "15:45"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.7310819633212654,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 288,
+  "m": 288,
+  "et": "14:18",
+  "spot": 7551.96,
+  "strike": 7550,
+  "cp": "P",
+  "pivot": 7552.68,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:18",
+   "entry_px": 3.9,
+   "spot0": 7551.96,
+   "node_target": 7550.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.10978906151319956,
+     "exit_et": "14:39"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "14:37"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "14:37"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "14:41"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPXW",
+  "side": "short",
+  "i": 295,
+  "m": 295,
+  "et": "14:25",
+  "spot": 7550.54,
+  "strike": 7550,
+  "cp": "P",
+  "pivot": 7554.03,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:25",
+   "entry_px": 3.8,
+   "spot0": 7550.54,
+   "node_target": 7550.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.1389940368161784,
+     "exit_et": "14:39"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.3586206896551727,
+     "exit_et": "14:37"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "14:37"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "14:41"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 31,
+  "m": 31,
+  "et": "10:01",
+  "spot": 751.095,
+  "strike": 751,
+  "cp": "P",
+  "pivot": 751.6800000000001,
+  "gates": {
+   "G1": false,
+   "G2": true,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:01",
+   "entry_px": 1.72,
+   "spot0": 751.095,
+   "node_target": 750.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.1961278496964145,
+     "exit_et": "10:11"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "10:16"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "10:16"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.43578875014320073,
+     "exit_et": "10:41"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "long",
+  "i": 50,
+  "m": 50,
+  "et": "10:20",
+  "spot": 749.85,
+  "strike": 750,
+  "cp": "C",
+  "pivot": 749.19,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "10:20",
+   "entry_px": 1.74,
+   "spot0": 749.85,
+   "node_target": 750.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": -0.0072476077232318525,
+     "exit_et": "10:21"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "10:34"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "10:34"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "10:34"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 73,
+  "m": 73,
+  "et": "10:43",
+  "spot": 751.65,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.21,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": true,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:43",
+   "entry_px": 1.72,
+   "spot0": 751.65,
+   "node_target": 750.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.5429888876159925,
+     "exit_et": "11:09"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.5429888876159925,
+     "exit_et": "11:09"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.5429888876159925,
+     "exit_et": "11:09"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.5429888876159925,
+     "exit_et": "11:09"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 101,
+  "m": 101,
+  "et": "11:11",
+  "spot": 752.675,
+  "strike": 753,
+  "cp": "P",
+  "pivot": 752.95,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "11:11",
+   "entry_px": 1.36,
+   "spot0": 752.675,
+   "node_target": 752.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.2130541871921181,
+     "exit_et": "11:19"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "11:20"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059112,
+     "exit_et": "11:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "11:42"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "long",
+  "i": 165,
+  "m": 165,
+  "et": "12:15",
+  "spot": 750.55,
+  "strike": 751,
+  "cp": "C",
+  "pivot": 750.115,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "12:15",
+   "entry_px": 0.76,
+   "spot0": 750.55,
+   "node_target": 752.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.8131967850661135,
+     "exit_et": "13:02"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "12:35"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "12:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566503,
+     "exit_et": "13:00"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 214,
+  "m": 214,
+  "et": "13:04",
+  "spot": 751.87,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.025,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:04",
+   "entry_px": 0.95,
+   "spot0": 751.87,
+   "node_target": 750.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.41773399014778323,
+     "exit_et": "13:24"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.41773399014778323,
+     "exit_et": "13:24"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.41773399014778323,
+     "exit_et": "13:24"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.41773399014778323,
+     "exit_et": "13:24"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 225,
+  "m": 225,
+  "et": "13:15",
+  "spot": 751.815,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.1800000000001,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:15",
+   "entry_px": 0.92,
+   "spot0": 751.815,
+   "node_target": 751.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.6624544870421931,
+     "exit_et": "14:15"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.6624544870421931,
+     "exit_et": "14:15"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.6624544870421931,
+     "exit_et": "14:15"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.6624544870421931,
+     "exit_et": "14:15"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 236,
+  "m": 236,
+  "et": "13:26",
+  "spot": 752.425,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.48,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:26",
+   "entry_px": 0.52,
+   "spot0": 752.425,
+   "node_target": 748.0,
+   "results": {
+    "next-node": {
+     "reason": "eod",
+     "pnl": -0.7387267904509283,
+     "exit_et": "15:45"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "13:35"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "13:35"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.7387267904509283,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 244,
+  "m": 244,
+  "et": "13:34",
+  "spot": 752.115,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.5,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:34",
+   "entry_px": 0.7,
+   "spot0": 752.115,
+   "node_target": 751.0,
+   "results": {
+    "next-node": {
+     "reason": "eod",
+     "pnl": -0.8059113300492611,
+     "exit_et": "15:45"
+    },
+    "+40%": {
+     "reason": "eod",
+     "pnl": -0.8059113300492611,
+     "exit_et": "15:45"
+    },
+    "+60%": {
+     "reason": "eod",
+     "pnl": -0.8059113300492611,
+     "exit_et": "15:45"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.8059113300492611,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 288,
+  "m": 288,
+  "et": "14:18",
+  "spot": 752.55,
+  "strike": 753,
+  "cp": "P",
+  "pivot": 752.605,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:18",
+   "entry_px": 0.76,
+   "spot0": 752.55,
+   "node_target": 752.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.44289603318641424,
+     "exit_et": "14:44"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "14:37"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "14:41"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.13170858179932576,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "SPY",
+  "side": "short",
+  "i": 295,
+  "m": 295,
+  "et": "14:25",
+  "spot": 752.46,
+  "strike": 752,
+  "cp": "P",
+  "pivot": 752.74,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:25",
+   "entry_px": 0.32,
+   "spot0": 752.46,
+   "node_target": 752.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.5466440886699506,
+     "exit_et": "14:44"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "14:37"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "14:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "14:41"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 38,
+  "m": 38,
+  "et": "10:08",
+  "spot": 717.2,
+  "strike": 717,
+  "cp": "C",
+  "pivot": 716.72,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:08",
+   "entry_px": 2.41,
+   "spot0": 717.2,
+   "node_target": 718.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.08190421683052973,
+     "exit_et": "10:11"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.08190421683052973,
+     "exit_et": "10:11"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.08190421683052973,
+     "exit_et": "10:11"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.08190421683052973,
+     "exit_et": "10:11"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 43,
+  "m": 43,
+  "et": "10:13",
+  "spot": 717.0450000000001,
+  "strike": 717,
+  "cp": "C",
+  "pivot": 716.1949999999999,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:13",
+   "entry_px": 2.23,
+   "spot0": 717.0450000000001,
+   "node_target": 719.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.238441317457863,
+     "exit_et": "10:16"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.238441317457863,
+     "exit_et": "10:16"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.238441317457863,
+     "exit_et": "10:16"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.238441317457863,
+     "exit_et": "10:16"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 50,
+  "m": 50,
+  "et": "10:20",
+  "spot": 715.81,
+  "strike": 716,
+  "cp": "C",
+  "pivot": 715.0999999999999,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:20",
+   "entry_px": 2.63,
+   "spot0": 715.81,
+   "node_target": 716.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.018412032441139647,
+     "exit_et": "10:21"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "10:33"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059118,
+     "exit_et": "10:34"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "11:04"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 55,
+  "m": 55,
+  "et": "10:25",
+  "spot": 716.5,
+  "strike": 716,
+  "cp": "P",
+  "pivot": 717.77,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:25",
+   "entry_px": 1.95,
+   "spot0": 716.5,
+   "node_target": 716.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.3779209296450675,
+     "exit_et": "10:33"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.3779209296450675,
+     "exit_et": "10:33"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.3779209296450675,
+     "exit_et": "10:33"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.3779209296450675,
+     "exit_et": "10:33"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 73,
+  "m": 73,
+  "et": "10:43",
+  "spot": 718.845,
+  "strike": 719,
+  "cp": "P",
+  "pivot": 719.745,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "10:43",
+   "entry_px": 2.41,
+   "spot0": 718.845,
+   "node_target": 718.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.14761972896183817,
+     "exit_et": "10:47"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "10:50"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.5369253725241706,
+     "exit_et": "11:06"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.5369253725241706,
+     "exit_et": "11:06"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 82,
+  "m": 82,
+  "et": "10:52",
+  "spot": 718.21,
+  "strike": 718,
+  "cp": "C",
+  "pivot": 717.2,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "10:52",
+   "entry_px": 2.28,
+   "spot0": 718.21,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.37479474548440095,
+     "exit_et": "11:05"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "11:04"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "11:04"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "11:21"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 93,
+  "m": 93,
+  "et": "11:03",
+  "spot": 719.1800000000001,
+  "strike": 719,
+  "cp": "P",
+  "pivot": 719.585,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "11:03",
+   "entry_px": 1.82,
+   "spot0": 719.1800000000001,
+   "node_target": 719.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.29616196611270496,
+     "exit_et": "11:05"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.29616196611270496,
+     "exit_et": "11:05"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.29616196611270496,
+     "exit_et": "11:05"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.29616196611270496,
+     "exit_et": "11:05"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 102,
+  "m": 102,
+  "et": "11:12",
+  "spot": 721.03,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 721.355,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "11:12",
+   "entry_px": 1.58,
+   "spot0": 721.03,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.12782939452516062,
+     "exit_et": "11:25"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.12782939452516062,
+     "exit_et": "11:25"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.12782939452516062,
+     "exit_et": "11:25"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.12782939452516062,
+     "exit_et": "11:25"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 122,
+  "m": 122,
+  "et": "11:32",
+  "spot": 721.8299999999999,
+  "strike": 722,
+  "cp": "P",
+  "pivot": 722.04,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "11:32",
+   "entry_px": 1.75,
+   "spot0": 721.8299999999999,
+   "node_target": 721.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.1312596762843068,
+     "exit_et": "11:36"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "11:41"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "11:51"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566503,
+     "exit_et": "11:54"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 147,
+  "m": 147,
+  "et": "11:57",
+  "spot": 719.775,
+  "strike": 720,
+  "cp": "C",
+  "pivot": 719.395,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "11:57",
+   "entry_px": 1.27,
+   "spot0": 719.775,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.19002366083549882,
+     "exit_et": "12:01"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.19002366083549882,
+     "exit_et": "12:01"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.19002366083549882,
+     "exit_et": "12:01"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.19002366083549882,
+     "exit_et": "12:01"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 156,
+  "m": 156,
+  "et": "12:06",
+  "spot": 718.4449999999999,
+  "strike": 718,
+  "cp": "C",
+  "pivot": 718.235,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "12:06",
+   "entry_px": 2.13,
+   "spot0": 718.4449999999999,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.3349291149194018,
+     "exit_et": "12:42"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.3586206896551727,
+     "exit_et": "12:43"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "13:11"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "14:15"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 170,
+  "m": 170,
+  "et": "12:20",
+  "spot": 718.785,
+  "strike": 719,
+  "cp": "C",
+  "pivot": 718.04,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "12:20",
+   "entry_px": 1.47,
+   "spot0": 718.785,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.41935591970778474,
+     "exit_et": "12:42"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517224,
+     "exit_et": "12:41"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059112,
+     "exit_et": "13:00"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566501,
+     "exit_et": "13:23"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 198,
+  "m": 198,
+  "et": "12:48",
+  "spot": 720.005,
+  "strike": 720,
+  "cp": "P",
+  "pivot": 720.465,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "12:48",
+   "entry_px": 1.38,
+   "spot0": 720.005,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": -0.17020061397872488,
+     "exit_et": "12:49"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.416327550510459,
+     "exit_et": "13:02"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.416327550510459,
+     "exit_et": "13:02"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.416327550510459,
+     "exit_et": "13:02"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 214,
+  "m": 214,
+  "et": "13:04",
+  "spot": 720.735,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 720.865,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:04",
+   "entry_px": 1.41,
+   "spot0": 720.735,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.40121580547112445,
+     "exit_et": "13:23"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.40121580547112445,
+     "exit_et": "13:23"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.40121580547112445,
+     "exit_et": "13:23"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.40121580547112445,
+     "exit_et": "13:23"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 223,
+  "m": 223,
+  "et": "13:13",
+  "spot": 720.995,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 721.125,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:13",
+   "entry_px": 1.17,
+   "spot0": 720.995,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "stop",
+     "pnl": -0.2783882783882783,
+     "exit_et": "13:27"
+    },
+    "+40%": {
+     "reason": "stop",
+     "pnl": -0.2783882783882783,
+     "exit_et": "13:27"
+    },
+    "+60%": {
+     "reason": "stop",
+     "pnl": -0.2783882783882783,
+     "exit_et": "13:27"
+    },
+    "+80%": {
+     "reason": "stop",
+     "pnl": -0.2783882783882783,
+     "exit_et": "13:27"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 236,
+  "m": 236,
+  "et": "13:26",
+  "spot": 721.3050000000001,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 721.39,
+  "gates": {
+   "G1": true,
+   "G2": true,
+   "G3": false,
+   "G4": true,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:26",
+   "entry_px": 0.83,
+   "spot0": 721.3050000000001,
+   "node_target": 721.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.2861297406374268,
+     "exit_et": "13:33"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "13:35"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "15:02"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566503,
+     "exit_et": "15:07"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 244,
+  "m": 244,
+  "et": "13:34",
+  "spot": 720.87,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 721.505,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "13:34",
+   "entry_px": 1.13,
+   "spot0": 720.87,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.11643925192902937,
+     "exit_et": "15:04"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.3586206896551727,
+     "exit_et": "15:07"
+    },
+    "+60%": {
+     "reason": "eod",
+     "pnl": -0.3730764200706219,
+     "exit_et": "15:45"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.3730764200706219,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 277,
+  "m": 277,
+  "et": "14:07",
+  "spot": 721.23,
+  "strike": 721,
+  "cp": "P",
+  "pivot": 721.575,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:07",
+   "entry_px": 0.69,
+   "spot0": 721.23,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 0.8283715285214537,
+     "exit_et": "15:04"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "14:41"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059114,
+     "exit_et": "14:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "15:02"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "short",
+  "i": 286,
+  "m": 286,
+  "et": "14:16",
+  "spot": 721.615,
+  "strike": 722,
+  "cp": "P",
+  "pivot": 721.675,
+  "gates": {
+   "G1": true,
+   "G2": false,
+   "G3": true,
+   "G4": false,
+   "G5": true
+  },
+  "sim": {
+   "entry_et": "14:16",
+   "entry_px": 0.97,
+   "spot0": 721.615,
+   "node_target": 720.0,
+   "results": {
+    "next-node": {
+     "reason": "target",
+     "pnl": 1.1009598293636689,
+     "exit_et": "15:04"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "14:37"
+    },
+    "+60%": {
+     "reason": "target",
+     "pnl": 0.5527093596059116,
+     "exit_et": "14:41"
+    },
+    "+80%": {
+     "reason": "target",
+     "pnl": 0.7467980295566505,
+     "exit_et": "14:41"
+    }
+   }
+  }
+ },
+ {
+  "tk": "QQQ",
+  "side": "long",
+  "i": 344,
+  "m": 344,
+  "et": "15:14",
+  "spot": 720.505,
+  "strike": 721,
+  "cp": "C",
+  "pivot": 719.755,
+  "gates": {
+   "G1": false,
+   "G2": false,
+   "G3": false,
+   "G4": false,
+   "G5": false
+  },
+  "sim": {
+   "entry_et": "15:14",
+   "entry_px": 0.32,
+   "spot0": 720.505,
+   "node_target": 721.0,
+   "results": {
+    "next-node": {
+     "reason": "eod",
+     "pnl": -0.5451046798029557,
+     "exit_et": "15:45"
+    },
+    "+40%": {
+     "reason": "target",
+     "pnl": 0.35862068965517246,
+     "exit_et": "15:22"
+    },
+    "+60%": {
+     "reason": "eod",
+     "pnl": -0.5451046798029557,
+     "exit_et": "15:45"
+    },
+    "+80%": {
+     "reason": "eod",
+     "pnl": -0.5451046798029557,
+     "exit_et": "15:45"
+    }
+   }
+  }
+ }
+]
