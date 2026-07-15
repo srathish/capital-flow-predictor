@@ -18,11 +18,25 @@ a strong positive-gamma pin is theta-death for a long-option scalp; the money is
 the **transition out of the pin** — the exhaustion reversal / break-retest. So:
 **price action picks the trade; gamma-state says whether you're allowed to take it.**
 
-## OPERATING MODE (the strongest result — operator's "one confident play/day" idea)
-Across 12 blind days, trading EVERY setup = −1.7%/day (net loss — the extra trades ARE
-the loss). Taking only the FIRST gate-open transition each day, one shot, then stopping =
-**63% win, +7.0%/day, +77% over 11 days, FULLY CAUSAL** (no hindsight; commit to the first
-gate-open setup without seeing the future; days with no gate-open setup = NO TRADE).
+## OPERATING MODE (operator's "one confident play/day" idea) — 26-BLIND-DAY UPDATE
+Across 26 blind days (73 trades), trading EVERY setup = −0.3%/day, 39% win (dead break-even —
+the extra trades ARE the drag; DISCIPLINE is the whole edge, unambiguous). Taking only the
+FIRST gate-open transition each day, one shot, then stopping, FULLY CAUSAL:
+  - gate netg≤40M: 47% win, +3.6%/day (n=21)   gate≤20M: 52% win, +6.2%/day (n=19)   gate≤0: 60% win, +11.1%/day (n=15)
+HONEST TRAJECTORY: the one-shot gate≤40 REGRESSED as data grew (+7.0→+5.1→+4.8→+3.6%/day,
+win 63%→47%); the tight gate≤0 deflated 100%→72%→66%→60%. The +7%/day was small-sample. BUT:
+(1) still POSITIVE at 26 blind days (regressed toward a modest number, not to zero — unlike
+every other lead, which hit exactly break-even/negative); (2) the chronological OOS split HELD
+a 4th straight time (test half +6.8%/day, 54% win); (3) all-trades immovably break-even proves
+the one-shot discipline is the edge. VERDICT: a MODEST, high-variance, real-ish edge (~+3 to
++6%/day at 47-52% win, carried by winners > capped losers, NOT by hit rate). Best operating
+point = gate≤20M (52% win / +6.2%/day, stays above coin-flip). The tighter gate≤0 number is
+NOT trustworthy (still deflating). GATE BLIND SPOTS confirmed OOS: catches strong +gamma pins,
+MISSES near-zero-gamma whipsaw (6/11 −48%) and negative-gamma barney-wall chop (5/22 −40%).
+Only the FORWARD test (live, unseen days) can settle where +3-6%/day truly lands.
+
+### (superseded 11-day figures, kept for the regression record)
+Earlier: 63% win, +7.0%/day, +77% over 11 days. Regressed to the above at 26 days.
 - **Rule: one trade per day.** The first clean transition (exhaustion-V or break-flush)
   where the gate is open (net near-spot gamma ≤ +40M). Take it, size it, DONE for the day.
 - **SIZING:** because it is ONE concentrated +EV shot (~+14%/trade expectancy), size it as a

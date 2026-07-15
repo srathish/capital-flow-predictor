@@ -1,0 +1,49 @@
+{"m": 30, "et": "10:00", "spot": 7421.98, "action": "hold", "why": ""}
+{"m": 33, "et": "10:03", "spot": 7430.05, "action": "hold", "why": ""}
+{"m": 38, "et": "10:08", "spot": 7433.37, "action": "hold", "why": ""}
+{"m": 43, "et": "10:13", "spot": 7432.03, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7428.76, "action": "hold", "why": ""}
+{"m": 57, "et": "10:27", "spot": 7441.09, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7439.12, "action": "hold", "why": ""}
+{"m": 67, "et": "10:37", "spot": 7448.66, "action": "hold", "why": ""}
+{"m": 69, "et": "10:39", "spot": 7445.39, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7453.85, "action": "enter_long", "why": "CHART: price broke above the all-day 7422-7450 pin band to a new day high (7453.9) on a strong green candle (7439.5->7453.9), momentum +0.16%/5m +0.19%/15m, above VWAP \u2014 bullish HH breakout, the transition OUT of the positive-gamma pin. GEX CONFIRM: the 7450 pika (+31M) just flipped from overhead king/resistance to the FLOOR directly beneath price; overhead now clear air until weak 7500 pika (+13.6M, 46pts up) = real floor under + no wall overhead. Invalidation: fall back below 7450 = failed break, exit fast."}
+{"m": 78, "et": "10:48", "spot": 7454.06, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7450.36, "action": "hold", "why": ""}
+{"m": 81, "et": "10:51", "spot": 7448.67, "action": "exit", "why": "FAILED BREAKOUT \u2014 price fell back below 7450 (7448.67), hitting my stated invalidation. GEX structure reverted: 7450 flipped from floor back to overhead resistance (+31M) with next floor all the way at 7375; the positive-gamma pin reasserted and sucked the break back in (levels hold). Chart thesis broken + momentum died to +0.02% \u2014 exit fast, take the small loss rather than round-trip it.", "closed": {"side": "long", "m": 77, "spot": 7453.85}}
+{"m": 82, "et": "10:52", "spot": 7454.02, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7457.89, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7465.53, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7463.69, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7463.92, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7458.14, "action": "hold", "why": ""}
+{"m": 121, "et": "11:31", "spot": 7438.83, "action": "enter_short", "why": "CHART: after grinding to a +1.1% high (7466), price rolled over and broke DECISIVELY below the all-morning 7450 support shelf \u2014 5-min close at the low 7438.8, below VWAP (7444.5), momentum accelerating down (-0.26%/5m, -0.34%/15m). Failed-high reversal. GEX CONFIRM: 7450 pika (+32M) flipped from floor to overhead RESISTANCE/barney, and the floor structurally vacated to 7375 (63pts of air below, no pika in between) = ceiling above + floor giving way, the short template. Unlike the earlier 1-min whipsaw, this is a 5-min close below the shelf with acceleration. Invalidation: reclaim above 7450 = failed break, exit."}
+{"m": 122, "et": "11:32", "spot": 7439.72, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7434.66, "action": "hold", "why": ""}
+{"m": 126, "et": "11:36", "spot": 7435.92, "action": "hold", "why": ""}
+{"m": 127, "et": "11:37", "spot": 7436.54, "action": "exit", "why": "Bank it \u2014 the flush stalled: price found footing at 7435-7437 for two candles, 5-min momentum flattened to -0.04%, and positive gamma re-strengthened to +60M (absorption regime reasserting). My momentum-continuation thesis has decayed and the drop stopped far above the 7375 target. Per 0DTE discipline (cap winners / exit when confirming regime flips), take the small gain rather than round-trip it as strong positive gamma pins price back up.", "closed": {"side": "short", "m": 121, "spot": 7438.83}}
+{"m": 128, "et": "11:38", "spot": 7441.88, "action": "hold", "why": ""}
+{"m": 138, "et": "11:48", "spot": 7454.99, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7441.57, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7442.16, "action": "hold", "why": ""}
+{"m": 168, "et": "12:18", "spot": 7448.14, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7443.32, "action": "hold", "why": ""}
+{"m": 188, "et": "12:38", "spot": 7432.95, "action": "hold", "why": ""}
+{"m": 196, "et": "12:46", "spot": 7435.51, "action": "hold", "why": ""}
+{"m": 206, "et": "12:56", "spot": 7435.68, "action": "hold", "why": ""}
+{"m": 216, "et": "13:06", "spot": 7423.56, "action": "hold", "why": ""}
+{"m": 221, "et": "13:11", "spot": 7419.54, "action": "hold", "why": ""}
+{"m": 231, "et": "13:21", "spot": 7418.96, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7437.05, "action": "hold", "why": ""}
+{"m": 251, "et": "13:41", "spot": 7422.09, "action": "hold", "why": ""}
+{"m": 261, "et": "13:51", "spot": 7427.25, "action": "hold", "why": ""}
+{"m": 271, "et": "14:01", "spot": 7428.06, "action": "hold", "why": ""}
+{"m": 281, "et": "14:11", "spot": 7433.33, "action": "hold", "why": ""}
+{"m": 291, "et": "14:21", "spot": 7427.19, "action": "hold", "why": ""}
+{"m": 301, "et": "14:31", "spot": 7437, "action": "hold", "why": ""}
+{"m": 311, "et": "14:41", "spot": 7422.22, "action": "hold", "why": ""}
+{"m": 321, "et": "14:51", "spot": 7423.23, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7422.78, "action": "hold", "why": ""}
+{"m": 340, "et": "15:10", "spot": 7416, "action": "hold", "why": ""}
+{"m": 350, "et": "15:20", "spot": 7404.9, "action": "hold", "why": ""}
+{"m": 360, "et": "15:30", "spot": 7404.21, "action": "hold", "why": ""}

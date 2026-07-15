@@ -1,0 +1,50 @@
+{"m": 30, "et": "10:00", "spot": 7528.19, "action": "hold", "why": ""}
+{"m": 33, "et": "10:03", "spot": 7524.21, "action": "hold", "why": ""}
+{"m": 38, "et": "10:08", "spot": 7525.87, "action": "hold", "why": ""}
+{"m": 41, "et": "10:11", "spot": 7528.26, "action": "hold", "why": ""}
+{"m": 44, "et": "10:14", "spot": 7522.26, "action": "hold", "why": ""}
+{"m": 47, "et": "10:17", "spot": 7518.3, "action": "enter_short", "why": "CHART: 4x rejection at 7528 (09:35/10:00/10:10/10:11), now lost VWAP-proxy 7521 on two consecutive red candles (10:10, 10:15) with negative and worsening momentum (5m -0.08%, 15m -0.13%) = exhaustion top rollover. GEX CONFIRM: no support until 7505 King barney / 7495 pika floor below (~13-23pt air), no node overhead until far-off 7540, positive-gamma means the 7528 top holds as resistance backing the fade. Target the 7505/7495 support cluster; bail on VWAP reclaim >7524."}
+{"m": 48, "et": "10:18", "spot": 7512.51, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7513.96, "action": "hold", "why": ""}
+{"m": 52, "et": "10:22", "spot": 7512.8, "action": "exit", "why": "Cover short into the 7505 King barney (-10M) opposing support node. Move from 7528 exhaustion top to 7510 (~5.5pt gain from 7518.30 entry) with momentum decelerating (5m -0.07% vs -0.16%) and price grinding not flushing (lows 7512.5->7510.1, closing back up). Cap the 0DTE winner into support before a chop-regime bounce to VWAP 7520 erodes it.", "closed": {"side": "short", "m": 47, "spot": 7518.3}}
+{"m": 53, "et": "10:23", "spot": 7510.18, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7504.36, "action": "hold", "why": ""}
+{"m": 57, "et": "10:27", "spot": 7505.34, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7495.25, "action": "enter_short", "why": "CHART: decisive breakdown to new LOD 7495 \u2014 broke the 7500 day-open and prior 7495 support on accelerating downside momentum (15m -0.35%), below VWAP 7518 all session, 10:25/10:30 candles printing lower. GEX CONFIRM (strong): deepest negative gamma of the day (-23M) = levels break/moves extend; the 7495 pika floor just EVAPORATED, nearest support now 7425 = ~70pt air pocket below; 7500 barney flipped to overhead resistance. Flush-through-support short. Target the air pocket toward 7470/7460 and trail; bail on reclaim >7502."}
+{"m": 61, "et": "10:31", "spot": 7486.89, "action": "hold", "why": ""}
+{"m": 63, "et": "10:33", "spot": 7480.44, "action": "hold", "why": ""}
+{"m": 65, "et": "10:35", "spot": 7484.8, "action": "exit", "why": "Cover breakdown short. Flush exhausted at 7480.4 and bouncing to 7484.8 with momentum decelerating (5m from -0.23 to -0.14). Banking gain from 7495.25 entry after giving back from the peak. Air-pocket target 7425 not reached but the leg is spent; violent neg-gamma tape snaps back toward the 7500 barney and VWAP 7515, so cap the winner.", "closed": {"side": "short", "m": 60, "spot": 7495.25}}
+{"m": 66, "et": "10:36", "spot": 7488.93, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7485.34, "action": "hold", "why": ""}
+{"m": 72, "et": "10:42", "spot": 7481.69, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7480.51, "action": "hold", "why": ""}
+{"m": 80, "et": "10:50", "spot": 7476.96, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7466.72, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7471.69, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7480.79, "action": "hold", "why": ""}
+{"m": 97, "et": "11:07", "spot": 7470.58, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7476.35, "action": "hold", "why": ""}
+{"m": 112, "et": "11:22", "spot": 7472.37, "action": "hold", "why": ""}
+{"m": 122, "et": "11:32", "spot": 7474.73, "action": "hold", "why": ""}
+{"m": 132, "et": "11:42", "spot": 7486.09, "action": "hold", "why": ""}
+{"m": 135, "et": "11:45", "spot": 7487.97, "action": "hold", "why": ""}
+{"m": 137, "et": "11:47", "spot": 7487.71, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7484.01, "action": "enter_short", "why": "CHART: failed bounce / lower-high. Grind up stalled at 7490.7 (11:45), rejected and closed on its low 7484, below VWAP 7495 \u2014 a lower high in the days downtrend (open 7500 to LOD 7463). 5m momentum turned negative. GEX CONFIRM: very strong 7500 King barney (-21M) caps upside and in positive gamma levels hold, so the bounce fails; downside target the range toward the strengthening 7450 pika floor (+11.5M). Positive-gamma dampening means modest target: cover into 7465 range-low. Bail on reclaim >7491."}
+{"m": 140, "et": "11:50", "spot": 7474.36, "action": "hold", "why": ""}
+{"m": 142, "et": "11:52", "spot": 7477.37, "action": "exit", "why": "Cover the failed-bounce short. Down-move stalled fast at 7474 and bounced to 7477 \u2014 positive-gamma dampening (+16M) capping it as expected. Banking ~7pt gain from 7484.01. Holding for the 7450 floor is poor R/R now (only ~5pt more to target vs ~7pt round-trip risk back to entry/VWAP 7495 if it mean-reverts in this pin). Cap the 0DTE winner.", "closed": {"side": "short", "m": 139, "spot": 7484.01}}
+{"m": 143, "et": "11:53", "spot": 7476.14, "action": "hold", "why": ""}
+{"m": 153, "et": "12:03", "spot": 7468.45, "action": "hold", "why": ""}
+{"m": 165, "et": "12:15", "spot": 7477.91, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7473.47, "action": "hold", "why": ""}
+{"m": 193, "et": "12:43", "spot": 7472.87, "action": "hold", "why": ""}
+{"m": 208, "et": "12:58", "spot": 7476.46, "action": "hold", "why": ""}
+{"m": 223, "et": "13:13", "spot": 7473.76, "action": "hold", "why": ""}
+{"m": 238, "et": "13:28", "spot": 7476.95, "action": "hold", "why": ""}
+{"m": 253, "et": "13:43", "spot": 7472.48, "action": "hold", "why": ""}
+{"m": 268, "et": "13:58", "spot": 7479.2, "action": "hold", "why": ""}
+{"m": 283, "et": "14:13", "spot": 7477.04, "action": "hold", "why": ""}
+{"m": 298, "et": "14:28", "spot": 7479.5, "action": "hold", "why": ""}
+{"m": 311, "et": "14:41", "spot": 7477.06, "action": "hold", "why": ""}
+{"m": 326, "et": "14:56", "spot": 7467.56, "action": "hold", "why": ""}
+{"m": 341, "et": "15:11", "spot": 7463.93, "action": "hold", "why": ""}
+{"m": 356, "et": "15:26", "spot": 7464.81, "action": "hold", "why": ""}

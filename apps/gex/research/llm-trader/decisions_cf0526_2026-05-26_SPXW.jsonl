@@ -1,0 +1,65 @@
+{"m": 30, "et": "10:00", "spot": 7524.97, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7529.28, "action": "hold", "why": ""}
+{"m": 40, "et": "10:10", "spot": 7530.29, "action": "hold", "why": ""}
+{"m": 48, "et": "10:18", "spot": 7531.11, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7534.47, "action": "hold", "why": ""}
+{"m": 68, "et": "10:38", "spot": 7538.72, "action": "hold", "why": ""}
+{"m": 73, "et": "10:43", "spot": 7537.82, "action": "hold", "why": ""}
+{"m": 83, "et": "10:53", "spot": 7535.56, "action": "hold", "why": ""}
+{"m": 95, "et": "11:05", "spot": 7525.21, "action": "enter_short", "why": "CHART: rejected 7538-39 double-top, 5 declining candles rolled price to 7525, just broke BELOW VWAP 7528, momentum accelerating down (5m -0.08%, 15m -0.14%). GEX CONFIRM: regime flipped +65M->NEGATIVE gamma (levels break/fuel), 7555 pika now overhead ceiling, ~45pts of air below to lone 7480 floor. Transition out of the morning pin = 0DTE move."}
+{"m": 96, "et": "11:06", "spot": 7525.8, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7523.73, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7523.42, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7523.99, "action": "hold", "why": ""}
+{"m": 107, "et": "11:17", "spot": 7521.05, "action": "hold", "why": ""}
+{"m": 110, "et": "11:20", "spot": 7521.96, "action": "hold", "why": ""}
+{"m": 112, "et": "11:22", "spot": 7519, "action": "hold", "why": ""}
+{"m": 114, "et": "11:24", "spot": 7518.79, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7521.14, "action": "exit", "why": "CHART: 7518.7 breakdown low HELD and bounced to 7521, 5m momentum flipped +0.03%, down-move exhausting/not accelerating. GEX: negative gamma easing -15M->-6M = fuel draining. Bank the modest short gain before it round-trips to VWAP 7527.", "closed": {"side": "short", "m": 95, "spot": 7525.21}}
+{"m": 117, "et": "11:27", "spot": 7520.8, "action": "hold", "why": ""}
+{"m": 127, "et": "11:37", "spot": 7510.6, "action": "enter_short", "why": "CHART: clean downtrend, lower highs/lows 7521->7518->7516->7510, below VWAP 7526, 11:35 broke 7516 with a -6pt candle closing at its low, momentum negative (15m -0.11%). GEX CONFIRM: negative gamma intensified to -42M near-spot (real fuel), king is now a barney at 7500 (downside magnet, not support), air below to 7480 floor. Stronger confirm than first trade."}
+{"m": 128, "et": "11:38", "spot": 7512, "action": "hold", "why": ""}
+{"m": 130, "et": "11:40", "spot": 7516.12, "action": "hold", "why": ""}
+{"m": 132, "et": "11:42", "spot": 7515.2, "action": "hold", "why": ""}
+{"m": 135, "et": "11:45", "spot": 7511.51, "action": "hold", "why": ""}
+{"m": 137, "et": "11:47", "spot": 7510.68, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7510.44, "action": "hold", "why": ""}
+{"m": 141, "et": "11:51", "spot": 7508.67, "action": "hold", "why": ""}
+{"m": 143, "et": "11:53", "spot": 7508.12, "action": "hold", "why": ""}
+{"m": 145, "et": "11:55", "spot": 7503.71, "action": "hold", "why": ""}
+{"m": 146, "et": "11:56", "spot": 7501.41, "action": "hold", "why": ""}
+{"m": 147, "et": "11:57", "spot": 7502.08, "action": "exit", "why": "CHART: reached 7500 target, price rejected the first 7500 test (7501.4->7502.1 bounce), 5m momentum easing. GEX: hit the 7500 barney (my next opposing node), and the 7480 pika floor is building fast (+12.7M, 1m\u0394+1.0) = fresh support forming below, air draining. Cap the 0DTE short winner (+0.11%) at the node before round-trip.", "closed": {"side": "short", "m": 127, "spot": 7510.6}}
+{"m": 148, "et": "11:58", "spot": 7505.13, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7507.22, "action": "hold", "why": ""}
+{"m": 165, "et": "12:15", "spot": 7506.13, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7513.87, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7516.87, "action": "hold", "why": ""}
+{"m": 183, "et": "12:33", "spot": 7516.59, "action": "hold", "why": ""}
+{"m": 185, "et": "12:35", "spot": 7516.73, "action": "hold", "why": ""}
+{"m": 187, "et": "12:37", "spot": 7516.11, "action": "hold", "why": ""}
+{"m": 192, "et": "12:42", "spot": 7511.77, "action": "enter_short", "why": "CHART: countertrend bounce made a lower high at 7516.9, rejected BELOW VWAP 7521 (never reclaimed), now rolling over \u2014 12:40 down candle broke the coil to 7511.8, momentum turning negative. GEX CONFIRM: negative gamma at deepest of the day -52M near-spot (max fuel), 7500 barney magnet strengthening -45M, air below to 7485 floor. Cleanest bearish confirm of the session."}
+{"m": 193, "et": "12:43", "spot": 7511.49, "action": "hold", "why": ""}
+{"m": 195, "et": "12:45", "spot": 7509.73, "action": "hold", "why": ""}
+{"m": 197, "et": "12:47", "spot": 7511.38, "action": "hold", "why": ""}
+{"m": 199, "et": "12:49", "spot": 7506.97, "action": "hold", "why": ""}
+{"m": 201, "et": "12:51", "spot": 7508.96, "action": "hold", "why": ""}
+{"m": 203, "et": "12:53", "spot": 7507.35, "action": "hold", "why": ""}
+{"m": 205, "et": "12:55", "spot": 7509.81, "action": "exit", "why": "CHART: 7500 refused to break after ~4 tests, price defends 7507 support and is range-bound 7507-7516, 5m momentum flipped +0.04%. GEX: 7485 floor now shrinking (1m\u0394-1.5), barney pull not converting to a break. Thesis was a break to 7500/7485; it stalled. Bank the small gain, stop churning the range.", "closed": {"side": "short", "m": 192, "spot": 7511.77}}
+{"m": 206, "et": "12:56", "spot": 7509.03, "action": "hold", "why": ""}
+{"m": 216, "et": "13:06", "spot": 7508.23, "action": "hold", "why": ""}
+{"m": 228, "et": "13:18", "spot": 7507.77, "action": "hold", "why": ""}
+{"m": 240, "et": "13:30", "spot": 7504.23, "action": "hold", "why": ""}
+{"m": 243, "et": "13:33", "spot": 7507.09, "action": "hold", "why": ""}
+{"m": 258, "et": "13:48", "spot": 7508.18, "action": "hold", "why": ""}
+{"m": 273, "et": "14:03", "spot": 7506.53, "action": "hold", "why": ""}
+{"m": 288, "et": "14:18", "spot": 7515.26, "action": "hold", "why": ""}
+{"m": 290, "et": "14:20", "spot": 7516.89, "action": "enter_long", "why": "CHART: 4-candle grind up off the 7506 pin (7510.7->7513->7516.2->7516.9), just RECLAIMED VWAP 7516.86 (first time above since morning), momentum positive (15m +0.10%). GEX CONFIRM: strong POSITIVE gamma +85M (levels hold), king flipped to the 7525 pika (+32M) = magnet target above, pika floor support at 7510 below. Positive-gamma drift to the king pika. Cap at 7525."}
+{"m": 291, "et": "14:21", "spot": 7515.36, "action": "hold", "why": ""}
+{"m": 294, "et": "14:24", "spot": 7517.81, "action": "hold", "why": ""}
+{"m": 297, "et": "14:27", "spot": 7515.76, "action": "hold", "why": ""}
+{"m": 299, "et": "14:29", "spot": 7514.08, "action": "exit", "why": "CHART: failed to hold the VWAP reclaim (slipped 7517.8->7514), 5m momentum turned negative -0.05%. GEX: king magnet flipped from the bullish 7540 pika to a BARNEY at 7515 now sitting right overhead as resistance = bullish drift thesis invalidated. Cut the small loss fast per method.", "closed": {"side": "long", "m": 290, "spot": 7516.89}}
+{"m": 300, "et": "14:30", "spot": 7514.25, "action": "hold", "why": ""}
+{"m": 315, "et": "14:45", "spot": 7511.71, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7508.29, "action": "hold", "why": ""}
+{"m": 345, "et": "15:15", "spot": 7509.91, "action": "hold", "why": ""}
+{"m": 360, "et": "15:30", "spot": 7513.15, "action": "hold", "why": ""}

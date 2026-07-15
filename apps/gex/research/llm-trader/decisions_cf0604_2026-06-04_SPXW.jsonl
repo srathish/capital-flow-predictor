@@ -1,0 +1,41 @@
+{"m": 30, "et": "10:00", "spot": 7545.65, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7540.83, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7548.59, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7556.88, "action": "enter_long", "why": "CHART: pin break to new day high 7556.88 (100% of range), two strong green 5-min candles 10:20/10:25, momentum accelerating 5m +0.13%/15m +0.20%, above VWAP. GEX CONFIRM: 7550 king flipped from overhead resistance to pika FLOOR beneath price (+21M); no wall until 7575 (+15.6M) = ~18pts air overhead. This is the transition OUT of the pin. Invalidation = loss of 7550 floor."}
+{"m": 56, "et": "10:26", "spot": 7556.7, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7556.11, "action": "hold", "why": ""}
+{"m": 62, "et": "10:32", "spot": 7551.66, "action": "exit", "why": "CHART: breakout failed to follow through \u2014 price faded from 7556.9 HOD back to 7551.7 (10:30 red candle), momentum flipped negative 5m -0.04%, back to 83% of range. GEX: 7550 floor weakening (1m\u0394-1.2, +21M\u2192+17.8M) as price returns to it; positive-gamma pin re-asserted. Thesis broken, cut the small loss before the floor gives way toward 7525.", "closed": {"side": "long", "m": 55, "spot": 7556.88}}
+{"m": 63, "et": "10:33", "spot": 7551.44, "action": "hold", "why": ""}
+{"m": 73, "et": "10:43", "spot": 7554.66, "action": "hold", "why": ""}
+{"m": 83, "et": "10:53", "spot": 7551.58, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7560.38, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7564.76, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7568.96, "action": "enter_long", "why": "CHART: established accelerating uptrend \u2014 four green 5-min candles (7555->7561->7568->7569), new HOD 7568.96, 100% of range, above VWAP, momentum 5m +0.10%/15m +0.20%. GEX CONFIRM: regime just FLIPPED positive->NEGATIVE gamma (net -11M) = trending fuel, levels break, so the 7575 king (+22M) is set to break not hold; floor 7550 (+14M) refilling beneath (1m\u0394+1.1). This is the pin->trend transition. Target break/extension above 7575, cap winner; invalidation = hard 7575 rejection + momentum roll."}
+{"m": 102, "et": "11:12", "spot": 7570.3, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7569.11, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7572.28, "action": "hold", "why": ""}
+{"m": 108, "et": "11:18", "spot": 7573.89, "action": "exit", "why": "CHART: pushed +5pts from 7568.96 entry to 7573.89 HOD, but candle advances shrinking (7570.5->7572.3->7573.9) = momentum grinding to a halt into resistance. GEX: 7575 king growing aggressively +22M->+27M (dealers defending hard) while negative-gamma fuel fades (net -11M->-6M). Method rule: cap 0DTE winners, exit into the next opposing node \u2014 the +27M 7575 king is that node right at price. Bank the gain before it round-trips off the wall.", "closed": {"side": "long", "m": 101, "spot": 7568.96}}
+{"m": 109, "et": "11:19", "spot": 7571.45, "action": "hold", "why": ""}
+{"m": 114, "et": "11:24", "spot": 7569.54, "action": "hold", "why": ""}
+{"m": 119, "et": "11:29", "spot": 7572.48, "action": "hold", "why": ""}
+{"m": 122, "et": "11:32", "spot": 7572.61, "action": "hold", "why": ""}
+{"m": 127, "et": "11:37", "spot": 7572.31, "action": "hold", "why": ""}
+{"m": 135, "et": "11:45", "spot": 7567.23, "action": "enter_short", "why": "CHART: 7575 rejected \u2014 coil under it broke DOWN, price rolling over from 7574 to 7567, momentum turned negative both TFs (5m -0.05%/15m -0.09%), two down closes 7568.6->7567.2. GEX CONFIRM: 7575 king proven ceiling (+31M, held+grew all day); 7570 coil floor just DISSOLVED, nearest floor now 7550 (+9.5M, shrinking 1m\u0394-1.1) = air below; NEGATIVE gamma (-9M) = downside fuel, levels break. Target VWAP 7554 / 7550 floor (next opposing node), cap there. Invalidation = reclaim >7570 or stabilize above VWAP."}
+{"m": 136, "et": "11:46", "spot": 7566.4, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7564.39, "action": "hold", "why": ""}
+{"m": 142, "et": "11:52", "spot": 7564.95, "action": "exit", "why": "Confirming regime FLIPPED: NEGATIVE gamma (my short fuel) -> POSITIVE gamma (net +3M, levels hold). 7550 pika floor RE-FORMED (+11.4M) right below; downside collapse stalled after only ~3pts (11:50 green candle 7563.7->7564.9, momentum decel -0.06%->-0.03%), never reached VWAP. Method: exit when confirming regime flips / chart thesis breaks. Bank the tiny gain, avoid countertrend short into a positive-gamma bounce.", "closed": {"side": "short", "m": 135, "spot": 7567.23}}
+{"m": 143, "et": "11:53", "spot": 7567.68, "action": "hold", "why": ""}
+{"m": 153, "et": "12:03", "spot": 7570.23, "action": "hold", "why": ""}
+{"m": 165, "et": "12:15", "spot": 7576.77, "action": "hold", "why": ""}
+{"m": 170, "et": "12:20", "spot": 7578.31, "action": "hold", "why": ""}
+{"m": 180, "et": "12:30", "spot": 7579.44, "action": "hold", "why": ""}
+{"m": 192, "et": "12:42", "spot": 7582.61, "action": "hold", "why": ""}
+{"m": 200, "et": "12:50", "spot": 7582.24, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7582.09, "action": "hold", "why": ""}
+{"m": 230, "et": "13:20", "spot": 7583.76, "action": "hold", "why": ""}
+{"m": 250, "et": "13:40", "spot": 7585.97, "action": "hold", "why": ""}
+{"m": 270, "et": "14:00", "spot": 7592.21, "action": "hold", "why": ""}
+{"m": 290, "et": "14:20", "spot": 7593.15, "action": "hold", "why": ""}
+{"m": 310, "et": "14:40", "spot": 7592.93, "action": "hold", "why": ""}
+{"m": 330, "et": "15:00", "spot": 7591.11, "action": "hold", "why": ""}
+{"m": 350, "et": "15:20", "spot": 7591.55, "action": "hold", "why": ""}

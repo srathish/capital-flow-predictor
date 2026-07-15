@@ -1,0 +1,82 @@
+{"m": 30, "et": "10:00", "spot": 7476.65, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7478.17, "action": "hold", "why": ""}
+{"m": 45, "et": "10:15", "spot": 7478.15, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7494.41, "action": "hold", "why": ""}
+{"m": 56, "et": "10:26", "spot": 7495.15, "action": "hold", "why": ""}
+{"m": 57, "et": "10:27", "spot": 7489.42, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7482.17, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7494.7, "action": "hold", "why": ""}
+{"m": 71, "et": "10:41", "spot": 7493.24, "action": "hold", "why": ""}
+{"m": 72, "et": "10:42", "spot": 7489.98, "action": "hold", "why": ""}
+{"m": 82, "et": "10:52", "spot": 7495.55, "action": "hold", "why": ""}
+{"m": 83, "et": "10:53", "spot": 7494.5, "action": "hold", "why": ""}
+{"m": 85, "et": "10:55", "spot": 7495.89, "action": "hold", "why": ""}
+{"m": 87, "et": "10:57", "spot": 7497.28, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7497.93, "action": "enter_long", "why": "CHART: 6-min ascending coil, higher lows (7477>7482>7489>7493>7496) pressing flat 7500 resistance, momentum turned up (15m +0.12%), price above VWAP 7485 = bullish continuation pressing a breakout. GEX CONFIRM: deeply negative-gamma (-88M near-spot); a break of the 7500 barney (-36M king) forces short-gamma dealers to chase = upside fuel; day already printed 7507 so room to run; pika floor building 7455 + VWAP 7485 support below. Tight leash: exit if it rejects back under VWAP."}
+{"m": 89, "et": "10:59", "spot": 7500.83, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7498.11, "action": "hold", "why": ""}
+{"m": 91, "et": "11:01", "spot": 7496.87, "action": "exit", "why": "CHART: breakout thesis failed to confirm \u2014 6th rejection at 7500, price rolling back to 7497 with momentum flat, no reclaim/hold above the barney. GEX: barney reasserting (-37M) and net gamma deepening to -97M; the break-fuel never triggered because the break never held. Exit fast per plan, take the scratch near breakeven rather than round-trip to VWAP.", "closed": {"side": "long", "m": 88, "spot": 7497.93}}
+{"m": 92, "et": "11:02", "spot": 7494.38, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7491.57, "action": "hold", "why": ""}
+{"m": 95, "et": "11:05", "spot": 7494.45, "action": "hold", "why": ""}
+{"m": 105, "et": "11:15", "spot": 7491.8, "action": "hold", "why": ""}
+{"m": 115, "et": "11:25", "spot": 7485.35, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7486.23, "action": "hold", "why": ""}
+{"m": 118, "et": "11:28", "spot": 7490.7, "action": "hold", "why": ""}
+{"m": 133, "et": "11:43", "spot": 7481.34, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7479.18, "action": "hold", "why": ""}
+{"m": 135, "et": "11:45", "spot": 7478.47, "action": "hold", "why": ""}
+{"m": 137, "et": "11:47", "spot": 7476, "action": "hold", "why": ""}
+{"m": 138, "et": "11:48", "spot": 7479.52, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7493.99, "action": "hold", "why": ""}
+{"m": 163, "et": "12:13", "spot": 7492.81, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7495.9, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7496.09, "action": "hold", "why": ""}
+{"m": 186, "et": "12:36", "spot": 7494.8, "action": "hold", "why": ""}
+{"m": 201, "et": "12:51", "spot": 7496.2, "action": "hold", "why": ""}
+{"m": 221, "et": "13:11", "spot": 7505.08, "action": "hold", "why": ""}
+{"m": 222, "et": "13:12", "spot": 7505.91, "action": "hold", "why": ""}
+{"m": 223, "et": "13:13", "spot": 7505.33, "action": "hold", "why": ""}
+{"m": 224, "et": "13:14", "spot": 7505.6, "action": "hold", "why": ""}
+{"m": 225, "et": "13:15", "spot": 7505.94, "action": "enter_long", "why": "CHART: fresh afternoon momentum push 7494->7506 (+11pts), then 6-min tight bull flag holding the day high 7505-7506 without fading \u2014 sellers cannot push it back, coiled to break 7507 into clear air. Above VWAP 7490, above the 7500 barney. GEX CONFIRM: overhead node flipped from 7500 barney to 7520 PIKA (+19.5M) = clear air +14pts; price above the huge 7500 barney (-74M) so in negative gamma a hold/break forces short-gamma dealers to chase up; strong pika FLOOR 7495 (+25M) support beneath. This is the structurally clean version the morning break lacked. Target 7520 pika; stop on a fade back below 7500."}
+{"m": 226, "et": "13:16", "spot": 7507.31, "action": "hold", "why": ""}
+{"m": 227, "et": "13:17", "spot": 7509.48, "action": "hold", "why": ""}
+{"m": 228, "et": "13:18", "spot": 7509.99, "action": "hold", "why": ""}
+{"m": 229, "et": "13:19", "spot": 7510.49, "action": "hold", "why": ""}
+{"m": 230, "et": "13:20", "spot": 7509.7, "action": "exit", "why": "CHART: breakout ran +4.5pts from 7506 entry to 7510.5, now stalling \u2014 momentum cooling (15m +0.18%->+0.10%), price ticked down off the high, at the day extreme (99% of range) that rejected all day. GEX: transient 7515 barney showed dealer resistance just overhead; next node 7520 pika not being reached as momentum fades. CAP the 0DTE winner per method \u2014 bank the gain into the stall rather than round-trip back through the 7500 barney.", "closed": {"side": "long", "m": 225, "spot": 7505.94}}
+{"m": 231, "et": "13:21", "spot": 7509.54, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7508.4, "action": "hold", "why": ""}
+{"m": 239, "et": "13:29", "spot": 7504.3, "action": "hold", "why": ""}
+{"m": 241, "et": "13:31", "spot": 7507.92, "action": "hold", "why": ""}
+{"m": 244, "et": "13:34", "spot": 7507.11, "action": "hold", "why": ""}
+{"m": 249, "et": "13:39", "spot": 7505.08, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7503.09, "action": "hold", "why": ""}
+{"m": 256, "et": "13:46", "spot": 7504.61, "action": "hold", "why": ""}
+{"m": 266, "et": "13:56", "spot": 7500.98, "action": "hold", "why": ""}
+{"m": 268, "et": "13:58", "spot": 7500.64, "action": "hold", "why": ""}
+{"m": 270, "et": "14:00", "spot": 7500.36, "action": "hold", "why": ""}
+{"m": 275, "et": "14:05", "spot": 7496.47, "action": "hold", "why": ""}
+{"m": 276, "et": "14:06", "spot": 7497.92, "action": "hold", "why": ""}
+{"m": 286, "et": "14:16", "spot": 7495.14, "action": "hold", "why": ""}
+{"m": 287, "et": "14:17", "spot": 7494.43, "action": "hold", "why": ""}
+{"m": 288, "et": "14:18", "spot": 7496.09, "action": "hold", "why": ""}
+{"m": 298, "et": "14:28", "spot": 7497.74, "action": "hold", "why": ""}
+{"m": 308, "et": "14:38", "spot": 7492.58, "action": "hold", "why": ""}
+{"m": 309, "et": "14:39", "spot": 7492.05, "action": "enter_short", "why": "CHART: sustained breakdown \u2014 4 lower closes (7497->7495.6->7493.5->7492.1) breaking below the 7495 pika AND below VWAP 7492.67, price now pinned at the recent low 7492, held 2+ min (NOT the instant-bounce fake of 14:17). GEX CONFIRM: the day strongest floor, the 7495 pika (was +43M), has COLLAPSED \u2014 nearest floor dropped all the way to 7425, a ~67pt air pocket; net gamma deepest of day (-134M) = violent-move fuel in negative gamma; 7500 barney (-84M) now overhead resistance capping bounces. Target the air pocket toward 7480/7470, cap into any stall. Stop: reclaim of 7495 (pika rebuilds = thesis dead)."}
+{"m": 310, "et": "14:40", "spot": 7492.23, "action": "hold", "why": ""}
+{"m": 311, "et": "14:41", "spot": 7491.89, "action": "hold", "why": ""}
+{"m": 313, "et": "14:43", "spot": 7493.34, "action": "hold", "why": ""}
+{"m": 315, "et": "14:45", "spot": 7494.57, "action": "exit", "why": "CHART: breakdown-flush thesis failed \u2014 6 min in, price grinded UP 7492->7494.6 instead of flushing into the air pocket, momentum flipped positive (5m +0.03%), now pressing my 7495 reclaim stop. Charts lead and price action is the opposite of my thesis. GEX: pika nominally still collapsed (7425) but price refuses to go, and the 7500 barney magnet risks pulling it back up (bigger loss). Cut the non-working short for a small loss per plan rather than hope.", "closed": {"side": "short", "m": 309, "spot": 7492.05}}
+{"m": 316, "et": "14:46", "spot": 7495.58, "action": "hold", "why": ""}
+{"m": 326, "et": "14:56", "spot": 7497.32, "action": "hold", "why": ""}
+{"m": 336, "et": "15:06", "spot": 7489.3, "action": "enter_short", "why": "CHART: real 3-candle breakdown 7498.8->7494.5->7490.2->7489.3 (-9.5pts) below VWAP 7492.80, price actively falling, not the slow grind of the 14:39 fake. GEX CONFIRM (much stronger than 14:39): the pika floor is now COMPLETELY GONE \u2014 >>NONE, no support under price<< vs merely dropping to 7425 last time; net gamma spiked to extreme -167M (day deepest by far) = violent-flush fuel; 7500 barney (-79M) now overhead resistance. Late day (15:06) with zero support below = high flush potential. Target continuation to 7480/7470, cap into any stall. Stop: reclaim of 7495."}
+{"m": 337, "et": "15:07", "spot": 7488.92, "action": "hold", "why": ""}
+{"m": 338, "et": "15:08", "spot": 7488.86, "action": "hold", "why": ""}
+{"m": 339, "et": "15:09", "spot": 7489.89, "action": "hold", "why": ""}
+{"m": 341, "et": "15:11", "spot": 7485.12, "action": "hold", "why": ""}
+{"m": 342, "et": "15:12", "spot": 7483.09, "action": "hold", "why": ""}
+{"m": 343, "et": "15:13", "spot": 7482.99, "action": "exit", "why": "CHART: air-pocket flush delivered \u2014 rode 7489.3->7483 (-6pts), now stalled one minute at 7483 right on the 7480 barney (next opposing node). GEX: 7480 barney (-83M) is real support-when-below (barneys bounced price all day); extreme -198M gamma cuts both ways but the day has mean-reverted every flush. CAP the 0DTE winner into the opposing node per method \u2014 same discipline that correctly banked my breakout long at the 7510 stall. Lock the gain rather than risk a round-trip bounce off 7480.", "closed": {"side": "short", "m": 336, "spot": 7489.3}}
+{"m": 344, "et": "15:14", "spot": 7485.15, "action": "hold", "why": ""}
+{"m": 349, "et": "15:19", "spot": 7483.55, "action": "hold", "why": ""}
+{"m": 352, "et": "15:22", "spot": 7489, "action": "hold", "why": ""}
+{"m": 360, "et": "15:30", "spot": 7489.88, "action": "hold", "why": ""}

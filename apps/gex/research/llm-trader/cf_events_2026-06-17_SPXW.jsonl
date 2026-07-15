@@ -1,0 +1,5 @@
+{"day":"2026-06-17","ticker":"SPXW","minute":"14:41","strike:spot@entry":"7505:7506.08","kind":"cf","implied":"down","exit_minute":"14:44","outcome":"loss","pnl_pct":-0.1235}
+{"day":"2026-06-17","ticker":"SPXW","minute":"14:50","strike:spot@entry":"7505:7504.32","kind":"cf","implied":"down","exit_minute":"15:14","outcome":"loss","pnl_pct":-0.1543}
+{"day":"2026-06-17","ticker":"SPXW","minute":"16:37","strike:spot@entry":"7515:7513.46","kind":"cf","implied":"down","exit_minute":"17:07","outcome":"win","pnl_pct":0.1465}
+{"day":"2026-06-17","ticker":"SPXW","minute":"18:10","strike:spot@entry":"7480:7478.22","kind":"cf","implied":"down","exit_minute":"18:16","outcome":"loss","pnl_pct":-0.2681}
+{"day":"2026-06-17","ticker":"SPXW","minute":"18:44","strike:spot@entry":"7510:7507.82","kind":"cf","implied":"down","exit_minute":"18:54","outcome":"win","pnl_pct":0.3381}

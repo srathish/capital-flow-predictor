@@ -1,0 +1,67 @@
+{"m": 30, "et": "10:00", "spot": 7309.01, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7324.31, "action": "hold", "why": ""}
+{"m": 38, "et": "10:08", "spot": 7322.03, "action": "hold", "why": ""}
+{"m": 48, "et": "10:18", "spot": 7288.34, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7283.2, "action": "hold", "why": ""}
+{"m": 53, "et": "10:23", "spot": 7297.29, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7296.28, "action": "hold", "why": ""}
+{"m": 66, "et": "10:36", "spot": 7303.64, "action": "hold", "why": ""}
+{"m": 76, "et": "10:46", "spot": 7298.11, "action": "hold", "why": ""}
+{"m": 86, "et": "10:56", "spot": 7275.89, "action": "hold", "why": ""}
+{"m": 88, "et": "10:58", "spot": 7273.47, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7268.94, "action": "enter_short", "why": "CHART: box floor 7275 broke decisively - two bars below it, new day low 7265.3 with 10:55 closing on its low, 5-min momentum accelerating down -0.24%, price round-tripped whole AM gain, below VWAP. GEX CONFIRM: net near-spot gamma collapsed +59M(10:36)->+7M = pin spent/levels no longer holding; 7275 floor absorbed, harness stepped nearest floor down to 7250; king 7325 far overhead. Target 7250 floor. Exit on reclaim of 7275 (bear-trap) or gamma re-firming."}
+{"m": 91, "et": "11:01", "spot": 7263.02, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7265.05, "action": "hold", "why": ""}
+{"m": 94, "et": "11:04", "spot": 7273.85, "action": "exit", "why": "THESIS BROKEN: 11:00 bar V-reversed off 7258.67 (near 7250 target) and closed at its high 7273.9 - bullish hammer reclaiming the 7275 floor and my entry. 5-min momentum flipped positive +0.12%. 7250 floor held, positive-gamma levels-hold reasserted, net gamma steady +8M (no negative-gamma flush materialized). Hit my pre-set exit rule (reclaim of 7275). Cut small.", "closed": {"side": "short", "m": 90, "spot": 7268.94}}
+{"m": 95, "et": "11:05", "spot": 7272.05, "action": "hold", "why": ""}
+{"m": 100, "et": "11:10", "spot": 7278.65, "action": "enter_long", "why": "CHART: floor-reclaim bounce - price V-reversed off 7258 (11:00 hammer), 11:05 closed strong 7280.7, reclaimed 7275, now 7278.6 with 5-min momentum positive and 15-min improving (-0.29->-0.11). GEX CONFIRM: harness re-established 7275 pika as floor (+8.0M) directly beneath = tight stop reference; net near-spot gamma firming +7M->+14M; no wall until king 7325 (~47 pts room); positive-gamma regime backs mean-reversion up (every floor held today). Target VWAP 7296 -> box center 7300-7310. Exit on decisive break back below 7275."}
+{"m": 101, "et": "11:11", "spot": 7282.62, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7290.46, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7296.25, "action": "hold", "why": ""}
+{"m": 108, "et": "11:18", "spot": 7288.38, "action": "exit", "why": "TARGET REACHED + STALL: mean-reversion long achieved its objective (7275 floor -> tagged VWAP 7296.2 on 11:15 high) then rejected and closed below VWAP at 7288. 5-min momentum stalled to flat, net near-spot gamma collapsed +32M->+5M (up-thrust unbacked), classic positive-gamma VWAP round-trip. Hit my trail rule (close below VWAP 7295). Cap the 0DTE winner rather than give it back toward the floor.", "closed": {"side": "long", "m": 100, "spot": 7278.65}}
+{"m": 109, "et": "11:19", "spot": 7283, "action": "hold", "why": ""}
+{"m": 114, "et": "11:24", "spot": 7291.03, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7285.3, "action": "hold", "why": ""}
+{"m": 134, "et": "11:44", "spot": 7291, "action": "hold", "why": ""}
+{"m": 146, "et": "11:56", "spot": 7285.82, "action": "hold", "why": ""}
+{"m": 158, "et": "12:08", "spot": 7302.11, "action": "hold", "why": ""}
+{"m": 166, "et": "12:16", "spot": 7310.31, "action": "hold", "why": ""}
+{"m": 169, "et": "12:19", "spot": 7308.96, "action": "hold", "why": ""}
+{"m": 173, "et": "12:23", "spot": 7300.45, "action": "hold", "why": ""}
+{"m": 183, "et": "12:33", "spot": 7288.81, "action": "hold", "why": ""}
+{"m": 188, "et": "12:38", "spot": 7307.66, "action": "hold", "why": ""}
+{"m": 194, "et": "12:44", "spot": 7298.36, "action": "hold", "why": ""}
+{"m": 206, "et": "12:56", "spot": 7280.36, "action": "hold", "why": ""}
+{"m": 208, "et": "12:58", "spot": 7282.36, "action": "hold", "why": ""}
+{"m": 210, "et": "13:00", "spot": 7277.37, "action": "hold", "why": ""}
+{"m": 211, "et": "13:01", "spot": 7279.14, "action": "enter_long", "why": "CHART: floor-bounce long - price tested 7275 (low 7277.4) and held cleanly, now turning up 7279.1, 5-min momentum flattened -0.02%. GEX CONFIRM: 7275 pika is the strongest floor of the day (+12.3M) and still GROWING (1m\u0414+0.5) directly beneath = tight stop; held without poking below (stronger than prior tests); no wall until king 7325 (~46 pts room); positive-gamma levels-hold backs the bounce. Target VWAP 7295 -> box center 7300-7310. Exit on decisive break below 7275."}
+{"m": 212, "et": "13:02", "spot": 7280.48, "action": "hold", "why": ""}
+{"m": 215, "et": "13:05", "spot": 7270.81, "action": "exit", "why": "STOP HIT / THESIS BROKEN: 7275 floor (strongest of the day +12.3M) got absorbed - 13:00 bar broke it, low 7268.8, closed at its low; harness reassigned floor down to 7250. My pre-set exit was a decisive break below 7275, now hit. Even the strongest floor failing under neutral gamma (+2M) opens downside. Discipline over hope - cut the small loss rather than hold for a bear-trap; re-enter only on a clean reclaim of 7275.", "closed": {"side": "long", "m": 211, "spot": 7279.14}}
+{"m": 216, "et": "13:06", "spot": 7274.55, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7278.85, "action": "enter_long", "why": "CHART: confirmed bear-trap reclaim - 7268.8 poke reversed, 13:05 closed at its high 7278.9, reclaimed 7275, 5-min momentum +0.03% turning up, 15-min improving -0.24->-0.08. GEX CONFIRM: 7275 pika now STRONGEST floor of the day (+13.1M, growing +0.6/min) = dealers defending it hard, directly beneath as tight support; no wall until king 7325; positive-gamma regime. Same pattern as my winning T2, now with the confirmation T3 lacked. Target VWAP 7295 (cap there). Stop on decisive break below 7268 bear-trap low."}
+{"m": 219, "et": "13:09", "spot": 7276.72, "action": "hold", "why": ""}
+{"m": 222, "et": "13:12", "spot": 7281.65, "action": "hold", "why": ""}
+{"m": 226, "et": "13:16", "spot": 7272.88, "action": "exit", "why": "REGIME FLIP - confirming regime flipped POSITIVE->NEGATIVE gamma (net near-spot -2M, levels break/trending). My floor-bounce long relied entirely on positive-gamma levels-hold; that basis is invalidated. Also price broke back below 7275 (floor absorbed again, node moved to 7250). Method says exit when the confirming regime flips - cut now (-0.08%) before a negative-gamma flush toward 7250.", "closed": {"side": "long", "m": 218, "spot": 7278.85}}
+{"m": 227, "et": "13:17", "spot": 7275.66, "action": "hold", "why": ""}
+{"m": 229, "et": "13:19", "spot": 7267.5, "action": "hold", "why": ""}
+{"m": 232, "et": "13:22", "spot": 7268.48, "action": "hold", "why": ""}
+{"m": 237, "et": "13:27", "spot": 7278.1, "action": "hold", "why": ""}
+{"m": 245, "et": "13:35", "spot": 7350.76, "action": "hold", "why": ""}
+{"m": 247, "et": "13:37", "spot": 7346, "action": "hold", "why": ""}
+{"m": 249, "et": "13:39", "spot": 7351.38, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7371.66, "action": "hold", "why": ""}
+{"m": 256, "et": "13:46", "spot": 7369.85, "action": "hold", "why": ""}
+{"m": 259, "et": "13:49", "spot": 7362.44, "action": "hold", "why": ""}
+{"m": 262, "et": "13:52", "spot": 7355.56, "action": "hold", "why": ""}
+{"m": 265, "et": "13:55", "spot": 7356.02, "action": "hold", "why": ""}
+{"m": 273, "et": "14:03", "spot": 7351.22, "action": "hold", "why": ""}
+{"m": 279, "et": "14:09", "spot": 7344.31, "action": "hold", "why": ""}
+{"m": 287, "et": "14:17", "spot": 7365.93, "action": "hold", "why": ""}
+{"m": 293, "et": "14:23", "spot": 7354.05, "action": "hold", "why": ""}
+{"m": 303, "et": "14:33", "spot": 7357.87, "action": "hold", "why": ""}
+{"m": 315, "et": "14:45", "spot": 7362.08, "action": "hold", "why": ""}
+{"m": 327, "et": "14:57", "spot": 7368.47, "action": "hold", "why": ""}
+{"m": 335, "et": "15:05", "spot": 7375.66, "action": "hold", "why": ""}
+{"m": 340, "et": "15:10", "spot": 7374.64, "action": "hold", "why": ""}
+{"m": 350, "et": "15:20", "spot": 7386.45, "action": "hold", "why": ""}
+{"m": 360, "et": "15:30", "spot": 7392.01, "action": "hold", "why": ""}

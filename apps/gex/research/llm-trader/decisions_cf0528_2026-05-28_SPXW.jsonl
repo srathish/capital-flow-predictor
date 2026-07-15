@@ -1,0 +1,34 @@
+{"m": 30, "et": "10:00", "spot": 7518.57, "action": "hold", "why": ""}
+{"m": 34, "et": "10:04", "spot": 7518.9, "action": "hold", "why": ""}
+{"m": 42, "et": "10:12", "spot": 7519.81, "action": "hold", "why": ""}
+{"m": 52, "et": "10:22", "spot": 7542.11, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7541.07, "action": "enter_short", "why": "CHART: price broke the morning pin and ran straight into 7550, then rejected \u2014 10:15 closed at the high 7550.3, 10:20 printed a clean red rejection candle (7547->7537), 10:25 only weakly bouncing to 7541 = lower-high exhaustion at the ceiling. 5-min momentum rolled negative. Fading back toward VWAP-proxy 7522/prior-pin. GEX CONFIRM: king is 7550 pika +37M directly overhead (strong ceiling, no room up), regime POSITIVE-gamma +61M favors mean reversion to the middle; floor pika at 7500 weakening. Ceiling rejection + reversion regime backs the short."}
+{"m": 56, "et": "10:26", "spot": 7543.06, "action": "hold", "why": ""}
+{"m": 58, "et": "10:28", "spot": 7542.82, "action": "hold", "why": ""}
+{"m": 61, "et": "10:31", "spot": 7546.74, "action": "exit", "why": "Thesis breaking: instead of reverting down, price made higher lows (7541->7544->7546.7) back to 91% of range, and a fresh pika FLOOR formed at 7545 directly under spot = the pin migrated UP toward the ceiling, dealers now defending 7545 as support. That directly contradicts my ceiling-rejection/reversion-down thesis; price is at the edge of my 7547 invalidation. Cutting fast for a small loss rather than risk a 7550 breakout to 7560+.", "closed": {"side": "short", "m": 55, "spot": 7541.07}}
+{"m": 62, "et": "10:32", "spot": 7543.04, "action": "hold", "why": ""}
+{"m": 66, "et": "10:36", "spot": 7538.45, "action": "hold", "why": ""}
+{"m": 69, "et": "10:39", "spot": 7536.31, "action": "hold", "why": ""}
+{"m": 79, "et": "10:49", "spot": 7541.38, "action": "hold", "why": ""}
+{"m": 89, "et": "10:59", "spot": 7544.17, "action": "hold", "why": ""}
+{"m": 104, "et": "11:14", "spot": 7551.03, "action": "hold", "why": ""}
+{"m": 109, "et": "11:19", "spot": 7551.77, "action": "hold", "why": ""}
+{"m": 124, "et": "11:34", "spot": 7557.63, "action": "hold", "why": ""}
+{"m": 129, "et": "11:39", "spot": 7559.45, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7556.91, "action": "hold", "why": ""}
+{"m": 151, "et": "12:01", "spot": 7557.11, "action": "hold", "why": ""}
+{"m": 166, "et": "12:16", "spot": 7557.87, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7560.99, "action": "hold", "why": ""}
+{"m": 196, "et": "12:46", "spot": 7560.89, "action": "hold", "why": ""}
+{"m": 211, "et": "13:01", "spot": 7566.3, "action": "hold", "why": ""}
+{"m": 219, "et": "13:09", "spot": 7563.02, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7561.6, "action": "hold", "why": ""}
+{"m": 249, "et": "13:39", "spot": 7561.37, "action": "hold", "why": ""}
+{"m": 264, "et": "13:54", "spot": 7565.19, "action": "hold", "why": ""}
+{"m": 276, "et": "14:06", "spot": 7565.61, "action": "hold", "why": ""}
+{"m": 291, "et": "14:21", "spot": 7562.85, "action": "hold", "why": ""}
+{"m": 306, "et": "14:36", "spot": 7561.79, "action": "hold", "why": ""}
+{"m": 321, "et": "14:51", "spot": 7560.06, "action": "hold", "why": ""}
+{"m": 336, "et": "15:06", "spot": 7561.91, "action": "hold", "why": ""}
+{"m": 351, "et": "15:21", "spot": 7559.57, "action": "hold", "why": ""}
+{"m": 366, "et": "15:36", "spot": 7566.54, "action": "hold", "why": ""}

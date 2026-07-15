@@ -1,0 +1,103 @@
+{"m": 30, "et": "10:00", "spot": 7457.2, "action": "hold", "why": ""}
+{"m": 35, "et": "10:05", "spot": 7453.8, "action": "hold", "why": ""}
+{"m": 40, "et": "10:10", "spot": 7453.69, "action": "hold", "why": ""}
+{"m": 50, "et": "10:20", "spot": 7413.68, "action": "hold", "why": ""}
+{"m": 53, "et": "10:23", "spot": 7426.18, "action": "hold", "why": ""}
+{"m": 55, "et": "10:25", "spot": 7432.8, "action": "enter_long", "why": "CHART: exhaustion-V reversal off the 7408 negative-gamma flush low; impulsive bounce reclaimed both 7420 and 7430 barneys, 5-min momentum turned positive and is building (+0.26%), targeting VWAP reclaim (7451) then the 7480 highs. GEX CONFIRM: a growing pika FLOOR at 7425 (+8.9M, 1mDelta+0.2) sits right under price giving tight invalidation, and there is clear air overhead to the next node at 7500 (no wall). Invalidation = loss of 7425 pika floor."}
+{"m": 56, "et": "10:26", "spot": 7433.64, "action": "hold", "why": ""}
+{"m": 59, "et": "10:29", "spot": 7426.06, "action": "hold", "why": ""}
+{"m": 60, "et": "10:30", "spot": 7424.73, "action": "exit", "why": "Invalidation hit: price lost the 7425 pika floor (now 7424.7) and that node flipped to overhead resistance (+10M), with the next floor an air-pocket down at 7375. Momentum turned negative (5-min -0.11%); the bounce-to-VWAP thesis broke. Exiting fast per plan, small loss, rather than hoping for a reclaim in a negative-gamma air pocket.", "closed": {"side": "long", "m": 55, "spot": 7432.8}}
+{"m": 61, "et": "10:31", "spot": 7417.76, "action": "hold", "why": ""}
+{"m": 63, "et": "10:33", "spot": 7429, "action": "hold", "why": ""}
+{"m": 67, "et": "10:37", "spot": 7422.08, "action": "hold", "why": ""}
+{"m": 70, "et": "10:40", "spot": 7421.99, "action": "hold", "why": ""}
+{"m": 75, "et": "10:45", "spot": 7399.04, "action": "hold", "why": ""}
+{"m": 77, "et": "10:47", "spot": 7384.97, "action": "hold", "why": ""}
+{"m": 78, "et": "10:48", "spot": 7375.82, "action": "enter_long", "why": "CHART: climactic 3-candle flush (7422->7406->7399->7385->7375) into a new day low that tagged the 7375 floor exactly = exhaustion of the down-move; mean-reversion long targeting the 7420 barney (45 pts) then VWAP 7441. GEX CONFIRM (strong): price is sitting on the 7375 pika floor (+9.2M) and net near-spot gamma surged to POSITIVE +37M (levels hold / pins) = regime now actively supports the floor rather than fighting it, with clear air up to the 7420 barney. Invalidation = decisive break below 7375/7370."}
+{"m": 79, "et": "10:49", "spot": 7366.54, "action": "exit", "why": "Invalidation hit: price sliced through the 7375 floor to 7366.5 (below my 7370 line) and the floor stepped down to 7350, momentum still strongly negative (5-min -0.54%) with no bounce candle. I caught the knife one minute early. My specific level failed, so I exit fast per plan and take the small loss rather than move the stop down and hope for 7350.", "closed": {"side": "long", "m": 78, "spot": 7375.82}}
+{"m": 80, "et": "10:50", "spot": 7363.64, "action": "hold", "why": ""}
+{"m": 82, "et": "10:52", "spot": 7372.82, "action": "hold", "why": ""}
+{"m": 84, "et": "10:54", "spot": 7367.01, "action": "hold", "why": ""}
+{"m": 90, "et": "11:00", "spot": 7390.29, "action": "hold", "why": ""}
+{"m": 93, "et": "11:03", "spot": 7382.17, "action": "hold", "why": ""}
+{"m": 101, "et": "11:11", "spot": 7395, "action": "hold", "why": ""}
+{"m": 106, "et": "11:16", "spot": 7383.42, "action": "hold", "why": ""}
+{"m": 116, "et": "11:26", "spot": 7349.31, "action": "hold", "why": ""}
+{"m": 118, "et": "11:28", "spot": 7338.47, "action": "hold", "why": ""}
+{"m": 120, "et": "11:30", "spot": 7321.48, "action": "hold", "why": ""}
+{"m": 122, "et": "11:32", "spot": 7318.21, "action": "hold", "why": ""}
+{"m": 123, "et": "11:33", "spot": 7320.2, "action": "enter_short", "why": "CHART: persistent all-day downtrend (LH+LL); decisive break-flush out of the collapsed 7375 positive-gamma pin drove price to a 7318 day-low, and it is now COILING at the lows for 3+ minutes WITHOUT the sharp V-bounce seen on every earlier flush = distribution/continuation, not reversal. Target 7280 then structural 7230. GEX CONFIRM: positive gamma eroded from +48M to +22M (levels no longer holding, approaching the flip that fuels trends) and the GEX king/center-of-mass collapsed all the way down to 7230 = structure points lower; overhead 7360 pika caps bounces, floor at 7280 is thin (+3.5M). Invalidation = reclaim above 7332 (coil high)."}
+{"m": 124, "et": "11:34", "spot": 7322.75, "action": "hold", "why": ""}
+{"m": 126, "et": "11:36", "spot": 7328.47, "action": "exit", "why": "Thesis break: the continuation-down premise is gone. In 3 minutes the GEX king snapped from 7230 back up to 7360 and positive gamma re-strengthened +21M->+32M (floor regime re-established), while price printed a green bounce candle to 7328 (day pattern of snapbacks repeating) and momentum flipped flat/positive. The collapsed-structure reason I shorted is invalidated, so I exit fast for a small loss rather than wait to get stopped at 7332 or widen the stop.", "closed": {"side": "short", "m": 123, "spot": 7320.2}}
+{"m": 127, "et": "11:37", "spot": 7324.45, "action": "hold", "why": ""}
+{"m": 131, "et": "11:41", "spot": 7325.72, "action": "hold", "why": ""}
+{"m": 139, "et": "11:49", "spot": 7332.23, "action": "hold", "why": ""}
+{"m": 147, "et": "11:57", "spot": 7313.47, "action": "hold", "why": ""}
+{"m": 149, "et": "11:59", "spot": 7303.03, "action": "hold", "why": ""}
+{"m": 151, "et": "12:01", "spot": 7308.66, "action": "enter_long", "why": "CHART: confirmed double-bottom at 7300-7303 (tested 7302.9 then 7302.7, both held) with a green reversal candle (12:00: 7302.7->7308.7) after a deeply oversold -1.3% decline from the open = exhaustion/turn CONFIRMED (waited for the candle, not the tag this time). Mean-reversion long targeting the 7340 barney then 7360, capping the winner. GEX CONFIRM: positive gamma is strong at +32M (levels hold / floor regime) with the 7300 pika floor reasserting (+6.0M) directly under price = tight invalidation; every prior intraday bounce came from exactly this gamma-surge-at-the-floor signature. Invalidation = decisive break below 7300/7298."}
+{"m": 152, "et": "12:02", "spot": 7312.16, "action": "hold", "why": ""}
+{"m": 154, "et": "12:04", "spot": 7309.71, "action": "hold", "why": ""}
+{"m": 157, "et": "12:07", "spot": 7306.14, "action": "hold", "why": ""}
+{"m": 159, "et": "12:09", "spot": 7292.97, "action": "exit", "why": "Invalidation hit: 7300 broke decisively (7292.97, below my 7298 line), the floor gave way and flipped to overhead resistance (+5.7M pika), next floor an air-pocket down at 7230. The double-bottom bounce failed. Exit immediately per plan, small loss (-0.21%). Strong positive gamma (+41M) did not hold the level - the downtrend keeps winning.", "closed": {"side": "long", "m": 151, "spot": 7308.66}}
+{"m": 160, "et": "12:10", "spot": 7294.05, "action": "hold", "why": ""}
+{"m": 162, "et": "12:12", "spot": 7302.04, "action": "hold", "why": ""}
+{"m": 165, "et": "12:15", "spot": 7295.82, "action": "hold", "why": ""}
+{"m": 171, "et": "12:21", "spot": 7269.06, "action": "hold", "why": ""}
+{"m": 173, "et": "12:23", "spot": 7279.82, "action": "hold", "why": ""}
+{"m": 176, "et": "12:26", "spot": 7290.8, "action": "hold", "why": ""}
+{"m": 178, "et": "12:28", "spot": 7283.47, "action": "hold", "why": ""}
+{"m": 183, "et": "12:33", "spot": 7295.02, "action": "hold", "why": ""}
+{"m": 191, "et": "12:41", "spot": 7242.88, "action": "hold", "why": ""}
+{"m": 193, "et": "12:43", "spot": 7249.1, "action": "hold", "why": ""}
+{"m": 195, "et": "12:45", "spot": 7257.95, "action": "enter_long", "why": "CHART: CONFIRMED bounce off the 7242.88 day-low (deepest oversold of the day, -2.1% from open) - green reversal candle to 7259.2, momentum flipped positive (5-min +0.20%), higher low holding above 7250 (waited for confirmation, not the knife-tag). Capped mean-reversion scalp targeting the 7290-7300 resistance where every prior bounce topped. GEX CONFIRM (strongest of day): the 7230 pika king/floor just below is the strongest floor of the day (+17.8M, vs the +6M floor that failed my last long), and positive gamma peaked at +61M into the low (now +45M) = powerful dealer defense at the extreme. Invalidation = break below 7242 (the confirmed low). Cap into 7290-7300."}
+{"m": 196, "et": "12:46", "spot": 7264.07, "action": "hold", "why": ""}
+{"m": 198, "et": "12:48", "spot": 7262.84, "action": "hold", "why": ""}
+{"m": 201, "et": "12:51", "spot": 7257, "action": "hold", "why": ""}
+{"m": 203, "et": "12:53", "spot": 7253.69, "action": "hold", "why": ""}
+{"m": 205, "et": "12:55", "spot": 7248.66, "action": "hold", "why": ""}
+{"m": 206, "et": "12:56", "spot": 7257.24, "action": "hold", "why": ""}
+{"m": 208, "et": "12:58", "spot": 7258.44, "action": "hold", "why": ""}
+{"m": 210, "et": "13:00", "spot": 7277.63, "action": "hold", "why": ""}
+{"m": 212, "et": "13:02", "spot": 7279.92, "action": "hold", "why": ""}
+{"m": 213, "et": "13:03", "spot": 7289.72, "action": "exit", "why": "CAP the winner into the opposing node. Price reached 7289.7 at the 7300 pika resistance (+11.3M) - the exact zone where every prior bounce today topped and reversed hard. Per the method, 0DTE winners round-trip, so I bank the +0.44% gain (best of the day) into the 7290-7300 wall rather than risk a give-back for a few more points. Long from 7257.95, confirmed-bounce-off-strongest-floor thesis played out.", "closed": {"side": "long", "m": 195, "spot": 7257.95}}
+{"m": 214, "et": "13:04", "spot": 7295.55, "action": "hold", "why": ""}
+{"m": 216, "et": "13:06", "spot": 7295.98, "action": "hold", "why": ""}
+{"m": 218, "et": "13:08", "spot": 7293.04, "action": "hold", "why": ""}
+{"m": 221, "et": "13:11", "spot": 7286.09, "action": "hold", "why": ""}
+{"m": 223, "et": "13:13", "spot": 7290.4, "action": "hold", "why": ""}
+{"m": 228, "et": "13:18", "spot": 7306.55, "action": "hold", "why": ""}
+{"m": 230, "et": "13:20", "spot": 7311.86, "action": "hold", "why": ""}
+{"m": 232, "et": "13:22", "spot": 7322.25, "action": "hold", "why": ""}
+{"m": 234, "et": "13:24", "spot": 7311.24, "action": "hold", "why": ""}
+{"m": 235, "et": "13:25", "spot": 7316.61, "action": "hold", "why": ""}
+{"m": 237, "et": "13:27", "spot": 7315.49, "action": "hold", "why": ""}
+{"m": 242, "et": "13:32", "spot": 7319.27, "action": "hold", "why": ""}
+{"m": 250, "et": "13:40", "spot": 7333.93, "action": "hold", "why": ""}
+{"m": 252, "et": "13:42", "spot": 7343.23, "action": "hold", "why": ""}
+{"m": 254, "et": "13:44", "spot": 7348.43, "action": "hold", "why": ""}
+{"m": 255, "et": "13:45", "spot": 7343.27, "action": "hold", "why": ""}
+{"m": 257, "et": "13:47", "spot": 7331.71, "action": "hold", "why": ""}
+{"m": 259, "et": "13:49", "spot": 7325.8, "action": "hold", "why": ""}
+{"m": 261, "et": "13:51", "spot": 7331.66, "action": "hold", "why": ""}
+{"m": 264, "et": "13:54", "spot": 7334.7, "action": "hold", "why": ""}
+{"m": 272, "et": "14:02", "spot": 7341.87, "action": "hold", "why": ""}
+{"m": 277, "et": "14:07", "spot": 7339, "action": "hold", "why": ""}
+{"m": 287, "et": "14:17", "spot": 7340.76, "action": "hold", "why": ""}
+{"m": 297, "et": "14:27", "spot": 7353.38, "action": "hold", "why": ""}
+{"m": 299, "et": "14:29", "spot": 7361.71, "action": "hold", "why": ""}
+{"m": 301, "et": "14:31", "spot": 7370.43, "action": "hold", "why": ""}
+{"m": 302, "et": "14:32", "spot": 7370.01, "action": "hold", "why": ""}
+{"m": 304, "et": "14:34", "spot": 7367.87, "action": "hold", "why": ""}
+{"m": 307, "et": "14:37", "spot": 7372.84, "action": "hold", "why": ""}
+{"m": 309, "et": "14:39", "spot": 7373.16, "action": "hold", "why": ""}
+{"m": 313, "et": "14:43", "spot": 7364.36, "action": "hold", "why": ""}
+{"m": 315, "et": "14:45", "spot": 7357.22, "action": "hold", "why": ""}
+{"m": 316, "et": "14:46", "spot": 7360.17, "action": "hold", "why": ""}
+{"m": 319, "et": "14:49", "spot": 7365.14, "action": "hold", "why": ""}
+{"m": 325, "et": "14:55", "spot": 7368.37, "action": "hold", "why": ""}
+{"m": 333, "et": "15:03", "spot": 7380.46, "action": "hold", "why": ""}
+{"m": 334, "et": "15:04", "spot": 7381.78, "action": "hold", "why": ""}
+{"m": 340, "et": "15:10", "spot": 7377.63, "action": "hold", "why": ""}
+{"m": 346, "et": "15:16", "spot": 7355.81, "action": "hold", "why": ""}
+{"m": 351, "et": "15:21", "spot": 7351.41, "action": "hold", "why": ""}
+{"m": 361, "et": "15:31", "spot": 7358.09, "action": "hold", "why": ""}

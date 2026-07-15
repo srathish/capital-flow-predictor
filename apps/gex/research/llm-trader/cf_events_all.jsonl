@@ -1,15 +1,58 @@
+{"day":"2026-05-22","ticker":"SPXW","minute":"14:05","strike:spot@entry":"7480:7480.07","kind":"cf","implied":"down","exit_minute":"14:11","outcome":"loss","pnl_pct":-0.0773}
+{"day":"2026-05-22","ticker":"SPXW","minute":"14:22","strike:spot@entry":"7470:7470.07","kind":"cf","implied":"down","exit_minute":"14:28","outcome":"loss","pnl_pct":-0.1647}
+{"day":"2026-05-22","ticker":"SPXW","minute":"17:35","strike:spot@entry":"7495:7497.01","kind":"cf","implied":"down","exit_minute":"17:40","outcome":"loss","pnl_pct":-0.1543}
+{"day":"2026-05-26","ticker":"SPXW","minute":"15:05","strike:spot@entry":"7525:7525.21","kind":"cf","implied":"down","exit_minute":"15:26","outcome":"win","pnl_pct":0.170}
+{"day":"2026-05-26","ticker":"SPXW","minute":"15:37","strike:spot@entry":"7510:7510.60","kind":"cf","implied":"down","exit_minute":"15:57","outcome":"win","pnl_pct":0.244}
+{"day":"2026-05-26","ticker":"SPXW","minute":"16:42","strike:spot@entry":"7510:7511.77","kind":"cf","implied":"down","exit_minute":"16:55","outcome":"win","pnl_pct":0.115}
+{"day":"2026-05-26","ticker":"SPXW","minute":"18:20","strike:spot@entry":"7515:7516.89","kind":"cf","implied":"up","exit_minute":"18:29","outcome":"loss","pnl_pct":-0.135}
+{"day":"2026-05-28","ticker":"SPXW","minute":"14:25","strike:spot@entry":"7540:7541.07","kind":"cf","implied":"down","exit_minute":"14:32","outcome":"win","pnl_pct":0.0201}
 {"day":"2026-05-29","ticker":"SPXW","minute":"14:40","strike":7575,"spot":7573.45,"kind":"cf","implied":"down","exit_minute":"14:50","outcome":"win","pnl_pct":15.8}
 {"day":"2026-05-29","ticker":"SPXW","minute":"17:43","strike":7580,"spot":7578.90,"kind":"cf","implied":"down","exit_minute":"17:55","outcome":"win","pnl_pct":28.2}
 {"day":"2026-05-29","ticker":"SPXW","minute":"18:53","strike":7575,"spot":7573.21,"kind":"cf","implied":"down","exit_minute":"19:05","outcome":"loss","pnl_pct":-34.2}
+{"day":"2026-06-01","ticker":"SPXW","minute":"17:02","strike:spot@entry":"7595:7594.31","kind":"cf","implied":"down","exit_minute":"17:08","outcome":"win","pnl_pct":0.3331}
+{"day":"2026-06-02","ticker":"SPXW","minute":"14:35","strike:spot@entry":"7605:7602.64","kind":"cf","implied":"up","exit_minute":"14:42","outcome":"loss","pnl_pct":-0.0978}
+{"day":"2026-06-04","ticker":"SPXW","minute":"14:25","strike:spot@entry":"7555:7556.88","kind":"cf","implied":"up","exit_minute":"14:32","outcome":"loss","pnl_pct":-0.2298}
+{"day":"2026-06-04","ticker":"SPXW","minute":"15:11","strike:spot@entry":"7570:7568.96","kind":"cf","implied":"up","exit_minute":"15:18","outcome":"loss","pnl_pct":-0.0296}
+{"day":"2026-06-04","ticker":"SPXW","minute":"15:45","strike:spot@entry":"7565:7567.23","kind":"cf","implied":"down","exit_minute":"15:52","outcome":"loss","pnl_pct":-0.0659}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "14:18", "strike": 7520, "spot_entry": 7520.22, "kind": "cf", "implied": "up", "exit_minute": "14:24", "outcome": "loss", "pnl_pct": -25.5}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "15:41", "strike": 7480, "spot_entry": 7479.77, "kind": "cf", "implied": "down", "exit_minute": "15:44", "outcome": "loss", "pnl_pct": -7.8}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "16:11", "strike": 7465, "spot_entry": 7464.86, "kind": "cf", "implied": "down", "exit_minute": "16:12", "outcome": "win", "pnl_pct": 0.4}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "16:43", "strike": 7445, "spot_entry": 7445.89, "kind": "cf", "implied": "down", "exit_minute": "16:52", "outcome": "loss", "pnl_pct": -33.4}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "18:19", "strike": 7430, "spot_entry": 7428.31, "kind": "cf", "implied": "down", "exit_minute": "18:32", "outcome": "win", "pnl_pct": 39.9}
 {"day": "2026-06-05", "ticker": "SPXW", "minute": "18:44", "strike": 7415, "spot_entry": 7413.57, "kind": "cf", "implied": "down", "exit_minute": "18:50", "outcome": "win", "pnl_pct": 37.5}
+{"day":"2026-06-08","ticker":"SPXW","minute":"14:47","strike:spot@entry":"7455:7453.85","kind":"cf","implied":"up","exit_minute":"14:51","outcome":"loss","pnl_pct":-0.0476}
+{"day":"2026-06-08","ticker":"SPXW","minute":"15:31","strike:spot@entry":"7440:7438.83","kind":"cf","implied":"down","exit_minute":"15:37","outcome":"loss","pnl_pct":-0.1634}
+{"day":"2026-06-09","ticker":"SPXW","minute":"14:25","strike:spot@entry":"7435:7432.80","kind":"cf","implied":"up","exit_minute":"14:30","outcome":"loss","pnl_pct":-0.3800}
+{"day":"2026-06-09","ticker":"SPXW","minute":"14:48","strike:spot@entry":"7375:7375.82","kind":"cf","implied":"up","exit_minute":"14:49","outcome":"loss","pnl_pct":-0.0926}
+{"day":"2026-06-09","ticker":"SPXW","minute":"15:33","strike:spot@entry":"7320:7320.20","kind":"cf","implied":"down","exit_minute":"15:36","outcome":"loss","pnl_pct":-0.0826}
+{"day":"2026-06-09","ticker":"SPXW","minute":"16:01","strike:spot@entry":"7310:7308.66","kind":"cf","implied":"up","exit_minute":"16:09","outcome":"loss","pnl_pct":-0.3239}
+{"day":"2026-06-09","ticker":"SPXW","minute":"16:45","strike:spot@entry":"7260:7257.95","kind":"cf","implied":"up","exit_minute":"17:03","outcome":"win","pnl_pct":0.5787}
 {"day":"2026-06-10","ticker":"SPXW","minute":"15:25","strike":"7330:7330.74","kind":"cf","implied":"up","exit_minute":"15:34","outcome":"loss","pnl_pct":-28.1}
 {"day":"2026-06-10","ticker":"SPXW","minute":"17:39","strike":"7295:7294.65","kind":"cf","implied":"down","exit_minute":"17:48","outcome":"loss","pnl_pct":-51.2}
 {"day":"2026-06-10","ticker":"SPXW","minute":"18:07","strike":"7325:7324.95","kind":"cf","implied":"up","exit_minute":"18:14","outcome":"loss","pnl_pct":-4.6}
+{"day":"2026-06-11","ticker":"SPXW","minute":"15:00","strike:spot@entry":"7270:7268.94","kind":"cf","implied":"down","exit_minute":"15:04","outcome":"loss","pnl_pct":-0.1745}
+{"day":"2026-06-11","ticker":"SPXW","minute":"15:10","strike:spot@entry":"7280:7278.65","kind":"cf","implied":"up","exit_minute":"15:18","outcome":"loss","pnl_pct":-0.0296}
+{"day":"2026-06-11","ticker":"SPXW","minute":"17:01","strike:spot@entry":"7280:7279.14","kind":"cf","implied":"up","exit_minute":"17:05","outcome":"loss","pnl_pct":-0.1704}
+{"day":"2026-06-11","ticker":"SPXW","minute":"17:08","strike:spot@entry":"7280:7278.85","kind":"cf","implied":"up","exit_minute":"17:16","outcome":"loss","pnl_pct":-0.1050}
+{"day":"2026-06-12","ticker":"SPXW","minute":"14:02","strike:spot@entry":"7395:7395.19","kind":"cf","implied":"up","exit_minute":"14:08","outcome":"win","pnl_pct":0.25448}
+{"day":"2026-06-12","ticker":"SPXW","minute":"14:45","strike:spot@entry":"7390:7391.91","kind":"cf","implied":"down","exit_minute":"14:53","outcome":"loss","pnl_pct":-0.33666}
+{"day":"2026-06-12","ticker":"SPXW","minute":"15:34","strike:spot@entry":"7445:7443.15","kind":"cf","implied":"down","exit_minute":"15:43","outcome":"win","pnl_pct":0.35463}
+{"day":"2026-06-12","ticker":"SPXW","minute":"15:50","strike:spot@entry":"7410:7407.83","kind":"cf","implied":"down","exit_minute":"15:53","outcome":"loss","pnl_pct":-0.25858}
+{"day":"2026-06-15","ticker":"SPXW","minute":"15:00","strike:spot@entry":"7555:7552.9","kind":"cf","implied":"up","exit_minute":"15:08","outcome":"win","pnl_pct":0.0626}
+{"day":"2026-06-16","ticker":"SPXW","minute":"14:33","strike:spot@entry":"7535:7536.55","kind":"cf","implied":"up","exit_minute":"14:41","outcome":"win","pnl_pct":0.3639}
+{"day":"2026-06-16","ticker":"SPXW","minute":"15:31","strike:spot@entry":"7540:7539.27","kind":"cf","implied":"up","exit_minute":"15:40","outcome":"loss","pnl_pct":-0.0845}
+{"day":"2026-06-17","ticker":"SPXW","minute":"14:41","strike:spot@entry":"7505:7506.08","kind":"cf","implied":"down","exit_minute":"14:44","outcome":"loss","pnl_pct":-0.1235}
+{"day":"2026-06-17","ticker":"SPXW","minute":"14:50","strike:spot@entry":"7505:7504.32","kind":"cf","implied":"down","exit_minute":"15:14","outcome":"loss","pnl_pct":-0.1543}
+{"day":"2026-06-17","ticker":"SPXW","minute":"16:37","strike:spot@entry":"7515:7513.46","kind":"cf","implied":"down","exit_minute":"17:07","outcome":"win","pnl_pct":0.1465}
+{"day":"2026-06-17","ticker":"SPXW","minute":"18:10","strike:spot@entry":"7480:7478.22","kind":"cf","implied":"down","exit_minute":"18:16","outcome":"loss","pnl_pct":-0.2681}
+{"day":"2026-06-17","ticker":"SPXW","minute":"18:44","strike:spot@entry":"7510:7507.82","kind":"cf","implied":"down","exit_minute":"18:54","outcome":"win","pnl_pct":0.3381}
+{"day":"2026-06-18","ticker":"SPXW","minute":"14:58","strike:spot@entry":"7500:7497.93","kind":"cf","implied":"up","exit_minute":"15:01","outcome":"loss","pnl_pct":-0.2474}
+{"day":"2026-06-18","ticker":"SPXW","minute":"17:15","strike:spot@entry":"7505:7505.94","kind":"cf","implied":"up","exit_minute":"17:20","outcome":"win","pnl_pct":0.1076}
+{"day":"2026-06-18","ticker":"SPXW","minute":"18:39","strike:spot@entry":"7490:7492.05","kind":"cf","implied":"down","exit_minute":"18:45","outcome":"loss","pnl_pct":-0.3327}
+{"day":"2026-06-18","ticker":"SPXW","minute":"19:06","strike:spot@entry":"7490:7489.30","kind":"cf","implied":"down","exit_minute":"19:13","outcome":"win","pnl_pct":0.2991}
+{"day":"2026-06-22","ticker":"SPXW","minute":"14:17","strike:spot@entry":"7520:7518.30","kind":"cf","implied":"down","exit_minute":"14:22","outcome":"win","pnl_pct":0.0442}
+{"day":"2026-06-22","ticker":"SPXW","minute":"14:30","strike:spot@entry":"7495:7495.25","kind":"cf","implied":"down","exit_minute":"14:35","outcome":"loss","pnl_pct":-0.1178}
+{"day":"2026-06-22","ticker":"SPXW","minute":"15:49","strike:spot@entry":"7485:7484.01","kind":"cf","implied":"down","exit_minute":"15:52","outcome":"loss","pnl_pct":-0.1689}
 {"day":"2026-06-23","ticker":"SPXW","minute":"14:05","strike":"7410:7407.82@entry","kind":"cf","implied":"up","exit_minute":"14:17","outcome":"win","pnl_pct":21.95}
 {"day":"2026-06-23","ticker":"SPXW","minute":"15:10","strike":"7390:7387.50@entry","kind":"cf","implied":"down","exit_minute":"15:29","outcome":"win","pnl_pct":29.80}
 {"day":"2026-06-23","ticker":"SPXW","minute":"15:57","strike":"7385:7385.62@entry","kind":"cf","implied":"down","exit_minute":"16:03","outcome":"loss","pnl_pct":-26.46}
