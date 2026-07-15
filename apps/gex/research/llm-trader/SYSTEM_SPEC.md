@@ -1,13 +1,16 @@
 # Charts-First 0DTE System — Candidate Spec (RESEARCH, Clause 0)
 
-**Status: WEAK CANDIDATE / MOSTLY REGRESSED. Not validated. Paper only.** Built from
-10 blind charts-first days (2026-06-03…07-14), 25 trades. HONEST UPDATE at 10 days:
-the UNGATED method regressed to break-even (−0.4%/trade, 48% win) — the +2.4 to +7.9%
-seen at 5–8 days was small-sample optimism. The pin-release gate is the ONLY component
-still adding value (−0.4% → +3.3%/trade, 48% → 56% win) but is modest and its +40M
-threshold is post-hoc/in-sample. The gate governs WHEN to hunt; it does NOT stop a bad
-entry inside the allowed zone (6/10 missed a −51% low-gamma bear-trap short). Do not
-size real money; this may still be regressing toward zero. 2 OOS days pending (6/23, 5/29).
+**Status: WEAK LEAD / NOT AN EDGE UNGATED. Not validated. Paper only.** FINAL 12-blind-day
+result (2026-05-29…07-14), 30 trades: UNGATED = −0.6%/trade, 46% win (NO edge). Gated
+(net gamma ≤ +40M) = +2.2%/trade, 52% win — but the gated number REGRESSED across the
+night (+7.9% → +3.3% → +2.2% as days were added; still declining) and the +40M threshold
+is post-hoc/in-sample. 6/23 exposed the gate's blind spot: it only catches POSITIVE-gamma
+pins; NEGATIVE-gamma barney-WALL chop is equally untradeable and the gate lets it through
+(all five 6/23 trades were negative-gamma; 3 lost). The real gate should be "IS A PIN
+HOLDING (positive-gamma OR barney-wall)?" not gamma sign. DURABLE QUALITATIVE FINDING
+(held all 12 days, every trader independently): money is in the TRANSITION out of a pin
+(exhaustion-V, break-flush); losses are all from fighting INSIDE a pin. That principle is
+robust; the mechanical pin-detector is what's weak. Do NOT size real money.
 
 ## The one-line thesis
 GEX does not predict direction (18 hypotheses dead). It predicts *tradeability*:
