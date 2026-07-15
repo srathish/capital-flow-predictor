@@ -18,6 +18,23 @@ a strong positive-gamma pin is theta-death for a long-option scalp; the money is
 the **transition out of the pin** — the exhaustion reversal / break-retest. So:
 **price action picks the trade; gamma-state says whether you're allowed to take it.**
 
+## OPERATING MODE (the strongest result — operator's "one confident play/day" idea)
+Across 12 blind days, trading EVERY setup = −1.7%/day (net loss — the extra trades ARE
+the loss). Taking only the FIRST gate-open transition each day, one shot, then stopping =
+**63% win, +7.0%/day, +77% over 11 days, FULLY CAUSAL** (no hindsight; commit to the first
+gate-open setup without seeing the future; days with no gate-open setup = NO TRADE).
+- **Rule: one trade per day.** The first clean transition (exhaustion-V or break-flush)
+  where the gate is open (net near-spot gamma ≤ +40M). Take it, size it, DONE for the day.
+- **SIZING:** because it is ONE concentrated +EV shot (~+14%/trade expectancy), size it as a
+  real position, not a scalp — largest when conviction is highest (gamma clearly negative +
+  textbook setup, e.g. the +43% days). BUT ~1 day in 3 loses and one in ~11 is −50%, and 0DTE
+  can go to −100% — so size substantial-but-fractional, never all-in; risk only premium you
+  can lose in full. Kelly logic: real edge, high variance → meaningful fraction, not the account.
+- CAVEATS: 11 days, in-sample +40M gate, and this INHERITS the reasoning trader's entry
+  quality (the rule picks among trades a good discretionary read produced). Needs the forward
+  test before real size. The −51% day (6/10) was the first gate-open trade being a bad short —
+  one-shot does not avoid every bad day.
+
 ## The system, in order
 
 ### 1. THE GATE (trade / no-trade) — the one computable edge found
