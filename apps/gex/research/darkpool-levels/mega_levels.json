@@ -1,0 +1,18 @@
+{
+  "_note": "MEGA persistent SPY dark-pool prints (>=$1.3B), the levels Skylit tracks as ongoing S/R. RATIO = 10.035 (verified: Skylit places 6/16 SPY 750.057 at SPX 7526.47). spx = spy_price * 10.035. A level is 'active' on any day AT/AFTER its date (persists). notional in USD.",
+  "ratio": 10.035,
+  "levels": [
+    {"date":"2026-06-09","spy":737.38,"spx":7399.6,"notional":4057928475},
+    {"date":"2026-06-11","spy":738.17,"spx":7407.5,"notional":1994665568},
+    {"date":"2026-06-16","spy":750.057,"spx":7526.3,"notional":8744713293},
+    {"date":"2026-06-18","spy":747.87,"spx":7504.4,"notional":5228781055},
+    {"date":"2026-06-30","spy":742.18,"spx":7447.5,"notional":1764667876},
+    {"date":"2026-06-30","spy":746.92,"spx":7495.1,"notional":1007539061},
+    {"date":"2026-07-01","spy":745.55,"spx":7481.3,"notional":1349593000},
+    {"date":"2026-07-02","spy":745.58,"spx":7481.6,"notional":1863937750},
+    {"date":"2026-07-06","spy":751.05,"spx":7536.8,"notional":2500000000},
+    {"date":"2026-07-09","spy":751.70,"spx":7543.3,"notional":2500000000},
+    {"date":"2026-07-13","spy":748.95,"spx":7515.7,"notional":973629280},
+    {"date":"2026-07-15","spy":754.69,"spx":7573.3,"notional":1811264640}
+  ]
+}
