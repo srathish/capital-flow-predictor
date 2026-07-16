@@ -193,6 +193,22 @@ const PIN_MIN_RELSIG = 0.20;        // ...that now owns ≥20% of the surface...
 const PIN_GROWTH_RATIO = 1.5;       // ...and grew ≥1.5× since fire
 const CLOSE_REASON_STRUCTURE = 'closed_structure_invalidated';
 
+// ---------- v2 profit cap (FLAGGED, additive to v1 — no change to v1) ----------
+// v1 = current exit only (structural invalidate + trail arm@+50% / giveback 15%).
+// v2 = v1 PLUS a hard full-position profit CAP: bank 100% the moment the mark
+// first reaches +CAP over entry. Validated LEAN on 43 real fires (7/09-7/15,
+// real UW option paths, research/exit-fix-real/): the v1 exit leaks the move —
+// fires touch +30/40/50% intraday then the structural exit gives it back
+// (e.g. 7/15 rug_setup P7535 peaked +46% -> held to -98%; the +50% trail-arm was
+// too HIGH to ever protect it). The +45% cap turns the real fires -1.6%/tr ->
+// +11.8..+18.3%/tr and 49% -> 70% win by banking the mid-size winners v1 abandons.
+// Cost: clips the rare monster winner (a +138% call -> +68%). A profit CAP, not a
+// scale-out — scale-outs tested WORSE (they strip v1's structural downside).
+// DEFAULT v1 (current behavior preserved). Enable with EXIT_LOGIC_VERSION=v2.
+const EXIT_LOGIC_VERSION = process.env.EXIT_LOGIC_VERSION === 'v2' ? 'v2' : 'v1';
+const PROFIT_CAP_PCT = Number(process.env.EXIT_PROFIT_CAP_PCT) || 0.45; // +45% (tunable)
+const CLOSE_REASON_CAP = 'closed_profit_cap_v2';
+
 export function buildSurfaceBaseline(nodes, spot) {
   if (!Array.isArray(nodes) || !nodes.length || !spot) return null;
   // EVERY strike on the map, not a near-spot slice. Exit logic weights the
@@ -311,6 +327,7 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
   let refreshed = 0;
   let trailClosed = 0;
   let structureClosed = 0;
+  let capClosed = 0;
   for (const r of rows) {
     let quote = null;
     try { quote = await quoteFetcher(r.option_symbol); } catch (_) { quote = null; }
@@ -321,6 +338,21 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
     const pctGain = (newBest - r.entry_mark) / r.entry_mark;
     update.run(quote.mid, now, newBest, newBestTs, pctGain, r.play_id);
     refreshed++;
+
+    // v2 profit cap (FLAGGED): bank 100% the moment the CURRENT mark reaches
+    // +CAP over entry. Additive rail ON TOP of the v1 structural/trail exits
+    // below. v1 (default) skips this block entirely — behavior unchanged.
+    if (EXIT_LOGIC_VERSION === 'v2') {
+      const curGain = (quote.mid - r.entry_mark) / r.entry_mark;
+      if (curGain >= PROFIT_CAP_PCT) {
+        closeStmt.run(CLOSE_REASON_CAP, now, quote.mid,
+          `${CLOSE_REASON_CAP}:+${Math.round(curGain * 100)}%`, r.play_id);
+        printExit({ ...r, best_mark: newBest }, quote.mid,
+          `PROFIT CAP v2 +${Math.round(curGain * 100)}% (sold 100%)`);
+        capClosed++;
+        continue;
+      }
+    }
 
     // Structural read — the WHOLE surface, every tick. Fire loop publishes
     // the full strike map each minute; here we diff it against this play's
@@ -356,7 +388,7 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
       trailClosed++;
     }
   }
-  return { refreshed, trailClosed, structureClosed };
+  return { refreshed, trailClosed, structureClosed, capClosed };
 }
 
 /**
