@@ -339,21 +339,6 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
     update.run(quote.mid, now, newBest, newBestTs, pctGain, r.play_id);
     refreshed++;
 
-    // v2 profit cap (FLAGGED): bank 100% the moment the CURRENT mark reaches
-    // +CAP over entry. Additive rail ON TOP of the v1 structural/trail exits
-    // below. v1 (default) skips this block entirely — behavior unchanged.
-    if (EXIT_LOGIC_VERSION === 'v2') {
-      const curGain = (quote.mid - r.entry_mark) / r.entry_mark;
-      if (curGain >= PROFIT_CAP_PCT) {
-        closeStmt.run(CLOSE_REASON_CAP, now, quote.mid,
-          `${CLOSE_REASON_CAP}:+${Math.round(curGain * 100)}%`, r.play_id);
-        printExit({ ...r, best_mark: newBest }, quote.mid,
-          `PROFIT CAP v2 +${Math.round(curGain * 100)}% (sold 100%)`);
-        capClosed++;
-        continue;
-      }
-    }
-
     // Structural read — the WHOLE surface, every tick. Fire loop publishes
     // the full strike map each minute; here we diff it against this play's
     // fire-time baseline.
@@ -373,6 +358,28 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
       printExit({ ...r, best_mark: newBest }, quote.mid, `STRUCT ${structural.reason}`);
       structureClosed++;
       continue;
+    }
+
+    // v2 profit cap (FLAGGED, HOLD-AWARE): bank 100% the moment the CURRENT mark
+    // reaches +CAP over entry — UNLESS the structural read says HOLD (barney fuel
+    // accumulating in our direction / trapdoor-up), in which case the MAP says the
+    // move still has fuel, so we let the runner go past the cap. This keeps v2
+    // consistent with the system's core principle (the map leads the mark) — we
+    // only take the hard profit when structure ISN'T telling us to stay in.
+    // Net effect vs the unconditional cap: still saves the mid-size winners v1
+    // abandoned (their structure is neutral/pinning, not HOLD → capped), but no
+    // longer clips the fuel-backed monster runners (their structure = HOLD → run).
+    // v1 (default) skips this entirely — behavior unchanged.
+    if (EXIT_LOGIC_VERSION === 'v2' && structural.action !== 'hold') {
+      const curGain = (quote.mid - r.entry_mark) / r.entry_mark;
+      if (curGain >= PROFIT_CAP_PCT) {
+        closeStmt.run(CLOSE_REASON_CAP, now, quote.mid,
+          `${CLOSE_REASON_CAP}:+${Math.round(curGain * 100)}%`, r.play_id);
+        printExit({ ...r, best_mark: newBest }, quote.mid,
+          `PROFIT CAP v2 +${Math.round(curGain * 100)}% (sold 100%, no HOLD)`);
+        capClosed++;
+        continue;
+      }
     }
 
     // Trailing-stop check — arm only after real gain, then exit on giveback.
