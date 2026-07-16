@@ -92,14 +92,18 @@ because root `.env` sets `DATABASE_URL`). So the stock-gex tools must run on a
 Isolation needs **no code change** — two env vars pin this terminal to its own session:
 
 ```bash
-# 1. Capture a 2nd Skylit login's cookies into session-b.env (see session-b.env.example)
-cp research/stock-gex/session-b.env.example research/stock-gex/session-b.env   # then fill it in
+# 1. Capture session B via the popup login (Discord OAuth) — writes CLERK_* into the
+#    file, preserves DATABASE_URL=, and does NOT touch Postgres (session A safe):
+cd ../jobs && uv run cfp-jobs skylit-login \
+  --env-file "$PWD/../gex/research/stock-gex/session-b.env" && cd ../gex
 
 # 2. Run the stock-gex tools with ENV_FILE + ENV_FILE_PATH pointed at it:
 ENV_FILE="$PWD/research/stock-gex/session-b.env" \
 ENV_FILE_PATH="$PWD/research/stock-gex/session-b.env" \
   /usr/local/bin/node research/stock-gex/poll.mjs        # or verify.mjs
 ```
+`session-b.env` already exists (gitignored) with `DATABASE_URL=` set; the login just
+fills the three `CLERK_*` keys. Re-run the login whenever session B expires.
 
 - `ENV_FILE` → `_env-bootstrap` loads it last with `override:true` → session B wins.
 - `ENV_FILE_PATH` → cookie rotations persist back to `session-b.env`, never root `.env`.
