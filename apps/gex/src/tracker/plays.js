@@ -207,7 +207,14 @@ const CLOSE_REASON_STRUCTURE = 'closed_structure_invalidated';
 // DEFAULT v1 (current behavior preserved). Enable with EXIT_LOGIC_VERSION=v2.
 const EXIT_LOGIC_VERSION = process.env.EXIT_LOGIC_VERSION === 'v2' ? 'v2' : 'v1';
 const PROFIT_CAP_PCT = Number(process.env.EXIT_PROFIT_CAP_PCT) || 0.45; // +45% (tunable)
+// Profit FLOOR: once a play has PEAKED >= cap, never let it give the gain back
+// to a loss — even while a structural HOLD is keeping us in for more upside.
+// This is what stops HOLD from holding losers: a runner runs, but the moment a
+// >=+45%-peaked play falls below the floor it exits regardless of HOLD. So a
+// winner can climb, but a winner can never round-trip to a loss.
+const PROFIT_FLOOR_PCT = Number(process.env.EXIT_PROFIT_FLOOR_PCT) || 0.20; // lock >= +20%
 const CLOSE_REASON_CAP = 'closed_profit_cap_v2';
+const CLOSE_REASON_FLOOR = 'closed_profit_floor_v2';
 
 export function buildSurfaceBaseline(nodes, spot) {
   if (!Array.isArray(nodes) || !nodes.length || !spot) return null;
@@ -360,23 +367,41 @@ export async function refreshLivePlays({ db, quoteFetcher }) {
       continue;
     }
 
-    // v2 profit cap (FLAGGED, HOLD-AWARE): bank 100% the moment the CURRENT mark
-    // reaches +CAP over entry — UNLESS the structural read says HOLD (barney fuel
-    // accumulating in our direction / trapdoor-up), in which case the MAP says the
-    // move still has fuel, so we let the runner go past the cap. This keeps v2
-    // consistent with the system's core principle (the map leads the mark) — we
-    // only take the hard profit when structure ISN'T telling us to stay in.
-    // Net effect vs the unconditional cap: still saves the mid-size winners v1
-    // abandoned (their structure is neutral/pinning, not HOLD → capped), but no
-    // longer clips the fuel-backed monster runners (their structure = HOLD → run).
-    // v1 (default) skips this entirely — behavior unchanged.
-    if (EXIT_LOGIC_VERSION === 'v2' && structural.action !== 'hold') {
+    // v2 profit management (FLAGGED) — two rails that together keep the runners
+    // WITHOUT holding losers (v1 default skips this block entirely):
+    //
+    //   (a) HARD CAP: bank 100% the moment the CURRENT mark reaches +CAP over
+    //       entry — UNLESS the structural read says HOLD (barney fuel accumulating
+    //       in our direction / trapdoor-up), in which case the MAP says the move
+    //       has fuel, so we let the runner go past the cap. Saves the mid-size
+    //       winners v1 abandoned (neutral/pinning structure → capped) without
+    //       clipping fuel-backed monster runners (HOLD → run).
+    //
+    //   (b) PROFIT FLOOR: once a play has PEAKED >= cap, if the current mark falls
+    //       back below the FLOOR, exit EVEN DURING HOLD. This is the answer to
+    //       "does HOLD hold losers?" — no: a >=+45%-peaked play can climb higher
+    //       while HOLD persists, but it can never round-trip the profit to a loss.
+    //       (This is what killed the -98% put: it 'held' structurally while the
+    //       mark bled from +46% to -97%. The floor exits it at +20% instead.)
+    if (EXIT_LOGIC_VERSION === 'v2') {
       const curGain = (quote.mid - r.entry_mark) / r.entry_mark;
-      if (curGain >= PROFIT_CAP_PCT) {
+      const holding = structural.action === 'hold';
+      // (a) hard cap when structure isn't telling us to stay in
+      if (!holding && curGain >= PROFIT_CAP_PCT) {
         closeStmt.run(CLOSE_REASON_CAP, now, quote.mid,
           `${CLOSE_REASON_CAP}:+${Math.round(curGain * 100)}%`, r.play_id);
         printExit({ ...r, best_mark: newBest }, quote.mid,
-          `PROFIT CAP v2 +${Math.round(curGain * 100)}% (sold 100%, no HOLD)`);
+          `PROFIT CAP v2 +${Math.round(curGain * 100)}% (sold 100%)`);
+        capClosed++;
+        continue;
+      }
+      // (b) profit floor — protects any >=cap-peaked play from becoming a loss,
+      //     regardless of HOLD. pctGain is the PEAK gain (from newBest).
+      if (pctGain >= PROFIT_CAP_PCT && curGain <= PROFIT_FLOOR_PCT) {
+        closeStmt.run(CLOSE_REASON_FLOOR, now, quote.mid,
+          `${CLOSE_REASON_FLOOR}:+${Math.round(curGain * 100)}%_from_peak+${Math.round(pctGain * 100)}%`, r.play_id);
+        printExit({ ...r, best_mark: newBest }, quote.mid,
+          `PROFIT FLOOR v2 +${Math.round(curGain * 100)}% (peaked +${Math.round(pctGain * 100)}%, locked)`);
         capClosed++;
         continue;
       }
