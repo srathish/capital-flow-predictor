@@ -81,6 +81,36 @@ test that killed every static index node idea), **real bid/ask fills** on the
 weekly/monthly option, **walk-forward**. Fold in the one dynamic signal that
 survived the index program: **vanna-velocity**.
 
+## Auth: the stock-gex terminal needs its OWN Skylit session
+
+Skylit's `__client` cookie **rotates on every JWT refresh** (auth.js:170). Two
+processes refreshing the *same* session clobber each other → both 401 and die. The
+live index tracker + Railway app already share one session (session A, via Postgres,
+because root `.env` sets `DATABASE_URL`). So the stock-gex tools must run on a
+**second, isolated session** — otherwise they'd knock the live tracker offline.
+
+Isolation needs **no code change** — two env vars pin this terminal to its own session:
+
+```bash
+# 1. Capture a 2nd Skylit login's cookies into session-b.env (see session-b.env.example)
+cp research/stock-gex/session-b.env.example research/stock-gex/session-b.env   # then fill it in
+
+# 2. Run the stock-gex tools with ENV_FILE + ENV_FILE_PATH pointed at it:
+ENV_FILE="$PWD/research/stock-gex/session-b.env" \
+ENV_FILE_PATH="$PWD/research/stock-gex/session-b.env" \
+  /usr/local/bin/node research/stock-gex/poll.mjs        # or verify.mjs
+```
+
+- `ENV_FILE` → `_env-bootstrap` loads it last with `override:true` → session B wins.
+- `ENV_FILE_PATH` → cookie rotations persist back to `session-b.env`, never root `.env`.
+- `DATABASE_URL=` (empty) in the file → `initAuth` skips Postgres, uses session B from the file.
+
+The launchd plist already sets both vars. **Use session B for BOTH tools** (verify
+and poll) whenever the live tracker is running — verify only refreshes ~once per run
+(the JWT caches ~55s across all 10 names), but that one refresh can still trigger a
+rotation, so keep it off session A. verify may use session A only if the live tracker
+is stopped.
+
 ## Verify grading (stage 2, the entry gate)
 
 Per name, for its thesis side: **support** (strongest pika below for BULL / above

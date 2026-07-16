@@ -43,9 +43,14 @@
     <dict>
         <key>PATH</key>
         <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
-        <!-- .env with CLERK_* (Skylit) + UNUSUAL_WHALES_API_KEY -->
-        <key>DOTENV_CONFIG_PATH</key>
-        <string>REPLACE_ME_ENV_PATH/.env</string>
+        <!-- DEDICATED Skylit session (session B), isolated from the live tracker.
+             ENV_FILE   → _env-bootstrap loads it LAST (override wins) = session B.
+             ENV_FILE_PATH → rotated cookies persist back to THIS file, not root .env.
+             session-b.env sets DATABASE_URL= (empty) so initAuth skips Postgres. -->
+        <key>ENV_FILE</key>
+        <string>REPLACE_ME_REPO_PATH/apps/gex/research/stock-gex/session-b.env</string>
+        <key>ENV_FILE_PATH</key>
+        <string>REPLACE_ME_REPO_PATH/apps/gex/research/stock-gex/session-b.env</string>
     </dict>
 
     <key>StandardOutPath</key>
