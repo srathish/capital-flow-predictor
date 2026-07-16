@@ -1,0 +1,5 @@
+# reproducible from pull.mjs / score.py — do not commit bulky pulled data
+optcache/
+spotpaths.json
+scored.json
+random.json
