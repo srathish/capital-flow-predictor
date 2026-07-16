@@ -1,0 +1,118 @@
+{
+  "generated": "2026-07-16T04:46:20.511Z",
+  "verdicts": [
+    {
+      "ticker": "AAPL",
+      "side": "BULL",
+      "grade": 84,
+      "verdict": "ENTER",
+      "spot": 327.775,
+      "reasons": [
+        "floor 325(27.3M) 0.8% below =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "HOOD",
+      "side": "BEAR",
+      "grade": 58,
+      "verdict": "WAIT",
+      "spot": 115.58,
+      "reasons": [
+        "ceiling 120(15.6M) 3.8% above =KING",
+        "floor 110(5.1M) 4.8% below = minor block"
+      ]
+    },
+    {
+      "ticker": "IBM",
+      "side": "BEAR",
+      "grade": 56,
+      "verdict": "WAIT",
+      "spot": 211.82999999999998,
+      "reasons": [
+        "ceiling 220(1.7M) 3.9% above =KING",
+        "floor 205(0.4M) 3.2% below = minor block",
+        "barney 210(-0.4M) = air pocket down"
+      ]
+    },
+    {
+      "ticker": "GOOG",
+      "side": "BULL",
+      "grade": 50,
+      "verdict": "WAIT",
+      "spot": 371.065,
+      "reasons": [
+        "floor 360(10.1M) 3.0% below =KING",
+        "ceiling 375(4.0M) 1.1% above = CAP"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "side": "BEAR",
+      "grade": 49,
+      "verdict": "WAIT",
+      "spot": 397.04999999999995,
+      "reasons": [
+        "ceiling 400(14.6M) 0.7% above",
+        "floor 390(15.2M) 1.8% below = CAP"
+      ]
+    },
+    {
+      "ticker": "NFLX",
+      "side": "BEAR",
+      "grade": 48,
+      "verdict": "WAIT",
+      "spot": 73.985,
+      "reasons": [
+        "⚠ PINNED at king 74(9.6M) — wait for a break",
+        "ceiling 74(9.6M) 0.0% above =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "SOFI",
+      "side": "BEAR",
+      "grade": 48,
+      "verdict": "WAIT",
+      "spot": 17.950000000000003,
+      "reasons": [
+        "⚠ PINNED at king 18(12.2M) — wait for a break",
+        "ceiling 18(12.2M) 0.3% above =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "CRWD",
+      "side": "BULL",
+      "grade": 44,
+      "verdict": "WAIT",
+      "spot": 207.435,
+      "reasons": [
+        "floor 200(0.9M) 3.6% below =KING",
+        "ceiling 212.5(0.7M) 2.4% above = CAP"
+      ]
+    },
+    {
+      "ticker": "GOOGL",
+      "side": "BULL",
+      "grade": 14,
+      "verdict": "AVOID",
+      "spot": 372,
+      "reasons": [
+        "floor 355(4.0M) 4.6% below",
+        "ceiling 375(8.6M) 0.8% above = CAP"
+      ]
+    },
+    {
+      "ticker": "ORCL",
+      "side": "BEAR",
+      "grade": 10,
+      "verdict": "AVOID",
+      "spot": 133.01,
+      "reasons": [
+        "ceiling 145(4.6M) 9.0% above =KING",
+        "floor 133(4.6M) 0.0% below = CAP"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Stock-GEX swing study — screen without Skylit, then forward-poll only the winners
+# Stock-GEX swing tool — pick stocks we like, use GEX to confirm the entry, then track it
 
 Extends the GEX node-pattern system (king-floor, node-flip — the "Glitch model")
 from 0DTE indexes to **individual stocks on weekly/monthly options, held over
@@ -6,25 +6,35 @@ days** (swing, not 0DTE). Weeklies decay far slower than 0DTE, so the same
 directional node edge monetizes better — this sidesteps the theta wall that
 capped the index program.
 
-## Why this design
+## The model (operator, 2026-07-16): GEX is the CONFIRMATION, not the finder
 
-Two constraints shaped it:
+Three stages — we find ideas on factors, use GEX to green-light the entry, then
+keep the GEX to manage the trade:
+
+```
+  1. SCREEN  screen.mjs   (UW factors, NO Skylit) ──▶ candidates.json   "stocks we like"
+     + pinned.json (HOOD, GOOG archetypes)
+                                   │
+  2. VERIFY  verify.mjs   (current Skylit GEX) ─────▶ verdicts.json     ENTER / WAIT / AVOID now
+                                   │                  (king-floor / air-pocket / ceiling-wall read)
+                                   ▼
+  3. TRACK   poll.mjs     (forward Skylit GEX, ~2mo) ▶ data/snapshots.jsonl
+             tagged w/ each name's thesis+verdict → manage the entry (node-based exits)
+             AND validate whether ENTER actually beat AVOID over the hold.
+```
+
+Why the forward track still matters (it is NOT a scanner): once we're **in**, we
+have the ongoing node structure for the life of the trade — that's how we manage
+exits (like the index full-surface reads), and it accrues a hindsight-proof record
+to check the verify verdicts.
+
+Two constraints shaped the plumbing:
 
 1. **Skylit only retains ~2–3 months of history** (verified 2026-07-16: HOOD data
-   exists back to ~mid-May, gone by mid-April). So a 6-month *backtest* is
-   impossible. We **collect forward** instead — which is strictly better: a forward
-   study can't be tainted by hindsight, the exact flaw that inflated every index
-   backtest.
-2. **Never over-poll Skylit.** We do NOT poll the 500-ticker universe. A cheap,
-   broad **UW screen (no Skylit)** picks the handful of names worth watching, and
-   we poll Skylit **only for those**.
-
-```
-  screen.mjs  ──(UW only, no Skylit)──▶  candidates.json  ─┐
-  pinned.json (HOOD, GOOG archetypes) ────────────────────┼─▶  poll.mjs ──▶ data/snapshots.jsonl
-                                                           │    (Skylit aggregate GEX, RTH, ~30-min)
-                                          (bounded: ~10 names × ~13 polls/day)
-```
+   back to ~mid-May, gone by mid-April) → a 6-month *backtest* is impossible, so
+   the track is **forward** (which is also hindsight-proof).
+2. **Never over-poll Skylit.** No 500-ticker universe: the UW screen (no Skylit)
+   narrows to a handful; Skylit is touched only for those. Bounded ~10 names.
 
 ## The 0DTE-vs-swing data distinction (critical)
 
@@ -37,10 +47,11 @@ Two constraints shaped it:
 
 | File | Role |
 |---|---|
-| `screen.mjs` | Non-Skylit UW screener → ranks liquid, trending, unusually-active large-caps → `candidates.json`. Run `node research/stock-gex/screen.mjs [N=8]`. |
-| `pinned.json` | Reference archetypes always polled (HOOD = operator's pick; GOOG = Glitch's king-floor name). |
-| `poll.mjs` | Pulls Skylit **aggregate** GEX/VEX for the basket, appends to `data/snapshots.jsonl`. Run `node research/stock-gex/poll.mjs` (add `--rth-gate` for scheduled runs). |
-| `com.bellwether.stock-gex-poll.plist` | launchd job: fires every 30 min; `--rth-gate` self-limits to weekdays 09:30–16:00 ET. |
+| `screen.mjs` | **(1) SCREEN** — non-Skylit UW screener → ranks liquid, trending, unusually-active large-caps → `candidates.json`. `node research/stock-gex/screen.mjs [N=8]`. |
+| `pinned.json` | Reference archetypes always included (HOOD = operator's pick; GOOG = Glitch's king-floor name). |
+| `verify.mjs` | **(2) VERIFY** — pulls current Skylit aggregate GEX, grades each name's thesis (king-floor / air-pocket / ceiling-wall; pin = veto) → **ENTER/WAIT/AVOID** → `verdicts.json`. `node research/stock-gex/verify.mjs` (or `verify.mjs HOOD:bull NVDA:bear` for a manual list). |
+| `poll.mjs` | **(3) TRACK** — pulls Skylit **aggregate** GEX for the verified basket, tagged with thesis+verdict, appends to `data/snapshots.jsonl`. `node research/stock-gex/poll.mjs` (add `--rth-gate` for scheduled runs). |
+| `com.bellwether.stock-gex-poll.plist` | launchd job for stage 3: fires every 30 min; `--rth-gate` self-limits to weekdays 09:30–16:00 ET. |
 
 ## Screen criteria (candidate selection, NOT the GEX analysis)
 
@@ -70,9 +81,20 @@ test that killed every static index node idea), **real bid/ask fills** on the
 weekly/monthly option, **walk-forward**. Fold in the one dynamic signal that
 survived the index program: **vanna-velocity**.
 
+## Verify grading (stage 2, the entry gate)
+
+Per name, for its thesis side: **support** (strongest pika below for BULL / above
+for BEAR) × proximity, minus **block** (opposing pika wall near spot = CAP), plus
+bonuses for **king-floor** (king IS the support) and a **barney in front** (squeeze
+fuel / air pocket). A dominant pika **AT spot = PIN → capped at WAIT** (no
+directional edge; wait for a break). Score → ENTER (≥62) / WAIT (≥42) / AVOID.
+Advisory to inform a discretionary entry, **not** a validated mechanical signal.
+
 ## Status
 
-- 2026-07-16: pipeline built + verified. First basket: AAPL NFLX GOOGL IBM ORCL
-  SOFI CRWD MSFT (screened) + HOOD GOOG (pinned). Forward collection begins on
-  schedule load. Basket is **frozen** for the study window so every name gets full
-  history; re-run `screen.mjs` only to start a new cohort.
+- 2026-07-16: three-stage tool built + verified end-to-end. First basket: AAPL NFLX
+  GOOGL IBM ORCL SOFI CRWD MSFT (screened) + HOOD GOOG (pinned). **Today's verify:
+  AAPL BULL ENTER (84, king-floor 325 + clear headroom)** the lone confirmed entry;
+  NFLX/SOFI WAIT (pinned at king); GOOGL/ORCL AVOID (capped / support against thesis);
+  HOOD/GOOG/MSFT/CRWD/IBM WAIT. Forward TRACK begins on schedule load; basket frozen
+  for the window (re-run screen→verify to start a new cohort).

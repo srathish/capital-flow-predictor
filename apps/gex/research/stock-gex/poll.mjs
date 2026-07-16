@@ -29,15 +29,24 @@ if (process.argv.includes('--rth-gate')) {
   if (dow === 0 || dow === 6 || hm < 9 * 60 + 30 || hm > 16 * 60) { console.log('outside RTH — skip'); process.exit(0); }
 }
 
+// Basket = the VERIFIED names (from verify.mjs), tagged with their thesis + verdict,
+// so the forward record manages the entries AND validates whether ENTER beat AVOID.
+// Falls back to the raw candidates+pinned if verify hasn't run yet.
 const tickers = process.argv.slice(2).filter(a => !a.startsWith('--'));
-let basket = tickers;
+let basket = tickers.map(t => ({ ticker: t.toUpperCase() }));
 if (!basket.length) {
-  const cf = path.join(HERE, 'candidates.json');
-  if (!fs.existsSync(cf)) { console.error('no candidates.json — run screen.mjs first'); process.exit(1); }
-  const screened = JSON.parse(fs.readFileSync(cf, 'utf8')).candidates.map(c => c.ticker);
-  const pf = path.join(HERE, 'pinned.json');
-  const pinned = fs.existsSync(pf) ? JSON.parse(fs.readFileSync(pf, 'utf8')).pinned || [] : [];
-  basket = [...new Set([...screened, ...pinned])];   // automated picks + reference archetypes
+  const vf = path.join(HERE, 'verdicts.json');
+  if (fs.existsSync(vf)) {
+    basket = JSON.parse(fs.readFileSync(vf, 'utf8')).verdicts.map(v => ({ ticker: v.ticker, side: v.side, verdict: v.verdict, entry_grade: v.grade }));
+  } else {
+    const cf = path.join(HERE, 'candidates.json');
+    if (!fs.existsSync(cf)) { console.error('no verdicts.json or candidates.json — run screen.mjs + verify.mjs first'); process.exit(1); }
+    const screened = JSON.parse(fs.readFileSync(cf, 'utf8')).candidates.map(c => ({ ticker: c.ticker, side: c.bias }));
+    const pf = path.join(HERE, 'pinned.json');
+    const pinned = fs.existsSync(pf) ? (JSON.parse(fs.readFileSync(pf, 'utf8')).pinned || []).map(t => ({ ticker: t })) : [];
+    const seen = new Set(screened.map(s => s.ticker));
+    basket = [...screened, ...pinned.filter(p => !seen.has(p.ticker))];
+  }
 }
 
 await initAuth();
@@ -82,13 +91,15 @@ async function pullAgg(ticker) {
 }
 
 const ws = fs.createWriteStream(path.join(DATA, 'snapshots.jsonl'), { flags: 'a' });
-console.log(`polling ${basket.length} names (aggregate/swing GEX): ${basket.join(' ')}`);
+console.log(`polling ${basket.length} names (aggregate/swing GEX): ${basket.map(b => b.ticker).join(' ')}`);
 let ok = 0;
-for (const t of basket) {
+for (const entry of basket) {
+  const t = entry.ticker;
   try {
     const s = await pullAgg(t);
     if (s.error) { console.log(`  ${t.padEnd(6)} ERR ${s.error}`); continue; }
-    ws.write(JSON.stringify({ ts: nowIso, ...s }) + '\n');
+    // tag each snapshot with the entry thesis so the forward record ties to the trade
+    ws.write(JSON.stringify({ ts: nowIso, side: entry.side || null, verdict: entry.verdict || null, entry_grade: entry.entry_grade ?? null, ...s }) + '\n');
     ok++;
     const f = s.floor ? `${s.floor.k}(${s.floor.g}M)` : '—';
     const c = s.ceiling ? `${s.ceiling.k}(${s.ceiling.g}M)` : '—';
