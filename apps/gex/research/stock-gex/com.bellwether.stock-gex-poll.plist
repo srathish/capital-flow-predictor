@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+      Stock-GEX forward poller (research). Fires every 30 min; poll.mjs --rth-gate
+      self-limits to weekdays 09:30-16:00 ET, so it only hits Skylit during market
+      hours. Bounded: ~10 names x ~13 polls/day. Builds a forward, hindsight-proof
+      aggregate-GEX dataset over ~2 months.
+
+      Install (one-time):
+        1. Replace REPLACE_ME_* below with your absolute paths.
+        2. cp com.bellwether.stock-gex-poll.plist ~/Library/LaunchAgents/
+        3. launchctl load -w ~/Library/LaunchAgents/com.bellwether.stock-gex-poll.plist
+
+      Uninstall (when the 2-month collection is done):
+        launchctl unload ~/Library/LaunchAgents/com.bellwether.stock-gex-poll.plist
+        rm ~/Library/LaunchAgents/com.bellwether.stock-gex-poll.plist
+
+      Logs: tail -f ~/Library/Logs/bellwether-stock-gex-poll.log
+    -->
+
+    <key>Label</key>
+    <string>com.bellwether.stock-gex-poll</string>
+
+    <!-- Fire every 30 min; the script's --rth-gate decides whether to actually poll. -->
+    <key>StartInterval</key>
+    <integer>1800</integer>
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/node</string>              <!-- Node 22 (ABI 127); `which node` to confirm -->
+        <string>REPLACE_ME_REPO_PATH/apps/gex/research/stock-gex/poll.mjs</string>
+        <string>--rth-gate</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>REPLACE_ME_REPO_PATH/apps/gex</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+        <!-- .env with CLERK_* (Skylit) + UNUSUAL_WHALES_API_KEY -->
+        <key>DOTENV_CONFIG_PATH</key>
+        <string>REPLACE_ME_ENV_PATH/.env</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>REPLACE_ME_HOME/Library/Logs/bellwether-stock-gex-poll.log</string>
+    <key>StandardErrorPath</key>
+    <string>REPLACE_ME_HOME/Library/Logs/bellwether-stock-gex-poll.log</string>
+</dict>
+</plist>

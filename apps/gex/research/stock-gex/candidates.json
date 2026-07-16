@@ -1,0 +1,245 @@
+{
+  "as_of": "2026-07-15",
+  "generated": "2026-07-16T00:00:00Z",
+  "gates": {
+    "MIN_OI": 300000,
+    "MIN_MCAP": 20000000000,
+    "PRICE_MIN": 15,
+    "PRICE_MAX": 700
+  },
+  "weights": {
+    "_liq": 0.28,
+    "_conviction": 0.22,
+    "_trend": 0.22,
+    "_activity": 0.12,
+    "_move": 0.08,
+    "_regime": 0.08
+  },
+  "count": 8,
+  "candidates": [
+    {
+      "rank": 1,
+      "ticker": "AAPL",
+      "name": "APPLE INC",
+      "sector": "Technology",
+      "close": 327.5,
+      "marketcap": 4810109090000,
+      "bias": "BULL",
+      "score": 0.821,
+      "signals": {
+        "total_oi": 4938702,
+        "call_day_vs_avg": 2.03,
+        "net_call_premium": 90570763,
+        "implied_move_pct": 5.5,
+        "range_pos_52w": 0.99,
+        "iv_rank": 66.9426,
+        "uw_gex_regime_hint": 0.392,
+        "next_earnings": "2026-07-30"
+      },
+      "breakdown": {
+        "liq": 0.95,
+        "conviction": 0.81,
+        "move": 0.13,
+        "trend": 0.97,
+        "activity": 0.92,
+        "regime": 0.55
+      }
+    },
+    {
+      "rank": 2,
+      "ticker": "NFLX",
+      "name": "NETFLIX INC",
+      "sector": "Communication Services",
+      "close": 73.68,
+      "marketcap": 310398681887,
+      "bias": "BEAR",
+      "score": 0.804,
+      "signals": {
+        "total_oi": 5975895,
+        "call_day_vs_avg": 0.92,
+        "net_call_premium": -3709924,
+        "implied_move_pct": 9.8,
+        "range_pos_52w": 0.05,
+        "iv_rank": 100,
+        "uw_gex_regime_hint": 0.644,
+        "next_earnings": "2026-07-16"
+      },
+      "breakdown": {
+        "liq": 0.98,
+        "conviction": 0.71,
+        "move": 0.68,
+        "trend": 0.89,
+        "activity": 0.55,
+        "regime": 0.71
+      }
+    },
+    {
+      "rank": 3,
+      "ticker": "GOOGL",
+      "name": "ALPHABET INC",
+      "sector": "Communication Services",
+      "close": 370.92,
+      "marketcap": 2160238080000,
+      "bias": "BULL",
+      "score": 0.783,
+      "signals": {
+        "total_oi": 3150940,
+        "call_day_vs_avg": 1.83,
+        "net_call_premium": 52870474,
+        "implied_move_pct": 7.6,
+        "range_pos_52w": 0.83,
+        "iv_rank": 72.6522,
+        "uw_gex_regime_hint": 1.514,
+        "next_earnings": "2026-07-22"
+      },
+      "breakdown": {
+        "liq": 0.87,
+        "conviction": 0.87,
+        "move": 0.42,
+        "trend": 0.61,
+        "activity": 0.89,
+        "regime": 0.9
+      }
+    },
+    {
+      "rank": 4,
+      "ticker": "IBM",
+      "name": "INTERNATIONAL BUSINESS MACHINES CORP",
+      "sector": "Technology",
+      "close": 211.2,
+      "marketcap": 198503771136,
+      "bias": "BEAR",
+      "score": 0.782,
+      "signals": {
+        "total_oi": 746893,
+        "call_day_vs_avg": 2.28,
+        "net_call_premium": -15386462,
+        "implied_move_pct": 10.1,
+        "range_pos_52w": 0,
+        "iv_rank": 77.5525,
+        "uw_gex_regime_hint": 1.083,
+        "next_earnings": "2026-07-22"
+      },
+      "breakdown": {
+        "liq": 0.39,
+        "conviction": 0.97,
+        "move": 0.73,
+        "trend": 1,
+        "activity": 0.95,
+        "regime": 0.85
+      }
+    },
+    {
+      "rank": 5,
+      "ticker": "ORCL",
+      "name": "ORACLE CORP",
+      "sector": "Technology",
+      "close": 132.49,
+      "marketcap": 381633602790,
+      "bias": "BEAR",
+      "score": 0.772,
+      "signals": {
+        "total_oi": 2821791,
+        "call_day_vs_avg": 1.15,
+        "net_call_premium": -4831874,
+        "implied_move_pct": 11.9,
+        "range_pos_52w": 0.02,
+        "iv_rank": 56.3071,
+        "uw_gex_regime_hint": 0.106,
+        "next_earnings": "2026-09-08"
+      },
+      "breakdown": {
+        "liq": 0.84,
+        "conviction": 0.73,
+        "move": 0.85,
+        "trend": 0.95,
+        "activity": 0.68,
+        "regime": 0.23
+      }
+    },
+    {
+      "rank": 6,
+      "ticker": "SOFI",
+      "name": "SOFI TECHNOLOGIES INC",
+      "sector": "Financial Services",
+      "close": 17.87,
+      "marketcap": 22922585244,
+      "bias": "BEAR",
+      "score": 0.732,
+      "signals": {
+        "total_oi": 4226374,
+        "call_day_vs_avg": 0.8,
+        "net_call_premium": -2049011,
+        "implied_move_pct": 13.6,
+        "range_pos_52w": 0.17,
+        "iv_rank": 54.3696,
+        "uw_gex_regime_hint": 0.042,
+        "next_earnings": "2026-07-29"
+      },
+      "breakdown": {
+        "liq": 0.9,
+        "conviction": 0.98,
+        "move": 0.92,
+        "trend": 0.6,
+        "activity": 0.44,
+        "regime": 0.06
+      }
+    },
+    {
+      "rank": 7,
+      "ticker": "CRWD",
+      "name": "CROWDSTRIKE HOLDINGS INC",
+      "sector": "Technology",
+      "close": 206.77,
+      "marketcap": 210545471326,
+      "bias": "BULL",
+      "score": 0.731,
+      "signals": {
+        "total_oi": 1464923,
+        "call_day_vs_avg": 1.39,
+        "net_call_premium": -6077452,
+        "implied_move_pct": 12.1,
+        "range_pos_52w": 0.92,
+        "iv_rank": 75.3445,
+        "uw_gex_regime_hint": 0.07,
+        "next_earnings": "2026-08-26"
+      },
+      "breakdown": {
+        "liq": 0.68,
+        "conviction": 0.89,
+        "move": 0.87,
+        "trend": 0.76,
+        "activity": 0.81,
+        "regime": 0.16
+      }
+    },
+    {
+      "rank": 8,
+      "ticker": "MSFT",
+      "name": "MICROSOFT CORP",
+      "sector": "Technology",
+      "close": 395.63,
+      "marketcap": 2938911621944,
+      "bias": "BEAR",
+      "score": 0.729,
+      "signals": {
+        "total_oi": 4554076,
+        "call_day_vs_avg": 1.26,
+        "net_call_premium": 46171076,
+        "implied_move_pct": 9,
+        "range_pos_52w": 0.23,
+        "iv_rank": 100,
+        "uw_gex_regime_hint": 1.065,
+        "next_earnings": "2026-07-29"
+      },
+      "breakdown": {
+        "liq": 0.92,
+        "conviction": 0.76,
+        "move": 0.63,
+        "trend": 0.45,
+        "activity": 0.74,
+        "regime": 0.82
+      }
+    }
+  ]
+}
