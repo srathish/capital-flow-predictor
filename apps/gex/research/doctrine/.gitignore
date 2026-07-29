@@ -4,3 +4,6 @@ signals_disc.json
 features.csv
 reach_models.pkl
 reach_feats.json
+state_autotrade.json
+trades_*.txt
+autotrade_cron.log
