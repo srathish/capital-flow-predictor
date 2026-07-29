@@ -27,7 +27,7 @@ async function markAt(day, cp, k, et) {
   const r = await fetch(`https://api.unusualwhales.com/api/option-contract/${occ}/intraday?date=${day}`, { headers: { Authorization: `Bearer ${KEY}` }, signal: AbortSignal.timeout(15000) }).catch(() => null);
   if (!r || !r.ok) return null;
   const pts = ((await r.json())?.data || []).map(x => ({ et: new Date(x.start_time).toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5), m: +(x.close ?? x.avg_price ?? 0) })).filter(p => p.m > 0).sort((a, b) => a.et.localeCompare(b.et));
-  const e = pts.find(p => p.et >= et) || pts[0]; return e ? e.m : null;
+  const e = pts.find(p => p.et >= et) || pts[pts.length - 1]; return e ? e.m : null;
 }
 
 function findReversals(fr) {           // returns list of {i, et, side, spot, node, target}
