@@ -2,3 +2,5 @@ live_snapshots.jsonl
 forward_log.txt
 signals_disc.json
 features.csv
+reach_models.pkl
+reach_feats.json
