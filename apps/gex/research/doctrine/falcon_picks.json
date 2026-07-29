@@ -26,6 +26,7 @@
     "user_intuition": "User flagged VIX as important early; Glitch's own posts confirm it's a first-class input."
   },
   "picks": [
+    {"date":"2026-07-29","et":"14:54","dir":"SHORT","cp":"P","strike":null,"score":null,"underlying":"SPX","kind":"EXECUTED","thesis":"late-day PUTS on SPX @ ~7440 (2:54pm bear entry) — user-reported forward pick, to validate our system against."},
     {"date":"2026-07-20","et":"09:45","dir":"SHORT","cp":"P","strike":7455,"score":null,"signal":"trinity_deflection","anchor_wall":7490,"max":1078,"kind":"EXECUTED","thesis":"BEAR all day; shorted each tap of the 7490 deflection wall toward 7450-7470. 9/9 taps of 7490 rejected."},
     {"date":"2026-07-20","et":"10:57","dir":"LONG","cp":"C","strike":7490,"score":null,"signal":"trinity_deflection","anchor_wall":7490,"kind":"watchlist","thesis":"lone bull exception 10:48-10:57 — a bounce off the intraday low back to the 7490 king, then resumed bear thesis."},
     {"date":"2026-07-17","et":"09:46","dir":"LONG","cp":"C","strike":7495,"entry":4.10,"score":64,"rr":8.6,"max":168,"signal":"trinity_confluence","kind":"watchlist","thesis":"BULL day — 'Falcon doesn't get bearish near the lows'; long toward the king."},
