@@ -9,3 +9,4 @@ trades_*.txt
 autotrade_cron.log
 status_*.txt
 scan_multi_state.json
+today_*.jsonl.gz
