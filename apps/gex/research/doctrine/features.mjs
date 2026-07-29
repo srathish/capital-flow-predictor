@@ -46,6 +46,7 @@ const cols = ['day', 'et', 'minsOpen', 'minsClose',
   'vex_net', 'vex_below', 'vex_above', 'vex_net_vel', 'vex_x_dvix', 'aggFlip_d', 'aggFlipSide', 'crossKingAgree', 'crossFlipAgree', 'charm',
   'tape', 'trinity_sum', 'trinity_aligned',
   'vix', 'vix_vel', 'vix_pct', 'spx_vol_z',
+  'tide_np', 'tide_nv', 'tide_np_vel', 'tide_nv_vel', 'tide_dir',
   // targets
   'y_dir', 'y_maxUp', 'y_maxDn', 'y_reachKing', 'y_reachUp', 'y_reachDn', 'y_pin'];
 const rows = [cols.join(',')];
@@ -75,6 +76,11 @@ for (const d of days) {
     const vix = vixC[et] ?? 0, vixVel = (vixC[et] != null && vixC[p15] != null) ? vixC[et] - vixC[p15] : 0;
     const vixPct = (vMax > vMin && vixC[et] != null) ? (vixC[et] - vMin) / (vMax - vMin) : 0.5;
     const volZ = (spyV[et] || 0) / (volMed || 1);
+    // MARKET TIDE flow (net premium & volume + velocities = the leading positioning signal GEX can't see)
+    const tideAt = (arr, e) => { let v = null; for (const p of arr || []) { if (p.et <= e) v = p; else break; } return v; };
+    const t0 = tideAt(a.tide, et), t15v = tideAt(a.tide, p15);
+    const np0 = t0 ? (t0.ncp - t0.npp) : 0, np15 = t15v ? (t15v.ncp - t15v.npp) : 0;
+    const tideNp = np0 / 1e6, tideNv = t0 ? t0.nv / 1000 : 0, tideNpVel = (np0 - np15) / 1e6, tideNvVel = (t0 && t15v) ? (t0.nv - t15v.nv) / 1000 : 0, tideDir = sign(np0);
     // targets: forward bracket ±T, max excursion, reach king
     let ydir = 0, up = 0, dn = 0, reachK = 0, reachUp = 0, reachDn = 0, pinMove = 0;
     const cwK = cw ? cw.strike : null, pwK = pw ? pw.strike : null;
@@ -91,6 +97,7 @@ for (const d of days) {
       (vexNet(fx) / 1e6).toFixed(1), (vexSide(fx, spot, false) / 1e6).toFixed(1), (vexSide(fx, spot, true) / 1e6).toFixed(1), ((vexNet(fx) - vexNet(prev)) / 1e6).toFixed(1), ((vexNet(fx) / 1e6) * vixVel).toFixed(1), flipDistAgg(fx, spot).toFixed(0), sign(flipDistAgg(fx, spot)), (() => { const ak = aggKingOf(fx, spot); const a = ak ? sign(spot - ak.strike) : 0; const k0 = sign(spot - king.strike); return (k0 !== 0 && k0 === a) ? 1 : 0; })(), (sign(flipDist(fx, spot)) === sign(flipDistAgg(fx, spot)) ? 1 : 0), ((m - 9 * 60 - 30) / 390 * (king.g0 / (sumAbsG(fx) || 1)) * sign(king.strike - spot)).toFixed(3),
       tape, tsum, aligned,
       vix.toFixed(2), vixVel.toFixed(2), vixPct.toFixed(2), volZ.toFixed(2),
+      tideNp.toFixed(1), tideNv.toFixed(0), tideNpVel.toFixed(1), tideNvVel.toFixed(0), tideDir,
       ydir, up.toFixed(1), dn.toFixed(1), reachK, reachUp, reachDn, yPin];
     rows.push(r.join(','));
   }

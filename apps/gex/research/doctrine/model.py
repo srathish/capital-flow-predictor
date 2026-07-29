@@ -22,9 +22,14 @@ def clf(name, ytr, yte, Xtr, Xte, show_imp=False):
         for f,v in sorted(zip(feats, pi.importances_mean), key=lambda x:-x[1])[:12]: print(f"      {f:16s} {v:+.4f}")
     return auc
 
-print("=== Q1: DIRECTION (up before down) — does aggregate VEX crack the drift? ===")
+print("=== Q1: DIRECTION (up before down) — does FLOW (market tide) crack the drift? ===")
 d_tr, d_te = tr[tr.y_dir!=0], te[te.y_dir!=0]
-clf("direction", (d_tr.y_dir>0).astype(int), (d_te.y_dir>0).astype(int), d_tr[feats], d_te[feats], show_imp=True)
+ytr, yte = (d_tr.y_dir>0).astype(int), (d_te.y_dir>0).astype(int)
+tide_f = [c for c in feats if c.startswith('tide')]
+gex_f  = [c for c in feats if not c.startswith('tide')]
+clf("GEX only",    ytr, yte, d_tr[gex_f],  d_te[gex_f])
+clf("tide only",   ytr, yte, d_tr[tide_f], d_te[tide_f])
+clf("GEX + flow",  ytr, yte, d_tr[feats],  d_te[feats], show_imp=True)
 
 print("\n=== Q2: RANGE — reach & pin (the known edge) ===")
 clf("reach king", tr.y_reachKing, te.y_reachKing, tr[feats], te[feats])
