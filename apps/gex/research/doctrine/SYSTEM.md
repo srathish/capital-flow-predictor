@@ -1,5 +1,21 @@
 # The Bellwether 0DTE System — reverse-engineered from Falcon, then improved
 
+## THE DIRECTION-FREE LOOP (the resolution — never predicts direction)
+The full-picture model proved DIRECTION is unpredictable OOS (AUC ~0.51 with GEX+VEX+aggregate+flow+charm,
+5× confirmed). But REACH is (0.90) and RIDE-LENGTH tracks structure. So the machine reacts, never forecasts:
+1. **Don't predict direction.** Wait for a CONFIRMED move (≥3pt/10min) or price reaching a key level.
+2. **Ride to the NEXT PIKA ahead = the exit** (rides stall at it: 53% stall when pika ≤6pt ahead; ride-length
+   rises with pika distance — `ride.mjs`). A **BARNEY ahead = accelerant**, ride longer/through (4.3 vs 2.8pt).
+3. **At the pika, expect reversal** (strong pika respected 79%, vanna+ rejects 74%). Wait for the retrace
+   confirmation candle.
+4. **Fade back toward the next pika down = the next ride.** Repeat.
+5. **Convex 0DTE, take the pop (+20-30%), cut fast, identical size.**
+This is ~what Falcon does: harvest predictable REACH + node-sign exits with convexity + management. His 92% is
+reach × management on selected setups, NOT a direction oracle (one doesn't exist in this data).
+
+---
+
+
 The operator's workflow: **every morning mark the SPX levels, then judge deflection vs push-through.**
 Not buy-and-hold-all-day (that only works on trend days). The mode is chosen per day.
 
