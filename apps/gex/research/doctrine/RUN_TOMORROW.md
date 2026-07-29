@@ -21,14 +21,20 @@ ENV_FILE=research/stock-gex/session-b.env ENV_FILE_PATH=research/stock-gex/sessi
 ```
 Do NOT act before ~10:00-10:30 — let the 0DTE structure and tape form.
 
-## 3. How to read it
-- **STAND ASIDE** (no strong king ≥15M): no trade. ~half of days are this — that's correct. Keep checking; a
-  strong king can build later (that's how we'd catch a 07-28).
-- **TREND BULL/BEAR** (tape agrees with king side, GEX concentrated): hold ONE thesis all day, in that
-  direction. Expect price to push THROUGH levels. Stop ~8 pts against. Convex 0DTE in the thesis direction.
-- **CHOP (fade)**: fade the king magnet — short the extension above it / long the extension below it, back to
-  the king. Stop 6 pts. **Take the pop (+20-30% on the option), don't hold.** Two stops the same way → stand
-  down (it's trending, not chopping).
+## 3. How to read it — the co-pilot prints everything
+The tool marks the MAP + the RULES; you react (it never forecasts direction — that's proven impossible).
+Each refresh shows: SPX spot · TRINITY (aligned=trend / diverging=chop) · tape · VIX regime · the KING and
+the pika ceiling/floor + barney accelerants, each with a **reach%** (validated prob price gets there), and
+the **DIRECTION-FREE LOOP** contextualized to right now.
+
+- **STAND ASIDE** (no strong king ≥15M): no trade. ~half of days. A strong king can build later (07-28 case).
+- **TREND** (trinity aligned + tape/king agree): ride a confirmed move to the next pika = your EXIT. A barney
+  ahead = accelerant → ride through it. Stop ~8 pts against.
+- **CHOP / RANGE**: fade the walls back toward the king. Stop ~6. Two stops same way → stand down.
+- **At any pika**: expect reversal (79%; vanna+ holds/deflect 74%, vanna− breaks). Wait for the retrace.
+- **FAILED-REACH (the strong tell)**: if price stalls ~4pt SHORT of a pika and rejects *without touching* →
+  fade HARDER (reverses ~7-9pt vs ~4pt). The wall rejected price before contact = 2× snapback.
+- Reach% tells you conviction on getting to a level: big/far node = low reach (pins); small/close = high.
 
 ## 4. Every trade (Falcon's execution — non-negotiable)
 - Cheap CONVEX 0DTE in the signal direction. Identical size every trade.
