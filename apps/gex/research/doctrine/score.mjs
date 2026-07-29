@@ -136,6 +136,11 @@ if (disc) {
   sig = kept;
   console.log(`(DISCIPLINE MODE: tape-agree + one-thesis/day + top-2 by score => ${sig.length} signals, ${(sig.length / days.length).toFixed(1)}/day)`);
 }
+if (process.argv.includes('--emit')) {
+  const out = sig.map(g => ({ day: g.day, et: g.et, dir: g.dir, spot: g.spot, wall: g.wall, target: g.target, total: g.total, tgtSign: g.tgtSign }));
+  fs.writeFileSync(path.join(process.cwd(), 'research', 'doctrine', 'signals_disc.json'), JSON.stringify(out, null, 0));
+  console.log(`emitted ${out.length} signals -> signals_disc.json`);
+}
 
 if (arg !== 'ALL') {
   console.log(`=== SCORER — ${arg} (${sig.length} candidate signals) ===`);
