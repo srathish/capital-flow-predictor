@@ -103,8 +103,19 @@ if (st.pos) {                                                                // 
   const best = scored[0];
   if (best) { bestConf = best.pass; bestKind = best.kind; }
   if (best && best.pass >= MIN_CONFLUENCE) {
-    const hits = best.cr.filter(x => x[1]).map(x => x[0]).join('+');
-    await open(best.kind, best.dir, best.target, best.stop, `CONFLUENCE ${best.pass}/9 [${hits}]`, (best.dir > 0 ? pikaUp : pikaDn)?.strike);
+    // RED TEAM — the trade must SURVIVE the arguments AGAINST it (adversarial veto), not just score well
+    const a = best.anchor, reward = Math.abs(best.target - spot), risk = Math.abs(best.stop - spot);
+    const objections = [
+      ['target unreachable (reach<25%)', a && reachPct(reward, a.g0) < 25],           // the 81pt-fade killer
+      ['fighting strong tape', Math.abs(mom10) >= 6 && sign(mom10) !== best.dir],       // don't fade a running trend
+      ['R:R poor (<0.8)', reward < risk * 0.8],                                         // bad risk/reward
+      ['no room (pin <5pt away)', best.kind === 'FADE' && reward < 5],                  // nothing to capture
+      ['weak anchor (<15M)', !a || a.g0 < STRONG],                                      // flimsy wall
+    ].filter(x => x[1]).map(x => x[0]);
+    if (objections.length === 0) {
+      const hits = best.cr.filter(x => x[1]).map(x => x[0]).join('+');
+      await open(best.kind, best.dir, best.target, best.stop, `CONFLUENCE ${best.pass}/9 [${hits}] · red-team CLEARED`, (best.dir > 0 ? pikaUp : pikaDn)?.strike);
+    } else { log(`  ${hm}  ⚖ RED-TEAM VETO ${best.kind} ${best.dir > 0 ? 'LONG' : 'SHORT'} (conf ${best.pass}/9): ${objections.join(' · ')}`); bestKind = `${best.kind}✗vetoed`; }
   }
 }
 if (m >= 15 * 60 + 55 && !st.pos && st.trades.length && !st.done) { const w = st.trades.filter(t => t.ret > 0).length; log(`  ═══ DAY DONE: ${st.trades.length} trades · ${w}/${st.trades.length} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / st.trades.length).toFixed(0)}% ═══`); st.done = 1; }
