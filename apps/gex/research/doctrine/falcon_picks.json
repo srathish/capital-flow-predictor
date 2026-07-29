@@ -1,0 +1,49 @@
+{
+  "_note": "Falcon's published picks + behavior (Glitch tweets/UI) = labeled data to reverse-engineer. EXECUTED trades (from tweets) are the ground truth; the 5-9 UI cards are the watchlist. Reconstruct SPXW surface at each ET to find what picks share + how score maps to features.",
+  "behavior": {
+    "one_thesis_per_day": "Falcon forms ONE directional thesis and holds it ALL DAY — does NOT flip-flop. 07-23: 'stuck with its short thesis the entire day.' This is the core (our reversal sim failed BECAUSE it took both directions).",
+    "few_trades": "~1-3 executed/day (07-23 = 2). ~1.3/day avg ('1 loss in 2 weeks'). Watchlist cards != executed trades.",
+    "anchored_on_key_strike": "Repeatedly plays ONE key strike/level: 7380P(07-23), 7410P(07-24 x3), 7430P(07-28 x2) = the day's magnet.",
+    "fades_toward_the_king": "07-17 'Falcon doesn't get bearish near the lows' — it fades TOWARD the mean/king (long near lows, short near highs), never chases the breakdown at an extreme.",
+    "patience": "'Calm and collected. Nothing but patience.' Waits for the setup.",
+    "sizing": "Identical size every trade.",
+    "rr": "~1:1.0-1.75 (NOT 3:1). Edge is the ~92% win rate (setup quality), not fat R:R.",
+    "scoring": "0-100 score per setup (cards show 64-95). Ranks which few to take. NOT expected-return — 95 was a Trinity Deflection (14/19 legs ≥30%), 64 a Trinity Confluence long. Conviction, not payout."
+  },
+  "signals": {
+    "_note": "Falcon/Talon name each setup on the card. The names are labels for GEX structure — this is the skeleton of the 0-100 score.",
+    "_REGIME_IS_NODE_LEVEL": "CRITICAL (verified node_sign.mjs): the whole-surface net gamma is POSITIVE on every 2026 low-VIX day, so it does NOT discriminate. The setup switch is the SIGN OF THE NODE IN THE TRADE'S PATH. Pika (g0>0) = holds = FADE toward/off it (deflection). Barney (g0<0) = breaks = ride THROUGH it (trapdoor). Confirmed: 07-09 trapdoor short had a 7540 barney(-16M) right under spot 7542; 07-20 deflection long targeted the 7490 pika(+28M) king. The pick's own OTM strike is ~0 gamma — read the STRUCTURE around spot, not the strike.",
+    "trinity_deflection": "Fade off a DEALER-HELD wall — a pika price taps repeatedly but never closes through, and the wall holds/grows. 'Trinity' = SPX/SPY/QQQ radar all agree. CONFIRMED JUL 20: 7490 tapped 9x, rejected 9/9, king in 64% of frames; Falcon shorted each tap toward 7450-7470. The core reversal.",
+    "trapdoor": "Short THROUGH a barney (negative-gamma node below spot) = accelerant, momentum down. NOT a fade — a break. Talon 7535P/7540P/7545P Jul 9 & 13.",
+    "barney_floor": "Long off a barney acting as support (neg-gamma floor that flips) — the bull mirror of trapdoor. Talon 7535C Jul 13.",
+    "trinity_confluence": "Multiple structural signals + the 3-index radar align one direction. Falcon 7495C/7445C LONG Jul 17 (score 64).",
+    "spy_rug": "Cross-asset downside lead — SPY rugs first, SPX follows. Talon SPXW 7535P 'SPY RUG' Jul 13.",
+    "spy_rev": "Cross-asset reversal lead — SPY reverses first. Talon SPXW 7545C 'SPY REV' Jul 13."
+  },
+  "vix": {
+    "_note": "Glitch Jul 16: '$VIX below 16 and volatility spikes again.' The signal is COMPRESSION, not level.",
+    "rule": "VIX pinned at/below ~16 = coiled spring → vol expansion imminent. RAISES conviction on a deflection fade because the move will have RANGE into the target. High VIX alone is NOT bullish for the setup; compression-then-expansion is the tell. Score input = VIX regime (compressed vs elevated) + intraday direction of change, NOT raw level.",
+    "user_intuition": "User flagged VIX as important early; Glitch's own posts confirm it's a first-class input."
+  },
+  "picks": [
+    {"date":"2026-07-20","et":"09:45","dir":"SHORT","cp":"P","strike":7455,"score":null,"signal":"trinity_deflection","anchor_wall":7490,"max":1078,"kind":"EXECUTED","thesis":"BEAR all day; shorted each tap of the 7490 deflection wall toward 7450-7470. 9/9 taps of 7490 rejected."},
+    {"date":"2026-07-20","et":"10:57","dir":"LONG","cp":"C","strike":7490,"score":null,"signal":"trinity_deflection","anchor_wall":7490,"kind":"watchlist","thesis":"lone bull exception 10:48-10:57 — a bounce off the intraday low back to the 7490 king, then resumed bear thesis."},
+    {"date":"2026-07-17","et":"09:46","dir":"LONG","cp":"C","strike":7495,"entry":4.10,"score":64,"rr":8.6,"max":168,"signal":"trinity_confluence","kind":"watchlist","thesis":"BULL day — 'Falcon doesn't get bearish near the lows'; long toward the king."},
+    {"date":"2026-07-17","et":"09:46","dir":"LONG","cp":"C","strike":7445,"entry":null,"score":null,"max":128,"signal":"trinity_confluence","kind":"watchlist"},
+    {"date":"2026-07-13","et":"14:58","dir":"SHORT","cp":"P","strike":749,"entry":0.32,"score":95,"rr":3.29,"max":212,"signal":"trinity_deflection","underlying":"SPY","kind":"EXECUTED","thesis":"'It's alive' green day — 19 SPY legs, 14/19 saw >=30%, best +395%, avg max +135%. take-every-card book = -19% (selection is the edge)."},
+    {"date":"2026-07-13","et":"12:15","dir":"SHORT","cp":"P","strike":7535,"entry":1.72,"score":83,"rr":16.13,"signal":"spy_rug","kind":"watchlist","model":"Talon"},
+    {"date":"2026-07-13","et":"12:00","dir":"LONG","cp":"C","strike":7545,"entry":6.30,"score":86,"rr":2.47,"max":252,"signal":"spy_rev","kind":"watchlist","model":"Talon"},
+    {"date":"2026-07-13","et":"11:22","dir":"SHORT","cp":"P","strike":7535,"entry":4.70,"score":82,"rr":3.55,"max":372,"signal":"trapdoor","kind":"watchlist","model":"Talon"},
+    {"date":"2026-07-09","et":"14:30","dir":"SHORT","cp":"P","strike":7535,"entry":2.25,"score":83,"rr":3.74,"max":82,"signal":"trapdoor","kind":"EXECUTED","model":"Talon","thesis":"'Bang 100%+' — sniped HOD then trapdoored down."},
+    {"date":"2026-07-28","et":"13:35","dir":"SHORT","cp":"P","strike":7430,"entry":2.55,"score":78,"rr":1.17,"max":112,"managed":52,"kind":"watchlist"},
+    {"date":"2026-07-28","et":"12:55","dir":"SHORT","cp":"P","strike":7440,"entry":2.25,"score":77,"rr":1.13,"max":140,"managed":38,"kind":"watchlist"},
+    {"date":"2026-07-28","et":"12:42","dir":"SHORT","cp":"P","strike":7430,"entry":3.70,"score":79,"rr":3.67,"max":83,"managed":16,"kind":"watchlist"},
+    {"date":"2026-07-28","et":"11:48","dir":"SHORT","cp":"P","strike":7425,"entry":3.90,"score":75,"rr":1.04,"max":67,"managed":21,"kind":"watchlist"},
+    {"date":"2026-07-28","et":"10:15","dir":"LONG","cp":"C","strike":7415,"entry":4.20,"score":70,"rr":1.75,"max":462,"managed":43,"kind":"watchlist"},
+    {"date":"2026-07-24","et":"12:09","dir":"SHORT","cp":"P","strike":7410,"entry":0.90,"score":77,"rr":3.28,"max":1411,"managed":88,"kind":"watchlist"},
+    {"date":"2026-07-24","et":"11:00","dir":"SHORT","cp":"P","strike":7410,"entry":6.10,"score":71,"rr":1.25,"max":249,"managed":84,"kind":"watchlist"},
+    {"date":"2026-07-24","et":"10:21","dir":"LONG","cp":"C","strike":7485,"entry":0.30,"score":70,"rr":1.42,"max":740,"managed":204,"kind":"watchlist"},
+    {"date":"2026-07-24","et":"09:45","dir":"SHORT","cp":"P","strike":7410,"entry":14.20,"score":86,"rr":1.28,"max":54,"managed":15,"kind":"watchlist"},
+    {"date":"2026-07-23","et":"15:25","dir":"SHORT","cp":"P","strike":7380,"entry":0.35,"score":78,"rr":1.21,"max":443,"managed":94,"kind":"EXECUTED","thesis":"SHORT all day, 2/2 flawless"}
+  ]
+}
