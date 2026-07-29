@@ -10,6 +10,7 @@ const D = path.join(process.cwd(), 'research', 'doctrine');
 const STATE = path.join(D, 'state_autotrade.json');
 const sign = (x) => x > 0 ? 1 : x < 0 ? -1 : 0, r5 = (x) => Math.round(x / 5) * 5;
 const STRONG = 15e6, WALL = 12e6, BARN = 8e6, RIDE_MOM = 3, FADE_EXT = 7, FADE_MAX = 20, RIDE_STOP = 8, FADE_STOP = 6;
+const MIN_CONFLUENCE = 5;   // Falcon's selectivity principle: fire ONLY when >=5 of our validated criteria align
 const TP = 25, SL = 40, HARDEN = 1.8;                                        // manage: +25% pop / −40% / struct-harden ×1.8
 const REACH = { S: [93, 74, 59, 42, 24], M: [89, 69, 55, 43, 26], L: [87, 52, 38, 22, 6] };
 const reachPct = (ad, g0) => { const g = g0 >= 35e6 ? 'L' : g0 >= 20e6 ? 'M' : 'S'; const b = ad < 4 ? 0 : ad < 8 ? 1 : ad < 12 ? 2 : ad < 18 ? 3 : 4; return REACH[g][b]; };
@@ -32,10 +33,11 @@ u.searchParams.set('symbol', 'SPXW'); u.searchParams.set('max_strikes', '200'); 
 const rr = await fetch(u, { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: `Bearer ${token}`, Accept: 'application/json' }, signal: AbortSignal.timeout(15000) }).catch(() => null);
 if (!rr || !rr.ok) { log(`${hm} · surface pull failed (${rr ? rr.status : 'net'})`); process.exit(0); }
 const raw = await rr.json(); if (!raw || raw.CurrentSpot == null) process.exit(0);
-const spot = raw.CurrentSpot, K = raw.Strikes || [], G = raw.GammaValues || [], strikes = [];
-for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.012) strikes.push({ strike: k, g0: (G[i] || [])[0] || 0 }); }
+const spot = raw.CurrentSpot, K = raw.Strikes || [], G = raw.GammaValues || [], V = raw.VannaValues || [], strikes = [];
+for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.012) strikes.push({ strike: k, g0: (G[i] || [])[0] || 0, v0: (V[i] || [])[0] || 0 }); }
 const sumAbs = strikes.reduce((t, n) => t + Math.abs(n.g0), 0) || 1;
 const gAt = (k) => (strikes.find(n => n.strike === k)?.g0 || 0);
+const vAt = (k) => (strikes.find(n => n.strike === k)?.v0 || 0);
 const king = strikes.filter(n => n.g0 >= STRONG).sort((a, b) => b.g0 - a.g0)[0];
 const pikaUp = strikes.filter(n => n.g0 >= WALL && n.strike > spot + 1).sort((a, b) => a.strike - b.strike)[0];
 const pikaDn = strikes.filter(n => n.g0 >= WALL && n.strike < spot - 1).sort((a, b) => b.strike - a.strike)[0];
@@ -60,6 +62,7 @@ function closePos(exitMark, why, oppNow) {
   st.pos = null;
 }
 
+let bestConf = -1, bestKind = '';                                            // confluence visibility for the status line
 if (st.pos) {                                                                // RefreshLoop: manage on REAL option quote + structure
   const p = st.pos, mark = await optMark(p.occ);
   if (mark != null) { p.peakMark = Math.max(p.peakMark || 0, mark); const ret = p.entryMark ? (mark - p.entryMark) / p.entryMark * 100 : 0;
@@ -73,19 +76,35 @@ if (st.pos) {                                                                // 
     else if (stopHit) closePos(mark, `spot stop`, oppNow);
     else if (eod) closePos(mark, `closed_eod`, oppNow);
   }
-} else if (king) {                                                           // FireLoop: our validated rules, by priority
+} else if (king) {                                                           // FireLoop: CONFLUENCE-GATED entry (Falcon selectivity — fire ONLY when ≥MIN validated criteria align)
+  const trinity = sign(mom10);                                              // tape proxy (SPY 10-min momentum)
+  const migDir = st.prevKing && Math.abs(king.strike - st.prevKing) >= 5 ? sign(king.strike - st.prevKing) : 0;  // escalator
+  const cands = [];
   const fUp = failedReach(pikaUp), fDn = failedReach(pikaDn);
-  if (fUp || fDn) { const dir = fUp ? -1 : 1, pk = fUp ? pikaUp : pikaDn, tgt = (dir > 0 ? pikaUp : pikaDn) || king;
-    await open('FAILED-REACH', dir, tgt.strike, +(spot - FADE_STOP * dir).toFixed(1), `stalled ${(fUp || fDn).toFixed(1)}pt short of ${pk.strike} (reach ${reachPct(fUp || fDn, pk.g0)}%) → fade hard`, pk.strike);
-  } else if (Math.abs(mom10) >= RIDE_MOM) { const dir = sign(mom10), pk = dir > 0 ? pikaUp : pikaDn, barn = barnAhead(dir);
-    if (pk && Math.abs(pk.strike - spot) <= 15) { const accel = barn && Math.abs(barn.strike - spot) < Math.abs(pk.strike - spot);
-      await open(accel ? 'RIDE-BARNEY' : 'RIDE', dir, pk.strike, +(spot - RIDE_STOP * dir).toFixed(1), `mom ${mom10.toFixed(0)}pt→pika ${pk.strike} (reach ${reachPct(Math.abs(pk.strike - spot), pk.g0)}%)${accel ? ` thru barney ${barn.strike}` : ''}`, pk.strike);
-    } else if (barn) await open('TRAPDOOR', dir, +(barn.strike + 5 * dir).toFixed(1), +(spot - RIDE_STOP * dir).toFixed(1), `mom ${mom10.toFixed(0)}pt thru barney ${barn.strike}`, null);
-  } else {                                                                  // FADE only a REALISTIC extension to the NEAREST strong pin (cap FADE_MAX; else stand aside)
-    const pin = strikes.filter(n => n.g0 >= STRONG && Math.abs(n.strike - spot) >= FADE_EXT && Math.abs(n.strike - spot) <= FADE_MAX).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
-    if (pin) { const dir = sign(pin.strike - spot), opp = dir > 0 ? pikaDn : pikaUp;
-      await open('FADE', dir, pin.strike, +(spot - FADE_STOP * dir).toFixed(1), `ext ${(spot - pin.strike).toFixed(0)}pt→pin ${pin.strike}`, opp?.strike);
-    }
+  if (fUp) cands.push({ kind: 'FAILED-REACH', dir: -1, anchor: pikaUp, target: (pikaDn || king).strike, stop: +(spot + FADE_STOP).toFixed(1) });
+  if (fDn) cands.push({ kind: 'FAILED-REACH', dir: 1, anchor: pikaDn, target: (pikaUp || king).strike, stop: +(spot - FADE_STOP).toFixed(1) });
+  const pin = strikes.filter(n => n.g0 >= STRONG && Math.abs(n.strike - spot) >= FADE_EXT && Math.abs(n.strike - spot) <= FADE_MAX).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
+  if (pin) cands.push({ kind: 'FADE', dir: sign(pin.strike - spot), anchor: pin, target: pin.strike, stop: +(spot - sign(pin.strike - spot) * FADE_STOP).toFixed(1) });
+  if (Math.abs(mom10) >= RIDE_MOM) { const d = sign(mom10), pk = d > 0 ? pikaUp : pikaDn; if (pk && Math.abs(pk.strike - spot) <= 15) cands.push({ kind: 'RIDE', dir: d, anchor: pk, target: pk.strike, stop: +(spot - d * RIDE_STOP).toFixed(1) }); }
+  const scored = cands.map(c => {
+    const cr = [
+      ['pika', !!c.anchor && c.anchor.g0 > 0],                             // anchor is a positive-gamma wall
+      ['strong20M', !!c.anchor && c.anchor.g0 >= 20e6],                    // extra-strong node
+      ['reachable', !!c.anchor && reachPct(Math.abs(c.target - spot), c.anchor.g0) >= 40], // reach model says gettable
+      ['vanna+', !!c.anchor && vAt(c.anchor.strike) > 0],                  // vanna+ = holds/deflect (74%)
+      ['king-mig', migDir !== 0 && migDir === c.dir],                      // escalator agrees
+      ['tape', trinity !== 0 && trinity === c.dir],                        // SPY momentum agrees
+      ['failed-reach', c.kind === 'FAILED-REACH'],                         // the strongest reversal tell
+      ['R:R≥1', Math.abs(c.target - spot) >= Math.abs(c.stop - spot)],     // reward ≥ risk
+      ['window', m < 15 * 60 + 15],                                        // pre-15:15
+    ];
+    return { ...c, cr, pass: cr.filter(x => x[1]).length };
+  }).sort((a, b) => b.pass - a.pass);
+  const best = scored[0];
+  if (best) { bestConf = best.pass; bestKind = best.kind; }
+  if (best && best.pass >= MIN_CONFLUENCE) {
+    const hits = best.cr.filter(x => x[1]).map(x => x[0]).join('+');
+    await open(best.kind, best.dir, best.target, best.stop, `CONFLUENCE ${best.pass}/9 [${hits}]`, (best.dir > 0 ? pikaUp : pikaDn)?.strike);
   }
 }
 if (m >= 15 * 60 + 55 && !st.pos && st.trades.length && !st.done) { const w = st.trades.filter(t => t.ret > 0).length; log(`  ═══ DAY DONE: ${st.trades.length} trades · ${w}/${st.trades.length} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / st.trades.length).toFixed(0)}% ═══`); st.done = 1; }
@@ -95,6 +114,6 @@ const kd = king ? spot - king.strike : 0;
 let migNote = '';
 if (king && st.prevKing && Math.abs(king.strike - st.prevKing) >= 5) { migNote = ` · 🔀 KING MIGRATED ${st.prevKing}→${king.strike} (escalator ${king.strike > st.prevKing ? 'UP' : 'DOWN'})`; log(`  ${hm}  🔀 KING wall migrated ${st.prevKing} → ${king.strike} (escalator ${king.strike > st.prevKing ? 'UP/bull-lean' : 'DOWN/bear-lean'})`); }
 if (king) st.prevKing = king.strike;
-const status = `${hm} · SPX ${spot.toFixed(1)} · ${king ? `king ${king.strike}(${(king.g0 / 1e6).toFixed(0)}M) ${kd >= 0 ? '+' : ''}${kd.toFixed(0)}` : 'NO strong king → STAND ASIDE'} · mom ${mom10 >= 0 ? '+' : ''}${mom10.toFixed(0)}pt · ${st.pos ? `IN ${st.pos.kind} ${st.pos.dir > 0 ? 'LONG' : 'SHORT'} @${st.pos.entry}→${st.pos.target}` : king ? `flat/watching (fade if |ext|≥${FADE_EXT}, ride if |mom|≥${RIDE_MOM})` : 'flat'}${migNote}`;
+const status = `${hm} · SPX ${spot.toFixed(1)} · ${king ? `king ${king.strike}(${(king.g0 / 1e6).toFixed(0)}M) ${kd >= 0 ? '+' : ''}${kd.toFixed(0)}` : 'NO strong king → STAND ASIDE'} · mom ${mom10 >= 0 ? '+' : ''}${mom10.toFixed(0)}pt · ${st.pos ? `IN ${st.pos.kind} ${st.pos.dir > 0 ? 'LONG' : 'SHORT'} @${st.pos.entry}→${st.pos.target}` : king ? `flat · best ${bestKind || '—'} confluence ${bestConf >= 0 ? bestConf : 0}/9 (fire ≥${MIN_CONFLUENCE})` : 'flat'}${migNote}`;
 fs.appendFileSync(path.join(D, `status_${day}.txt`), status + '\n');
 fs.writeFileSync(STATE, JSON.stringify(st));
