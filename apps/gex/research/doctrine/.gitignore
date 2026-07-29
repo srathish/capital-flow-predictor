@@ -7,3 +7,4 @@ reach_feats.json
 state_autotrade.json
 trades_*.txt
 autotrade_cron.log
+status_*.txt

@@ -86,4 +86,8 @@ if (st.pos) {                                                                // 
   }
 }
 if (m >= 15 * 60 + 55 && !st.pos && st.trades.length && !st.done) { const w = st.trades.filter(t => t.ret > 0).length; log(`  ═══ DAY DONE: ${st.trades.length} trades · ${w}/${st.trades.length} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / st.trades.length).toFixed(0)}% ═══`); st.done = 1; }
+// per-tick STATUS heartbeat (watch it think between trades) — appended to status_<day>.txt
+const kd = king ? spot - king.strike : 0;
+const status = `${hm} · SPX ${spot.toFixed(1)} · ${king ? `king ${king.strike}(${(king.g0 / 1e6).toFixed(0)}M) ${kd >= 0 ? '+' : ''}${kd.toFixed(0)}` : 'NO strong king → STAND ASIDE'} · mom ${mom10 >= 0 ? '+' : ''}${mom10.toFixed(0)}pt · ${st.pos ? `IN ${st.pos.kind} ${st.pos.dir > 0 ? 'LONG' : 'SHORT'} @${st.pos.entry}→${st.pos.target}` : king ? `flat/watching (fade if |ext|≥${FADE_EXT}, ride if |mom|≥${RIDE_MOM})` : 'flat'}`;
+fs.appendFileSync(path.join(D, `status_${day}.txt`), status + '\n');
 fs.writeFileSync(STATE, JSON.stringify(st));
