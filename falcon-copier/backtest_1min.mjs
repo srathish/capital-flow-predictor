@@ -39,7 +39,13 @@ for (const I of INSTR) {
     if (pin) cands.push({ kind: 'PIKA', dir: sign(pin.k - spot), anchor: pin, target: pin.k, strong: pin.g0 >= I.strong * 1.3, vanna: pin.v0 > 0 });
     // B) REJECT off a big BARNEY price is AT (node-sign reversal — the 14:54 −40M @7450 top-tick Falcon caught)
     const barn = s.strikes.filter(n => n.g0 <= -I.strong && Math.abs(n.k - spot) >= I.gap && Math.abs(n.k - spot) <= I.range * 0.5).sort((a, b) => Math.abs(a.k - spot) - Math.abs(b.k - spot))[0];
-    if (barn) { const d = -sign(barn.k - spot); cands.push({ kind: 'BARNEY', dir: d, anchor: barn, target: +(spot + d * I.stop * 1.3).toFixed(2), strong: barn.g0 <= -I.strong * 2, vanna: barn.v0 < 0 }); }
+    if (barn) {                                                            // FAILED-REACH confirmation: price TAPPED the barney + is RETRACING (Falcon waited for 14:54 tap-reject, didn't short the approach)
+      const d = -sign(barn.k - spot), look = F.slice(Math.max(0, i - 5), i + 1).map(f => f.spot);
+      const ext = barn.k > spot ? Math.max(...look) : Math.min(...look);   // extreme toward the barney over last ~5min
+      const tapped = Math.abs(ext - barn.k) <= (I.sym === 'SPXW' ? 6 : 0.6);
+      const retrace = barn.k > spot ? spot < ext - (I.sym === 'SPXW' ? 1 : 0.1) : spot > ext + (I.sym === 'SPXW' ? 1 : 0.1);
+      if (tapped && retrace) cands.push({ kind: 'BARNEY', dir: d, anchor: barn, target: +(spot + d * I.stop * 1.3).toFixed(2), strong: barn.g0 <= -I.strong * 2, vanna: barn.v0 < 0 });
+    }
     let best = null;
     for (const c of cands) {
       const cr = [true, c.strong, c.vanna, migDir === c.dir && migDir !== 0, fl === c.dir && fl !== 0, c.dir > 0 ? spot < s.prevClose : spot > s.prevClose, vah != null && (c.dir < 0 ? spot > vah : spot < val)];
