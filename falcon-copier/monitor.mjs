@@ -3,7 +3,7 @@
 // HEALTH (feeds up? session-B ok? paper-trader alive?). Run: node monitor.mjs  (add --loop 30 to refresh).
 import '../apps/gex/scripts/_env-bootstrap.js';
 import { initAuth, getFreshToken } from '../apps/gex/src/heatseeker/auth.js';
-import fs from 'node:fs';
+import fs from 'node:fs'; import path from 'node:path';
 const KEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
 const DATE = new Date().toISOString().slice(0, 10);
 const LOOP = process.argv.includes('--loop') ? Number(process.argv[process.argv.indexOf('--loop') + 1]) : 0;
@@ -60,6 +60,13 @@ async function cycle() {
   console.log(`READ    ${S.front !== S.back ? 'DIVERGENT term = chop risk; ' : ''}${dpEx.includes('short') ? 'DP says fade the stretch DOWN to ' + DP.poc + '; ' : dpEx.includes('long') ? 'DP says revert UP to ' + DP.poc + '; ' : ''}0DTE magnet ${S.king ? S.king.k : '—'}. Net bias ${bias > 0 ? 'UP-lean' : bias < 0 ? 'DOWN-lean' : 'neutral'} (context, NOT a prediction).`);
   const tick = fs.existsSync('/tmp/bellwether_last_tick.txt') ? fs.readFileSync('/tmp/bellwether_last_tick.txt', 'utf8').trim() : 'none';
   console.log(`HEALTH  skylit ✓ · uw ${DP.ok && TF.ok ? '✓' : '⚠'} · session-B ✓ · paper-trader ${tick}`);
+  // BRIDGE TO THE AGENT — write the full-stack state so an LLM (Athena-style) can reason over it each cycle
+  const state = { t: `${DATE}T${now}`, spot: +spot.toFixed(1), prevClose: S.prevClose, chgPct: +S.chg.toFixed(2),
+    pivotSide: spot > S.prevClose ? 'bull' : 'bear', king: S.king ? { k: S.king.k, gM: +(S.king.g / 1e6).toFixed(0) } : null,
+    callWall: S.cw?.k ?? null, putWall: S.pw?.k ?? null, barney: S.barn?.k ?? null, netG_M: +(S.netG / 1e6).toFixed(0),
+    term: S.front === S.back && S.back !== 0 ? 'agree' : 'diverge', dp: DP.ok ? { poc: DP.poc, vah: DP.vah, val: DP.val, extension: dpEx } : null,
+    flow: TF.ok ? { netPrem_M: +TF.netPrem.toFixed(0), netVol: TF.netVol } : null, trinity: { spy: mom(spy), qqq: mom(qqq) }, vix: vixy[vixy.length - 1] ?? null, ruleBias: bias };
+  fs.writeFileSync(path.join(process.cwd(), 'falcon-copier', 'monitor_state.json'), JSON.stringify(state, null, 2));
 }
 try { await cycle(); if (LOOP > 0) { console.log(`\n(monitoring every ${LOOP}s — Ctrl-C to stop)`); setInterval(() => cycle().catch(e => console.error('ERR', e.message)), LOOP * 1000); } }
 catch (e) { console.error('MONITOR ERROR', e.message); process.exit(1); }
