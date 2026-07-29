@@ -9,7 +9,7 @@ import Database from 'better-sqlite3';
 const KEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
 const DEFL = 5, CONFIRM = 0.0012, W = 20, MIN_WALL_G = 12e6, COOLDOWN = 35;
 const RUNGS = 4, STEP = 10, TRAIL = 0.0012, ARM = 0.0018;
-const RR_MIN = Number(process.env.RR_MIN) || 3;
+const RR_MIN = Number(process.env.RR_MIN) || 1;   // Falcon floor ~1:1 (his cards), NOT 3:1
 const VIXY_SHOCK = 0.04;        // VIXY up >4% over 15 min = vol shock, skip
 const VOL_MULT = 1.15;          // rejection bar volume >= 1.15x day-median
 const DIR = path.join(process.cwd(), 'research', 'velocity-capture');
