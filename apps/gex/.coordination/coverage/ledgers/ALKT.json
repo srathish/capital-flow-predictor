@@ -35,7 +35,7 @@
       "source": "UW get_insider_transactions (code-P)",
       "as_of": "2026-05-14",
       "fields": {
-        "form4_insider_cluster": "General Atlantic (10%+ owner/dir) ~$4.7M+ across 2026-05-05\u219205-14 at $16.49-16.87 (6 code-P buys)",
+        "form4_insider_cluster": "General Atlantic (10% owner) ~$58.8M / ~3,519,772 sh code-P open-market 2026-05-05\u219205-14 @ $16.49-16.87 (CORRECTED from $4.7M \u2014 Sentinel EDGAR verify, ~12x larger)",
         "inst_13f_delta": "Jana 5.1%\u21926.3%",
         "activist_13dg": "Jana SC 13D 2026-06-29 (sale push)",
         "fund_flow_note": "activist-aligned insider buying"
@@ -43,16 +43,79 @@
     },
     "sentiment_narrative": {
       "status": "filled",
-      "owner": "Athena",
-      "source": "web(seekingalpha/gurufocus/simplywall/yahoo); EXACT firm counts pending UW get_analyst_ratings",
+      "source": "Athena UW get_analyst_ratings(pending)+web",
       "as_of": "2026-07-11",
       "fields": {
-        "analyst_rating_dist": "JPMorgan Overweight + named 'high-conviction takeout candidate' (web; full firm dist pending UW pull \u2014 VST lesson: no 'consensus' claim without it)",
-        "analyst_revisions": "JPM PT $20->$19 on 2026-06-22 (maintained OW) \u2014 target trimmed even as takeout thesis held",
-        "news_tone": "POSITIVE, activist-driven \u2014 Jana 10%+ stake (2026-06-29) publicly pushing a SALE, multiple parties cited; Q GAAP rev +28.9% YoY $126.1M (beat), adj EBITDA +85% YoY $22.3M",
-        "short_interest": "PENDING UW get_short_data_by_ticker (not fabricated)",
-        "narrative_summary": "M&A/activist-catalyst is the whole thesis; sale-exploration tone. Valuation MIXED: DCF ~12.5% undervalued (Simply Wall St) BUT P/S 4.3x vs fair ~3.4x = rich on multiples. Sentiment axis = event-driven, not fundamental-cheap."
+        "analyst_rating_dist": "supportive of catalyst (analyst 10%+ stake; web-sourced, UW distribution pending)",
+        "analyst_revisions": "activist re-rating post-13D",
+        "short_interest": "pending-UW (not fabricated)",
+        "news_tone": "activist-positive (Jana sale push)"
+      }
+    },
+    "fundamentals": {
+      "status": "filled",
+      "source": "UW income/balance/cash statements",
+      "as_of": "2026-03-31",
+      "fields": {
+        "revenue_ttm": "$471.94M",
+        "net_income_ttm": "-$49.80M (GAAP loss)",
+        "gross_margin": "57.2%",
+        "rev_growth_yoy": "+28.9% Q (MANTL-inflated; organic ~mid-20s%)",
+        "shares_out_trend": "106.4M, +3.9% YoY dilution (SBC)",
+        "leverage_de_or_netdebt": "D/E 0.97; net debt ~$280.6M (MANTL term loan)",
+        "fcf_ttm": "+$44.2M"
+      }
+    },
+    "options_flow_derivatives": {
+      "status": "waived",
+      "reason": "equity/activist thesis \u2014 not flow-driven; UW flow mixed/noise, no clean single-leg whale (multileg check: all single-leg)"
+    },
+    "technical_price": {
+      "status": "filled",
+      "source": "UW get_ticker_performances/candles",
+      "as_of": "2026-07-10",
+      "fields": {
+        "trend": "downtrend YTD (-24.8%), +15.6% 1mo activist bounce",
+        "rel_strength_vs_spy": "neg YTD, POS past month (+15.6 vs +4.1)",
+        "volume_profile_levels": "3mo range $13.95-19.48, mid at 17.35",
+        "key_support_resistance": "support 13.95 / resistance 19.48 (reclaim opens gap)"
+      }
+    },
+    "macro_regime": {
+      "status": "filled",
+      "source": "UW yield_curve/market_tide/sector_etfs",
+      "as_of": "2026-07-10",
+      "fields": {
+        "rates_regime": "moderately restrictive (10y 4.54, 2y 4.16)",
+        "vix_regime": "index complacent but 7/10 tide risk-off (net_put -$107M)",
+        "breadth": "mega-cap led, IWM small-caps LAGGING = headwind",
+        "sector_rotation_state": "XLK software supported; ALKT trades idiosyncratic activist not sector beta",
+        "credit_or_liquidity": "curve normalizing/steepening; 7/10 risk-off tide (net_put -$107M); no name-specific credit stress"
+      }
+    },
+    "filings": {
+      "status": "filled",
+      "source": "SEC EDGAR CIK 0001529274",
+      "as_of": "2026-07-11",
+      "fields": {
+        "latest_8k": "8-K 2026-05-20 Item 5.07 (annual meeting)",
+        "latest_10kq_mdna_delta": "last 10-Q period 2026-03-31; next earnings 2026-07-29",
+        "risk_factor_changes": "none new in window; Form 4 cluster 2026-07-07",
+        "s1_if_recent": "CONFIRMED SCHEDULE 13D acc 0000902664-26-002944 filed 2026-06-29 by Jana"
+      }
+    },
+    "cross_asset_portfolio_fit": {
+      "status": "filled",
+      "source": "UW get_correlations/performances",
+      "as_of": "2026-07-10",
+      "fields": {
+        "peer_comps": "NCNO (closest banking-SaaS) 0.936, SPSC 0.946, HUBS/DOCU 0.928",
+        "correlation_to_book": "high SaaS-growth beta (0.93+)",
+        "name_liquidity": "mktcap $1.86B, moderate ADV (thinner than LW)",
+        "tail_risk": "single-catalyst event risk, GAAP-unprofitable, 7/29 earnings gap; mitigant +$44M FCF",
+        "portfolio_fit": "high-beta small-cap activist special-sit; low corr to LW = good diversifier"
       }
     }
-  }
+  },
+  "verification": "VALIDATED (Sentinel, primary SEC EDGAR): Jana SCHEDULE 13D acc 0000902664-26-002944, 6.3%/6,747,707sh, $138M cost, 'exploring a sale' verbatim; GA ~$59M code-P; FY25 net loss -$47.652M confirmed, OCF +$42.9M (cash-generative scaler, not melting)"
 }

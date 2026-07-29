@@ -3,9 +3,9 @@
 **Master guide. Point any new session here first.** This is the single map of the whole effort: what Falcon
 is, what we proved, the system we built, where every file lives, and what's running live right now.
 
-> ⚠️ The executable code lives in **`apps/gex/research/doctrine/`** (it depends on `apps/gex` for Skylit
+> ⚠️ The executable code lives in **`falcon-copier/`** (it depends on `apps/gex` for Skylit
 > auth `../../src/heatseeker/auth.js`, env bootstrap, and the historical data in `research/velocity-capture/`).
-> This folder is the **index + findings**; run things from `apps/gex/`. Paths below are from repo root.
+> This folder is the **index + findings**; run things from repo root (`the final plan/`). Paths below are from repo root.
 
 ---
 
@@ -42,7 +42,7 @@ $100K over 6 months, ~1 trade/day, manages the pop (+~21% avg win).** Its screen
 7. Execute: cheap convex 0DTE, manage the pop (+25%), identical size, few trades.
 ```
 
-## 4. File map (all in `apps/gex/research/doctrine/`)
+## 4. File map (all in `falcon-copier/`)
 **LIVE system (running now):**
 - `autotrade.mjs` — the paper-trader. Confluence-gated entries + rule-based red team + king-migration + real
   0DTE option quotes + structure-invalidation exits. Runs every 60s via launchd. Logs `trades_<day>.txt`,
@@ -68,7 +68,7 @@ $100K over 6 months, ~1 trade/day, manages the pop (+~21% avg win).** Its screen
 
 ## 5. Live system — how to run & watch (run from `apps/gex/`)
 ```
-cd "apps/gex"
+cd "the final plan" (repo root)
 # watch it think (per-tick) + trades:
 tail -F research/doctrine/status_$(date +%F).txt
 tail -F research/doctrine/trades_$(date +%F).txt

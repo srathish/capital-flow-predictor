@@ -1,0 +1,36 @@
+[operator-eye] complete days = 16: ['2026-06-22', '2026-06-23', '2026-06-24', '2026-06-25', '2026-06-26', '2026-06-29', '2026-06-30', '2026-07-01', '2026-07-02', '2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10', '2026-07-13', '2026-07-14']
+
+====================================================================================================
+GRID RESULTS  (Bonferroni alpha=0.0083 -> need bootstrap P(mean>0) >= 0.9917)
+====================================================================================================
+   R% exit      S  nTr    mean     med   hit  tot/day           boot90CI  P(>0)  Bonf
+-------------------------------------------------------------------------------------
+ 0.15 stall     8  503   -5.3%  -11.1%   25%  -167.7%        [-8.2,-2.4]     0%    no
+ 0.15 stall    12  522   -5.8%  -11.5%   24%  -188.7%        [-8.9,-2.5]     0%    no
+ 0.15 ladder   12  521   -5.7%  -11.4%   27%  -185.9%        [-8.5,-2.7]     0%    no
+ 0.25 stall     8  382   -4.3%  -12.7%   30%  -103.8%        [-8.7,-0.2]     4%    no
+ 0.25 stall    12  389   -2.9%  -12.9%   31%   -71.1%        [-7.6,+1.8]    16%    no *PRIMARY
+ 0.25 ladder   12  389   -3.0%  -11.6%   35%   -74.0%        [-7.1,+1.2]    11%    no
+
+====================================================================================================
+PRIMARY CELL  R=0.25%  exit=swing-stall S=12
+====================================================================================================
+trades=389  mean_net=-2.9%  median=-12.9%  hit=31%  total=-1138%  per-day=-71.1%  [-96%,+237%]
+  LONG  (n=192): mean=+0.4% med=-9.9% hit=36% total=+83%
+  SHORT (n=197): mean=-6.2% med=-18.1% hit=26% total=-1221%
+  rule=vreclaim   (n=126): mean=+8.2% hit=40%
+  rule=higherlow  (n=36): mean=-3.6% hit=36%
+  rule=lowerhigh  (n=29): mean=-19.4% hit=21%
+  rule=flip       (n=198): mean=-7.5% hit=26%
+  exit reasons: {'stall': 152, 'flip': 225, 'eod': 12}
+  walkfwd H1 2026-06-22..2026-07-01: n=218 mean=-0.3% med=-11.4% hit=32% total=-57%
+  walkfwd H2 2026-07-02..2026-07-14: n=171 mean=-6.3% med=-16.5% hit=30% total=-1081%
+  day-block bootstrap net: 90%CI=[-7.6%,+1.8%] med=-3.0% P(mean>0)=15%  Bonferroni FAIL
+
+--- CONTROL: volume-matched random-timing (same #entries/day/side, random minutes) ---
+  n=9725  mean=-2.2%  med=-16.1%  hit=31%  [p5=-55%, p95=+100%]
+
+--- HEAD-TO-HEAD: live system EXECUTED fires (overlap days), same exit (stall S=12) ---
+  n=43 executed fires on ['2026-07-09', '2026-07-10', '2026-07-13', '2026-07-14']: mean=-10.4% med=-14.3% hit=33% [p5=-54%,p95=+49%]
+
+[wrote /Users/saiyeeshrathish/the final plan/apps/gex/research/velocity-capture/swing_events.jsonl]  (389 events)

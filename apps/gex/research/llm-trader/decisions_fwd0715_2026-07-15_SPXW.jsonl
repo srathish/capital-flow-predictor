@@ -1,0 +1,28 @@
+{"m": 30, "et": "10:00", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 38, "et": "10:08", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 43, "et": "10:13", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 53, "et": "10:23", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 73, "et": "10:43", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 98, "et": "11:08", "spot": 7560.56, "action": "hold", "why": ""}
+{"m": 148, "et": "11:58", "spot": 7549.84, "action": "hold", "why": ""}
+{"m": 163, "et": "12:13", "spot": 7541.24, "action": "hold", "why": ""}
+{"m": 173, "et": "12:23", "spot": 7532.98, "action": "hold", "why": ""}
+{"m": 181, "et": "12:31", "spot": 7533.31, "action": "hold", "why": ""}
+{"m": 196, "et": "12:46", "spot": 7534.63, "action": "hold", "why": ""}
+{"m": 214, "et": "13:04", "spot": 7545.41, "action": "hold", "why": ""}
+{"m": 220, "et": "13:10", "spot": 7547.3, "action": "hold", "why": ""}
+{"m": 235, "et": "13:25", "spot": 7551.14, "action": "hold", "why": ""}
+{"m": 253, "et": "13:43", "spot": 7559.61, "action": "hold", "why": ""}
+{"m": 268, "et": "13:58", "spot": 7568.87, "action": "enter_long", "why": "CHART: sustained afternoon uptrend off 7528 exhaustion-V low, 8 green candles, reclaimed to day-high zone 7568 (-0.04% day), above VWAP 7549, momentum 15m +0.14%. GEX CONFIRM: pin RELEASING (net gamma +255->+183M), 7550 floor shrinking -5/min left 18pt below as support, nearest resistance jumped to 7580 (+34M) = clean AIR POCKET 7568->7580. Long the air-pocket release, cap at 7580 opposing pika."}
+{"m": 271, "et": "14:01", "spot": 7569.79, "action": "hold", "why": ""}
+{"m": 274, "et": "14:04", "spot": 7569.74, "action": "exit", "why": "THESIS BROKE: entered on releasing pin + air pocket to 7580, but in 6 min net gamma re-strengthened +174->+195M, the 7565 barney fuel vanished, and 7580 became a GROWING king pika wall (+43M) = air pocket closed into a ceiling. Price stalled 7569-70, momentum fading (15m +0.13%->+0.07%). Flat on underlying; cut before theta round-trip per exit-when-regime-flips.", "closed": {"side": "long", "m": 268, "spot": 7568.87}}
+{"m": 277, "et": "14:07", "spot": 7571.16, "action": "hold", "why": ""}
+{"m": 285, "et": "14:15", "spot": 7569.55, "action": "hold", "why": ""}
+{"m": 303, "et": "14:33", "spot": 7574.63, "action": "hold", "why": ""}
+{"m": 318, "et": "14:48", "spot": 7563.37, "action": "enter_short", "why": "CHART: clean rejection off 7580 day-high wall, 3 red candles 7574->7563, momentum flipped NEGATIVE (15m -0.15%), breaking back down. GEX CONFIRM: pin COLLAPSING (net +223->+82M), king flipped to -72M BARNEY at 7565 = negative-gamma FUEL price is falling through, 7580 ceiling rejected. Target 7550 pika floor (+40M, ~13pt below). Short the barney-fueled flush, cap at 7550."}
+{"m": 321, "et": "14:51", "spot": 7561.71, "action": "hold", "why": ""}
+{"m": 324, "et": "14:54", "spot": 7557.63, "action": "hold", "why": ""}
+{"m": 327, "et": "14:57", "spot": 7558.91, "action": "exit", "why": "CAP WINNER into opposing node: flush stalled ~7pt short of 7550 target as the floor fortified into a +76M pika fortress (biggest node of day); price bounced 7557.6->7558.9, 5m momentum flipped +, barney fuel fading (-72->-60M), net gamma back +121M positive. Negative-gamma flush exhausted into the opposing pika. Lock the +0.06% short before the bounce reverts it.", "closed": {"side": "short", "m": 318, "spot": 7563.37}}
+{"m": 330, "et": "15:00", "spot": 7557.15, "action": "hold", "why": ""}
+{"m": 348, "et": "15:18", "spot": 7562.51, "action": "hold", "why": ""}
+{"m": 356, "et": "15:26", "spot": 7557.43, "action": "hold", "why": ""}

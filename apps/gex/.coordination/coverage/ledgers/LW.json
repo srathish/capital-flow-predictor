@@ -43,16 +43,79 @@
     },
     "sentiment_narrative": {
       "status": "filled",
-      "owner": "Athena",
-      "source": "web(tipranks/seekingalpha/fooddive/simplywall); EXACT firm counts pending UW get_analyst_ratings",
+      "source": "Athena UW get_analyst_ratings(pending)+web",
       "as_of": "2026-07-11",
       "fields": {
-        "analyst_rating_dist": "Moderate Buy: 3 Buy / 6 Hold (TipRanks web); pending UW confirm",
-        "analyst_revisions": "consensus PT ~$63.73 (range $57-80) \u2014 wide dispersion = genuine disagreement on turnaround",
-        "news_tone": "MIXED / cautiously-optimistic \u2014 DUAL activist (Starboard 4/30 letter: cost cuts, 25% EBITDA margin by FY29, ZBB, APAC sale; + Jana stake) with insider buying support, BUT years-of-underperformance backdrop + execution risk",
-        "short_interest": "PENDING UW get_short_data_by_ticker (not fabricated)",
-        "narrative_summary": "Dual-activist turnaround (Starboard + Jana) + insider code-P buys = catalyst real; but it's a SHOW-ME story (execution risk, mixed analyst tape). Narrative supports a value-with-catalyst thesis, not a momentum long."
+        "analyst_rating_dist": "Moderate Buy (~3B/6H, wide PT dispersion; web-sourced, UW pending)",
+        "analyst_revisions": "mixed; years of underperformance backdrop",
+        "short_interest": "pending-UW (not fabricated)",
+        "news_tone": "catalyst-real but show-me / execution risk"
+      }
+    },
+    "fundamentals": {
+      "status": "filled",
+      "source": "UW income/balance/cash statements",
+      "as_of": "2026-02-28",
+      "fields": {
+        "revenue_ttm": "$6,518.0M",
+        "net_income_ttm": "$300.3M (profitable, down hard)",
+        "gross_margin": "20.6% (compressed from ~28-30%)",
+        "rev_growth_yoy": "+2.9% Q / +2.0% TTM",
+        "shares_out_trend": "139.3M, flat-to-slightly-declining (modest buyback)",
+        "leverage_de_or_netdebt": "D/E 2.20; net debt ~$3.96B; net-debt/EBITDA ~4.0x ELEVATED",
+        "fcf_ttm": "+$634.3M (covers ~$206M dividend)"
+      }
+    },
+    "options_flow_derivatives": {
+      "status": "waived",
+      "reason": "equity/activist thesis \u2014 not flow-driven; mixed/hedged flow (Jan27 55C buy vs 45P buy), all single-leg, no clean signal"
+    },
+    "technical_price": {
+      "status": "filled",
+      "source": "UW get_ticker_performances/candles",
+      "as_of": "2026-07-10",
+      "fields": {
+        "trend": "3mo uptrend/recovery, +10.9% YTD, -9.6% YoY",
+        "rel_strength_vs_spy": "in-line YTD (+10.9 vs +10.7)",
+        "volume_profile_levels": "3mo range $40.16-47.42, testing top at 46.45",
+        "key_support_resistance": "support 41-42 pivot / resistance 47.42"
+      }
+    },
+    "macro_regime": {
+      "status": "filled",
+      "source": "UW yield_curve/sector_etfs/market_tide",
+      "as_of": "2026-07-10",
+      "fields": {
+        "rates_regime": "restrictive; high leverage = refinancing rate-sensitivity",
+        "vix_regime": "index complacent, mild defensive bid intraday",
+        "breadth": "mega-cap led (neutral for large-cap staple)",
+        "sector_rotation_state": "XLP staples near 52w-high w/ steady inflows = supportive defensive backdrop",
+        "credit_or_liquidity": "net-debt/EBITDA ~4.0x elevated = credit/refinancing-sensitive; 5/26 credit-facility event"
+      }
+    },
+    "filings": {
+      "status": "filled",
+      "source": "SEC EDGAR CIK 0001679273",
+      "as_of": "2026-07-11",
+      "fields": {
+        "latest_8k": "8-K 2026-06-04 Item 2.05 (exit/disposal costs = restructuring); 2026-05-26 debt/credit-facility event",
+        "latest_10kq_mdna_delta": "last 10-Q period 2026-02-28; next earnings 2026-07-24",
+        "risk_factor_changes": "no new 10-K in window (FY-end ~May)",
+        "s1_if_recent": "NO activist SC 13D \u2014 only passive 13G/A; activism via Starboard 13F + 4/30 letter + Jana Form 4 buying"
+      }
+    },
+    "cross_asset_portfolio_fit": {
+      "status": "filled",
+      "source": "UW get_correlations/performances",
+      "as_of": "2026-07-10",
+      "fields": {
+        "peer_comps": "trades bond-like (IAGG 0.935, BNDX 0.910); fundamental comps CAG/GIS/MKC/TSN",
+        "correlation_to_book": "low equity beta / bond-like defensive",
+        "name_liquidity": "mktcap $6.41B, high liquidity (deep ADV)",
+        "tail_risk": "leverage ~4x, margin compression, 7/24 earnings; mitigant +$634M FCF",
+        "portfolio_fit": "defensive staples turnaround; low/neg corr to ALKT = natural growth-vs-defensive pair"
       }
     }
-  }
+  },
+  "verification": "VALIDATED (Sentinel, primary sources): Starboard 13F $258.4M/6,114,982sh + 4/30 letter ($500M cuts); Jana code-P to 5,398,980sh; CFO Gray +14,556 ($40.9-43.9) + Exec Chair Craps +50k @$48.65 code-P confirmed; bearish 'insiders not buying' web claim REFUTED"
 }

@@ -1,0 +1,93 @@
+============================================================================================
+SWING-CYCLE 1-MIN — DIGEST   days=13 series=39 events=337
+days: ['2026-06-25', '2026-06-26', '2026-06-29', '2026-06-30', '2026-07-01', '2026-07-02', '2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10', '2026-07-13', '2026-07-14']
+
+--- PER-ENTRY EXPECTANCY & PER-DAY P&L (net, all-leg 3%% haircut) ---
+config                       side  legs  expect  median  hit  $/day  bootExp90CI       p+
+A_cycle                      all   126  -14.8%  -45.2%   37% -143.7%  [-22.3%,-6.8%]   0%
+A_cycle                      call   48  -9.5%  -47.1%   38% -35.0%  [-28.7%,+27.5%]  32%
+A_cycle                      put    78  -18.1%  -44.0%   36% -108.7%  [-25.6%,-6.2%]   1%
+    cycle_dist: {1: 105, 2: 17, 3: 4}
+A_ss_ladder                  all   108  -12.3%  -38.1%   38% -102.6%  [-20.8%,-3.3%]   1%
+A_ss_ladder                  call   43  -3.8%  -33.1%   40% -12.5%  [-22.4%,+29.8%]  43%
+A_ss_ladder                  put    65  -18.0%  -43.1%   37% -90.1%  [-27.7%,-3.7%]   2%
+    cycle_dist: {1: 108}
+A_ss_ladder_nostruct         all    94  -15.2%  -61.5%   40% -110.0%  [-26.5%,-2.6%]   2%
+A_ss_ladder_nostruct         call   37  -5.7%  -61.4%   46% -16.3%  [-29.1%,+33.9%]  42%
+A_ss_ladder_nostruct         put    57  -21.4%  -61.6%   37% -93.7%  [-34.2%,-3.3%]   3%
+    cycle_dist: {1: 94}
+A_ss_trail                   all    94  -16.1%  -61.5%   40% -116.6%  [-26.6%,-4.2%]   1%
+A_ss_trail                   call   37  -10.2%  -61.4%   46% -29.1%  [-30.6%,+26.6%]  30%
+A_ss_trail                   put    57  -20.0%  -61.6%   37% -87.5%  [-33.0%,-3.7%]   3%
+    cycle_dist: {1: 94}
+B_cycle                      all   211  -7.8%  -29.9%   45% -126.0%  [-12.1%,-2.1%]   2%
+B_cycle                      call  103  -2.4%  -10.4%   48% -19.1%  [-15.5%,+11.9%]  38%
+B_cycle                      put   108  -12.9%  -38.5%   42% -106.9%  [-21.6%,-4.1%]   1%
+    cycle_dist: {1: 176, 2: 31, 3: 4}
+B_ss_ladder                  all   173  -7.1%  -27.2%   45% -94.1%  [-13.0%,-0.1%]   5%
+B_ss_ladder                  call   84  +1.2%  +4.2%   50% +7.6%  [-13.4%,+15.5%]  54%
+B_ss_ladder                  put    89  -14.9%  -38.7%   40% -101.7%  [-24.9%,-4.8%]   1%
+    cycle_dist: {1: 173}
+B_ss_trail                   all   143  -6.3%  +14.1%   52% -69.8%  [-13.5%,+2.1%]  10%
+B_ss_trail                   call   72  -0.8%  +21.4%   56% -4.7%  [-19.6%,+17.1%]  46%
+B_ss_trail                   put    71  -11.9%  -61.2%   48% -65.1%  [-23.2%,-1.0%]   3%
+    cycle_dist: {1: 143}
+B_cycle_cond                 all   124  -1.7%  +0.0%   50% -15.7%  [-12.7%,+10.4%]  42%
+B_cycle_cond                 call   70  +3.6%  +16.2%   54% +19.6%  [-12.5%,+19.8%]  63%
+B_cycle_cond                 put    54  -8.5%  -23.7%   44% -35.3%  [-23.1%,+5.7%]  19%
+    cycle_dist: {1: 110, 2: 14}
+B_cycle_phantom              all   199  -6.5%  -29.8%   49% -98.8%  [-16.0%,+6.7%]  20%
+B_cycle_phantom              call  110  -2.5%  +8.5%   51% -21.2%  [-17.0%,+14.3%]  40%
+B_cycle_phantom              put    89  -11.3%  -44.2%   46% -77.7%  [-27.8%,+8.3%]  16%
+    cycle_dist: {1: 153, 2: 40, 3: 6}
+
+--- (d) RANDOM-TIMING matched frequency (all side, ladder+struct) ---
+  random vs A_cycle freq   n=2520 expect=-27.2% med=-59.6% boot=[-35.8%,-18.3%]
+  random vs B_cycle freq   n=4220 expect=-6.7% med=-4.4% boot=[-9.4%,-3.5%]
+
+--- (e) LIVE tracked_plays (overlap days) ---
+  all : n=175 expect=-22.7% med=-35.3%
+  call: n=76 expect=+14.3% med=-3.0%
+  put : n=99 expect=-51.1% med=-61.2%
+
+--- VARIANT B mirror physics: P(bounce|touch) ---
+  dominant_pika      touches= 728 bounces= 560 rate=77%
+  weak_node          touches= 116 bounces=  93 rate=80%
+  phantom_dominant   touches= 672 bounces= 526 rate=78%
+
+--- WALK-FORWARD halves (per-entry expectancy) ---
+  A_cycle                      train n= 60 exp=-18.0%  test n= 66 exp=-12.0%
+  A_ss_ladder                  train n= 56 exp=-16.5%  test n= 52 exp=-7.9%
+  A_ss_ladder_nostruct         train n= 45 exp=-22.1%  test n= 49 exp=-8.9%
+  A_ss_trail                   train n= 45 exp=-25.8%  test n= 49 exp=-7.2%
+  B_cycle                      train n=114 exp=-11.4%  test n= 97 exp=-3.4%
+  B_ss_ladder                  train n= 94 exp=-12.5%  test n= 79 exp=-0.6%
+  B_ss_trail                   train n= 72 exp=-16.3%  test n= 71 exp=+3.7%
+  B_cycle_cond                 train n= 67 exp=-10.9%  test n= 57 exp=+9.2%
+  B_cycle_phantom              train n= 95 exp=-9.8%  test n=104 exp=-3.4%
+
+--- CASE STUDIES 2026-07-14 ---
+  SPXW: session_low=7515.34 high=7556.11 dom_pikas=[(7520, 0.137, 'king'), (7555, 0.398, 'relsig'), (7585, 0.127, 'king')]
+    [A] put  entry 14:40 lvl=7546.19 cyc1 -> 14:55 ladder_r1   +23%
+    [A] put  entry 15:13 lvl=7556.11 cyc1 -> 15:47 ladder_r1   +35%
+  QQQ: session_low=711.74 high=722.04 dom_pikas=[(719, 0.211, 'relsig'), (720, 0.368, 'relsig'), (722, 0.372, 'relsig'), (723, 0.269, 'relsig')]
+    [A] put  entry 15:21 lvl=721.36 cyc1 -> 16:27 ladder_r2   +66%
+    [B] call entry 14:38 lvl=719 cyc1 -> 14:45 struct_exit -27%
+    [B] call entry 15:03 lvl=719 cyc1 -> 15:42 ladder_r1   +36%
+    [B] call entry 16:30 lvl=719 cyc2 -> 18:40 ladder_r1   +21%
+    [B] call entry 15:47 lvl=720 cyc1 -> 16:02 struct_exit -60%
+    [B] call entry 16:45 lvl=720 cyc1 -> 19:09 trail       -63%
+    [B] call entry 19:16 lvl=720 cyc2 -> 19:27 ladder_r1   +15%
+    [B] put  entry 14:46 lvl=719 cyc1 -> 15:06 struct_exit -63%
+    [B] put  entry 16:04 lvl=719 cyc1 -> 16:41 trail       -62%
+    [B] put  entry 14:44 lvl=720 cyc1 -> 15:07 trail       -64%
+    [B] put  entry 15:57 lvl=720 cyc2 -> 17:02 struct_exit -59%
+    [B] put  entry 18:20 lvl=722 cyc1 -> 19:13 ladder_r2   +67%
+    [Bcond] call entry 14:38 lvl=719 cyc1 -> 14:45 struct_exit -27%
+    [Bcond] call entry 15:03 lvl=719 cyc1 -> 15:42 ladder_r1   +36%
+    [Bcond] call entry 16:30 lvl=719 cyc2 -> 18:40 ladder_r1   +21%
+    [Bcond] call entry 15:47 lvl=720 cyc1 -> 16:02 struct_exit -60%
+    [Bcond] call entry 16:45 lvl=720 cyc1 -> 19:09 trail       -63%
+    [Bcond] call entry 19:16 lvl=720 cyc2 -> 19:27 ladder_r1   +15%
+    [Bcond] put  entry 16:04 lvl=719 cyc1 -> 16:41 trail       -62%
+============================================================================================
