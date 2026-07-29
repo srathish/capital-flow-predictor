@@ -59,9 +59,15 @@ SPXW barney-reject top-tick SHORT). In-sample day: 8 trades, 6/8 win. **In-sampl
 - `pull_today.mjs` — caches today's 1-min GEX (g0/v0/spot/prevClose) for SPXW+SPY+QQQ → `today_<sym>.jsonl.gz`
   (feeds `backtest_1min.mjs`). Resumable.
 
-**LIVE forward test (running now):** the paper-trader IS the forward record — `autotrade.mjs` logs per-tick
-per-instrument confluence to `status_<day>.txt` (the signal log, even when flat) and actual managed fires +
-%P/L to `trades_<day>.txt`. Compare those against Falcon's plays each day. `run_autotrade.sh` = its wrapper.
+**LIVE forward test + LEARNING LOOP (running now):** the paper-trader IS the forward record — `autotrade.mjs`
+logs per-tick per-instrument confluence to `status_<day>.txt` (the signal log, even when flat), managed fires +
+%P/L to `trades_<day>.txt`, and every closed trade (with its full entry context: kind, confluence, per-criterion
+map) to the cumulative **`falcon_ledger.jsonl`** (survives across days). `run_autotrade.sh` = its wrapper.
+- **`review.mjs` = the iterative loop** — auto-spawned by autotrade at day-done (also run by hand). Reads the
+  CUMULATIVE ledger and appends a dated analysis to **`REVIEW.md`**: win/expectancy by kind/instrument/confluence,
+  and each criterion's edge (present vs absent). **Anti-over-correct by construction:** it won't even consider a
+  change until ≥20 trades AND ≥10 days, every stat is cumulative (never last-day), flagged patterns are WATCH-only
+  needing another block of days + approval, and the default is always NO CHANGE. Read `REVIEW.md`'s header first.
 - `forward_scan.sh` + `com.bellwether.forwardscan` — a PARKED pure-observer (unloaded). It runs `scan_multi.mjs`
   and logs deduped WOULD-FIRE to `forward_<date>.log` with no position gate (catches signals even while the
   trader is holding). To run it ALONGSIDE autotrade it needs its OWN Skylit session (session C) — two 60s jobs

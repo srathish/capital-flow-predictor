@@ -56,7 +56,9 @@ async function dpVAH() { const r = await fetch(`https://api.unusualwhales.com/ap
 
 function closePos(exitMark, why) {
   const p = st.pos, ret = (p.entryMark && exitMark) ? (exitMark - p.entryMark) / p.entryMark * 100 : 0;
-  st.trades.push({ ...p, exitET: hm, exitMark, ret: +ret.toFixed(0), why });
+  const rec = { day, ...p, exitET: hm, exitMark, ret: +ret.toFixed(0), why };
+  st.trades.push(rec);
+  try { fs.appendFileSync(path.join(D, 'falcon_ledger.jsonl'), JSON.stringify(rec) + '\n'); } catch (e) { }   // cumulative forward learning ledger (survives across days; review.mjs reads it)
   log(`  ${hm}  ✂ EXIT  ${p.sym.padEnd(4)} ${p.cp === 'C' ? 'CALL' : 'PUT'} $${p.strike}  ${p.kind}  $${(p.entryMark || 0).toFixed(2)} → $${(exitMark || 0).toFixed(2)}  (${ret >= 0 ? '🟢' : '🔴'} ${Math.abs(ret).toFixed(0)}%)  peak $${(p.peakMark || 0).toFixed(2)}  [${why}]`);
   st.pos = null;
 }
@@ -113,6 +115,7 @@ if (st.pos) {                                                                // 
         ['dp-ext', vah != null && (c.dir < 0 ? spot > vah : spot < val)],
       ];
       c.pass = cr.filter(x => x[1]).length; c.hits = cr.filter(x => x[1]).map(x => x[0]);
+      c.crmap = {}; for (const [k, v] of cr) c.crmap[k.replace(/[+-]$/, '')] = v ? 1 : 0;   // normalized criteria map for the learning ledger (vanna+/- → vanna)
       if (!best || c.pass > best.pass) best = c;
     }
     scan.push({ I, S, fl, king, best });
@@ -135,12 +138,17 @@ if (st.pos) {                                                                // 
       // opposing node = strongest pika in the direction of travel that could cap us (for structure-hardening exit)
       const opp = S.strikes.filter(n => n.g0 >= I.strong && (n.strike - spot) * best.dir > 0).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
       const oppShare = opp ? opp.g0 / sumAbs : 0;
-      st.pos = { sym: I.sym, kind: best.kind, dir: best.dir, entry: +spot.toFixed(2), entryET: hm, target: best.target, stopSpot: best.stop, cp, strike, occ, entryMark: mark, peakMark: mark, oppStrike: opp?.strike || null, oppShare0: +oppShare.toFixed(3) };
+      st.pos = { sym: I.sym, kind: best.kind, dir: best.dir, entry: +spot.toFixed(2), entryET: hm, target: best.target, stopSpot: best.stop, cp, strike, occ, entryMark: mark, peakMark: mark, oppStrike: opp?.strike || null, oppShare0: +oppShare.toFixed(3), pass: best.pass, hits: best.hits, crmap: best.crmap };
       log(`  ${hm}  ${best.dir > 0 ? '🐂' : '🐻'} ${best.kind.padEnd(6)} ${I.sym.padEnd(4)} ${cp === 'C' ? 'CALL' : 'PUT'} $${strike} @ $${mark == null ? '?' : mark.toFixed(2)}  [${occ}]  → tgt ${best.target} · CONFLUENCE ${best.pass}/7 [${best.hits.join('+')}] · red-team CLEARED`);
     } else { log(`  ${hm}  ⚖ RED-TEAM VETO ${winner.I.sym} ${best.kind} ${best.dir > 0 ? 'LONG' : 'SHORT'} (conf ${best.pass}/7): ${objections.join(' · ')}`); }
   }
   statusLine = `${hm} · flat · ` + scan.map(x => `${x.I.sym} ${x.S.spot.toFixed(1)}${x.best ? ` ${x.best.kind[0]}${x.best.dir > 0 ? '↑' : '↓'}${x.best.pass}/7` : ' —'}`).join(' · ') + ` · fire ≥${MIN_CONFLUENCE}`;
 }
-if (m >= 15 * 60 + 55 && !st.pos && st.trades.length && !st.done) { const w = st.trades.filter(t => t.ret > 0).length; log(`  ═══ DAY DONE: ${st.trades.length} trades · ${w}/${st.trades.length} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / st.trades.length).toFixed(0)}% ═══`); st.done = 1; }
+if (m >= 15 * 60 + 55 && !st.pos && !st.done) {                              // DAY DONE + auto-run the disciplined review (the iterative loop)
+  const n = st.trades.length, w = st.trades.filter(t => t.ret > 0).length;
+  log(n ? `  ═══ DAY DONE: ${n} trades · ${w}/${n} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / n).toFixed(0)}% ═══` : `  ═══ DAY DONE: 0 trades (stood aside all day) ═══`);
+  st.done = 1;
+  try { const { spawn } = await import('node:child_process'); spawn(process.execPath, [path.join(D, 'review.mjs')], { cwd: process.cwd(), detached: true, stdio: 'ignore' }).unref(); } catch (e) { }
+}
 if (statusLine) fs.appendFileSync(path.join(D, `status_${day}.txt`), statusLine + '\n');
 fs.writeFileSync(STATE, JSON.stringify(st));
