@@ -31,25 +31,45 @@ $100K over 6 months, ~1 trade/day, manages the pop (+~21% avg win).** Its screen
   fade↔ride) beats fixed strategies (+4 vs −16 fade vs −87 ride). Value = avoiding wrong-regime disasters.
   An LLM agent reading the live tape is the answer to intraday non-stationarity (no training data needed).
 
-## 3. The system (direction-free, confluence-gated, agentic)
+## 3. The system (direction-free, confluence-gated, agentic) — THE UNIFIED ENGINE
+The backtest, the live scanner, and the paper-trader now run the **same** engine. It evaluates SPX+SPY+QQQ
+every minute and builds two candidate types, scores confluence, fires the single best across the complex:
 ```
-1. Never forecast direction. Wait for a confirmed move OR price reaching a level.
-2. Reactive regime: TREND (efficient tape) → ride to next pika; CHOP → fade the wall.
-3. Ride exit = the next pika ahead (stalls there); barney ahead = accelerant (ride through).
-4. At the pika: expect reversal (79% respect, vanna+ 74%). FAILED-REACH (stall short) = fade harder.
-5. CONFLUENCE gate: fire ONLY when ≥5 of 9 validated criteria align (Falcon selectivity).
-6. RED TEAM: the trade must SURVIVE adversarial objections (unreachable, fighting tape, bad R:R…) or veto.
-7. Execute: cheap convex 0DTE, manage the pop (+25%), identical size, few trades.
+1. Never forecast direction. Wait for price to REACH a node (reach is the only predictable thing).
+2. Two candidates per instrument:
+   • PIKA  — fade/bounce toward the nearest strong positive-gamma wall within range (mean-revert to the wall).
+   • BARNEY — reject off a big negative-gamma node price has TAPPED and is now RETRACING from (failed-reach).
+3. CONFLUENCE gate (7 criteria): at-node · strong-node · vanna(+ for pika / − for barney) · king-migration ·
+   flow-agree · pivot-side · dp-extension. Fire ONLY the best setup across SPX/SPY/QQQ when ≥5/7 (selectivity).
+4. RED TEAM: the trade must SURVIVE adversarial objections (unreachable, fighting tape, bad R:R, no room,
+   weak anchor) or it's vetoed — scoring well is not enough.
+5. Execute: cheap convex 0DTE on the firing instrument, manage the pop (+25% / −40% / structure-harden / EOD).
 ```
+This is the machine that reverse-engineered BOTH of Falcon's 07-29 plays (12:00 SPY pika-bounce LONG + 14:54
+SPXW barney-reject top-tick SHORT). In-sample day: 8 trades, 6/8 win. **In-sample — the forward test is the gate.**
 
 ## 4. File map (all in `falcon-copier/`)
-**LIVE system (running now):**
-- `autotrade.mjs` — the paper-trader. Confluence-gated entries + rule-based red team + king-migration + real
-  0DTE option quotes + structure-invalidation exits. Runs every 60s via launchd. Logs `trades_<day>.txt`,
-  `status_<day>.txt` (per-tick "thinking"), `state_autotrade.json`.
-- `run_autotrade.sh` — cron/launchd wrapper. `live_copilot.mjs` — on-demand map+rules read.
-- `predict.mjs` — trinity-regime reach engine (live). `engine.mjs` — node-size reach + vanna hold.
-- `run_forward.sh` — post-close forward-validation logger. `RUN_TOMORROW.md` — operator runbook.
+**THE UNIFIED ENGINE (same logic, three surfaces):**
+- `backtest_1min.mjs` — minute-granularity replay on the cached day (`node backtest_1min.mjs [THRESH]`). The
+  reference implementation of the engine; where new rules get validated in-sample first.
+- `scan_multi.mjs` — the engine LIVE on SPX/SPY/QQQ, prints the best setup + confluence. Observer (no orders).
+- `autotrade.mjs` — the engine paper-TRADING: multi-instrument scan → fire best ≥5/7 → red-team → real 0DTE
+  option quotes + peak tracking + structure-hardening exits. Runs every 60s via launchd (`com.bellwether.autotrade`).
+  Logs `trades_<day>.txt`, `status_<day>.txt` (per-tick "thinking"), `state_autotrade.json`. PAPER ONLY.
+- `pull_today.mjs` — caches today's 1-min GEX (g0/v0/spot/prevClose) for SPXW+SPY+QQQ → `today_<sym>.jsonl.gz`
+  (feeds `backtest_1min.mjs`). Resumable.
+
+**LIVE forward test (running now):** the paper-trader IS the forward record — `autotrade.mjs` logs per-tick
+per-instrument confluence to `status_<day>.txt` (the signal log, even when flat) and actual managed fires +
+%P/L to `trades_<day>.txt`. Compare those against Falcon's plays each day. `run_autotrade.sh` = its wrapper.
+- `forward_scan.sh` + `com.bellwether.forwardscan` — a PARKED pure-observer (unloaded). It runs `scan_multi.mjs`
+  and logs deduped WOULD-FIRE to `forward_<date>.log` with no position gate (catches signals even while the
+  trader is holding). To run it ALONGSIDE autotrade it needs its OWN Skylit session (session C) — two 60s jobs
+  on session B would clobber the Clerk cookie (see §5). Re-`launchctl load` only after wiring a session-C env.
+
+**Other live tools:** `fullstack.mjs` (every-source snapshot + king-side trinity), `monitor.mjs` (unified view
+→ `monitor_state.json` agent bridge), `dp_value_area.mjs` `flow_confirm.mjs` `expiry_structure.mjs`
+`multi_instrument.mjs` (per-layer reads). `predict.mjs`/`engine.mjs` — reach engines. `RUN_TOMORROW.md` — runbook.
 
 **Models / feature pipeline:**
 - `features.mjs` → `features.csv` (64-feature matrix per minute-state). `model.py` — full-picture GBM (OOS).
@@ -66,20 +86,27 @@ $100K over 6 months, ~1 trade/day, manages the pop (+~21% avg win).** Its screen
 - `falcon_picks.json` — labeled Falcon picks (training/validation data). `SYSTEM.md` `FORWARD_VALIDATION.md`
   `GEX_FRAMEWORK.md` — the doctrine docs.
 
-## 5. Live system — how to run & watch (run from `apps/gex/`)
+## 5. Live system — how to run & watch (run from repo root `the final plan/`)
 ```
-cd "the final plan" (repo root)
-# watch it think (per-tick) + trades:
-tail -F research/doctrine/status_$(date +%F).txt
-tail -F research/doctrine/trades_$(date +%F).txt
-# manual one tick (FORCE bypasses the RTH gate):
-ENV_FILE=research/stock-gex/session-b.env ENV_FILE_PATH=research/stock-gex/session-b.env DATABASE_URL= FORCE=1 /usr/local/bin/node research/doctrine/autotrade.mjs
-# scheduler (macOS launchd, every 60s): plist at ~/Library/LaunchAgents/com.bellwether.autotrade.plist
-launchctl list | grep bellwether        # check it's alive
+cd "the final plan"                       # repo root — all falcon-copier scripts run from here
+ENV="ENV_FILE=apps/gex/research/stock-gex/session-b.env DATABASE_URL="
+# watch the paper-trader think (per-tick) + its trades:
+tail -F falcon-copier/status_$(date +%F).txt
+tail -F falcon-copier/trades_$(date +%F).txt
+# watch the forward-test WOULD-FIRE log:
+tail -F falcon-copier/forward_$(date +%F).log
+# one live scan / one trader tick (FORCE bypasses RTH + entry-time gates for off-hours testing):
+env $ENV /usr/local/bin/node falcon-copier/scan_multi.mjs
+env $ENV FORCE=1 /usr/local/bin/node falcon-copier/autotrade.mjs
+# refresh today's cache then re-run the in-sample backtest:
+env $ENV /usr/local/bin/node falcon-copier/pull_today.mjs && env $ENV /usr/local/bin/node falcon-copier/backtest_1min.mjs 5
+# scheduler (macOS launchd, 60s): com.bellwether.autotrade (the trader + forward record; single session-B consumer)
+launchctl list | grep bellwether          # check it's alive
 ```
 Session isolation: uses **session B** (`apps/gex/research/stock-gex/session-b.env`). Re-auth if it 401s:
-`cfp-jobs skylit-login --env-file apps/gex/research/stock-gex/session-b.env`. Do NOT run co-pilot + autotrade
-at once (they'd clobber session B).
+`cfp-jobs skylit-login --env-file apps/gex/research/stock-gex/session-b.env`. **Exactly ONE session-B consumer
+at a time** — autotrade owns it. Two 60s jobs on one session rotate/clobber the Clerk `__client` cookie and
+both start 401ing. Any second live consumer (e.g. the parked forwardscan) needs its own session env.
 
 ## 6. Data sources
 - **Skylit** `app.skylit.ai/api/data?symbol=SPXW` → per-strike `g0`(0DTE gamma) `v0`(0DTE vanna) `gAgg`/`vAgg`
@@ -90,15 +117,24 @@ at once (they'd clobber session B).
   (off_vol = dark-pool); greek exposure by strike (call/put/charm/vanna, historical).
 
 ## 7. Open threads (current build queue)
-1. **Dark-pool value-area layer** — IN PROGRESS. On 07-29 Falcon top-ticked a short at 7446 with NO GEX pika
-   there — it faded price stretched ~45pt above the DP value area (POC ~7400). GEX-only missed it. Build:
-   pull DP off_vol by price → POC/VAH/VAL → "extended beyond value" fade signal + confluence criterion.
-2. **LLM red-team debate** (tier-2) — bull vs red-team vs judge on confluence survivors (~1-3/day, on-demand).
-3. **Reactive regime → wire into autotrade** (mode-switch fade↔ride on live efficiency).
-4. **More data + walk-forward retraining** — the adaptive model is data-starved on 19 days; needs more history.
-5. **Forward validation** — the paper-trader is accumulating the ONLY thing that matters: real forward results.
+DONE since last update: ✓ dark-pool value-area layer (now the `dp-extension` confluence criterion) ✓ BARNEY
+reject + failed-reach confirmation (reverse-engineered Falcon's 14:54 top-tick) ✓ multi-instrument SPX+SPY+QQQ
+✓ minute granularity ✓ unified engine across backtest/scan/trader ✓ forward record live via autotrade.
+1. **Forward validation** — THE gate. autotrade is now accumulating the only thing that matters: real forward
+   results on the full engine. Everything above is in-sample until this says it generalizes. Compare
+   `trades_<day>.txt` + `status_<day>.txt` against Falcon's actual plays daily.
+2. **LLM red-team debate** (tier-2) — replace the rule-based veto with bull vs red-team vs judge on confluence
+   survivors (~1-3/day, on-demand). The `monitor_state.json` bridge exists for this.
+3. **Full-coverage signal log while in-position** — autotrade only logs the 3-instrument scan when FLAT (it
+   manages, single-position, when holding). To record signals it would've seen while holding, either make
+   autotrade scan-for-log during positions, or run the parked forwardscan on a session C.
+4. **More data + walk-forward retraining** — the adaptive model is data-starved (~19 days); needs more history.
+5. **Reactive regime → deeper wire** (mode-switch fade↔ride on live tape efficiency).
 
 ## 8. The honest bottom line
-We reverse-engineered and BUILT Falcon's machine (reach + confluence + red team + reactive regime +
-management). We PROVED the boundary (direction unpredictable). What we do NOT have is Falcon's proof: a
-forward track record. The 60s paper-trader started that clock. **Machine — close. Proof — just started.**
+We reverse-engineered and BUILT Falcon's machine (multi-instrument reach + PIKA/BARNEY node structure +
+confluence + red team + management), and it now catches BOTH of Falcon's 07-29 plays. But that catch is
+**in-sample** — the barney logic and the ≥5/7 threshold were fit to those two known plays; fitting to 2 plays
+on 1 day is textbook overfit risk. We PROVED the boundary (direction unpredictable OOS). What we still do NOT
+have is Falcon's proof: a FORWARD track record. The 60s multi-instrument paper-trader is now running the full
+engine and accumulating exactly that. **Machine — built & unified. Proof — the forward clock is running.**
