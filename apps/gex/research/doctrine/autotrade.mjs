@@ -9,7 +9,7 @@ const KEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
 const D = path.join(process.cwd(), 'research', 'doctrine');
 const STATE = path.join(D, 'state_autotrade.json');
 const sign = (x) => x > 0 ? 1 : x < 0 ? -1 : 0, r5 = (x) => Math.round(x / 5) * 5;
-const STRONG = 15e6, WALL = 12e6, BARN = 8e6, RIDE_MOM = 3, FADE_EXT = 7, RIDE_STOP = 8, FADE_STOP = 6;
+const STRONG = 15e6, WALL = 12e6, BARN = 8e6, RIDE_MOM = 3, FADE_EXT = 7, FADE_MAX = 20, RIDE_STOP = 8, FADE_STOP = 6;
 const TP = 25, SL = 40, HARDEN = 1.8;                                        // manage: +25% pop / −40% / struct-harden ×1.8
 const REACH = { S: [93, 74, 59, 42, 24], M: [89, 69, 55, 43, 26], L: [87, 52, 38, 22, 6] };
 const reachPct = (ad, g0) => { const g = g0 >= 35e6 ? 'L' : g0 >= 20e6 ? 'M' : 'S'; const b = ad < 4 ? 0 : ad < 8 ? 1 : ad < 12 ? 2 : ad < 18 ? 3 : 4; return REACH[g][b]; };
@@ -81,8 +81,11 @@ if (st.pos) {                                                                // 
     if (pk && Math.abs(pk.strike - spot) <= 15) { const accel = barn && Math.abs(barn.strike - spot) < Math.abs(pk.strike - spot);
       await open(accel ? 'RIDE-BARNEY' : 'RIDE', dir, pk.strike, +(spot - RIDE_STOP * dir).toFixed(1), `mom ${mom10.toFixed(0)}pt→pika ${pk.strike} (reach ${reachPct(Math.abs(pk.strike - spot), pk.g0)}%)${accel ? ` thru barney ${barn.strike}` : ''}`, pk.strike);
     } else if (barn) await open('TRAPDOOR', dir, +(barn.strike + 5 * dir).toFixed(1), +(spot - RIDE_STOP * dir).toFixed(1), `mom ${mom10.toFixed(0)}pt thru barney ${barn.strike}`, null);
-  } else if (Math.abs(spot - king.strike) >= FADE_EXT) { const dir = sign(king.strike - spot), opp = dir > 0 ? pikaDn : pikaUp;
-    await open('FADE', dir, king.strike, +(spot - FADE_STOP * dir).toFixed(1), `ext ${(spot - king.strike).toFixed(0)}pt→king ${king.strike}`, opp?.strike);
+  } else {                                                                  // FADE only a REALISTIC extension to the NEAREST strong pin (cap FADE_MAX; else stand aside)
+    const pin = strikes.filter(n => n.g0 >= STRONG && Math.abs(n.strike - spot) >= FADE_EXT && Math.abs(n.strike - spot) <= FADE_MAX).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
+    if (pin) { const dir = sign(pin.strike - spot), opp = dir > 0 ? pikaDn : pikaUp;
+      await open('FADE', dir, pin.strike, +(spot - FADE_STOP * dir).toFixed(1), `ext ${(spot - pin.strike).toFixed(0)}pt→pin ${pin.strike}`, opp?.strike);
+    }
   }
 }
 if (m >= 15 * 60 + 55 && !st.pos && st.trades.length && !st.done) { const w = st.trades.filter(t => t.ret > 0).length; log(`  ═══ DAY DONE: ${st.trades.length} trades · ${w}/${st.trades.length} green · avg ${(st.trades.reduce((a, c) => a + c.ret, 0) / st.trades.length).toFixed(0)}% ═══`); st.done = 1; }
