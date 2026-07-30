@@ -11,7 +11,9 @@
 import '../apps/gex/scripts/_env-bootstrap.js';
 import fs from 'node:fs'; import zlib from 'node:zlib'; import path from 'node:path';
 const KEY = process.env.ANTHROPIC_API_KEY, MODEL = process.env.AGENT_MODEL || 'claude-sonnet-5';
-const FC = path.join(process.cwd(), 'falcon-copier'), DAY = process.env.AGENT_DAY || '2026-07-29';
+const FC = path.join(process.cwd(), 'falcon-copier');
+const LIVEMODE = process.argv.includes('--loop') || process.argv.includes('--live');
+const DAY = process.env.AGENT_DAY || (LIVEMODE ? new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }) : '2026-07-29');
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 ? (process.argv[i + 1] || true) : d; };
 const M = (x) => +(x / 1e6).toFixed(1);
 const etM = (ts) => (+ts.slice(11, 13) - 4) * 60 + +ts.slice(14, 16);
@@ -43,11 +45,38 @@ function assembleInstrument(sym, etStr) {
     king_node: king ? { strike: king.k, gex_M: M(king.g0) } : null,
     nearest_strong_support_below: floor ? { strike: floor.k, gex_M: M(floor.g0) } : null,
     nearest_strong_resistance_above: ceil ? { strike: ceil.k, gex_M: M(ceil.g0) } : null,
-    regime_now: { neg_strikes: band.filter(n => n.g0 < 0).length, pos_strikes: band.filter(n => n.g0 > 0).length, net_gamma_M: netOf(s) },
-    strong_nodes_wide: strongWide, gex_vex_map_now: map,
+    regime_now: { neg_strikes: band.filter(n => n.g0 < 0).length, pos_strikes: band.filter(n => n.g0 > 0).length, net_gamma_M: netOf(s), net_vanna_M: M(band.reduce((a, c) => a + (c.v0 || 0), 0)) },
+    strong_nodes_wide: strongWide, gex_vex_map_now: map,   // gex_M = 0DTE gamma, vex_M = 0DTE vanna, per strike
   };
 }
-function assembleComplex(etStr) { const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; } return { as_of_et: etStr, instruments }; }
+// ── SKYLIT-NATIVE live layers (Flowseeker /fs/api + Heatseeker): dark-pool prints + market tide (flow lean).
+// Discovered via browser network capture (capture_endpoints.py). Same auth as /api/data (Clerk JWT). live-only.
+let _skReady = false;
+async function skGet(pathq) {
+  if (!_skReady) { await initAuth(); _skReady = true; }
+  const t = await getFreshToken();
+  return fetch('https://app.skylit.ai' + pathq, { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: 'Bearer ' + t, Accept: 'application/json', 'Accept-Language': 'en-US,en;q=0.9', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' }, signal: AbortSignal.timeout(12000) }).then(x => x.ok ? x.json() : null).catch(() => null);
+}
+async function skylitDarkPool() {   // real dark-pool prints (institutional levels), index ETFs
+  const r = await skGet('/fs/api/dark-pool/trades?min_notional=1000000&limit=250&order=desc');
+  const rows = (r?.data || r || []).filter(x => ['SPY', 'QQQ', 'IWM', 'DIA'].includes(x.ticker));
+  return rows.slice(0, 12).map(x => ({ ticker: x.ticker, price: x.price, notional_M: M(x.total_value), venue: x.venue }));
+}
+async function skylitTide() {        // net call/put premium = the market flow lean (Flowseeker)
+  const r = await skGet('/fs/api/market/tide?interval=1D&bucket=1min');
+  const last = (r?.data?.bars || []).slice(-1)[0]; if (!last) return null;
+  const net = (+last.ncp_cumulative || 0) - (+last.npp_cumulative || 0);
+  return { net_call_prem_M: M(+last.ncp_cumulative || 0), net_put_prem_M: M(+last.npp_cumulative || 0), net_lean_M: M(net), lean: net > 0 ? 'bullish' : net < 0 ? 'bearish' : 'balanced' };
+}
+async function liveLayers() {
+  const [dp, tide] = await Promise.all([skylitDarkPool(), skylitTide()]);
+  return { source: 'skylit (Flowseeker /fs/api)', dark_pool_prints: dp, market_tide_flow_lean: tide, vix: null, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium. Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here). VIX endpoint TBD.' };
+}
+async function assembleComplex(etStr, live = false) {
+  const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
+  const uwLayers = live ? await liveLayers() : { note: 'options_flow / dark_pool / market_tide / vix are LIVE-ONLY UW data — not reconstructable for this historical replay day. Reason from GEX/VEX/structure/cross-index here; they ARE wired and present in live runs.' };
+  return { as_of_et: etStr, instruments, uw_layers: uwLayers };
+}
 // what SPX actually did after a decision — for the learning/reflection pass
 function outcomeAfter(etStr, mins = 45) {
   const F = load('SPXW'), t0 = (+etStr.slice(0, 2)) * 60 + (+etStr.slice(3, 5));
@@ -99,17 +128,41 @@ const MEM = path.join(FC, `agent_state_${DAY}.json`);
 const sysWithLessons = () => { const L = loadLessons(); return DOCTRINE + (L.length ? `\n\nLESSONS YOU LEARNED FROM PAST SESSIONS (apply them):\n${L.map((x, i) => `${i + 1}. ${x.lesson}`).join('\n')}` : ''); };
 const fmt = (d) => d && d.direction !== 'stand_aside' ? `${d.instrument && d.instrument !== 'none' ? d.instrument + ' ' : ''}${d.direction.toUpperCase()} ${d.entry || ''}→${d.target || '?'} (conv ${d.conviction}, stop ${d.stop || '?'})` : `stand aside (${d?.conviction ?? '?'})`;
 
+const DASH = path.join(FC, `agent_dashboard.json`);
+// trade memory — the agent's own book per posture. Its evolving decision IS the management: a directional call
+// opens; a flip to stand_aside/opposite closes at the current price. P/L in the instrument's own points.
+function manage(book, mode, dec, instruments, et) {
+  const b = (book[mode] ||= { open: null, closed: [] });
+  const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
+  const px = instruments[inst]?.spot ?? instruments.SPXW?.spot;
+  if (b.open && px != null) {
+    const flip = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== b.open.dir);
+    if (flip) { const sgn = b.open.dir === 'long' ? 1 : -1; b.closed.push({ ...b.open, exitET: et, exitPx: +(instruments[b.open.instrument]?.spot ?? px).toFixed(2), pnl: +(((instruments[b.open.instrument]?.spot ?? px) - b.open.entryPx) * sgn).toFixed(1), why: dec.direction === 'stand_aside' ? 'closed (stood aside)' : 'reversed' }); b.open = null; }
+  }
+  if (!b.open && dec.direction && dec.direction !== 'stand_aside' && dec.conviction >= 0.5 && px != null) {
+    b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), target: dec.target || '', stop: dec.stop || '', conviction: dec.conviction, thesis: dec.why || '' };
+  }
+}
+const bookLine = (book) => ['conservative', 'aggressive'].map(m => { const b = book[m] || { open: null, closed: [] }; const rp = b.closed.reduce((a, c) => a + c.pnl, 0); return `${m}: ${b.open ? `IN ${b.open.instrument} ${b.open.dir} @${b.open.entryPx}` : 'flat'} · realized ${rp >= 0 ? '+' : ''}${rp.toFixed(1)}pt (${b.closed.length} closed)`; }).join(' | ');
+
+const LIVE = !!arg('--live', false);
 async function step(et, mem) {
-  const state = assembleComplex(et);
-  const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}` : 'YOUR RUNNING JOURNAL: (empty — first read of the day)';
-  const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it and emit your two-posture decision + journal update.`, TOOL);
+  const state = await assembleComplex(et, LIVE), R = state.instruments.SPXW;
+  mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
+  const bookNote = `YOUR OPEN TRADES: conservative ${mem.book.conservative.open ? JSON.stringify(mem.book.conservative.open) : 'flat'} · aggressive ${mem.book.aggressive.open ? JSON.stringify(mem.book.aggressive.open) : 'flat'}`;
+  const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
+  const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
+  manage(mem.book, 'conservative', d.conservative, state.instruments, et);
+  manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
   mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
-  const R = state.instruments.SPXW;
+  // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
+  const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
+  fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: et, instruments: inst, uw_layers: state.uw_layers, decision: { regime_read: d.regime_read, shared_thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive }, book: mem.book, journal: mem.notes, lessons: loadLessons() }, null, 1));
   console.log(`\n─── @ ${et} ET · SPX ${R.spot} (${R.chg_pct >= 0 ? '+' : ''}${R.chg_pct}%) · domNeg ${R.structure_timeline_30m.map(t => t.dom_neg_strike).join('→')} · regime ${R.regime_now.net_gamma_M}M ───`);
   console.log(`  CONSERVATIVE: ${fmt(d.conservative)}`);
   console.log(`  AGGRESSIVE:   ${fmt(d.aggressive)}`);
-  console.log(`  read: ${d.shared_thesis}`);
+  console.log(`  book: ${bookLine(mem.book)}`);
   return mem;
 }
 
@@ -136,9 +189,11 @@ async function reflect() {
 
 // --distill: read the WHOLE diary → promote only lessons that RECUR across days → agent_lessons.json (the durable doctrine).
 async function distill() {
-  const diary = loadDiary();
-  if (diary.length < 2) { console.log(`diary has ${diary.length} day(s) — need at least a few days before distilling durable lessons (a single day is a hypothesis, not doctrine). Keep running --reflect.`); return; }
-  const prior = loadLessons();
+  const diary = loadDiary(), prior = loadLessons(), force = arg('--force', false);
+  const FIRST_MIN = 5, INTERVAL = 5;                                    // first durable lessons need ~a week; then re-review ~weekly
+  const lastDays = prior.length ? Math.max(...prior.map(p => p.days || 0)) : 0;
+  if (diary.length < FIRST_MIN && !force) { console.log(`diary has ${diary.length} day(s) — need ≥${FIRST_MIN} (about a week) before the FIRST durable lessons; a single day is a hypothesis, not doctrine. Keep running --reflect daily. (--force to override.)`); return; }
+  if (prior.length && diary.length - lastDays < INTERVAL && !force) { console.log(`only ${diary.length - lastDays} new day(s) since the last distill (at ${lastDays} days) — cadence is ~weekly. Wait for ${INTERVAL} new days so changes are evidence-driven, not reactive. (--force to override.)`); return; }
   const out = await claude(
     `You distill DURABLE trading lessons from a multi-day diary. STRICT anti-overfit discipline:
 - A pattern seen on only ONE day is a HYPOTHESIS, not a lesson — do NOT promote it. Promote only what RECURS across multiple days.
@@ -153,6 +208,37 @@ async function distill() {
   lessons.forEach((l, i) => console.log(`   ${i + 1}. ${l}`));
 }
 
-if (arg('--distill', false)) await distill();
+// ── LIVE: pull one Skylit GEX/VEX frame for a symbol (same auth/headers as the app) ──
+async function pullLiveGEX(sym) {
+  if (!_skReady) { await initAuth(); _skReady = true; }
+  const t = await getFreshToken();
+  const u = new URL('https://app.skylit.ai/api/data');
+  u.searchParams.set('symbol', sym); u.searchParams.set('max_strikes', '200'); u.searchParams.set('max_expirations', '10'); u.searchParams.set('nocache', Math.random().toString());
+  const r = await fetch(u, { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: 'Bearer ' + t, Accept: 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' }, signal: AbortSignal.timeout(15000) }).catch(() => null);
+  if (!r || !r.ok) return null; const raw = await r.json(); if (raw.CurrentSpot == null) return null;
+  const spot = raw.CurrentSpot, K = raw.Strikes || [], G = raw.GammaValues || [], V = raw.VannaValues || [], strikes = [];
+  for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.012) strikes.push({ k, g0: (G[i] || [])[0] || 0, v0: (V[i] || [])[0] || 0 }); }
+  return { ts: new Date().toISOString(), spot, prevClose: raw.PreviousClose, strikes };
+}
+// ── LIVE loop: every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
+async function loop() {
+  const bufs = { SPXW: [], SPY: [], QQQ: [] };
+  let mem = { day: DAY, notes: '', log: [], book: { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } } };
+  console.log(`\n  🦅 agent LIVE loop started (${DAY}) · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
+  for (; ;) {
+    const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
+    const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));
+    if (m >= 9 * 60 + 30 && m <= 16 * 60) {
+      try {
+        for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); if (bufs[sym].length > 60) bufs[sym].shift(); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n')); } }
+        if (bufs.SPXW.length) mem = await step(et, mem);
+      } catch (e) { console.log(`  ${et} loop error: ${e.message.slice(0, 90)}`); }
+    } else { console.log(`  ${et} ET · market closed — idle`); }
+    await new Promise(r => setTimeout(r, 60000));
+  }
+}
+
+if (arg('--loop', false)) await loop();
+else if (arg('--distill', false)) await distill();
 else if (arg('--reflect', false)) await reflect();
 else { const seq = arg('--sequence', null); let mem = { day: DAY, notes: '', log: [] }; if (seq) { for (const et of String(seq).split(',')) mem = await step(et.trim(), mem); } else await step(arg('--et', '15:00'), mem); }

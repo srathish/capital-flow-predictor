@@ -1,0 +1,27 @@
+{
+  "t": "2026-07-29T15:46",
+  "spot": 7334.6,
+  "prevClose": 7413.18,
+  "chgPct": -1.06,
+  "pivotSide": "bear",
+  "king": {
+    "k": 7300,
+    "gM": 102
+  },
+  "callWall": null,
+  "putWall": 7320,
+  "barney": 7345,
+  "netG_M": 148,
+  "term": "diverge",
+  "dp": null,
+  "flow": {
+    "netPrem_M": -60,
+    "netVol": -212457
+  },
+  "trinity": {
+    "spy": 1,
+    "qqq": 1
+  },
+  "vix": 21.68,
+  "ruleBias": 0
+}

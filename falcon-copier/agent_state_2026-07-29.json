@@ -1,0 +1,109 @@
+{
+ "day": "2026-07-29",
+ "notes": "15:10 update: Aggressive 14:30 short (entry 7396.6) thesis fully validated - the 7450 wall tap-reject played out exactly as scripted, dom_neg_strike rolled 7450->7415 confirming the top, price flushed to session low 7408.6 (-41pts off high). SPY hit session low 738.4 right at its 738 support node; QQQ hit session low 674.8 at 673-674 king/support cluster. Action: trail aggressive short stop down to 7420 (above rolled-down 7415 wall) to lock in gains while net gamma (-75.2M) still argues for possible continuation toward 7387/7385. Conservative stays flat - late to chase this leg, no new wall tap. NEXT WATCH: (1) does SPX/SPY/QQQ base right here (positive nodes 7405ish/738/673-674) = take some off / consider covering into support, or (2) does it break support cleanly = air pocket to 7375-7365 opens, add/hold. Also watch for a failed bounce back to 7415-7420 as a fresh short re-entry for conservative posture.",
+ "log": [
+  {
+   "et": "14:30",
+   "regime": "SPX and QQQ are in negative-gamma (net -84M and -23M respectively), prone to trend/accelerate moves; SPY by contrast is still strongly positive-gamma (net +260M), pinned near 737-742 king node. This divergence across products is the key tension: SPX/QQQ have chopped down off their 14:06-14:12 highs (7417/674.4) with dom_neg walls sitting just overhead (7450 SPX, 675 QQQ) capping rallies, while SPY held its floor near 734-737. No positive node has yet firmed below spot in SPX (nearest_strong_support_below is null), meaning downside has little cushion if it breaks 7387.",
+   "thesis": "SPX/QQQ negative-gamma regime with a heavy overhead wall (7450 SPX -20.2M, 675 QQQ -37.5M) capped the 14:06-14:12 rally and price has since chopped lower into the 7390-7400 zone; SPY's still-positive gamma structure is the one cross-index wrinkle urging caution. The setup favors fading bounces toward 7400-7410 with a target toward the 7387 low and open air below (no support node until well lower), but full top-confirmation (dom_neg rolling down toward spot) hasn't fully materialized yet.",
+   "conservative": {
+    "direction": "stand_aside",
+    "conviction": 0.25,
+    "instrument": "none",
+    "entry": "",
+    "stop": "",
+    "target": "",
+    "why": "SPX/QQQ negative gamma trend argues for downside but price is chopping in a range (7387-7411) with no clean roll-down of a dominant negative node confirming a top yet, and SPY structure is still net positive gamma (pinned near 737-742) - cross-index disagreement (SPY pos-gamma vs SPX/QQQ neg-gamma) is a reason to wait for cleaner alignment before committing."
+   },
+   "aggressive": {
+    "direction": "short",
+    "conviction": 0.5,
+    "instrument": "SPXW",
+    "entry": "7396-7398 on any bounce/tap into 7400-7405 supply zone",
+    "stop": "7411 (above 14:00-14:12 swing high / above 7410 pocket)",
+    "target": "7387 session low, then 7375/7365 negative-gamma air pocket",
+    "why": "SPX net gamma deeply negative and deepening (-64 to -84), price faded off 7417 high and is chopping below 7400 with no positive node below to hold it - QQQ confirms with -1.46% and its own dom_neg building at 675/670; a failed bounce into 7400-7405 offers a tight-stop short toward the open air below 7390."
+   }
+  },
+  {
+   "et": "14:45",
+   "regime": "SPX has reversed hard off the 7387.5 low and is now ripping straight into the 7440 king node / 7450 dom_neg wall (7431.6 spot, +0.25%). This is the exact opposite of the aggressive short thesis - price broke ABOVE 7405-7410 (invalidation zone) and is accelerating higher in deepening negative gamma (-106.4M and dropping fast), which now favors continuation UP into the wall, not down. QQQ and SPY both confirm strongly: QQQ ripped from 671 to 677 (also net negative gamma, accelerating), SPY made new highs at 740.7 with net gamma exploding to +596M (from +228M) - SPY's positive-gamma pin is now dragging price up toward 742/743 the same direction. All three indices aligned bullish now. The 7450/742/679-680 strikes are the next dom_neg walls above - in negative gamma, a rally INTO a big negative node above spot is where dealers must sell into strength, so expect resistance/rejection right at 7450 (SPX) and 742-743 (SPY), 679-680 (QQQ), but the move getting there has been sharp and one-directional with no sign yet of topping (dom_neg_strike hasn't rolled down, it's still 7450/740/675 - unchanged location, just growing in size as price runs at it).",
+   "thesis": "Aggressive short thesis is invalidated - SPX reclaimed and blew through 7405-7410, now up at 7431.6 approaching the 7450 dom_neg wall in a negative-gamma accelerating regime; SPY confirms with net gamma surging to +596M into new highs, QQQ confirms with a sharp rally off its lows. All three are aligned bullish into resistance walls (SPX 7450, SPY 742-743, QQQ 679-680) - the trade now is whether to fade the wall tap or ride the momentum a bit further, not to stay short.",
+   "conservative": {
+    "direction": "stand_aside",
+    "conviction": 0.25,
+    "why": "Prior short thesis is dead - price ripped through invalidation and is now approaching the 7450 wall too fast to have any confirmed rejection yet; want to see price actually tag 7440-7450 and show a stall/rollover in dom_neg_strike before fading, no edge in chasing either direction here.",
+    "instrument": "none"
+   },
+   "aggressive": {
+    "direction": "short",
+    "conviction": 0.4,
+    "instrument": "SPXW",
+    "entry": "7431-7440 on any stall into the 7440 king node/7450 wall",
+    "stop": "7451 (above the 7450 dom_neg wall)",
+    "target": "7410-7415 (retest of breakout level), then 7395 if momentum fails",
+    "why": "Closed out the failed 14:30 short at breakeven-ish (invalidated by the reclaim); now flipping to fade the approach into the massive -52.7M/-2465 vex 7450 wall which has been the ceiling all session - tight stop just above 7450 gives a small-risk short at a structurally significant resistance level after a fast, extended run."
+   }
+  },
+  {
+   "et": "15:00",
+   "regime": "SPX flipped hard into deep negative gamma (-121.7M, worsening) even as price pinned right at 7440 king node and stalling into the massive -69.5M wall at 7450 (dom_neg growing fast: -20->-69.5 over 30min, vex -1502 = huge dealer short-gamma there). SPY is heavily positive-gamma (+546M) and QQQ flipped positive too (+12M) - all three showing price gravitating to/pinning near their king nodes (SPX 7440, SPY 742, QQQ 676) after the big rally, with upside momentum stalling exactly at resistance walls (SPX 7450, SPY 743-744, QQQ 680).",
+   "thesis": "The 14:30 aggressive short thesis was invalidated by the rip to 7450, but price has now stalled exactly at that pre-identified 7450 SPX wall (dom_neg -69.5M and growing, vex -1502) with three failed pushes (7450, 7446.7->7450->7443ish), while SPY/QQQ show matching resistance at 743-744/680. No rollover in dom_neg_strike yet, but the wall-tap pattern plus SPX's underlying deep negative-gamma regime (which favors sharp moves once triggered) sets up a classic fade-the-wall trade, with 7440 king node as first support and 7405-7420 as the deeper magnet if it breaks.",
+   "conservative": {
+    "direction": "stand_aside",
+    "conviction": 0.25,
+    "instrument": "none",
+    "why": "Wall at 7450 is holding on first taps but net gamma is deeply negative and deepening (-121.7M) with SPY/QQQ still net long-gamma/pinned bullish - no rollover in dom_neg_strike yet (still 7450, not chasing down), so confirmation of a top is incomplete; safer to wait for a clear roll-down or a clean break/hold above 7450."
+   },
+   "aggressive": {
+    "direction": "short",
+    "conviction": 0.45,
+    "instrument": "SPXW",
+    "entry": "7443-7448 (into 7450 wall taps)",
+    "stop": "7452.5 (above session high 7450 + buffer)",
+    "target": "7420 then 7405-7410",
+    "why": "Price tagged and stalled right at the 7450 dom-neg wall (-69.5M, growing) with two rejections (7450->7443, 7450->7443 again); tight stop just above wall for a fade back toward 7420/7405 support pocket."
+   }
+  },
+  {
+   "et": "15:10",
+   "regime": "SPX flushed hard off the 7450 wall exactly as the aggressive short thesis anticipated - the -69.5M dom_neg wall at 7450 held, rejected, and price cascaded from 7450 to 7408.6 (session low, -41pts) in ~25min. Confirms the negative-gamma trend-continuation dynamic: reversals run. dom_neg_strike has now rolled DOWN from 7450 to 7415 (right above current spot 7408.6) - the ceiling is chasing price lower, classic top-confirmed signature. SPX net gamma is still deeply negative (-75.2M) even after cooling from -122M, meaning acceleration risk remains. SPY/QQQ fully confirm: SPY broke its 739 support pocket and sits at session low 738.4 right at its nearest support node (738, +28.1M); QQQ is down -1.07% at session low 674.8, tagging its 673-674 support cluster (king node 673). All three synchronized at/near first support tier.",
+   "thesis": "The 7450 wall tap-and-reject played out fully (dom_neg_strike rolled 7450->7415, price -41pts) validating the prior short thesis; SPX/SPY/QQQ are now all sitting right at their first meaningful support cluster (SPX ~7405-7415 pocket with king 7440 far above, SPY 738/739, QQQ 673-674) after a sharp negative-gamma flush. Net gamma still negative argues the down-move isn't necessarily over, but price is now AT support rather than at a fresh wall to fade, so risk/reward for a fresh short entry here is worse than it was at 7450.",
+   "conservative": {
+    "direction": "stand_aside",
+    "conviction": 0.3,
+    "instrument": "none",
+    "why": "Prior short thesis fully played out into support (7408 SPX, 738 SPY, 674 QQQ, all sitting on positive nodes) - chasing the short here is late; no fresh wall tap to fade and no roll-down/basing confirmation yet for a long. Wait for either a bounce-and-fail back into 7415-7420 (re-short) or a clear base/reclaim above 7415-7420 (long) before acting."
+   },
+   "aggressive": {
+    "direction": "short",
+    "conviction": 0.35,
+    "instrument": "SPXW",
+    "entry": "manage existing 14:30 short (7396.6) - hold remainder, trail stop to 7420 (above the 7415 dom_neg wall that just rolled down and above recent swing 7422-7429)",
+    "stop": "7420",
+    "target": "7387/7385 SPY-equivalent air pocket, then 7375-7365 if net gamma stays deeply negative",
+    "why": "Original short thesis fully validated (7450 wall rejected, dom_neg rolled down to 7415, -41pt flush); tighten stop to lock gains but net gamma still -75M so a bit more downside/air-pocket risk remains before support fully firms - QQQ/SPY confirming with fresh session lows."
+   }
+  }
+ ],
+ "book": {
+  "conservative": {
+   "open": null,
+   "closed": []
+  },
+  "aggressive": {
+   "open": {
+    "mode": "aggressive",
+    "instrument": "SPXW",
+    "dir": "short",
+    "entryET": "14:30",
+    "entryPx": 7396.6,
+    "target": "7387 session low, then 7375/7365 negative-gamma air pocket",
+    "stop": "7411 (above 14:00-14:12 swing high / above 7410 pocket)",
+    "conviction": 0.5,
+    "thesis": "SPX net gamma deeply negative and deepening (-64 to -84), price faded off 7417 high and is chopping below 7400 with no positive node below to hold it - QQQ confirms with -1.46% and its own dom_neg building at 675/670; a failed bounce into 7400-7405 offers a tight-stop short toward the open air below 7390."
+   },
+   "closed": []
+  }
+ }
+}
