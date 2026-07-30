@@ -1,0 +1,10 @@
+[
+ {
+  "day": "2026-07-29",
+  "grade": "C- (correct directional bias overridden by excessive caution; sizing/conviction mismatch)",
+  "observations": [
+   "<parameter name=\"provisional_lessons\">[\"When aggressive call and conservative call diverge sharply (stand_aside vs 0.55 short) and price is chopping near a wall (7448-7450 tagged almost exactly per the 15:00 aggressive read), the market often needs one more failed test before it breaks — the read was right, timing/patience was the gap, not direction.\", \"At 14:30 the aggressive short thesis was flat-out wrong (market ripped +53 to 7450 instead of breaking down) — this is a reminder that 'no support below' reasoning near a wall can fail badly if the wall itself gets broken upward first; walls can flip from resistance to launchpad.\", \"Once the top was actually tagged (7450) at 14:45/15:00, the subsequent moves were huge clean breakdowns (-60, -107, -79 pts) that were flagged correctly in direction and even in the specific target zones (7405-7395, 7395), but conservative stand_aside missed nearly the entire move — being 0.3 conviction stand_aside three cycles in a row while aggressive kept calling the same fade-short thesis and kept being validated is a pattern worth watching: repeated aggressive conviction that later proves right should probably start upgrading the conservative stance sooner.\", \"The 15:10 'short (0.4)' call finally aligned conservative with the actual move, but by then most of the 100+pt drop was already captured only by the aggressive line, not by the more cautious default — suggests conservative threshold may be miscalibrated to react only after confirmation that costs most of the move.\", \"One session is not enough to conclude 'always trust aggressive over conservative near identified walls' — this could easily be a case of a lucky sequential read on a trending gamma unwind day; need more days with mixed/choppy outcomes to see if aggressive calls get punished as often as they get rewarded.\"]"
+  ],
+  "provisional_lessons": []
+ }
+]

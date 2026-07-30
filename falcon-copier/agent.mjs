@@ -113,21 +113,46 @@ async function step(et, mem) {
   return mem;
 }
 
+const arr = (v) => Array.isArray(v) ? v : typeof v === 'string' ? v.split('\n').map(s => s.replace(/^\s*[\d.\-)]+\s*/, '').trim()).filter(Boolean) : Object.values(v || {}).map(String);
+const DIARY_FILE = path.join(FC, 'agent_diary.json');
+const loadDiary = () => fs.existsSync(DIARY_FILE) ? JSON.parse(fs.readFileSync(DIARY_FILE, 'utf8')) : [];
+
+// --reflect: review today vs outcomes → append to the PERMANENT diary (raw experience). Does NOT touch durable lessons.
 async function reflect() {
   const mem = fs.existsSync(MEM) ? JSON.parse(fs.readFileSync(MEM, 'utf8')) : null;
   if (!mem?.log?.length) { console.log('no decision log to reflect on — run --sequence first'); return; }
   const review = mem.log.map(e => ({ et: e.et, conservative: `${e.conservative.direction} (${e.conservative.conviction})`, aggressive: `${e.aggressive.direction} ${e.aggressive.entry || ''}→${e.aggressive.target || ''} (${e.aggressive.conviction})`, what_price_did_next_45m: outcomeAfter(e.et) }));
   const out = await claude(
-    `You are the same 0DTE agent, now REVIEWING your own decisions against what price actually did, to LEARN. For each decision compare your conservative vs aggressive call to the real outcome. Be blunt about where you were too cautious (stood aside on a move you should have taken — e.g. "the tap of the King node WAS the right short") or too aggressive (chased and got stopped). Then distill 2-4 durable, general LESSONS (not "on 7/29 do X" — transferable judgment about reading regime/evolution/timing) to apply in future sessions.`,
-    `Your decisions today (${DAY}) and the actual outcomes:\n${JSON.stringify(review, null, 1)}\n\nReflect and emit your lessons.`,
-    { name: 'emit_lessons', description: 'lessons learned', input_schema: { type: 'object', required: ['grade', 'lessons'], properties: { grade: { type: 'string', description: 'honest self-grade of today: what you got right/wrong' }, lessons: { type: 'array', items: { type: 'string' }, description: '2-4 durable transferable lessons' } } } }, 1500);
-  const lessons = Array.isArray(out.lessons) ? out.lessons : typeof out.lessons === 'string' ? out.lessons.split('\n').map(s => s.replace(/^\s*[\d.\-)]+\s*/, '').trim()).filter(Boolean) : Object.values(out.lessons || {}).map(String);
-  console.log(`\n═══ REFLECTION · ${DAY} ═══\n  self-grade: ${out.grade}\n  LESSONS LEARNED:`);
-  lessons.forEach((l, i) => console.log(`   ${i + 1}. ${l}`));
-  const all = loadLessons().concat(lessons.map(l => ({ day: DAY, lesson: l })));
-  fs.writeFileSync(LESSONS_FILE, JSON.stringify(all, null, 1));
-  console.log(`\n  → saved ${out.lessons.length} lessons to agent_lessons.json (${all.length} total; re-injected into future reasoning)`);
+    `You are the same 0DTE agent REVIEWING your own decisions today against what price actually did, to build EXPERIENCE. Compare conservative vs aggressive vs the real outcome; be blunt where you were too cautious or too aggressive. Record OBSERVATIONS (what you saw and how it resolved) and PROVISIONAL lessons (tentative — one day is not proof). This goes into a permanent multi-day diary; durable lessons are distilled later across many days, so do NOT overclaim from one session.`,
+    `Your decisions today (${DAY}) and actual outcomes:\n${JSON.stringify(review, null, 1)}\n\nWrite today's diary entry.`,
+    { name: 'emit_diary', description: "today's diary entry", input_schema: { type: 'object', required: ['grade', 'observations', 'provisional_lessons'], properties: { grade: { type: 'string' }, observations: { type: 'array', items: { type: 'string' }, description: 'what you saw today + how it resolved (the raw record)' }, provisional_lessons: { type: 'array', items: { type: 'string' }, description: 'tentative takeaways — hypotheses, not yet doctrine' } } } }, 1600);
+  const entry = { day: DAY, grade: out.grade, observations: arr(out.observations), provisional_lessons: arr(out.provisional_lessons) };
+  const diary = loadDiary().filter(d => d.day !== DAY).concat(entry);   // one entry per day; re-reflect replaces today's
+  fs.writeFileSync(DIARY_FILE, JSON.stringify(diary, null, 1));
+  console.log(`\n═══ DIARY · ${DAY} (day ${diary.length} of the record) ═══\n  self-grade: ${out.grade}\n  provisional lessons (hypotheses, not yet doctrine):`);
+  entry.provisional_lessons.forEach((l, i) => console.log(`   ${i + 1}. ${l}`));
+  console.log(`\n  → appended to agent_diary.json (${diary.length} days). Durable lessons update only on --distill (needs the pattern to RECUR).`);
 }
 
-if (arg('--reflect', false)) await reflect();
+// --distill: read the WHOLE diary → promote only lessons that RECUR across days → agent_lessons.json (the durable doctrine).
+async function distill() {
+  const diary = loadDiary();
+  if (diary.length < 2) { console.log(`diary has ${diary.length} day(s) — need at least a few days before distilling durable lessons (a single day is a hypothesis, not doctrine). Keep running --reflect.`); return; }
+  const prior = loadLessons();
+  const out = await claude(
+    `You distill DURABLE trading lessons from a multi-day diary. STRICT anti-overfit discipline:
+- A pattern seen on only ONE day is a HYPOTHESIS, not a lesson — do NOT promote it. Promote only what RECURS across multiple days.
+- If diary days CONTRADICT each other, flag the tension; do NOT just pick the most recent day.
+- Keep lessons FEW (max 7) and GENERAL/transferable (judgment about reading regime, node evolution, timing, risk) — never day-specific.
+- Strongly prefer KEEPING an existing durable lesson over churning it; only revise one if multiple days clearly warrant it. Stability over reactivity.`,
+    `EXISTING durable lessons:\n${prior.length ? prior.map((x, i) => `${i + 1}. ${x.lesson}`).join('\n') : '(none yet)'}\n\nDIARY (${diary.length} days):\n${JSON.stringify(diary, null, 1)}\n\nDistill the durable lesson set (mostly stable; only change what the multi-day record justifies).`,
+    { name: 'emit_durable', description: 'durable cross-day lessons', input_schema: { type: 'object', required: ['durable_lessons', 'note'], properties: { durable_lessons: { type: 'array', items: { type: 'string' }, description: 'max 7 lessons confirmed across multiple days' }, note: { type: 'string', description: 'what changed vs prior and why (or "no change")' } } } }, 1600);
+  const lessons = arr(out.durable_lessons).slice(0, 7);
+  fs.writeFileSync(LESSONS_FILE, JSON.stringify(lessons.map(l => ({ days: diary.length, lesson: l })), null, 1));
+  console.log(`\n═══ DISTILL · ${diary.length}-day diary → durable lessons ═══\n  change: ${out.note}\n  DURABLE LESSONS (re-injected into every future decision):`);
+  lessons.forEach((l, i) => console.log(`   ${i + 1}. ${l}`));
+}
+
+if (arg('--distill', false)) await distill();
+else if (arg('--reflect', false)) await reflect();
 else { const seq = arg('--sequence', null); let mem = { day: DAY, notes: '', log: [] }; if (seq) { for (const et of String(seq).split(',')) mem = await step(et.trim(), mem); } else await step(arg('--et', '15:00'), mem); }
