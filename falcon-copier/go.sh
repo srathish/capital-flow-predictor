@@ -15,9 +15,9 @@ if ! $NODE falcon-copier/preflight.mjs; then
 fi
 pkill -f "agent.mjs --loop" 2>/dev/null; pkill -f "falcon-copier/dashboard.mjs" 2>/dev/null; sleep 1
 echo "── dashboard → http://localhost:8790 ──"
-$NODE falcon-copier/dashboard.mjs > /tmp/falcon_dashboard.log 2>&1 &
+nohup $NODE falcon-copier/dashboard.mjs > /tmp/falcon_dashboard.log 2>&1 &
 echo "── live agent loop (reasons over all data every minute during RTH) ──"
-$NODE falcon-copier/agent.mjs --loop --live > /tmp/falcon_agent.log 2>&1 &
+nohup $NODE falcon-copier/agent.mjs --loop --live > /tmp/falcon_agent.log 2>&1 &
 sleep 3
 open "http://localhost:8790"
 echo ""

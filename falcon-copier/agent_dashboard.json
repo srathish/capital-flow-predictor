@@ -1,115 +1,113 @@
 {
  "day": "2026-07-30",
- "as_of_et": "09:32",
+ "as_of_et": "09:41",
  "instruments": {
   "SPXW": {
-   "spot": 7381.01,
-   "chg_pct": 0.89,
+   "spot": 7376.13,
+   "chg_pct": 0.82,
    "king": {
     "strike": 7400,
-    "gex_M": 6.5
+    "gex_M": 6.3
    },
    "regime": {
     "neg_strikes": 10,
     "pos_strikes": 6,
-    "net_gamma_M": -2.3,
-    "net_vanna_M": -916.5
+    "net_gamma_M": -0.9,
+    "net_vanna_M": -945.9
    },
    "support_below": null,
    "resist_above": null,
    "dom_neg_roll": [
-    7425
+    7325
    ],
    "strong_nodes": [],
    "path": [
-    7384.8,
-    7381
+    7376.1
    ]
   },
   "SPY": {
-   "spot": 735.52,
-   "chg_pct": 0.83,
+   "spot": 735.14,
+   "chg_pct": 0.78,
    "king": {
     "strike": 733,
-    "gex_M": 81.1
+    "gex_M": 86.1
    },
    "regime": {
-    "neg_strikes": 2,
-    "pos_strikes": 6,
-    "net_gamma_M": 255.6,
-    "net_vanna_M": -1069.5
+    "neg_strikes": 0,
+    "pos_strikes": 8,
+    "net_gamma_M": 309.1,
+    "net_vanna_M": 143.8
    },
    "support_below": {
     "strike": 735,
-    "gex_M": 54.6
+    "gex_M": 60.4
    },
    "resist_above": null,
    "dom_neg_roll": [
-    739
+    729
    ],
    "strong_nodes": [
     {
-     "strike": 730,
-     "gex_M": 20.9,
+     "strike": 727,
+     "gex_M": 24.7,
      "side": "below"
     },
     {
      "strike": 731,
-     "gex_M": 25.5,
+     "gex_M": 33.6,
      "side": "below"
     },
     {
      "strike": 732,
-     "gex_M": 20.9,
+     "gex_M": 25,
      "side": "below"
     },
     {
      "strike": 733,
-     "gex_M": 81.1,
+     "gex_M": 86.1,
      "side": "below"
     },
     {
      "strike": 734,
-     "gex_M": 31.7,
+     "gex_M": 32.3,
      "side": "below"
     },
     {
      "strike": 735,
-     "gex_M": 54.6,
+     "gex_M": 60.4,
      "side": "below"
     },
     {
-     "strike": 736,
-     "gex_M": 35.3,
+     "strike": 737,
+     "gex_M": 42.1,
      "side": "above"
     },
     {
-     "strike": 737,
-     "gex_M": 46.5,
+     "strike": 738,
+     "gex_M": 30.9,
      "side": "above"
     }
    ],
    "path": [
-    735.7,
-    735.5
+    735.1
    ]
   },
   "QQQ": {
-   "spot": 674.35,
-   "chg_pct": 1.91,
+   "spot": 675.25,
+   "chg_pct": 2.04,
    "king": {
-    "strike": 675,
-    "gex_M": 9.7
+    "strike": 676,
+    "gex_M": 11.4
    },
    "regime": {
     "neg_strikes": 2,
     "pos_strikes": 6,
-    "net_gamma_M": 46.5,
-    "net_vanna_M": 62.9
+    "net_gamma_M": 45,
+    "net_vanna_M": 138.7
    },
    "support_below": {
-    "strike": 674,
-    "gex_M": 6.9
+    "strike": 675,
+    "gex_M": 10.9
    },
    "resist_above": null,
    "dom_neg_roll": [
@@ -118,48 +116,32 @@
    "strong_nodes": [
     {
      "strike": 671,
-     "gex_M": 7.3,
+     "gex_M": 5.5,
      "side": "below"
     },
     {
      "strike": 674,
-     "gex_M": 6.9,
+     "gex_M": 7.4,
      "side": "below"
     },
     {
      "strike": 675,
-     "gex_M": 9.7,
-     "side": "above"
+     "gex_M": 10.9,
+     "side": "below"
     },
     {
      "strike": 676,
-     "gex_M": 9.2,
-     "side": "above"
-    },
-    {
-     "strike": 677,
-     "gex_M": 5.9,
+     "gex_M": 11.4,
      "side": "above"
     },
     {
      "strike": 678,
-     "gex_M": 7.7,
-     "side": "above"
-    },
-    {
-     "strike": 680,
-     "gex_M": 5.7,
-     "side": "above"
-    },
-    {
-     "strike": 682,
-     "gex_M": 5.4,
+     "gex_M": 9.9,
      "side": "above"
     }
    ],
    "path": [
-    674.6,
-    674.4
+    675.2
    ]
   }
  },
@@ -167,99 +149,104 @@
   "source": "skylit (Flowseeker /fs/api)",
   "dark_pool_prints": [
    {
-    "ticker": "SPY",
-    "price": 735.6,
-    "notional_M": 1.7,
-    "venue": "FINN"
-   },
-   {
-    "ticker": "DIA",
-    "price": 518.04,
-    "notional_M": 8.3,
-    "venue": "FINN"
-   },
-   {
-    "ticker": "DIA",
-    "price": 518.18,
-    "notional_M": 1.1,
-    "venue": "FINN"
-   },
-   {
-    "ticker": "SPY",
-    "price": 735.5,
-    "notional_M": 1,
+    "ticker": "IWM",
+    "price": 290.12,
+    "notional_M": 1.6,
     "venue": "FINN"
    },
    {
     "ticker": "QQQ",
-    "price": 674.9,
+    "price": 674.96,
+    "notional_M": 2,
+    "venue": "FINN"
+   },
+   {
+    "ticker": "SPY",
+    "price": 734.91,
+    "notional_M": 1.1,
+    "venue": "FINN"
+   },
+   {
+    "ticker": "QQQ",
+    "price": 675.115,
+    "notional_M": 1.7,
+    "venue": "FINN"
+   },
+   {
+    "ticker": "QQQ",
+    "price": 675.1599,
+    "notional_M": 2.5,
+    "venue": "FINN"
+   },
+   {
+    "ticker": "SPY",
+    "price": 734.79,
     "notional_M": 1.4,
     "venue": "FINN"
    },
    {
-    "ticker": "SPY",
-    "price": 735.5,
-    "notional_M": 1.1,
-    "venue": "FINN"
-   },
-   {
     "ticker": "QQQ",
-    "price": 674.7601,
-    "notional_M": 5.7,
-    "venue": "FINN"
-   },
-   {
-    "ticker": "SPY",
-    "price": 735.56,
+    "price": 674.795,
     "notional_M": 1.8,
     "venue": "FINN"
    },
    {
-    "ticker": "SPY",
-    "price": 735.4798,
-    "notional_M": 1.2,
+    "ticker": "QQQ",
+    "price": 674.795,
+    "notional_M": 1.8,
     "venue": "FINN"
    },
    {
-    "ticker": "SPY",
-    "price": 735.48,
-    "notional_M": 3.7,
+    "ticker": "QQQ",
+    "price": 674.795,
+    "notional_M": 1.8,
     "venue": "FINN"
    },
    {
-    "ticker": "SPY",
-    "price": 735.44,
-    "notional_M": 1.5,
+    "ticker": "QQQ",
+    "price": 674.795,
+    "notional_M": 1.8,
     "venue": "FINN"
    },
    {
-    "ticker": "SPY",
-    "price": 735.5,
-    "notional_M": 1.7,
+    "ticker": "QQQ",
+    "price": 674.795,
+    "notional_M": 1.8,
+    "venue": "FINN"
+   },
+   {
+    "ticker": "QQQ",
+    "price": 674.795,
+    "notional_M": 1.8,
     "venue": "FINN"
    }
   ],
   "market_tide_flow_lean": {
-   "net_call_prem_M": 42.9,
-   "net_put_prem_M": -5.5,
-   "net_lean_M": 48.4,
+   "net_call_prem_M": 135.4,
+   "net_put_prem_M": 6.2,
+   "net_lean_M": 129.2,
    "lean": "bullish"
   },
   "vix": null,
   "note": "dark-pool = real prints (venue/notional); flow lean = tide net call−put premium. Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here). VIX endpoint TBD."
  },
  "decision": {
-  "regime_read": "SPX still negative-gamma (net -2.3M) but pulled back off session high toward 7381, sitting inside a chop band 7380-7400 with king magnet 7400 above and dom_neg wall 7425 above that. SPY/QQQ remain positive-gamma/pinned (net +255.6M, +46.5M) with SPY king 733 below spot and QQQ king 675 essentially at spot. Cross-index divergence from baseline persists: SPX reads accelerant while SPY/QQQ read pinned.",
-  "shared_thesis": "Two minutes in, SPX has faded from 7384.8 to 7381, still negative-gamma with the same 7425 dom_neg wall unchanged in size/location (no roll-down yet) and king 7400 unreclaimed — a stall, not a confirmed move either way. SPY and QQQ are calmer/pinned near their kings (733 and 675) with bullish dark-pool prints trickling in at spot, and flow lean modestly bullish. No multi-step evolution signal (wall growing+rolling, or floor firming) has emerged yet — this is still baseline-confirmation-gathering territory, not an entry trigger.",
+  "regime_read": "Mixed/transitional: SPX flipped slightly negative gamma near-money (ambiguous, thin data at 09:41 single print) while SPY and QQQ remain solidly positive-gamma (pinned/mean-revert). This is a 3-way pullback that is showing early signs of resolving bullish — SPX made a marginal new session high (7376.1 vs prior 7374 low context), SPY held above 735 support with king 733 intact, QQQ spot 675.2 is back at/above its 675 support and near king 676.",
+  "shared_thesis": "All three indices pulled back together at 09:38-09:40 and are now showing tentative reclaim: SPX ticking to a fresh session high, SPY holding above 735 with 733 king untouched, QQQ back at 675 support just under king 676. Dark-pool flow remains real size and bullish-lean (call premium +129M net), no distribution signature. The SPX net_gamma flip to slightly negative and the lone 7325 dom_neg print are the one unresolved crack — could be noise from spot moving through the map, or the start of a real regime shift; not yet confirmed by SPY/QQQ structure which both still look pinned/bullish.",
   "conservative": {
    "direction": "stand_aside",
-   "conviction": 0.15,
-   "why": "Single 2-min timeline step is insufficient confirmation; SPX regime still negative-gamma/choppy near 7381-7385 with no clear roll-down of the 7425 wall or firming floor below. SPY/QQQ remain pinned/positive but haven't diverged meaningfully. Waiting for multi-step confirmation before committing capital."
+   "conviction": 0.25,
+   "instrument": "none",
+   "why": "SPX net_gamma just flipped negative (-0.9M) with dom_neg 7325 still present though single-print and unconfirmed, QQQ king flip is only barely resolved (675.2 vs 676 king still above spot) — want one more clean print showing SPX net_gamma stabilize positive or SPX reclaim above 7400 king before committing."
   },
   "aggressive": {
-   "direction": "stand_aside",
-   "conviction": 0.25,
-   "why": "Only one data point since baseline; SPX pulled back to 7381 (below king 7400) with net_gamma still -2.3M — no roll-down of dom_neg 7425 yet, no confirmed reject. Flow lean turned more bullish (+48.4M) but price hasn't reacted. Need one more timeline step to see if 7425 wall grows/rolls or if SPX reclaims 7400 — premature to size a trigger here."
+   "direction": "long",
+   "conviction": 0.4,
+   "instrument": "SPY",
+   "entry": "735.1-735.2 (current, on hold of 734.9-735 support)",
+   "target": "737-738 (next positive nodes above)",
+   "stop": "733.90 (below king 733)",
+   "why": "SPX printed fresh high 7376, SPY reclaimed above 735 support with king 733 intact and net_gamma strongly positive (+309M), QQQ reclaimed 675.2 above king 675/676 zone — pullback resolving bullish, not breaking down; dark-pool QQQ buying persists at 674.8-675.2."
   }
  },
  "book": {
@@ -272,6 +259,6 @@
    "closed": []
   }
  },
- "journal": "09:32: SPX spot 7381 (down from 7384.8 open), still neg-gamma (-2.3M), king 7400 unreclaimed, dom_neg 7425 unchanged at -4.3M (was -4.6M) — no roll-down yet, no growth confirmation either. SPY spot 735.5, pinned regime intact (net +255.6M), king 733 below, dom_neg 739 above -8.8M. QQQ spot 674.4, pinned (+46.5M), king 675 essentially at spot. Flow lean bullish +48.4M (up from +21.7M), small bullish dark-pool prints in SPY/QQQ/DIA. WATCHING: (1) SPX — does it reclaim 7400 and push toward 7425 wall (watch for wall growing = rejection setup) or hold under 7400 and roll over toward 7380/7375 support; (2) does dom_neg 7425 grow in size or start rolling down — either would be the trigger; (3) SPY/QQQ continued pin vs any net_gamma flip. Still flat both postures — only 2 data points, need 2-3 more 6-min steps for real signal.",
+ "journal": "09:41: Pullback resolving bullish across SPY/QQQ — SPX marginal new high 7376.1, SPY reclaimed 735 (above king 733, dark-pool buying 734.79-734.91 continues), QQQ back to 675.2 (above 675 support, near king 676, dark-pool clustering 674.8-675.2 heavy). SPX net_gamma flipped to -0.9M with dom_neg 7325 (-4.4M) still showing — single-print zone, watching if it's real or map noise as spot moves. AGGRESSIVE: re-entering SPY long here (735.1) on the reclaim-of-support pattern with king 733 holding, tight stop 733.90, target 737-738 (next SPY positive nodes); conviction only 0.4 given SPX ambiguity. CONSERVATIVE: staying flat — want confirmation that SPX net_gamma stabilizes positive again or spot reclaims above 7400 SPX king before trusting the bounce; the 7325 dom_neg node is the flag to resolve first. WATCH NEXT: (1) does SPX net_gamma flip back positive or does 7325 dom_neg grow/roll (bad); (2) QQQ hold above 675 and reclaim 676 king; (3) SPY hold 735/734 on any retest; (4) dark-pool continuation vs fading at these levels.",
  "lessons": []
 }

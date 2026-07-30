@@ -15,6 +15,7 @@ const KEY = process.env.ANTHROPIC_API_KEY, MODEL = process.env.AGENT_MODEL || 'c
 const FC = path.join(process.cwd(), 'falcon-copier');
 const LIVEMODE = process.argv.includes('--loop') || process.argv.includes('--live');
 const DAY = process.env.AGENT_DAY || (LIVEMODE ? new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }) : '2026-07-29');
+const TODAY_ET = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });   // option premiums are current-day only
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 ? (process.argv[i + 1] || true) : d; };
 const M = (x) => +(x / 1e6).toFixed(1);
 const etM = (ts) => (+ts.slice(11, 13) - 4) * 60 + +ts.slice(14, 16);
@@ -145,7 +146,7 @@ async function manage(book, mode, dec, instruments, et) {
     const flip = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== b.open.dir);
     if (flip) {
       const sgn = b.open.dir === 'long' ? 1 : -1, exitPx = +(instruments[b.open.instrument]?.spot ?? px).toFixed(2);
-      const exitPrem = b.open.occ ? await optMark(b.open.occ) : null;
+      const exitPrem = (b.open.occ && DAY === TODAY_ET) ? await optMark(b.open.occ) : null;
       const optRet = (b.open.entry_premium && exitPrem) ? +(((exitPrem - b.open.entry_premium) / b.open.entry_premium) * 100).toFixed(0) : null;
       b.closed.push({ ...b.open, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - b.open.entryPx) * sgn).toFixed(1), why: dec.direction === 'stand_aside' ? 'closed (stood aside)' : 'reversed' });
       b.open = null;
@@ -153,7 +154,7 @@ async function manage(book, mode, dec, instruments, et) {
   }
   if (!b.open && dec.direction && dec.direction !== 'stand_aside' && dec.conviction >= 0.5 && px != null) {
     const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
-    const occ = occOf(inst, DAY, cp, strike), premium = await optMark(occ);
+    const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
     b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', conviction: dec.conviction, thesis: dec.why || '' };
   }
 }
@@ -166,6 +167,7 @@ async function step(et, mem) {
   const bookNote = `YOUR OPEN TRADES: conservative ${mem.book.conservative.open ? JSON.stringify(mem.book.conservative.open) : 'flat'} · aggressive ${mem.book.aggressive.open ? JSON.stringify(mem.book.aggressive.open) : 'flat'}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
+  for (const k of ['conservative', 'aggressive']) if (typeof d[k] === 'string') { try { d[k] = JSON.parse(d[k]); } catch { d[k] = { direction: 'stand_aside', conviction: 0, why: 'parse-fallback' }; } }   // sonnet sometimes emits the nested posture as a JSON string
   await manage(mem.book, 'conservative', d.conservative, state.instruments, et);
   await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
   mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
