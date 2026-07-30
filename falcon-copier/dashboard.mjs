@@ -25,6 +25,11 @@ h1{font-size:17px;margin:0;letter-spacing:.3px}.sub{color:var(--mut);font-size:1
 .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:0 0 10px}
 .read{color:#cdd6e6;font-size:13.5px;line-height:1.5}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.cards.solo{grid-template-columns:1fr}
+.phdr{display:flex;align-items:center;gap:12px;margin-bottom:10px}.phdr h2{margin:0}
+.toggle{display:inline-flex;gap:2px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:2px;margin-left:auto}
+.toggle button{background:none;border:none;color:var(--mut);font:inherit;font-size:11.5px;padding:4px 12px;border-radius:6px;cursor:pointer}
+.toggle button.on{background:var(--blu);color:#08111f;font-weight:700}
 .tc{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 12px 12px 12px}
 .tc .mode{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:6px}
 .tc .dir{font-size:15px;font-weight:700}.tc .dir.long{color:var(--grn)}.tc .dir.short{color:var(--red)}.tc .dir.aside{color:var(--mut)}
@@ -47,6 +52,8 @@ details{margin-top:8px}summary{cursor:pointer;color:var(--mut);font-size:12px}
 <div id="app"><div class="empty">waiting for the agent to write its first snapshot…</div></div>
 </div><script>
 const CONFIRM=${CONFIRM};
+let view='both';const setView=v=>{view=v;tick();};
+const modes=()=>view==='both'?['conservative','aggressive']:[view];
 const f1=x=>x==null?'—':(x>=0?'+':'')+(+x).toFixed(1);
 const dirCls=d=>d==='long'?'long':d==='short'?'short':'aside';
 function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;const roll=(s.dom_neg_roll||[]).filter((v,i,a)=>i===0||v!==a[i-1]).join('→');
@@ -72,7 +79,7 @@ function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_a
  <div class="lv" style="margin-top:5px">conviction \${d.conviction??'—'}</div></div>\`;}
 const opt=(x)=>x.strike?\`\${x.instrument} \${x.strike}\${x.cp}\`:x.instrument;
 const prem=(p)=>p!=null?'\$'+(+p).toFixed(2):'—';
-function blotter(book){let rows='';for(const m of ['conservative','aggressive']){const b=book?.[m]||{open:null,closed:[]};
+function blotter(book){let rows='';for(const m of modes()){const b=book?.[m]||{open:null,closed:[]};
  if(b.open)rows+=\`<tr><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td class="muted">open</td><td class="muted">—</td></tr>\`;
  for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'}</td></tr>\`;}
  return rows||'<tr><td colspan=6 class="muted">no trades yet</td></tr>';}
@@ -85,9 +92,10 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  const d=st.decision||{};const cp=pnl(st.book,'conservative'),ap=pnl(st.book,'aggressive');
  document.getElementById('app').innerHTML=\`
  <div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
- <div class="panel"><h2>Agent read \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''} \${st.uw_layers?.market_tide?('· tide '+st.uw_layers.market_tide.net_premium_M+'M'):''}</h2>
+ <div class="panel"><div class="phdr"><h2>Agent read \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''}</h2>
+     <div class="toggle"><button class="\${view==='both'?'on':''}" onclick="setView('both')">Both</button><button class="\${view==='conservative'?'on':''}" onclick="setView('conservative')">Conservative</button><button class="\${view==='aggressive'?'on':''}" onclick="setView('aggressive')">Aggressive</button></div></div>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
-   <div class="cards">\${tradeCard('conservative',d.conservative,st.book?.conservative?.open)}\${tradeCard('aggressive',d.aggressive,st.book?.aggressive?.open)}</div></div>
+   <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>
  <div class="two">
    <div class="panel"><h2>Trade blotter · realized: conservative <span class="\${cp>=0?'pl up':'pl dn'}">\${f1(cp)}</span> · aggressive <span class="\${ap>=0?'pl up':'pl dn'}">\${f1(ap)}</span></h2>
      <table><thead><tr><th>posture</th><th>option</th><th>fired</th><th>entry \$</th><th>exit \$</th><th>return</th></tr></thead><tbody>\${blotter(st.book)}</tbody></table></div>

@@ -237,8 +237,11 @@ async function pullLiveGEX(sym) {
 // ── LIVE loop: every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
 async function loop() {
   const bufs = { SPXW: [], SPY: [], QQQ: [] };
-  let mem = { day: DAY, notes: '', log: [], book: { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } } };
-  console.log(`\n  🦅 agent LIVE loop started (${DAY}) · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
+  // resume today's book/journal on restart so the full day of plays survives (step() saves mem to MEM each tick)
+  let mem = fs.existsSync(MEM) ? (() => { try { return JSON.parse(fs.readFileSync(MEM, 'utf8')); } catch { return null; } })() : null;
+  if (!mem || mem.day !== DAY) mem = { day: DAY, notes: '', log: [] };
+  mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
+  console.log(`\n  🦅 agent LIVE loop started (${DAY}) · ${(mem.book.conservative.closed.length + mem.book.aggressive.closed.length)} plays so far today · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
   for (; ;) {
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));
