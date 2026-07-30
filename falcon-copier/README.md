@@ -68,6 +68,12 @@ map) to the cumulative **`falcon_ledger.jsonl`** (survives across days). `run_au
   and each criterion's edge (present vs absent). **Anti-over-correct by construction:** it won't even consider a
   change until ≥20 trades AND ≥10 days, every stat is cumulative (never last-day), flagged patterns are WATCH-only
   needing another block of days + approval, and the default is always NO CHANGE. Read `REVIEW.md`'s header first.
+- **`capture_flowdp.mjs` + `com.bellwether.flowdp`** (launchd 60s, RTH-gated, **UW-only** → safe alongside autotrade)
+  — snapshots flow (ask-side bull/bear premium), dark-pool value area (POC/VAH/VAL + buckets), and market tide each
+  minute to `velocity-capture/flowdp_<day>.jsonl`. WHY: flow + dp-extension are LIVE-ONLY layers (UW keeps intraday
+  flow/DP for the current day only) — the reason historical replay couldn't validate them. Recording now makes them
+  backtestable on FUTURE days: join `flowdp_<day>.jsonl` with `replay_<day>_SPXW.jsonl.gz` (GEX, has spot) BY
+  TIMESTAMP to reconstruct the full 7-criteria confluence off-line. Starts capturing at the next open.
 - `forward_scan.sh` + `com.bellwether.forwardscan` — a PARKED pure-observer (unloaded). It runs `scan_multi.mjs`
   and logs deduped WOULD-FIRE to `forward_<date>.log` with no position gate (catches signals even while the
   trader is holding). To run it ALONGSIDE autotrade it needs its OWN Skylit session (session C) — two 60s jobs
