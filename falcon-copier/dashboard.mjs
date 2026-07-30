@@ -29,6 +29,7 @@ h1{font-size:17px;margin:0;letter-spacing:.3px}.sub{color:var(--mut);font-size:1
 .tc .mode{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:6px}
 .tc .dir{font-size:15px;font-weight:700}.tc .dir.long{color:var(--grn)}.tc .dir.short{color:var(--red)}.tc .dir.aside{color:var(--mut)}
 .tc .lv{color:var(--mut);font-size:12.5px;margin-top:4px}.tc .lv b{color:var(--ink)}
+.tc .idea{background:rgba(90,169,255,.1);border:1px solid rgba(90,169,255,.25);border-radius:7px;padding:6px 9px;margin:8px 0;font-size:12.5px;color:#cfe0ff}
 .tc .why{color:#b9c2d4;font-size:12px;margin-top:7px;line-height:1.45}
 .badge{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:15px;font-weight:800}
 .badge.x{background:rgba(255,204,85,.14);color:var(--amb);border:1px solid rgba(255,204,85,.35)}
@@ -58,18 +59,22 @@ function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;
  \${s.flow?\`<div class="kv"><span>Flow (ask)</span><b>\${s.flow.lean??'—'}</b></div>\`:''}
  \${s.dark_pool?\`<div class="kv"><span>DP value area</span><b>\${s.dark_pool.value_area_low}–\${s.dark_pool.value_area_high} (POC \${s.dark_pool.poc})</b></div>\`:''}
  </div>\`;}
-function tradeCard(mode,d){if(!d)return '';const conf=d.direction!=='stand_aside'&&d.conviction>=CONFIRM;const potential=d.direction!=='stand_aside'&&!conf;
+function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_aside'&&d.conviction>=CONFIRM;const potential=d.direction!=='stand_aside'&&!conf;
  const badge=d.direction==='stand_aside'?'':(conf?'<div class="badge ok">✓</div>':'<div class="badge x">✗</div>');
  const cvColor=conf?'var(--grn)':(d.direction==='stand_aside'?'var(--mut)':'var(--amb)');
+ const idea=pos?\`<div class="idea"><b>\${pos.instrument} \${pos.strike?pos.strike+pos.cp:''}</b> · 0DTE · fired <b>\${pos.entryET||'—'}</b> \${pos.entry_premium!=null?'· entry <b>\$'+(+pos.entry_premium).toFixed(2)+'</b>':'· <span class="muted">quote live-only</span>'}</div>\`:'';
  return \`<div class="tc">\${badge}<div class="mode">\${mode} \${conf?'· confirmed':(potential?'· potential':'')}</div>
  <div class="dir \${dirCls(d.direction)}">\${d.instrument&&d.instrument!=='none'?d.instrument+' ':''}\${(d.direction||'').toUpperCase().replace('_',' ')}</div>
+ \${idea}
  \${d.direction!=='stand_aside'?\`<div class="lv">entry <b>\${d.entry||'—'}</b> · target <b>\${d.target||'—'}</b> · stop <b>\${d.stop||'—'}</b></div>\`:''}
  <div class="why">\${d.why||''}</div>
  <div class="conv"><i style="width:\${Math.round((d.conviction||0)*100)}%;background:\${cvColor}"></i></div>
  <div class="lv" style="margin-top:5px">conviction \${d.conviction??'—'}</div></div>\`;}
+const opt=(x)=>x.strike?\`\${x.instrument} \${x.strike}\${x.cp}\`:x.instrument;
+const prem=(p)=>p!=null?'\$'+(+p).toFixed(2):'—';
 function blotter(book){let rows='';for(const m of ['conservative','aggressive']){const b=book?.[m]||{open:null,closed:[]};
- if(b.open)rows+=\`<tr><td>\${m}</td><td>\${b.open.instrument} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryPx}</td><td class="muted">open</td><td class="muted">\${b.open.target||''}</td><td class="muted">—</td></tr>\`;
- for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${c.instrument} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryPx}</td><td>\${c.exitPx} <span class="muted">(\${c.exitET})</span></td><td class="muted">\${c.why}</td><td class="pl \${c.pnl>=0?'up':'dn'}">\${f1(c.pnl)}</td></tr>\`;}
+ if(b.open)rows+=\`<tr><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td class="muted">open</td><td class="muted">—</td></tr>\`;
+ for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'}</td></tr>\`;}
  return rows||'<tr><td colspan=6 class="muted">no trades yet</td></tr>';}
 function pnl(book,m){const b=book?.[m]||{closed:[]};return (b.closed||[]).reduce((a,c)=>a+c.pnl,0);}
 async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const st=await r.json();document.getElementById('conn').textContent='● live';
@@ -82,10 +87,10 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  <div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
  <div class="panel"><h2>Agent read \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''} \${st.uw_layers?.market_tide?('· tide '+st.uw_layers.market_tide.net_premium_M+'M'):''}</h2>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
-   <div class="cards">\${tradeCard('conservative',d.conservative)}\${tradeCard('aggressive',d.aggressive)}</div></div>
+   <div class="cards">\${tradeCard('conservative',d.conservative,st.book?.conservative?.open)}\${tradeCard('aggressive',d.aggressive,st.book?.aggressive?.open)}</div></div>
  <div class="two">
    <div class="panel"><h2>Trade blotter · realized: conservative <span class="\${cp>=0?'pl up':'pl dn'}">\${f1(cp)}</span> · aggressive <span class="\${ap>=0?'pl up':'pl dn'}">\${f1(ap)}</span></h2>
-     <table><thead><tr><th>posture</th><th>trade</th><th>entry</th><th>exit</th><th>why</th><th>P/L (pt)</th></tr></thead><tbody>\${blotter(st.book)}</tbody></table></div>
+     <table><thead><tr><th>posture</th><th>option</th><th>fired</th><th>entry \$</th><th>exit \$</th><th>return</th></tr></thead><tbody>\${blotter(st.book)}</tbody></table></div>
    <div class="panel"><h2>Journal & lessons</h2><div class="jr">\${(st.journal||'(none)').slice(0,700)}</div>
      \${(st.lessons&&st.lessons.length)?'<details><summary>durable lessons ('+st.lessons.length+')</summary><div class="jr">'+st.lessons.map((l,i)=>(i+1)+'. '+(l.lesson||l)).join('\\n')+'</div></details>':'<div class="muted" style="margin-top:8px;font-size:12px">no durable lessons yet (need multi-day recurrence)</div>'}</div>
  </div>\`;}catch(e){document.getElementById('conn').textContent='● reconnecting';}}

@@ -9,6 +9,7 @@
 //   watch it build the day (both postures):  node agent.mjs --sequence 14:30,14:45,15:00,15:10
 //   learn from it:                           node agent.mjs --reflect
 import '../apps/gex/scripts/_env-bootstrap.js';
+import { initAuth, getFreshToken } from '../apps/gex/src/heatseeker/auth.js';
 import fs from 'node:fs'; import zlib from 'node:zlib'; import path from 'node:path';
 const KEY = process.env.ANTHROPIC_API_KEY, MODEL = process.env.AGENT_MODEL || 'claude-sonnet-5';
 const FC = path.join(process.cwd(), 'falcon-copier');
@@ -20,6 +21,11 @@ const etM = (ts) => (+ts.slice(11, 13) - 4) * 60 + +ts.slice(14, 16);
 const etOf = (ts) => `${String(+ts.slice(11, 13) - 4).padStart(2, '0')}:${ts.slice(14, 16)}`;
 const INSTR = { SPXW: { map: 80, band: 40, dom: 70, wide: 200, strong: 20e6 }, SPY: { map: 8, band: 4, dom: 7, wide: 20, strong: 20e6 }, QQQ: { map: 8, band: 4, dom: 7, wide: 20, strong: 5e6 } };
 const load = (sym) => { const f = path.join(FC, `today_${sym}.jsonl.gz`); return fs.existsSync(f) ? zlib.gunzipSync(fs.readFileSync(f)).toString().trim().split('\n').map(l => JSON.parse(l)) : null; };
+// ── the OPTION we'd actually trade: 0DTE ATM contract + its live premium (like Falcon's "SPXW 7405C · $3.20") ──
+const STEP = { SPXW: 5, SPY: 1, QQQ: 1 };
+const occOf = (sym, day, cp, strike) => (sym === 'SPXW' ? 'SPXW' : sym) + day.slice(2).replace(/-/g, '') + cp + String(Math.round(strike * 1000)).padStart(8, '0');
+const UWKEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
+async function optMark(occ) { if (!UWKEY) return null; const q = await fetch('https://api.unusualwhales.com/api/option-contract/' + occ + '/intraday', { headers: { Authorization: 'Bearer ' + UWKEY }, signal: AbortSignal.timeout(10000) }).then(x => x.ok ? x.json() : null).catch(() => null); const d = (q?.data || []).filter(b => +b.close > 0); return d.length ? +d[d.length - 1].close : null; }
 const LESSONS_FILE = path.join(FC, 'agent_lessons.json');
 const loadLessons = () => fs.existsSync(LESSONS_FILE) ? JSON.parse(fs.readFileSync(LESSONS_FILE, 'utf8')) : [];
 
@@ -131,16 +137,24 @@ const fmt = (d) => d && d.direction !== 'stand_aside' ? `${d.instrument && d.ins
 const DASH = path.join(FC, `agent_dashboard.json`);
 // trade memory — the agent's own book per posture. Its evolving decision IS the management: a directional call
 // opens; a flip to stand_aside/opposite closes at the current price. P/L in the instrument's own points.
-function manage(book, mode, dec, instruments, et) {
+async function manage(book, mode, dec, instruments, et) {
   const b = (book[mode] ||= { open: null, closed: [] });
   const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
   const px = instruments[inst]?.spot ?? instruments.SPXW?.spot;
   if (b.open && px != null) {
     const flip = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== b.open.dir);
-    if (flip) { const sgn = b.open.dir === 'long' ? 1 : -1; b.closed.push({ ...b.open, exitET: et, exitPx: +(instruments[b.open.instrument]?.spot ?? px).toFixed(2), pnl: +(((instruments[b.open.instrument]?.spot ?? px) - b.open.entryPx) * sgn).toFixed(1), why: dec.direction === 'stand_aside' ? 'closed (stood aside)' : 'reversed' }); b.open = null; }
+    if (flip) {
+      const sgn = b.open.dir === 'long' ? 1 : -1, exitPx = +(instruments[b.open.instrument]?.spot ?? px).toFixed(2);
+      const exitPrem = b.open.occ ? await optMark(b.open.occ) : null;
+      const optRet = (b.open.entry_premium && exitPrem) ? +(((exitPrem - b.open.entry_premium) / b.open.entry_premium) * 100).toFixed(0) : null;
+      b.closed.push({ ...b.open, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - b.open.entryPx) * sgn).toFixed(1), why: dec.direction === 'stand_aside' ? 'closed (stood aside)' : 'reversed' });
+      b.open = null;
+    }
   }
   if (!b.open && dec.direction && dec.direction !== 'stand_aside' && dec.conviction >= 0.5 && px != null) {
-    b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), target: dec.target || '', stop: dec.stop || '', conviction: dec.conviction, thesis: dec.why || '' };
+    const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
+    const occ = occOf(inst, DAY, cp, strike), premium = await optMark(occ);
+    b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', conviction: dec.conviction, thesis: dec.why || '' };
   }
 }
 const bookLine = (book) => ['conservative', 'aggressive'].map(m => { const b = book[m] || { open: null, closed: [] }; const rp = b.closed.reduce((a, c) => a + c.pnl, 0); return `${m}: ${b.open ? `IN ${b.open.instrument} ${b.open.dir} @${b.open.entryPx}` : 'flat'} · realized ${rp >= 0 ? '+' : ''}${rp.toFixed(1)}pt (${b.closed.length} closed)`; }).join(' | ');
@@ -152,8 +166,8 @@ async function step(et, mem) {
   const bookNote = `YOUR OPEN TRADES: conservative ${mem.book.conservative.open ? JSON.stringify(mem.book.conservative.open) : 'flat'} · aggressive ${mem.book.aggressive.open ? JSON.stringify(mem.book.aggressive.open) : 'flat'}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
-  manage(mem.book, 'conservative', d.conservative, state.instruments, et);
-  manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
+  await manage(mem.book, 'conservative', d.conservative, state.instruments, et);
+  await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
   mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
