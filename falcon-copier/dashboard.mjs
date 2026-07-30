@@ -47,6 +47,7 @@ td{padding:6px 8px;border-bottom:1px solid var(--line)}.pl.up{color:var(--grn)}.
 details{margin-top:8px}summary{cursor:pointer;color:var(--mut);font-size:12px}
 .jr{color:#aeb8cc;font-size:12.5px;white-space:pre-wrap;line-height:1.5;margin-top:8px}
 .empty{color:var(--mut);text-align:center;padding:30px}
+.status{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:var(--amb);font-size:13px;margin-bottom:14px;text-align:center;font-weight:600}
 </style></head><body><div class="wrap">
 <header><h1>🦅 Falcon-copier</h1><span class="sub">agentic 0DTE · <span id="asof">—</span></span><span class="sub" id="conn"></span></header>
 <div id="app"><div class="empty">waiting for the agent to write its first snapshot…</div></div>
@@ -90,12 +91,14 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  const ins=st.instruments||{};const flow=st.uw_layers?.options_flow||{};const dp=st.uw_layers?.dark_pool||{};
  for(const k in ins){ins[k].flow=flow[k];ins[k].dark_pool=dp[k==='SPXW'?'SPY':k];}
  const d=st.decision||{};const cp=pnl(st.book,'conservative'),ap=pnl(st.book,'aggressive');
+ const hasData=Object.keys(ins).length>0;
  document.getElementById('app').innerHTML=\`
- <div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
+ \${st.status?\`<div class="status">⏸ \${st.status}</div>\`:''}
+ \${hasData?\`<div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
  <div class="panel"><div class="phdr"><h2>Agent read \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''}</h2>
      <div class="toggle"><button class="\${view==='both'?'on':''}" onclick="setView('both')">Both</button><button class="\${view==='conservative'?'on':''}" onclick="setView('conservative')">Conservative</button><button class="\${view==='aggressive'?'on':''}" onclick="setView('aggressive')">Aggressive</button></div></div>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
-   <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>
+   <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>\`:''}
  <div class="two">
    <div class="panel"><h2>Trade blotter · realized: conservative <span class="\${cp>=0?'pl up':'pl dn'}">\${f1(cp)}</span> · aggressive <span class="\${ap>=0?'pl up':'pl dn'}">\${f1(ap)}</span></h2>
      <table><thead><tr><th>posture</th><th>option</th><th>fired</th><th>entry \$</th><th>exit \$</th><th>return</th></tr></thead><tbody>\${blotter(st.book)}</tbody></table></div>

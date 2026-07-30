@@ -241,7 +241,10 @@ async function loop() {
   let mem = fs.existsSync(MEM) ? (() => { try { return JSON.parse(fs.readFileSync(MEM, 'utf8')); } catch { return null; } })() : null;
   if (!mem || mem.day !== DAY) mem = { day: DAY, notes: '', log: [] };
   mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
-  console.log(`\n  🦅 agent LIVE loop started (${DAY}) · ${(mem.book.conservative.closed.length + mem.book.aggressive.closed.length)} plays so far today · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
+  const nplays = () => mem.book.conservative.closed.length + mem.book.aggressive.closed.length;
+  const idleDash = (status) => { try { fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5), status, instruments: {}, uw_layers: {}, decision: {}, book: mem.book, journal: mem.notes || '', lessons: loadLessons() }, null, 1)); } catch (e) { } };
+  idleDash('agent starting — clearing prior state…');   // wipe the stale (e.g. backtest) dashboard immediately
+  console.log(`\n  🦅 agent LIVE loop started (${DAY}) · ${nplays()} plays so far today · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
   for (; ;) {
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));
@@ -250,7 +253,7 @@ async function loop() {
         for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); if (bufs[sym].length > 60) bufs[sym].shift(); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n')); } }
         if (bufs.SPXW.length) mem = await step(et, mem);
       } catch (e) { console.log(`  ${et} loop error: ${e.message.slice(0, 90)}`); }
-    } else { console.log(`  ${et} ET · market closed — idle`); }
+    } else { console.log(`  ${et} ET · market closed — idle`); idleDash(`market ${m < 9 * 60 + 30 ? 'not open yet' : 'closed'} — agent idle · ${nplays()} plays today`); }
     await new Promise(r => setTimeout(r, 60000));
   }
 }
