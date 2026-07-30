@@ -30,7 +30,9 @@ Consistent with the proven boundary: direction unpredictable OOS; raw GEX-mechan
 | 7/24 | −32.9 | 0.04 | LOSE |
 | 7/28 | −18.7 | 0.06 | LOSE |
 
-**WIN days avg 0.21 vs LOSE days avg 0.06 (~3.5×).** A ~0.10 morning-efficiency gate would pass all 3 win days and block 3 of 4 bleed days (only the trending-but-badly-traded 7/17 slips through). **n=7 — tiny; a WATCH hypothesis, NOT a rule.**
+**WIN days avg 0.21 vs LOSE days avg 0.06 (~3.5×)** on n=7. A ~0.10 gate would pass all 3 win days and block 3 of 4 bleed days.
+
+**UPDATE — expanded to 16 days (06-04 → 07-28), the signal DEFLATED:** WIN 0.16 vs LOSE 0.09 (only 1.8×), with clear counterexamples (7/09 WON on choppy 0.04; 7/16 LOST on efficient 0.25). So tape-efficiency is a **weak lean, not a clean gate** — the n=7 was partly small-sample luck. This is why you expand the sample before believing a filter. Node coherence stayed inverted (WIN 0.42 vs LOSE 0.55 = still dead). And the blunt part: the structure-only engine is **net-negative across all 16 days (5 win / 11 lose, ≈ −155pt)** — neither node velocity nor tape efficiency rescues it. Kept as a LOGGED watch feature only (review's ≥10%-separation gate won't let a weak signal trigger a change).
 
 ## 4. How Falcon is (probably) winning — synthesis
 Not node velocity. Not a GEX direction oracle. The evidence points to **selectivity on tape quality** + a **confirmation stack we can't replay historically**:

@@ -11,7 +11,7 @@ const load = (d) => zlib.gunzipSync(fs.readFileSync(path.join(VC, `replay_${d}_S
 const g0At = (fr, k) => (fr.strikes.find(n => n.strike === k)?.g0 || 0);
 const L = 20;
 // engine flip-flop P/L per day (from backtest_replay.mjs, THRESH 3, SPXW) — the ground truth we're trying to gate
-const PL = { '2026-07-17': -39.7, '2026-07-20': 6.0, '2026-07-22': -8.3, '2026-07-23': 10.0, '2026-07-24': -32.9, '2026-07-27': 6.7, '2026-07-28': -18.7 };
+const PL = { '2026-06-04': 34.4, '2026-06-05': -69.8, '2026-07-09': 35.7, '2026-07-10': -17.4, '2026-07-13': -23.3, '2026-07-14': -11.1, '2026-07-15': -17.3, '2026-07-16': -0.9, '2026-07-17': -39.7, '2026-07-20': 6.0, '2026-07-21': -8.5, '2026-07-22': -8.3, '2026-07-23': 10.0, '2026-07-24': -32.9, '2026-07-27': 6.7, '2026-07-28': -18.7 };
 
 function metrics(F, cutMin) {
   const tilts = [], moves = []; let prevSpot = null, firstSpot = null, lastSpot = null;
