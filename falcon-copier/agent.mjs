@@ -26,7 +26,7 @@ const load = (sym) => { const f = path.join(FC, `today_${sym}.jsonl.gz`); return
 const STEP = { SPXW: 5, SPY: 1, QQQ: 1 };
 const occOf = (sym, day, cp, strike) => (sym === 'SPXW' ? 'SPXW' : sym) + day.slice(2).replace(/-/g, '') + cp + String(Math.round(strike * 1000)).padStart(8, '0');
 const UWKEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
-async function optMark(occ) { if (!UWKEY) return null; const q = await fetch('https://api.unusualwhales.com/api/option-contract/' + occ + '/intraday', { headers: { Authorization: 'Bearer ' + UWKEY }, signal: AbortSignal.timeout(10000) }).then(x => x.ok ? x.json() : null).catch(() => null); const d = (q?.data || []).filter(b => +b.close > 0); return d.length ? +d[d.length - 1].close : null; }
+async function optMark(occ) { if (!UWKEY) return null; const q = await fetch('https://api.unusualwhales.com/api/option-contract/' + occ + '/intraday', { headers: { Authorization: 'Bearer ' + UWKEY }, signal: AbortSignal.timeout(10000) }).then(x => x.ok ? x.json() : null).catch(() => null); const d = (q?.data || []).filter(b => +b.close > 0 && b.start_time); if (!d.length) return null; const latest = d.reduce((a, b) => b.start_time > a.start_time ? b : a); return +latest.close; }   // UW bars are newest-first-ish; take the max start_time = current mark
 const LESSONS_FILE = path.join(FC, 'agent_lessons.json');
 const loadLessons = () => fs.existsSync(LESSONS_FILE) ? JSON.parse(fs.readFileSync(LESSONS_FILE, 'utf8')) : [];
 
@@ -71,7 +71,8 @@ async function skylitDarkPool() {   // real dark-pool prints (institutional leve
 }
 async function skylitTide() {        // net call/put premium = the market flow lean (Flowseeker)
   const r = await skGet('/fs/api/market/tide?interval=1D&bucket=1min');
-  const last = (r?.data?.bars || []).slice(-1)[0]; if (!last) return null;
+  const bars = r?.data?.bars || [], real = bars.filter(b => +b.ncp !== 0 || +b.npp !== 0);   // ignore the empty future template bars
+  const last = (real.length ? real : bars).slice(-1)[0]; if (!last) return null;
   const net = (+last.ncp_cumulative || 0) - (+last.npp_cumulative || 0);
   return { net_call_prem_M: M(+last.ncp_cumulative || 0), net_put_prem_M: M(+last.npp_cumulative || 0), net_lean_M: M(net), lean: net > 0 ? 'bullish' : net < 0 ? 'bearish' : 'balanced' };
 }
@@ -171,6 +172,8 @@ async function step(et, mem) {
   await manage(mem.book, 'conservative', d.conservative, state.instruments, et);
   await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
   mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
+  // running option P/L on any OPEN position (live mark each tick, so the % ticks in real time)
+  for (const mm of ['conservative', 'aggressive']) { const o = mem.book[mm]?.open; if (o?.occ && DAY === TODAY_ET) { const mk = await optMark(o.occ); if (mk != null) { o.live_premium = mk; o.live_ret_pct = o.entry_premium ? +(((mk - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null; } } }
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
   const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };

@@ -70,7 +70,7 @@ function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;
 function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_aside'&&d.conviction>=CONFIRM;const potential=d.direction!=='stand_aside'&&!conf;
  const badge=d.direction==='stand_aside'?'':(conf?'<div class="badge ok">✓</div>':'<div class="badge x">✗</div>');
  const cvColor=conf?'var(--grn)':(d.direction==='stand_aside'?'var(--mut)':'var(--amb)');
- const idea=pos?\`<div class="idea"><b>\${pos.instrument} \${pos.strike?pos.strike+pos.cp:''}</b> · 0DTE · fired <b>\${pos.entryET||'—'}</b> \${pos.entry_premium!=null?'· entry <b>\$'+(+pos.entry_premium).toFixed(2)+'</b>':'· <span class="muted">quote live-only</span>'}</div>\`:'';
+ const idea=pos?\`<div class="idea"><b>\${pos.instrument} \${pos.strike?pos.strike+pos.cp:''}</b> · 0DTE · fired <b>\${pos.entryET||'—'}</b> \${pos.entry_premium!=null?'· entry <b>\$'+(+pos.entry_premium).toFixed(2)+'</b>':''}\${pos.live_premium!=null?' → <b>\$'+(+pos.live_premium).toFixed(2)+'</b> <span class="'+(pos.live_ret_pct>=0?'pl up':'pl dn')+'">'+(pos.live_ret_pct>=0?'+':'')+pos.live_ret_pct+'%</span>':''}</div>\`:'';
  return \`<div class="tc">\${badge}<div class="mode">\${mode} \${conf?'· confirmed':(potential?'· potential':'')}</div>
  <div class="dir \${dirCls(d.direction)}">\${d.instrument&&d.instrument!=='none'?d.instrument+' ':''}\${(d.direction||'').toUpperCase().replace('_',' ')}</div>
  \${idea}
@@ -81,7 +81,7 @@ function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_a
 const opt=(x)=>x.strike?\`\${x.instrument} \${x.strike}\${x.cp}\`:x.instrument;
 const prem=(p)=>p!=null?'\$'+(+p).toFixed(2):'—';
 function blotter(book){let rows='';for(const m of modes()){const b=book?.[m]||{open:null,closed:[]};
- if(b.open)rows+=\`<tr><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td class="muted">open</td><td class="muted">—</td></tr>\`;
+ if(b.open)rows+=\`<tr><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td>\${b.open.live_premium!=null?prem(b.open.live_premium)+' <span class="muted">now</span>':'<span class="muted">open</span>'}</td><td class="\${(b.open.live_ret_pct||0)>=0?'pl up':'pl dn'}">\${b.open.live_ret_pct!=null?(b.open.live_ret_pct>=0?'+':'')+b.open.live_ret_pct+'%':'—'}</td></tr>\`;
  for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'}</td></tr>\`;}
  return rows||'<tr><td colspan=6 class="muted">no trades yet</td></tr>';}
 function pnl(book,m){const b=book?.[m]||{closed:[]};return (b.closed||[]).reduce((a,c)=>a+c.pnl,0);}
