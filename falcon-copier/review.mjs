@@ -54,6 +54,13 @@ if (!R.length) {
   out += `\n**By instrument:**\n`; const byI = grp(r => r.sym || '?'); for (const k of Object.keys(byI).sort()) out += `- ${line(k, byI[k])}\n`;
   out += `\n**By confluence level:**\n`; const byC = grp(r => `${r.pass || '?'}/7`); for (const k of Object.keys(byC).sort()) out += `- ${line(k, byC[k])}\n`;
 
+  // WATCH feature — tape path-efficiency at entry (the chop-gate hypothesis; logged, testing forward, NOT gated)
+  const withEff = R.filter(r => typeof r.tapeEff === 'number');
+  if (withEff.length) {
+    out += `\n**By tape path-efficiency at entry (WATCH — chop-gate hypothesis, ~0.10; not acted on):**\n`;
+    out += `- ${line('efficient ≥0.10', withEff.filter(r => r.tapeEff >= 0.10))}\n- ${line('choppy <0.10', withEff.filter(r => r.tapeEff < 0.10))}\n`;
+  }
+
   // per-criterion value: win% / expectancy when the criterion was PRESENT vs ABSENT (cumulative — the honest feature test)
   out += `\n**By criterion (present → vs ← absent):** does each layer actually earn its place?\n`;
   for (const c of CRITERIA) {
@@ -81,6 +88,8 @@ if (!R.length) {
     }
     const hi = R.filter(r => (r.pass || 0) >= 6), lo = R.filter(r => (r.pass || 0) === 5);
     if (hi.length >= 8 && lo.length >= 8 && mean(hi.map(r => +r.ret || 0)) - mean(lo.map(r => +r.ret || 0)) >= 10) notes.push(`≥6/7 setups outperform exactly-5/7 by ≥10% exp — candidate to RAISE the fire bar to 6. WATCH; one change at a time.`);
+    const we = R.filter(r => typeof r.tapeEff === 'number' && r.tapeEff >= 0.10), wc = R.filter(r => typeof r.tapeEff === 'number' && r.tapeEff < 0.10);
+    if (we.length >= 8 && wc.length >= 8 && mean(we.map(r => +r.ret || 0)) - mean(wc.map(r => +r.ret || 0)) >= 10) notes.push(`efficient-tape entries (≥0.10) outperform choppy (<0.10) by ≥10% exp — candidate CHOP GATE (stand aside on choppy mornings). WATCH; needs another block of days.`);
     out += notes.length ? notes.map(n => `- 🔬 ${n}`).join('\n') + '\n' : `- No pattern strong or stable enough to flag. Default: **NO CHANGE.**\n`;
   }
 }

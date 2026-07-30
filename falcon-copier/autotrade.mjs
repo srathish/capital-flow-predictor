@@ -30,9 +30,10 @@ const hm = etHM(), day = etDate(), m = etMin(hm);
 if ((m < 9 * 60 + 35 || m > 15 * 60 + 56) && !process.env.FORCE) process.exit(0);   // RTH only (FORCE=1 to test off-hours)
 const TLOG = path.join(D, `trades_${day}.txt`);
 let st = fs.existsSync(STATE) ? JSON.parse(fs.readFileSync(STATE, 'utf8')) : {};
-if (st.day !== day) st = { day, pos: null, trades: [], prevKing: {}, spotHist: {} };
+if (st.day !== day) st = { day, pos: null, trades: [], prevKing: {}, spotHist: {}, spotPath: {} };
 if (typeof st.prevKing !== 'object' || st.prevKing === null) st.prevKing = {};   // migrate old SPXW-only scalar prevKing → per-instrument map
 if (typeof st.spotHist !== 'object' || st.spotHist === null) st.spotHist = {};
+if (typeof st.spotPath !== 'object' || st.spotPath === null) st.spotPath = {};   // session spot path per instrument → tape path-efficiency (WATCH feature: logged, NOT acted on)
 const log = (s) => { fs.appendFileSync(TLOG, s + '\n'); console.log(s); };
 
 await initAuth();
@@ -92,6 +93,7 @@ if (st.pos) {                                                                // 
     if (king && st.prevKing[I.sym] && Math.abs(king.strike - st.prevKing[I.sym]) >= I.gap) log(`  ${hm}  🔀 ${I.sym} KING migrated ${st.prevKing[I.sym]} → ${king.strike} (escalator ${king.strike > st.prevKing[I.sym] ? 'UP' : 'DOWN'})`);
     if (king) st.prevKing[I.sym] = king.strike;
     const hist = (st.spotHist[I.sym] || []).concat(spot).slice(-6); st.spotHist[I.sym] = hist;
+    st.spotPath[I.sym] = (st.spotPath[I.sym] || []).concat(spot).slice(-400);   // accumulate session path for tape path-efficiency
     const vah = dp && I.dpMul ? dp.vah * I.dpMul : null, val = dp && I.dpMul ? dp.val * I.dpMul : null;
     const cands = [];
     const pin = S.strikes.filter(n => n.g0 >= I.strong && Math.abs(n.strike - spot) >= I.gap && Math.abs(n.strike - spot) <= I.range).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
@@ -138,7 +140,9 @@ if (st.pos) {                                                                // 
       // opposing node = strongest pika in the direction of travel that could cap us (for structure-hardening exit)
       const opp = S.strikes.filter(n => n.g0 >= I.strong && (n.strike - spot) * best.dir > 0).sort((a, b) => Math.abs(a.strike - spot) - Math.abs(b.strike - spot))[0];
       const oppShare = opp ? opp.g0 / sumAbs : 0;
-      st.pos = { sym: I.sym, kind: best.kind, dir: best.dir, entry: +spot.toFixed(2), entryET: hm, target: best.target, stopSpot: best.stop, cp, strike, occ, entryMark: mark, peakMark: mark, oppStrike: opp?.strike || null, oppShare0: +oppShare.toFixed(3), pass: best.pass, hits: best.hits, crmap: best.crmap };
+      const pth = st.spotPath[I.sym] || [spot], mv = pth.slice(1).reduce((a, c, idx) => a + Math.abs(c - pth[idx]), 0) || 1e-9;
+      const tapeEff = +(Math.abs(spot - pth[0]) / mv).toFixed(3);   // session path-efficiency up to entry — WATCH: chop-gate hypothesis (win days ~0.21 vs bleed ~0.06, n=7). LOGGED, not gated.
+      st.pos = { sym: I.sym, kind: best.kind, dir: best.dir, entry: +spot.toFixed(2), entryET: hm, target: best.target, stopSpot: best.stop, cp, strike, occ, entryMark: mark, peakMark: mark, oppStrike: opp?.strike || null, oppShare0: +oppShare.toFixed(3), pass: best.pass, hits: best.hits, crmap: best.crmap, tapeEff };
       log(`  ${hm}  ${best.dir > 0 ? '🐂' : '🐻'} ${best.kind.padEnd(6)} ${I.sym.padEnd(4)} ${cp === 'C' ? 'CALL' : 'PUT'} $${strike} @ $${mark == null ? '?' : mark.toFixed(2)}  [${occ}]  → tgt ${best.target} · CONFLUENCE ${best.pass}/7 [${best.hits.join('+')}] · red-team CLEARED`);
     } else { log(`  ${hm}  ⚖ RED-TEAM VETO ${winner.I.sym} ${best.kind} ${best.dir > 0 ? 'LONG' : 'SHORT'} (conf ${best.pass}/7): ${objections.join(' · ')}`); }
   }
