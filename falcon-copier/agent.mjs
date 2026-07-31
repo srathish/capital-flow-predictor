@@ -110,17 +110,26 @@ HOW TO READ IT (doctrine — synthesize, do not pattern-match)
 YOU PRODUCE TWO RISK-POSTURE READS OVER THE SAME ANALYSIS:
 - CONSERVATIVE: demand strong, multi-signal confirmation. Prefer standing aside over a marginal trade. Only act on high-certainty setups.
 - AGGRESSIVE: a decisive trigger-puller. When regime + structure + evolution + cross-index align, ACT — take the tap-reject at a confirmed wall with a TIGHT stop just beyond it (small risk for a large structural target). Manage risk with the stop, not by avoiding entries. Still stand aside on genuine chop.
-Both reason over the same data. They should often differ (that's the point). Give each a direction, conviction, entry, structural target, stop, and one-line why.`;
+Both reason over the same data. They should often differ (that's the point). Give each a direction, conviction, entry, structural target, stop, and one-line why.
+
+DOMINANT TREND — COMMIT TO IT (this is the #1 discipline)
+- FIRST judge the DAY'S DOMINANT TREND (up / down / chop) and its strength, from the 30-min price path + structure evolution + cross-index. Trade WITH it by default — on a trending day, get aligned and STAY aligned.
+- A COUNTER-TREND trade (fading the day's direction) is the exception, never the reflex. It demands exceptional evidence — a CONFIRMED reversal (dom_neg growing AND rolling down into a top, cross-index confirming, a clear failed retest of a wall) — and high conviction. Do NOT fade a strong up-trend just because near-money gamma prints negative: near-money can read negative the whole way up a rip. A single negative-gamma snapshot is not a top.
+
+MANAGE THE POSITION — DON'T RE-DECIDE IT EVERY MINUTE
+- If you already HOLD a trade, your job is to MANAGE YOUR PLAN, not re-open the question. Repeat the SAME direction to HOLD. Only exit (stand_aside) or reverse when the thesis is genuinely INVALIDATED — your stop is breached or the structure that justified the trade has flipped — and then with HIGH conviction (≥0.6). Do NOT dump a valid position because momentum wobbled for one minute. Let winners run to your target; that is where the money is.
+- Every non-stand_aside decision MUST include a numeric target_level and stop_level (index points, on the correct side: for a long, target above / stop below spot; for a bearish/short, target below / stop above). The SYSTEM EXECUTES them — it takes profit at your target, stops out at your stop, HOLDS in between regardless of minute-to-minute noise, and force-flattens near the close. Set them where you truly want in and out; they are your plan and they will be honored.`;
 
 const TOOL = {
   name: 'emit_decisions', description: 'Emit the shared read plus a conservative and an aggressive decision, and update your journal. Call exactly once.',
   input_schema: {
-    type: 'object', required: ['regime_read', 'shared_thesis', 'conservative', 'aggressive', 'journal_update'],
+    type: 'object', required: ['regime_read', 'dominant_trend', 'shared_thesis', 'conservative', 'aggressive', 'journal_update'],
     properties: {
       regime_read: { type: 'string' },
+      dominant_trend: { type: 'object', required: ['direction', 'strength'], description: 'the DAY\'s dominant trend — trade with it by default; fading it needs high conviction', properties: { direction: { type: 'string', enum: ['up', 'down', 'chop'] }, strength: { type: 'string', enum: ['strong', 'moderate', 'weak'] }, basis: { type: 'string', description: 'what in the price path + structure evolution + cross-index says so' } } },
       shared_thesis: { type: 'string', description: '2-4 sentences: the synthesis across map+timeline+cross-index+price that both postures share' },
-      conservative: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, why: { type: 'string' } } },
-      aggressive: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, why: { type: 'string' } } },
+      conservative: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
+      aggressive: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
       journal_update: { type: 'string', description: 'running notes to carry to the next minute: current bias, levels watched, what triggers/invalidates' },
     },
   },
@@ -134,29 +143,46 @@ async function claude(system, content, tool, maxTok = 1800) {
 
 const MEM = path.join(FC, `agent_state_${DAY}.json`);
 const sysWithLessons = () => { const L = loadLessons(); return DOCTRINE + (L.length ? `\n\nLESSONS YOU LEARNED FROM PAST SESSIONS (apply them):\n${L.map((x, i) => `${i + 1}. ${x.lesson}`).join('\n')}` : ''); };
-const fmt = (d) => d && d.direction !== 'stand_aside' ? `${d.instrument && d.instrument !== 'none' ? d.instrument + ' ' : ''}${d.direction.toUpperCase()} ${d.entry || ''}→${d.target || '?'} (conv ${d.conviction}, stop ${d.stop || '?'})` : `stand aside (${d?.conviction ?? '?'})`;
+const fmt = (d) => d && d.direction && d.direction !== 'stand_aside' ? `${d.instrument && d.instrument !== 'none' ? d.instrument + ' ' : ''}${d.direction.toUpperCase()} → tgt ${d.target_level ?? d.target ?? '?'} / stop ${d.stop_level ?? d.stop ?? '?'} (conv ${d.conviction})` : `stand aside (${d?.conviction ?? '?'})`;   // d.direction guarded (fixes the morning toUpperCase crash)
 
 const DASH = path.join(FC, `agent_dashboard.json`);
-// trade memory — the agent's own book per posture. Its evolving decision IS the management: a directional call
-// opens; a flip to stand_aside/opposite closes at the current price. P/L in the instrument's own points.
-async function manage(book, mode, dec, instruments, et) {
+// ── EXECUTION DISCIPLINE ── the agent sets the PLAN (direction + numeric target/stop); the book HOLDS to it.
+// A position exits only on: stop hit · target hit · EOD flatten · or a genuinely high-conviction invalidation/reversal
+// — never on a noisy minute-read. New entries clear a conviction bar (RAISED when fighting the dominant trend).
+const ENTRY_BAR = 0.5, COUNTER_TREND_BAR = 0.7, EXIT_BAR = 0.6;   // open-aligned / open-counter-trend / exit-or-reverse-early
+const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
+async function closeOpen(b, instruments, et, why) {
+  const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
+  const exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;
+  const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
+  b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), why });
+  b.open = null;
+}
+async function manage(book, mode, dec, instruments, et, trend) {
   const b = (book[mode] ||= { open: null, closed: [] });
   const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
   const px = instruments[inst]?.spot ?? instruments.SPXW?.spot;
-  if (b.open && px != null) {
-    const flip = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== b.open.dir);
-    if (flip) {
-      const sgn = b.open.dir === 'long' ? 1 : -1, exitPx = +(instruments[b.open.instrument]?.spot ?? px).toFixed(2);
-      const exitPrem = (b.open.occ && DAY === TODAY_ET) ? await optMark(b.open.occ) : null;
-      const optRet = (b.open.entry_premium && exitPrem) ? +(((exitPrem - b.open.entry_premium) / b.open.entry_premium) * 100).toFixed(0) : null;
-      b.closed.push({ ...b.open, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - b.open.entryPx) * sgn).toFixed(1), why: dec.direction === 'stand_aside' ? 'closed (stood aside)' : 'reversed' });
-      b.open = null;
-    }
+  // ── manage an OPEN position: HOLD to the plan; exit only on stop/target/EOD or a high-conviction invalidation ──
+  if (b.open) {
+    const o = b.open, opx = instruments[o.instrument]?.spot ?? px, long = o.dir === 'long';
+    let why = null, reverse = false;
+    if (opx != null && o.stop_level != null && (long ? (o.stop_level < o.entryPx && opx <= o.stop_level) : (o.stop_level > o.entryPx && opx >= o.stop_level))) why = 'stop hit';
+    else if (opx != null && o.target_level != null && (long ? (o.target_level > o.entryPx && opx >= o.target_level) : (o.target_level < o.entryPx && opx <= o.target_level))) why = 'target hit';
+    else if (et >= FLATTEN_ET) why = 'EOD flatten';
+    else { const wantsOut = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== o.dir);
+      if (wantsOut && (dec.conviction ?? 0) >= EXIT_BAR) { why = dec.direction === 'stand_aside' ? 'exit — thesis invalidated' : 'reversed (high conviction)'; reverse = dec.direction !== 'stand_aside'; } }
+    if (!why) return;                                     // HOLD — plan intact; don't touch anything else this tick
+    await closeOpen(b, instruments, et, why);
+    if (!reverse) return;                                 // mechanical / stand-aside close → go flat, no same-tick re-entry
   }
-  if (!b.open && dec.direction && dec.direction !== 'stand_aside' && dec.conviction >= 0.5 && px != null) {
-    const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
-    const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
-    b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', conviction: dec.conviction, thesis: dec.why || '' };
+  // ── OPEN a new position: flat + decisive + clears the bar (HIGHER if counter-trend) + before the late-day cutoff ──
+  if (!b.open && dec.direction && dec.direction !== 'stand_aside' && px != null && et < NO_NEW_ET) {
+    const counter = (trend === 'up' && dec.direction === 'short') || (trend === 'down' && dec.direction === 'long');
+    if ((dec.conviction ?? 0) >= (counter ? COUNTER_TREND_BAR : ENTRY_BAR)) {
+      const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
+      const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
+      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', target_level: dec.target_level ?? null, stop_level: dec.stop_level ?? null, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
+    }
   }
 }
 const bookLine = (book) => ['conservative', 'aggressive'].map(m => { const b = book[m] || { open: null, closed: [] }; const rp = b.closed.reduce((a, c) => a + c.pnl, 0); return `${m}: ${b.open ? `IN ${b.open.instrument} ${b.open.dir} @${b.open.entryPx}` : 'flat'} · realized ${rp >= 0 ? '+' : ''}${rp.toFixed(1)}pt (${b.closed.length} closed)`; }).join(' | ');
@@ -165,20 +191,22 @@ const LIVE = !!arg('--live', false);
 async function step(et, mem) {
   const state = await assembleComplex(et, LIVE), R = state.instruments.SPXW;
   mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
-  const bookNote = `YOUR OPEN TRADES: conservative ${mem.book.conservative.open ? JSON.stringify(mem.book.conservative.open) : 'flat'} · aggressive ${mem.book.aggressive.open ? JSON.stringify(mem.book.aggressive.open) : 'flat'}`;
+  const planNote = (m) => { const o = mem.book[m].open; return o ? `${m}: HOLDING ${o.instrument} ${o.dir} from ${o.entryET} @${o.entryPx} (target ${o.target_level ?? (o.target || '?')}, stop ${o.stop_level ?? (o.stop || '?')}) — MANAGE it: repeat "${o.dir}" to HOLD; stand_aside/reverse ONLY if genuinely invalidated (conv ≥0.6). The system auto-exits at your target/stop and flattens near the close.` : `${m}: flat`; };
+  const bookNote = `YOUR OPEN POSITIONS & PLANS (manage them — don't re-decide from scratch):\n  ${planNote('conservative')}\n  ${planNote('aggressive')}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
   for (const k of ['conservative', 'aggressive']) if (typeof d[k] === 'string') { try { d[k] = JSON.parse(d[k]); } catch { d[k] = { direction: 'stand_aside', conviction: 0, why: 'parse-fallback' }; } }   // sonnet sometimes emits the nested posture as a JSON string
-  await manage(mem.book, 'conservative', d.conservative, state.instruments, et);
-  await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et);
-  mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
+  const trendDir = d.dominant_trend?.direction;
+  await manage(mem.book, 'conservative', d.conservative, state.instruments, et, trendDir);
+  await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et, trendDir);
+  mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, trend: d.dominant_trend, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
   // running option P/L on any OPEN position (live mark each tick, so the % ticks in real time)
   for (const mm of ['conservative', 'aggressive']) { const o = mem.book[mm]?.open; if (o?.occ && DAY === TODAY_ET) { const mk = await optMark(o.occ); if (mk != null) { o.live_premium = mk; o.live_ret_pct = o.entry_premium ? +(((mk - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null; } } }
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
   const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
-  fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: et, instruments: inst, uw_layers: state.uw_layers, decision: { regime_read: d.regime_read, shared_thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive }, book: mem.book, journal: mem.notes, lessons: loadLessons() }, null, 1));
-  console.log(`\n─── @ ${et} ET · SPX ${R.spot} (${R.chg_pct >= 0 ? '+' : ''}${R.chg_pct}%) · domNeg ${R.structure_timeline_30m.map(t => t.dom_neg_strike).join('→')} · regime ${R.regime_now.net_gamma_M}M ───`);
+  fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: et, instruments: inst, uw_layers: state.uw_layers, decision: { regime_read: d.regime_read, dominant_trend: d.dominant_trend, shared_thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive }, book: mem.book, journal: mem.notes, lessons: loadLessons() }, null, 1));
+  console.log(`\n─── @ ${et} ET · SPX ${R.spot} (${R.chg_pct >= 0 ? '+' : ''}${R.chg_pct}%) · trend ${d.dominant_trend?.direction || '?'}/${d.dominant_trend?.strength || ''} · regime ${R.regime_now.net_gamma_M}M ───`);
   console.log(`  CONSERVATIVE: ${fmt(d.conservative)}`);
   console.log(`  AGGRESSIVE:   ${fmt(d.aggressive)}`);
   console.log(`  book: ${bookLine(mem.book)}`);

@@ -48,6 +48,12 @@ details{margin-top:8px}summary{cursor:pointer;color:var(--mut);font-size:12px}
 .jr{color:#aeb8cc;font-size:12.5px;white-space:pre-wrap;line-height:1.5;margin-top:8px}
 .empty{color:var(--mut);text-align:center;padding:30px}
 .status{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:var(--amb);font-size:13px;margin-bottom:14px;text-align:center;font-weight:600}
+.tag.open{background:rgba(90,169,255,.2);color:var(--blu);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.open-pill{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--blu);background:rgba(90,169,255,.16);padding:1px 6px;border-radius:5px;vertical-align:middle}
+.why-tag{font-size:10px;color:var(--mut);font-weight:600;margin-left:6px;padding:1px 6px;border-radius:4px;background:var(--bg)}
+.trend{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:6px;margin-left:6px}.trend.up{background:rgba(61,220,132,.15);color:var(--grn)}.trend.down{background:rgba(255,92,108,.15);color:var(--red)}.trend.chop{background:rgba(138,147,166,.15);color:var(--mut)}
+tr.open-row td{background:rgba(90,169,255,.06);border-bottom:1px solid rgba(90,169,255,.22)}
 </style></head><body><div class="wrap">
 <header><h1>🦅 Falcon-copier</h1><span class="sub">agentic 0DTE · <span id="asof">—</span></span><span class="sub" id="conn"></span></header>
 <div id="app"><div class="empty">waiting for the agent to write its first snapshot…</div></div>
@@ -57,6 +63,7 @@ let view='both';const setView=v=>{view=v;tick();};
 const modes=()=>view==='both'?['conservative','aggressive']:[view];
 const f1=x=>x==null?'—':(x>=0?'+':'')+(+x).toFixed(1);
 const dirCls=d=>d==='long'?'long':d==='short'?'short':'aside';
+const exitReason=(w)=>{if(!w)return '';w=String(w);if(w.includes('target'))return '✓ target hit';if(w.includes('stop'))return '✗ stop hit';if(w.includes('EOD'))return '⏰ EOD flat';if(w.includes('revers'))return '↺ reversed';if(w.includes('invalidated')||w.includes('stood aside')||w.includes('exit'))return '⊘ exit';return w;};
 function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;const roll=(s.dom_neg_roll||[]).filter((v,i,a)=>i===0||v!==a[i-1]).join('→');
  return \`<div class="card"><div class="sym"><b>\${sym}</b><span><span class="px">\${(+s.spot).toFixed(2)}</span> <span class="chg \${s.chg_pct>=0?'up':'dn'}">\${s.chg_pct>=0?'+':''}\${s.chg_pct}%</span></span></div>
  <div><span class="reg \${neg?'neg':'pos'}">\${neg?'negative γ · trend':'positive γ · pinned'}</span></div>
@@ -70,7 +77,7 @@ function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;
 function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_aside'&&d.conviction>=CONFIRM;const potential=d.direction!=='stand_aside'&&!conf;
  const badge=d.direction==='stand_aside'?'':(conf?'<div class="badge ok">✓</div>':'<div class="badge x">✗</div>');
  const cvColor=conf?'var(--grn)':(d.direction==='stand_aside'?'var(--mut)':'var(--amb)');
- const idea=pos?\`<div class="idea"><b>\${pos.instrument} \${pos.strike?pos.strike+pos.cp:''}</b> · 0DTE · fired <b>\${pos.entryET||'—'}</b> \${pos.entry_premium!=null?'· entry <b>\$'+(+pos.entry_premium).toFixed(2)+'</b>':''}\${pos.live_premium!=null?' → <b>\$'+(+pos.live_premium).toFixed(2)+'</b> <span class="'+(pos.live_ret_pct>=0?'pl up':'pl dn')+'">'+(pos.live_ret_pct>=0?'+':'')+pos.live_ret_pct+'%</span>':''}</div>\`:'';
+ const idea=pos?\`<div class="idea"><span class="open-pill">● OPEN</span> <b>\${pos.instrument} \${pos.strike?pos.strike+pos.cp:''}</b> · fired <b>\${pos.entryET||'—'}</b> \${pos.entry_premium!=null?'· entry <b>\$'+(+pos.entry_premium).toFixed(2)+'</b>':''}\${pos.live_premium!=null?' → <b>\$'+(+pos.live_premium).toFixed(2)+'</b> <span class="'+(pos.live_ret_pct>=0?'pl up':'pl dn')+'">'+(pos.live_ret_pct>=0?'+':'')+pos.live_ret_pct+'% unrealized</span>':''}</div>\`:'';
  return \`<div class="tc">\${badge}<div class="mode">\${mode} \${conf?'· confirmed':(potential?'· potential':'')}</div>
  <div class="dir \${dirCls(d.direction)}">\${d.instrument&&d.instrument!=='none'?d.instrument+' ':''}\${(d.direction||'').toUpperCase().replace('_',' ')}</div>
  \${idea}
@@ -81,8 +88,8 @@ function tradeCard(mode,d,pos){if(!d)return '';const conf=d.direction!=='stand_a
 const opt=(x)=>x.strike?\`\${x.instrument} \${x.strike}\${x.cp}\`:x.instrument;
 const prem=(p)=>p!=null?'\$'+(+p).toFixed(2):'—';
 function blotter(book){let rows='';for(const m of modes()){const b=book?.[m]||{open:null,closed:[]};
- if(b.open)rows+=\`<tr><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td>\${b.open.live_premium!=null?prem(b.open.live_premium)+' <span class="muted">now</span>':'<span class="muted">open</span>'}</td><td class="\${(b.open.live_ret_pct||0)>=0?'pl up':'pl dn'}">\${b.open.live_ret_pct!=null?(b.open.live_ret_pct>=0?'+':'')+b.open.live_ret_pct+'%':'—'}</td></tr>\`;
- for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'}</td></tr>\`;}
+ if(b.open)rows+=\`<tr class="open-row"><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span> <span class="tag open">● OPEN</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td>\${b.open.live_premium!=null?prem(b.open.live_premium)+' <span class="muted">now</span>':'<span class="muted">—</span>'}</td><td class="\${(b.open.live_ret_pct||0)>=0?'pl up':'pl dn'}">\${b.open.live_ret_pct!=null?(b.open.live_ret_pct>=0?'+':'')+b.open.live_ret_pct+'% <span class="muted">unrl</span>':'—'}</td></tr>\`;
+ for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'} <span class="why-tag">\${exitReason(c.why)}</span></td></tr>\`;}
  return rows||'<tr><td colspan=6 class="muted">no trades yet</td></tr>';}
 function pnl(book,m){const b=book?.[m]||{closed:[]};return (b.closed||[]).reduce((a,c)=>a+c.pnl,0);}
 async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const st=await r.json();document.getElementById('conn').textContent='● live';
@@ -95,7 +102,7 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  document.getElementById('app').innerHTML=\`
  \${st.status?\`<div class="status">⏸ \${st.status}</div>\`:''}
  \${hasData?\`<div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
- <div class="panel"><div class="phdr"><h2>Agent read \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''}</h2>
+ <div class="panel"><div class="phdr"><h2>Agent read \${d.dominant_trend?.direction?'<span class="trend '+d.dominant_trend.direction+'">trend '+d.dominant_trend.direction.toUpperCase()+(d.dominant_trend.strength?' ('+d.dominant_trend.strength+')':'')+'</span>':''} \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''}</h2>
      <div class="toggle"><button class="\${view==='both'?'on':''}" onclick="setView('both')">Both</button><button class="\${view==='conservative'?'on':''}" onclick="setView('conservative')">Conservative</button><button class="\${view==='aggressive'?'on':''}" onclick="setView('aggressive')">Aggressive</button></div></div>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
    <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>\`:''}
