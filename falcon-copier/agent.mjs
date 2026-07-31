@@ -149,7 +149,7 @@ const DASH = path.join(FC, `agent_dashboard.json`);
 // ── EXECUTION DISCIPLINE ── the agent sets the PLAN (direction + numeric target/stop); the book HOLDS to it.
 // A position exits only on: stop hit · target hit · EOD flatten · or a genuinely high-conviction invalidation/reversal
 // — never on a noisy minute-read. New entries clear a conviction bar (RAISED when fighting the dominant trend).
-const ENTRY_BAR = 0.5, COUNTER_TREND_BAR = 0.7, EXIT_BAR = 0.6;   // open-aligned / open-counter-trend / exit-or-reverse-early
+const ENTRY_BAR = 0.5, EXIT_BAR = 0.6;   // decisive-entry / exit-or-reverse-early. Trend-caution lives in the agent's CONVICTION (doctrine guides it) + the stop, NOT a hard counter-trend gate — keeps it agentic, not a one-day rule.
 const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
 async function closeOpen(b, instruments, et, why) {
   const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
@@ -177,8 +177,8 @@ async function manage(book, mode, dec, instruments, et, trend) {
   }
   // ── OPEN a new position: flat + decisive + clears the bar (HIGHER if counter-trend) + before the late-day cutoff ──
   if (!b.open && dec.direction && dec.direction !== 'stand_aside' && px != null && et < NO_NEW_ET) {
-    const counter = (trend === 'up' && dec.direction === 'short') || (trend === 'down' && dec.direction === 'long');
-    if ((dec.conviction ?? 0) >= (counter ? COUNTER_TREND_BAR : ENTRY_BAR)) {
+    const counter = (trend === 'up' && dec.direction === 'short') || (trend === 'down' && dec.direction === 'long');   // recorded for the diary; NOT a gate — the agent self-assigns low conviction to casual fades (doctrine), and the stop caps any bad one
+    if ((dec.conviction ?? 0) >= ENTRY_BAR) {
       const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
       const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
       b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', target_level: dec.target_level ?? null, stop_level: dec.stop_level ?? null, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
@@ -223,7 +223,7 @@ async function reflect() {
   if (!mem?.log?.length) { console.log('no decision log to reflect on — run --sequence first'); return; }
   const review = mem.log.map(e => ({ et: e.et, conservative: `${e.conservative.direction} (${e.conservative.conviction})`, aggressive: `${e.aggressive.direction} ${e.aggressive.entry || ''}→${e.aggressive.target || ''} (${e.aggressive.conviction})`, what_price_did_next_45m: outcomeAfter(e.et) }));
   const out = await claude(
-    `You are the same 0DTE agent REVIEWING your own decisions today against what price actually did, to build EXPERIENCE. Compare conservative vs aggressive vs the real outcome; be blunt where you were too cautious or too aggressive. Record OBSERVATIONS (what you saw and how it resolved) and PROVISIONAL lessons (tentative — one day is not proof). This goes into a permanent multi-day diary; durable lessons are distilled later across many days, so do NOT overclaim from one session.`,
+    `You are the same 0DTE agent REVIEWING your own decisions today against what price actually did, to build EXPERIENCE. Compare conservative vs aggressive vs the real outcome; be blunt where you were too cautious or too aggressive. ALSO explicitly GRADE the system's execution behaviors so we can VALIDATE them across many days (never conclude from one): (1) HOLD-TO-TARGET — did holding winners to their target help or hurt vs exiting sooner? (2) FORCED EXITS — did any stop-out or 15:55 EOD-flatten save or cost money? (3) TREND-COMMITMENT — did trading WITH the dominant trend help, and would any counter-trend trade have worked or failed? These are HYPOTHESES on trial, not settled — say if today's evidence supports or undercuts each. Record OBSERVATIONS (what you saw and how it resolved) and PROVISIONAL lessons (tentative — one day is not proof). This goes into a permanent multi-day diary; durable lessons are distilled later across many days, so do NOT overclaim from one session.`,
     `Your decisions today (${DAY}) and actual outcomes:\n${JSON.stringify(review, null, 1)}\n\nWrite today's diary entry.`,
     { name: 'emit_diary', description: "today's diary entry", input_schema: { type: 'object', required: ['grade', 'observations', 'provisional_lessons'], properties: { grade: { type: 'string' }, observations: { type: 'array', items: { type: 'string' }, description: 'what you saw today + how it resolved (the raw record)' }, provisional_lessons: { type: 'array', items: { type: 'string' }, description: 'tentative takeaways — hypotheses, not yet doctrine' } } } }, 1600);
   const entry = { day: DAY, grade: out.grade, observations: arr(out.observations), provisional_lessons: arr(out.provisional_lessons) };
