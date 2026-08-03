@@ -118,7 +118,7 @@ DOMINANT TREND — COMMIT TO IT (this is the #1 discipline)
 
 MANAGE THE POSITION — DON'T RE-DECIDE IT EVERY MINUTE
 - If you already HOLD a trade, your job is to MANAGE YOUR PLAN, not re-open the question. Repeat the SAME direction to HOLD. Only exit (stand_aside) or reverse when the thesis is genuinely INVALIDATED — your stop is breached or the structure that justified the trade has flipped — and then with HIGH conviction (≥0.6). Do NOT dump a valid position because momentum wobbled for one minute. Let winners run to your target; that is where the money is.
-- Every non-stand_aside decision MUST include a numeric target_level and stop_level (index points, on the correct side: for a long, target above / stop below spot; for a bearish/short, target below / stop above). The SYSTEM EXECUTES them — it takes profit at your target, stops out at your stop, HOLDS in between regardless of minute-to-minute noise, and force-flattens near the close. Set them where you truly want in and out; they are your plan and they will be honored.`;
+- Every non-stand_aside decision MUST include a numeric target_level and stop_level (index points, on the correct side: for a long, target above / stop below spot; for a bearish/short, target below / stop above). The SYSTEM EXECUTES them — it takes profit at your target, stops out at your stop, HOLDS in between regardless of minute-to-minute noise, and force-flattens near the close. Set them where you truly want in and out; they are your plan and they will be honored. As a winner runs in your favor, RAISE your stop_level each read (trail it up under price for a long / down over price for a short) to lock in gains — the system ratchets the stop (it tightens only, never loosens), so a reversal takes you out at your protected level instead of round-tripping the whole move. Move target_level too as the structure extends or stalls.`;
 
 const TOOL = {
   name: 'emit_decisions', description: 'Emit the shared read plus a conservative and an aggressive decision, and update your journal. Call exactly once.',
@@ -164,12 +164,17 @@ async function manage(book, mode, dec, instruments, et, trend) {
   const b = (book[mode] ||= { open: null, closed: [] });
   const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
   const px = instruments[inst]?.spot ?? instruments.SPXW?.spot;
-  // ── manage an OPEN position: HOLD to the plan; exit only on stop/target/EOD or a high-conviction invalidation ──
+  // ── manage an OPEN position: TRAIL the agent's stop/target (ratchet the stop, never loosen), then exit on stop/target/EOD or a high-conviction invalidation ──
   if (b.open) {
     const o = b.open, opx = instruments[o.instrument]?.spot ?? px, long = o.dir === 'long';
+    if (opx != null) {   // maintain the agent's EVOLVING plan on the position — persisted to agent_state each tick ("in memory")
+      const s = dec.stop_level, t = dec.target_level;
+      if (s != null && (long ? s < opx : s > opx) && (o.stop_level == null || (long ? s > o.stop_level : s < o.stop_level))) o.stop_level = s;   // RATCHET: raise a long's stop / lower a short's — protect gains, never loosen into a hoped-for bounce
+      if (t != null && (long ? t > opx : t < opx)) o.target_level = t;   // target follows the agent's read while still ahead of price
+    }
     let why = null, reverse = false;
-    if (opx != null && o.stop_level != null && (long ? (o.stop_level < o.entryPx && opx <= o.stop_level) : (o.stop_level > o.entryPx && opx >= o.stop_level))) why = 'stop hit';
-    else if (opx != null && o.target_level != null && (long ? (o.target_level > o.entryPx && opx >= o.target_level) : (o.target_level < o.entryPx && opx <= o.target_level))) why = 'target hit';
+    if (opx != null && o.stop_level != null && (long ? opx <= o.stop_level : opx >= o.stop_level)) why = 'stop hit';
+    else if (opx != null && o.target_level != null && (long ? opx >= o.target_level : opx <= o.target_level)) why = 'target hit';
     else if (et >= FLATTEN_ET) why = 'EOD flatten';
     else { const wantsOut = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== o.dir);
       if (wantsOut && (dec.conviction ?? 0) >= EXIT_BAR) { why = dec.direction === 'stand_aside' ? 'exit — thesis invalidated' : 'reversed (high conviction)'; reverse = dec.direction !== 'stand_aside'; } }
@@ -185,7 +190,9 @@ async function manage(book, mode, dec, instruments, et, trend) {
       const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
       const notional = Math.round(BASE_NOTIONAL * Math.min(1, dec.conviction));   // conviction-weighted $ size (the agent's read drives it), equal across instruments
       const contracts = premium ? +(notional / (premium * 100)).toFixed(2) : null;
-      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, contracts, notional: premium ? notional : null, target: dec.target || '', stop: dec.stop || '', target_level: dec.target_level ?? null, stop_level: dec.stop_level ?? null, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
+      const initStop = (dec.stop_level != null && (dec.direction === 'long' ? dec.stop_level < px : dec.stop_level > px)) ? dec.stop_level : null;   // only accept an initial stop on the correct side of entry
+      const initTarget = (dec.target_level != null && (dec.direction === 'long' ? dec.target_level > px : dec.target_level < px)) ? dec.target_level : null;
+      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, contracts, notional: premium ? notional : null, target: dec.target || '', stop: dec.stop || '', target_level: initTarget, stop_level: initStop, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
     }
   }
 }

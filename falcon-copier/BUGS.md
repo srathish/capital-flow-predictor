@@ -2,8 +2,10 @@
 
 ## OPEN — NEXT BUILD (after the close; loop refactor = restart, so batch these)
 
-### A. Trailing stop/target NOT enforced — the agent's updates are ignored (HIGH — protects winners) [user-flagged 8/3]
-`manage()` freezes `o.stop_level`/`o.target_level` at ENTRY and never applies the agent's later adjustments. The agent re-emits its stop/target every tick (it *wants* to trail the stop up to lock a winner's gains), but execution ignores them. **Live proof 8/3:** aggressive SPXW 7585C at +110% — agent trailed its stop 7583→7592 and target 7599→7605, but enforced stayed **7583/7599**, so the +110% was protected 13pts down instead of the 4 the agent intended. **Fix (agentic):** each tick while holding, apply the agent's current `stop_level`/`target_level` to the open position — for a long, RATCHET the stop up (protect gains, never loosen into a hoped-for bounce); let the target move with the agent's read. This is the missing half of "let winners run": run them AND protect them.
+### A. Premium/theta stop — a sideways 0DTE bleeds to a big loss WITHOUT hitting the price stop (HIGH — protects capital) [user-flagged 8/3]
+The price-based stop can't catch THETA. **Live proof 8/3:** SPXW 7610C long entered 15:01 @SPX 7608 ($4.30); SPX then chopped **7603–7609 and NEVER hit the 7600 stop**, but the 0DTE call bled to $1.30 = **−70% / −$3,837** before the agent finally bailed at 15:40. Hold-to-plan held while the premium melted. **Fix:** a premium-based hard stop (cut if the option is down ≥ ~40–50% regardless of price level) — the loser-side counterpart to the trailing stop — plus doctrine making the agent theta-aware (a 0DTE long that isn't moving is bleeding — bail faster), and better late-day entry discipline (this was a chased 7610C at 15:01).
+
+### ✅ B. Trailing stop/target — DONE 8/3 PM (moved to FIXED). The agent now ratchets its stop each tick, it's enforced + persisted, and a stop trailed above entry fires. 25/25 tests.
 
 ### B. Cost: agent-paced split loop + prompt caching + JSON compaction (MED)
 Split the fast cheap price-execution (stops/targets/EOD every min, no LLM) from the LLM reasoning; add a `next_review_minutes` field so the AGENT paces its own re-checks (cap ~3 min). Cache the static doctrine+tool prefix. Drop `JSON.stringify(state, null, 1)` pretty-printing. Target ~$12/day → ~$5–7/day, more agentic not less. See conversation 8/3.
