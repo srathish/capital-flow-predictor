@@ -1,11 +1,27 @@
 # Falcon-copier — bug log
 
-## OPEN
-### 3. Raw frame history not durable — rolling 60-min window, wiped on restart (MED — data/replay)
-`bufs` starts empty on loop start (agent.mjs) and each tick overwrites `today_*.jsonl.gz` from it, so (a) a restart loses all frames before it, and (b) even with no restart the file is capped at the last 60 frames — no full-day raw GEX archive. Decisions survive (mem resumes from agent_state); raw frames don't. **Fix:** on startup load today's frames into `bufs`; separately append every frame to an uncapped `archive/<day>_<sym>.jsonl.gz`. Until then: copy `today_*.jsonl.gz` aside before any manual restart. See [[feedback_never_hard_reset_live_loop]].
+## OPEN — NEXT BUILD (after the close; loop refactor = restart, so batch these)
 
-### WATCH: trend-commitment validated by tests + one live call, NOT yet by a full live day
-The 7/31 rewrite passed 17/17 execution unit tests + a live reasoning call, but a real trend day is the true stress test. Watch 7/31: does it HOLD winners to target, SKIP casual counter-trend, flatten by 15:55, and show clean discrete exits? Feed the outcome to `--reflect`. One day is a hypothesis (anti-overfit).
+### A. Trailing stop/target NOT enforced — the agent's updates are ignored (HIGH — protects winners) [user-flagged 8/3]
+`manage()` freezes `o.stop_level`/`o.target_level` at ENTRY and never applies the agent's later adjustments. The agent re-emits its stop/target every tick (it *wants* to trail the stop up to lock a winner's gains), but execution ignores them. **Live proof 8/3:** aggressive SPXW 7585C at +110% — agent trailed its stop 7583→7592 and target 7599→7605, but enforced stayed **7583/7599**, so the +110% was protected 13pts down instead of the 4 the agent intended. **Fix (agentic):** each tick while holding, apply the agent's current `stop_level`/`target_level` to the open position — for a long, RATCHET the stop up (protect gains, never loosen into a hoped-for bounce); let the target move with the agent's read. This is the missing half of "let winners run": run them AND protect them.
+
+### B. Cost: agent-paced split loop + prompt caching + JSON compaction (MED)
+Split the fast cheap price-execution (stops/targets/EOD every min, no LLM) from the LLM reasoning; add a `next_review_minutes` field so the AGENT paces its own re-checks (cap ~3 min). Cache the static doctrine+tool prefix. Drop `JSON.stringify(state, null, 1)` pretty-printing. Target ~$12/day → ~$5–7/day, more agentic not less. See conversation 8/3.
+
+### C. Dashboard: "HOLDING" state while in a trade (MED — UX, user-flagged 8/3)
+The ✗/✓ entry-trigger badge flips on conviction wobble even while a position is HELD (e.g. conv 0.55 → ✗ but still open at +110%). Once a position is open, show "HOLDING · in trade" and reserve ✗/✓ for FLAT/new-entry evaluation. Also: the level line shows the agent's *current* stop/target, which (per bug A) differs from what's enforced — surface the ENFORCED levels.
+
+### D. QQQ-selection tracking in `--reflect` (LOW — user-flagged 8/3)
+0 QQQ trades in 4 days (SPXW 24, SPY 12, QQQ 0) though QQQ is fully eligible + reasoned over every tick. Have `--reflect` flag when a strong QQQ setup was read but SPX/SPY taken instead — real preference vs blind spot?
+
+### E. SPX stop-width calibration (LOW) — SPXW wiggle-stops (6 stopped in 4–13min on 7/31). Guide the agent to noise-aware SPX stops once the frame archive gives us the noise data.
+
+### WATCH: trend-commitment / hold-to-plan / sizing — validated by tests + 8/3 live, NOT yet across many days
+Feed each day to `--reflect` (now unblocked by the archive). One day is a hypothesis (anti-overfit). Judge on risk-parity $ across the sample.
+
+## FIXED — 8/3 risk-parity sizing + durable frame archive (deployed live 8/3)
+- **Position sizing** — each trade sized to conviction-weighted $ notional (BASE $10k × the agent's conviction), so SPXW & SPY are comparable in $ (fixes 7/31's −$2857-vs-+$2000 sizing artifact). `pnl_usd` on every closed trade; dashboard shows risk-parity $.
+- **#3 frame history durability** — buffer uncapped + dated `archive/<day>_<sym>.jsonl.gz`, reloaded on restart. A restart no longer loses the day's GEX frames, and `--reflect` can finally see full-day outcomes. Verified writing live 8/3.
 
 ## FIXED — 7/31 trend-commitment + hold-to-plan deploy (validated 17/17 unit + live sample)
 - **#1 exit logic** (was: no take-profit/stop, churned winners, gave back the 7385C's +28%→−25%) → `manage()` now holds to the agent's OWN numeric `target_level`/`stop_level`: take-profit at target, stop-out at stop, HOLD in between, a raised 0.6 bar to exit/reverse early. No more dumping winners on a noisy minute-read.
