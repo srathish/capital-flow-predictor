@@ -83,12 +83,22 @@ async function skylitTide() {        // net call/put premium = the market flow l
   const net = (+last.ncp_cumulative || 0) - (+last.npp_cumulative || 0);
   return { net_call_prem_M: M(+last.ncp_cumulative || 0), net_put_prem_M: M(+last.npp_cumulative || 0), net_lean_M: M(net), lean: net > 0 ? 'bullish' : net < 0 ? 'bearish' : 'balanced' };
 }
-async function getVix() {   // VIX isn't in Skylit's REST endpoints — pull the public CBOE index quote (no auth)
+async function getVix() {   // VOLATILITY REGIME (VIX family) — Skylit has no REST VIX; public CBOE quotes, no auth. See knowledge/VOLATILITY_PRIMER.md
+  const q = (sym, iv = '1d', rng = '2d') => fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=${iv}&range=${rng}`, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }).then(x => x.ok ? x.json() : null).catch(() => null);
+  const px = (j) => { const v = +j?.chart?.result?.[0]?.meta?.regularMarketPrice; return Number.isFinite(v) ? +v.toFixed(2) : null; };
   try {
-    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=1d', { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }).then(x => x.ok ? x.json() : null);
-    const m = r?.chart?.result?.[0]?.meta; if (!m?.regularMarketPrice) return null;
-    const v = +m.regularMarketPrice, pc = +m.chartPreviousClose;
-    return { level: +v.toFixed(2), chg_pct: pc ? +(((v - pc) / pc) * 100).toFixed(1) : null, band: v < 15 ? 'calm' : v < 20 ? 'normal' : v < 27 ? 'elevated' : 'high' };
+    const [d5, v1, v9, v3, vn] = await Promise.all([q('%5EVIX', '5m', '2d'), q('%5EVIX1D'), q('%5EVIX9D'), q('%5EVIX3M'), q('%5EVXN')]);
+    const res = d5?.chart?.result?.[0], m = res?.meta; if (!m?.regularMarketPrice) return null;
+    const level = +(+m.regularMarketPrice).toFixed(2), pc = +m.chartPreviousClose;
+    const vix1d = px(v1), vix9d = px(v9), vix3m = px(v3), vxn = px(vn);
+    const band = level <= 16 ? 'low' : level < 25 ? 'moderate' : 'high';   // hazy: ≤16 chop/grind, 17-24 sweet spot, ≥25 violent/size-down
+    let pivot = pc ? +pc.toFixed(2) : null, pivotSrc = 'prior-close proxy';   // pivot: manual override (vix_pivot.json) else prior-day-close proxy
+    try { const pf = path.join(FC, 'vix_pivot.json'); if (fs.existsSync(pf)) { const p = JSON.parse(fs.readFileSync(pf, 'utf8')); if (+p.pivot) { pivot = +p.pivot; pivotSrc = 'manual (Architect)'; } } } catch { }
+    const tilt = pivot == null ? null : level > pivot ? 'bearish' : 'bullish';   // VIX above pivot = bearish tilt; below = bullish
+    let tilt_confirmed = 'unconfirmed';   // 2-candle rule: last two completed 5-min candles FULLY beyond the pivot (no wick touches)
+    if (pivot != null && res.indicators?.quote?.[0]) { const qd = res.indicators.quote[0]; const bars = (res.timestamp || []).map((t, i) => ({ h: qd.high[i], l: qd.low[i], c: qd.close[i] })).filter(b => b.c != null).slice(-2); if (bars.length === 2 && bars.every(b => b.l > pivot)) tilt_confirmed = 'bearish-confirmed'; else if (bars.length === 2 && bars.every(b => b.h < pivot)) tilt_confirmed = 'bullish-confirmed'; }
+    const term_structure = (vix1d != null && vix3m != null) ? (vix1d < vix3m ? 'contango' : 'backwardation') : null;   // front<back = calm/bullish bias; front>back = stress/bearish
+    return { level, chg_pct: pc ? +(((level - pc) / pc) * 100).toFixed(1) : null, band, vix1d_0dte: vix1d, vix9d, vix3m, nasdaq_vol_vxn: vxn, term_structure, pivot, pivot_source: pivotSrc, tilt, tilt_confirmed };
   } catch { return null; }
 }
 async function liveLayers() {
@@ -115,7 +125,12 @@ WHAT THE DATA IS
 - king_node = largest positive node = dominant magnet. vex_M = 0DTE vanna. gex_chg15_M = 15-min node change.
 - structure_timeline_30m = last 30 min at 6-min steps. THIS is the edge over a snapshot: watch dom_neg_M grow (conviction building at a wall) and dom_neg_strike ROLL DOWN (ceiling chasing price = top confirming), and net_gamma shift (regime change).
 - higher_timeframe = the FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+). agg_king = the multi-day magnet. When it MATCHES the 0DTE king_node → strong confluence (price gets pinned/pulled hard there). When it's FAR from the 0DTE king → the bigger surface is pulling price toward agg_king, so today's 0DTE pin is weaker and more likely to BREAK toward the aggregate level. Use both: 0DTE = today's mechanics, higher_timeframe = the gravitational pull. Don't fade toward a 0DTE node if the whole surface is pulling the other way.
-- vix (uw_layers) = CBOE volatility. calm/low (<15) = trend-friendly, ranges contained, pins hold, you can chase a rip; elevated/high (>20) = 2-way chop, WIDE ranges, pins break, stops need more room — favor PULLBACK entries, smaller conviction/size, expect whipsaw; a fast VIX spike intraday = risk-off, get defensive.
+- vix (uw_layers.vix) = the VOLATILITY REGIME (VIX family) — macro context + directional bias, weigh it in every read:
+   · band: low (≤16) = chop/grind, pins HOLD, trend-friendly, you can chase a rip; moderate (17-24) = the sweet spot, meaningful moves; high (≥25) = VIOLENT both ways, levels BLOW THROUGH, size DOWN, favor pullback entries + wider stops. vix1d_0dte is the 0DTE-specific vol — weight it MOST for today's tape.
+   · term_structure: contango (front<back) = calm/coasting → market biased neutral-to-BULLISH; backwardation (front>back) = near-term stress → biased BEARISH (a delayed but strong signal).
+   · tilt (VIX vs pivot): VIX BELOW pivot = bullish tilt, ABOVE = bearish tilt; tilt_confirmed = the 2-candle flip confirmed. VIX is ~80% INVERSE to price (VIX up → spot down).
+   Synthesize: low-VIX + contango + bullish-tilt = favor longs/trend-following, hold to target, pins hold; high-VIX + backwardation + bearish-tilt = caution, pullback entries, smaller size, respect downside, levels less reliable. Don't fight a confirmed VIX tilt.
+- EVENT PREMIUM: near a scheduled macro event (FOMC/CPI/PCE/NFP) index options carry extra "event premium" that IV-CRUSHES after — a 0DTE long into an event that doesn't move enough gets double-bled (theta + crush). (Econ-calendar timing is a TODO; for now infer from unusually rich near-dated premium.)
 
 HOW TO READ IT (doctrine — synthesize, do not pattern-match)
 - REGIME first. Near-money mostly NEGATIVE = negative-gamma: moves TREND/ACCELERATE, reversals run, price rips toward levels fast (speed is a lure). Mostly POSITIVE = pinned/mean-revert: fade extensions to walls, expect chop.
