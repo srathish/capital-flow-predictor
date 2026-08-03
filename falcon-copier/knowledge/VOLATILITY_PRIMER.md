@@ -50,6 +50,7 @@ Third-party educational synthesis. Distilled for the 0DTE index agent (SPXW/SPY/
 - **Inverted term structure into an event** (front IV > back IV) isolates the event premium.
 - Structures that dodge crush: calendar/diagonal (sell front, buy back), verticals/debit spreads, or **wait for the crush** and play post-event drift.
 - **How it maps to us:** on the index this is the **macro-event premium** (FOMC/CPI days). Reinforces the need for the **econ calendar** sense: before a scheduled event, near-dated index options carry event premium (buying them = fighting the crush); after, IV normalizes. A 0DTE long into an event that doesn't move enough = double-bled (theta + crush).
+- **Full earnings playbook** (Archi's method — a separate stock workstream) distilled in `IV_EXPANSION_STRATEGY.md`. **The live crossover for us:** the **0DTE ATM straddle prices today's expected range** — a strong candidate sense (set realistic targets/stops off it; a move *beyond* the implied range is genuinely significant, not noise).
 
 ## 7. IV Rank vs IV Percentile (judging if premium is rich)
 - **IV Rank:** where IV sits in the past year's range (outlier-skewed by one big event).
