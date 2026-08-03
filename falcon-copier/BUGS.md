@@ -21,6 +21,14 @@ The ✗/✓ entry-trigger badge flips on conviction wobble even while a position
 ### WATCH: trend-commitment / hold-to-plan / sizing — validated by tests + 8/3 live, NOT yet across many days
 Feed each day to `--reflect` (now unblocked by the archive). One day is a hypothesis (anti-overfit). Judge on risk-parity $ across the sample.
 
+## FIXED — 8/3 PM: higher-timeframe (future GEX/VEX) + VIX senses (verified live, all 3 instruments)
+- **Future/aggregate GEX+VEX** — `pullLiveGEX` was keeping only col[0] (0DTE) and discarding the other 9 expiries; now it also keeps the aggregate (gA/vA summed across the full surface) + widens the window to ±2.5%. Each instrument gets a `higher_timeframe` block: agg_king (the multi-day magnet), agg nodes above/below, agg net gamma. Verified live: SPX 0DTE king 7595 vs HTF king **7650** (55pt divergence the agent was blind to). Doctrine added (confluence vs divergence).
+- **VIX** — Skylit has no REST VIX; pulled from CBOE public quote (no auth). `uw_layers.vix` = {level, chg, band}. Doctrine added (calm/low = trend-friendly/pins-hold; high = chop/wide-ranges → pullback entries, smaller size). Dashboard shows HTF king + VIX.
+
+## OPEN (ops)
+### `DAY` is baked at loop start — a loop left running across midnight goes stale (LOW-MED)
+The loop fixes `DAY`=today-ET at launch; run it past midnight and it writes the wrong day's files + skips premium fetches (DAY≠TODAY_ET). This is why the weekend went stale. Mitigation: **relaunch via go.sh each morning** (already the ritual; 8:30 precheck reminds you). Real fix: recompute the day each tick (dynamic MEM/archive/occ paths).
+
 ## FIXED — 8/3 PM: trailing stop + premium/theta stop + resting entries (validated 31/31 unit tests)
 - **Trailing stop/target** — the agent ratchets its stop each tick (long up / short down, never loosens), enforced + persisted; a stop trailed above entry now fires (fixes the frozen-stop that under-protected the +110%).
 - **Premium/theta stop** (the −70% fix) — the agent now SEES its live option P/L in the prompt and is told a stalling 0DTE bleeds; a hard −50% premium stop backstops it, so a sideways bleeder can't run past −50% even when the price-stop is never hit.

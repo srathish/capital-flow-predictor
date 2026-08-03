@@ -45,6 +45,12 @@ function assembleInstrument(sym, etStr) {
   const king = s.strikes.filter(n => n.g0 > 0).sort((a, b) => b.g0 - a.g0)[0];
   const floor = s.strikes.filter(n => n.g0 >= I.strong && n.k < spot).sort((a, b) => b.k - a.k)[0];
   const ceil = s.strikes.filter(n => n.g0 <= -I.strong && n.k > spot).sort((a, b) => a.k - b.k)[0];
+  // ── HIGHER-TIMEFRAME: full-surface gamma summed across ALL expiries (0DTE + weeklies+) — the multi-day magnet & walls the 0DTE map is blind to ──
+  const hasAgg = s.strikes.some(n => n.gA != null);
+  const aggKing = s.strikes.filter(n => (n.gA || 0) > 0).sort((a, b) => b.gA - a.gA)[0];
+  const aggAbove = s.strikes.filter(n => n.k > spot).sort((a, b) => Math.abs(b.gA || 0) - Math.abs(a.gA || 0))[0];
+  const aggBelow = s.strikes.filter(n => n.k < spot).sort((a, b) => Math.abs(b.gA || 0) - Math.abs(a.gA || 0))[0];
+  const aggNet = M(s.strikes.filter(n => Math.abs(n.k - spot) <= I.wide).reduce((a, c) => a + (c.gA || 0), 0));
   const band = s.strikes.filter(n => Math.abs(n.k - spot) <= I.band), path30 = F.slice(Math.max(0, idx - 30), idx + 1).map(f => +f.spot.toFixed(1));
   return {
     symbol: sym, spot: +spot.toFixed(2), chg_pct: +(((spot - s.prevClose) / s.prevClose) * 100).toFixed(2), session_high: Math.max(...path30), session_low: Math.min(...path30),
@@ -54,6 +60,7 @@ function assembleInstrument(sym, etStr) {
     nearest_strong_resistance_above: ceil ? { strike: ceil.k, gex_M: M(ceil.g0) } : null,
     regime_now: { neg_strikes: band.filter(n => n.g0 < 0).length, pos_strikes: band.filter(n => n.g0 > 0).length, net_gamma_M: netOf(s), net_vanna_M: M(band.reduce((a, c) => a + (c.v0 || 0), 0)) },
     strong_nodes_wide: strongWide, gex_vex_map_now: map,   // gex_M = 0DTE gamma, vex_M = 0DTE vanna, per strike
+    higher_timeframe: hasAgg ? { note: 'FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+) — the multi-day magnet & walls. Same strike as the 0DTE king_node = strong confluence; far apart = the bigger surface is pulling price toward agg_king (today the 0DTE king and agg_king can be 50+ pts apart).', front_expiry: s.frontExp || null, agg_king: aggKing ? { strike: aggKing.k, gex_M: M(aggKing.gA) } : null, agg_node_above: aggAbove ? { strike: aggAbove.k, gex_M: M(aggAbove.gA) } : null, agg_node_below: aggBelow ? { strike: aggBelow.k, gex_M: M(aggBelow.gA) } : null, agg_net_gamma_M: aggNet } : null,
   };
 }
 // ── SKYLIT-NATIVE live layers (Flowseeker /fs/api + Heatseeker): dark-pool prints + market tide (flow lean).
@@ -76,9 +83,17 @@ async function skylitTide() {        // net call/put premium = the market flow l
   const net = (+last.ncp_cumulative || 0) - (+last.npp_cumulative || 0);
   return { net_call_prem_M: M(+last.ncp_cumulative || 0), net_put_prem_M: M(+last.npp_cumulative || 0), net_lean_M: M(net), lean: net > 0 ? 'bullish' : net < 0 ? 'bearish' : 'balanced' };
 }
+async function getVix() {   // VIX isn't in Skylit's REST endpoints — pull the public CBOE index quote (no auth)
+  try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=1d', { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }).then(x => x.ok ? x.json() : null);
+    const m = r?.chart?.result?.[0]?.meta; if (!m?.regularMarketPrice) return null;
+    const v = +m.regularMarketPrice, pc = +m.chartPreviousClose;
+    return { level: +v.toFixed(2), chg_pct: pc ? +(((v - pc) / pc) * 100).toFixed(1) : null, band: v < 15 ? 'calm' : v < 20 ? 'normal' : v < 27 ? 'elevated' : 'high' };
+  } catch { return null; }
+}
 async function liveLayers() {
-  const [dp, tide] = await Promise.all([skylitDarkPool(), skylitTide()]);
-  return { source: 'skylit (Flowseeker /fs/api)', dark_pool_prints: dp, market_tide_flow_lean: tide, vix: null, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium. Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here). VIX endpoint TBD.' };
+  const [dp, tide, vix] = await Promise.all([skylitDarkPool(), skylitTide(), getVix()]);
+  return { source: 'skylit (Flowseeker /fs/api) + CBOE VIX', dark_pool_prints: dp, market_tide_flow_lean: tide, vix, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium; vix = CBOE index (level/chg/band). Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here).' };
 }
 async function assembleComplex(etStr, live = false) {
   const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
@@ -99,6 +114,8 @@ WHAT THE DATA IS
 - gex_M per strike = 0DTE dealer gamma. POSITIVE (pika) = wall/magnet/pin: price gravitates to it, tends to hold/reject. NEGATIVE (barney) = accelerant: thin, dealers amplify; a rally INTO a big negative node above spot is a wall of dealer selling that tends to reject price DOWN.
 - king_node = largest positive node = dominant magnet. vex_M = 0DTE vanna. gex_chg15_M = 15-min node change.
 - structure_timeline_30m = last 30 min at 6-min steps. THIS is the edge over a snapshot: watch dom_neg_M grow (conviction building at a wall) and dom_neg_strike ROLL DOWN (ceiling chasing price = top confirming), and net_gamma shift (regime change).
+- higher_timeframe = the FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+). agg_king = the multi-day magnet. When it MATCHES the 0DTE king_node → strong confluence (price gets pinned/pulled hard there). When it's FAR from the 0DTE king → the bigger surface is pulling price toward agg_king, so today's 0DTE pin is weaker and more likely to BREAK toward the aggregate level. Use both: 0DTE = today's mechanics, higher_timeframe = the gravitational pull. Don't fade toward a 0DTE node if the whole surface is pulling the other way.
+- vix (uw_layers) = CBOE volatility. calm/low (<15) = trend-friendly, ranges contained, pins hold, you can chase a rip; elevated/high (>20) = 2-way chop, WIDE ranges, pins break, stops need more room — favor PULLBACK entries, smaller conviction/size, expect whipsaw; a fast VIX spike intraday = risk-off, get defensive.
 
 HOW TO READ IT (doctrine — synthesize, do not pattern-match)
 - REGIME first. Near-money mostly NEGATIVE = negative-gamma: moves TREND/ACCELERATE, reversals run, price rips toward levels fast (speed is a lure). Mostly POSITIVE = pinned/mean-revert: fade extensions to walls, expect chop.
@@ -227,7 +244,7 @@ async function step(et, mem) {
   // (live option P/L is set inside manage() each tick now — powers the theta safety-stop + the P/L the agent sees)
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
-  const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
+  const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, htf: s.higher_timeframe, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
   fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: et, instruments: inst, uw_layers: state.uw_layers, decision: { regime_read: d.regime_read, dominant_trend: d.dominant_trend, shared_thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive }, book: mem.book, journal: mem.notes, lessons: loadLessons() }, null, 1));
   console.log(`\n─── @ ${et} ET · SPX ${R.spot} (${R.chg_pct >= 0 ? '+' : ''}${R.chg_pct}%) · trend ${d.dominant_trend?.direction || '?'}/${d.dominant_trend?.strength || ''} · regime ${R.regime_now.net_gamma_M}M ───`);
   console.log(`  CONSERVATIVE: ${fmt(d.conservative)}`);
@@ -286,9 +303,10 @@ async function pullLiveGEX(sym) {
   u.searchParams.set('symbol', sym); u.searchParams.set('max_strikes', '200'); u.searchParams.set('max_expirations', '10'); u.searchParams.set('nocache', Math.random().toString());
   const r = await fetch(u, { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: 'Bearer ' + t, Accept: 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' }, signal: AbortSignal.timeout(15000) }).catch(() => null);
   if (!r || !r.ok) return null; const raw = await r.json(); if (raw.CurrentSpot == null) return null;
-  const spot = raw.CurrentSpot, K = raw.Strikes || [], G = raw.GammaValues || [], V = raw.VannaValues || [], strikes = [];
-  for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.012) strikes.push({ k, g0: (G[i] || [])[0] || 0, v0: (V[i] || [])[0] || 0 }); }
-  return { ts: new Date().toISOString(), spot, prevClose: raw.PreviousClose, strikes };
+  const spot = raw.CurrentSpot, K = raw.Strikes || [], G = raw.GammaValues || [], V = raw.VannaValues || [], EXP = raw.Expirations || [], strikes = [];
+  const sum = (a) => (a || []).reduce((s, x) => s + (+x || 0), 0);   // aggregate across ALL expiries = the full-surface (multi-day) structure
+  for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.025) strikes.push({ k, g0: (G[i] || [])[0] || 0, v0: (V[i] || [])[0] || 0, gA: sum(G[i]), vA: sum(V[i]) }); }   // g0/v0 = 0DTE (col0); gA/vA = aggregate/full-surface. window widened to ±2.5% to catch the higher-TF walls.
+  return { ts: new Date().toISOString(), spot, prevClose: raw.PreviousClose, frontExp: EXP[0], strikes };
 }
 // ── LIVE loop: every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
 async function loop() {

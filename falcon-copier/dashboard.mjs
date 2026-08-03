@@ -68,7 +68,8 @@ const exitReason=(w)=>{if(!w)return '';w=String(w);if(w.includes('target'))retur
 function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;const roll=(s.dom_neg_roll||[]).filter((v,i,a)=>i===0||v!==a[i-1]).join('→');
  return \`<div class="card"><div class="sym"><b>\${sym}</b><span><span class="px">\${(+s.spot).toFixed(2)}</span> <span class="chg \${s.chg_pct>=0?'up':'dn'}">\${s.chg_pct>=0?'+':''}\${s.chg_pct}%</span></span></div>
  <div><span class="reg \${neg?'neg':'pos'}">\${neg?'negative γ · trend':'positive γ · pinned'}</span></div>
- <div class="kv"><span>King</span><b>\${s.king?.strike??'—'} <span class="muted">(\${s.king?.gex_M??'?'}M)</span></b></div>
+ <div class="kv"><span>King (0DTE)</span><b>\${s.king?.strike??'—'} <span class="muted">(\${s.king?.gex_M??'?'}M)</span></b></div>
+ \${s.htf?.agg_king?\`<div class="kv"><span>HTF king (full surface)</span><b>\${s.htf.agg_king.strike} <span class="muted">(\${s.htf.agg_king.gex_M}M · net \${s.htf.agg_net_gamma_M}M)</span></b></div>\`:''}
  <div class="kv"><span>Support ↓ / Resist ↑</span><b>\${s.support_below?.strike??'—'} / \${s.resist_above?.strike??'—'}</b></div>
  <div class="kv"><span>Net γ / Net vanna</span><b>\${s.regime?.net_gamma_M??'?'}M / \${s.regime?.net_vanna_M??'?'}M</b></div>
  <div class="kv"><span>Dominant-neg roll</span><b class="roll">\${roll||'—'}</b></div>
@@ -103,7 +104,7 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  document.getElementById('app').innerHTML=\`
  \${st.status?\`<div class="status">⏸ \${st.status}</div>\`:''}
  \${hasData?\`<div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
- <div class="panel"><div class="phdr"><h2>Agent read \${d.dominant_trend?.direction?'<span class="trend '+d.dominant_trend.direction+'">trend '+d.dominant_trend.direction.toUpperCase()+(d.dominant_trend.strength?' ('+d.dominant_trend.strength+')':'')+'</span>':''} \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?('· VIX '+st.uw_layers.vix):''}</h2>
+ <div class="panel"><div class="phdr"><h2>Agent read \${d.dominant_trend?.direction?'<span class="trend '+d.dominant_trend.direction+'">trend '+d.dominant_trend.direction.toUpperCase()+(d.dominant_trend.strength?' ('+d.dominant_trend.strength+')':'')+'</span>':''} \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?.level?('· VIX '+st.uw_layers.vix.level+' '+(st.uw_layers.vix.band||'')):''}</h2>
      <div class="toggle"><button class="\${view==='both'?'on':''}" onclick="setView('both')">Both</button><button class="\${view==='conservative'?'on':''}" onclick="setView('conservative')">Conservative</button><button class="\${view==='aggressive'?'on':''}" onclick="setView('aggressive')">Aggressive</button></div></div>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
    <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>\`:''}
