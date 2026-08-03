@@ -150,12 +150,14 @@ const DASH = path.join(FC, `agent_dashboard.json`);
 // A position exits only on: stop hit · target hit · EOD flatten · or a genuinely high-conviction invalidation/reversal
 // — never on a noisy minute-read. New entries clear a conviction bar (RAISED when fighting the dominant trend).
 const ENTRY_BAR = 0.5, EXIT_BAR = 0.6;   // decisive-entry / exit-or-reverse-early. Trend-caution lives in the agent's CONVICTION (doctrine guides it) + the stop, NOT a hard counter-trend gate — keeps it agentic, not a one-day rule.
+const BASE_NOTIONAL = 10000;   // $ notional at full conviction, scaled by the agent's OWN conviction. This is SIZING/risk (not a decision rule): it equalizes SPXW vs SPY so a loss and a win are comparable in $, and lets the agent's conviction drive size.
 const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
 async function closeOpen(b, instruments, et, why) {
   const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
   const exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;
   const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
-  b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), why });
+  const pnlUsd = (o.entry_premium != null && exitPrem != null && o.contracts != null) ? Math.round((exitPrem - o.entry_premium) * 100 * o.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
+  b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
   b.open = null;
 }
 async function manage(book, mode, dec, instruments, et, trend) {
@@ -181,7 +183,9 @@ async function manage(book, mode, dec, instruments, et, trend) {
     if ((dec.conviction ?? 0) >= ENTRY_BAR) {
       const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
       const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
-      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, target: dec.target || '', stop: dec.stop || '', target_level: dec.target_level ?? null, stop_level: dec.stop_level ?? null, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
+      const notional = Math.round(BASE_NOTIONAL * Math.min(1, dec.conviction));   // conviction-weighted $ size (the agent's read drives it), equal across instruments
+      const contracts = premium ? +(notional / (premium * 100)).toFixed(2) : null;
+      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, contracts, notional: premium ? notional : null, target: dec.target || '', stop: dec.stop || '', target_level: dec.target_level ?? null, stop_level: dec.stop_level ?? null, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
     }
   }
 }
@@ -270,6 +274,10 @@ async function pullLiveGEX(sym) {
 // ── LIVE loop: every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
 async function loop() {
   const bufs = { SPXW: [], SPY: [], QQQ: [] };
+  // resume today's FRAMES on restart (durability, BUGS #3): reload from the dated archive so a restart never loses the day's GEX history
+  try { fs.mkdirSync(path.join(FC, 'archive'), { recursive: true }); } catch { }
+  for (const sym of ['SPXW', 'SPY', 'QQQ']) { const af = path.join(FC, 'archive', `${DAY}_${sym}.jsonl.gz`); if (fs.existsSync(af)) { try { bufs[sym] = zlib.gunzipSync(fs.readFileSync(af)).toString().trim().split('\n').map(l => JSON.parse(l)); } catch { } } }
+  if (bufs.SPXW.length) console.log(`  ↺ resumed ${bufs.SPXW.length} frames from today's archive (no data lost on restart)`);
   // resume today's book/journal on restart so the full day of plays survives (step() saves mem to MEM each tick)
   let mem = fs.existsSync(MEM) ? (() => { try { return JSON.parse(fs.readFileSync(MEM, 'utf8')); } catch { return null; } })() : null;
   if (!mem || mem.day !== DAY) mem = { day: DAY, notes: '', log: [] };
@@ -283,7 +291,7 @@ async function loop() {
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));
     if (m >= 9 * 60 + 30 && m <= 16 * 60) {
       try {
-        for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); if (bufs[sym].length > 60) bufs[sym].shift(); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n')); } }
+        for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); const gz = zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n'); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), gz); fs.writeFileSync(path.join(FC, 'archive', `${DAY}_${sym}.jsonl.gz`), gz); } }   // uncapped now (full-day archive); dated copy survives the next day's overwrite. assembleInstrument only reads the last ~30 frames so the prompt doesn't grow.
         if (bufs.SPXW.length) mem = await step(et, mem);
       } catch (e) { console.log(`  ${et} loop error: ${e.message.slice(0, 90)}`); }
     } else { console.log(`  ${et} ET · market closed — idle`); idleDash(`market ${m < 9 * 60 + 30 ? 'not open yet' : 'closed'} — agent idle · ${nplays()} plays today`); }

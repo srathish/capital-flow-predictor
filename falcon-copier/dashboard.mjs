@@ -62,6 +62,7 @@ const CONFIRM=${CONFIRM};
 let view='both';const setView=v=>{view=v;tick();};
 const modes=()=>view==='both'?['conservative','aggressive']:[view];
 const f1=x=>x==null?'—':(x>=0?'+':'')+(+x).toFixed(1);
+const usd=x=>x==null?'—':(x>=0?'+$':'-$')+Math.abs(Math.round(x)).toLocaleString();
 const dirCls=d=>d==='long'?'long':d==='short'?'short':'aside';
 const exitReason=(w)=>{if(!w)return '';w=String(w);if(w.includes('target'))return '✓ target hit';if(w.includes('stop'))return '✗ stop hit';if(w.includes('EOD'))return '⏰ EOD flat';if(w.includes('revers'))return '↺ reversed';if(w.includes('invalidated')||w.includes('stood aside')||w.includes('exit'))return '⊘ exit';return w;};
 function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;const roll=(s.dom_neg_roll||[]).filter((v,i,a)=>i===0||v!==a[i-1]).join('→');
@@ -89,9 +90,9 @@ const opt=(x)=>x.strike?\`\${x.instrument} \${x.strike}\${x.cp}\`:x.instrument;
 const prem=(p)=>p!=null?'\$'+(+p).toFixed(2):'—';
 function blotter(book){let rows='';for(const m of modes()){const b=book?.[m]||{open:null,closed:[]};
  if(b.open)rows+=\`<tr class="open-row"><td>\${m}</td><td>\${opt(b.open)} <span class="tag \${b.open.dir}">\${b.open.dir}</span> <span class="tag open">● OPEN</span></td><td>\${b.open.entryET||''}</td><td>\${prem(b.open.entry_premium)}</td><td>\${b.open.live_premium!=null?prem(b.open.live_premium)+' <span class="muted">now</span>':'<span class="muted">—</span>'}</td><td class="\${(b.open.live_ret_pct||0)>=0?'pl up':'pl dn'}">\${b.open.live_ret_pct!=null?(b.open.live_ret_pct>=0?'+':'')+b.open.live_ret_pct+'% <span class="muted">unrl</span>':'—'}</td></tr>\`;
- for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'} <span class="why-tag">\${exitReason(c.why)}</span></td></tr>\`;}
+ for(const c of (b.closed||[]))rows+=\`<tr><td>\${m}</td><td>\${opt(c)} <span class="tag \${c.dir}">\${c.dir}</span></td><td>\${c.entryET||''}</td><td>\${prem(c.entry_premium)}</td><td>\${prem(c.exit_premium)} <span class="muted">\${c.exitET||''}</span></td><td class="pl \${(c.pnl_usd??c.opt_ret_pct??c.pnl)>=0?'up':'dn'}">\${c.opt_ret_pct!=null?(c.opt_ret_pct>=0?'+':'')+c.opt_ret_pct+'%':f1(c.pnl)+'pt'}\${c.pnl_usd!=null?' <span class="muted">'+usd(c.pnl_usd)+'</span>':''} <span class="why-tag">\${exitReason(c.why)}</span></td></tr>\`;}
  return rows||'<tr><td colspan=6 class="muted">no trades yet</td></tr>';}
-function pnl(book,m){const b=book?.[m]||{closed:[]};return (b.closed||[]).reduce((a,c)=>a+c.pnl,0);}
+function pnl(book,m){const b=book?.[m]||{closed:[]};return (b.closed||[]).reduce((a,c)=>a+(c.pnl_usd??0),0);}
 async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const st=await r.json();document.getElementById('conn').textContent='● live';
  if(!st){document.getElementById('app').innerHTML='<div class="empty">no snapshot yet — run the agent</div>';return;}
  document.getElementById('asof').textContent=(st.day||'')+' '+(st.as_of_et||'')+' ET';
@@ -107,7 +108,7 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
    <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>\`:''}
  <div class="two">
-   <div class="panel"><h2>Trade blotter · realized: conservative <span class="\${cp>=0?'pl up':'pl dn'}">\${f1(cp)}</span> · aggressive <span class="\${ap>=0?'pl up':'pl dn'}">\${f1(ap)}</span></h2>
+   <div class="panel"><h2>Trade blotter · realized (risk-parity $): conservative <span class="\${cp>=0?'pl up':'pl dn'}">\${usd(cp)}</span> · aggressive <span class="\${ap>=0?'pl up':'pl dn'}">\${usd(ap)}</span></h2>
      <table><thead><tr><th>posture</th><th>option</th><th>fired</th><th>entry \$</th><th>exit \$</th><th>return</th></tr></thead><tbody>\${blotter(st.book)}</tbody></table></div>
    <div class="panel"><h2>Journal & lessons</h2><div class="jr">\${(st.journal||'(none)').slice(0,700)}</div>
      \${(st.lessons&&st.lessons.length)?'<details><summary>durable lessons ('+st.lessons.length+')</summary><div class="jr">'+st.lessons.map((l,i)=>(i+1)+'. '+(l.lesson||l)).join('\\n')+'</div></details>':'<div class="muted" style="margin-top:8px;font-size:12px">no durable lessons yet (need multi-day recurrence)</div>'}</div>
