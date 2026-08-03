@@ -70,6 +70,7 @@ function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;
  <div><span class="reg \${neg?'neg':'pos'}">\${neg?'negative γ · trend':'positive γ · pinned'}</span></div>
  <div class="kv"><span>King (0DTE)</span><b>\${s.king?.strike??'—'} <span class="muted">(\${s.king?.gex_M??'?'}M)</span></b></div>
  \${s.htf?.agg_king?\`<div class="kv"><span>HTF king (full surface)</span><b>\${s.htf.agg_king.strike} <span class="muted">(\${s.htf.agg_king.gex_M}M · net \${s.htf.agg_net_gamma_M}M)</span></b></div>\`:''}
+ \${s.em?.expected_range?\`<div class="kv"><span>Expected range (0DTE straddle)</span><b>\${s.em.expected_range[0]}–\${s.em.expected_range[1]} <span class="muted">(±\${s.em.expected_move_pts})</span></b></div>\`:''}
  <div class="kv"><span>Support ↓ / Resist ↑</span><b>\${s.support_below?.strike??'—'} / \${s.resist_above?.strike??'—'}</b></div>
  <div class="kv"><span>Net γ / Net vanna</span><b>\${s.regime?.net_gamma_M??'?'}M / \${s.regime?.net_vanna_M??'?'}M</b></div>
  <div class="kv"><span>Dominant-neg roll</span><b class="roll">\${roll||'—'}</b></div>

@@ -27,6 +27,14 @@ const STEP = { SPXW: 5, SPY: 1, QQQ: 1 };
 const occOf = (sym, day, cp, strike) => (sym === 'SPXW' ? 'SPXW' : sym) + day.slice(2).replace(/-/g, '') + cp + String(Math.round(strike * 1000)).padStart(8, '0');
 const UWKEY = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY;
 async function optMark(occ) { if (!UWKEY) return null; const q = await fetch('https://api.unusualwhales.com/api/option-contract/' + occ + '/intraday', { headers: { Authorization: 'Bearer ' + UWKEY }, signal: AbortSignal.timeout(10000) }).then(x => x.ok ? x.json() : null).catch(() => null); const d = (q?.data || []).filter(b => +b.close > 0 && b.start_time); if (!d.length) return null; const latest = d.reduce((a, b) => b.start_time > a.start_time ? b : a); return +latest.close; }   // UW bars are newest-first-ish; take the max start_time = current mark
+async function expectedMove(sym, spot) {   // the 0DTE ATM straddle ≈ the market's expected REMAINING range to the close (community: "expected move ≈ ATM straddle")
+  if (DAY !== TODAY_ET || spot == null) return null;
+  const step = STEP[sym] || 1, atm = Math.round(spot / step) * step;
+  const [c, p] = await Promise.all([optMark(occOf(sym, DAY, 'C', atm)), optMark(occOf(sym, DAY, 'P', atm))]);
+  if (c == null || p == null) return null;
+  const straddle = +(c + p).toFixed(2);
+  return { atm_strike: atm, atm_straddle: straddle, expected_move_pts: straddle, expected_range: [+(spot - straddle).toFixed(1), +(spot + straddle).toFixed(1)], note: 'straddle ≈ expected REMAINING move to close; within range = normal, beyond = significant (exhaustion or real breakout); shrinks as the day ages' };
+}
 const LESSONS_FILE = path.join(FC, 'agent_lessons.json');
 const loadLessons = () => fs.existsSync(LESSONS_FILE) ? JSON.parse(fs.readFileSync(LESSONS_FILE, 'utf8')) : [];
 
@@ -107,6 +115,7 @@ async function liveLayers() {
 }
 async function assembleComplex(etStr, live = false) {
   const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
+  if (live) await Promise.all(Object.entries(instruments).map(async ([sym, s]) => { const em = await expectedMove(sym, s.spot); if (em) s.expected_move = em; }));   // 0DTE ATM straddle = today's implied range
   const uwLayers = live ? await liveLayers() : { note: 'options_flow / dark_pool / market_tide / vix are LIVE-ONLY UW data — not reconstructable for this historical replay day. Reason from GEX/VEX/structure/cross-index here; they ARE wired and present in live runs.' };
   return { as_of_et: etStr, instruments, uw_layers: uwLayers };
 }
@@ -125,6 +134,7 @@ WHAT THE DATA IS
 - king_node = largest positive node = dominant magnet. vex_M = 0DTE vanna. gex_chg15_M = 15-min node change.
 - structure_timeline_30m = last 30 min at 6-min steps. THIS is the edge over a snapshot: watch dom_neg_M grow (conviction building at a wall) and dom_neg_strike ROLL DOWN (ceiling chasing price = top confirming), and net_gamma shift (regime change).
 - higher_timeframe = the FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+). agg_king = the multi-day magnet. When it MATCHES the 0DTE king_node → strong confluence (price gets pinned/pulled hard there). When it's FAR from the 0DTE king → the bigger surface is pulling price toward agg_king, so today's 0DTE pin is weaker and more likely to BREAK toward the aggregate level. Use both: 0DTE = today's mechanics, higher_timeframe = the gravitational pull. Don't fade toward a 0DTE node if the whole surface is pulling the other way.
+- expected_move (per instrument, live) = the 0DTE ATM straddle = the market's expected REMAINING range to the close (expected_range = spot ± straddle). Set your target_level INSIDE this range by default — a target beyond it rarely fills same-day. If price has already REACHED/EXCEEDED the expected range, the move is significant: either exhaustion (fade candidate, esp. into a wall) or a genuine range-expansion breakout (with structure + rising VIX). It SHRINKS as the day ages (theta) → late-day, less room, tighten targets.
 - vix (uw_layers.vix) = the VOLATILITY REGIME (VIX family) — macro context + directional bias, weigh it in every read:
    · band: low (≤16) = chop/grind, pins HOLD, trend-friendly, you can chase a rip; moderate (17-24) = the sweet spot, meaningful moves; high (≥25) = VIOLENT both ways, levels BLOW THROUGH, size DOWN, favor pullback entries + wider stops. vix1d_0dte is the 0DTE-specific vol — weight it MOST for today's tape.
    · term_structure: contango (front<back) = calm/coasting → market biased neutral-to-BULLISH; backwardation (front>back) = near-term stress → biased BEARISH (a delayed but strong signal).
@@ -259,7 +269,7 @@ async function step(et, mem) {
   // (live option P/L is set inside manage() each tick now — powers the theta safety-stop + the P/L the agent sees)
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
-  const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, htf: s.higher_timeframe, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
+  const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, htf: s.higher_timeframe, em: s.expected_move, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
   fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: et, instruments: inst, uw_layers: state.uw_layers, decision: { regime_read: d.regime_read, dominant_trend: d.dominant_trend, shared_thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive }, book: mem.book, journal: mem.notes, lessons: loadLessons() }, null, 1));
   console.log(`\n─── @ ${et} ET · SPX ${R.spot} (${R.chg_pct >= 0 ? '+' : ''}${R.chg_pct}%) · trend ${d.dominant_trend?.direction || '?'}/${d.dominant_trend?.strength || ''} · regime ${R.regime_now.net_gamma_M}M ───`);
   console.log(`  CONSERVATIVE: ${fmt(d.conservative)}`);
