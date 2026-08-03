@@ -2,8 +2,8 @@
 
 ## OPEN — NEXT BUILD (after the close; loop refactor = restart, so batch these)
 
-### A. Premium/theta stop — a sideways 0DTE bleeds to a big loss WITHOUT hitting the price stop (HIGH — protects capital) [user-flagged 8/3]
-The price-based stop can't catch THETA. **Live proof 8/3:** SPXW 7610C long entered 15:01 @SPX 7608 ($4.30); SPX then chopped **7603–7609 and NEVER hit the 7600 stop**, but the 0DTE call bled to $1.30 = **−70% / −$3,837** before the agent finally bailed at 15:40. Hold-to-plan held while the premium melted. **Fix:** a premium-based hard stop (cut if the option is down ≥ ~40–50% regardless of price level) — the loser-side counterpart to the trailing stop — plus doctrine making the agent theta-aware (a 0DTE long that isn't moving is bleeding — bail faster), and better late-day entry discipline (this was a chased 7610C at 15:01).
+### ✅ A. Premium/theta stop + resting entries — DONE 8/3 PM (see FIXED section). Original finding kept below.
+The price-based stop can't catch THETA. **Live proof 8/3:** SPXW 7610C long entered 15:01 @SPX 7608 ($4.30); SPX then chopped **7603–7609 and NEVER hit the 7600 stop**, but the 0DTE call bled to $1.30 = **−70% / −$3,837** before the agent finally bailed at 15:40. Hold-to-plan held while the premium melted. Fixed via: agent now SEES its live option P/L + theta doctrine + a hard −50% premium stop; and resting entries so it stops chasing late-day calls.
 
 ### ✅ B. Trailing stop/target — DONE 8/3 PM (moved to FIXED). The agent now ratchets its stop each tick, it's enforced + persisted, and a stop trailed above entry fires. 25/25 tests.
 
@@ -20,6 +20,12 @@ The ✗/✓ entry-trigger badge flips on conviction wobble even while a position
 
 ### WATCH: trend-commitment / hold-to-plan / sizing — validated by tests + 8/3 live, NOT yet across many days
 Feed each day to `--reflect` (now unblocked by the archive). One day is a hypothesis (anti-overfit). Judge on risk-parity $ across the sample.
+
+## FIXED — 8/3 PM: trailing stop + premium/theta stop + resting entries (validated 31/31 unit tests)
+- **Trailing stop/target** — the agent ratchets its stop each tick (long up / short down, never loosens), enforced + persisted; a stop trailed above entry now fires (fixes the frozen-stop that under-protected the +110%).
+- **Premium/theta stop** (the −70% fix) — the agent now SEES its live option P/L in the prompt and is told a stalling 0DTE bleeds; a hard −50% premium stop backstops it, so a sideways bleeder can't run past −50% even when the price-stop is never hit.
+- **Resting/pullback entries** — the agent chooses `entry_type` (market vs pullback) + `entry_level`; a pullback entry WAITS for price to come back (buy the dip / sell the bounce) instead of chasing — better fills + tighter stops, aimed at the chop days. Doctrine guides rest-in-chop / chase-in-rip.
+- Tests versioned in `falcon-copier/manage.test.mjs` (logic replica of manage()).
 
 ## FIXED — 8/3 risk-parity sizing + durable frame archive (deployed live 8/3)
 - **Position sizing** — each trade sized to conviction-weighted $ notional (BASE $10k × the agent's conviction), so SPXW & SPY are comparable in $ (fixes 7/31's −$2857-vs-+$2000 sizing artifact). `pnl_usd` on every closed trade; dashboard shows risk-parity $.

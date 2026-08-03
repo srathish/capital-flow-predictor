@@ -116,9 +116,16 @@ DOMINANT TREND — COMMIT TO IT (this is the #1 discipline)
 - FIRST judge the DAY'S DOMINANT TREND (up / down / chop) and its strength, from the 30-min price path + structure evolution + cross-index. Trade WITH it by default — on a trending day, get aligned and STAY aligned.
 - A COUNTER-TREND trade (fading the day's direction) is the exception, never the reflex. It demands exceptional evidence — a CONFIRMED reversal (dom_neg growing AND rolling down into a top, cross-index confirming, a clear failed retest of a wall) — and high conviction. Do NOT fade a strong up-trend just because near-money gamma prints negative: near-money can read negative the whole way up a rip. A single negative-gamma snapshot is not a top.
 
+ENTRY LOCATION — DON'T CHASE (where you get in decides the trade)
+- On a CHOP/pinned day especially, prefer a PULLBACK entry (entry_type: "pullback", entry_level = a support node to buy / a resistance node to sell) so you get in at the BOTTOM OF THE DEFLECTION. Your stop then sits just under a real level — tight, not wiggle-hit — so a wrong call exits fast for a SMALL loss, and the R:R is far better than chasing.
+- On a STRONG trend where price won't come back to you, take it at market (entry_type: "market") so you don't miss the move. Rest the dip in chop; chase only in a real rip.
+- A resting entry ONLY fills when price reaches your entry_level. If it never comes and the setup goes stale, stand aside or switch to market — your call.
+
 MANAGE THE POSITION — DON'T RE-DECIDE IT EVERY MINUTE
 - If you already HOLD a trade, your job is to MANAGE YOUR PLAN, not re-open the question. Repeat the SAME direction to HOLD. Only exit (stand_aside) or reverse when the thesis is genuinely INVALIDATED — your stop is breached or the structure that justified the trade has flipped — and then with HIGH conviction (≥0.6). Do NOT dump a valid position because momentum wobbled for one minute. Let winners run to your target; that is where the money is.
-- Every non-stand_aside decision MUST include a numeric target_level and stop_level (index points, on the correct side: for a long, target above / stop below spot; for a bearish/short, target below / stop above). The SYSTEM EXECUTES them — it takes profit at your target, stops out at your stop, HOLDS in between regardless of minute-to-minute noise, and force-flattens near the close. Set them where you truly want in and out; they are your plan and they will be honored. As a winner runs in your favor, RAISE your stop_level each read (trail it up under price for a long / down over price for a short) to lock in gains — the system ratchets the stop (it tightens only, never loosens), so a reversal takes you out at your protected level instead of round-tripping the whole move. Move target_level too as the structure extends or stalls.`;
+- Every non-stand_aside decision MUST include a numeric target_level and stop_level (index points, on the correct side: for a long, target above / stop below spot; for a bearish/short, target below / stop above). The SYSTEM EXECUTES them — it takes profit at your target, stops out at your stop, HOLDS in between regardless of minute-to-minute noise, and force-flattens near the close. Set them where you truly want in and out; they are your plan and they will be honored. As a winner runs in your favor, RAISE your stop_level each read (trail it up under price for a long / down over price for a short) to lock in gains — the system ratchets the stop (it tightens only, never loosens), so a reversal takes you out at your protected level instead of round-tripping the whole move. Move target_level too as the structure extends or stalls.
+
+0DTE THETA — DON'T BAG-HOLD A BLEEDER: your option is a wasting asset. If a LONG isn't working and price grinds sideways, the premium melts from time decay even while your price-stop is never hit — you can lose most of the option "correctly" holding a level. Your live option P/L is shown in YOUR OPEN POSITIONS; if it's bleeding and the move you wanted isn't coming, BAIL (stand_aside, conv ≥0.6) rather than waiting for the far price-stop. (A hard −50% premium stop backstops you — but exit on your own read first.)`;
 
 const TOOL = {
   name: 'emit_decisions', description: 'Emit the shared read plus a conservative and an aggressive decision, and update your journal. Call exactly once.',
@@ -128,8 +135,8 @@ const TOOL = {
       regime_read: { type: 'string' },
       dominant_trend: { type: 'object', required: ['direction', 'strength'], description: 'the DAY\'s dominant trend — trade with it by default; fading it needs high conviction', properties: { direction: { type: 'string', enum: ['up', 'down', 'chop'] }, strength: { type: 'string', enum: ['strong', 'moderate', 'weak'] }, basis: { type: 'string', description: 'what in the price path + structure evolution + cross-index says so' } } },
       shared_thesis: { type: 'string', description: '2-4 sentences: the synthesis across map+timeline+cross-index+price that both postures share' },
-      conservative: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
-      aggressive: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
+      conservative: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, entry_type: { type: 'string', enum: ['market', 'pullback'], description: 'market = take it now; pullback = WAIT for price to come back to entry_level (buy the dip / sell the bounce) for a better fill + tighter stop' }, entry_level: { type: 'number', description: 'if entry_type=pullback, the price to wait for (long: below current spot; bearish: above)' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
+      aggressive: { type: 'object', required: ['direction', 'conviction', 'why'], properties: { instrument: { type: 'string', enum: ['SPXW', 'SPY', 'QQQ', 'none'] }, direction: { type: 'string', enum: ['long', 'short', 'stand_aside'] }, conviction: { type: 'number', minimum: 0, maximum: 1 }, entry: { type: 'string' }, entry_type: { type: 'string', enum: ['market', 'pullback'], description: 'market = take it now; pullback = WAIT for price to come back to entry_level (buy the dip / sell the bounce) for a better fill + tighter stop' }, entry_level: { type: 'number', description: 'if entry_type=pullback, the price to wait for (long: below current spot; bearish: above)' }, target: { type: 'string' }, stop: { type: 'string' }, target_level: { type: 'number', description: 'index-points level to TAKE PROFIT (long: above entry; bearish: below). Give it for any trade — the system executes it.' }, stop_level: { type: 'number', description: 'index-points level to STOP OUT (long: below entry; bearish: above). Give it for any trade.' }, why: { type: 'string' } } },
       journal_update: { type: 'string', description: 'running notes to carry to the next minute: current bias, levels watched, what triggers/invalidates' },
     },
   },
@@ -152,9 +159,10 @@ const DASH = path.join(FC, `agent_dashboard.json`);
 const ENTRY_BAR = 0.5, EXIT_BAR = 0.6;   // decisive-entry / exit-or-reverse-early. Trend-caution lives in the agent's CONVICTION (doctrine guides it) + the stop, NOT a hard counter-trend gate — keeps it agentic, not a one-day rule.
 const BASE_NOTIONAL = 10000;   // $ notional at full conviction, scaled by the agent's OWN conviction. This is SIZING/risk (not a decision rule): it equalizes SPXW vs SPY so a loss and a win are comparable in $, and lets the agent's conviction drive size.
 const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
-async function closeOpen(b, instruments, et, why) {
+const MAX_OPT_LOSS_PCT = -50;   // hard premium/theta stop: cut any option down ≥50% even if the price-stop was never hit (a sideways 0DTE bleeds from decay). Risk cap, not a market rule.
+async function closeOpen(b, instruments, et, why, exitPrem) {
   const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
-  const exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;
+  if (exitPrem === undefined) exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // reuse the mark manage() already fetched (no double API call)
   const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
   const pnlUsd = (o.entry_premium != null && exitPrem != null && o.contracts != null) ? Math.round((exitPrem - o.entry_premium) * 100 * o.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
   b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
@@ -172,20 +180,25 @@ async function manage(book, mode, dec, instruments, et, trend) {
       if (s != null && (long ? s < opx : s > opx) && (o.stop_level == null || (long ? s > o.stop_level : s < o.stop_level))) o.stop_level = s;   // RATCHET: raise a long's stop / lower a short's — protect gains, never loosen into a hoped-for bounce
       if (t != null && (long ? t > opx : t < opx)) o.target_level = t;   // target follows the agent's read while still ahead of price
     }
+    const curPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // live option mark — powers the theta safety-stop + the live P/L the agent sees
+    if (curPrem != null) { o.live_premium = curPrem; o.live_ret_pct = o.entry_premium ? +(((curPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null; }
     let why = null, reverse = false;
     if (opx != null && o.stop_level != null && (long ? opx <= o.stop_level : opx >= o.stop_level)) why = 'stop hit';
     else if (opx != null && o.target_level != null && (long ? opx >= o.target_level : opx <= o.target_level)) why = 'target hit';
+    else if (o.live_ret_pct != null && o.live_ret_pct <= MAX_OPT_LOSS_PCT) why = `premium stop (${MAX_OPT_LOSS_PCT}% theta/loss cap)`;   // safety net: a sideways 0DTE bled past the cap even though price never hit the stop
     else if (et >= FLATTEN_ET) why = 'EOD flatten';
     else { const wantsOut = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== o.dir);
       if (wantsOut && (dec.conviction ?? 0) >= EXIT_BAR) { why = dec.direction === 'stand_aside' ? 'exit — thesis invalidated' : 'reversed (high conviction)'; reverse = dec.direction !== 'stand_aside'; } }
     if (!why) return;                                     // HOLD — plan intact; don't touch anything else this tick
-    await closeOpen(b, instruments, et, why);
+    await closeOpen(b, instruments, et, why, curPrem);
     if (!reverse) return;                                 // mechanical / stand-aside close → go flat, no same-tick re-entry
   }
   // ── OPEN a new position: flat + decisive + clears the bar (HIGHER if counter-trend) + before the late-day cutoff ──
   if (!b.open && dec.direction && dec.direction !== 'stand_aside' && px != null && et < NO_NEW_ET) {
     const counter = (trend === 'up' && dec.direction === 'short') || (trend === 'down' && dec.direction === 'long');   // recorded for the diary; NOT a gate — the agent self-assigns low conviction to casual fades (doctrine), and the stop caps any bad one
-    if ((dec.conviction ?? 0) >= ENTRY_BAR) {
+    const wantPullback = dec.entry_type === 'pullback' && dec.entry_level != null;
+    const reached = !wantPullback || (dec.direction === 'long' ? px <= dec.entry_level : px >= dec.entry_level);   // a RESTING entry fills only when price comes back to the agent's level (buy the dip / sell the bounce); else it waits (the agent re-emits next tick)
+    if ((dec.conviction ?? 0) >= ENTRY_BAR && reached) {
       const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
       const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
       const notional = Math.round(BASE_NOTIONAL * Math.min(1, dec.conviction));   // conviction-weighted $ size (the agent's read drives it), equal across instruments
@@ -202,7 +215,7 @@ const LIVE = !!arg('--live', false);
 async function step(et, mem) {
   const state = await assembleComplex(et, LIVE), R = state.instruments.SPXW;
   mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
-  const planNote = (m) => { const o = mem.book[m].open; return o ? `${m}: HOLDING ${o.instrument} ${o.dir} from ${o.entryET} @${o.entryPx} (target ${o.target_level ?? (o.target || '?')}, stop ${o.stop_level ?? (o.stop || '?')}) — MANAGE it: repeat "${o.dir}" to HOLD; stand_aside/reverse ONLY if genuinely invalidated (conv ≥0.6). The system auto-exits at your target/stop and flattens near the close.` : `${m}: flat`; };
+  const planNote = (m) => { const o = mem.book[m].open; if (!o) return `${m}: flat`; const pl = o.live_ret_pct != null ? `${o.live_ret_pct >= 0 ? '+' : ''}${o.live_ret_pct}% (opt $${o.live_premium})` : 'just opened'; return `${m}: HOLDING ${o.instrument} ${o.strike}${o.cp} ${o.dir} from ${o.entryET} @${o.entryPx} — YOUR OPTION IS ${pl} · target ${o.target_level ?? (o.target || '?')}, stop ${o.stop_level ?? (o.stop || '?')}. MANAGE it: repeat "${o.dir}" to HOLD; RAISE your stop_level to trail gains; stand_aside/reverse if invalidated OR if this 0DTE is bleeding from theta while price goes nowhere (conv ≥0.6). System auto-exits at target/stop, a hard ${MAX_OPT_LOSS_PCT}% premium stop, and flattens near close.`; };
   const bookNote = `YOUR OPEN POSITIONS & PLANS (manage them — don't re-decide from scratch):\n  ${planNote('conservative')}\n  ${planNote('aggressive')}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
@@ -211,8 +224,7 @@ async function step(et, mem) {
   await manage(mem.book, 'conservative', d.conservative, state.instruments, et, trendDir);
   await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et, trendDir);
   mem.notes = d.journal_update || mem.notes; mem.log = (mem.log || []).concat({ et, regime: d.regime_read, trend: d.dominant_trend, thesis: d.shared_thesis, conservative: d.conservative, aggressive: d.aggressive });
-  // running option P/L on any OPEN position (live mark each tick, so the % ticks in real time)
-  for (const mm of ['conservative', 'aggressive']) { const o = mem.book[mm]?.open; if (o?.occ && DAY === TODAY_ET) { const mk = await optMark(o.occ); if (mk != null) { o.live_premium = mk; o.live_ret_pct = o.entry_premium ? +(((mk - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null; } } }
+  // (live option P/L is set inside manage() each tick now — powers the theta safety-stop + the P/L the agent sees)
   fs.writeFileSync(MEM, JSON.stringify(mem, null, 1));
   // dashboard snapshot — SPX/SPY/QQQ + both postures' decisions + the live book + journal + lessons
   const inst = {}; for (const [sym, s] of Object.entries(state.instruments)) inst[sym] = { spot: s.spot, chg_pct: s.chg_pct, king: s.king_node, regime: s.regime_now, support_below: s.nearest_strong_support_below, resist_above: s.nearest_strong_resistance_above, dom_neg_roll: s.structure_timeline_30m.map(t => t.dom_neg_strike), strong_nodes: s.strong_nodes_wide, path: s.price_path_30m };
