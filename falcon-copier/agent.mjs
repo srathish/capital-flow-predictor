@@ -245,6 +245,7 @@ async function closePosition(b, pos, instruments, et, why, exitPrem) {
   } finally { pos._closing = false; }
 }
 async function manage(book, mode, dec, instruments, et, trend) {
+  if (!dec || typeof dec !== 'object') dec = { direction: 'stand_aside', conviction: 0 };   // never crash on a missing/malformed posture — treat as HOLD (manage existing tranches, open nothing)
   const b = (book[mode] ||= { positions: [], closed: [] });
   b.positions ||= (b.open ? [b.open] : []); delete b.open;   // migrate a pre-pyramid single-open book to the stack
   const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
@@ -313,7 +314,7 @@ async function step(et, mem) {
   const bookNote = `YOUR OPEN POSITIONS & PLANS (manage them — don't re-decide from scratch):\n  ${planNote('conservative')}\n  ${planNote('aggressive')}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
-  for (const k of ['conservative', 'aggressive']) if (typeof d[k] === 'string') { try { d[k] = JSON.parse(d[k]); } catch { d[k] = { direction: 'stand_aside', conviction: 0, why: 'parse-fallback' }; } }   // sonnet sometimes emits the nested posture as a JSON string
+  for (const k of ['conservative', 'aggressive']) { if (typeof d[k] === 'string') { try { d[k] = JSON.parse(d[k]); } catch { d[k] = { direction: 'stand_aside', conviction: 0, why: 'parse-fallback' }; } } if (!d[k] || typeof d[k] !== 'object') d[k] = { direction: 'stand_aside', conviction: 0, why: 'missing-posture' }; }   // sonnet sometimes emits a posture as a JSON string, or OMITS one entirely — default a missing/invalid posture to HOLD (stand_aside) so existing tranches are still managed (trailed/stopped/EOD) rather than crashing the tick
   const trendDir = d.dominant_trend?.direction;
   await manage(mem.book, 'conservative', d.conservative, state.instruments, et, trendDir);
   await manage(mem.book, 'aggressive', d.aggressive, state.instruments, et, trendDir);
