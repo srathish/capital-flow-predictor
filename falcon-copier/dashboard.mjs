@@ -63,6 +63,7 @@ let view='both';const setView=v=>{view=v;tick();};
 const modes=()=>view==='both'?['conservative','aggressive']:[view];
 const f1=x=>x==null?'—':(x>=0?'+':'')+(+x).toFixed(1);
 const usd=x=>x==null?'—':(x>=0?'+$':'-$')+Math.abs(Math.round(x)).toLocaleString();
+const ago=m=>m==null?'':m<120?m+'m':m<1440?Math.round(m/60)+'h':Math.round(m/1440)+'d';
 const dirCls=d=>d==='long'?'long':d==='short'?'short':'aside';
 const exitReason=(w)=>{if(!w)return '';w=String(w);if(w.includes('target'))return '✓ target hit';if(w.includes('stop'))return '✗ stop hit';if(w.includes('EOD'))return '⏰ EOD flat';if(w.includes('revers'))return '↺ reversed';if(w.includes('invalidated')||w.includes('stood aside')||w.includes('exit'))return '⊘ exit';return w;};
 function instCard(sym,s){if(!s)return '';const neg=(s.regime?.net_gamma_M||0)<0;const roll=(s.dom_neg_roll||[]).filter((v,i,a)=>i===0||v!==a[i-1]).join('→');
@@ -105,7 +106,7 @@ async function tick(){try{const r=await fetch('/state',{cache:'no-store'});const
  document.getElementById('app').innerHTML=\`
  \${st.status?\`<div class="status">⏸ \${st.status}</div>\`:''}
  \${hasData?\`<div class="grid3">\${instCard('SPXW',ins.SPXW)}\${instCard('SPY',ins.SPY)}\${instCard('QQQ',ins.QQQ)}</div>
- <div class="panel"><div class="phdr"><h2>Agent read \${d.dominant_trend?.direction?'<span class="trend '+d.dominant_trend.direction+'">trend '+d.dominant_trend.direction.toUpperCase()+(d.dominant_trend.strength?' ('+d.dominant_trend.strength+')':'')+'</span>':''} \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?.level?('· VIX '+st.uw_layers.vix.level+' '+(st.uw_layers.vix.band||'')+(st.uw_layers.vix.tilt?' · '+st.uw_layers.vix.tilt+' tilt':'')+(st.uw_layers.vix.term_structure?' · '+st.uw_layers.vix.term_structure:'')):''}</h2>
+ <div class="panel"><div class="phdr"><h2>Agent read \${d.dominant_trend?.direction?'<span class="trend '+d.dominant_trend.direction+'">trend '+d.dominant_trend.direction.toUpperCase()+(d.dominant_trend.strength?' ('+d.dominant_trend.strength+')':'')+'</span>':''} \${st.uw_layers?.market_tide_flow_lean?('· tide '+st.uw_layers.market_tide_flow_lean.lean):''} \${st.uw_layers?.vix?.level?('· VIX '+st.uw_layers.vix.level+' '+(st.uw_layers.vix.band||'')+(st.uw_layers.vix.tilt?' · '+st.uw_layers.vix.tilt+' tilt':'')+(st.uw_layers.vix.term_structure?' · '+st.uw_layers.vix.term_structure:'')):''}\${st.uw_layers?.econ_calendar?.next_high_impact?(' · '+(st.uw_layers.econ_calendar.in_event_window?'⚠ ':'📅 ')+st.uw_layers.econ_calendar.next_high_impact.event+' in '+ago(st.uw_layers.econ_calendar.next_high_impact.minutes_away)):''}</h2>
      <div class="toggle"><button class="\${view==='both'?'on':''}" onclick="setView('both')">Both</button><button class="\${view==='conservative'?'on':''}" onclick="setView('conservative')">Conservative</button><button class="\${view==='aggressive'?'on':''}" onclick="setView('aggressive')">Aggressive</button></div></div>
    <div class="read"><b>\${d.regime_read||''}</b><br>\${d.shared_thesis||''}</div>
    <div class="cards\${view!=='both'?' solo':''}">\${modes().map(m=>tradeCard(m,d[m],st.book?.[m]?.open)).join('')}</div></div>\`:''}

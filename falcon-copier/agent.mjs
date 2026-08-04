@@ -109,9 +109,26 @@ async function getVix() {   // VOLATILITY REGIME (VIX family) — Skylit has no 
     return { level, chg_pct: pc ? +(((level - pc) / pc) * 100).toFixed(1) : null, band, vix1d_0dte: vix1d, vix9d, vix3m, nasdaq_vol_vxn: vxn, term_structure, pivot, pivot_source: pivotSrc, tilt, tilt_confirmed };
   } catch { return null; }
 }
+async function getEconCalendar() {   // scheduled macro events (UW REST) — event-premium / IV-crush timing the agent must respect
+  if (!UWKEY) return null;
+  try {
+    const r = await fetch('https://api.unusualwhales.com/api/market/economic-calendar', { headers: { Authorization: 'Bearer ' + UWKEY, Accept: 'application/json' }, signal: AbortSignal.timeout(10000) }).then(x => x.ok ? x.json() : null);
+    const rows = r?.data || []; if (!rows.length) return null;
+    const now = new Date(), todayET = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const HIGH = /CPI|consumer price|PCE|nonfarm|payroll|\bFOMC\b|interest rate|rate decision|unemployment|jobless|\bGDP\b|\bPPI\b|producer price|retail sales|\bISM\b/i;
+    const etT = (t) => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
+    const etD = (t) => new Date(t).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const evs = rows.map(e => ({ ev: e.event, dt: new Date(e.time), et: etT(e.time), day: etD(e.time), type: e.type, high: HIGH.test(e.event || '') })).filter(e => !isNaN(e.dt));
+    const today = evs.filter(e => e.day === todayET).sort((a, b) => a.dt - b.dt).map(e => ({ et: e.et, event: e.ev, importance: e.high ? 'HIGH' : (e.type === 'fed-speaker' ? 'fed-speaker' : 'normal') }));
+    const upHigh = evs.filter(e => e.high && e.dt > now).sort((a, b) => a.dt - b.dt)[0];
+    const mins = upHigh ? Math.round((upHigh.dt - now) / 60000) : null;
+    const in_event_window = evs.some(e => e.high && Math.abs(e.dt - now) <= 30 * 60000);
+    return { today_events: today, next_high_impact: upHigh ? { event: upHigh.ev, et: upHigh.et, day: upHigh.day, minutes_away: mins } : null, in_event_window, note: 'scheduled macro events (ET). HIGH = market-mover (CPI/NFP/FOMC/PCE/PPI/retail/GDP/ISM). Into a HIGH event, index options carry event premium that IV-CRUSHES after — 0DTE longs are double-bled if the move disappoints; ranges expand and levels get less reliable.' };
+  } catch { return null; }
+}
 async function liveLayers() {
-  const [dp, tide, vix] = await Promise.all([skylitDarkPool(), skylitTide(), getVix()]);
-  return { source: 'skylit (Flowseeker /fs/api) + CBOE VIX', dark_pool_prints: dp, market_tide_flow_lean: tide, vix, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium; vix = CBOE index (level/chg/band). Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here).' };
+  const [dp, tide, vix, econ] = await Promise.all([skylitDarkPool(), skylitTide(), getVix(), getEconCalendar()]);
+  return { source: 'skylit (Flowseeker /fs/api) + CBOE VIX + UW econ-calendar', dark_pool_prints: dp, market_tide_flow_lean: tide, vix, econ_calendar: econ, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium; vix = CBOE index (level/chg/band); econ_calendar = scheduled macro events. Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here).' };
 }
 async function assembleComplex(etStr, live = false) {
   const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
@@ -140,7 +157,7 @@ WHAT THE DATA IS
    · term_structure: contango (front<back) = calm/coasting → market biased neutral-to-BULLISH; backwardation (front>back) = near-term stress → biased BEARISH (a delayed but strong signal).
    · tilt (VIX vs pivot): VIX BELOW pivot = bullish tilt, ABOVE = bearish tilt; tilt_confirmed = the 2-candle flip confirmed. VIX is ~80% INVERSE to price (VIX up → spot down).
    Synthesize: low-VIX + contango + bullish-tilt = favor longs/trend-following, hold to target, pins hold; high-VIX + backwardation + bearish-tilt = caution, pullback entries, smaller size, respect downside, levels less reliable. Don't fight a confirmed VIX tilt.
-- EVENT PREMIUM: near a scheduled macro event (FOMC/CPI/PCE/NFP) index options carry extra "event premium" that IV-CRUSHES after — a 0DTE long into an event that doesn't move enough gets double-bled (theta + crush). (Econ-calendar timing is a TODO; for now infer from unusually rich near-dated premium.)
+- EVENT PREMIUM & econ_calendar (uw_layers): near a scheduled HIGH-impact event (CPI/NFP/FOMC/PCE/PPI/retail — next_high_impact.minutes_away is your countdown; in_event_window = within ±30 min) index options carry event premium that IV-CRUSHES after. Into a high event: 0DTE longs are double-bled if the move disappoints or reverses — be cautious or STAND ASIDE through the print, expect ranges to EXPAND and levels to be less reliable. After the crush, IV normalizes and the post-event drift becomes tradeable.
 
 HOW TO READ IT (doctrine — synthesize, do not pattern-match)
 - REGIME first. Near-money mostly NEGATIVE = negative-gamma: moves TREND/ACCELERATE, reversals run, price rips toward levels fast (speed is a lure). Mostly POSITIVE = pinned/mean-revert: fade extensions to walls, expect chop.
