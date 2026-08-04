@@ -227,12 +227,16 @@ const BASE_NOTIONAL = 10000;   // $ notional at full conviction, scaled by the a
 const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
 const MAX_OPT_LOSS_PCT = -50;   // hard premium/theta stop: cut any option down ≥50% even if the price-stop was never hit (a sideways 0DTE bleeds from decay). Risk cap, not a market rule.
 async function closeOpen(b, instruments, et, why, exitPrem) {
-  const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
-  if (exitPrem === undefined) exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // reuse the mark manage() already fetched (no double API call)
-  const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
-  const pnlUsd = (o.entry_premium != null && exitPrem != null && o.contracts != null) ? Math.round((exitPrem - o.entry_premium) * 100 * o.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
-  b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
-  b.open = null;
+  if (b._closing || !b.open) return;   // MUTEX: the fast stop-loop and the slow LLM loop share the book — never double-close (flag set synchronously before any await)
+  b._closing = true;
+  try {
+    const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
+    if (exitPrem === undefined) exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // reuse the mark manage() already fetched (no double API call)
+    const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
+    const pnlUsd = (o.entry_premium != null && exitPrem != null && o.contracts != null) ? Math.round((exitPrem - o.entry_premium) * 100 * o.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
+    b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
+    b.open = null;
+  } finally { b._closing = false; }
 }
 async function manage(book, mode, dec, instruments, et, trend) {
   const b = (book[mode] ||= { open: null, closed: [] });
@@ -357,7 +361,40 @@ async function pullLiveGEX(sym) {
   for (let i = 0; i < K.length; i++) { const k = +K[i]; if (Number.isFinite(k) && Math.abs(k - spot) / spot <= 0.025) strikes.push({ k, g0: (G[i] || [])[0] || 0, v0: (V[i] || [])[0] || 0, gA: sum(G[i]), vA: sum(V[i]) }); }   // g0/v0 = 0DTE (col0); gA/vA = aggregate/full-surface. window widened to ±2.5% to catch the higher-TF walls.
   return { ts: new Date().toISOString(), spot, prevClose: raw.PreviousClose, frontExp: EXP[0], strikes };
 }
-// ── LIVE loop: every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
+// ── FAST half of the split loop: price-stop / price-target execution every FAST_SEC sec, NO LLM, so a stop fires in seconds instead of waiting on the ~90s reasoning tick ──
+async function fastSpot(sym) {   // lightweight real-time spot — the SAME Skylit CurrentSpot the agent's stop/target levels are set against (max_strikes=1 = tiny payload)
+  try {
+    if (!_skReady) { await initAuth(); _skReady = true; }
+    const t = await getFreshToken();
+    const u = new URL('https://app.skylit.ai/api/data');
+    u.searchParams.set('symbol', sym); u.searchParams.set('max_strikes', '1'); u.searchParams.set('max_expirations', '1'); u.searchParams.set('nocache', Math.random().toString());
+    const r = await fetch(u, { headers: { Origin: 'https://app.skylit.ai', Referer: 'https://app.skylit.ai/', Authorization: 'Bearer ' + t, Accept: 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' }, signal: AbortSignal.timeout(6000) }).catch(() => null);
+    if (!r || !r.ok) return null; const raw = await r.json(); const v = +raw?.CurrentSpot; return Number.isFinite(v) ? v : null;
+  } catch { return null; }
+}
+const FAST_SEC = 10;   // fast-loop cadence. Only pulls a spot when a position is actually OPEN (0 calls when flat) → legitimate position-monitoring, not high-frequency scraping.
+let _fastBusy = false;   // reentrancy guard so a slow spot pull can't stack overlapping fast ticks
+async function fastStops(mem) {   // price-stop / price-target ONLY. Trailing, premium/theta stop, EOD flatten, and all OPENS stay on the slow LLM tick.
+  if (_fastBusy || !mem?.book) return; _fastBusy = true;
+  try {
+    const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
+    const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5)); if (m < 9 * 60 + 30 || m > 16 * 60) return;   // RTH only
+    for (const mode of ['conservative', 'aggressive']) {
+      const b = mem.book[mode]; if (!b?.open || b._closing) continue;
+      const o = b.open; if (o.stop_level == null && o.target_level == null) continue;
+      const long = o.dir === 'long', spot = await fastSpot(o.instrument); if (spot == null) continue;
+      let why = null;   // mirrors the slow loop's manage() price checks (agent.mjs) so both halves agree on what a breach is
+      if (o.stop_level != null && (long ? spot <= o.stop_level : spot >= o.stop_level)) why = 'stop hit (fast)';
+      else if (o.target_level != null && (long ? spot >= o.target_level : spot <= o.target_level)) why = 'target hit (fast)';
+      if (why && b.open && !b._closing) {   // closeOpen re-checks the _closing mutex; the slow manage() shares this book + guard, so the two halves never double-close
+        await closeOpen(b, { [o.instrument]: { spot } }, et, why);
+        try { fs.writeFileSync(MEM, JSON.stringify(mem, null, 1)); } catch { }
+        console.log(`  ⚡ FAST-EXIT · ${why} @${et} · ${o.instrument} ${o.strike}${o.cp} ${o.dir} @ ${spot} (${mode})`);
+      }
+    }
+  } finally { _fastBusy = false; }
+}
+// ── LIVE loop (SLOW half): every minute during RTH, refresh the GEX buffer + reason + write the dashboard ──
 async function loop() {
   const bufs = { SPXW: [], SPY: [], QQQ: [] };
   // resume today's FRAMES on restart (durability, BUGS #3): reload from the dated archive so a restart never loses the day's GEX history
@@ -372,6 +409,8 @@ async function loop() {
   const idleDash = (status) => { try { fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5), status, instruments: {}, uw_layers: {}, decision: {}, book: mem.book, journal: mem.notes || '', lessons: loadLessons() }, null, 1)); } catch (e) { } };
   idleDash('agent starting — clearing prior state…');   // wipe the stale (e.g. backtest) dashboard immediately
   console.log(`\n  🦅 agent LIVE loop started (${DAY}) · ${nplays()} plays so far today · dashboard → http://localhost:8790 · Ctrl-C to stop\n`);
+  setInterval(() => { fastStops(mem).catch(() => { }); }, FAST_SEC * 1000);   // ⚡ FAST stop/target loop runs CONCURRENTLY with the slow reasoning loop below — checks the live price of any open position every FAST_SEC sec and exits the moment it breaches stop/target, no LLM wait
+  console.log(`  ⚡ fast stop-loop armed · checks open-position price every ${FAST_SEC}s (stops fire in seconds, not on the ~90s reasoning tick)\n`);
   for (; ;) {
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));

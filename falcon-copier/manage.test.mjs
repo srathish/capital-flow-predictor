@@ -104,4 +104,26 @@ chk('price dips to 7584 → FILLS at the deflection', manage(b,{direction:'long'
 b={open:null,closed:[]};
 chk('market entry fills immediately (no wait)', manage(b,{direction:'long',conviction:.6,entry_type:'market',target_level:7620,stop_level:7580},7592,'11:00','up'), 'OPEN long');
 
+console.log('\n── SCENARIO J: FAST/SLOW SPLIT — fast loop fires stop/target off the live price (no LLM), and the mutex stops fast+slow from double-closing ──');
+// replica of fastStops() breach decision (agent.mjs) — identical to the slow-loop check, just driven by the 10s spot instead of the 90s tick
+function fastCheck(o,spot){if(!o)return null;const long=o.dir==='long';
+  if(o.stop_level!=null&&(long?spot<=o.stop_level:spot>=o.stop_level))return 'stop hit (fast)';
+  if(o.target_level!=null&&(long?spot>=o.target_level:spot<=o.target_level))return 'target hit (fast)';
+  return null;}
+// replica of the MUTEX closeOpen (agent.mjs) — _closing set SYNCHRONOUSLY before the await, so a racing caller bails at the guard
+async function closeOpenMx(b,px,et,why){if(b._closing||!b.open)return;b._closing=true;
+  try{const o=b.open,sgn=o.dir==='long'?1:-1;await Promise.resolve();b.closed.push({...o,exitET:et,exitPx:px,pnl:+((px-o.entryPx)*sgn).toFixed(1),why});b.open=null;}finally{b._closing=false;}}
+b={open:null,closed:[]};manage(b,{direction:'long',conviction:.6,target_level:7620,stop_level:7580},7600,'13:00','up');
+chk('long: spot 7600 between stop/target → HOLD (no fast exit)', fastCheck(b.open,7600), null);
+chk('long: spot ticks to 7579 (< 7580 stop) → FAST stop fires', fastCheck(b.open,7579), 'stop hit (fast)');
+chk('long: spot rips to 7621 (> 7620 target) → FAST target fires', fastCheck(b.open,7621), 'target hit (fast)');
+let bs={open:null,closed:[]};manage(bs,{direction:'short',conviction:.7,target_level:7550,stop_level:7620},7600,'11:00','chop');
+chk('short: spot 7621 (>= 7620 stop) → FAST stop fires', fastCheck(bs.open,7621), 'stop hit (fast)');
+chk('short: spot 7549 (<= 7550 target) → FAST target fires', fastCheck(bs.open,7549), 'target hit (fast)');
+b={open:null,closed:[]};manage(b,{direction:'long',conviction:.6,target_level:7620,stop_level:7580},7600,'13:00','up');
+await Promise.all([closeOpenMx(b,7580,'13:05','stop hit (fast)'),closeOpenMx(b,7580,'13:05','stop hit')]);   // fast + slow both breach at the same instant
+chk('MUTEX: concurrent fast+slow close → exactly 1 booked (no double-close)', b.closed.length, 1);
+chk('flat after the race', b.open, null);
+chk('the trade that won the race booked the fast reason', b.closed[0].why, 'stop hit (fast)');
+
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);
