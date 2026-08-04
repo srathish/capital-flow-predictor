@@ -3,7 +3,7 @@
 // hold winners, take profit at target, stop out, trail, gate counter-trend, flatten EOD, and pyramid on a trend?
 // Replica of agent.mjs's positions-stack manage() — returns a status string for the assertions.
 const ENTRY_BAR = 0.5, EXIT_BAR = 0.6, NO_NEW_ET = '15:45', FLATTEN_ET = '15:55', MAX_OPT_LOSS_PCT = -50;
-const NOTIONAL_PER_POSITION = 3000, MAX_TRANCHES = 4, MIN_ADD_PCT = 0.0015, ADD_CUTOFF_ET = '14:00';
+const NOTIONAL_PER_POSITION = 3000, MAX_TRANCHES = 4, ADD_CUTOFF_ET = '14:00';
 function closePosition(b, pos, px, et, why) { const i = b.positions.indexOf(pos); if (i < 0) return; const sgn = pos.dir === 'long' ? 1 : -1; b.closed.push({ ...pos, exitET: et, exitPx: px, pnl: +((px - pos.entryPx) * sgn).toFixed(1), why }); b.positions.splice(i, 1); }
 function manage(b, dec, px, et, trend, optPct) {
   b.positions ||= (b.open ? [b.open] : []); delete b.open; b.closed ||= [];
@@ -37,11 +37,9 @@ function manage(b, dec, px, et, trend, optPct) {
         if (conv >= ENTRY_BAR && !reached) return 'WAIT (pullback to ' + dec.entry_level + ')';
         return 'skip (conv<0.5)';
       }
-      const last = b.positions[b.positions.length - 1];
       const trendOK = (decDir === 'long' && trend === 'up') || (decDir === 'short' && trend === 'down');
-      const newExtreme = decDir === 'long' ? px >= last.entryPx * (1 + MIN_ADD_PCT) : px <= last.entryPx * (1 - MIN_ADD_PCT);
       const allGreen = b.positions.every(p => p.live_ret_pct == null || p.live_ret_pct > 0);
-      if (conv >= ENTRY_BAR && trendOK && newExtreme && allGreen && openCount < MAX_TRANCHES && et < ADD_CUTOFF_ET) { openPos(true); return 'ADD ' + decDir + ' #' + b.positions.length; }
+      if (dec.scale_in === true && conv >= ENTRY_BAR && trendOK && allGreen && openCount < MAX_TRANCHES && et < ADD_CUTOFF_ET) { openPos(true); return 'ADD ' + decDir + ' #' + b.positions.length; }   // AGENT-signalled add + pure risk floor
     }
   }
   return b.positions.length ? 'HOLD' : 'flat';
@@ -138,29 +136,30 @@ chk('MUTEX: concurrent fast+slow close of one tranche → exactly 1 booked', b.c
 chk('flat after the race', b.positions.length, 0);
 chk('the winner booked the fast reason', b.closed[0].why, 'stop hit (fast)');
 
-console.log('\n── SCENARIO K: PYRAMIDING — stack up to 4×$3k on a confirmed uptrend at NEW highs; each stop rolled up; no adds on chop / no-new-high / red / late / >max ──');
+console.log('\n── SCENARIO K: PYRAMIDING — AGENT-signalled adds (scale_in); the code enforces only the risk floor (green / max4 / pre-14:00 / trend-aligned) ──');
 let bk = { positions: [], closed: [] };
 chk('open tranche #1 long @7675 conv.7 up-trend', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7665 }, 7675, '10:40', 'up'), 'OPEN long');
 chk('  1 tranche held', bk.positions.length, 1);
-chk('drift @7676 (no NEW high) → HOLD, no add', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7665 }, 7676, '10:45', 'up'), 'HOLD');
-chk('  still 1 tranche', bk.positions.length, 1);
-chk('NEW high @7700 confirmed up → ADD #2', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7690 }, 7700, '11:00', 'up'), 'ADD long #2');
-chk('NEW high @7725 → ADD #3', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7712 }, 7725, '11:30', 'up'), 'ADD long #3');
-chk('NEW high @7745 → ADD #4', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7735 }, 7745, '12:00', 'up'), 'ADD long #4');
+chk('stay long @7700 but NO scale_in → HOLD (adds are the agent’s call, not automatic)', manage(bk, { direction: 'long', conviction: .7, target_level: 7760, stop_level: 7690 }, 7700, '11:00', 'up'), 'HOLD');
+chk('  still 1 tranche (no silent add)', bk.positions.length, 1);
+chk('agent signals scale_in @7700 → ADD #2', manage(bk, { direction: 'long', conviction: .7, scale_in: true, target_level: 7760, stop_level: 7690 }, 7700, '11:05', 'up'), 'ADD long #2');
+chk('scale_in @7725 → ADD #3', manage(bk, { direction: 'long', conviction: .7, scale_in: true, target_level: 7760, stop_level: 7712 }, 7725, '11:30', 'up'), 'ADD long #3');
+chk('scale_in @7745 → ADD #4', manage(bk, { direction: 'long', conviction: .7, scale_in: true, target_level: 7760, stop_level: 7735 }, 7745, '12:00', 'up'), 'ADD long #4');
 chk('  4 tranches stacked (~$12k)', bk.positions.length, 4);
-chk('NEW high @7758 but MAX 4 → HOLD, no 5th', manage(bk, { direction: 'long', conviction: .7, target_level: 7770, stop_level: 7748 }, 7758, '12:30', 'up'), 'HOLD');
+chk('scale_in @7758 but MAX 4 → HOLD (risk floor caps it)', manage(bk, { direction: 'long', conviction: .7, scale_in: true, target_level: 7770, stop_level: 7748 }, 7758, '12:30', 'up'), 'HOLD');
 chk('  cap holds at 4', bk.positions.length, 4);
 chk('every tranche stop rolled UP to 7748 (structural ratchet)', bk.positions.every(p => p.stop_level === 7748), true);
 chk('dip to 7748 → stack exits together at the protected level', manage(bk, { direction: 'long', conviction: .5 }, 7748, '12:40', 'up'), 'stop hit');
 chk('  flat after stack stop-out', bk.positions.length, 0);
 chk('  booked all 4 tranches', bk.closed.length, 4);
+// RISK FLOOR still REFUSES a bad add even WITH scale_in set:
 let bk2 = { positions: [], closed: [] }; manage(bk2, { direction: 'long', conviction: .7, stop_level: 7665 }, 7675, '10:40', 'up');
-chk('NEW high but trend=CHOP → HOLD, no add', manage(bk2, { direction: 'long', conviction: .7, stop_level: 7690 }, 7700, '11:00', 'chop'), 'HOLD');
+chk('scale_in but trend=CHOP → HOLD (refused, adds are trend-only)', manage(bk2, { direction: 'long', conviction: .7, scale_in: true, stop_level: 7690 }, 7700, '11:00', 'chop'), 'HOLD');
 chk('  no add on chop', bk2.positions.length, 1);
-chk('NEW high + up-trend but tranche RED (-10%) → HOLD, no add', manage(bk2, { direction: 'long', conviction: .7, stop_level: 7690 }, 7705, '11:05', 'up', -10), 'HOLD');
+chk('scale_in + up-trend but stack RED (-10%) → HOLD (no averaging down)', manage(bk2, { direction: 'long', conviction: .7, scale_in: true, stop_level: 7690 }, 7705, '11:05', 'up', -10), 'HOLD');
 chk('  never add on top of a red stack', bk2.positions.length, 1);
 let bk3 = { positions: [], closed: [] }; manage(bk3, { direction: 'long', conviction: .7, stop_level: 7665 }, 7675, '10:40', 'up');
-chk('NEW high but after 14:00 cutoff → HOLD, no add', manage(bk3, { direction: 'long', conviction: .7, stop_level: 7690 }, 7700, '14:30', 'up'), 'HOLD');
-chk('  no late-day adds (charm/pin risk)', bk3.positions.length, 1);
+chk('scale_in but after 14:00 cutoff → HOLD (refused, charm/pin risk)', manage(bk3, { direction: 'long', conviction: .7, scale_in: true, stop_level: 7690 }, 7700, '14:30', 'up'), 'HOLD');
+chk('  no late-day adds', bk3.positions.length, 1);
 
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);
