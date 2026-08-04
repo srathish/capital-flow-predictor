@@ -185,8 +185,9 @@ ENTRY LOCATION — DON'T CHASE (where you get in decides the trade)
 - A resting entry ONLY fills when price reaches your entry_level. If it never comes and the setup goes stale, stand aside or switch to market — your call.
 
 REGIME-ADAPTIVE EXECUTION — how HARD you press must match the regime (you have the senses; USE them)
-- STRONG TREND (net_gamma one-directional/accelerant, price making new session highs/lows, dom_neg wall rolling UP-and-away, low VIX, contango, cross-index aligned): LET WINNERS RUN. Set a WIDE stop that survives normal digestion — do NOT tighten it so hard that a routine pullback knocks you out (that turns a runner into a scratch). Hold toward a FAR structural target (the next king / agg_king). Do NOT ladder-chase re-entries at ever-higher strikes — a trend gives you ONE big trade held, not ten small ones cut early.
-- CHOP / PINNED (net_gamma positive/pinned, price range-bound between a floor and a wall, no clean trend, whipsaw, VIX tilt not resolving): STAND ASIDE by default, or FADE the extremes back to the pin (sell into the wall, buy off the floor) — do NOT chase momentum in both directions (that is how you get whipsawed to death). If you cannot clearly tell trend from chop, stand aside.
+- STRONG TREND (net_gamma one-directional/accelerant, price making new session highs/lows, dom_neg wall rolling UP-and-away, low VIX, contango, cross-index aligned): LET WINNERS RUN. Set a WIDE stop that survives normal digestion — do NOT tighten it so hard that a routine pullback knocks you out (that turns a runner into a scratch). Hold toward a FAR structural target (the next king / agg_king). PRESS the trend by PYRAMIDING, not chasing: the system adds a NEW $3k tranche (up to 4 ≈ $12k) each time you stay in-direction at a genuine NEW high with the stack green — that is the RIGHT way to get bigger on a trend (add HELD tranches on confirmation, NEVER size up one position past $3k). The WRONG way — never do it — is ladder-CHASING: exiting a winner on a shallow dip then re-buying higher, death by a thousand cuts. Hold + add; never stop-and-re-enter.
+- PYRAMIDING mechanics (TREND-ONLY, how the stack works): staying in your direction at each NEW high with conviction ≥ the entry bar ADDS a $3k tranche (max 4), each with its OWN structural stop under the then-current support — later adds sit under NEARER support so they peel off first on a dip while the core (bought lowest, under DEEP support) rides longest. To HOLD the stack WITHOUT adding (trend stalling, near your target, or into the close), drop your conviction BELOW the entry bar — the stack holds, no new tranche. RAISE stop_level every read to trail EVERY tranche up (STRUCTURAL — under the rising king / last higher-low, your GEX/VEX read sets it, not a fixed distance). No adds after 14:00 ET (charm/pin reversal risk + little room left) or on chop; a high-conviction stand_aside/reverse flattens the WHOLE stack at once.
+- CHOP / PINNED (net_gamma positive/pinned, price range-bound between a floor and a wall, no clean trend, whipsaw, VIX tilt not resolving): STAND ASIDE by default, or FADE the extremes back to the pin (sell into the wall, buy off the floor) — do NOT chase momentum in both directions (that is how you get whipsawed to death), and do NOT pyramid (adds are trend-only). If you cannot clearly tell trend from chop, stand aside.
 - The two errors to never repeat: on a TREND, exiting winners on shallow digestion then chasing higher (death by a thousand cuts up); on CHOP, chasing every breakout/rejection that instantly reverses (death by a thousand cuts sideways). Same root: not adapting to the regime.
 
 MANAGE THE POSITION — DON'T RE-DECIDE IT EVERY MINUTE
@@ -225,69 +226,93 @@ const DASH = path.join(FC, `agent_dashboard.json`);
 // A position exits only on: stop hit · target hit · EOD flatten · or a genuinely high-conviction invalidation/reversal
 // — never on a noisy minute-read. New entries clear a conviction bar (RAISED when fighting the dominant trend).
 const ENTRY_BAR = 0.5, EXIT_BAR = 0.6;   // decisive-entry / exit-or-reverse-early. Trend-caution lives in the agent's CONVICTION (doctrine guides it) + the stop, NOT a hard counter-trend gate — keeps it agentic, not a one-day rule.
-const BASE_NOTIONAL = 10000;   // $ notional at full conviction, scaled by the agent's OWN conviction. This is SIZING/risk (not a decision rule): it equalizes SPXW vs SPY so a loss and a win are comparable in $, and lets the agent's conviction drive size.
+const NOTIONAL_PER_POSITION = 3000;   // FLAT $ per tranche — HARD CAP, never scaled up (never $10k on one position). Scale trend exposure by ADDING tranches, not by sizing up. Equal-notional so SPXW/SPY/QQQ are comparable.
+const MAX_TRANCHES = 4;                // max concurrent same-direction tranches per posture (~$12k total on a confirmed trend)
+const MIN_ADD_PCT = 0.0015;           // pyramiding: a new tranche only after price advances >=0.15% beyond the last add (anti-stack; ~11pt on SPX, scales across instruments)
+const ADD_CUTOFF_ET = '14:00';        // no NEW tranches after this (late-day charm/pin reversal risk + little room left); existing tranches still trail to their own stop/target/EOD
 const NO_NEW_ET = '15:45', FLATTEN_ET = '15:55';                  // 0DTE: no new entries late; force-flat before the close
 const MAX_OPT_LOSS_PCT = -50;   // hard premium/theta stop: cut any option down ≥50% even if the price-stop was never hit (a sideways 0DTE bleeds from decay). Risk cap, not a market rule.
-async function closeOpen(b, instruments, et, why, exitPrem) {
-  if (b._closing || !b.open) return;   // MUTEX: the fast stop-loop and the slow LLM loop share the book — never double-close (flag set synchronously before any await)
-  b._closing = true;
+async function closePosition(b, pos, instruments, et, why, exitPrem) {
+  if (!pos || pos._closing || !b.positions || b.positions.indexOf(pos) < 0) return;   // MUTEX (per-tranche): the fast stop-loop and the slow LLM loop share the book — never double-close the SAME tranche (flag set synchronously before any await); different tranches may close concurrently
+  pos._closing = true;
   try {
-    const o = b.open, sgn = o.dir === 'long' ? 1 : -1, exitPx = +(instruments[o.instrument]?.spot ?? o.entryPx).toFixed(2);
-    if (exitPrem === undefined) exitPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // reuse the mark manage() already fetched (no double API call)
-    const optRet = (o.entry_premium && exitPrem) ? +(((exitPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null;
-    const pnlUsd = (o.entry_premium != null && exitPrem != null && o.contracts != null) ? Math.round((exitPrem - o.entry_premium) * 100 * o.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
-    b.closed.push({ ...o, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - o.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
-    b.open = null;
-  } finally { b._closing = false; }
+    const sgn = pos.dir === 'long' ? 1 : -1, exitPx = +(instruments[pos.instrument]?.spot ?? pos.entryPx).toFixed(2);
+    if (exitPrem === undefined) exitPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // reuse the mark manage() already fetched (no double API call)
+    const optRet = (pos.entry_premium && exitPrem) ? +(((exitPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
+    const pnlUsd = (pos.entry_premium != null && exitPrem != null && pos.contracts != null) ? Math.round((exitPrem - pos.entry_premium) * 100 * pos.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
+    const { _closing, ...rec } = pos;
+    b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
+    const i = b.positions.indexOf(pos); if (i >= 0) b.positions.splice(i, 1);
+  } finally { pos._closing = false; }
 }
 async function manage(book, mode, dec, instruments, et, trend) {
-  const b = (book[mode] ||= { open: null, closed: [] });
+  const b = (book[mode] ||= { positions: [], closed: [] });
+  b.positions ||= (b.open ? [b.open] : []); delete b.open;   // migrate a pre-pyramid single-open book to the stack
   const inst = dec.instrument && dec.instrument !== 'none' ? dec.instrument : 'SPXW';
   const px = instruments[inst]?.spot ?? instruments.SPXW?.spot;
-  // ── manage an OPEN position: TRAIL the agent's stop/target (ratchet the stop, never loosen), then exit on stop/target/EOD or a high-conviction invalidation ──
-  if (b.open) {
-    const o = b.open, opx = instruments[o.instrument]?.spot ?? px, long = o.dir === 'long';
-    if (opx != null) {   // maintain the agent's EVOLVING plan on the position — persisted to agent_state each tick ("in memory")
+  const decDir = dec.direction, conv = dec.conviction ?? 0;
+  const held = b.positions;
+  // a high-conviction FLIP (reverse) or stand-aside flattens the WHOLE stack this tick; the reverse then opens the opposite side below
+  const wantsFlatten = decDir && ((decDir === 'stand_aside') || (held.length && held[0].dir !== decDir)) && conv >= EXIT_BAR;
+  const isReverse = wantsFlatten && decDir !== 'stand_aside';
+  // ── manage EACH open tranche: trail its OWN structural stop/target up (ratchet, never loosen), then exit on stop/target/premium/EOD/high-conv-flatten ──
+  let mechExit = false;                                                   // a non-reverse exit this tick → go flat, no same-tick re-entry
+  for (const pos of [...held]) {                                          // copy — closePosition() splices b.positions
+    const long = pos.dir === 'long', opx = instruments[pos.instrument]?.spot ?? px;
+    if (opx != null) {   // roll the agent's CURRENT structural stop/target onto this tranche (GEX/VEX-dictated level; ratchet only)
       const s = dec.stop_level, t = dec.target_level;
-      if (s != null && (long ? s < opx : s > opx) && (o.stop_level == null || (long ? s > o.stop_level : s < o.stop_level))) o.stop_level = s;   // RATCHET: raise a long's stop / lower a short's — protect gains, never loosen into a hoped-for bounce
-      if (t != null && (long ? t > opx : t < opx)) o.target_level = t;   // target follows the agent's read while still ahead of price
+      if (s != null && (long ? s < opx : s > opx) && (pos.stop_level == null || (long ? s > pos.stop_level : s < pos.stop_level))) pos.stop_level = s;   // RATCHET UP a long's stop / DOWN a short's — never loosen
+      if (t != null && (long ? t > opx : t < opx)) pos.target_level = t;
     }
-    const curPrem = (o.occ && DAY === TODAY_ET) ? await optMark(o.occ) : null;   // live option mark — powers the theta safety-stop + the live P/L the agent sees
-    if (curPrem != null) { o.live_premium = curPrem; o.live_ret_pct = o.entry_premium ? +(((curPrem - o.entry_premium) / o.entry_premium) * 100).toFixed(0) : null; }
-    let why = null, reverse = false;
-    if (opx != null && o.stop_level != null && (long ? opx <= o.stop_level : opx >= o.stop_level)) why = 'stop hit';
-    else if (opx != null && o.target_level != null && (long ? opx >= o.target_level : opx <= o.target_level)) why = 'target hit';
-    else if (o.live_ret_pct != null && o.live_ret_pct <= MAX_OPT_LOSS_PCT) why = `premium stop (${MAX_OPT_LOSS_PCT}% theta/loss cap)`;   // safety net: a sideways 0DTE bled past the cap even though price never hit the stop
+    const curPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // live mark — powers the theta stop + the P/L the agent sees
+    if (curPrem != null) { pos.live_premium = curPrem; pos.live_ret_pct = pos.entry_premium ? +(((curPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null; }
+    let why = null;
+    if (opx != null && pos.stop_level != null && (long ? opx <= pos.stop_level : opx >= pos.stop_level)) why = 'stop hit';
+    else if (opx != null && pos.target_level != null && (long ? opx >= pos.target_level : opx <= pos.target_level)) why = 'target hit';
+    else if (pos.live_ret_pct != null && pos.live_ret_pct <= MAX_OPT_LOSS_PCT) why = `premium stop (${MAX_OPT_LOSS_PCT}% theta/loss cap)`;
     else if (et >= FLATTEN_ET) why = 'EOD flatten';
-    else { const wantsOut = dec.direction === 'stand_aside' || (dec.direction && dec.direction !== o.dir);
-      if (wantsOut && (dec.conviction ?? 0) >= EXIT_BAR) { why = dec.direction === 'stand_aside' ? 'exit — thesis invalidated' : 'reversed (high conviction)'; reverse = dec.direction !== 'stand_aside'; } }
-    if (!why) return;                                     // HOLD — plan intact; don't touch anything else this tick
-    await closeOpen(b, instruments, et, why, curPrem);
-    if (!reverse) return;                                 // mechanical / stand-aside close → go flat, no same-tick re-entry
+    else if (wantsFlatten) why = isReverse ? 'reversed (high conviction)' : 'exit — thesis invalidated';
+    if (why) { await closePosition(b, pos, instruments, et, why, curPrem); if (!isReverse) mechExit = true; }
   }
-  // ── OPEN a new position: flat + decisive + clears the bar (HIGHER if counter-trend) + before the late-day cutoff ──
-  if (!b.open && dec.direction && dec.direction !== 'stand_aside' && px != null && et < NO_NEW_ET) {
-    const counter = (trend === 'up' && dec.direction === 'short') || (trend === 'down' && dec.direction === 'long');   // recorded for the diary; NOT a gate — the agent self-assigns low conviction to casual fades (doctrine), and the stop caps any bad one
-    const wantPullback = dec.entry_type === 'pullback' && dec.entry_level != null;
-    const reached = !wantPullback || (dec.direction === 'long' ? px <= dec.entry_level : px >= dec.entry_level);   // a RESTING entry fills only when price comes back to the agent's level (buy the dip / sell the bounce); else it waits (the agent re-emits next tick)
-    if ((dec.conviction ?? 0) >= ENTRY_BAR && reached) {
-      const cp = dec.direction === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;   // the 0DTE ATM option we'd buy
-      const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
-      const notional = Math.round(BASE_NOTIONAL * Math.min(1, dec.conviction));   // conviction-weighted $ size (the agent's read drives it), equal across instruments
-      const contracts = premium ? +(notional / (premium * 100)).toFixed(2) : null;
-      const initStop = (dec.stop_level != null && (dec.direction === 'long' ? dec.stop_level < px : dec.stop_level > px)) ? dec.stop_level : null;   // only accept an initial stop on the correct side of entry
-      const initTarget = (dec.target_level != null && (dec.direction === 'long' ? dec.target_level > px : dec.target_level < px)) ? dec.target_level : null;
-      b.open = { mode, instrument: inst, dir: dec.direction, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, contracts, notional: premium ? notional : null, target: dec.target || '', stop: dec.stop || '', target_level: initTarget, stop_level: initStop, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' };
-    }
+  // ── OPEN a tranche: the FIRST position, or an ADD (pyramid) on a confirmed trend at a NEW extreme. stand-aside never opens; a reverse opens the flipped side. ──
+  if (!decDir || decDir === 'stand_aside' || px == null || et >= NO_NEW_ET) return;
+  if (mechExit) return;                                                  // a stop/target/premium/EOD/stand-aside fired this tick → flat, re-evaluate next tick (only a reverse opens same-tick, below)
+  const openCount = b.positions.length;                                   // post-close count (a reverse just flattened → 0)
+  const sameDir = openCount === 0 || b.positions.every(p => p.dir === decDir);
+  if (!sameDir) return;                                                   // never mix directions in one posture's stack
+  const wantPullback = dec.entry_type === 'pullback' && dec.entry_level != null;
+  const reached = !wantPullback || (decDir === 'long' ? px <= dec.entry_level : px >= dec.entry_level);
+  let allow = false, isAdd = false;
+  if (openCount === 0) allow = conv >= ENTRY_BAR && reached;              // first tranche: decisive + (resting entry) reached
+  else {                                                                  // ADD gates — pyramiding discipline
+    const last = b.positions[b.positions.length - 1];
+    const trendOK = (decDir === 'long' && trend === 'up') || (decDir === 'short' && trend === 'down');   // confirmed trend only
+    const newExtreme = decDir === 'long' ? px >= last.entryPx * (1 + MIN_ADD_PCT) : px <= last.entryPx * (1 - MIN_ADD_PCT);   // add to a WINNER at a genuine new high/low
+    const allGreen = b.positions.every(p => p.live_ret_pct == null || p.live_ret_pct > 0);   // never add on top of a red tranche
+    allow = conv >= ENTRY_BAR && trendOK && newExtreme && allGreen && openCount < MAX_TRANCHES && et < ADD_CUTOFF_ET;
+    isAdd = true;
   }
+  if (!allow) return;
+  const cp = decDir === 'long' ? 'C' : 'P', step = STEP[inst] || 1, strike = Math.round(px / step) * step;
+  const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
+  const contracts = premium ? +(NOTIONAL_PER_POSITION / (premium * 100)).toFixed(2) : null;   // FLAT $3k per tranche — hard cap, never scaled up
+  const counter = (trend === 'up' && decDir === 'short') || (trend === 'down' && decDir === 'long');
+  const initStop = (dec.stop_level != null && (decDir === 'long' ? dec.stop_level < px : dec.stop_level > px)) ? dec.stop_level : null;   // structural stop on the correct side of THIS entry
+  const initTarget = (dec.target_level != null && (decDir === 'long' ? dec.target_level > px : dec.target_level < px)) ? dec.target_level : null;
+  b.positions.push({ mode, instrument: inst, dir: decDir, entryET: et, entryPx: +px.toFixed(2), cp, strike, occ, entry_premium: premium, contracts, notional: premium ? NOTIONAL_PER_POSITION : null, tranche: openCount + 1, is_add: isAdd, target: dec.target || '', stop: dec.stop || '', target_level: initTarget, stop_level: initStop, counter_trend: counter, conviction: dec.conviction, thesis: dec.why || '' });
 }
-const bookLine = (book) => ['conservative', 'aggressive'].map(m => { const b = book[m] || { open: null, closed: [] }; const rp = b.closed.reduce((a, c) => a + c.pnl, 0); return `${m}: ${b.open ? `IN ${b.open.instrument} ${b.open.dir} @${b.open.entryPx}` : 'flat'} · realized ${rp >= 0 ? '+' : ''}${rp.toFixed(1)}pt (${b.closed.length} closed)`; }).join(' | ');
+const bookLine = (book) => ['conservative', 'aggressive'].map(m => { const b = book[m] || { positions: [], closed: [] }; const ps = b.positions || (b.open ? [b.open] : []); const rp = b.closed.reduce((a, c) => a + (c.pnl_usd || 0), 0); return `${m}: ${ps.length ? `IN ${ps.length}×${ps[0].dir} ${ps[0].instrument}` : 'flat'} · realized ${rp >= 0 ? '+' : ''}$${rp} (${b.closed.length} closed)`; }).join(' | ');
 
 const LIVE = !!arg('--live', false);
 async function step(et, mem) {
   const state = await assembleComplex(et, LIVE), R = state.instruments.SPXW;
-  mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
-  const planNote = (m) => { const o = mem.book[m].open; if (!o) return `${m}: flat`; const pl = o.live_ret_pct != null ? `${o.live_ret_pct >= 0 ? '+' : ''}${o.live_ret_pct}% (opt $${o.live_premium})` : 'just opened'; return `${m}: HOLDING ${o.instrument} ${o.strike}${o.cp} ${o.dir} from ${o.entryET} @${o.entryPx} — YOUR OPTION IS ${pl} · target ${o.target_level ?? (o.target || '?')}, stop ${o.stop_level ?? (o.stop || '?')}. MANAGE it: repeat "${o.dir}" to HOLD; RAISE your stop_level to trail gains; stand_aside/reverse if invalidated OR if this 0DTE is bleeding from theta while price goes nowhere (conv ≥0.6). System auto-exits at target/stop, a hard ${MAX_OPT_LOSS_PCT}% premium stop, and flattens near close.`; };
+  mem.book ||= { conservative: { positions: [], closed: [] }, aggressive: { positions: [], closed: [] } };
+  for (const _m of ['conservative', 'aggressive']) { const _b = mem.book[_m] ||= { positions: [], closed: [] }; _b.positions ||= (_b.open ? [_b.open] : []); delete _b.open; _b.closed ||= []; }   // migrate a pre-pyramid single-open book
+  const planNote = (m) => {
+    const ps = mem.book[m]?.positions || []; if (!ps.length) return `${m}: flat`;
+    const dir = ps[0].dir, lines = ps.map((o, i) => `#${i + 1} ${o.instrument} ${o.strike}${o.cp} @${o.entryPx} ${o.live_ret_pct != null ? (o.live_ret_pct >= 0 ? '+' : '') + o.live_ret_pct + '%' : 'new'} stop→${o.stop_level ?? '?'}`).join(' | ');
+    return `${m}: HOLDING ${ps.length}/${MAX_TRANCHES} ${dir} tranche(s) [${lines}] · tgt ${ps[0].target_level ?? '?'}. MANAGE the stack: repeat "${dir}" to HOLD (a NEW $${NOTIONAL_PER_POSITION / 1000}k tranche is added ONLY on a confirmed ${dir === 'long' ? 'up' : 'down'}-trend at a NEW ${dir === 'long' ? 'high' : 'low'}, all-green, ≤${MAX_TRANCHES}, before ${ADD_CUTOFF_ET}); RAISE stop_level (STRUCTURAL — under the GEX support / king / last higher-${dir === 'long' ? 'low' : 'high'}) to trail EVERY tranche up; drop conviction below ${ENTRY_BAR} to HOLD-without-adding; stand_aside/reverse (conv ≥${EXIT_BAR}) to flatten the WHOLE stack. System auto-exits each tranche at its own stop/target, a hard ${MAX_OPT_LOSS_PCT}% premium stop, and flattens all near close.`;
+  };
   const bookNote = `YOUR OPEN POSITIONS & PLANS (manage them — don't re-decide from scratch):\n  ${planNote('conservative')}\n  ${planNote('aggressive')}`;
   const journal = mem.notes ? `YOUR RUNNING JOURNAL (your notes from earlier today):\n${mem.notes}\n${bookNote}` : `YOUR RUNNING JOURNAL: (empty — first read of the day)\n${bookNote}`;
   const d = await claude(sysWithLessons(), `${journal}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
@@ -381,17 +406,22 @@ async function fastStops(mem) {   // price-stop / price-target ONLY. Trailing, p
   try {
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5)); if (m < 9 * 60 + 30 || m > 16 * 60) return;   // RTH only
+    const spotCache = {};   // one spot pull per instrument per fast tick (tranches usually share the trend instrument)
     for (const mode of ['conservative', 'aggressive']) {
-      const b = mem.book[mode]; if (!b?.open || b._closing) continue;
-      const o = b.open; if (o.stop_level == null && o.target_level == null) continue;
-      const long = o.dir === 'long', spot = await fastSpot(o.instrument); if (spot == null) continue;
-      let why = null;   // mirrors the slow loop's manage() price checks (agent.mjs) so both halves agree on what a breach is
-      if (o.stop_level != null && (long ? spot <= o.stop_level : spot >= o.stop_level)) why = 'stop hit (fast)';
-      else if (o.target_level != null && (long ? spot >= o.target_level : spot <= o.target_level)) why = 'target hit (fast)';
-      if (why && b.open && !b._closing) {   // closeOpen re-checks the _closing mutex; the slow manage() shares this book + guard, so the two halves never double-close
-        await closeOpen(b, { [o.instrument]: { spot } }, et, why);
-        try { fs.writeFileSync(MEM, JSON.stringify(mem, null, 1)); } catch { }
-        console.log(`  ⚡ FAST-EXIT · ${why} @${et} · ${o.instrument} ${o.strike}${o.cp} ${o.dir} @ ${spot} (${mode})`);
+      const b = mem.book[mode]; if (!b?.positions?.length) continue;
+      for (const pos of [...b.positions]) {   // copy — closePosition() splices; each tranche has its OWN structural stop
+        if (pos._closing || (pos.stop_level == null && pos.target_level == null)) continue;
+        const long = pos.dir === 'long';
+        if (!(pos.instrument in spotCache)) spotCache[pos.instrument] = await fastSpot(pos.instrument);
+        const spot = spotCache[pos.instrument]; if (spot == null) continue;
+        let why = null;   // mirrors the slow loop's manage() price checks so both halves agree on what a breach is
+        if (pos.stop_level != null && (long ? spot <= pos.stop_level : spot >= pos.stop_level)) why = 'stop hit (fast)';
+        else if (pos.target_level != null && (long ? spot >= pos.target_level : spot <= pos.target_level)) why = 'target hit (fast)';
+        if (why && !pos._closing) {   // closePosition re-checks the per-tranche mutex; the slow manage() shares this book + guard, so the two halves never double-close
+          await closePosition(b, pos, { [pos.instrument]: { spot } }, et, why);
+          try { fs.writeFileSync(MEM, JSON.stringify(mem, null, 1)); } catch { }
+          console.log(`  ⚡ FAST-EXIT · ${why} @${et} · ${pos.instrument} ${pos.strike}${pos.cp} ${pos.dir} #${pos.tranche ?? '?'} @ ${spot} (${mode})`);
+        }
       }
     }
   } finally { _fastBusy = false; }
@@ -406,7 +436,8 @@ async function loop() {
   // resume today's book/journal on restart so the full day of plays survives (step() saves mem to MEM each tick)
   let mem = fs.existsSync(MEM) ? (() => { try { return JSON.parse(fs.readFileSync(MEM, 'utf8')); } catch { return null; } })() : null;
   if (!mem || mem.day !== DAY) mem = { day: DAY, notes: '', log: [] };
-  mem.book ||= { conservative: { open: null, closed: [] }, aggressive: { open: null, closed: [] } };
+  mem.book ||= { conservative: { positions: [], closed: [] }, aggressive: { positions: [], closed: [] } };
+  for (const _m of ['conservative', 'aggressive']) { const _b = mem.book[_m] ||= { positions: [], closed: [] }; _b.positions ||= (_b.open ? [_b.open] : []); delete _b.open; _b.closed ||= []; }   // migrate a pre-pyramid single-open book on resume
   const nplays = () => mem.book.conservative.closed.length + mem.book.aggressive.closed.length;
   const idleDash = (status) => { try { fs.writeFileSync(DASH, JSON.stringify({ day: DAY, as_of_et: new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5), status, instruments: {}, uw_layers: {}, decision: {}, book: mem.book, journal: mem.notes || '', lessons: loadLessons() }, null, 1)); } catch (e) { } };
   idleDash('agent starting — clearing prior state…');   // wipe the stale (e.g. backtest) dashboard immediately
