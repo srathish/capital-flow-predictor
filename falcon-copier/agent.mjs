@@ -60,8 +60,11 @@ function assembleInstrument(sym, etStr) {
   const aggBelow = s.strikes.filter(n => n.k < spot).sort((a, b) => Math.abs(b.gA || 0) - Math.abs(a.gA || 0))[0];
   const aggNet = M(s.strikes.filter(n => Math.abs(n.k - spot) <= I.wide).reduce((a, c) => a + (c.gA || 0), 0));
   const band = s.strikes.filter(n => Math.abs(n.k - spot) <= I.band), path30 = F.slice(Math.max(0, idx - 30), idx + 1).map(f => +f.spot.toFixed(1));
+  const dayF = F.slice(0, idx + 1), hodF = dayF.reduce((a, f) => f.spot > a.spot ? f : a, dayF[0]), lodF = dayF.reduce((a, f) => f.spot < a.spot ? f : a, dayF[0]);   // FULL-DAY high/low so far (session_high/low below is only the last 30 min)
+  const rangePos = (hodF.spot > lodF.spot) ? +(((spot - lodF.spot) / (hodF.spot - lodF.spot)) * 100).toFixed(0) : null;
   return {
     symbol: sym, spot: +spot.toFixed(2), chg_pct: +(((spot - s.prevClose) / s.prevClose) * 100).toFixed(2), session_high: Math.max(...path30), session_low: Math.min(...path30),
+    day_range: { high: +hodF.spot.toFixed(2), high_et: etOf(hodF.ts), low: +lodF.spot.toFixed(2), low_et: etOf(lodF.ts), spot_pctile_in_range: rangePos, note: 'FULL-DAY high/low so far (not the 30-min session_high/low). spot_pctile_in_range: 0=at the day LOW, 100=at the day HIGH. Judge your TARGET against it: in a CONFIRMED trend, if spot is near the day extreme in your favor and your target is only a hair beyond, you are leaving the bulk of the move — lean toward HOLDING a runner toward/through the day extreme instead of a tight target. Sold-too-early is the #1 tax on trend days.' },
     price_path_30m: path30, structure_timeline_30m: timeline,
     king_node: king ? { strike: king.k, gex_M: M(king.g0) } : null,
     nearest_strong_support_below: floor ? { strike: floor.k, gex_M: M(floor.g0) } : null,
@@ -244,8 +247,11 @@ async function closePosition(b, pos, instruments, et, why, exitPrem) {
     if (exitPrem === undefined) exitPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // reuse the mark manage() already fetched (no double API call)
     const optRet = (pos.entry_premium && exitPrem) ? +(((exitPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
     const pnlUsd = (pos.entry_premium != null && exitPrem != null && pos.contracts != null) ? Math.round((exitPrem - pos.entry_premium) * 100 * pos.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
+    const peakPrem = Math.max(pos.peak_premium ?? 0, exitPrem ?? 0, pos.entry_premium ?? 0) || null;   // OPTION high-water-mark incl. the exit tick
+    const peakRet = (pos.entry_premium && peakPrem) ? +(((peakPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
+    const peakCapturePct = (peakRet != null && peakRet !== 0 && optRet != null) ? Math.round(100 * optRet / peakRet) : null;   // % of the option's PEAK gain kept at exit: 100 = sold the high, <100 = gave some back to theta/reversal, <0 = round-tripped a winner into a loss
     const { _closing, ...rec } = pos;
-    b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
+    b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, peak_premium: peakPrem, peak_ret_pct: peakRet, peak_capture_pct: peakCapturePct, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
     const i = b.positions.indexOf(pos); if (i >= 0) b.positions.splice(i, 1);
   } finally { pos._closing = false; }
 }
@@ -270,7 +276,7 @@ async function manage(book, mode, dec, instruments, et, trend) {
       if (t != null && (long ? t > opx : t < opx)) pos.target_level = t;
     }
     const curPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // live mark — powers the theta stop + the P/L the agent sees
-    if (curPrem != null) { pos.live_premium = curPrem; pos.live_ret_pct = pos.entry_premium ? +(((curPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null; }
+    if (curPrem != null) { pos.live_premium = curPrem; pos.peak_premium = Math.max(pos.peak_premium ?? curPrem, curPrem); pos.live_ret_pct = pos.entry_premium ? +(((curPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null; pos.peak_ret_pct = (pos.entry_premium && pos.peak_premium) ? +(((pos.peak_premium - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null; }   // track the OPTION's high-water-mark (max premium seen), not just the last tick — powers real exit-efficiency (did we sell near the option's high?)
     const ng = instruments[pos.instrument]?.regime_now?.net_gamma_M ?? 0, priceFav = opx != null && (long ? opx >= pos.entryPx : opx <= pos.entryPx);
     const premCap = (priceFav || ng > 0) ? MAX_OPT_LOSS_PCT_WIDE : MAX_OPT_LOSS_PCT;   // regime-aware theta stop: LENIENT when price still holds OR chop (positive gamma, theta expected); TIGHT only when price has gone adverse on a trend (thesis breaking, not clock ticking)
     let why = null;
@@ -343,7 +349,7 @@ async function step(et, mem) {
   return mem;
 }
 
-const arr = (v) => Array.isArray(v) ? v : typeof v === 'string' ? v.split('\n').map(s => s.replace(/^\s*[\d.\-)]+\s*/, '').trim()).filter(Boolean) : Object.values(v || {}).map(String);
+const arr = (v) => Array.isArray(v) ? v : typeof v === 'string' ? v.replace(/<!\[CDATA\[|\]\]>/g, '').split('\n').map(s => s.replace(/^\s*[\d.\-)]+\s*/, '').trim()).filter(Boolean) : Object.values(v || {}).map(String);
 const DIARY_FILE = path.join(FC, 'agent_diary.json');
 const loadDiary = () => fs.existsSync(DIARY_FILE) ? JSON.parse(fs.readFileSync(DIARY_FILE, 'utf8')) : [];
 // standing instrumentation: exit-reason mix + conviction calibration across ALL recorded days — makes the theta-tax + conviction-degeneracy hypotheses visible on every --reflect
@@ -360,21 +366,42 @@ function tradeStats() {
   const degen = cv.length ? `${Math.round(100 * cv.filter(v => v === mode).length / cv.length)}% of trades at ONE conviction value (${mode}); ${new Set(cv).size} distinct values across ${cv.length} trades` : 'n/a';
   return { total: trades.length, reasonStr, buckets, degen };
 }
+// exit efficiency: did we sell near the favorable extreme? UNDERLYING (exit spot vs the day's extreme after entry, from frames) + OPTION (exit vs the tracked premium peak)
+function exitEfficiency(day, book) {
+  const ld = (sym) => { try { return zlib.gunzipSync(fs.readFileSync(path.join(FC, 'archive', `${day}_${sym}.jsonl.gz`))).toString().trim().split('\n').map(l => { const f = JSON.parse(l); return { et: etOf(f.ts), spot: +f.spot }; }); } catch { return []; } };
+  const paths = { SPXW: ld('SPXW'), SPY: ld('SPY'), QQQ: ld('QQQ') }, rows = [];
+  for (const mode of ['conservative', 'aggressive']) for (const t of (book?.[mode]?.closed || [])) {
+    const p = paths[t.instrument]; let uEff = null, uLeft = null;
+    if (p?.length && t.entryPx != null && t.exitPx != null) {
+      const ei = p.findIndex(x => x.et >= t.entryET), after = ei >= 0 ? p.slice(ei) : [];
+      if (after.length) { const short = t.dir === 'short', ext = short ? after.reduce((a, x) => x.spot < a.spot ? x : a) : after.reduce((a, x) => x.spot > a.spot ? x : a);
+        const avail = short ? (t.entryPx - ext.spot) : (ext.spot - t.entryPx), capt = short ? (t.entryPx - t.exitPx) : (t.exitPx - t.entryPx);
+        uEff = avail > 0.5 ? Math.round(100 * capt / avail) : null; uLeft = +(avail - capt).toFixed(1); } }
+    rows.push({ mode, tag: `${t.entryET}->${t.exitET} ${t.instrument} ${t.dir}`, optCapture: t.peak_capture_pct ?? null, peakRet: t.peak_ret_pct ?? null, optRet: t.opt_ret_pct ?? null, uEff, uLeft, pnl: t.pnl_usd });
+  }
+  return rows;
+}
 
 // --reflect: review today vs outcomes → append to the PERMANENT diary (raw experience). Does NOT touch durable lessons.
 async function reflect() {
   const mem = fs.existsSync(MEM) ? JSON.parse(fs.readFileSync(MEM, 'utf8')) : null;
   if (!mem?.log?.length) { console.log('no decision log to reflect on — run --sequence first'); return; }
-  const review = mem.log.map(e => ({ et: e.et, conservative: `${e.conservative.direction} (${e.conservative.conviction})`, aggressive: `${e.aggressive.direction} ${e.aggressive.entry || ''}→${e.aggressive.target || ''} (${e.aggressive.conviction})`, what_price_did_next_45m: outcomeAfter(e.et) }));
+  const _B = mem.book || {};   // focus the review on the actual TRADES + a sampled decision arc — sending all ~275 ticks (~750KB) drowned the model and it returned only a grade
+  const trades = ['conservative', 'aggressive'].flatMap(mode => (_B[mode]?.closed || []).map(t => ({ mode, when: `${t.entryET}->${t.exitET}`, inst: t.instrument, dir: t.dir, strike: `${t.strike}${t.cp}`, conv: t.conviction, opt_ret_pct: t.opt_ret_pct, pnl_usd: t.pnl_usd, why: t.why })));
+  const arc = mem.log.filter((e, i) => i % 10 === 0 || i === mem.log.length - 1).map(e => ({ et: e.et, trend: e.trend?.direction, agg: `${e.aggressive?.direction} (${e.aggressive?.conviction})`, next45m: outcomeAfter(e.et) }));
+  const review = { trades, decision_arc_sampled: arc };
   const S = tradeStats();
+  const EFF = exitEfficiency(DAY, mem.book);
+  const effStr = EFF.length ? EFF.map(r => `${r.mode[0]} ${r.tag}: underlying ${r.uEff != null ? r.uEff + '% captured (left ' + r.uLeft + 'pt on the table)' : 'n/a'}${r.optCapture != null ? ` · option sold at ${r.optCapture}% of its peak (peaked +${r.peakRet}%, exited +${r.optRet}%)` : ' · option-peak n/a (tracking starts today)'}`).join('\n  ') : 'no closed trades today';
   const out = await claude(
-    `You are the same 0DTE agent REVIEWING your own decisions today against what price actually did, to build EXPERIENCE. Compare conservative vs aggressive vs the real outcome; be blunt where you were too cautious or too aggressive. ALSO explicitly GRADE the system's execution behaviors so we can VALIDATE them across many days (never conclude from one): (1) HOLD-TO-TARGET — did holding winners to their target help or hurt vs exiting sooner? (2) FORCED EXITS — did any stop-out or 15:55 EOD-flatten save or cost money? (3) TREND-COMMITMENT — did trading WITH the dominant trend help, and would any counter-trend trade have worked or failed? (4) THETA-TAX & CONVICTION — grade the STANDING METRICS given below (across ALL recorded days): does the exit-reason mix show PREMIUM-STOPS taxing the edge (a theta/strike-selection tax, not a market read)? Is CONVICTION degenerate — nearly all trades at ONE value, so the number carries no information and the entry/exit bars are arbitrary dials? Do higher-conviction buckets actually produce better outcomes (do they rank-order)? These are HYPOTHESES on trial, not settled — say if today's evidence supports or undercuts each. Record OBSERVATIONS (what you saw and how it resolved) and PROVISIONAL lessons (tentative — one day is not proof). This goes into a permanent multi-day diary; durable lessons are distilled later across many days, so do NOT overclaim from one session.`,
-    `Your decisions today (${DAY}) and actual outcomes:\n${JSON.stringify(review, null, 1)}\n\nSTANDING METRICS (all ${S.total} recorded closed trades, all days):\n  exit-reason mix: ${S.reasonStr}\n  conviction→outcome buckets: ${S.buckets}\n  conviction spread: ${S.degen}\n\nWrite today's diary entry.`,
-    { name: 'emit_diary', description: "today's diary entry", input_schema: { type: 'object', required: ['grade', 'observations', 'provisional_lessons'], properties: { grade: { type: 'string' }, observations: { type: 'array', items: { type: 'string' }, description: 'what you saw today + how it resolved (the raw record)' }, provisional_lessons: { type: 'array', items: { type: 'string' }, description: 'tentative takeaways — hypotheses, not yet doctrine' } } } }, 1600);
+    `You are the same 0DTE agent REVIEWING your own decisions today against what price actually did, to build EXPERIENCE. Compare conservative vs aggressive vs the real outcome; be blunt where you were too cautious or too aggressive. ALSO explicitly GRADE the system's execution behaviors so we can VALIDATE them across many days (never conclude from one): (1) HOLD-TO-TARGET — did holding winners to their target help or hurt vs exiting sooner? (2) FORCED EXITS — did any stop-out or 15:55 EOD-flatten save or cost money? (3) TREND-COMMITMENT — did trading WITH the dominant trend help, and would any counter-trend trade have worked or failed? (4) THETA-TAX & CONVICTION — grade the STANDING METRICS given below (across ALL recorded days): does the exit-reason mix show PREMIUM-STOPS taxing the edge (a theta/strike-selection tax, not a market read)? Is CONVICTION degenerate — nearly all trades at ONE value, so the number carries no information and the entry/exit bars are arbitrary dials? Do higher-conviction buckets actually produce better outcomes (do they rank-order)? (5) EXIT EFFICIENCY / SOLD-TOO-EARLY — grade the EXIT EFFICIENCY data below: did you sell/cover near the favorable extreme, or leave a big chunk of the move on the table (low underlying-capture %, low option-peak-capture %)? On a TREND day especially, was the target set too CLOSE to your own thesis, forcing a target-out-then-re-chase instead of holding ONE runner toward the day extreme? Sold-too-early is the #1 trend-day tax. These are HYPOTHESES on trial, not settled — say if today's evidence supports or undercuts each. Record OBSERVATIONS (what you saw and how it resolved) and PROVISIONAL lessons (tentative — one day is not proof). This goes into a permanent multi-day diary; durable lessons are distilled later across many days, so do NOT overclaim from one session.`,
+    `Your decisions today (${DAY}) and actual outcomes:\n${JSON.stringify(review, null, 1)}\n\nSTANDING METRICS (all ${S.total} recorded closed trades, all days):\n  exit-reason mix: ${S.reasonStr}\n  conviction→outcome buckets: ${S.buckets}\n  conviction spread: ${S.degen}\n\nEXIT EFFICIENCY TODAY (did you sell near the favorable extreme? underlying = exit spot vs the day's extreme after entry; option = exit vs the option's premium peak):\n  ${effStr}\n\nWrite today's diary entry.`,
+    { name: 'emit_diary', description: "today's diary entry", input_schema: { type: 'object', required: ['grade', 'observations', 'provisional_lessons'], properties: { grade: { type: 'string' }, observations: { type: 'array', items: { type: 'string' }, description: 'what you saw today + how it resolved (the raw record)' }, provisional_lessons: { type: 'array', items: { type: 'string' }, description: 'tentative takeaways — hypotheses, not yet doctrine' } } } }, 2800);
   const entry = { day: DAY, grade: out.grade, observations: arr(out.observations), provisional_lessons: arr(out.provisional_lessons) };
   const diary = loadDiary().filter(d => d.day !== DAY).concat(entry);   // one entry per day; re-reflect replaces today's
   fs.writeFileSync(DIARY_FILE, JSON.stringify(diary, null, 1));
   console.log(`\n═══ STANDING METRICS (all ${S.total} recorded closed trades) ═══\n  exit-reason mix: ${S.reasonStr}\n  conviction→outcome: ${S.buckets}\n  conviction spread: ${S.degen}`);
+  console.log(`\n═══ EXIT EFFICIENCY · ${DAY} (did we sell near the favorable extreme?) ═══\n  ${effStr}`);
   console.log(`\n═══ DIARY · ${DAY} (day ${diary.length} of the record) ═══\n  self-grade: ${out.grade}\n  provisional lessons (hypotheses, not yet doctrine):`);
   entry.provisional_lessons.forEach((l, i) => console.log(`   ${i + 1}. ${l}`));
   console.log(`\n  → appended to agent_diary.json (${diary.length} days). Durable lessons update only on --distill (needs the pattern to RECUR).`);
