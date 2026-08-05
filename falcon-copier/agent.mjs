@@ -64,7 +64,7 @@ function assembleInstrument(sym, etStr) {
   const rangePos = (hodF.spot > lodF.spot) ? +(((spot - lodF.spot) / (hodF.spot - lodF.spot)) * 100).toFixed(0) : null;
   // ── VELOCITY: rate-of-change of the key structure (M/min) + accelerating/decelerating — read GROWTH and DECAY as sharply as the levels ──
   const dnMag = (fr) => domNeg(fr)?.gex_M ?? null, kingGex = (fr) => { const k = fr.strikes.filter(n => n.g0 > 0).sort((a, b) => b.g0 - a.g0)[0]; return k ? M(k.g0) : null; };
-  const rateAccel = (fn) => { const v0 = fn(s), v6 = idx >= 6 ? fn(at(6)) : null, v12 = idx >= 12 ? fn(at(12)) : null; if (v0 == null || v6 == null) return { rate: null, accel: null }; const r1 = +((v0 - v6) / 6).toFixed(1), r0 = v12 != null ? +((v6 - v12) / 6).toFixed(1) : null; return { rate: r1, accel: r0 == null ? null : Math.abs(r1) > Math.abs(r0) + 0.3 ? 'accelerating' : Math.abs(r1) < Math.abs(r0) - 0.3 ? 'decelerating' : 'steady' }; };
+  const rateAccel = (fn) => { const f6 = idx >= 6 ? at(6) : null, f12 = idx >= 12 ? at(12) : null; const v0 = fn(s), v6 = f6 ? fn(f6) : null, v12 = f12 ? fn(f12) : null; if (v0 == null || v6 == null) return { rate: null, accel: null }; const dt1 = Math.max(1, etM(s.ts) - etM(f6.ts)), dt0 = f12 ? Math.max(1, etM(f6.ts) - etM(f12.ts)) : null; const r1 = +((v0 - v6) / dt1).toFixed(1), r0 = (v12 != null && dt0) ? +((v6 - v12) / dt0).toFixed(1) : null; return { rate: r1, accel: r0 == null ? null : Math.abs(r1) > Math.abs(r0) + 0.3 ? 'accelerating' : Math.abs(r1) < Math.abs(r0) - 0.3 ? 'decelerating' : 'steady' }; };   // rate per ACTUAL elapsed minute (timestamp delta) — a dropped frame no longer fakes acceleration
   const vNet = rateAccel(netOf), vDn = rateAccel(dnMag), vKing = rateAccel(kingGex);
   return {
     symbol: sym, spot: +spot.toFixed(2), chg_pct: +(((spot - s.prevClose) / s.prevClose) * 100).toFixed(2), session_high: Math.max(...path30), session_low: Math.min(...path30),
@@ -167,7 +167,7 @@ WHAT THE DATA IS
 - vix (uw_layers.vix) = the VOLATILITY REGIME (VIX family) — macro context + directional bias, weigh it in every read:
    · band: low (≤16) = chop/grind, pins HOLD, trend-friendly, you can chase a rip; moderate (17-24) = the sweet spot, meaningful moves; high (≥25) = VIOLENT both ways, levels BLOW THROUGH, size DOWN, favor pullback entries + wider stops. vix1d_0dte is the 0DTE-specific vol — weight it MOST for today's tape.
    · term_structure: contango (front<back) = calm/coasting → market biased neutral-to-BULLISH; backwardation (front>back) = near-term stress → biased BEARISH (a delayed but strong signal).
-   · tilt (VIX vs pivot): VIX BELOW pivot = bullish tilt, ABOVE = bearish tilt; tilt_confirmed = the 2-candle flip confirmed. VIX is ~80% INVERSE to price (VIX up → spot down).
+   · tilt (VIX vs pivot): VIX BELOW pivot = bullish tilt, ABOVE = bearish tilt. VIX is ~80% INVERSE to price (VIX up → spot down). VIX is now REAL-TIME (UW), and vix1d_0dte / term_structure come straight off SPX's own IV curve.
    Synthesize: low-VIX + contango + bullish-tilt = favor longs/trend-following, hold to target, pins hold; high-VIX + backwardation + bearish-tilt = caution, pullback entries, smaller size, respect downside, levels less reliable. BUT when the VIX tilt CONFLICTS with a CONFIRMED price trend (e.g. VIX bearish-tilt while price trends UP — VIX rising WITH price, the ~20% divergence case), the PRICE TREND wins short-term — do NOT fade a strong confirmed trend on VIX-tilt alone. Treat a VIX/price divergence as a CAUTION flag (be nimble), not a reversal signal to trade against the trend. (Empirically SPX LEADS VIX — VIX is the REACTION to price, not the anticipator of it; VIX levels do not reliably time SPX direction. Read PRICE for direction; use VIX for REGIME + sizing, never as a standalone counter-trend trigger.)
 - EVENT PREMIUM & econ_calendar (uw_layers): near a scheduled HIGH-impact event (CPI/NFP/FOMC/PCE/PPI/retail — next_high_impact.minutes_away is your countdown; in_event_window = within ±30 min) index options carry event premium that IV-CRUSHES after. Into a high event: 0DTE longs are double-bled if the move disappoints or reverses — be cautious or STAND ASIDE through the print, expect ranges to EXPAND and levels to be less reliable. After the crush, IV normalizes and the post-event drift becomes tradeable.
 
@@ -250,6 +250,7 @@ const MAX_OPT_LOSS_PCT_WIDE = -70;    // LENIENT theta cap when price still hold
 const ITM_PCT = 0.0015;               // strike_style:'itm' shifts the strike ~0.15% in-the-money (higher delta, LESS theta-fragile) for a conviction hold; default 'atm' (max gamma/leverage) for a fast scalp
 const PREM_TAKE_MIN = 60;             // arm the premium-trailing TAKE only after the option has peaked >= +60% (a real spike, not noise)
 const PREM_TRAIL_GIVEBACK = 0.30;     // then BANK it if the option gives back >= 30% of its premium from that peak — captures the option's high before theta/IV-crush/reversal erodes it (the OPTION-value MIRROR of the price trailing stop)
+const SPREAD_PCT = 0.025;             // round-trip 0DTE ATM spread haircut ≈ 2.5% of entry premium (you cross the bid/ask TWICE) — subtracted from pnl_usd so the book P/L is honest, not a fill-at-mark fantasy (worst on the fast tap-reject trades)
 async function closePosition(b, pos, instruments, et, why, exitPrem) {
   if (!pos || pos._closing || !b.positions || b.positions.indexOf(pos) < 0) return;   // MUTEX (per-tranche): the fast stop-loop and the slow LLM loop share the book — never double-close the SAME tranche (flag set synchronously before any await); different tranches may close concurrently
   pos._closing = true;
@@ -257,12 +258,13 @@ async function closePosition(b, pos, instruments, et, why, exitPrem) {
     const sgn = pos.dir === 'long' ? 1 : -1, exitPx = +(instruments[pos.instrument]?.spot ?? pos.entryPx).toFixed(2);
     if (exitPrem === undefined) exitPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // reuse the mark manage() already fetched (no double API call)
     const optRet = (pos.entry_premium && exitPrem) ? +(((exitPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
-    const pnlUsd = (pos.entry_premium != null && exitPrem != null && pos.contracts != null) ? Math.round((exitPrem - pos.entry_premium) * 100 * pos.contracts) : null;   // sized $ (always long the option) — equal-notional so SPXW & SPY are comparable
+    const spreadCost = (pos.entry_premium != null && pos.contracts != null) ? Math.round(pos.entry_premium * SPREAD_PCT * 100 * pos.contracts) : 0;   // round-trip spread haircut — makes pnl_usd honest (you don't fill at mark on both sides)
+    const pnlUsd = (pos.entry_premium != null && exitPrem != null && pos.contracts != null) ? Math.round((exitPrem - pos.entry_premium) * 100 * pos.contracts) - spreadCost : null;   // sized $ (always long the option), NET of the round-trip spread — equal-notional so SPXW & SPY are comparable
     const peakPrem = Math.max(pos.peak_premium ?? 0, exitPrem ?? 0, pos.entry_premium ?? 0) || null;   // OPTION high-water-mark incl. the exit tick
     const peakRet = (pos.entry_premium && peakPrem) ? +(((peakPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
     const peakCapturePct = (peakRet != null && peakRet !== 0 && optRet != null) ? Math.round(100 * optRet / peakRet) : null;   // % of the option's PEAK gain kept at exit: 100 = sold the high, <100 = gave some back to theta/reversal, <0 = round-tripped a winner into a loss
     const { _closing, ...rec } = pos;
-    b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, peak_premium: peakPrem, peak_ret_pct: peakRet, peak_capture_pct: peakCapturePct, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, why });
+    b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, peak_premium: peakPrem, peak_ret_pct: peakRet, peak_capture_pct: peakCapturePct, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, spread_cost: spreadCost, why });
     const i = b.positions.indexOf(pos); if (i >= 0) b.positions.splice(i, 1);
   } finally { pos._closing = false; }
 }
@@ -474,21 +476,24 @@ async function fastStops(mem) {   // price-stop / price-target ONLY. Trailing, p
   try {
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5)); if (m < 9 * 60 + 30 || m > 16 * 60) return;   // RTH only
+    const eod = et >= FLATTEN_ET;   // fast-loop EOD backstop: flatten 0DTE even if the slow 15:55 tick errored (Skylit hiccup at the worst moment = holding into expiry with no backstop)
     const spotCache = {};   // one spot pull per instrument per fast tick (tranches usually share the trend instrument)
     for (const mode of ['conservative', 'aggressive']) {
       const b = mem.book[mode]; if (!b?.positions?.length) continue;
       for (const pos of [...b.positions]) {   // copy — closePosition() splices; each tranche has its OWN structural stop
-        if (pos._closing || (pos.stop_level == null && pos.target_level == null)) continue;
+        if (pos._closing || (!eod && pos.stop_level == null && pos.target_level == null)) continue;
         const long = pos.dir === 'long';
         if (!(pos.instrument in spotCache)) spotCache[pos.instrument] = await fastSpot(pos.instrument);
-        const spot = spotCache[pos.instrument]; if (spot == null) continue;
+        const spot = spotCache[pos.instrument];
         let why = null;   // mirrors the slow loop's manage() price checks so both halves agree on what a breach is
-        if (pos.stop_level != null && (long ? spot <= pos.stop_level : spot >= pos.stop_level)) why = 'stop hit (fast)';
+        if (eod) why = 'EOD flatten (fast)';                                  // EOD backstop takes precedence and needs no spot (flatten regardless)
+        else if (spot == null) continue;
+        else if (pos.stop_level != null && (long ? spot <= pos.stop_level : spot >= pos.stop_level)) why = 'stop hit (fast)';
         else if (pos.target_level != null && (long ? spot >= pos.target_level : spot <= pos.target_level)) why = 'target hit (fast)';
         if (why && !pos._closing) {   // closePosition re-checks the per-tranche mutex; the slow manage() shares this book + guard, so the two halves never double-close
-          await closePosition(b, pos, { [pos.instrument]: { spot } }, et, why);
+          await closePosition(b, pos, spot != null ? { [pos.instrument]: { spot } } : {}, et, why);
           try { fs.writeFileSync(MEM, JSON.stringify(mem, null, 1)); } catch { }
-          console.log(`  ⚡ FAST-EXIT · ${why} @${et} · ${pos.instrument} ${pos.strike}${pos.cp} ${pos.dir} #${pos.tranche ?? '?'} @ ${spot} (${mode})`);
+          console.log(`  ⚡ FAST-EXIT · ${why} @${et} · ${pos.instrument} ${pos.strike}${pos.cp} ${pos.dir} #${pos.tranche ?? '?'} @ ${spot ?? 'n/a'} (${mode})`);
         }
       }
     }
