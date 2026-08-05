@@ -2,7 +2,7 @@
 // We can't re-run the LLM over full-day frames, so we test EXECUTION directly: given (decision, price) does it
 // hold winners, take profit at target, stop out, trail, gate counter-trend, flatten EOD, and pyramid on a trend?
 // Replica of agent.mjs's positions-stack manage() — returns a status string for the assertions.
-const ENTRY_BAR = 0.5, EXIT_BAR = 0.6, NO_NEW_ET = '15:45', FLATTEN_ET = '15:55', MAX_OPT_LOSS_PCT = -50, MAX_OPT_LOSS_PCT_WIDE = -70;
+const ENTRY_BAR = 0.5, EXIT_BAR = 0.6, NO_NEW_ET = '15:45', FLATTEN_ET = '15:55', MAX_OPT_LOSS_PCT = -50, MAX_OPT_LOSS_PCT_WIDE = -70, PREM_TAKE_MIN = 60, PREM_TRAIL_GIVEBACK = 0.30;
 const NOTIONAL_PER_POSITION = 3000, MAX_TRANCHES = 4, ADD_CUTOFF_ET = '14:00';
 function closePosition(b, pos, px, et, why) { const i = b.positions.indexOf(pos); if (i < 0) return; const sgn = pos.dir === 'long' ? 1 : -1; b.closed.push({ ...pos, exitET: et, exitPx: px, pnl: +((px - pos.entryPx) * sgn).toFixed(1), why }); b.positions.splice(i, 1); }
 function manage(b, dec, px, et, trend, optPct, ng) {
@@ -17,11 +17,12 @@ function manage(b, dec, px, et, trend, optPct, ng) {
     const long = pos.dir === 'long', s = dec.stop_level, t = dec.target_level;
     if (s != null && (long ? s < px : s > px) && (pos.stop_level == null || (long ? s > pos.stop_level : s < pos.stop_level))) pos.stop_level = s;   // RATCHET (never loosen)
     const rt = dec.runner_target, wantRunner = rt != null && trendAligned && (t == null || (long ? rt > t : rt < t)); if ((pos === core && wantRunner) || pos.is_runner) { if (rt != null && (long ? rt > px : rt < px)) { pos.target_level = rt; pos.is_runner = true; } } else if (t != null && (long ? t > px : t < px)) pos.target_level = t;
-    if (optPct != null) pos.live_ret_pct = optPct;   // test: option P/L applies to every held tranche
+    if (optPct != null) { pos.live_ret_pct = optPct; pos.peak_ret_pct = Math.max(pos.peak_ret_pct ?? optPct, optPct); }   // test: option P/L applies to every held tranche; track the peak
     const priceFav = long ? px >= pos.entryPx : px <= pos.entryPx, premCap = (priceFav || (ng ?? 0) > 0) ? MAX_OPT_LOSS_PCT_WIDE : MAX_OPT_LOSS_PCT;   // regime-aware theta stop
     let why = null;
     if (pos.stop_level != null && (long ? px <= pos.stop_level : px >= pos.stop_level)) why = 'stop hit';
     else if (pos.target_level != null && (long ? px >= pos.target_level : px <= pos.target_level)) why = 'target hit';
+    else if (pos.peak_ret_pct != null && pos.peak_ret_pct >= PREM_TAKE_MIN && pos.live_ret_pct != null && ((pos.peak_ret_pct - pos.live_ret_pct) / (100 + pos.peak_ret_pct)) >= PREM_TRAIL_GIVEBACK) why = 'premium take';
     else if (pos.live_ret_pct != null && pos.live_ret_pct <= premCap) why = 'premium stop';
     else if (et >= FLATTEN_ET) why = 'EOD flatten';
     else if (wantsFlatten) why = isReverse ? 'reversed (high conviction)' : 'exit — thesis invalidated';
@@ -197,5 +198,16 @@ let bch = { positions: [], closed: [] };
 manage(bch, { direction: 'short', conviction: .7, target_level: 7740, stop_level: 7778 }, 7770, '10:30', 'chop');
 chk('  CHOP guard: target hit with runner_target set but trend≠down → whole position exits (no runner in chop)', manage(bch, { direction: 'short', conviction: .7, target_level: 7740, runner_target: 7700, stop_level: 7748 }, 7739, '11:18', 'chop'), 'target hit');
 chk('  chop: flat, no runner held', bch.positions.length, 0);
+
+console.log('\n── SCENARIO N: PREMIUM-TRAILING TAKE — bank the option near its high when it spikes then gives back (option-value mirror of the theta stop) ──');
+let bp = { positions: [], closed: [] };
+manage(bp, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'up');   // entry @7600; price stays ~7601 (far from stop/target) so only the option moves
+chk('option +80% (fresh peak) → HOLD', manage(bp, { direction: 'long', conviction: .5 }, 7601, '13:05', 'up', 80), 'HOLD');
+chk('option eases to +75% (~3% off the premium peak) → HOLD', manage(bp, { direction: 'long', conviction: .5 }, 7601, '13:10', 'up', 75), 'HOLD');
+chk('option drops to +25% (~30% off the +80% premium peak) → PREMIUM TAKE', manage(bp, { direction: 'long', conviction: .5 }, 7601, '13:15', 'up', 25), 'premium take');
+let bp2 = { positions: [], closed: [] };
+manage(bp2, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'up');
+manage(bp2, { direction: 'long', conviction: .5 }, 7601, '13:05', 'up', 40);   // peak only +40% (below the +60% arm)
+chk('option peaked only +40% then eased to +5% → HOLD (take not armed under a +60% peak)', manage(bp2, { direction: 'long', conviction: .5 }, 7601, '13:10', 'up', 5), 'HOLD');
 
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);
