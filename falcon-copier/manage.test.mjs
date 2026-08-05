@@ -12,10 +12,11 @@ function manage(b, dec, px, et, trend, optPct, ng) {
   const isReverse = wantsFlatten && decDir !== 'stand_aside';
   const counter = (trend === 'up' && decDir === 'short') || (trend === 'down' && decDir === 'long');
   let mechExit = false, lastWhy = null;
+  const core = held[0], trendAligned = (decDir === 'long' && trend === 'up') || (decDir === 'short' && trend === 'down');   // core = runner candidate
   for (const pos of [...held]) {
     const long = pos.dir === 'long', s = dec.stop_level, t = dec.target_level;
     if (s != null && (long ? s < px : s > px) && (pos.stop_level == null || (long ? s > pos.stop_level : s < pos.stop_level))) pos.stop_level = s;   // RATCHET (never loosen)
-    if (t != null && (long ? t > px : t < px)) pos.target_level = t;
+    const rt = dec.runner_target, wantRunner = rt != null && trendAligned && (t == null || (long ? rt > t : rt < t)); if ((pos === core && wantRunner) || pos.is_runner) { if (rt != null && (long ? rt > px : rt < px)) { pos.target_level = rt; pos.is_runner = true; } } else if (t != null && (long ? t > px : t < px)) pos.target_level = t;
     if (optPct != null) pos.live_ret_pct = optPct;   // test: option P/L applies to every held tranche
     const priceFav = long ? px >= pos.entryPx : px <= pos.entryPx, premCap = (priceFav || (ng ?? 0) > 0) ? MAX_OPT_LOSS_PCT_WIDE : MAX_OPT_LOSS_PCT;   // regime-aware theta stop
     let why = null;
@@ -177,5 +178,24 @@ chk('itm long SPX @7700 → 7690 (strike BELOW spot = ITM call, higher delta, sl
 chk('itm bearish/put SPX @7700 → 7710 (strike ABOVE spot = ITM put)', strikeOf(7700, 'short', 'itm', 5), 7710);
 chk('atm long SPY @765 → 765', strikeOf(765, 'long', 'atm', 1), 765);
 chk('itm long SPY @765 → 764 (1 strike ITM)', strikeOf(765, 'long', 'itm', 1), 764);
+
+console.log('\n── SCENARIO M: RUNNER / SCALE-OUT — on a confirmed trend, target_level banks the scalps but the CORE rides toward runner_target (the fix for selling-too-early) ──');
+let bm = { positions: [], closed: [] };
+manage(bm, { direction: 'short', conviction: .7, target_level: 7740, stop_level: 7778 }, 7770, '10:30', 'down');   // #1 core @7770
+manage(bm, { direction: 'short', conviction: .7, scale_in: true, target_level: 7740, stop_level: 7762 }, 7755, '10:45', 'down');   // add #2
+manage(bm, { direction: 'short', conviction: .7, scale_in: true, target_level: 7740, stop_level: 7752 }, 7745, '11:00', 'down');   // add #3
+chk('3-tranche short stack built', bm.positions.length, 3);
+manage(bm, { direction: 'short', conviction: .7, target_level: 7740, runner_target: 7700, stop_level: 7748 }, 7739, '11:18', 'down');   // near target hit + runner_target set on a confirmed down-trend
+chk('  scalps banked, ONE runner held (not the whole stack)', bm.positions.length, 1);
+chk('  2 scalps closed at the near target', bm.closed.length, 2);
+chk('  the survivor is the CORE (best entry 7770)', bm.positions[0].entryPx, 7770);
+chk('  core converted to a RUNNER toward runner_target 7700', bm.positions[0].is_runner === true && bm.positions[0].target_level === 7700, true);
+chk('  bounce to 7742 (runner stop 7748 not hit) → HOLD the runner', manage(bm, { direction: 'short', conviction: .55, runner_target: 7700 }, 7742, '11:30', 'down'), 'HOLD');
+chk('  runner reaches 7699 (past runner_target 7700) → target hit', manage(bm, { direction: 'short', conviction: .55, runner_target: 7700 }, 7699, '12:00', 'down'), 'target hit');
+chk('  flat after the runner books the full move', bm.positions.length, 0);
+let bch = { positions: [], closed: [] };
+manage(bch, { direction: 'short', conviction: .7, target_level: 7740, stop_level: 7778 }, 7770, '10:30', 'chop');
+chk('  CHOP guard: target hit with runner_target set but trend≠down → whole position exits (no runner in chop)', manage(bch, { direction: 'short', conviction: .7, target_level: 7740, runner_target: 7700, stop_level: 7748 }, 7739, '11:18', 'chop'), 'target hit');
+chk('  chop: flat, no runner held', bch.positions.length, 0);
 
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);
