@@ -32,9 +32,42 @@
  },
  "plays": [
   {
+   "ticker": "MSFT",
+   "theme": "Mega Tech",
+   "score": 83,
+   "occ": "MSFT260821C00410000",
+   "strike": 410.0,
+   "exp": "2026-08-21",
+   "dte": 29,
+   "spot": 391.49,
+   "king": 410.0,
+   "node_share": 12.8,
+   "dist": 4.7,
+   "node_persist": 100,
+   "node_growth": 129,
+   "node_days": 16,
+   "theme_bull": false,
+   "aplus": false,
+   "king_sign": "pika",
+   "vex_strike": 460.0,
+   "vex_dist": 17.5,
+   "vex_bullish": true,
+   "pinned": false,
+   "sum20": 555,
+   "sum7": 536,
+   "posdays": 13,
+   "askshare": 50,
+   "entry": 83.93,
+   "iv": 53,
+   "spread": 2.3,
+   "take_profit": 167.86,
+   "tradeable": true,
+   "suspect": false
+  },
+  {
    "ticker": "PLTR",
    "theme": "AI Software",
-   "score": 45,
+   "score": 56,
    "occ": "PLTR260821C00150000",
    "strike": 150.0,
    "exp": "2026-08-21",
@@ -53,14 +86,14 @@
    "vex_dist": 29.5,
    "vex_bullish": true,
    "pinned": false,
-   "sum20": 32,
-   "sum7": -38,
-   "posdays": 11,
+   "sum20": 74,
+   "sum7": 101,
+   "posdays": 10,
    "askshare": 50,
-   "entry": 1.92,
-   "iv": 71,
-   "spread": 10.9,
-   "take_profit": 3.84,
+   "entry": 15.85,
+   "iv": 58,
+   "spread": 1.9,
+   "take_profit": 31.7,
    "tradeable": true,
    "suspect": false
   }
@@ -69,14 +102,14 @@
   "MSFT": {
    "ticker": "MSFT",
    "flow": {
-    "sum20": 118149295.0,
-    "sum7": -8853343.0,
-    "posdays": 11,
-    "askshare": 0.4984450762972349,
-    "lastdate": "2026-07-29"
+    "sum20": 554607663.0,
+    "sum7": 536436843.0,
+    "posdays": 13,
+    "askshare": 0.5040565451829068,
+    "lastdate": "2026-08-04"
    },
    "reasons": [
-    "flow weak (20d $118M, 11/20d, ask 50% <52)"
+    "INTERSECTION \u2713 flow + GEX node (100% persist, pika) + VEX bullish ($460 +17.5%) + not chasing"
    ],
    "spot": 391.49,
    "king": 410.0,
@@ -89,9 +122,9 @@
    "dte": 29,
    "strike": 410.0,
    "occ": "MSFT260821C00410000",
-   "sum20": 118,
-   "sum7": -9,
-   "posdays": 11,
+   "sum20": 555,
+   "sum7": 536,
+   "posdays": 13,
    "askshare": 50,
    "pop3": -0.2,
    "vex_strike": 460.0,
@@ -99,19 +132,26 @@
    "vex_bullish": true,
    "pinned": false,
    "king_sign": "pika",
-   "intersection": false
+   "intersection": true,
+   "score": 83,
+   "target_pct": 4.7,
+   "take_profit_pct": 100,
+   "max_hold_days": 20,
+   "aplus": false,
+   "theme": "Mega Tech",
+   "theme_bull": false
   },
   "GOOG": {
    "ticker": "GOOG",
    "flow": {
-    "sum20": -53685772.0,
-    "sum7": -23856410.0,
-    "posdays": 10,
-    "askshare": 0.5035791895085155,
-    "lastdate": "2026-07-29"
+    "sum20": -3451503.0,
+    "sum7": 81147395.0,
+    "posdays": 11,
+    "askshare": 0.5034378030978437,
+    "lastdate": "2026-08-04"
    },
    "reasons": [
-    "flow weak (20d $-54M, 10/20d, ask 50% <52)"
+    "flow weak (20d $-3M, 11/20d, ask 50% <52)"
    ],
    "spot": 320.74,
    "king": 330.0,
@@ -124,9 +164,9 @@
    "dte": 29,
    "strike": 330.0,
    "occ": "GOOG260821C00330000",
-   "sum20": -54,
-   "sum7": -24,
-   "posdays": 10,
+   "sum20": -3,
+   "sum7": 81,
+   "posdays": 11,
    "askshare": 50,
    "pop3": -9.7,
    "vex_strike": 375.0,
@@ -139,14 +179,14 @@
   "GOOGL": {
    "ticker": "GOOGL",
    "flow": {
-    "sum20": -26885455.0,
-    "sum7": -55133735.0,
-    "posdays": 7,
-    "askshare": 0.4908999432404521,
-    "lastdate": "2026-07-29"
+    "sum20": 46513667.0,
+    "sum7": 91457543.0,
+    "posdays": 9,
+    "askshare": 0.4969192745345831,
+    "lastdate": "2026-08-04"
    },
    "reasons": [
-    "flow weak (20d $-27M, 7/20d, ask 49% <52)",
+    "flow weak (20d $47M, 9/20d, ask 50% <52)",
     "PINNED \u2014 GEX King at spot (pika wall), price stuck not trending",
     "King at/below spot (-0.4%) \u2014 no upside target"
    ],
@@ -161,10 +201,10 @@
    "dte": 29,
    "strike": 320.0,
    "occ": "GOOGL260821C00320000",
-   "sum20": -27,
-   "sum7": -55,
-   "posdays": 7,
-   "askshare": 49,
+   "sum20": 47,
+   "sum7": 91,
+   "posdays": 9,
+   "askshare": 50,
    "pop3": -9.7,
    "vex_strike": 410.0,
    "vex_dist": 27.6,
