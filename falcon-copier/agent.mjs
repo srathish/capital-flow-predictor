@@ -18,8 +18,8 @@ const DAY = process.env.AGENT_DAY || (LIVEMODE ? new Date().toLocaleDateString('
 const TODAY_ET = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });   // option premiums are current-day only
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i >= 0 ? (process.argv[i + 1] || true) : d; };
 const M = (x) => +(x / 1e6).toFixed(1);
-const etM = (ts) => (+ts.slice(11, 13) - 4) * 60 + +ts.slice(14, 16);
-const etOf = (ts) => `${String(+ts.slice(11, 13) - 4).padStart(2, '0')}:${ts.slice(14, 16)}`;
+const etOf = (ts) => new Date(ts).toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);   // DST-safe ET (was hardcoded UTC-4 = EDT → wrong by an hour Nov–Mar)
+const etM = (ts) => { const e = etOf(ts); return (+e.slice(0, 2)) * 60 + (+e.slice(3, 5)); };
 const INSTR = { SPXW: { map: 80, band: 40, dom: 70, wide: 200, strong: 20e6 }, SPY: { map: 8, band: 4, dom: 7, wide: 20, strong: 20e6 }, QQQ: { map: 8, band: 4, dom: 7, wide: 20, strong: 5e6 } };
 const load = (sym) => { const f = path.join(FC, `today_${sym}.jsonl.gz`); return fs.existsSync(f) ? zlib.gunzipSync(fs.readFileSync(f)).toString().trim().split('\n').map(l => JSON.parse(l)) : null; };
 // ── the OPTION we'd actually trade: 0DTE ATM contract + its live premium (like Falcon's "SPXW 7405C · $3.20") ──
@@ -99,22 +99,24 @@ async function skylitTide() {        // net call/put premium = the market flow l
   const net = (+last.ncp_cumulative || 0) - (+last.npp_cumulative || 0);
   return { net_call_prem_M: M(+last.ncp_cumulative || 0), net_put_prem_M: M(+last.npp_cumulative || 0), net_lean_M: M(net), lean: net > 0 ? 'bullish' : net < 0 ? 'bearish' : 'balanced' };
 }
-async function getVix() {   // VOLATILITY REGIME (VIX family) — Skylit has no REST VIX; public CBOE quotes, no auth. See knowledge/VOLATILITY_PRIMER.md
-  const q = (sym, iv = '1d', rng = '2d') => fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=${iv}&range=${rng}`, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }).then(x => x.ok ? x.json() : null).catch(() => null);
-  const px = (j) => { const v = +j?.chart?.result?.[0]?.meta?.regularMarketPrice; return Number.isFinite(v) ? +v.toFixed(2) : null; };
+async function getVix() {   // VOLATILITY REGIME — REAL-TIME from UW (our paid feed): VIX stock-state + SPY/QQQ IV term structure. Replaces the ~15-min-delayed Yahoo index scrape. See knowledge/VOLATILITY_PRIMER.md
+  if (!UWKEY) return null;
+  const H = { Authorization: 'Bearer ' + UWKEY, Accept: 'application/json' };
+  const get = (p) => fetch('https://api.unusualwhales.com/api/' + p, { headers: H, signal: AbortSignal.timeout(9000) }).then(x => x.ok ? x.json() : null).catch(() => null);
+  const nearVol = (ts, lo, hi) => { const r = (ts?.data || []).filter(x => +x.dte >= lo && +x.dte <= hi); return r.length ? +(r.reduce((a, x) => a + +x.volatility, 0) / r.length * 100).toFixed(1) : null; };   // avg IV% across the DTE band
   try {
-    const [d5, v1, v9, v3, vn] = await Promise.all([q('%5EVIX', '5m', '2d'), q('%5EVIX1D'), q('%5EVIX9D'), q('%5EVIX3M'), q('%5EVXN')]);
-    const res = d5?.chart?.result?.[0], m = res?.meta; if (!m?.regularMarketPrice) return null;
-    const level = +(+m.regularMarketPrice).toFixed(2), pc = +m.chartPreviousClose;
-    const vix1d = px(v1), vix9d = px(v9), vix3m = px(v3), vxn = px(vn);
-    const band = level <= 16 ? 'low' : level < 25 ? 'moderate' : 'high';   // hazy: ≤16 chop/grind, 17-24 sweet spot, ≥25 violent/size-down
-    let pivot = pc ? +pc.toFixed(2) : null, pivotSrc = 'prior-close proxy';   // pivot: manual override (vix_pivot.json) else prior-day-close proxy
+    const [vixR, spyTS, qqqTS] = await Promise.all([get('stock/VIX/stock-state'), get('stock/SPY/volatility/term-structure'), get('stock/QQQ/volatility/term-structure')]);
+    const vd = vixR?.data; if (!vd?.close) return null;
+    const level = +(+vd.close).toFixed(2), pc = vd.prev_close != null ? +vd.prev_close : null;
+    const band = level <= 16 ? 'low' : level < 25 ? 'moderate' : 'high';   // ≤16 chop/grind, 17-24 sweet spot, ≥25 violent/size-down
+    const spy0 = (spyTS?.data || []).find(x => +x.dte === 0);   // 0DTE SPY IV = today's 0DTE-specific vol (VIX1D-equivalent, from SPX/SPY's own options)
+    const vix1d = spy0 ? +(+spy0.volatility * 100).toFixed(1) : null;
+    const iv30 = nearVol(spyTS, 28, 32), iv90 = nearVol(spyTS, 80, 95), vxn = nearVol(qqqTS, 28, 32);
+    const term_structure = (iv30 != null && iv90 != null) ? (iv30 < iv90 ? 'contango' : 'backwardation') : null;   // 30d<90d = calm/coasting (bullish bias); 30d>90d = near-term stress (bearish)
+    let pivot = pc ? +pc.toFixed(2) : null, pivotSrc = 'prior-close proxy';   // pivot: manual override (vix_pivot.json) else prior-day VIX close
     try { const pf = path.join(FC, 'vix_pivot.json'); if (fs.existsSync(pf)) { const p = JSON.parse(fs.readFileSync(pf, 'utf8')); if (+p.pivot) { pivot = +p.pivot; pivotSrc = 'manual (Architect)'; } } } catch { }
     const tilt = pivot == null ? null : level > pivot ? 'bearish' : 'bullish';   // VIX above pivot = bearish tilt; below = bullish
-    let tilt_confirmed = 'unconfirmed';   // 2-candle rule: last two completed 5-min candles FULLY beyond the pivot (no wick touches)
-    if (pivot != null && res.indicators?.quote?.[0]) { const qd = res.indicators.quote[0]; const bars = (res.timestamp || []).map((t, i) => ({ h: qd.high[i], l: qd.low[i], c: qd.close[i] })).filter(b => b.c != null).slice(-2); if (bars.length === 2 && bars.every(b => b.l > pivot)) tilt_confirmed = 'bearish-confirmed'; else if (bars.length === 2 && bars.every(b => b.h < pivot)) tilt_confirmed = 'bullish-confirmed'; }
-    const term_structure = (vix1d != null && vix3m != null) ? (vix1d < vix3m ? 'contango' : 'backwardation') : null;   // front<back = calm/bullish bias; front>back = stress/bearish
-    return { level, chg_pct: pc ? +(((level - pc) / pc) * 100).toFixed(1) : null, band, vix1d_0dte: vix1d, vix9d, vix3m, nasdaq_vol_vxn: vxn, term_structure, pivot, pivot_source: pivotSrc, tilt, tilt_confirmed };
+    return { level, chg_pct: pc ? +(((level - pc) / pc) * 100).toFixed(1) : null, band, vix1d_0dte: vix1d, spy_iv_30d: iv30, spy_iv_90d: iv90, nasdaq_vol_vxn: vxn, term_structure, pivot, pivot_source: pivotSrc, tilt, source: 'unusual-whales (real-time)', as_of: vd.tape_time || null };
   } catch { return null; }
 }
 async function getEconCalendar() {   // scheduled macro events (UW REST) — event-premium / IV-crush timing the agent must respect
