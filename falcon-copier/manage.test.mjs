@@ -2,10 +2,10 @@
 // We can't re-run the LLM over full-day frames, so we test EXECUTION directly: given (decision, price) does it
 // hold winners, take profit at target, stop out, trail, gate counter-trend, flatten EOD, and pyramid on a trend?
 // Replica of agent.mjs's positions-stack manage() — returns a status string for the assertions.
-const ENTRY_BAR = 0.5, EXIT_BAR = 0.6, NO_NEW_ET = '15:45', FLATTEN_ET = '15:55', MAX_OPT_LOSS_PCT = -50;
+const ENTRY_BAR = 0.5, EXIT_BAR = 0.6, NO_NEW_ET = '15:45', FLATTEN_ET = '15:55', MAX_OPT_LOSS_PCT = -50, MAX_OPT_LOSS_PCT_WIDE = -70;
 const NOTIONAL_PER_POSITION = 3000, MAX_TRANCHES = 4, ADD_CUTOFF_ET = '14:00';
 function closePosition(b, pos, px, et, why) { const i = b.positions.indexOf(pos); if (i < 0) return; const sgn = pos.dir === 'long' ? 1 : -1; b.closed.push({ ...pos, exitET: et, exitPx: px, pnl: +((px - pos.entryPx) * sgn).toFixed(1), why }); b.positions.splice(i, 1); }
-function manage(b, dec, px, et, trend, optPct) {
+function manage(b, dec, px, et, trend, optPct, ng) {
   b.positions ||= (b.open ? [b.open] : []); delete b.open; b.closed ||= [];
   const decDir = dec.direction, conv = dec.conviction ?? 0, held = b.positions;
   const wantsFlatten = decDir && ((decDir === 'stand_aside') || (held.length && held[0].dir !== decDir)) && conv >= EXIT_BAR;
@@ -17,10 +17,11 @@ function manage(b, dec, px, et, trend, optPct) {
     if (s != null && (long ? s < px : s > px) && (pos.stop_level == null || (long ? s > pos.stop_level : s < pos.stop_level))) pos.stop_level = s;   // RATCHET (never loosen)
     if (t != null && (long ? t > px : t < px)) pos.target_level = t;
     if (optPct != null) pos.live_ret_pct = optPct;   // test: option P/L applies to every held tranche
+    const priceFav = long ? px >= pos.entryPx : px <= pos.entryPx, premCap = (priceFav || (ng ?? 0) > 0) ? MAX_OPT_LOSS_PCT_WIDE : MAX_OPT_LOSS_PCT;   // regime-aware theta stop
     let why = null;
     if (pos.stop_level != null && (long ? px <= pos.stop_level : px >= pos.stop_level)) why = 'stop hit';
     else if (pos.target_level != null && (long ? px >= pos.target_level : px <= pos.target_level)) why = 'target hit';
-    else if (pos.live_ret_pct != null && pos.live_ret_pct <= MAX_OPT_LOSS_PCT) why = 'premium stop';
+    else if (pos.live_ret_pct != null && pos.live_ret_pct <= premCap) why = 'premium stop';
     else if (et >= FLATTEN_ET) why = 'EOD flatten';
     else if (wantsFlatten) why = isReverse ? 'reversed (high conviction)' : 'exit — thesis invalidated';
     if (why) { closePosition(b, pos, px, et, why); lastWhy = why; if (!isReverse) mechExit = true; }
@@ -105,11 +106,17 @@ manage(b, { direction: 'short', conviction: .7, target_level: 7550, stop_level: 
 chk('short stop LOWERED to 7605 (ratchet down)', P0(b).stop_level, 7605);
 chk('loosen up to 7615 BLOCKED', (() => { manage(b, { direction: 'short', conviction: .7, target_level: 7550, stop_level: 7615 }, 7585, '11:15', 'chop'); return P0(b).stop_level; })(), 7605);
 
-console.log('\n── SCENARIO H: PREMIUM/THETA STOP — sideways price NEVER hits the stop, but the option bleeds → cut it ──');
+console.log('\n── SCENARIO H: REGIME-AWARE PREMIUM/THETA STOP — lenient when price HOLDS or it’s CHOP (theta expected); tight only when price goes ADVERSE on a trend (stop the thesis breaking, not the clock ticking) ──');
 b = { positions: [], closed: [] };
-manage(b, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'up');
-chk('holding: price 7601 (above 7580 stop), option -20% → HOLD', manage(b, { direction: 'long', conviction: .5 }, 7601, '13:05', 'up', -20), 'HOLD');
-chk('price STILL 7601 (stop never hit) but option -55% → PREMIUM STOP fires', manage(b, { direction: 'long', conviction: .5 }, 7601, '13:10', 'up', -55), 'premium stop');
+manage(b, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'up');   // entry @7600
+chk('price 7601 FAVORABLE + option -55% (trend) → HOLD (theta-lenient -70; thesis intact, just clock ticking)', manage(b, { direction: 'long', conviction: .5 }, 7601, '13:05', 'up', -55, -30), 'HOLD');
+chk('price 7601 favorable but option -72% → PREMIUM STOP (past the lenient -70 cap; don’t hold to zero)', manage(b, { direction: 'long', conviction: .5 }, 7601, '13:10', 'up', -72, -30), 'premium stop');
+let bh = { positions: [], closed: [] };
+manage(bh, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'up');
+chk('price 7595 ADVERSE on a TREND (ng<0, above the 7580 price-stop) + option -55% → PREMIUM STOP (tight -50, thesis breaking)', manage(bh, { direction: 'long', conviction: .5 }, 7595, '13:05', 'up', -55, -30), 'premium stop');
+let bc = { positions: [], closed: [] };
+manage(bc, { direction: 'long', conviction: .6, target_level: 7620, stop_level: 7580 }, 7600, '13:00', 'chop');
+chk('price 7595 adverse but CHOP (ng>0) + option -55% → HOLD (chop-lenient -70; oscillation is expected)', manage(bc, { direction: 'long', conviction: .5 }, 7595, '13:05', 'chop', -55, 30), 'HOLD');
 
 console.log('\n── SCENARIO I: RESTING/PULLBACK ENTRY — waits for the dip, fills at the level; market fills now ──');
 b = { positions: [], closed: [] };
@@ -161,5 +168,14 @@ chk('  never add on top of a red stack', bk2.positions.length, 1);
 let bk3 = { positions: [], closed: [] }; manage(bk3, { direction: 'long', conviction: .7, stop_level: 7665 }, 7675, '10:40', 'up');
 chk('scale_in but after 14:00 cutoff → HOLD (refused, charm/pin risk)', manage(bk3, { direction: 'long', conviction: .7, scale_in: true, stop_level: 7690 }, 7700, '14:30', 'up'), 'HOLD');
 chk('  no late-day adds', bk3.positions.length, 1);
+
+console.log('\n── SCENARIO L: STRIKE STYLE — atm (default, max gamma) vs itm (higher delta, slower theta) offset ──');
+const ITM_PCT = 0.0015;
+const strikeOf = (px, dir, style, step) => { const refPx = style === 'itm' ? (dir === 'long' ? px * (1 - ITM_PCT) : px * (1 + ITM_PCT)) : px; return Math.round(refPx / step) * step; };
+chk('atm long SPX @7700 → 7700 (at the money)', strikeOf(7700, 'long', 'atm', 5), 7700);
+chk('itm long SPX @7700 → 7690 (strike BELOW spot = ITM call, higher delta, slower decay)', strikeOf(7700, 'long', 'itm', 5), 7690);
+chk('itm bearish/put SPX @7700 → 7710 (strike ABOVE spot = ITM put)', strikeOf(7700, 'short', 'itm', 5), 7710);
+chk('atm long SPY @765 → 765', strikeOf(765, 'long', 'atm', 1), 765);
+chk('itm long SPY @765 → 764 (1 strike ITM)', strikeOf(765, 'long', 'itm', 1), 764);
 
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);
