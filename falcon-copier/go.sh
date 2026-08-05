@@ -13,11 +13,13 @@ if ! $NODE falcon-copier/preflight.mjs; then
   echo "     cd \"apps/jobs\" && uv run cfp-jobs skylit-login --env-file \"$ENV_FILE\""
   exit 1
 fi
-pkill -f "agent.mjs --loop" 2>/dev/null; pkill -f "falcon-copier/dashboard.mjs" 2>/dev/null; sleep 1
+pkill -f "agent.mjs --loop" 2>/dev/null; pkill -f "falcon-copier/dashboard.mjs" 2>/dev/null; pkill -f "sense_logger.mjs" 2>/dev/null; sleep 1
 echo "── dashboard → http://localhost:8790 ──"
 nohup $NODE falcon-copier/dashboard.mjs > /tmp/falcon_dashboard.log 2>&1 &
 echo "── live agent loop (reasons over all data every minute during RTH) ──"
 nohup $NODE falcon-copier/agent.mjs --loop --live > /tmp/falcon_agent.log 2>&1 &
+echo "── candidate-sense logger (research-only, NOT in the agent's decisions — freeze-safe) ──"
+nohup $NODE falcon-copier/sense_logger.mjs > /tmp/falcon_senses.log 2>&1 &
 sleep 3
 open "http://localhost:8790"
 echo ""
