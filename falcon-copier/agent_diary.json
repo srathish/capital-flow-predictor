@@ -22,5 +22,31 @@
    "15:55 EOD-flatten mentality (conservative/aggressive both stand_aside heavy by 15:50-16:00) avoided being long into the final reversal — this effectively saved money since the 15:46-15:47 chase-long entries were the ones caught by the reversal; the model had NOT added new size in the last 10 minutes, which was protective."
   ],
   "provisional_lessons": []
+ },
+ {
+  "day": "2026-08-05",
+  "grade": "B (aggressive), C- (conservative) — good trend capture mid-morning, but consistent early exits left large money on the table, and afternoon chop chewed up both sides with repeated stop-outs",
+  "observations": [
+   "<![CDATA[",
+   "Morning: two false long attempts (09:59, 10:01, both SPXW calls) into what the arc later confirms was a \"down\" trend forming — both stopped for -747/-561. The 09:59 decision-arc row itself showed max_up=0, max_down=-27.9 in the following 45m — the long thesis was fighting the tape from minute one.",
+   "10:27 arc correctly flagged \"chop\" then by 10:42 flipped to \"down\" with agg 0.72 — the short pivot was well-timed and is the best decision of the day.",
+   "From 10:30-11:18 aggressive ran a cluster of SPXW puts (7770P, 7775P x2, 7760P) all hitting target for +3354/+1996/+1788/+1190 — this is the day's engine. All four captured only 40-64% of the underlying's post-entry move before the shared 11:18 target/exit wave. Spot kept falling to 7724-7731 over the next 30-40min (per 11:12 and 11:26 arc rows showing low_next 7731.1 and 7724.9) — a huge amount of continuation was left unharvested because every position on the board hit the SAME target time (11:18) rather than a staggered/runner exit.",
+   "Conservative book mirrored this: 7755P and 7760P shorts captured only 21-48% of the underlying move, consistent with target being set too close to entry given the trend had real legs (spot dropped another ~30pts after these exits per 11:12/11:26 arc).",
+   "11:18->12:21 aggressive short (7755P) and conservative 11:19->12:20 short (7760P) show the flip side: once the easy trend leg was harvested, chasing the SAME direction into 11:54-12:08 chop/reversal (spot bounced 7724->7744, max_up 19.2 at 12:08) caused give-back — stop-outs, near breakeven.",
+   "Midday chop (12:22-13:47): long 7740C (-816), long 7730C (-259), three QQQ put scalps all stopped within minutes (-454/-147/-308) — arc conviction here was low (0.3-0.55) and \"chop\" labeled, yet trades were still taken. This is the classic theta-tax pattern: five straight small-to-medium losers in a directionless regime.",
+   "Late day: 15:26 arc flipped \"up\" (long taken, stopped +298 partial), then 15:39-15:50 short 7735P got hit for -1434 as spot fell hard into close (7723.1) — thesis flagged \"invalidated\" and exited manually just before the real drop that would have made it a winner; classic sold/covered wrong side just before the move validated in the other direction. Ironic: the short direction was right for the close but the position was already flattened on a stop/invalidation call before the actual friendly move showed up by 15:59.",
+   "Net day: big aggressive short cluster (+8328 gross) offset by chop/short-side/wrong-way trades; likely net positive but efficiency-dragged.",
+   "]]>"
+  ],
+  "provisional_lessons": [
+   "<![CDATA[",
+   "HOLD-TO-TARGET: Today undercuts blind \"hold to target\" as currently calibrated — targets on the 10:30-11:18 short cluster were clearly too tight relative to trend continuation (spot fell another 20-40pts after every target hit). Same target level triggering 4 separate positions simultaneously (11:18) is a strong tell that the target is a fixed distance dial, not adaptive to trend strength.",
+   "FORCED EXITS: No evidence today that stops \"saved\" money on the trend side — the trend shorts that stopped out later (11:18->12:21 aggressive, 11:19->12:20 conservative) did so on a *counter-trend bounce* (12:08 max_up 19.2), so those stops likely were correctly protective, not costly. But the 15:39 short \"thesis invalidated\" exit right before spot dropped hard into the close looks like a costly premature exit — worth flagging for pattern-check across days: are \"thesis invalidated\" exits systematically mistimed near turning points?",
+   "TREND-COMMITMENT: Strongly supported today. The two counter-trend long attempts at the open (09:59, 10:01) both failed immediately against a developing down day. The pivot to short at 10:30-11:18 once \"down\" trend was confirmed produced the day's entire profit. Trading WITH confirmed trend >> guessing reversals early.",
+   "THETA-TAX & CONVICTION: Standing metrics still show conviction is near-degenerate (81% of all 68 trades at exactly 0.55) — today's data added more 0.55-conviction trades on both winning and losing sides (e.g., 0.55 shorts that won big, 0.55 longs that lost immediately), reinforcing that the number carries little discriminating information yet. The one weak positive signal: today's higher-conviction trades (0.65-0.72 shorts in the 10:30-11:18 cluster) were the biggest winners, consistent with the standing bucket table showing 0.6-0.8 buckets outperforming 0.5-0.6. But sample size at high conviction remains tiny (still only 2 trades >0.7 historically) — not enough to call this validated.",
+   "EXIT EFFICIENCY / SOLD-TOO-EARLY: This is today's clearest, most costly pattern. Every winning short in the 10:30-11:18 cluster captured only 40-64% of the underlying's favorable move, and the two conservative winners captured only 21-48%. On what was clearly a real trend day (spot fell ~65pts from 10:42 to 11:26), running FOUR separate same-direction positions to the SAME nearby target instead of holding at least one runner toward the 11:26-12:08 lows (7724-7731) left a large amount of the move unharvested. This directly supports the \"sold-too-early is the #1 trend-day tax\" hypothesis — today is a strong single-day data point for it, though still just one day.",
+   "Additional hypothesis to track: taking trades in \"chop\"-labeled regimes at low conviction (0.3-0.55) produced a clean losing streak (5 straight stops midday) — supports tightening or skipping entries when arc explicitly says \"chop,\" but need more days to confirm the chop-labeled subset is systematically -EV.",
+   "]]>"
+  ]
  }
 ]

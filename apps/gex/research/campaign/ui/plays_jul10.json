@@ -53,14 +53,14 @@
    "vex_dist": 17.5,
    "vex_bullish": true,
    "pinned": false,
-   "sum20": 555,
-   "sum7": 536,
+   "sum20": 574,
+   "sum7": 505,
    "posdays": 13,
-   "askshare": 50,
-   "entry": 83.93,
-   "iv": 53,
-   "spread": 2.3,
-   "take_profit": 167.86,
+   "askshare": 51,
+   "entry": 80.4,
+   "iv": 47,
+   "spread": 2.5,
+   "take_profit": 160.8,
    "tradeable": true,
    "suspect": false
   },
@@ -87,13 +87,13 @@
    "vex_bullish": true,
    "pinned": false,
    "sum20": 74,
-   "sum7": 101,
+   "sum7": 85,
    "posdays": 10,
    "askshare": 50,
-   "entry": 15.85,
-   "iv": 58,
-   "spread": 1.9,
-   "take_profit": 31.7,
+   "entry": 15.35,
+   "iv": 55,
+   "spread": 2.6,
+   "take_profit": 30.7,
    "tradeable": true,
    "suspect": false
   }
@@ -102,11 +102,11 @@
   "MSFT": {
    "ticker": "MSFT",
    "flow": {
-    "sum20": 554607663.0,
-    "sum7": 536436843.0,
+    "sum20": 573997284.0,
+    "sum7": 505048045.0,
     "posdays": 13,
-    "askshare": 0.5040565451829068,
-    "lastdate": "2026-08-04"
+    "askshare": 0.5073980645664353,
+    "lastdate": "2026-08-05"
    },
    "reasons": [
     "INTERSECTION \u2713 flow + GEX node (100% persist, pika) + VEX bullish ($460 +17.5%) + not chasing"
@@ -122,10 +122,10 @@
    "dte": 29,
    "strike": 410.0,
    "occ": "MSFT260821C00410000",
-   "sum20": 555,
-   "sum7": 536,
+   "sum20": 574,
+   "sum7": 505,
    "posdays": 13,
-   "askshare": 50,
+   "askshare": 51,
    "pop3": -0.2,
    "vex_strike": 460.0,
    "vex_dist": 17.5,
@@ -144,14 +144,14 @@
   "GOOG": {
    "ticker": "GOOG",
    "flow": {
-    "sum20": -3451503.0,
-    "sum7": 81147395.0,
+    "sum20": 4343950.0,
+    "sum7": 62497084.0,
     "posdays": 11,
-    "askshare": 0.5034378030978437,
-    "lastdate": "2026-08-04"
+    "askshare": 0.5053288857827988,
+    "lastdate": "2026-08-05"
    },
    "reasons": [
-    "flow weak (20d $-3M, 11/20d, ask 50% <52)"
+    "flow weak (20d $4M, 11/20d, ask 51% <52)"
    ],
    "spot": 320.74,
    "king": 330.0,
@@ -164,10 +164,10 @@
    "dte": 29,
    "strike": 330.0,
    "occ": "GOOG260821C00330000",
-   "sum20": -3,
-   "sum7": 81,
+   "sum20": 4,
+   "sum7": 62,
    "posdays": 11,
-   "askshare": 50,
+   "askshare": 51,
    "pop3": -9.7,
    "vex_strike": 375.0,
    "vex_dist": 16.9,
@@ -179,14 +179,14 @@
   "GOOGL": {
    "ticker": "GOOGL",
    "flow": {
-    "sum20": 46513667.0,
-    "sum7": 91457543.0,
+    "sum20": 56602338.0,
+    "sum7": 66483121.0,
     "posdays": 9,
-    "askshare": 0.4969192745345831,
-    "lastdate": "2026-08-04"
+    "askshare": 0.4985264087203169,
+    "lastdate": "2026-08-05"
    },
    "reasons": [
-    "flow weak (20d $47M, 9/20d, ask 50% <52)",
+    "flow weak (20d $57M, 9/20d, ask 50% <52)",
     "PINNED \u2014 GEX King at spot (pika wall), price stuck not trending",
     "King at/below spot (-0.4%) \u2014 no upside target"
    ],
@@ -201,8 +201,8 @@
    "dte": 29,
    "strike": 320.0,
    "occ": "GOOGL260821C00320000",
-   "sum20": 47,
-   "sum7": 91,
+   "sum20": 57,
+   "sum7": 66,
    "posdays": 9,
    "askshare": 50,
    "pop3": -9.7,

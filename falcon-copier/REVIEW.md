@@ -176,3 +176,36 @@ forward ledger and PROPOSES; it never edits the engine.
 **Sample gate:** 38/20 trades · 4/10 days → **INSUFFICIENT.** No changes considered. Keep trading and logging. Default: **NO CHANGE.**
 
 ---
+
+## Review — 2026-08-05 (generated 8/5/2026, 15:55:42 ET)
+**Cumulative:** 53 trades over 5 day(s) · 0% win · **expectancy +0.0%/trade** · Σ+0.0%
+
+**By kind:**
+- BARNEY: 14 trades · 0% win · exp +0.0% · Σ+0.0%
+- PIKA: 39 trades · 0% win · exp +0.0% · Σ+0.0%
+
+**By instrument:**
+- QQQ: 20 trades · 0% win · exp +0.0% · Σ+0.0%
+- SPXW: 7 trades · 0% win · exp +0.0% · Σ+0.0%
+- SPY: 26 trades · 0% win · exp +0.0% · Σ+0.0%
+
+**By confluence level:**
+- 5/7: 50 trades · 0% win · exp +0.0% · Σ+0.0%
+- 6/7: 3 trades · 0% win · exp +0.0% · Σ+0.0%
+
+**By tape path-efficiency at entry (WATCH — chop-gate hypothesis, ~0.10; not acted on):**
+- efficient ≥0.10: 43 trades · 0% win · exp +0.0% · Σ+0.0%
+- choppy <0.10: 10 trades · 0% win · exp +0.0% · Σ+0.0%
+
+**By criterion (present → vs ← absent):** does each layer actually earn its place?
+- `at-node`: present 0% win/exp +0.0% (n=53)  ←→  absent — win/exp +0.0% (n=0)
+- `strong`: present 0% win/exp +0.0% (n=50)  ←→  absent 0% win/exp +0.0% (n=3)
+- `vanna`: present 0% win/exp +0.0% (n=38)  ←→  absent 0% win/exp +0.0% (n=15)
+- `king-mig`: present 0% win/exp +0.0% (n=22)  ←→  absent 0% win/exp +0.0% (n=31)
+- `flow`: present 0% win/exp +0.0% (n=45)  ←→  absent 0% win/exp +0.0% (n=8)
+- `pivot-side`: present 0% win/exp +0.0% (n=40)  ←→  absent 0% win/exp +0.0% (n=13)
+- `dp-ext`: present 0% win/exp +0.0% (n=20)  ←→  absent 0% win/exp +0.0% (n=33)
+
+**Sample gate:** 53/20 trades · 5/10 days → **INSUFFICIENT.** No changes considered. Keep trading and logging. Default: **NO CHANGE.**
+
+---
