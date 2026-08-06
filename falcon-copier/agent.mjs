@@ -227,7 +227,8 @@ const TOOL = {
 };
 
 async function claude(system, content, tool, maxTok = 1800) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: MODEL, max_tokens: maxTok, system, messages: [{ role: 'user', content }], tools: [tool], tool_choice: { type: 'tool', name: tool.name } }) });
+  // PROMPT CACHING: the doctrine (+ tools before it in the prefix) is byte-identical every tick → cache it (cache_control on the system block). ~90% off that ~6k-token static prefix on cache hits, behavior-NEUTRAL (identical prompt). The 1-min cadence keeps the 5-min-TTL cache warm all session.
+  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: MODEL, max_tokens: maxTok, system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }], messages: [{ role: 'user', content }], tools: [tool], tool_choice: { type: 'tool', name: tool.name } }) });
   const j = await r.json(); if (r.status !== 200) throw new Error(`API ${r.status}: ${JSON.stringify(j.error || j).slice(0, 200)}`);
   return (j.content || []).find(c => c.type === 'tool_use')?.input || {};
 }
