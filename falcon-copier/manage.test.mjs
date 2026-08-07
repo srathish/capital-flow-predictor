@@ -210,4 +210,53 @@ manage(bp2, { direction: 'long', conviction: .6, target_level: 7620, stop_level:
 manage(bp2, { direction: 'long', conviction: .5 }, 7601, '13:05', 'up', 40);   // peak only +40% (below the +60% arm)
 chk('option peaked only +40% then eased to +5% → HOLD (take not armed under a +60% peak)', manage(bp2, { direction: 'long', conviction: .5 }, 7601, '13:10', 'up', 5), 'HOLD');
 
+// ═══ SCENARIOS O–T: the 2026-08-07 RISK-GOVERNOR guards (mirror the exact predicates added to
+// agent.mjs manage()/closePosition()/fastStops(); the replica's manage() is single-posture, so the
+// cross-posture breaker/cap are asserted here as direct predicate tests). ═══
+const DAILY_LOSS_LIMIT = -5000, MAX_TOTAL = 4, COOLDOWN_MIN = 5, STALE_FLATTEN_MIN = 5;
+
+console.log('\n── SCENARIO O: NULL-MARK guard — a LIVE entry whose option mark failed opens NOTHING (no phantom $0 position) ──');
+const openOnMark = (premium, isLive) => (isLive && premium == null) ? 'refused' : 'open';   // mirrors: if (DAY===TODAY_ET && premium==null) return;
+chk('live entry, mark null → refused', openOnMark(null, true), 'refused');
+chk('live entry, mark $4.20 → open', openOnMark(4.2, true), 'open');
+chk('replay entry, mark null → open (points-based backtest preserved)', openOnMark(null, false), 'open');
+
+console.log('\n── SCENARIO P: NO-STOP-ON-OVERSHOOT — a set stop already past the fill refuses rather than open naked ──');
+const overshoot = (dir, stop, fill) => (stop != null && (dir === 'long' ? stop >= fill : stop <= fill)) ? 'refused' : 'open';
+chk('long stop 7580, fill 7578 (fill below stop) → refused', overshoot('long', 7580, 7578), 'refused');
+chk('long stop 7580, fill 7585 (normal) → open', overshoot('long', 7580, 7585), 'open');
+chk('short stop 7620, fill 7622 (fill above stop) → refused', overshoot('short', 7620, 7622), 'refused');
+chk('no stop given → open (premium/EOD backstop only)', overshoot('long', null, 7585), 'open');
+
+console.log('\n── SCENARIO Q: RE-ENTRY COOLDOWN — same instrument+dir blocked for COOLDOWN_MIN after a stop-out ──');
+const cd = {}; const stopRec = (key, min) => { cd[key] = min; };
+const cdBlocked = (key, now) => (cd[key] != null && now - cd[key] < COOLDOWN_MIN);
+stopRec('QQQ_long', 11 * 60 + 7);   // stopped out QQQ long at 11:07 (the real 8/6 churn window)
+chk('re-arm QQQ long 11:09 (2 min) → blocked', cdBlocked('QQQ_long', 11 * 60 + 9), true);
+chk('re-arm QQQ long 11:13 (6 min) → allowed', cdBlocked('QQQ_long', 11 * 60 + 13), false);
+chk('QQQ SHORT 11:09 (other dir) → allowed', cdBlocked('QQQ_short', 11 * 60 + 9), false);
+chk('SPXW long 11:09 (other instrument) → allowed', cdBlocked('SPXW_long', 11 * 60 + 9), false);
+
+console.log('\n── SCENARIO R: CIRCUIT BREAKER + GLOBAL CORRELATION CAP ──');
+const halted = (dayRealized) => dayRealized <= DAILY_LOSS_LIMIT ? 'halted' : 'ok';
+chk('combined -4900 → ok', halted(-4900), 'ok');
+chk('combined -5000 → halted (no new risk)', halted(-5000), 'halted');
+chk('combined -6300 (the 8/6 churn) → halted', halted(-6300), 'halted');
+const capped = (consOpen, aggOpen) => (consOpen + aggOpen) >= MAX_TOTAL ? 'capped' : 'ok';
+chk('2 cons + 1 agg = 3 open → ok', capped(2, 1), 'ok');
+chk('2 cons + 2 agg = 4 open → capped (was 8 allowed before)', capped(2, 2), 'capped');
+chk('4 cons + 0 agg = 4 open → capped (GLOBAL cap, not per-posture)', capped(4, 0), 'capped');
+
+console.log('\n── SCENARIO S: STALENESS-FLATTEN — fast loop flattens when the data feed goes dark ──');
+const isStale = (lastMs, nowMs) => lastMs != null && (nowMs - lastMs) > STALE_FLATTEN_MIN * 60000;
+chk('last frame 2 min ago → hold', isStale(1000, 1000 + 2 * 60000), false);
+chk('last frame 6 min ago → STALE → flatten', isStale(1000, 1000 + 6 * 60000), true);
+chk('no frame yet (startup, null) → not stale (never flatten before first frame)', isStale(null, 9 * 60000), false);
+
+console.log('\n── SCENARIO T: NULL-EXIT FALLBACK — a failed exit mark books last live premium, not a corrupting $0 ──');
+const resolveExit = (freshMark, livePrem, isLive) => { let e = isLive ? freshMark : null; if (e == null && isLive && livePrem != null) e = livePrem; return e; };
+chk('live close, fresh mark 9.0 → 9.0', resolveExit(9.0, 8.6, true), 9.0);
+chk('live close, fresh mark null, live_premium 8.6 → 8.6 (not null $0)', resolveExit(null, 8.6, true), 8.6);
+chk('live close, both null → null (nothing to book, not a false $0)', resolveExit(null, null, true), null);
+
 console.log(`\n═══ ${pass} passed, ${fail} failed ═══`);

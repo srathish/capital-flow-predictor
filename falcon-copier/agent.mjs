@@ -252,12 +252,20 @@ const ITM_PCT = 0.0015;               // strike_style:'itm' shifts the strike ~0
 const PREM_TAKE_MIN = 60;             // arm the premium-trailing TAKE only after the option has peaked >= +60% (a real spike, not noise)
 const PREM_TRAIL_GIVEBACK = 0.30;     // then BANK it if the option gives back >= 30% of its premium from that peak — captures the option's high before theta/IV-crush/reversal erodes it (the OPTION-value MIRROR of the price trailing stop)
 const SPREAD_PCT = 0.025;             // round-trip 0DTE ATM spread haircut ≈ 2.5% of entry premium (you cross the bid/ask TWICE) — subtracted from pnl_usd so the book P/L is honest, not a fill-at-mark fantasy (worst on the fast tap-reject trades)
+// ── PORTFOLIO RISK GOVERNOR (survival, not alpha) — added 2026-08-07 per the 10-auditor audit ──
+const DAILY_LOSS_LIMIT = -5000;       // CIRCUIT BREAKER: once both postures' COMBINED realized P/L breaches this, open no new risk for the day (existing tranches still manage/stop/EOD)
+const MAX_TOTAL = 4;                  // GLOBAL correlation cap: SPXW/SPY/QQQ across BOTH postures are ~one bet → cap TOTAL concurrent tranches (≈$12k one-way), not 4-per-posture (which was 8 = ~$24k)
+const COOLDOWN_MIN = 5;               // RE-ENTRY COOLDOWN: after a stop-out, block a same-instrument+direction re-arm for this many minutes (kills stop→re-enter→stop churn)
+const STALE_FLATTEN_MIN = 5;          // STALENESS-FLATTEN: if no fresh Skylit frame for this long, the fast loop flattens rather than ride blind on stale data (the 8/6 blind-window hole)
+const _cooldown = {};                 // {`${instrument}_${dir}`: ET-minutes of last stop-out} — intraday only; reset on restart is fine
+let _lastFrameMs = null;              // wall-clock ms of the last successful Skylit frame pull (drives STALENESS-FLATTEN)
 async function closePosition(b, pos, instruments, et, why, exitPrem) {
   if (!pos || pos._closing || !b.positions || b.positions.indexOf(pos) < 0) return;   // MUTEX (per-tranche): the fast stop-loop and the slow LLM loop share the book — never double-close the SAME tranche (flag set synchronously before any await); different tranches may close concurrently
   pos._closing = true;
   try {
     const sgn = pos.dir === 'long' ? 1 : -1, exitPx = +(instruments[pos.instrument]?.spot ?? pos.entryPx).toFixed(2);
     if (exitPrem === undefined) exitPrem = (pos.occ && DAY === TODAY_ET) ? await optMark(pos.occ) : null;   // reuse the mark manage() already fetched (no double API call)
+    if (exitPrem == null && DAY === TODAY_ET && pos.live_premium != null) exitPrem = pos.live_premium;   // NULL-EXIT FALLBACK: a failed exit mark falls back to the last known live premium so the trade books REAL P/L, not a corrupting $0
     const optRet = (pos.entry_premium && exitPrem) ? +(((exitPrem - pos.entry_premium) / pos.entry_premium) * 100).toFixed(0) : null;
     const spreadCost = (pos.entry_premium != null && pos.contracts != null) ? Math.round(pos.entry_premium * SPREAD_PCT * 100 * pos.contracts) : 0;   // round-trip spread haircut — makes pnl_usd honest (you don't fill at mark on both sides)
     const pnlUsd = (pos.entry_premium != null && exitPrem != null && pos.contracts != null) ? Math.round((exitPrem - pos.entry_premium) * 100 * pos.contracts) - spreadCost : null;   // sized $ (always long the option), NET of the round-trip spread — equal-notional so SPXW & SPY are comparable
@@ -266,6 +274,7 @@ async function closePosition(b, pos, instruments, et, why, exitPrem) {
     const peakCapturePct = (peakRet != null && peakRet !== 0 && optRet != null) ? Math.round(100 * optRet / peakRet) : null;   // % of the option's PEAK gain kept at exit: 100 = sold the high, <100 = gave some back to theta/reversal, <0 = round-tripped a winner into a loss
     const { _closing, ...rec } = pos;
     b.closed.push({ ...rec, exitET: et, exitPx, exit_premium: exitPrem, opt_ret_pct: optRet, peak_premium: peakPrem, peak_ret_pct: peakRet, peak_capture_pct: peakCapturePct, pnl: +((exitPx - pos.entryPx) * sgn).toFixed(1), pnl_usd: pnlUsd, spread_cost: spreadCost, why });
+    if (/stop/i.test(why) && typeof et === 'string' && et.length >= 5) _cooldown[`${pos.instrument}_${pos.dir}`] = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));   // record the stop-out so the open gate enforces the re-entry cooldown
     const i = b.positions.indexOf(pos); if (i >= 0) b.positions.splice(i, 1);
   } finally { pos._closing = false; }
 }
@@ -308,6 +317,12 @@ async function manage(book, mode, dec, instruments, et, trend) {
   // ── OPEN a tranche: the FIRST position, or an ADD (pyramid) on a confirmed trend at a NEW extreme. stand-aside never opens; a reverse opens the flipped side. ──
   if (!decDir || decDir === 'stand_aside' || px == null || et >= NO_NEW_ET || !inst) return;   // !inst → the agent named no instrument; open nothing (never default to SPX)
   if (mechExit) return;                                                  // a stop/target/premium/EOD/stand-aside fired this tick → flat, re-evaluate next tick (only a reverse opens same-tick, below)
+  const _dayRealized = ['conservative', 'aggressive'].reduce((a, m) => a + (book[m]?.closed || []).reduce((s, c) => s + (c.pnl_usd || 0), 0), 0);
+  if (_dayRealized <= DAILY_LOSS_LIMIT) return;                          // CIRCUIT BREAKER: combined realized loss breached the daily limit → no new risk
+  const _totalOpen = (book.conservative?.positions?.length || 0) + (book.aggressive?.positions?.length || 0);
+  if (_totalOpen >= MAX_TOTAL) return;                                   // GLOBAL correlation cap across both postures + instruments
+  const _nowMin = (typeof et === 'string' && et.length >= 5) ? (+et.slice(0, 2)) * 60 + (+et.slice(3, 5)) : null;
+  if (_cooldown[`${inst}_${decDir}`] != null && _nowMin != null && _nowMin - _cooldown[`${inst}_${decDir}`] < COOLDOWN_MIN) return;   // RE-ENTRY COOLDOWN: just stopped out this instrument+dir
   const openCount = b.positions.length;                                   // post-close count (a reverse just flattened → 0)
   const sameDir = openCount === 0 || b.positions.every(p => p.dir === decDir);
   if (!sameDir) return;                                                   // never mix directions in one posture's stack
@@ -322,10 +337,12 @@ async function manage(book, mode, dec, instruments, et, trend) {
     isAdd = true;
   }
   if (!allow) return;
+  if (dec.stop_level != null && (decDir === 'long' ? dec.stop_level >= px : dec.stop_level <= px)) return;   // NO-STOP-ON-OVERSHOOT: the agent set a stop but the fill is already past it → refuse rather than open a naked position
   const cp = decDir === 'long' ? 'C' : 'P', step = STEP[inst] || 1;
   const refPx = dec.strike_style === 'itm' ? (decDir === 'long' ? px * (1 - ITM_PCT) : px * (1 + ITM_PCT)) : px;   // strike_style 'itm' = slightly in-the-money (higher delta, less theta-fragile — for a conviction HOLD); default ATM (max gamma/leverage — for a fast scalp)
   const strike = Math.round(refPx / step) * step;
   const occ = occOf(inst, DAY, cp, strike), premium = DAY === TODAY_ET ? await optMark(occ) : null;
+  if (DAY === TODAY_ET && premium == null) return;   // NULL-MARK GUARD: refuse to open a phantom $0 LIVE position on a failed entry mark (it would also lose its theta stop); retry next tick. (Replay: premium stays null = points-based backtest.)
   const contracts = premium ? +(NOTIONAL_PER_POSITION / (premium * 100)).toFixed(2) : null;   // FLAT $3k per tranche — hard cap, never scaled up
   const counter = (trend === 'up' && decDir === 'short') || (trend === 'down' && decDir === 'long');
   const initStop = (dec.stop_level != null && (decDir === 'long' ? dec.stop_level < px : dec.stop_level > px)) ? dec.stop_level : null;   // structural stop on the correct side of THIS entry
@@ -478,19 +495,25 @@ async function fastStops(mem) {   // price-stop / price-target ONLY. Trailing, p
     const et = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false }).slice(0, 5);
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5)); if (m < 9 * 60 + 30 || m > 16 * 60) return;   // RTH only
     const eod = et >= FLATTEN_ET;   // fast-loop EOD backstop: flatten 0DTE even if the slow 15:55 tick errored (Skylit hiccup at the worst moment = holding into expiry with no backstop)
+    const stale = _lastFrameMs != null && (Date.now() - _lastFrameMs) > STALE_FLATTEN_MIN * 60000;   // STALENESS-FLATTEN: no fresh Skylit frame for STALE_FLATTEN_MIN → data went dark (the 8/6 blind-window hole) → flatten rather than ride blind (the UW option mark still prices the exit even when Skylit is down)
     const spotCache = {};   // one spot pull per instrument per fast tick (tranches usually share the trend instrument)
     for (const mode of ['conservative', 'aggressive']) {
       const b = mem.book[mode]; if (!b?.positions?.length) continue;
       for (const pos of [...b.positions]) {   // copy — closePosition() splices; each tranche has its OWN structural stop
-        if (pos._closing || (!eod && pos.stop_level == null && pos.target_level == null)) continue;
+        if (pos._closing || (!eod && !stale && pos.stop_level == null && pos.target_level == null)) continue;
         const long = pos.dir === 'long';
         if (!(pos.instrument in spotCache)) spotCache[pos.instrument] = await fastSpot(pos.instrument);
         const spot = spotCache[pos.instrument];
         let why = null;   // mirrors the slow loop's manage() price checks so both halves agree on what a breach is
         if (eod) why = 'EOD flatten (fast)';                                  // EOD backstop takes precedence and needs no spot (flatten regardless)
+        else if (stale) why = 'stale-data flatten (fast)';                    // data dark → flatten regardless of spot (exit priced off the UW mark, which is independent of Skylit)
         else if (spot == null) continue;
         else if (pos.stop_level != null && (long ? spot <= pos.stop_level : spot >= pos.stop_level)) why = 'stop hit (fast)';
         else if (pos.target_level != null && (long ? spot >= pos.target_level : spot <= pos.target_level)) why = 'target hit (fast)';
+        else if (pos.occ && DAY === TODAY_ET && pos.entry_premium != null) {   // FAST THETA BACKSTOP: fetch the live mark and cut a hard -70% premium bleed the slow loop missed (null mark / >60s late). -70% ONLY, so it never pre-empts the slow loop's regime-aware -50%.
+          const prem = await optMark(pos.occ);
+          if (prem != null) { pos.live_premium = prem; if (((prem - pos.entry_premium) / pos.entry_premium) * 100 <= MAX_OPT_LOSS_PCT_WIDE) why = `premium stop (${MAX_OPT_LOSS_PCT_WIDE}% fast-backstop)`; }
+        }
         if (why && !pos._closing) {   // closePosition re-checks the per-tranche mutex; the slow manage() shares this book + guard, so the two halves never double-close
           await closePosition(b, pos, spot != null ? { [pos.instrument]: { spot } } : {}, et, why);
           try { fs.writeFileSync(MEM, JSON.stringify(mem, null, 1)); } catch { }
@@ -523,7 +546,7 @@ async function loop() {
     const m = (+et.slice(0, 2)) * 60 + (+et.slice(3, 5));
     if (m >= 9 * 60 + 30 && m <= 16 * 60) {
       try {
-        for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); const gz = zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n'); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), gz); fs.writeFileSync(path.join(FC, 'archive', `${DAY}_${sym}.jsonl.gz`), gz); } }   // uncapped now (full-day archive); dated copy survives the next day's overwrite. assembleInstrument only reads the last ~30 frames so the prompt doesn't grow.
+        for (const sym of ['SPXW', 'SPY', 'QQQ']) { const f = await pullLiveGEX(sym); if (f) { bufs[sym].push(f); _lastFrameMs = Date.now(); const gz = zlib.gzipSync(bufs[sym].map(x => JSON.stringify(x)).join('\n') + '\n'); fs.writeFileSync(path.join(FC, `today_${sym}.jsonl.gz`), gz); fs.writeFileSync(path.join(FC, 'archive', `${DAY}_${sym}.jsonl.gz`), gz); } }   // uncapped now (full-day archive); dated copy survives the next day's overwrite. assembleInstrument only reads the last ~30 frames so the prompt doesn't grow.
         if (bufs.SPXW.length) mem = await step(et, mem);
       } catch (e) { console.log(`  ${et} loop error: ${e.message.slice(0, 90)}`); }
     } else { console.log(`  ${et} ET · market closed — idle`); idleDash(`market ${m < 9 * 60 + 30 ? 'not open yet' : 'closed'} — agent idle · ${nplays()} plays today`); }
