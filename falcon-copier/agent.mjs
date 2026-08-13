@@ -497,6 +497,7 @@ async function fastSpot(sym) {   // lightweight real-time spot — the SAME Skyl
   } catch { return null; }
 }
 const FAST_SEC = 10;   // fast-loop cadence. Only pulls a spot when a position is actually OPEN (0 calls when flat) → legitimate position-monitoring, not high-frequency scraping.
+const SLOW_SEC = +(process.env.SLOW_SEC) || 180;   // ★ COST/CHURN DIAL (env-tunable) — sleep between LLM ticks. Higher = cheaper + fewer trades (less over-trading). ~180s ≈ 4-min cadence ≈ ~$9/day on the 2-stage (testing default); set SLOW_SEC=300 for ~$5/day, or =60 for production speed. The 10s fast-loop still protects open positions regardless.
 let _fastBusy = false;   // reentrancy guard so a slow spot pull can't stack overlapping fast ticks
 async function fastStops(mem) {   // price-stop / price-target ONLY. Trailing, premium/theta stop, EOD flatten, and all OPENS stay on the slow LLM tick.
   if (_fastBusy || !mem?.book) return; _fastBusy = true;
@@ -559,7 +560,7 @@ async function loop() {
         if (bufs.SPXW.length) mem = await step(et, mem);
       } catch (e) { console.log(`  ${et} loop error: ${e.message.slice(0, 90)}`); }
     } else { console.log(`  ${et} ET · market closed — idle`); idleDash(`market ${m < 9 * 60 + 30 ? 'not open yet' : 'closed'} — agent idle · ${nplays()} plays today`); }
-    await new Promise(r => setTimeout(r, 60000));
+    await new Promise(r => setTimeout(r, SLOW_SEC * 1000));
   }
 }
 
