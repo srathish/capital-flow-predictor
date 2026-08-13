@@ -232,6 +232,12 @@ async function claude(system, content, tool, maxTok = 1800) {
   const j = await r.json(); if (r.status !== 200) throw new Error(`API ${r.status}: ${JSON.stringify(j.error || j).slice(0, 200)}`);
   return (j.content || []).find(c => c.type === 'tool_use')?.input || {};
 }
+// STAGE 1 of the two-stage tick: FREE deliberation with adaptive-thinking ON (NO tool_choice — forcing a tool suppresses sonnet-5's thinking). Returns the reasoning TEXT that grounds the emit stage. AGENTIC: it makes the model genuinely weigh the setup (esp. chase-vs-fade in a pin) instead of emit-then-rationalizing — it never picks direction FOR the model, it just makes it think first.
+async function reason(system, content) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: MODEL, max_tokens: 2500, system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }], messages: [{ role: 'user', content }] }) });
+  const j = await r.json(); if (r.status !== 200) throw new Error(`API ${r.status}: ${JSON.stringify(j.error || j).slice(0, 200)}`);
+  return (j.content || []).map(c => c.text).filter(Boolean).join('\n').trim();
+}
 
 const MEM = path.join(FC, `agent_state_${DAY}.json`);
 const sysWithLessons = () => { const L = loadLessons(); return DOCTRINE + (L.length ? `\n\nLESSONS YOU LEARNED FROM PAST SESSIONS (apply them):\n${L.map((x, i) => `${i + 1}. ${x.lesson}`).join('\n')}` : ''); };
@@ -366,7 +372,10 @@ async function step(et, mem) {
   const _ng = state.instruments.SPXW?.regime_now?.net_gamma_M;   // a net_gamma sign flip is exactly when the journal thesis is most likely STALE — inject a challenge (kills confirmation-bias-all-day)
   const _flip = (mem._lastNG != null && _ng != null && Math.sign(_ng) !== Math.sign(mem._lastNG)) ? `\n\n⚠ REGIME FLIP since your last read: SPX net_gamma ${mem._lastNG}M → ${_ng}M (${mem._lastNG > 0 ? 'pinned/mean-revert' : 'accelerant/trend'} → ${_ng > 0 ? 'pinned/mean-revert' : 'accelerant/trend'}). Your journal thesis may be STALE — RE-DERIVE from THIS frame and challenge the journal before trusting it.` : '';
   if (_ng != null) mem._lastNG = _ng;
-  const d = await claude(sysWithLessons(), `${journal}${_flip}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}\n\nReason over ALL of it (manage any open trades) and emit your two-posture decision + journal update.`, TOOL);
+  const _state = `${journal}${_flip}\n\nFULL DATA STATE @ ${et} ET:\n${JSON.stringify(state, null, 1)}`;
+  // TWO-STAGE (agentic): STAGE 1 deliberate → STAGE 2 emit grounded in it. A stage-1 failure degrades gracefully to the old single-emit.
+  const _delib = await reason(sysWithLessons(), `${_state}\n\nBefore you decide, REASON through this tick (do NOT emit yet):\n• REGIME: net_gamma sign — positive = PINNED/mean-revert (pins hold, fade the extremes); negative = accelerant/trend (breakouts run).\n• The BULL case AND the BEAR case for the next ~20 min — weigh both honestly.\n• If leaning to OPEN: is the entry a CHASE (buying a rip / selling a flush at the extreme) or a FADE/pullback (toward support/resistance)? In a PINNED regime a market chase is the pattern that keeps BLEEDING — a fade or stand-aside usually beats it; in a TREND regime chasing is correct.\n• What would prove you WRONG?\nWrite your read tightly.`).catch(() => '');
+  const d = await claude(sysWithLessons(), `${_state}\n\nYOUR DELIBERATION THIS TICK:\n${_delib || '(none)'}\n\nNow emit your two-posture decision + journal update, CONSISTENT with that reasoning (and manage any open trades).`, TOOL);
   for (const k of ['conservative', 'aggressive']) { if (typeof d[k] === 'string') { try { d[k] = JSON.parse(d[k]); } catch { d[k] = { direction: 'stand_aside', conviction: 0, why: 'parse-fallback' }; } } if (!d[k] || typeof d[k] !== 'object') d[k] = { direction: 'stand_aside', conviction: 0, why: 'missing-posture' }; }   // sonnet sometimes emits a posture as a JSON string, or OMITS one entirely — default a missing/invalid posture to HOLD (stand_aside) so existing tranches are still managed (trailed/stopped/EOD) rather than crashing the tick
   const trendDir = d.dominant_trend?.direction;
   await manage(mem.book, 'conservative', d.conservative, state.instruments, et, trendDir);
