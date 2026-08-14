@@ -47,7 +47,8 @@ function assembleInstrument(sym, etStr) {
   const domNeg = (fr) => { const d = fr.strikes.filter(n => Math.abs(n.k - fr.spot) <= I.dom && n.g0 < 0).sort((x, y) => x.g0 - y.g0)[0]; return d ? { strike: d.k, gex_M: M(d.g0) } : null; };
   const kingOf = (fr) => { const k = fr.strikes.filter(n => n.g0 > 0).sort((a, b) => b.g0 - a.g0)[0]; return k ? k.k : null; };
   const netOf = (fr) => M(fr.strikes.filter(n => Math.abs(n.k - fr.spot) <= I.band).reduce((a, c) => a + c.g0, 0));
-  const timeline = [30, 24, 18, 12, 6, 0].filter(b => idx - b >= 0).map(b => { const fr = at(b); const dn = domNeg(fr); return { et: etOf(fr.ts), spot: +fr.spot.toFixed(1), king: kingOf(fr), dom_neg_strike: dn?.strike ?? null, dom_neg_M: dn?.gex_M ?? null, net_gamma_M: netOf(fr) }; });
+  const netV = (fr) => M(fr.strikes.filter(n => Math.abs(n.k - fr.spot) <= I.band).reduce((a, c) => a + (c.v0 || 0), 0));   // net VANNA in the band — mirrors netOf for the vanna-flow timeline/velocity
+  const timeline = [30, 24, 18, 12, 6, 0].filter(b => idx - b >= 0).map(b => { const fr = at(b); const dn = domNeg(fr); return { et: etOf(fr.ts), spot: +fr.spot.toFixed(1), king: kingOf(fr), dom_neg_strike: dn?.strike ?? null, dom_neg_M: dn?.gex_M ?? null, net_gamma_M: netOf(fr), net_vanna_M: netV(fr) }; });
   const map = s.strikes.filter(n => Math.abs(n.k - spot) <= I.map).sort((a, b) => a.k - b.k).map(n => ({ strike: n.k, gex_M: M(n.g0), vex_M: M(n.v0 || 0), gex_chg15_M: M(n.g0 - g0Prev(n.k, 15)) }));
   const strongWide = s.strikes.filter(n => Math.abs(n.g0) >= I.strong && Math.abs(n.k - spot) <= I.wide).sort((a, b) => a.k - b.k).map(n => ({ strike: n.k, gex_M: M(n.g0), side: n.k > spot ? 'above' : 'below' }));
   const king = s.strikes.filter(n => n.g0 > 0).sort((a, b) => b.g0 - a.g0)[0];
@@ -65,7 +66,11 @@ function assembleInstrument(sym, etStr) {
   // ── VELOCITY: rate-of-change of the key structure (M/min) + accelerating/decelerating — read GROWTH and DECAY as sharply as the levels ──
   const dnMag = (fr) => domNeg(fr)?.gex_M ?? null, kingGex = (fr) => { const k = fr.strikes.filter(n => n.g0 > 0).sort((a, b) => b.g0 - a.g0)[0]; return k ? M(k.g0) : null; };
   const rateAccel = (fn) => { const f6 = idx >= 6 ? at(6) : null, f12 = idx >= 12 ? at(12) : null; const v0 = fn(s), v6 = f6 ? fn(f6) : null, v12 = f12 ? fn(f12) : null; if (v0 == null || v6 == null) return { rate: null, accel: null }; const dt1 = Math.max(1, etM(s.ts) - etM(f6.ts)), dt0 = f12 ? Math.max(1, etM(f6.ts) - etM(f12.ts)) : null; const r1 = +((v0 - v6) / dt1).toFixed(1), r0 = (v12 != null && dt0) ? +((v6 - v12) / dt0).toFixed(1) : null; return { rate: r1, accel: r0 == null ? null : Math.abs(r1) > Math.abs(r0) + 0.3 ? 'accelerating' : Math.abs(r1) < Math.abs(r0) - 0.3 ? 'decelerating' : 'steady' }; };   // rate per ACTUAL elapsed minute (timestamp delta) — a dropped frame no longer fakes acceleration
-  const vNet = rateAccel(netOf), vDn = rateAccel(dnMag), vKing = rateAccel(kingGex);
+  const vNet = rateAccel(netOf), vDn = rateAccel(dnMag), vKing = rateAccel(kingGex), vVanna = rateAccel(netV);
+  // ── OPENING (today's RTH open + first-30-min range) + HTF daily trend — read-only, from frames/levels already in hand ──
+  const rthF = F.filter(f => etM(f.ts) >= 570 && etM(f.ts) <= etM(s.ts)), dayOpen = rthF.length ? +rthF[0].spot.toFixed(2) : null;
+  const orF = rthF.filter(f => etM(f.ts) <= 600), orH = orF.length ? +Math.max(...orF.map(f => f.spot)).toFixed(2) : null, orL = orF.length ? +Math.min(...orF.map(f => f.spot)).toFixed(2) : null;
+  const htfT = (_levels.data[sym] || {}).htf_trend || null;
   return {
     symbol: sym, spot: +spot.toFixed(2), chg_pct: +(((spot - s.prevClose) / s.prevClose) * 100).toFixed(2), session_high: Math.max(...path30), session_low: Math.min(...path30),
     day_range: { high: +hodF.spot.toFixed(2), high_et: etOf(hodF.ts), low: +lodF.spot.toFixed(2), low_et: etOf(lodF.ts), spot_pctile_in_range: rangePos, note: 'FULL-DAY high/low so far (not the 30-min session_high/low). spot_pctile_in_range: 0=at the day LOW, 100=at the day HIGH. Judge your TARGET against it: in a CONFIRMED trend, if spot is near the day extreme in your favor and your target is only a hair beyond, you are leaving the bulk of the move — lean toward HOLDING a runner toward/through the day extreme instead of a tight target. Sold-too-early is the #1 tax on trend days.' },
@@ -78,6 +83,9 @@ function assembleInstrument(sym, etStr) {
     strong_nodes_wide: strongWide, gex_vex_map_now: map,   // gex_M = 0DTE gamma, vex_M = 0DTE vanna, per strike
     higher_timeframe: hasAgg ? { note: 'FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+) — the multi-day magnet & walls. Same strike as the 0DTE king_node = strong confluence; far apart = the bigger surface is pulling price toward agg_king (today the 0DTE king and agg_king can be 50+ pts apart).', front_expiry: s.frontExp || null, agg_king: aggKing ? { strike: aggKing.k, gex_M: M(aggKing.gA) } : null, agg_node_above: aggAbove ? { strike: aggAbove.k, gex_M: M(aggAbove.gA) } : null, agg_node_below: aggBelow ? { strike: aggBelow.k, gex_M: M(aggBelow.gA) } : null, agg_net_gamma_M: aggNet } : null,
     key_levels: keyLevelsBlock(sym, spot),   // PRICE-memory levels (prior-day/overnight/prior-week H-L + swings) — independent of the gamma map
+    higher_timeframe_trend: htfT,   // DAILY/weekly trend DIRECTION (20d SMA + slope + swing structure) — the multi-day anchor to check intraday dominant_trend against
+    opening: dayOpen != null ? { open: dayOpen, spot_vs_open: spot > dayOpen ? 'above (buyers control)' : 'below (sellers control)', pts_from_open: +(spot - dayOpen).toFixed(2), or_high: orH, or_low: orL, in_or: (orL != null && orH != null && spot >= orL && spot <= orH), note: "today's RTH OPEN = the bull/bear line; OPENING RANGE = first-30-min H/L. An ORH/ORL break that ACCEPTS (holds beyond several frames) is a real directional commit; a poke that snaps back is noise. (8/13: the 11:38 losing short broke a MARGINAL new low — the accept-vs-reject read on ORL is exactly that call.)" } : null,
+    vanna_flow: { net_vanna_M: M(band.reduce((a, c) => a + (c.v0 || 0), 0)), net_vanna_M_per_min: vVanna.rate, accel: vVanna.accel, note: "VANNA = the VIX->direction transmission dealers hedge: net_vanna >0 while VIX FALLS = dealers mechanically BID (the slow grind-up — do NOT short into it); net_vanna <0 while VIX RISES = they SELL. Read its VELOCITY like gamma's, and cross it against vix.tilt/path." },
   };
 }
 // ── SKYLIT-NATIVE live layers (Flowseeker /fs/api + Heatseeker): dark-pool prints + market tide (flow lean).
@@ -171,17 +179,30 @@ function computeLevels(byDate) {
   return { pdh: B.h, pdl: B.l, pdc: B.c, pwh: mx(pw.map(b => b.h)), pwl: mn(pw.map(b => b.l)), onh: mx(on.map(b => b.h)), onl: mn(on.map(b => b.l)), swing_highs: [...new Set(swH)], swing_lows: [...new Set(swL)] };
 }
 const scaleLevels = (L, k) => { const s = v => v == null ? null : +(v * k).toFixed(2); return { pdh: s(L.pdh), pdl: s(L.pdl), pdc: s(L.pdc), pwh: s(L.pwh), pwl: s(L.pwl), onh: s(L.onh), onl: s(L.onl), swing_highs: L.swing_highs.map(s), swing_lows: L.swing_lows.map(s) }; };
+function computeHTFTrend(byDate) {   // DAILY trend context from the SAME UW daily OHLC — direction is scale-invariant, so SPX reuses SPY's
+  const rth = Object.keys(byDate).filter(d => byDate[d].r && d < TODAY_ET).sort();
+  if (rth.length < 20) return null;
+  const c = rth.map(d => byDate[d].r.c), h = rth.map(d => byDate[d].r.h), l = rth.map(d => byDate[d].r.l);
+  const last = c[c.length - 1], sma = (a, n) => a.slice(-n).reduce((x, y) => x + y, 0) / n;
+  const sma20 = sma(c, 20), sma20prev = sma(c.slice(0, -5), 20);           // 20d SMA now vs 5 sessions ago = slope
+  const slope = sma20 > sma20prev * 1.0008 ? 'rising' : sma20 < sma20prev * 0.9992 ? 'falling' : 'flat';
+  const above = last > sma20, rh = h.slice(-5), rl = l.slice(-5);
+  const hh = rh[rh.length - 1] >= Math.max(...rh.slice(0, -1)), hl = rl[rl.length - 1] >= Math.min(...rl.slice(0, -1));
+  const structure = (above && slope === 'rising') ? 'uptrend' : (!above && slope === 'falling') ? 'downtrend' : 'range/transition';
+  return { direction: structure === 'uptrend' ? 'up' : structure === 'downtrend' ? 'down' : 'sideways', daily_slope: slope, spot_vs_20dma: above ? 'above' : 'below', pct_from_20dma: +(((last - sma20) / sma20) * 100).toFixed(2), swing_structure: hh && hl ? 'higher-highs+higher-lows' : (!hh && !hl ? 'lower-highs+lower-lows' : 'mixed'), note: "DAILY trend context (20d SMA + slope + swing structure). Doctrine's #1 rule is COMMIT TO THE DOMINANT TREND — check your INTRADAY dominant_trend against THIS daily read: an intraday counter-move AGAINST a strong daily trend is usually a PULLBACK to fade WITH the daily (a dip-buy in a daily uptrend), not a reversal to chase. RAISE the entry bar for any counter-daily-trend trade. (8/13: the 11:38/11:58 losing shorts fought an up day — a daily-uptrend anchor would have raised the bar on them.)" };
+}
 let _levels = { day: null, data: {}, _spyRaw: null, _qqqRaw: null };
 async function ensureLevels() {
   if (_levels.day !== DAY) {                                // new day → refetch daily OHLC once
     const [spyD, qqqD] = await Promise.all([uwDailyOHLC('SPY'), uwDailyOHLC('QQQ')]);
+    const spyT = spyD && computeHTFTrend(spyD), qqqT = qqqD && computeHTFTrend(qqqD);   // daily trend from the SAME data — no extra call
     _levels = { day: DAY, data: {}, _spyRaw: spyD && computeLevels(spyD), _qqqRaw: qqqD && computeLevels(qqqD) };
-    if (_levels._spyRaw) _levels.data.SPY = { ..._levels._spyRaw, src: 'UW daily OHLC (exact)' };
-    if (_levels._qqqRaw) _levels.data.QQQ = { ..._levels._qqqRaw, src: 'UW daily OHLC (exact)' };
+    if (_levels._spyRaw) _levels.data.SPY = { ..._levels._spyRaw, src: 'UW daily OHLC (exact)', htf_trend: spyT };
+    if (_levels._qqqRaw) _levels.data.QQQ = { ..._levels._qqqRaw, src: 'UW daily OHLC (exact)', htf_trend: qqqT };
   }
   if (!_levels.data.SPXW && _levels._spyRaw) {              // scale SPX off SPY once frames give us SPX prev-close (retries cheaply until set)
     const F = load('SPXW'), sp = F && F.length ? F[F.length - 1].prevClose : null, k = (sp && _levels._spyRaw.pdc) ? sp / _levels._spyRaw.pdc : null;
-    if (k) _levels.data.SPXW = { ...scaleLevels(_levels._spyRaw, k), src: `SPY×${k.toFixed(3)} (SPX index OHLC not on UW tier; prior-CLOSE exact, H/L extremes ±~5-10 pts from SPY/SPX drift — zones not ticks)` };
+    if (k) _levels.data.SPXW = { ...scaleLevels(_levels._spyRaw, k), src: `SPY×${k.toFixed(3)} (SPX index OHLC not on UW tier; prior-CLOSE exact, H/L extremes ±~5-10 pts from SPY/SPX drift — zones not ticks)`, htf_trend: (_levels.data.SPY || {}).htf_trend || null };
   }
 }
 function keyLevelsBlock(sym, spot) {
@@ -206,7 +227,9 @@ async function assembleComplex(etStr, live = false) {
   const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
   if (live) await Promise.all(Object.entries(instruments).map(async ([sym, s]) => { const em = await expectedMove(sym, s.spot); if (em) s.expected_move = em; }));   // 0DTE ATM straddle = today's implied range
   const uwLayers = live ? await liveLayers() : { note: 'options_flow / dark_pool / market_tide / vix are LIVE-ONLY UW data — not reconstructable for this historical replay day. Reason from GEX/VEX/structure/cross-index here; they ARE wired and present in live runs.' };
-  return { as_of_et: etStr, instruments, uw_layers: uwLayers };
+  const _nm = (+etStr.slice(0, 2)) * 60 + (+etStr.slice(3, 5)), _mc = 960 - _nm;   // RTH 09:30(=570m) → 16:00(=960m)
+  const session = { et: etStr, minutes_to_close: _mc, pct_rth_elapsed: Math.max(0, Math.min(100, +(((_nm - 570) / 390) * 100).toFixed(0))), phase: _nm < 600 ? 'opening_drive' : _nm < 690 ? 'morning' : _nm < 810 ? 'lunch_lull' : _nm < 900 ? 'afternoon' : 'power_hour', note: "WHERE in the 0DTE session you are — the defining context for a same-day-expiry trade. minutes_to_close: theta accelerates as it shrinks (a 10:00 entry has runway; a 15:00 entry ~1h with savage decay — take the fast scalp, hold nothing loose). PHASE signal-quality: opening_drive(9:30-10:00)=high-vol, direction sets; morning(10:00-11:30)=cleanest trends; LUNCH_LULL(11:30-13:30)=LOWEST signal, chop/fakeouts — RAISE the bar, prefer fade-to-pin or stand-aside (the 8/13 whipsaw shorts died HERE); afternoon(13:30-15:00)=trends resume; power_hour(15:00-16:00)=gamma pin + charm ramp intensify." };
+  return { as_of_et: etStr, session, instruments, uw_layers: uwLayers };
 }
 // what SPX actually did after a decision — for the learning/reflection pass
 function outcomeAfter(etStr, mins = 45) {
@@ -225,6 +248,7 @@ WHAT THE DATA IS
 - ACCEPTANCE vs REJECTION (the auction read on that SAME timeline) — GEX tells you WHERE the walls are; this tells you whether price is going THROUGH a level or bouncing OFF it, which decides press-vs-fade INDEPENDENT of GEX magnitude. ACCEPTANCE = price spends TIME (several consecutive frames on structure_timeline/price_path) beyond a wall/level and HOLDS there = that level became fair value → the wall is giving way = TREND CONTINUATION (the "escalator" — go WITH it; this is the same signature as dom_neg ROLL-UP). REJECTION = price pokes past a level for ~one frame then SNAPS back inside (a wick / excess, no time spent) = the wall HELD → fade back toward the prior node/king (the "wall"). So: held-beyond = accept = trend (press/hold); poke-and-return = reject = fade (sell the bounce into the wall / buy the flush off the floor). When you cannot see either cleanly, it is chop — stand aside.
 - higher_timeframe = the FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+). agg_king = the multi-day magnet. When it MATCHES the 0DTE king_node → strong confluence (price gets pinned/pulled hard there). When it's FAR from the 0DTE king → the bigger surface is pulling price toward agg_king, so today's 0DTE pin is weaker and more likely to BREAK toward the aggregate level. Use both: 0DTE = today's mechanics, higher_timeframe = the gravitational pull. Don't fade toward a 0DTE node if the whole surface is pulling the other way.
 - key_levels = PRICE-memory levels (prior-day high/low/close, overnight high/low, prior-week high/low, recent swing pivots, and the nearest level above/below spot) — INDEPENDENT of the gamma map: the reference points every discretionary trader watches. GEX tells you where DEALERS defend; key_levels tell you where PRICE remembers. Highest-value use is the DIP-vs-REVERSAL call the agent has been getting wrong: in an uptrend a pullback that HOLDS above the prior-day close / a prior swing-low is a DIP (stay with the trend); one that BREAKS and ACCEPTS below it (time spent beyond, visible on structure_timeline_30m / price_path) is a REVERSAL — stop pressing longs, consider the other side (mirror for downtrends). Also: don't fade a clean break-and-accept THROUGH a key level; don't short into support or long into resistance; and a prior level STACKED on a gamma wall at the same price is the strongest S/R, while a level in a gamma air-pocket breaks cleaner. SPX key_levels are SPY-derived (prior-close exact, extremes ±~5-10 pts) — treat as zones, not ticks.
+- NEW perception layers (each carries its own in-line usage note — read it): higher_timeframe_trend = the DAILY up/down anchor; check your intraday dominant_trend against it and treat a counter-daily intraday move as a PULLBACK to fade WITH the daily, not a reversal to chase (raise the bar to fight the daily). opening = today's OPEN (bull/bear line) + opening range; an ORH/ORL break that ACCEPTS is a real commit, a poke-and-snap-back is noise. session = minutes_to_close + PHASE; respect 0DTE theta as time runs out and RAISE the bar / prefer fade-or-stand-aside in the LUNCH_LULL (11:30-13:30) low-signal window — that is exactly where the 8/13 whipsaw shorts were greenlit. vanna_flow = the VIX->direction dealer transmission; do NOT short into a rising positive-vanna bid (falling VIX = mechanical dealer buying). USE THEM TOGETHER: the strongest reads stack GEX structure + a key_level + the daily trend + a supportive session phase + vanna/VIX all pointing the same way; when they CONFLICT, size down or stand aside. This is how you tell a dip-in-a-trend from a reversal — the call the 8/13 shorts got wrong.
 - expected_move (per instrument, live) = the 0DTE ATM straddle = the market's expected REMAINING range to the close (expected_range = spot ± straddle). Set your target_level INSIDE this range by default — a target beyond it rarely fills same-day. If price has already REACHED/EXCEEDED the expected range, the move is significant: either exhaustion (fade candidate, esp. into a wall) or a genuine range-expansion breakout (with structure + rising VIX). It SHRINKS as the day ages (theta) → late-day, less room, tighten targets.
 - CHARM into the close (0DTE-specific, TIME-VARYING pin strength): as 0DTE delta decays toward the 4pm expiry, dealer re-hedging from CHARM intensifies — in the final ~30-60 min the pinning force is many times its open-day strength. The pin is NOT constant; it RAMPS into the close. Read it by regime: in POSITIVE gamma (pinned), late-day = the pull to the dominant strike/king STRENGTHENS → fade extremes back to the pin and do NOT chase a late-day breakout away from it (it usually gets sucked back before the bell). In NEGATIVE gamma (accelerant), the opposite — late-day moves ACCELERATE, so a late trend can run hard into the close. Combine with expected_move shrinking: late + positive-gamma = tighten targets and lean fade-to-pin; late + negative-gamma = let a late runner go. (This is why a mid-day winner sometimes should be HELD toward a strengthening close pin rather than cut early.)
 - vix (uw_layers.vix) = the VOLATILITY REGIME (VIX family) — macro context + directional bias, weigh it in every read:
@@ -629,7 +653,13 @@ async function loop() {
   }
 }
 
-if (arg('--levels', false)) {   // debug: fetch + print the prior-day/overnight/week price levels for all 3 instruments (uses the latest frame spot)
+if (arg('--state', false)) {   // debug: eyeball the NEW per-instrument state fields (htf trend / opening / vanna / session) from the on-disk frames
+  await ensureLevels();
+  const F = load('SPXW'), lastEt = F && F.length ? etOf(F[F.length - 1].ts) : '15:00';
+  for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, lastEt); if (!a) { console.log(`${sym}: no frames`); continue; } console.log(`\n═══ ${sym} @ ${lastEt} · spot ${a.spot} ═══`); console.log(' higher_timeframe_trend:', JSON.stringify(a.higher_timeframe_trend)); console.log(' opening:', JSON.stringify(a.opening)); console.log(' vanna_flow:', JSON.stringify(a.vanna_flow)); console.log(' timeline[last]:', JSON.stringify((a.structure_timeline_30m || []).slice(-1)[0])); }
+  process.exit(0);
+}
+else if (arg('--levels', false)) {   // debug: fetch + print the prior-day/overnight/week price levels for all 3 instruments (uses the latest frame spot)
   await ensureLevels();
   for (const sym of ['SPXW', 'SPY', 'QQQ']) { const F = load(sym), spot = F && F.length ? +F[F.length - 1].spot.toFixed(2) : null; console.log(`\n═══ ${sym}  spot ${spot} ═══`); console.log(JSON.stringify(keyLevelsBlock(sym, spot), null, 1)); }
   process.exit(0);
