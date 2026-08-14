@@ -77,6 +77,7 @@ function assembleInstrument(sym, etStr) {
     regime_now: { neg_strikes: band.filter(n => n.g0 < 0).length, pos_strikes: band.filter(n => n.g0 > 0).length, net_gamma_M: netOf(s), net_vanna_M: M(band.reduce((a, c) => a + (c.v0 || 0), 0)) },
     strong_nodes_wide: strongWide, gex_vex_map_now: map,   // gex_M = 0DTE gamma, vex_M = 0DTE vanna, per strike
     higher_timeframe: hasAgg ? { note: 'FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+) — the multi-day magnet & walls. Same strike as the 0DTE king_node = strong confluence; far apart = the bigger surface is pulling price toward agg_king (today the 0DTE king and agg_king can be 50+ pts apart).', front_expiry: s.frontExp || null, agg_king: aggKing ? { strike: aggKing.k, gex_M: M(aggKing.gA) } : null, agg_node_above: aggAbove ? { strike: aggAbove.k, gex_M: M(aggAbove.gA) } : null, agg_node_below: aggBelow ? { strike: aggBelow.k, gex_M: M(aggBelow.gA) } : null, agg_net_gamma_M: aggNet } : null,
+    key_levels: keyLevelsBlock(sym, spot),   // PRICE-memory levels (prior-day/overnight/prior-week H-L + swings) — independent of the gamma map
   };
 }
 // ── SKYLIT-NATIVE live layers (Flowseeker /fs/api + Heatseeker): dark-pool prints + market tide (flow lean).
@@ -140,7 +141,68 @@ async function liveLayers() {
   const [dp, tide, vix, econ] = await Promise.all([skylitDarkPool(), skylitTide(), getVix(), getEconCalendar()]);
   return { source: 'skylit (Flowseeker /fs/api) + CBOE VIX + UW econ-calendar', dark_pool_prints: dp, market_tide_flow_lean: tide, vix, econ_calendar: econ, note: 'dark-pool = real prints (venue/notional); flow lean = tide net call−put premium; vix = CBOE index (level/chg/band); econ_calendar = scheduled macro events. Granular flow tape is the wss://fs-ws.skylit.ai multiplexed stream (not polled here).' };
 }
+// ── PRIOR PRICE LEVELS (key_levels): the reference levels the GEX map is blind to — prior-day high/low/close, overnight
+// high/low, prior-week high/low, recent swing pivots. SPY/QQQ are EXACT from UW daily OHLC (each date splits into
+// r=regular / pr=premarket / po=postmarket sessions). SPX index OHLC is not on our UW REST tier, so SPXW levels are
+// SPY × the prior-close ratio (±~1-2 pts — zones, not ticks; labeled in `source`).
+async function uwDailyOHLC(t) {
+  if (!UWKEY) return null;
+  const r = await fetch('https://api.unusualwhales.com/api/stock/' + t + '/ohlc/1d', { headers: { Authorization: 'Bearer ' + UWKEY, Accept: 'application/json' }, signal: AbortSignal.timeout(12000) }).then(x => x.ok ? x.json() : null).catch(() => null);
+  const rows = r?.data || []; if (!rows.length) return null;
+  const byDate = {};                                        // { 'YYYY-MM-DD': { r:{o,h,l,c}, pr:{...}, po:{...} } }
+  for (const b of rows) { (byDate[b.date] = byDate[b.date] || {})[b.market_time] = { o: +b.open, h: +b.high, l: +b.low, c: +b.close }; }
+  return byDate;
+}
+function computeLevels(byDate) {
+  const rth = Object.keys(byDate).filter(d => byDate[d].r && d < TODAY_ET).sort();   // COMPLETED regular sessions before today
+  if (rth.length < 2) return null;
+  const pd = rth[rth.length - 1], B = byDate[pd].r;                                   // prior day = most recent completed RTH
+  const now = new Date(TODAY_ET + 'T12:00:00Z'), thisMon = new Date(now); thisMon.setUTCDate(now.getUTCDate() - ((now.getUTCDay() + 6) % 7));
+  const pMon = new Date(thisMon.getTime() - 7 * 864e5).toISOString().slice(0, 10), pSun = new Date(thisMon.getTime() - 864e5).toISOString().slice(0, 10);
+  const pw = rth.filter(d => d >= pMon && d <= pSun).map(d => byDate[d].r);           // prior calendar week's RTH days
+  const on = []; if (byDate[pd].po) on.push(byDate[pd].po); if (byDate[TODAY_ET] && byDate[TODAY_ET].pr) on.push(byDate[TODAY_ET].pr);   // overnight = prior-day post + today pre
+  const win = rth.slice(-12).map(d => byDate[d].r);                                   // recent swing pivots (±2 lookaround)
+  const swH = [], swL = [];
+  for (let i = 2; i < win.length - 2; i++) {
+    if (win[i].h >= Math.max(win[i - 1].h, win[i - 2].h, win[i + 1].h, win[i + 2].h)) swH.push(+win[i].h.toFixed(2));
+    if (win[i].l <= Math.min(win[i - 1].l, win[i - 2].l, win[i + 1].l, win[i + 2].l)) swL.push(+win[i].l.toFixed(2));
+  }
+  const mx = a => a.length ? Math.max(...a) : null, mn = a => a.length ? Math.min(...a) : null;
+  return { pdh: B.h, pdl: B.l, pdc: B.c, pwh: mx(pw.map(b => b.h)), pwl: mn(pw.map(b => b.l)), onh: mx(on.map(b => b.h)), onl: mn(on.map(b => b.l)), swing_highs: [...new Set(swH)], swing_lows: [...new Set(swL)] };
+}
+const scaleLevels = (L, k) => { const s = v => v == null ? null : +(v * k).toFixed(2); return { pdh: s(L.pdh), pdl: s(L.pdl), pdc: s(L.pdc), pwh: s(L.pwh), pwl: s(L.pwl), onh: s(L.onh), onl: s(L.onl), swing_highs: L.swing_highs.map(s), swing_lows: L.swing_lows.map(s) }; };
+let _levels = { day: null, data: {}, _spyRaw: null, _qqqRaw: null };
+async function ensureLevels() {
+  if (_levels.day !== DAY) {                                // new day → refetch daily OHLC once
+    const [spyD, qqqD] = await Promise.all([uwDailyOHLC('SPY'), uwDailyOHLC('QQQ')]);
+    _levels = { day: DAY, data: {}, _spyRaw: spyD && computeLevels(spyD), _qqqRaw: qqqD && computeLevels(qqqD) };
+    if (_levels._spyRaw) _levels.data.SPY = { ..._levels._spyRaw, src: 'UW daily OHLC (exact)' };
+    if (_levels._qqqRaw) _levels.data.QQQ = { ..._levels._qqqRaw, src: 'UW daily OHLC (exact)' };
+  }
+  if (!_levels.data.SPXW && _levels._spyRaw) {              // scale SPX off SPY once frames give us SPX prev-close (retries cheaply until set)
+    const F = load('SPXW'), sp = F && F.length ? F[F.length - 1].prevClose : null, k = (sp && _levels._spyRaw.pdc) ? sp / _levels._spyRaw.pdc : null;
+    if (k) _levels.data.SPXW = { ...scaleLevels(_levels._spyRaw, k), src: `SPY×${k.toFixed(3)} (SPX index OHLC not on UW tier; prior-CLOSE exact, H/L extremes ±~5-10 pts from SPY/SPX drift — zones not ticks)` };
+  }
+}
+function keyLevelsBlock(sym, spot) {
+  const L = _levels.data[sym]; if (!L || spot == null) return null;
+  const rel = v => v == null ? null : { level: +(+v).toFixed(2), side: v > spot ? 'above' : 'below', dist_pts: +(v - spot).toFixed(2), dist_pct: +(((v - spot) / spot) * 100).toFixed(2) };
+  const above = [L.pdh, L.onh, L.pwh, ...(L.swing_highs || [])].filter(v => v != null && v > spot);
+  const below = [L.pdl, L.onl, L.pwl, ...(L.swing_lows || [])].filter(v => v != null && v < spot);
+  return {
+    note: 'PRICE-memory levels, INDEPENDENT of the gamma map — where price remembers it has been. Use them 3 ways: (1) S/R — a prior level is a magnet/barrier on its own; (2) BREAK vs REJECT — price ACCEPTING through a level (time spent beyond it on the timeline) = continuation, poke-and-snap-back = fade; (3) DIP vs REVERSAL (the key call the agent has been getting wrong) — in an uptrend a pullback that HOLDS above the prior-day close / a prior swing-low is a DIP to buy; one that BREAKS and accepts below it is a REVERSAL — stop pressing longs (mirror for downtrends). CONFLUENCE with GEX: a prior level stacked on a gamma wall = the strongest S/R; a level sitting in a gamma air-pocket breaks cleaner. Never short into support / long into resistance without gamma confluence, and never fade a decisive break-and-accept through a key level.',
+    prior_day: { high: rel(L.pdh), low: rel(L.pdl), close: rel(L.pdc) },
+    overnight: { high: rel(L.onh), low: rel(L.onl) },
+    prior_week: { high: rel(L.pwh), low: rel(L.pwl) },
+    nearest_above: rel(above.length ? Math.min(...above) : null),
+    nearest_below: rel(below.length ? Math.max(...below) : null),
+    recent_swing_highs_above: (L.swing_highs || []).filter(v => v > spot).sort((a, b) => a - b).slice(0, 2).map(rel),
+    recent_swing_lows_below: (L.swing_lows || []).filter(v => v < spot).sort((a, b) => b - a).slice(0, 2).map(rel),
+    source: L.src,
+  };
+}
 async function assembleComplex(etStr, live = false) {
+  if (live) await ensureLevels();   // prior-day/overnight/prior-week price levels — fetched once per day from UW (no Skylit clobber); the reference levels the GEX map is blind to
   const instruments = {}; for (const sym of ['SPXW', 'SPY', 'QQQ']) { const a = assembleInstrument(sym, etStr); if (a) instruments[sym] = a; }
   if (live) await Promise.all(Object.entries(instruments).map(async ([sym, s]) => { const em = await expectedMove(sym, s.spot); if (em) s.expected_move = em; }));   // 0DTE ATM straddle = today's implied range
   const uwLayers = live ? await liveLayers() : { note: 'options_flow / dark_pool / market_tide / vix are LIVE-ONLY UW data — not reconstructable for this historical replay day. Reason from GEX/VEX/structure/cross-index here; they ARE wired and present in live runs.' };
@@ -162,6 +224,7 @@ WHAT THE DATA IS
 - structure_timeline_30m = last 30 min at 6-min steps. THIS is the edge over a snapshot: watch dom_neg_M grow (conviction building at a wall); dom_neg_strike ROLL UP (the overhead ceiling being pushed HIGHER as price grinds up — the wall keeps giving way = strong TREND CONTINUATION, stay long / don't fade it); dom_neg_strike ROLL DOWN (ceiling chasing price DOWN = a top confirming); and net_gamma shift (regime change).
 - ACCEPTANCE vs REJECTION (the auction read on that SAME timeline) — GEX tells you WHERE the walls are; this tells you whether price is going THROUGH a level or bouncing OFF it, which decides press-vs-fade INDEPENDENT of GEX magnitude. ACCEPTANCE = price spends TIME (several consecutive frames on structure_timeline/price_path) beyond a wall/level and HOLDS there = that level became fair value → the wall is giving way = TREND CONTINUATION (the "escalator" — go WITH it; this is the same signature as dom_neg ROLL-UP). REJECTION = price pokes past a level for ~one frame then SNAPS back inside (a wick / excess, no time spent) = the wall HELD → fade back toward the prior node/king (the "wall"). So: held-beyond = accept = trend (press/hold); poke-and-return = reject = fade (sell the bounce into the wall / buy the flush off the floor). When you cannot see either cleanly, it is chop — stand aside.
 - higher_timeframe = the FULL-SURFACE gamma summed across ALL expiries (0DTE + weeklies+). agg_king = the multi-day magnet. When it MATCHES the 0DTE king_node → strong confluence (price gets pinned/pulled hard there). When it's FAR from the 0DTE king → the bigger surface is pulling price toward agg_king, so today's 0DTE pin is weaker and more likely to BREAK toward the aggregate level. Use both: 0DTE = today's mechanics, higher_timeframe = the gravitational pull. Don't fade toward a 0DTE node if the whole surface is pulling the other way.
+- key_levels = PRICE-memory levels (prior-day high/low/close, overnight high/low, prior-week high/low, recent swing pivots, and the nearest level above/below spot) — INDEPENDENT of the gamma map: the reference points every discretionary trader watches. GEX tells you where DEALERS defend; key_levels tell you where PRICE remembers. Highest-value use is the DIP-vs-REVERSAL call the agent has been getting wrong: in an uptrend a pullback that HOLDS above the prior-day close / a prior swing-low is a DIP (stay with the trend); one that BREAKS and ACCEPTS below it (time spent beyond, visible on structure_timeline_30m / price_path) is a REVERSAL — stop pressing longs, consider the other side (mirror for downtrends). Also: don't fade a clean break-and-accept THROUGH a key level; don't short into support or long into resistance; and a prior level STACKED on a gamma wall at the same price is the strongest S/R, while a level in a gamma air-pocket breaks cleaner. SPX key_levels are SPY-derived (prior-close exact, extremes ±~5-10 pts) — treat as zones, not ticks.
 - expected_move (per instrument, live) = the 0DTE ATM straddle = the market's expected REMAINING range to the close (expected_range = spot ± straddle). Set your target_level INSIDE this range by default — a target beyond it rarely fills same-day. If price has already REACHED/EXCEEDED the expected range, the move is significant: either exhaustion (fade candidate, esp. into a wall) or a genuine range-expansion breakout (with structure + rising VIX). It SHRINKS as the day ages (theta) → late-day, less room, tighten targets.
 - CHARM into the close (0DTE-specific, TIME-VARYING pin strength): as 0DTE delta decays toward the 4pm expiry, dealer re-hedging from CHARM intensifies — in the final ~30-60 min the pinning force is many times its open-day strength. The pin is NOT constant; it RAMPS into the close. Read it by regime: in POSITIVE gamma (pinned), late-day = the pull to the dominant strike/king STRENGTHENS → fade extremes back to the pin and do NOT chase a late-day breakout away from it (it usually gets sucked back before the bell). In NEGATIVE gamma (accelerant), the opposite — late-day moves ACCELERATE, so a late trend can run hard into the close. Combine with expected_move shrinking: late + positive-gamma = tighten targets and lean fade-to-pin; late + negative-gamma = let a late runner go. (This is why a mid-day winner sometimes should be HELD toward a strengthening close pin rather than cut early.)
 - vix (uw_layers.vix) = the VOLATILITY REGIME (VIX family) — macro context + directional bias, weigh it in every read:
@@ -566,7 +629,12 @@ async function loop() {
   }
 }
 
-if (arg('--loop', false)) await loop();
+if (arg('--levels', false)) {   // debug: fetch + print the prior-day/overnight/week price levels for all 3 instruments (uses the latest frame spot)
+  await ensureLevels();
+  for (const sym of ['SPXW', 'SPY', 'QQQ']) { const F = load(sym), spot = F && F.length ? +F[F.length - 1].spot.toFixed(2) : null; console.log(`\n═══ ${sym}  spot ${spot} ═══`); console.log(JSON.stringify(keyLevelsBlock(sym, spot), null, 1)); }
+  process.exit(0);
+}
+else if (arg('--loop', false)) await loop();
 else if (arg('--distill', false)) await distill();
 else if (arg('--reflect', false)) await reflect();
 else { const seq = arg('--sequence', null); let mem = { day: DAY, notes: '', log: [] }; if (seq) { for (const et of String(seq).split(',')) mem = await step(et.trim(), mem); } else await step(arg('--et', '15:00'), mem); }
