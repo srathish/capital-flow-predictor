@@ -126,6 +126,13 @@ eq('weekly: prefers near expiry over far bigger pile', pickWeeklyExpiry({ '2026-
 eq('weekly: no king gamma → nearest in window', pickWeeklyExpiry({}, wExps, '2026-08-14', WK), '2026-08-21');
 eq('weekly: null when no expirations', pickWeeklyExpiry(wPerExp, [], '2026-08-14', WK), null);
 
+// distance floor: a FAR king → further-dated contract; a near magnet → near weekly
+const WKf = { min_dte_days: 2, max_dte_days: 50, time_decay_halflife_days: 10, trading_days_per_week: 5, dist_to_weeks: [{ maxPct: 0.03, weeks: 1 }, { maxPct: 0.06, weeks: 2 }, { maxPct: 0.10, weeks: 3 }, { maxPct: 0.16, weeks: 5 }] };
+const farExps = ['2026-08-21', '2026-08-28', '2026-09-18', '2026-10-16']; // DTE from 8/14: 5,10,24,45
+const farPer = { '2026-08-21': 5.0, '2026-09-18': 2.0, '2026-10-16': 1.0 }; // gamma biggest near, but distance floor overrides
+eq('far king (16%): distance floor → further-dated contract', pickWeeklyExpiry(farPer, farExps, '2026-08-14', WKf, 0.16), '2026-10-16');
+eq('near magnet (2%): near weekly', pickWeeklyExpiry(farPer, farExps, '2026-08-14', WKf, 0.02), '2026-08-21');
+
 // kingMigration: where the dominant node drifts (history newest → oldest)
 const kmUp = kingMigration([{ strike: 1010, gexAgg: 3 }], [{ strikes: [{ strike: 1000, gexAgg: 3 }] }, { strikes: [{ strike: 980, gexAgg: 3 }] }, { strikes: [{ strike: 960, gexAgg: 3 }] }, { strikes: [{ strike: 940, gexAgg: 3 }] }]);
 eq('king migration up = bullish', kmUp.direction, 'up_bullish');

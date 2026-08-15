@@ -13,21 +13,25 @@ import { tradingDaysBetween, weeksForDistance } from './time.mjs';
 // adjusts for distance (far-OTM gamma sits at later expiries; a near wall at nearer
 // ones), so we don't fight it with a distance heuristic. Prefer the expiry that holds
 // the most of the king's gamma soonest.
-export function pickWeeklyExpiry(perExpiry, expirations, runDate, wcfg = {}) {
+export function pickWeeklyExpiry(perExpiry, expirations, runDate, wcfg = {}, distPct = null) {
   if (!expirations || !expirations.length || !runDate) return null;
-  const minDte = wcfg.min_dte_days ?? 2;
-  const maxDte = wcfg.max_dte_days ?? 25;
-  const halflife = wcfg.time_decay_halflife_days ?? 7;
-  const withDte = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) }))
-    .filter((x) => x.dte >= minDte && x.dte <= maxDte).sort((a, b) => a.dte - b.dte);
-  if (!withDte.length) return null;
+  // A far king needs travel time: distance sets a MINIMUM DTE floor so we buy a
+  // further-dated contract rather than a near weekly that theta/whipsaws out.
+  const floorWeeks = (distPct != null && wcfg.dist_to_weeks) ? weeksForDistance(distPct, wcfg.dist_to_weeks) : 1;
+  const minDte = Math.max(wcfg.min_dte_days ?? 2, floorWeeks * (wcfg.trading_days_per_week ?? 5));
+  const maxDte = wcfg.max_dte_days ?? 50;
+  const halflife = wcfg.time_decay_halflife_days ?? 10;
+  const all = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) })).filter((x) => x.dte >= (wcfg.min_dte_days ?? 2)).sort((a, b) => a.dte - b.dte);
+  if (!all.length) return null;
+  let withDte = all.filter((x) => x.dte >= minDte && x.dte <= maxDte);
+  if (!withDte.length) withDte = [all.reduce((best, x) => (Math.abs(x.dte - minDte) < Math.abs(best.dte - minDte) ? x : best), all[0])]; // nearest to the floor
   let best = withDte[0].e, bestScore = -1;
   for (const { e, dte } of withDte) {
     const g = Math.abs((perExpiry && perExpiry[e]) || 0);
     const score = g * Math.pow(0.5, dte / halflife);
     if (score > bestScore) { bestScore = score; best = e; }
   }
-  return best; // bestScore<=0 (no king gamma in window) → nearest expiry in window
+  return best; // bestScore<=0 (no king gamma above floor) → nearest expiry above the floor
 }
 
 export function sumAbsGex(strikes) {
@@ -227,7 +231,7 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
   let suggested_weeks = null, suggested_weekly_expiry = null;
   if (wcfg && wcfg.enabled) {
     suggested_weeks = weeksForDistance(magnet.dist_pct, wcfg.dist_to_weeks);
-    suggested_weekly_expiry = pickWeeklyExpiry(magnet.perExpiry, profile.expirations, runDate, wcfg);
+    suggested_weekly_expiry = pickWeeklyExpiry(magnet.perExpiry, profile.expirations, runDate, wcfg, magnet.dist_pct);
   }
   const effective_target_expiry = targetExpiry || suggested_weekly_expiry;
 

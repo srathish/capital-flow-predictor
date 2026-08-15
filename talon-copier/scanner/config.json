@@ -51,12 +51,16 @@
     "_doc": "Default to weekly targets. Target the real Skylit weekly expiry where the king's gamma lives in the term structure: score each expiry = |magnet gamma there| × time-decay(DTE), capped at max_dte_days so a far monthly OPEX can't drag a near move out. The gamma term structure self-adjusts for distance.",
     "enabled": true,
     "min_dte_days": 2,
-    "max_dte_days": 25,
-    "time_decay_halflife_days": 7,
+    "max_dte_days": 50,
+    "time_decay_halflife_days": 10,
+    "trading_days_per_week": 5,
+    "_dist_to_weeks_doc": "A FAR king needs time to reach — distance sets a MINIMUM DTE floor (so we buy a further-dated contract), then gamma×time-decay picks which real expiry at/above that floor.",
     "dist_to_weeks": [
       { "maxPct": 0.03, "weeks": 1 },
       { "maxPct": 0.06, "weeks": 2 },
-      { "maxPct": 0.10, "weeks": 3 }
+      { "maxPct": 0.10, "weeks": 3 },
+      { "maxPct": 0.16, "weeks": 5 },
+      { "maxPct": 0.30, "weeks": 7 }
     ]
   },
 
