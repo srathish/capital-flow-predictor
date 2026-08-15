@@ -10,7 +10,7 @@ import { scan } from './stage1-scan.mjs';
 import { resolveMagnetReach } from './lib/resolve.mjs';
 import { FlowProvider } from './providers/flow-uw.mjs';
 import { resolveFromRoot, readJson, writeJson, ensureDir, log } from './lib/util.mjs';
-import { priorSessions, forwardSessions, isTradingDayET, weeklyExpiry, weeksForDistance, tradingDaysBetween } from './lib/time.mjs';
+import { priorSessions, forwardSessions, isTradingDayET, tradingDaysBetween } from './lib/time.mjs';
 
 // Trading sessions in [from,to], sampled every `every`.
 export function sessionsInRange(from, to, every = 1) {
@@ -51,16 +51,16 @@ export async function backtestScore({ config, dates, symbols = null, theme = nul
       const control = scored.slice(-controlK).map((r, i) => ({ ...r, group: 'control', rank: scored.length - controlK + i + 1 }));
       for (const s of [...top, ...control]) {
         const ohlc = await ohlcCached(flow, s.ticker, ohlcDir);
-        // King-driven weekly horizon: farther magnet → target a later weekly expiry.
-        const weeks = weekly ? weeksForDistance(s.magnet.dist_pct, config.weekly.dist_to_weeks) : null;
-        const kexp = weekly ? weeklyExpiry(runDate, weeks) : null;
-        const kh = weekly ? tradingDaysBetween(runDate, kexp) : (horizonDays || 5);
+        // Horizon = trading days to the REAL Skylit weekly expiry the scan picked for
+        // this ticker's king (where its gamma is biggest, floored by travel time).
+        const kexp = weekly ? s.suggested_weekly_expiry : null;
+        const kh = kexp ? tradingDaysBetween(runDate, kexp) : (horizonDays || 5);
         const res = resolveMagnetReach(s.magnet.strike, s.spot, ohlc, runDate, { horizonDays: kh, stopPct });
         rows.push({
           date: runDate, ticker: s.ticker, group: s.group, rank: s.rank, score: s.score,
           spot: s.spot, magnet: s.magnet.strike, magnet_dist_pct: s.magnet.dist_pct,
           persistence_days: s.persistence_days ?? 0,
-          weeks, weekly_expiry: kexp, horizon: kh,
+          weeks: s.suggested_weeks ?? null, weekly_expiry: kexp, horizon: kh,
           reached: res.reached, days_to_reach: res.days_to_reach, stopped_out: res.stopped_out,
           mfe_pct: res.mfe_pct, mae_pct: res.mae_pct, bars: res.bars,
         });

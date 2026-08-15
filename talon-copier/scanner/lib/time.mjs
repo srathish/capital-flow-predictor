@@ -103,27 +103,9 @@ export function forwardSessions(dateStr, n) {
   return out;
 }
 
-// First Friday strictly after `dateStr` (weekly options expire Fridays).
-export function nextFriday(dateStr) {
-  const [Y, M, D] = dateStr.split('-').map(Number);
-  let ms = Date.UTC(Y, M - 1, D, 12);
-  const DAY = 86400000;
-  for (let i = 0; i < 8; i++) { ms += DAY; if (new Date(ms).getUTCDay() === 5) return etDate(ms); }
-  return etDate(ms);
-}
-
-// The weekly expiry `weeksOut` weeks ahead of `dateStr` (Friday, rolled back to the
-// prior trading day if that Friday is a holiday).
-export function weeklyExpiry(dateStr, weeksOut = 1) {
-  const f0 = nextFriday(dateStr);
-  const [Y, M, D] = f0.split('-').map(Number);
-  let ms = Date.UTC(Y, M - 1, D, 12) + (Math.max(1, weeksOut) - 1) * 7 * 86400000;
-  let d = etDate(ms);
-  while (!isTradingDayET(d)) { ms -= 86400000; d = etDate(ms); }
-  return d;
-}
-
-// Map a magnet's %-distance above spot to how many weekly expiries out to target.
+// Map a magnet's %-distance above spot to a minimum weeks-of-DTE floor (so a far
+// magnet isn't targeted at an expiry too short to reach it). The ACTUAL target
+// expiry is always a real Skylit expiration — we never synthesize Friday dates.
 // thresholds = [{maxPct, weeks}, ...] ascending; falls through to the last.
 export function weeksForDistance(distPct, thresholds) {
   const d = Math.abs(distPct);
