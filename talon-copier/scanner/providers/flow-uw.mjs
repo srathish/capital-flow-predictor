@@ -97,14 +97,23 @@ export class FlowProvider {
   // Daily OHLC (regular session). Used by the resolver/backtest to score cards on a
   // closing basis and measure MFE/MAE. UW price data — allowed.
   async getDailyOHLC(ticker, { limit = 60 } = {}) {
-    const j = await this._get(`stock/${encodeURIComponent(ticker)}/ohlc/1d?limit=${limit}`);
+    // UW ohlc/1d returns separate candles per date for the regular ('r'), pre-market
+    // ('pr') and post-market ('po') sessions. We want ONLY the regular session so the
+    // close matches Skylit's 4pm spot (a pre-market candle is off by the intraday move).
+    const j = await this._get(`stock/${encodeURIComponent(ticker)}/ohlc/1d?limit=${limit * 3}`);
     const rows = Array.isArray(j) ? j : (j && j.data) || [];
-    const out = rows.map((r) => ({
-      date: String(r.date || r.market_date || r.start_time || '').slice(0, 10),
-      open: num(r.open), high: num(r.high), low: num(r.low), close: num(r.close),
-      volume: num(r.volume),
-    })).filter((r) => r.date && r.close != null);
-    out.sort((a, b) => (a.date < b.date ? -1 : 1));
-    return out;
+    const hasSession = rows.some((r) => r.market_time != null);
+    const out = rows
+      .filter((r) => !hasSession || r.market_time === 'r')
+      .map((r) => ({
+        date: String(r.date || r.market_date || r.start_time || '').slice(0, 10),
+        open: num(r.open), high: num(r.high), low: num(r.low), close: num(r.close),
+        volume: num(r.volume), session: r.market_time || 'r',
+      })).filter((r) => r.date && r.close != null);
+    // de-dupe by date (keep first regular candle) and sort ascending
+    const seen = new Set(), dedup = [];
+    for (const r of out) { if (!seen.has(r.date)) { seen.add(r.date); dedup.push(r); } }
+    dedup.sort((a, b) => (a.date < b.date ? -1 : 1));
+    return dedup;
   }
 }
