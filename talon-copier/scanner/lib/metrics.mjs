@@ -6,17 +6,21 @@
 // above spot that price flows toward. Path = strikes strictly between spot and magnet.
 import { tradingDaysBetween, weeksForDistance } from './time.mjs';
 
-// Choose the target WEEKLY expiry from the ticker's REAL expirations, driven by the
-// king node: far enough out for the magnet's %-distance to be travelled (travel
-// time), and — among expiries with enough DTE — the one where the king wall's gamma
-// is biggest (no point targeting an expiry where the king has already decayed).
+// Choose the target WEEKLY expiry from the ticker's REAL expirations. The magnet's
+// %-distance sets the target week (a +1% magnet is a this-week move; +8% needs ~3
+// weeks) — that keeps targeting WEEKLY, not pulled to a far monthly OPEX where
+// aggregate gamma piles up. Within that weekly neighborhood, the king node refines
+// WHICH real expiry (the one holding the most of the magnet's gamma).
 export function pickWeeklyExpiry(perExpiry, expirations, runDate, weeks, wcfg = {}) {
   if (!expirations || !expirations.length || !runDate) return null;
-  const minDTE = Math.max(1, weeks * (wcfg.trading_days_per_week || 5) - (wcfg.dte_buffer_days || 0));
+  const perWk = wcfg.trading_days_per_week || 5;
+  const target = weeks * perWk;
+  const lo = Math.max(1, target - (wcfg.dte_buffer_days || 0));
+  const hi = target + perWk; // allow up to ~1 week beyond the distance-implied target
   const withDte = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) })).filter((x) => x.dte >= 1).sort((a, b) => a.dte - b.dte);
   if (!withDte.length) return null;
-  let cands = withDte.filter((x) => x.dte >= minDTE);
-  if (!cands.length) cands = [withDte[withDte.length - 1]]; // nothing far enough → farthest available
+  let cands = withDte.filter((x) => x.dte >= lo && x.dte <= hi);
+  if (!cands.length) cands = [withDte.reduce((best, x) => (Math.abs(x.dte - target) < Math.abs(best.dte - target) ? x : best), withDte[0])];
   let best = cands[0], bestG = Math.abs((perExpiry && perExpiry[cands[0].e]) || 0);
   for (const c of cands) { const g = Math.abs((perExpiry && perExpiry[c.e]) || 0); if (g > bestG) { best = c; bestG = g; } }
   return best.e;
