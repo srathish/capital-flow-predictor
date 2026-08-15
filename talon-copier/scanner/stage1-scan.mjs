@@ -96,6 +96,7 @@ export async function scan({ config, date, expiry = null, gexProvider = null, re
       score: m.flow_through_score, pre_score: m.pre_score,
       magnet: m.magnet ? { strike: m.magnet.strike, gex: m.magnet.gex, dist_pct: m.magnet.dist_pct, magnet_norm: m.magnet.magnet_norm, sign: m.magnet.sign, respecified_from: m.magnet.respecified_from } : null,
       king: m.nodes && m.nodes[0] ? { strike: m.nodes[0].strike, gex: m.nodes[0].gex, sign: m.nodes[0].gamma_sign, position: m.nodes[0].position } : null,
+      king_migration: m.king_migration || null,
       path: m.path, proximity_weight: m.proximity_weight,
       persistence_days: m.persistence?.days ?? 0, persistence_mult: m.persistence?.mult ?? 1,
       suggested_weeks: m.suggested_weeks, suggested_weekly_expiry: m.suggested_weekly_expiry,

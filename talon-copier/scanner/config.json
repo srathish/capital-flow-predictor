@@ -91,7 +91,7 @@
     "reports_dir": "data/reports"
   },
 
-  "signal": { "get_in_score": 0.04, "min_persistence": 2 },
+  "signal": { "get_in_score": 0.04, "min_persistence": 2, "king_migration_trigger": 0.05 },
   "outcomes": { "dir": "data/outcomes", "max_horizon_days": 20 },
 
   "premarket_recheck": { "gap_band_pct": 0.004 }

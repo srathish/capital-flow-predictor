@@ -195,14 +195,21 @@ export async function backtestSignal({ config, dates, symbols, threshold, minPer
         const r = out.tickers.find((x) => x.ticker === t);
         const score = r && r.score != null ? r.score : null;
         const persist = r?.persistence_days ?? 0;
-        const gi = score != null && score >= threshold && persist >= minPersistence;
+        const km = r?.king_migration;
+        // Get-in fires two ways: a stable, primed wall (score + persistence) OR a
+        // bullishly MIGRATING king (climbs strikes → low persistence but very bullish).
+        const bullKing = km && km.direction === 'up_bullish' && (km.pct_change ?? 0) >= (config.signal?.king_migration_trigger ?? 0.05);
+        const primed = score != null && score >= threshold && persist >= minPersistence;
+        const gi = score != null && (primed || bullKing);
         const row = {
           date: runDate, ticker: t, spot: r?.spot ?? null, score,
           magnet: r?.magnet?.strike ?? null, magnet_norm: r?.magnet?.magnet_norm ?? null, dist_pct: r?.magnet?.dist_pct ?? null,
           king_strike: r?.king?.strike ?? null, king_sign: r?.king?.sign ?? null, king_pos: r?.king?.position ?? null,
+          king_mig_dir: km?.direction ?? null, king_mig_pct: km?.pct_change ?? null,
           persistence_days: persist, weekly_expiry: r?.suggested_weekly_expiry ?? null,
           no_setup: r?.dropped ?? (score == null ? 'no-magnet' : null),
-          get_in: gi, llm_verdict: null, card: null, validation: null, resolution: null, vetoed: false,
+          get_in: gi, get_in_reason: gi ? (primed ? 'score+persist' : 'king↑') : null,
+          llm_verdict: null, card: null, validation: null, resolution: null, vetoed: false,
         };
         // The LLM is called ONLY on the strong/building candidates — the get-in days.
         if (gi && llm) {
@@ -248,7 +255,7 @@ export function renderSignalReport(rows, priceByTicker, symbols, threshold, minP
   const L = [];
   L.push(`# Daily signal timeline — node builds → LLM buys → did it hit?`);
   L.push(`_JS scores every session; the LLM is called only on get-in days (score ≥ ${threshold} AND persistence ≥ ${minPersistence}d). oldest → newest_\n`);
-  L.push('_legend:  score ▁▂▃▅▇ (flow_through_score) · build ▲ get-in day · buy 🟢 LLM long / ⏸ no-trade / 🚫 flow-veto_\n');
+  L.push('_legend:  king$ (dominant-node drift) · score ▁▂▃▅▇ · build ▲ score-primed / K king-migration get-in · buy 🟢 LLM long / ⏸ no-trade / 🚫 flow-veto_\n');
   for (const t of symbols) {
     const tr = rows.filter((r) => r.ticker === t).sort((a, b) => (a.date < b.date ? -1 : 1));
     if (!tr.length) continue;
@@ -262,7 +269,7 @@ export function renderSignalReport(rows, priceByTicker, symbols, threshold, minP
     L.push('```');
     L.push('king$ ' + spark(tr.map((r) => r.king_strike)));
     L.push('score ' + spark(tr.map((r) => r.score)));
-    L.push('build ' + tr.map((r) => (r.get_in ? '▲' : (r.score == null ? '·' : ' '))).join(''));
+    L.push('build ' + tr.map((r) => (r.get_in ? (r.get_in_reason === 'king↑' ? 'K' : '▲') : (r.score == null ? '·' : ' '))).join(''));
     L.push('buy   ' + tr.map((r) => { if (!r.get_in || r.llm_verdict == null) return ' '; if (r.vetoed) return '🚫'; if (r.llm_verdict === 'long') return '🟢'; if (r.llm_verdict === 'no_trade') return '⏸'; return '·'; }).join(''));
     L.push('```');
     // King-node migration: where the dominant gamma wall is drifting (↑ bullish / ↓ bearish).
