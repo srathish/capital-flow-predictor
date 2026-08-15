@@ -133,6 +133,27 @@ export function persistenceMult(history, magnetStrike, step, cfg = {}) {
   return { days, mult, byDate };
 }
 
+// King-node migration: where the dominant gamma node has been drifting over the
+// trailing sessions. Up = bullish (ceiling/wall being pulled up), down = bearish.
+// history is most-recent-first, each {strikes:[{strike,gexAgg}]}; currentStrikes is today.
+export function kingMigration(currentStrikes, history, cfg = {}) {
+  const kingOf = (strikes) => {
+    let best = null, bg = -1;
+    for (const s of strikes || []) { const g = Math.abs(s.gexAgg); if (g > bg) { bg = g; best = s.strike; } }
+    return best;
+  };
+  const cur = kingOf(currentStrikes);
+  const series = [cur, ...(history || []).map((h) => kingOf(h.strikes))].filter((x) => x != null); // newest→oldest
+  if (series.length < 4) return { direction: 'unknown', pct_change: null, from: series[series.length - 1] ?? cur, to: cur, series };
+  const h = Math.floor(series.length / 2);
+  const recent = series.slice(0, h).reduce((a, b) => a + b, 0) / h;
+  const older = series.slice(h).reduce((a, b) => a + b, 0) / (series.length - h);
+  const pct = older ? (recent - older) / older : 0;
+  const band = cfg.flat_band ?? 0.01;
+  const direction = pct > band ? 'up_bullish' : pct < -band ? 'down_bearish' : 'flat';
+  return { direction, pct_change: pct, from: series[series.length - 1], to: cur, series };
+}
+
 // Fraction of the magnet's gamma that lives in expiries dying BEFORE the target
 // expiry (i.e. pull that evaporates before your contract's expiry). null if no target.
 export function magnetGammaBeforeTargetPct(magnetPerExpiry, targetExpiry) {
@@ -188,6 +209,7 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
   const pers = history
     ? persistenceMult(history, magnet.strike, step, { ...scan.persistence, topN: scan.top_n_nodes })
     : { days: 0, mult: 1.0, byDate: [] };
+  const king_migration = history ? kingMigration(profile.strikes, history) : { direction: 'unknown', pct_change: null };
 
   const parts = {
     magnet_norm: magnet.magnet_norm,
@@ -226,6 +248,7 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
     },
     proximity_weight,
     persistence: pers,
+    king_migration,
     suggested_weeks,
     suggested_weekly_expiry,
     effective_target_expiry,

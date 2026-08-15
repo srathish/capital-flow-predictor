@@ -1,7 +1,7 @@
 // metrics.test.mjs — hand-computed asserts for every Stage 1 metric (pure, no network).
 import {
   sumAbsGex, computeNodes, detectMagnet, pathMetrics, proximityWeight,
-  persistenceMult, magnetGammaBeforeTargetPct, flowThroughScore, scoreTicker, strikeStep, pickWeeklyExpiry,
+  persistenceMult, magnetGammaBeforeTargetPct, flowThroughScore, scoreTicker, strikeStep, pickWeeklyExpiry, kingMigration,
 } from '../lib/metrics.mjs';
 
 let pass = 0, fail = 0;
@@ -125,6 +125,17 @@ eq('weekly: king-biggest by gamma×time-decay', pickWeeklyExpiry(wPerExp, wExps,
 eq('weekly: prefers near expiry over far bigger pile', pickWeeklyExpiry({ '2026-08-21': 2.0, '2026-09-18': 5.0 }, wExps, '2026-08-14', WK), '2026-08-21');
 eq('weekly: no king gamma → nearest in window', pickWeeklyExpiry({}, wExps, '2026-08-14', WK), '2026-08-21');
 eq('weekly: null when no expirations', pickWeeklyExpiry(wPerExp, [], '2026-08-14', WK), null);
+
+// kingMigration: where the dominant node drifts (history newest → oldest)
+const kmUp = kingMigration([{ strike: 1010, gexAgg: 3 }], [{ strikes: [{ strike: 1000, gexAgg: 3 }] }, { strikes: [{ strike: 980, gexAgg: 3 }] }, { strikes: [{ strike: 960, gexAgg: 3 }] }, { strikes: [{ strike: 940, gexAgg: 3 }] }]);
+eq('king migration up = bullish', kmUp.direction, 'up_bullish');
+const kmDn = kingMigration([{ strike: 930, gexAgg: 3 }], [{ strikes: [{ strike: 940, gexAgg: 3 }] }, { strikes: [{ strike: 960, gexAgg: 3 }] }, { strikes: [{ strike: 980, gexAgg: 3 }] }, { strikes: [{ strike: 1000, gexAgg: 3 }] }]);
+eq('king migration down = bearish', kmDn.direction, 'down_bearish');
+const kmFlat = kingMigration([{ strike: 1000, gexAgg: 3 }], [{ strikes: [{ strike: 1000, gexAgg: 3 }] }, { strikes: [{ strike: 1000, gexAgg: 3 }] }, { strikes: [{ strike: 1000, gexAgg: 3 }] }]);
+eq('king migration flat', kmFlat.direction, 'flat');
+eq('king migration unknown when <4 sessions', kingMigration([{ strike: 1000, gexAgg: 3 }], []).direction, 'unknown');
+// the dominant node is picked by |gex| regardless of sign
+eq('king picks largest |gex| node', kingMigration([{ strike: 500, gexAgg: -9 }, { strike: 1000, gexAgg: 3 }], [{ strikes: [{ strike: 480, gexAgg: -9 }] }, { strikes: [{ strike: 460, gexAgg: -9 }] }, { strikes: [{ strike: 440, gexAgg: -9 }] }]).to, 500);
 
 console.log(`\nmetrics.test: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

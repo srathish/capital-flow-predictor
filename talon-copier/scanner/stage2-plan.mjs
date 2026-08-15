@@ -43,6 +43,7 @@ const SYSTEM = `You are a GEX/VEX structural options planner. You read ONE ticke
 Doctrine:
 - Price flows toward large gamma nodes ("magnets"/walls) and pins there. A clean long setup: spot sits in a low-gamma pocket with a dominant positive-gamma wall (the magnet) above it and little positive gamma in between (low path resistance). Negative net gamma on the path is FUEL (easier flow-through).
 - Persistence matters: a magnet that has been a top node for several sessions is "primed" and more trustworthy than one that appeared today.
+- KING-NODE MIGRATION is a directional signal. If the dominant gamma node has been drifting DOWN over recent sessions (king_migration.direction = "down_bearish"), the whole dealer structure is falling — be very skeptical of a long; strongly prefer no_trade unless the snapshot shows a clear, fresh bullish reversal (spot reclaiming a rising node). Migrating UP ("up_bullish") confirms a long. Do not buy a call into a bearishly-migrating king just because a small wall sits above spot today.
 - A wall on the path that rivals the magnet can stall price — respect it.
 - The target MUST be an actual node strike from the map (within 1%). The invalidation is applied on a CLOSING basis. For a long: invalidation < entry_trigger < target and the contract is a call. For a short: target < entry_trigger < invalidation and the contract is a put.
 - If the structure is not clean (no real magnet, heavy path resistance, magnet gamma mostly dies before your expiry), choose direction "no_trade" and null every level.
@@ -89,6 +90,11 @@ export function buildPlannerInput(m, { targetExpiry = null, runDate, config }) {
       multiplier: round(m.persistence?.mult ?? 1, 2),
       day_by_day: (m.persistence?.byDate || []).map((d) => `${d.date}:${d.hit ? 'node' : '-'}`),
     },
+    king_migration: m.king_migration ? {
+      direction: m.king_migration.direction,
+      pct_change: m.king_migration.pct_change == null ? null : round(m.king_migration.pct_change * 100, 1),
+      from_strike: m.king_migration.from, to_strike: m.king_migration.to,
+    } : null,
     target_expiry: targetExpiry,
     target_expiry_dte_trading_days: dte,
     target_is_monthly_opex: targetExpiry ? isMonthlyOpex(targetExpiry) : null,
