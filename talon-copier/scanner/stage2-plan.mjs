@@ -6,6 +6,58 @@
 // never sees the validation. Deterministic knobs (size, invalidation basis) are NOT
 // in the schema — code applies them.
 import { tradingDaysBetween, isMonthlyOpex } from './lib/time.mjs';
+import { assembleStructure } from './lib/structure.mjs';
+
+// Structure-driven doctrine: the LLM reads the COMPLETE gamma/vanna structure and its
+// evolution and recognizes WHICHEVER formation is present — no JS pre-filter picked a
+// thesis for it. This is what lets it see a negative-gamma squeeze the score missed.
+const STRUCTURE_SYSTEM = `You are a GEX/VEX structural options trader. You read ONE ticker's COMPLETE dealer-gamma/vanna structure (from Skylit) and its recent evolution, and decide: long, short, or no_trade. There is no pre-filter — recognize whichever formation is present:
+
+- POSITIVE-WALL FLOW-THROUGH (bullish): spot in a low-gamma pocket below a dominant LONG-gamma wall, little positive gamma between → price grinds/pins UP to the wall. Target the wall.
+- NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large SHORT-gamma king (negative gex) AT or near spot = dealers are short gamma and must BUY into any rally (and sell into drops) → violent moves. If price is turning UP off/through a negative-gamma king, or that king is starting to flip positive, it is an explosive LONG — and this appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for a downside break = explosive short.
+- KING MIGRATION: the dominant node drifting UP across sessions = bullish (ceiling pulled up); drifting DOWN = bearish. A node BUILDING above spot = bullish accumulation; support DISSOLVING below = bearish.
+- VANNA MAGNETS: large positive vanna pulls price on IV compression (melt-up); negative vanna the reverse.
+- Short-gamma pockets are FUEL (easy travel); long-gamma walls are RESISTANCE en route and TARGET/PIN at the destination.
+
+Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes from the structure. Pick a contract expiry from the provided list with enough time for the move (a far target needs more DTE). If the structure is muddled/conflicting, or spot is pinned with no fuel and no migration, choose no_trade. You MUST answer by calling emit_trade_plan exactly once; no prose outside it.`;
+
+export function buildStructurePrompt(structure, { runDate }) {
+  const user = `Complete dealer-gamma/vanna structure for ${structure.ticker}, as of ${structure.as_of || runDate} (ONE ticker; positive gex = long gamma, negative = short gamma):\n\n${JSON.stringify(structure, null, 1)}\n\nAvailable contract expirations: ${(structure.expirations || []).join(', ')}\n\nRead the WHOLE structure and its evolution (trend fields = building/dissolving over recent sessions; king_migration = where the dominant node is drifting). Recognize whichever formation is present and emit the plan. Every price level must be a real node strike above.`;
+  return { system: STRUCTURE_SYSTEM, user };
+}
+
+// Plan straight from the assembled structure (LLM deciphers, no score gate). Called
+// DAILY per watchlist ticker. Same forced-tool + validation + repair machinery.
+export async function planFromStructure(profile, history, { config, runDate, llm, targetExpiry = null }) {
+  const structure = assembleStructure(profile, history);
+  const { system, user } = buildStructurePrompt(structure, { runDate });
+  const nodeStrikes = structure.nodes.map((n) => n.strike);
+  const validExpiries = structure.expirations || [];
+  const ctx = { nodeStrikes, targetExpiry, runDate, targetWithinPct: config.planner.target_within_node_pct, validExpiries };
+  let attempts = 0, lastErrors = null, rawPlan = null;
+  const maxAttempts = 1 + (config.planner.retries ?? 1);
+  while (attempts < maxAttempts) {
+    attempts++;
+    const content = attempts === 1 ? user
+      : `${user}\n\nYour previous emit_trade_plan call was REJECTED:\n- ${lastErrors.join('\n- ')}\nFix ALL of these; use only real node strikes and an expiry from the list.`;
+    const req = { model: config.planner.model, max_tokens: config.planner.max_tokens, system, messages: [{ role: 'user', content }], tools: [EMIT_TRADE_PLAN_TOOL], tool_choice: { type: 'tool', name: 'emit_trade_plan' } };
+    let resp;
+    try { resp = await llm(req); } catch (e) { lastErrors = [`llm error: ${String(e.message || e).slice(0, 120)}`]; break; }
+    const plan = repairLeakedToolParams(extractToolUse(resp));
+    if (!plan || Object.keys(plan).length === 0) { lastErrors = ['empty or missing emit_trade_plan tool call']; continue; }
+    rawPlan = plan;
+    const v = validatePlan(plan, ctx);
+    if (plan.direction !== 'no_trade' && plan.contract && plan.contract.expiry && validExpiries.length && !validExpiries.includes(plan.contract.expiry)) {
+      v.ok = false; v.errors.push(`contract.expiry ${plan.contract.expiry} not in the available expirations`);
+    }
+    if (v.ok) {
+      const budget = config.sizing_budget_usd[String(plan.confidence)] ?? null;
+      return { ticker: profile.ticker, status: 'ok', attempts, plan, deterministic: { invalidation_basis: config.invalidation_basis, sizing_budget_usd: budget }, structure };
+    }
+    lastErrors = v.errors;
+  }
+  return { ticker: profile.ticker, status: 'discarded', attempts, errors: lastErrors, rejected_plan: rawPlan, structure };
+}
 
 export const EMIT_TRADE_PLAN_TOOL = {
   name: 'emit_trade_plan',

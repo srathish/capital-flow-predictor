@@ -5,7 +5,11 @@
 
 // Resolve one card's plan against forward OHLC (sorted asc, {date,open,high,low,close}).
 // fromDate = the scan date; the card acts on sessions strictly after it.
-export function resolveCard(plan, ohlc, fromDate) {
+// opts.structByDate = { 'YYYY-MM-DD': king_migration_direction } — when provided, the
+// position is STRUCTURALLY invalidated (closing basis) the day the node structure flips
+// against it (a long dies when the king migrates down_bearish, a short on up_bullish),
+// even if the price stop hasn't triggered. Structure gets you in AND out.
+export function resolveCard(plan, ohlc, fromDate, opts = {}) {
   if (!plan || plan.direction === 'no_trade') return { status: 'n/a', triggered: false };
   const long = plan.direction === 'long';
   const fwd = (ohlc || []).filter((d) => d.date > fromDate && d.close != null);
@@ -53,6 +57,11 @@ export function resolveCard(plan, ohlc, fromDate) {
       out.hit_runner = plan.runner_target != null && (long ? b.high >= plan.runner_target : b.low <= plan.runner_target);
       out.status = 'target'; out.exit_reason = out.hit_runner ? 'target+runner' : 'target';
       out.exit_date = b.date; out.exit_price = out.hit_runner ? plan.runner_target : plan.target; break;
+    }
+    // Structural invalidation (closing basis): the node structure flipped against us.
+    const structDir = opts.structByDate ? opts.structByDate[b.date] : null;
+    if (structDir && (long ? structDir === 'down_bearish' : structDir === 'up_bullish')) {
+      out.status = 'structural'; out.exit_reason = 'structure flipped against position'; out.exit_date = b.date; out.exit_price = b.close; break;
     }
     const invalidated = long ? b.close < plan.invalidation : b.close > plan.invalidation;
     if (invalidated) { out.status = 'invalidation'; out.exit_reason = 'closing-basis invalidation'; out.exit_date = b.date; out.exit_price = b.close; break; }
