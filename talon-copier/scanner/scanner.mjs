@@ -18,7 +18,7 @@ const { gateAll } = await import('./stage3-gate.mjs');
 const { FlowProvider } = await import('./providers/flow-uw.mjs');
 const { GexProvider } = await import('./providers/gex-skylit.mjs');
 const { assemblePlans, writePlans, writeReport, discordSummary, postDiscord } = await import('./stage4-report.mjs');
-const { backtestScore, renderBacktestReport, sessionsInRange } = await import('./backtest.mjs');
+const { backtestScore, backtestCards, backtestSignal, renderBacktestReport, renderCardsReport, renderSignalReport, sessionsInRange } = await import('./backtest.mjs');
 const { resolveOutcomes } = await import('./stage7-outcomes.mjs');
 
 function parseArgs(argv) {
@@ -139,6 +139,34 @@ async function cmdOutcomes(args, config) {
   await resolveOutcomes({ config, date });
 }
 
+// Full-system card backtest on named tickers: real LLM plans resolved vs actual price.
+async function cmdBacktestCards(args, config) {
+  const from = args.from, to = args.to || from;
+  if (!from || !args.tickers) { log('backtest-cards needs --from YYYY-MM-DD and --tickers A,B'); return; }
+  if (!process.env.ANTHROPIC_API_KEY) { log('ANTHROPIC_API_KEY missing — cannot plan'); return; }
+  const dates = sessionsInRange(from, to, args.every ? +args.every : 5);
+  const symbols = String(args.tickers).split(',').map((s) => s.toUpperCase());
+  log(`[cards] ${dates.length} dates ${dates[0]}…${dates[dates.length - 1]} · ${symbols.join(',')} · gate ${args['no-gate'] ? 'off' : 'on'}`);
+  const { results, outFile } = await backtestCards({ config, dates, symbols, llm: anthropicLLM, gate: !args['no-gate'] });
+  log(`\n[cards] → ${outFile}\n`);
+  console.log(renderCardsReport(results, symbols));
+}
+
+// Daily signal timeline: when does the deterministic scanner flag "get in"?
+async function cmdTrack(args, config) {
+  const from = args.from, to = args.to || etToday();
+  if (!from || !args.tickers) { log('track needs --from YYYY-MM-DD and --tickers A,B'); return; }
+  const dates = sessionsInRange(from, to, args.every ? +args.every : 1);
+  const symbols = String(args.tickers).split(',').map((s) => s.toUpperCase());
+  const threshold = args.threshold ? +args.threshold : (config.signal?.get_in_score ?? 0.04);
+  const minP = args['min-persist'] ? +args['min-persist'] : (config.signal?.min_persistence ?? 2);
+  const useLlm = !args['no-llm'] && !!process.env.ANTHROPIC_API_KEY;
+  log(`[track] ${dates.length} sessions ${dates[0]}…${dates[dates.length - 1]} · ${symbols.join(',')} · get-in ≥ ${threshold} & persist ≥ ${minP} · LLM ${useLlm ? 'on' : 'off'}`);
+  const { rows, priceByTicker, outFile } = await backtestSignal({ config, dates, symbols, threshold, minPersistence: minP, llm: useLlm ? anthropicLLM : null, gate: !args['no-gate'] });
+  log(`\n[track] → ${outFile}\n`);
+  console.log(renderSignalReport(rows, priceByTicker, symbols, threshold, minP));
+}
+
 async function cmdAuth() {
   const gex = new GexProvider({});
   const s = await gex.authStatus();
@@ -154,6 +182,8 @@ try {
   if (cmd === 'run') await cmdRun(args, config);
   else if (cmd === 'scan') await cmdScan(args, config);
   else if (cmd === 'backtest') await cmdBacktest(args, config);
+  else if (cmd === 'backtest-cards') await cmdBacktestCards(args, config);
+  else if (cmd === 'track') await cmdTrack(args, config);
   else if (cmd === 'outcomes') await cmdOutcomes(args, config);
   else if (cmd === 'premarket') await cmdPremarket(args, config);
   else if (cmd === 'auth') await cmdAuth();

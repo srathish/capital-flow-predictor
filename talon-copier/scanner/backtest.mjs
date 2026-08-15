@@ -7,7 +7,9 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { ingest, effectiveScanDate } from './stage0-ingest.mjs';
 import { scan } from './stage1-scan.mjs';
-import { resolveMagnetReach } from './lib/resolve.mjs';
+import { planTicker } from './stage2-plan.mjs';
+import { gateCard } from './stage3-gate.mjs';
+import { resolveMagnetReach, resolveCard } from './lib/resolve.mjs';
 import { FlowProvider } from './providers/flow-uw.mjs';
 import { resolveFromRoot, readJson, writeJson, ensureDir, log } from './lib/util.mjs';
 import { priorSessions, forwardSessions, isTradingDayET, tradingDaysBetween } from './lib/time.mjs';
@@ -93,6 +95,189 @@ export async function backtestScore({ config, dates, symbols = null, theme = nul
   const outFile = resolveFromRoot(path.join('data/backtest', `score_${dates[0]}_${dates[dates.length - 1]}.json`));
   writeJson(outFile, { generatedAt: new Date().toISOString(), summary, rows });
   return { summary, rows, outFile };
+}
+
+// Full-pipeline card backtest: for each date, run the LLM planner + flow gate on the
+// named tickers, then resolve each real trade card (entry→target, close-basis stop,
+// time-stop) against forward OHLC. Shows whether the SYSTEM (not just the magnet)
+// caught the moves. Needs a real LLM (pass anthropicLLM).
+export async function backtestCards({ config, dates, symbols, llm, gate = true }) {
+  const flow = new FlowProvider();
+  const ohlcDir = ensureDir(resolveFromRoot('data/backtest/ohlc'));
+  const results = [];
+  for (const date of dates) {
+    const runDate = effectiveScanDate(date);
+    try {
+      await ingest({ config, date: runDate, symbols, withFlow: gate });
+      const { ranked } = await scan({ config, date: runDate });
+      const setups = ranked.filter((m) => symbols.includes(m.ticker));
+      const flowBy = {};
+      if (gate && flow.available) {
+        for (const m of setups) { try { flowBy[m.ticker] = await flow.getFlow(m.ticker, { asOfDate: runDate, lookbackSessions: config.flow_gate.lookback_sessions }); } catch { /* unvalidated */ } }
+      }
+      for (const m of setups) {
+        const card = await planTicker(m, { config, targetExpiry: null, runDate, llm });
+        if (gate) { const v = gateCard(card, flowBy[m.ticker] || null, config); card.validation = v; card.final_confidence = v.confidence_after; card.sizing_budget_usd = v.sizing_budget_usd; card.vetoed = v.vetoed; }
+        let resolution = null;
+        if (card.status === 'ok' && card.plan.direction !== 'no_trade') {
+          const ohlc = await ohlcCached(flow, m.ticker, ohlcDir);
+          resolution = resolveCard({ ...card.plan, ticker: m.ticker }, ohlc, runDate);
+        }
+        results.push({
+          date: runDate, ticker: m.ticker, score: m.flow_through_score, status: card.status,
+          plan: card.plan || null, validation: card.validation || null,
+          final_confidence: card.final_confidence ?? null, sizing_budget_usd: card.sizing_budget_usd ?? null,
+          vetoed: !!card.vetoed, resolution, errors: card.errors || null,
+        });
+      }
+      log(`[cards] ${runDate}: ${setups.length} setups planned`);
+    } catch (e) {
+      if (e.message === 'AUTH') { log('[cards] AUTH dead — stopping'); break; }
+      log(`[cards] ${runDate} failed: ${e.message}`);
+    }
+  }
+  const outFile = resolveFromRoot(path.join('data/backtest', `cards_${dates[0]}_${dates[dates.length - 1]}.json`));
+  writeJson(outFile, { generatedAt: new Date().toISOString(), symbols, results });
+  return { results, outFile };
+}
+
+const ICON = { target: '✅ TARGET', invalidation: '❌ stopped', time_stop: '⏱ time-stop', expiry: '⌛ expiry', never_triggered: '– no trigger', open: '… open', 'n/a': '·' };
+
+export function renderCardsReport(results, symbols) {
+  const pct = (x) => (x == null ? '—' : (x * 100).toFixed(1) + '%');
+  const L = [];
+  L.push(`# Full-system card backtest — ${symbols.join(', ')}`);
+  L.push(`_did the system's actual trade plans catch the moves?_\n`);
+  let totCards = 0, totWin = 0, totTraded = 0;
+  for (const t of symbols) {
+    const rows = results.filter((r) => r.ticker === t).sort((a, b) => (a.date < b.date ? -1 : 1));
+    if (!rows.length) continue;
+    L.push(`\n## ${t}`);
+    L.push(`| scan date | call | target expiry / strike | entry→target | stop | flow | outcome | MFE | days |`);
+    L.push(`|---|---|---|---|--:|---|---|--:|--:|`);
+    for (const r of rows) {
+      if (r.status !== 'ok' || !r.plan) { L.push(`| ${r.date} | — | (discarded: ${(r.errors || []).join('; ').slice(0, 40)}) | | | | 🗑 | | |`); continue; }
+      const p = r.plan;
+      if (p.direction === 'no_trade') { L.push(`| ${r.date} | no-trade | — | | | | ⏸ | | |`); continue; }
+      totCards++;
+      const res = r.resolution || {};
+      const oc = ICON[res.status] || res.status || '…';
+      const won = res.status === 'target';
+      if (res.triggered || res.status === 'never_triggered') totTraded++;
+      if (won) totWin++;
+      const veto = r.vetoed ? ' 🚫veto' : '';
+      L.push(`| ${r.date} | ${p.direction} | ${p.contract.expiry} $${p.contract.strike} | ${fmt(p.entry_trigger)}→${fmt(p.target)} | ${fmt(p.invalidation)} | ${r.validation?.state || '—'}${veto} | ${oc} | ${pct(res.mfe_pct)} | ${res.days_to_resolution ?? '—'} |`);
+    }
+  }
+  L.push(`\n---\n**${totCards} directional cards · ${totWin} hit target (${totCards ? (100 * totWin / totCards).toFixed(0) : 0}%) · avg MFE ${pct(avgBy(results, (r) => r.resolution?.mfe_pct))}**`);
+  return L.join('\n') + '\n';
+}
+function fmt(x) { return x == null ? '—' : (+x).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+function avgBy(arr, f) { const v = arr.map(f).filter((x) => x != null && Number.isFinite(x)); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
+
+// Daily signal timeline — the two-tier architecture. The deterministic JS scan runs
+// EVERY session and tracks each ticker's bullish setup (king node score + whether it
+// is BUILDING via persistence). On the days the king is strong enough (get_in: score
+// >= threshold & persistence >= minP), it makes the LLM call to decide buy/no-trade,
+// gates it on flow, and resolves the outcome vs actual price. So we see the whole
+// chain per ticker: node builds → LLM says buy → did it hit — and how many days
+// before the move it fired.
+export async function backtestSignal({ config, dates, symbols, threshold, minPersistence, llm = null, gate = true }) {
+  const flow = new FlowProvider();
+  const ohlcDir = ensureDir(resolveFromRoot('data/backtest/ohlc'));
+  const rows = [];
+  for (const date of dates) {
+    const runDate = effectiveScanDate(date);
+    try {
+      await ingest({ config, date: runDate, symbols, withFlow: gate && !!llm });
+      const { ranked, out } = await scan({ config, date: runDate });
+      for (const t of symbols) {
+        const r = out.tickers.find((x) => x.ticker === t);
+        const score = r && r.score != null ? r.score : null;
+        const persist = r?.persistence_days ?? 0;
+        const gi = score != null && score >= threshold && persist >= minPersistence;
+        const row = {
+          date: runDate, ticker: t, spot: r?.spot ?? null, score,
+          magnet: r?.magnet?.strike ?? null, magnet_norm: r?.magnet?.magnet_norm ?? null, dist_pct: r?.magnet?.dist_pct ?? null,
+          persistence_days: persist, weekly_expiry: r?.suggested_weekly_expiry ?? null,
+          no_setup: r?.dropped ?? (score == null ? 'no-magnet' : null),
+          get_in: gi, llm_verdict: null, card: null, validation: null, resolution: null, vetoed: false,
+        };
+        // The LLM is called ONLY on the strong/building candidates — the get-in days.
+        if (gi && llm) {
+          const m = ranked.find((x) => x.ticker === t);
+          if (m) {
+            const cardR = await planTicker(m, { config, targetExpiry: null, runDate, llm });
+            if (gate && cardR.status === 'ok' && cardR.plan.direction !== 'no_trade') {
+              let fl = null; try { fl = await flow.getFlow(t, { asOfDate: runDate, lookbackSessions: config.flow_gate.lookback_sessions }); } catch { /* unvalidated */ }
+              const v = gateCard(cardR, fl, config); cardR.validation = v; cardR.final_confidence = v.confidence_after; cardR.sizing_budget_usd = v.sizing_budget_usd; cardR.vetoed = v.vetoed;
+            }
+            row.llm_verdict = cardR.status === 'ok' ? cardR.plan.direction : 'discarded';
+            row.card = cardR.plan || null; row.validation = cardR.validation || null; row.vetoed = !!cardR.vetoed;
+            row.final_confidence = cardR.final_confidence ?? null; row.sizing_budget_usd = cardR.sizing_budget_usd ?? null;
+            if (cardR.status === 'ok' && cardR.plan.direction !== 'no_trade' && !cardR.vetoed) {
+              const ohlc = await ohlcCached(flow, t, ohlcDir);
+              row.resolution = resolveCard({ ...cardR.plan, ticker: t }, ohlc, runDate);
+            }
+          }
+        }
+        rows.push(row);
+      }
+      log(`[signal] ${runDate} done${llm ? ' (LLM on get-in days)' : ''}`);
+    } catch (e) { if (e.message === 'AUTH') { log('[signal] AUTH dead — stopping'); break; } log(`[signal] ${runDate} failed: ${e.message}`); }
+  }
+  const priceByTicker = {};
+  for (const t of symbols) { try { priceByTicker[t] = await ohlcCached(flow, t, ohlcDir); } catch { priceByTicker[t] = []; } }
+  const outFile = resolveFromRoot(path.join('data/backtest', `signal_${dates[0]}_${dates[dates.length - 1]}.json`));
+  writeJson(outFile, { generatedAt: new Date().toISOString(), threshold, minPersistence, used_llm: !!llm, rows });
+  return { rows, priceByTicker, outFile };
+}
+
+function spark(vals) {
+  const cs = '▁▂▃▄▅▆▇█';
+  const v = vals.filter((x) => x != null);
+  if (!v.length) return '';
+  const mn = Math.min(...v), mx = Math.max(...v), rng = (mx - mn) || 1;
+  return vals.map((x) => (x == null ? ' ' : cs[Math.round((x - mn) / rng * 7)])).join('');
+}
+
+const OC = { target: '✅ TARGET', invalidation: '❌ stopped', time_stop: '⏱ time-stop', expiry: '⌛ expiry', never_triggered: '– no-trigger', open: '… open' };
+
+export function renderSignalReport(rows, priceByTicker, symbols, threshold, minPersistence) {
+  const L = [];
+  L.push(`# Daily signal timeline — node builds → LLM buys → did it hit?`);
+  L.push(`_JS scores every session; the LLM is called only on get-in days (score ≥ ${threshold} AND persistence ≥ ${minPersistence}d). oldest → newest_\n`);
+  L.push('_legend:  score ▁▂▃▅▇ (flow_through_score) · build ▲ get-in day · buy 🟢 LLM long / ⏸ no-trade / 🚫 flow-veto_\n');
+  for (const t of symbols) {
+    const tr = rows.filter((r) => r.ticker === t).sort((a, b) => (a.date < b.date ? -1 : 1));
+    if (!tr.length) continue;
+    const first = tr[0].date, last = tr[tr.length - 1].date;
+    const ohlc = (priceByTicker[t] || []).filter((o) => o.date >= first && o.date <= last);
+    const startSpot = tr.find((r) => r.spot != null)?.spot ?? ohlc[0]?.close;
+    let peak = { high: -Infinity, date: null };
+    for (const o of ohlc) if (o.high > peak.high) peak = { high: o.high, date: o.date };
+    const movePct = startSpot && peak.high > -Infinity ? (peak.high - startSpot) / startSpot * 100 : null;
+    L.push(`\n## ${t} — $${startSpot?.toFixed(2)} → peak $${peak.high > -Infinity ? peak.high.toFixed(2) : '—'} (${peak.date || '—'})  ${movePct == null ? '' : (movePct >= 0 ? '+' : '') + movePct.toFixed(1) + '%'}`);
+    L.push('```');
+    L.push('score ' + spark(tr.map((r) => r.score)));
+    L.push('build ' + tr.map((r) => (r.get_in ? '▲' : (r.score == null ? '·' : ' '))).join(''));
+    L.push('buy   ' + tr.map((r) => { if (!r.get_in || r.llm_verdict == null) return ' '; if (r.vetoed) return '🚫'; if (r.llm_verdict === 'long') return '🟢'; if (r.llm_verdict === 'no_trade') return '⏸'; return '·'; }).join(''));
+    L.push('```');
+    const buys = tr.filter((r) => r.card && r.card.direction === 'long' && !r.vetoed);
+    if (buys.length) {
+      const fb = buys[0], res = fb.resolution || {};
+      const before = peak.date && fb.date <= peak.date;
+      const lead = (before && peak.date) ? tradingDaysBetween(fb.date, peak.date) : null;
+      L.push(`**First BUY ${fb.date}** → LONG ${fb.card.contract.expiry} $${fb.card.contract.strike}C · entry ${fmt(fb.card.entry_trigger)}→target ${fmt(fb.card.target)} · stop<${fmt(fb.card.invalidation)} · conf ${fb.final_confidence}/5${fb.validation?.state ? ` (flow ${fb.validation.state})` : ''}`);
+      L.push(`  outcome: **${OC[res.status] || res.status || '…'}**${res.mfe_pct != null ? ` · MFE ${(res.mfe_pct * 100).toFixed(1)}%` : ''}${res.days_to_resolution ? ` in ${res.days_to_resolution}d` : ''} · ${before ? `fired **${lead}d before the peak** ✅` : 'fired after the peak ⚠️'}`);
+      const wins = buys.filter((b) => b.resolution?.status === 'target').length;
+      L.push(`  ${buys.length} BUY day(s) · ${wins} hit target`);
+    } else {
+      const gid = tr.filter((r) => r.get_in);
+      L.push(gid.length ? `LLM saw ${gid.length} get-in day(s) but issued no BUY (all no-trade / veto)` : `no get-in day fired (peak score ${Math.max(...tr.map((r) => r.score || 0)).toFixed(3)})`);
+    }
+  }
+  return L.join('\n') + '\n';
 }
 
 export function renderBacktestReport(summary) {

@@ -6,24 +6,28 @@
 // above spot that price flows toward. Path = strikes strictly between spot and magnet.
 import { tradingDaysBetween, weeksForDistance } from './time.mjs';
 
-// Choose the target WEEKLY expiry from the ticker's REAL expirations. The magnet's
-// %-distance sets the target week (a +1% magnet is a this-week move; +8% needs ~3
-// weeks) — that keeps targeting WEEKLY, not pulled to a far monthly OPEX where
-// aggregate gamma piles up. Within that weekly neighborhood, the king node refines
-// WHICH real expiry (the one holding the most of the magnet's gamma).
-export function pickWeeklyExpiry(perExpiry, expirations, runDate, weeks, wcfg = {}) {
+// Choose the target WEEKLY expiry from the ticker's REAL expirations by where the
+// KING's gamma actually lives in the expiry term structure. Score each real expiry
+// = |magnet gamma at that expiry| × time-decay(DTE), within a weekly DTE cap so a far
+// monthly-OPEX pile can't drag a near move out there. The gamma term structure self-
+// adjusts for distance (far-OTM gamma sits at later expiries; a near wall at nearer
+// ones), so we don't fight it with a distance heuristic. Prefer the expiry that holds
+// the most of the king's gamma soonest.
+export function pickWeeklyExpiry(perExpiry, expirations, runDate, wcfg = {}) {
   if (!expirations || !expirations.length || !runDate) return null;
-  const perWk = wcfg.trading_days_per_week || 5;
-  const target = weeks * perWk;
-  const lo = Math.max(1, target - (wcfg.dte_buffer_days || 0));
-  const hi = target + perWk; // allow up to ~1 week beyond the distance-implied target
-  const withDte = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) })).filter((x) => x.dte >= 1).sort((a, b) => a.dte - b.dte);
+  const minDte = wcfg.min_dte_days ?? 2;
+  const maxDte = wcfg.max_dte_days ?? 25;
+  const halflife = wcfg.time_decay_halflife_days ?? 7;
+  const withDte = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) }))
+    .filter((x) => x.dte >= minDte && x.dte <= maxDte).sort((a, b) => a.dte - b.dte);
   if (!withDte.length) return null;
-  let cands = withDte.filter((x) => x.dte >= lo && x.dte <= hi);
-  if (!cands.length) cands = [withDte.reduce((best, x) => (Math.abs(x.dte - target) < Math.abs(best.dte - target) ? x : best), withDte[0])];
-  let best = cands[0], bestG = Math.abs((perExpiry && perExpiry[cands[0].e]) || 0);
-  for (const c of cands) { const g = Math.abs((perExpiry && perExpiry[c.e]) || 0); if (g > bestG) { best = c; bestG = g; } }
-  return best.e;
+  let best = withDte[0].e, bestScore = -1;
+  for (const { e, dte } of withDte) {
+    const g = Math.abs((perExpiry && perExpiry[e]) || 0);
+    const score = g * Math.pow(0.5, dte / halflife);
+    if (score > bestScore) { bestScore = score; best = e; }
+  }
+  return best; // bestScore<=0 (no king gamma in window) → nearest expiry in window
 }
 
 export function sumAbsGex(strikes) {
@@ -201,7 +205,7 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
   let suggested_weeks = null, suggested_weekly_expiry = null;
   if (wcfg && wcfg.enabled) {
     suggested_weeks = weeksForDistance(magnet.dist_pct, wcfg.dist_to_weeks);
-    suggested_weekly_expiry = pickWeeklyExpiry(magnet.perExpiry, profile.expirations, runDate, suggested_weeks, wcfg);
+    suggested_weekly_expiry = pickWeeklyExpiry(magnet.perExpiry, profile.expirations, runDate, wcfg);
   }
   const effective_target_expiry = targetExpiry || suggested_weekly_expiry;
 

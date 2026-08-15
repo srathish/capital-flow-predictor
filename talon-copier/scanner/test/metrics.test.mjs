@@ -115,15 +115,16 @@ const f4 = P([
 const mag4 = detectMagnet(f4, { proximityBand: 0.10 });
 eq('band excludes 112, magnet is in-band 108', mag4.strike, 108);
 
-// pickWeeklyExpiry: the king can live at ANY expiry — pick where its gamma is biggest,
-// floored by travel time (DTE >= weeks*5 - buffer). From 2026-08-14: DTE 8/21=5, 8/28=10, 9/04=15.
-const WK = { trading_days_per_week: 5, dte_buffer_days: 1 };
+// pickWeeklyExpiry: target where the king's gamma lives = |gamma| × time-decay(DTE),
+// within a weekly DTE cap. From 2026-08-14: DTE 8/21=5, 8/28=10, 9/04=15, 9/18=24.
+const WK = { min_dte_days: 2, max_dte_days: 25, time_decay_halflife_days: 7 };
 const wExps = ['2026-08-21', '2026-08-28', '2026-09-04', '2026-09-18'];
 const wPerExp = { '2026-08-21': 0.5, '2026-08-28': 3.0, '2026-09-04': 1.0 }; // king biggest at 8/28
-eq('weekly: king-biggest expiry among those with enough DTE (2w)', pickWeeklyExpiry(wPerExp, wExps, '2026-08-14', 2, WK), '2026-08-28');
-eq('weekly: follows the king expiry even for a near magnet (1w)', pickWeeklyExpiry(wPerExp, wExps, '2026-08-14', 1, WK), '2026-08-28');
-eq('weekly: no king gamma → nearest with enough DTE', pickWeeklyExpiry({}, wExps, '2026-08-14', 2, WK), '2026-08-28');
-eq('weekly: null when no expirations', pickWeeklyExpiry(wPerExp, [], '2026-08-14', 2, WK), null);
+eq('weekly: king-biggest by gamma×time-decay', pickWeeklyExpiry(wPerExp, wExps, '2026-08-14', WK), '2026-08-28');
+// a near expiry with decent gamma beats a far one with MORE gamma (no chasing a far monthly)
+eq('weekly: prefers near expiry over far bigger pile', pickWeeklyExpiry({ '2026-08-21': 2.0, '2026-09-18': 5.0 }, wExps, '2026-08-14', WK), '2026-08-21');
+eq('weekly: no king gamma → nearest in window', pickWeeklyExpiry({}, wExps, '2026-08-14', WK), '2026-08-21');
+eq('weekly: null when no expirations', pickWeeklyExpiry(wPerExp, [], '2026-08-14', WK), null);
 
 console.log(`\nmetrics.test: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
