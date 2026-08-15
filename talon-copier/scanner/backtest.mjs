@@ -7,11 +7,12 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { ingest, effectiveScanDate } from './stage0-ingest.mjs';
 import { scan } from './stage1-scan.mjs';
-import { planTicker } from './stage2-plan.mjs';
+import { planTicker, planFromStructure } from './stage2-plan.mjs';
 import { gateCard } from './stage3-gate.mjs';
 import { resolveMagnetReach, resolveCard } from './lib/resolve.mjs';
 import { FlowProvider } from './providers/flow-uw.mjs';
-import { resolveFromRoot, readJson, writeJson, ensureDir, log } from './lib/util.mjs';
+import { GexProvider } from './providers/gex-skylit.mjs';
+import { RateLimiter, resolveFromRoot, readJson, writeJson, ensureDir, log } from './lib/util.mjs';
 import { priorSessions, forwardSessions, isTradingDayET, tradingDaysBetween } from './lib/time.mjs';
 
 // Trading sessions in [from,to], sampled every `every`.
@@ -139,6 +140,69 @@ export async function backtestCards({ config, dates, symbols, llm, gate = true }
   const outFile = resolveFromRoot(path.join('data/backtest', `cards_${dates[0]}_${dates[dates.length - 1]}.json`));
   writeJson(outFile, { generatedAt: new Date().toISOString(), symbols, results });
   return { results, outFile };
+}
+
+// Structure-driven forward test on ONE ticker: every session, assemble the full
+// structure and let the LLM decide (long/short/no_trade) — the "assemble, decipher
+// daily" architecture as THE planner (no score gate). Resolves each directional call
+// vs actual price. History/profile cached per date for replay.
+export async function forwardTestStructure({ config, ticker, dates, llm }) {
+  const rl = new RateLimiter(config.ingest.rate_limit);
+  const gex = new GexProvider({ maxStrikes: config.ingest.max_strikes, maxExpirations: config.ingest.max_expirations, eodHHMM: config.ingest.skylit_eod_hhmm, limiter: rl });
+  await gex.init();
+  const flow = new FlowProvider();
+  const ohlc = await ohlcCached(flow, ticker, ensureDir(resolveFromRoot('data/backtest/ohlc')));
+  const rows = [];
+  for (const date of dates) {
+    const runDate = effectiveScanDate(date);
+    let profile = null, history = null;
+    try {
+      const pf = resolveFromRoot(`data/raw/${runDate}/${ticker}.json`);
+      const hf = resolveFromRoot(`data/raw/${runDate}/${ticker}.history.json`);
+      const pc = readJson(pf); profile = pc?.profile || await gex.getProfile(ticker, { date: runDate });
+      if (!pc?.profile && profile) writeJson(pf, { ticker, runDate, profile });
+      const hc = readJson(hf); history = hc?.history || await gex.getHistory(ticker, { asOfDate: runDate, sessions: config.ingest.history_sessions });
+      if (!hc?.history && history) writeJson(hf, { ticker, asOfDate: runDate, history });
+    } catch (e) { if (e.message === 'AUTH') { log('[fwd] AUTH dead — stopping'); break; } rows.push({ date: runDate, error: String(e.message).slice(0, 60) }); continue; }
+    if (!profile) { rows.push({ date: runDate, error: 'no profile' }); continue; }
+
+    const r = await planFromStructure(profile, history, { config, runDate, llm });
+    const s = r.structure || {};
+    let resolution = null;
+    if (r.status === 'ok' && r.plan.direction !== 'no_trade') resolution = resolveCard({ ...r.plan, ticker }, ohlc, runDate);
+    rows.push({
+      date: runDate, spot: Math.round(profile.spot * 100) / 100,
+      king: s.king ? `${s.king.strike}${s.king.gamma === 'short' ? '−' : '+'}` : null,
+      migration: s.king_migration?.direction || null,
+      verdict: r.status === 'ok' ? r.plan.direction : 'discarded',
+      plan: r.status === 'ok' ? r.plan : null, resolution, errors: r.errors || null,
+    });
+    log(`[fwd] ${runDate} ${ticker} → ${rows[rows.length - 1].verdict}`);
+  }
+  const outFile = resolveFromRoot(path.join('data/backtest', `forward_${ticker}_${dates[0]}_${dates[dates.length - 1]}.json`));
+  writeJson(outFile, { generatedAt: new Date().toISOString(), ticker, rows });
+  return { ticker, rows, outFile };
+}
+
+export function renderForwardReport(ticker, rows) {
+  const oc = { target: '✅ hit', invalidation: '❌ stop', time_stop: '⏱ time', expiry: '⌛ exp', never_triggered: '– notrig', open: '… open' };
+  const L = [];
+  L.push(`# Forward test (structure-driven, LLM decides daily) — ${ticker}\n`);
+  L.push('| date | spot | king | migration | verdict | contract | trig→target | outcome | MFE |');
+  L.push('|---|--:|---|---|---|---|---|---|--:|');
+  let nl = 0, ns = 0, nt = 0, win = 0, res = 0;
+  for (const r of rows) {
+    if (r.error) { L.push(`| ${r.date} | | | | err: ${r.error} | | | | |`); continue; }
+    const p = r.plan, rr = r.resolution;
+    if (r.verdict === 'no_trade') { nt++; L.push(`| ${r.date} | ${r.spot} | ${r.king || '—'} | ${r.migration || '—'} | ⏸ no-trade | | | | |`); continue; }
+    if (r.verdict === 'discarded') { L.push(`| ${r.date} | ${r.spot} | ${r.king || '—'} | ${r.migration || '—'} | 🗑 disc | | | | |`); continue; }
+    if (r.verdict === 'long') nl++; else ns++;
+    if (rr && ['target', 'invalidation', 'time_stop', 'expiry'].includes(rr.status)) { res++; if (rr.status === 'target') win++; }
+    const emo = r.verdict === 'long' ? '🟢 LONG' : '🔴 SHORT';
+    L.push(`| ${r.date} | ${r.spot} | ${r.king || '—'} | ${r.migration || '—'} | ${emo} | ${p.contract.expiry.slice(5)} $${p.contract.strike}${p.contract.type[0].toUpperCase()} | ${p.entry_trigger}→${p.target} | ${rr ? (oc[rr.status] || rr.status) : '—'} | ${rr && rr.mfe_pct != null ? (rr.mfe_pct * 100).toFixed(1) + '%' : '—'} |`);
+  }
+  L.push(`\n**${rows.length} sessions · ${nl} long · ${ns} short · ${nt} no-trade · ${res} resolved, ${win} hit target (${res ? (100 * win / res).toFixed(0) : 0}%)**`);
+  return L.join('\n') + '\n';
 }
 
 const ICON = { target: '✅ TARGET', invalidation: '❌ stopped', time_stop: '⏱ time-stop', expiry: '⌛ expiry', never_triggered: '– no trigger', open: '… open', 'n/a': '·' };

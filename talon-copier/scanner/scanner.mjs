@@ -18,7 +18,7 @@ const { gateAll } = await import('./stage3-gate.mjs');
 const { FlowProvider } = await import('./providers/flow-uw.mjs');
 const { GexProvider } = await import('./providers/gex-skylit.mjs');
 const { assemblePlans, writePlans, writeReport, discordSummary, postDiscord } = await import('./stage4-report.mjs');
-const { backtestScore, backtestCards, backtestSignal, renderBacktestReport, renderCardsReport, renderSignalReport, sessionsInRange } = await import('./backtest.mjs');
+const { backtestScore, backtestCards, backtestSignal, forwardTestStructure, renderBacktestReport, renderCardsReport, renderSignalReport, renderForwardReport, sessionsInRange } = await import('./backtest.mjs');
 const { resolveOutcomes } = await import('./stage7-outcomes.mjs');
 
 function parseArgs(argv) {
@@ -167,6 +167,19 @@ async function cmdTrack(args, config) {
   console.log(renderSignalReport(rows, priceByTicker, symbols, threshold, minP));
 }
 
+// Structure-driven forward test on one ticker: LLM decides daily from full structure.
+async function cmdForward(args, config) {
+  const from = args.from, to = args.to || etToday();
+  const ticker = (args.ticker || args.tickers || '').toUpperCase();
+  if (!from || !ticker) { log('forward needs --ticker MU --from YYYY-MM-DD [--to YYYY-MM-DD]'); return; }
+  if (!process.env.ANTHROPIC_API_KEY) { log('ANTHROPIC_API_KEY missing'); return; }
+  const dates = sessionsInRange(from, to, args.every ? +args.every : 1);
+  log(`[forward] ${ticker} · ${dates.length} sessions ${dates[0]}…${dates[dates.length - 1]} · structure-driven (LLM decides daily)`);
+  const { rows, outFile } = await forwardTestStructure({ config, ticker, dates, llm: anthropicLLM });
+  log(`\n[forward] → ${outFile}\n`);
+  console.log(renderForwardReport(ticker, rows));
+}
+
 async function cmdAuth() {
   const gex = new GexProvider({});
   const s = await gex.authStatus();
@@ -184,6 +197,7 @@ try {
   else if (cmd === 'backtest') await cmdBacktest(args, config);
   else if (cmd === 'backtest-cards') await cmdBacktestCards(args, config);
   else if (cmd === 'track') await cmdTrack(args, config);
+  else if (cmd === 'forward') await cmdForward(args, config);
   else if (cmd === 'outcomes') await cmdOutcomes(args, config);
   else if (cmd === 'premarket') await cmdPremarket(args, config);
   else if (cmd === 'auth') await cmdAuth();
