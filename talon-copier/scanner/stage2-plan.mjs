@@ -7,6 +7,7 @@
 // in the schema — code applies them.
 import { tradingDaysBetween, isMonthlyOpex } from './lib/time.mjs';
 import { assembleStructure } from './lib/structure.mjs';
+import { buildConvexContract } from './lib/contract.mjs';
 
 // Structure-driven doctrine: the LLM reads the COMPLETE gamma/vanna structure and its
 // evolution and recognizes WHICHEVER formation is present — no JS pre-filter picked a
@@ -80,6 +81,13 @@ export async function planFromStructure(profile, history, { config, runDate, llm
     if (plan.direction === 'long' && kingMig === 'down_bearish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: long while the gamma king is migrating DOWN_BEARISH (dominant node falling). A positive wall above is not a long signal by itself. Choose short or no_trade unless the gamma king is turning up.'); }
     if (plan.direction === 'short' && kingMig === 'up_bullish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: short while the gamma king is migrating UP_BULLISH. Choose long or no_trade.'); }
     if (v.ok) {
+      // Deterministic convex contract for squeezes (config.contract.enabled; off by
+      // default → plan.contract unchanged). Applied after validation — the OTM strike
+      // differs from the price target by design.
+      if (config.contract?.enabled && plan.direction !== 'no_trade') {
+        const cc = buildConvexContract(plan, structure, runDate, config.contract);
+        if (cc) plan.contract = cc;
+      }
       const budget = config.sizing_budget_usd[String(plan.confidence)] ?? null;
       return { ticker: profile.ticker, status: 'ok', attempts, plan, deterministic: { invalidation_basis: config.invalidation_basis, sizing_budget_usd: budget }, structure };
     }
