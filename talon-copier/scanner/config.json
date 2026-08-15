@@ -76,6 +76,13 @@
     "plans_dir": "data/plans"
   },
 
+  "contract": {
+    "_doc": "Deterministic convex contract for LLM-detected squeezes. OFF by default (keeps the LLM's near-money contract = 'core'). When enabled, a squeeze buys a near-weekly far-OTM strike (lotto convexity — the +2000% expression). blend (core + lotto two-leg) is a future extension.",
+    "enabled": false,
+    "squeeze_style": "lotto",
+    "lotto_otm_pct": 0.15,
+    "weekly_max_dte": 10
+  },
   "sizing_budget_usd": { "1": 1000, "2": 1500, "3": 2500, "4": 4000, "5": 6000 },
   "invalidation_basis": "close",
 
