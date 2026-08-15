@@ -47,6 +47,17 @@
   },
 
   "target_expiry": null,
+  "weekly": {
+    "_doc": "Default to weekly targets (stocks carry persistent weekly nodes). When no --expiry is given, each ticker targets the real weekly expiry where its king wall is biggest, no sooner than the travel time its distance needs.",
+    "enabled": true,
+    "dist_to_weeks": [
+      { "maxPct": 0.03, "weeks": 1 },
+      { "maxPct": 0.06, "weeks": 2 },
+      { "maxPct": 0.10, "weeks": 3 }
+    ],
+    "trading_days_per_week": 5,
+    "dte_buffer_days": 1
+  },
 
   "planner": {
     "model": "claude-sonnet-5",

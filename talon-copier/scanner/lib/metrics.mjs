@@ -4,6 +4,23 @@
 // Sign convention (Skylit): gexAgg > 0 = long-gamma wall (pins/supports/resists);
 // gexAgg < 0 = short-gamma (squeeze fuel). "Magnet" = the dominant positive wall
 // above spot that price flows toward. Path = strikes strictly between spot and magnet.
+import { tradingDaysBetween, weeksForDistance } from './time.mjs';
+
+// Choose the target WEEKLY expiry from the ticker's REAL expirations, driven by the
+// king node: far enough out for the magnet's %-distance to be travelled (travel
+// time), and — among expiries with enough DTE — the one where the king wall's gamma
+// is biggest (no point targeting an expiry where the king has already decayed).
+export function pickWeeklyExpiry(perExpiry, expirations, runDate, weeks, wcfg = {}) {
+  if (!expirations || !expirations.length || !runDate) return null;
+  const minDTE = Math.max(1, weeks * (wcfg.trading_days_per_week || 5) - (wcfg.dte_buffer_days || 0));
+  const withDte = expirations.map((e) => ({ e, dte: tradingDaysBetween(runDate, e) })).filter((x) => x.dte >= 1).sort((a, b) => a.dte - b.dte);
+  if (!withDte.length) return null;
+  let cands = withDte.filter((x) => x.dte >= minDTE);
+  if (!cands.length) cands = [withDte[withDte.length - 1]]; // nothing far enough → farthest available
+  let best = cands[0], bestG = Math.abs((perExpiry && perExpiry[cands[0].e]) || 0);
+  for (const c of cands) { const g = Math.abs((perExpiry && perExpiry[c.e]) || 0); if (g > bestG) { best = c; bestG = g; } }
+  return best.e;
+}
 
 export function sumAbsGex(strikes) {
   let t = 0;
@@ -130,7 +147,7 @@ export function flowThroughScore({ magnet_norm, persistence_mult, proximity_weig
 
 // Score one ticker end-to-end. history optional (persistence_mult defaults to 1).
 // Returns the full metric object (or a {skip} marker when there is no setup).
-export function scoreTicker(profile, config, { history = null, targetExpiry = null } = {}) {
+export function scoreTicker(profile, config, { history = null, targetExpiry = null, runDate = null } = {}) {
   const scan = config.scan;
   const total = sumAbsGex(profile.strikes);
   const nodes = computeNodes(profile, scan.top_n_nodes);
@@ -174,6 +191,16 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
   };
   const score = flowThroughScore(parts);
 
+  // Weekly target selection, king-driven: how many weekly expiries out the distance
+  // needs, and the real expiry where the king wall is biggest.
+  const wcfg = config.weekly;
+  let suggested_weeks = null, suggested_weekly_expiry = null;
+  if (wcfg && wcfg.enabled) {
+    suggested_weeks = weeksForDistance(magnet.dist_pct, wcfg.dist_to_weeks);
+    suggested_weekly_expiry = pickWeeklyExpiry(magnet.perExpiry, profile.expirations, runDate, suggested_weeks, wcfg);
+  }
+  const effective_target_expiry = targetExpiry || suggested_weekly_expiry;
+
   return {
     ticker: profile.ticker,
     spot: profile.spot,
@@ -191,7 +218,10 @@ export function scoreTicker(profile, config, { history = null, targetExpiry = nu
     },
     proximity_weight,
     persistence: pers,
-    magnet_gamma_before_target_pct: magnetGammaBeforeTargetPct(magnet.perExpiry, targetExpiry),
+    suggested_weeks,
+    suggested_weekly_expiry,
+    effective_target_expiry,
+    magnet_gamma_before_target_pct: magnetGammaBeforeTargetPct(magnet.perExpiry, effective_target_expiry),
     score_parts: parts,
     flow_through_score: score,
   };

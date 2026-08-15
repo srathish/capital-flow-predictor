@@ -10,7 +10,7 @@ import { scan } from './stage1-scan.mjs';
 import { resolveMagnetReach } from './lib/resolve.mjs';
 import { FlowProvider } from './providers/flow-uw.mjs';
 import { resolveFromRoot, readJson, writeJson, ensureDir, log } from './lib/util.mjs';
-import { priorSessions, forwardSessions, isTradingDayET } from './lib/time.mjs';
+import { priorSessions, forwardSessions, isTradingDayET, weeklyExpiry, weeksForDistance, tradingDaysBetween } from './lib/time.mjs';
 
 // Trading sessions in [from,to], sampled every `every`.
 export function sessionsInRange(from, to, every = 1) {
@@ -34,7 +34,8 @@ async function ohlcCached(flow, ticker, dir) {
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 const rate = (a, f) => (a.length ? a.filter(f).length / a.length : null);
 
-export async function backtestScore({ config, dates, symbols = null, theme = null, horizonDays = 5, stopPct = 0.05, topK = 10, controlK = 10, refresh = false }) {
+export async function backtestScore({ config, dates, symbols = null, theme = null, horizonDays = null, stopPct = 0.05, topK = 10, controlK = 10, refresh = false }) {
+  const weekly = config.weekly && config.weekly.enabled;
   const flow = new FlowProvider();
   const ohlcDir = ensureDir(resolveFromRoot(path.join('data/backtest/ohlc')));
   const rows = [];
@@ -50,11 +51,16 @@ export async function backtestScore({ config, dates, symbols = null, theme = nul
       const control = scored.slice(-controlK).map((r, i) => ({ ...r, group: 'control', rank: scored.length - controlK + i + 1 }));
       for (const s of [...top, ...control]) {
         const ohlc = await ohlcCached(flow, s.ticker, ohlcDir);
-        const res = resolveMagnetReach(s.magnet.strike, s.spot, ohlc, runDate, { horizonDays, stopPct });
+        // King-driven weekly horizon: farther magnet → target a later weekly expiry.
+        const weeks = weekly ? weeksForDistance(s.magnet.dist_pct, config.weekly.dist_to_weeks) : null;
+        const kexp = weekly ? weeklyExpiry(runDate, weeks) : null;
+        const kh = weekly ? tradingDaysBetween(runDate, kexp) : (horizonDays || 5);
+        const res = resolveMagnetReach(s.magnet.strike, s.spot, ohlc, runDate, { horizonDays: kh, stopPct });
         rows.push({
           date: runDate, ticker: s.ticker, group: s.group, rank: s.rank, score: s.score,
           spot: s.spot, magnet: s.magnet.strike, magnet_dist_pct: s.magnet.dist_pct,
           persistence_days: s.persistence_days ?? 0,
+          weeks, weekly_expiry: kexp, horizon: kh,
           reached: res.reached, days_to_reach: res.days_to_reach, stopped_out: res.stopped_out,
           mfe_pct: res.mfe_pct, mae_pct: res.mae_pct, bars: res.bars,
         });
@@ -79,7 +85,8 @@ export async function backtestScore({ config, dates, symbols = null, theme = nul
       reach_rate_persisted: rate(a.filter((r) => r.persistence_days >= 2), (r) => r.reached),
     };
   };
-  const summary = { horizonDays, stopPct, topK, controlK, dates: dates.length, resolved: rows.length, top: summarize('top'), control: summarize('control') };
+  const avgHorizon = rows.length ? rows.reduce((a, r) => a + (r.horizon || 0), 0) / rows.length : null;
+  const summary = { mode: weekly ? 'king-weekly' : 'fixed', avg_horizon_days: avgHorizon, stopPct, topK, controlK, dates: dates.length, resolved: rows.length, top: summarize('top'), control: summarize('control') };
   const edge = (summary.top.reach_rate != null && summary.control.reach_rate != null) ? summary.top.reach_rate - summary.control.reach_rate : null;
   summary.reach_edge_top_minus_control = edge;
 
@@ -92,7 +99,7 @@ export function renderBacktestReport(summary) {
   const pct = (x) => (x == null ? '—' : (x * 100).toFixed(1) + '%');
   const L = [];
   L.push(`# Walk-forward score backtest`);
-  L.push(`horizon ${summary.horizonDays}d · stop ${(summary.stopPct * 100).toFixed(0)}% · ${summary.dates} dates · ${summary.resolved} setups resolved`);
+  L.push(`${summary.mode} horizon (avg ${summary.avg_horizon_days == null ? '—' : summary.avg_horizon_days.toFixed(1)}d, king-distance driven) · stop ${(summary.stopPct * 100).toFixed(0)}% · ${summary.dates} dates · ${summary.resolved} setups resolved`);
   L.push('');
   L.push(`| cohort | n | magnet reach rate | stop rate | avg MFE | avg MAE | avg days→reach | reach rate (persisted≥2d) |`);
   L.push(`|---|--:|--:|--:|--:|--:|--:|--:|`);

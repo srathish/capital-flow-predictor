@@ -52,7 +52,7 @@ export async function scan({ config, date, expiry = null, gexProvider = null, re
   for (const rec of records) {
     const liq = liquidityCheck(rec, config);
     if (!liq.ok) { rows.push({ ticker: rec.ticker, spot: rec.profile.spot, dropped: liq.reason, liquidity: liq }); continue; }
-    const m = scoreTicker(rec.profile, config, { history: null, targetExpiry: expiry });
+    const m = scoreTicker(rec.profile, config, { history: null, targetExpiry: expiry, runDate });
     m.liquidity = liq;
     if (m.skip) { rows.push({ ticker: m.ticker, spot: m.spot, dropped: m.skip, magnet: m.magnet, liquidity: liq }); continue; }
     m.pre_score = m.flow_through_score;
@@ -76,7 +76,7 @@ export async function scan({ config, date, expiry = null, gexProvider = null, re
     try { history = await historyCached(gex, runDate, item.rec.ticker, config, rawDir, refresh); }
     catch (e) { if (e.message === 'AUTH') { authDead = true; log('[stage1] AUTH failure during history pull — persistence limited to cached'); } }
     if (history) {
-      const full = scoreTicker(item.rec.profile, config, { history, targetExpiry: expiry });
+      const full = scoreTicker(item.rec.profile, config, { history, targetExpiry: expiry, runDate });
       full.liquidity = item.m.liquidity;
       full.pre_score = item.m.pre_score;
       item.m = full;
@@ -97,6 +97,8 @@ export async function scan({ config, date, expiry = null, gexProvider = null, re
       magnet: m.magnet ? { strike: m.magnet.strike, gex: m.magnet.gex, dist_pct: m.magnet.dist_pct, magnet_norm: m.magnet.magnet_norm, sign: m.magnet.sign, respecified_from: m.magnet.respecified_from } : null,
       path: m.path, proximity_weight: m.proximity_weight,
       persistence_days: m.persistence?.days ?? 0, persistence_mult: m.persistence?.mult ?? 1,
+      suggested_weeks: m.suggested_weeks, suggested_weekly_expiry: m.suggested_weekly_expiry,
+      effective_target_expiry: m.effective_target_expiry,
       magnet_gamma_before_target_pct: m.magnet_gamma_before_target_pct,
       liquidity: m.liquidity, score_parts: m.score_parts,
     });

@@ -186,9 +186,11 @@ export function repairLeakedToolParams(plan) {
 // Plan one ticker: soft-forced tool (thinking on) or hard-forced (thinking off), then
 // validate; on failure, ONE retry with the errors appended; discard on a second failure.
 export async function planTicker(m, { config, targetExpiry = null, runDate, llm }) {
-  const { system, user, snapshot } = buildPlannerInput(m, { targetExpiry, runDate, config });
+  // When no global --expiry is set, target this ticker's king-driven weekly expiry.
+  const effExpiry = targetExpiry || m.effective_target_expiry || m.suggested_weekly_expiry || null;
+  const { system, user, snapshot } = buildPlannerInput(m, { targetExpiry: effExpiry, runDate, config });
   const nodeStrikes = [...new Set([m.magnet.strike, ...(m.nodes || []).map((n) => n.strike)])];
-  const ctx = { nodeStrikes, targetExpiry, runDate, targetWithinPct: config.planner.target_within_node_pct };
+  const ctx = { nodeStrikes, targetExpiry: effExpiry, runDate, targetWithinPct: config.planner.target_within_node_pct };
   const useThinking = (config.planner.thinking_budget || 0) > 0;
 
   let attempts = 0, lastErrors = null, rawPlan = null;

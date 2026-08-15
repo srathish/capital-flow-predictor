@@ -1,5 +1,5 @@
 // time.test.mjs — pure fixture tests for the America/New_York time math (no network).
-import { skylitTimestamp, etDate, isWeekendET, isTradingDayET, priorSessions, forwardSessions, isMonthlyOpex } from '../lib/time.mjs';
+import { skylitTimestamp, etDate, isWeekendET, isTradingDayET, priorSessions, forwardSessions, isMonthlyOpex, nextFriday, weeklyExpiry, weeksForDistance } from '../lib/time.mjs';
 
 let pass = 0, fail = 0;
 function eq(name, got, want) {
@@ -37,6 +37,18 @@ eq('forwardSessions Fri 8/14 x2', forwardSessions('2026-08-14', 2), ['2026-08-17
 ok('2026-08-21 is monthly OPEX (3rd Fri)', isMonthlyOpex('2026-08-21') === true);
 ok('2026-08-28 is NOT monthly OPEX (4th Fri)', isMonthlyOpex('2026-08-28') === false);
 ok('2026-09-18 is monthly OPEX (3rd Fri)', isMonthlyOpex('2026-09-18') === true);
+
+// weekly expiry math
+eq('nextFriday from a Friday is the NEXT one', nextFriday('2026-08-14'), '2026-08-21');
+eq('nextFriday from Monday', nextFriday('2026-08-17'), '2026-08-21');
+eq('weeklyExpiry 1w out', weeklyExpiry('2026-08-17', 1), '2026-08-21');
+eq('weeklyExpiry 2w out', weeklyExpiry('2026-08-17', 2), '2026-08-28');
+eq('weeklyExpiry 3w out', weeklyExpiry('2026-08-17', 3), '2026-09-04');
+eq('weeklyExpiry rolls off a holiday Friday (7/3) to Thu 7/2', weeklyExpiry('2026-06-29', 1), '2026-07-02');
+eq('weeksForDistance 2% → 1w', weeksForDistance(0.02, [{ maxPct: 0.03, weeks: 1 }, { maxPct: 0.06, weeks: 2 }, { maxPct: 0.10, weeks: 3 }]), 1);
+eq('weeksForDistance 5% → 2w', weeksForDistance(0.05, [{ maxPct: 0.03, weeks: 1 }, { maxPct: 0.06, weeks: 2 }, { maxPct: 0.10, weeks: 3 }]), 2);
+eq('weeksForDistance 9% → 3w', weeksForDistance(0.09, [{ maxPct: 0.03, weeks: 1 }, { maxPct: 0.06, weeks: 2 }, { maxPct: 0.10, weeks: 3 }]), 3);
+eq('weeksForDistance 15% → falls through to 3w', weeksForDistance(0.15, [{ maxPct: 0.03, weeks: 1 }, { maxPct: 0.06, weeks: 2 }, { maxPct: 0.10, weeks: 3 }]), 3);
 
 // structural invariants
 const fwd = forwardSessions('2026-07-15', 10);

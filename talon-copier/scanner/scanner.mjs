@@ -124,10 +124,10 @@ async function cmdBacktest(args, config) {
   const dates = sessionsInRange(from, to, args.every ? +args.every : 1);
   if (!dates.length) { log('no trading sessions in range'); return; }
   const symbols = args.tickers ? String(args.tickers).split(',') : null;
-  log(`[backtest] ${dates.length} dates ${dates[0]}…${dates[dates.length - 1]} · horizon ${args.horizon || 5}d · ${symbols ? symbols.length + ' tickers' : args.theme || 'full universe'}`);
+  log(`[backtest] ${dates.length} dates ${dates[0]}…${dates[dates.length - 1]} · horizon ${args.horizon ? args.horizon + 'd fixed' : 'king-weekly'} · ${symbols ? symbols.length + ' tickers' : args.theme || 'full universe'}`);
   const { summary, outFile } = await backtestScore({
     config, dates, symbols, theme: args.theme || null,
-    horizonDays: args.horizon ? +args.horizon : 5, stopPct: args.stop ? +args.stop : 0.05,
+    horizonDays: args.horizon ? +args.horizon : null, stopPct: args.stop ? +args.stop : 0.05,
     topK: args.topk ? +args.topk : 10, controlK: args.control ? +args.control : 10, refresh: !!args.refresh,
   });
   log(`\n[backtest] → ${outFile}\n`);

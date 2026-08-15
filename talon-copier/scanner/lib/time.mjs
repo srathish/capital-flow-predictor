@@ -103,6 +103,34 @@ export function forwardSessions(dateStr, n) {
   return out;
 }
 
+// First Friday strictly after `dateStr` (weekly options expire Fridays).
+export function nextFriday(dateStr) {
+  const [Y, M, D] = dateStr.split('-').map(Number);
+  let ms = Date.UTC(Y, M - 1, D, 12);
+  const DAY = 86400000;
+  for (let i = 0; i < 8; i++) { ms += DAY; if (new Date(ms).getUTCDay() === 5) return etDate(ms); }
+  return etDate(ms);
+}
+
+// The weekly expiry `weeksOut` weeks ahead of `dateStr` (Friday, rolled back to the
+// prior trading day if that Friday is a holiday).
+export function weeklyExpiry(dateStr, weeksOut = 1) {
+  const f0 = nextFriday(dateStr);
+  const [Y, M, D] = f0.split('-').map(Number);
+  let ms = Date.UTC(Y, M - 1, D, 12) + (Math.max(1, weeksOut) - 1) * 7 * 86400000;
+  let d = etDate(ms);
+  while (!isTradingDayET(d)) { ms -= 86400000; d = etDate(ms); }
+  return d;
+}
+
+// Map a magnet's %-distance above spot to how many weekly expiries out to target.
+// thresholds = [{maxPct, weeks}, ...] ascending; falls through to the last.
+export function weeksForDistance(distPct, thresholds) {
+  const d = Math.abs(distPct);
+  for (const t of thresholds) if (d <= t.maxPct) return t.weeks;
+  return thresholds[thresholds.length - 1].weeks;
+}
+
 // Count of trading sessions in (from, to] — i.e. contract DTE in trading days.
 export function tradingDaysBetween(from, to) {
   if (!to || to <= from) return 0;
