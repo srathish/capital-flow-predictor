@@ -65,6 +65,13 @@ export function isTradingDayET(dateStr) {
   return !isWeekendET(dateStr) && !HOLIDAYS.has(dateStr);
 }
 
+// Monthly OPEX = the 3rd Friday of the month (day-of-month 15..21 AND a Friday).
+export function isMonthlyOpex(dateStr) {
+  const [Y, M, D] = dateStr.split('-').map(Number);
+  const dow = new Date(Date.UTC(Y, M - 1, D, 12)).getUTCDay();
+  return dow === 5 && D >= 15 && D <= 21;
+}
+
 // The N trading sessions strictly BEFORE `dateStr` (most recent first).
 export function priorSessions(dateStr, n) {
   const out = [];

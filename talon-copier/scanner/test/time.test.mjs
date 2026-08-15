@@ -1,5 +1,5 @@
 // time.test.mjs — pure fixture tests for the America/New_York time math (no network).
-import { skylitTimestamp, etDate, isWeekendET, isTradingDayET, priorSessions, forwardSessions } from '../lib/time.mjs';
+import { skylitTimestamp, etDate, isWeekendET, isTradingDayET, priorSessions, forwardSessions, isMonthlyOpex } from '../lib/time.mjs';
 
 let pass = 0, fail = 0;
 function eq(name, got, want) {
@@ -32,6 +32,11 @@ eq('priorSessions Sat 8/15 x3', priorSessions('2026-08-15', 3), ['2026-08-14', '
 eq('priorSessions 1/20 x1 skips MLK+wknd', priorSessions('2026-01-20', 1), ['2026-01-16']);
 // forward sessions skip the weekend
 eq('forwardSessions Fri 8/14 x2', forwardSessions('2026-08-14', 2), ['2026-08-17', '2026-08-18']);
+
+// monthly OPEX = 3rd Friday
+ok('2026-08-21 is monthly OPEX (3rd Fri)', isMonthlyOpex('2026-08-21') === true);
+ok('2026-08-28 is NOT monthly OPEX (4th Fri)', isMonthlyOpex('2026-08-28') === false);
+ok('2026-09-18 is monthly OPEX (3rd Fri)', isMonthlyOpex('2026-09-18') === true);
 
 // structural invariants
 const fwd = forwardSessions('2026-07-15', 10);
