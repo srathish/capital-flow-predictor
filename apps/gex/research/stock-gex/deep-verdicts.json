@@ -1,0 +1,143 @@
+{
+ "generated": "2026-08-13T01:19:59.945Z",
+ "shortlist": [
+  {
+   "ticker": "CSCO",
+   "why": "Bullish bias, 0.9 52w pos, 6.3x call activity spike"
+  },
+  {
+   "ticker": "WBD",
+   "why": "Bullish, 0.87 52w pos, flat premium, 1.38 call activity"
+  },
+  {
+   "ticker": "MRNA",
+   "why": "Bullish, 0.65 52w pos, +$1M call premium, 13.3% move"
+  },
+  {
+   "ticker": "AMAT",
+   "why": "Bullish, 0.67 52w pos, 1.03 call activity, 13% move"
+  },
+  {
+   "ticker": "VRT",
+   "why": "Bullish, 0.65 52w pos, 1.31 call activity, strong gamma"
+  },
+  {
+   "ticker": "CRWD",
+   "why": "Bullish, 0.96 52w pos, flat premium, 11.6% implied move"
+  },
+  {
+   "ticker": "AVGO",
+   "why": "Bullish, 0.63 52w pos, 0.68 call activity, 9.6% move"
+  },
+  {
+   "ticker": "SHOP",
+   "why": "Bullish, 0.64 52w pos, flat premium, 8.3% move"
+  },
+  {
+   "ticker": "MS",
+   "why": "Bullish, 0.84 52w pos, 2.3x call activity, strong gamma"
+  },
+  {
+   "ticker": "DAL",
+   "why": "Bullish, 0.86 52w pos, 1.83x call activity, 6.9% move"
+  },
+  {
+   "ticker": "BA",
+   "why": "Bullish, 0.7 52w pos, 0.62 call activity, 5.5% move"
+  },
+  {
+   "ticker": "WDC",
+   "why": "Bullish, 0.52 52w pos, 0.98 call activity, 13.5% move"
+  },
+  {
+   "ticker": "BRKB",
+   "why": "Bullish, 0.62 52w pos, 1.1x call activity, strong gamma"
+  },
+  {
+   "ticker": "XYZ",
+   "why": "Bullish, 0.78 52w pos, 1.14 call activity, 6.7% move"
+  },
+  {
+   "ticker": "UNH",
+   "why": "Bullish, 0.73 52w pos, 0.53 call activity, 4.8% move"
+  }
+ ],
+ "structures": [
+  {
+   "ticker": "CSCO",
+   "structure": "spot 118.75 · KING 130(+2.4g/+20.8v M, 9.5%) · floor 110(+1.6g/-33.6v M, -7.4%) · ceiling 130(+2.4g/+20.8v M, 9.5%) · barney 132(-0.8g/-4.4v M, 11.2%) · vanna-magnet 140(+2.1g/+65.1v M, 17.9%)",
+   "uw": "bias=BULL netCallPrem=$-4M 52wPos=0.9 impMove=9.8% earnings=2026-08-12"
+  },
+  {
+   "ticker": "WBD",
+   "structure": "spot 27.555 · KING 28(+54.0g/+79.0v M, 1.6%) · floor 27(+10.7g/-21.3v M, -2.0%) · ceiling 28(+54.0g/+79.0v M, 1.6%) · barney 27.5(-3.5g/+0.6v M, -0.2%) · vanna-magnet 29(+39.2g/+193.1v M, 5.2%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.87 impMove=4.1% earnings=2026-11-05"
+  },
+  {
+   "ticker": "MRNA",
+   "structure": "spot 63.650000000000006 · KING 64(+0.4g/+0.4v M, 0.5%) · floor 59(+0.3g/-1.9v M, -7.3%) · ceiling 64(+0.4g/+0.4v M, 0.5%) · barney 61(-0.3g/+1.0v M, -4.2%) · vanna-magnet 75(+0.2g/+2.6v M, 17.8%)",
+   "uw": "bias=BULL netCallPrem=$1M 52wPos=0.65 impMove=13.3% earnings=2026-11-05"
+  },
+  {
+   "ticker": "AMAT",
+   "structure": "spot 552.4 · KING 610(+0.3g/+28.3v M, 10.4%) · floor 500(+0.2g/-2.2v M, -9.5%) · ceiling 610(+0.3g/+28.3v M, 10.4%) · barney 550(-0.2g/-2.3v M, -0.4%) · vanna-magnet 610(+0.3g/+28.3v M, 10.4%)",
+   "uw": "bias=BULL netCallPrem=$-5M 52wPos=0.67 impMove=13% earnings=2026-08-13"
+  },
+  {
+   "ticker": "VRT",
+   "structure": "spot 289.71500000000003 · KING 260(+1.6g/-40.2v M, -10.3%) · floor 260(+1.6g/-40.2v M, -10.3%) · ceiling 330(+0.5g/+36.4v M, 13.9%) · barney 300(-0.4g/-7.4v M, 3.6%) · vanna-magnet 260(+1.6g/-40.2v M, -10.3%)",
+   "uw": "bias=BULL netCallPrem=$-1M 52wPos=0.65 impMove=11.2% earnings=2026-10-28"
+  },
+  {
+   "ticker": "CRWD",
+   "structure": "spot 221.325 · KING 220(+2.3g/-6.3v M, -0.6%) · floor 220(+2.3g/-6.3v M, -0.6%) · ceiling 232.5(+0.4g/+7.6v M, 5.0%) · barney 207.5(-0.5g/+11.1v M, -6.2%) · vanna-magnet 187.5(-0.4g/+23.1v M, -15.3%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.96 impMove=11.6% earnings=2026-08-26"
+  },
+  {
+   "ticker": "AVGO",
+   "structure": "spot 415.12 · KING 420(+2.3g/+32.2v M, 1.2%) · floor 400(+1.9g/-61.3v M, -3.6%) · ceiling 420(+2.3g/+32.2v M, 1.2%) · barney 410(-2.3g/+5.7v M, -1.2%) · vanna-magnet 490(+0.8g/+116.7v M, 18.0%)",
+   "uw": "bias=BULL netCallPrem=$-4M 52wPos=0.63 impMove=9.6% earnings=2026-09-02"
+  },
+  {
+   "ticker": "SHOP",
+   "structure": "spot 151.48000000000002 · KING 160(+23.7g/+547.2v M, 5.6%) · floor 147(+0.3g/-1.5v M, -3.0%) · ceiling 160(+23.7g/+547.2v M, 5.6%) · barney 135(-8.4g/+280.5v M, -10.9%) · vanna-magnet 160(+23.7g/+547.2v M, 5.6%)",
+   "uw": "bias=BULL netCallPrem=$-2M 52wPos=0.64 impMove=8.3% earnings=2026-11-03"
+  },
+  {
+   "ticker": "MS",
+   "structure": "spot 218.36 · KING 230(+1.5g/+62.8v M, 5.3%) · floor 200(+1.0g/-58.2v M, -8.4%) · ceiling 230(+1.5g/+62.8v M, 5.3%) · barney 222.5(-0.4g/-5.9v M, 1.9%) · vanna-magnet 230(+1.5g/+62.8v M, 5.3%)",
+   "uw": "bias=BULL netCallPrem=$-1M 52wPos=0.84 impMove=5.4% earnings=2026-10-21"
+  },
+  {
+   "ticker": "DAL",
+   "structure": "spot 89.75 · KING 90(+2.5g/+0.1v M, 0.3%) · floor 87.5(+1.8g/-12.5v M, -2.5%) · ceiling 90(+2.5g/+0.1v M, 0.3%) · barney 94(-0.3g/-3.8v M, 4.7%) · vanna-magnet 75(+1.0g/-41.7v M, -16.4%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.86 impMove=6.9% earnings=2026-10-08"
+  },
+  {
+   "ticker": "BA",
+   "structure": "spot 231.25 · KING 225(-4.7g/+91.9v M, -2.7%) · floor 230(+4.6g/-19.3v M, -0.5%) · ceiling 255(+0.4g/+28.2v M, 10.3%) · barney 225(-4.7g/+91.9v M, -2.7%) · vanna-magnet 225(-4.7g/+91.9v M, -2.7%)",
+   "uw": "bias=BULL netCallPrem=$-2M 52wPos=0.7 impMove=5.5% earnings=2026-11-04"
+  },
+  {
+   "ticker": "WDC",
+   "structure": "spot 456.57 · KING 500(+0.5g/+31.8v M, 9.5%) · floor 425(+0.1g/-3.2v M, -6.9%) · ceiling 500(+0.5g/+31.8v M, 9.5%) · barney 430(-0.3g/+8.9v M, -5.8%) · vanna-magnet 500(+0.5g/+31.8v M, 9.5%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.52 impMove=13.5% earnings=2026-10-29"
+  },
+  {
+   "ticker": "BRKB",
+   "structure": "spot 509.85 · KING 500(-7.6g/+227.7v M, -1.9%) · floor 507.5(+1.3g/-20.7v M, -0.5%) · ceiling 520(+4.9g/+283.7v M, 2.0%) · barney 500(-7.6g/+227.7v M, -1.9%) · vanna-magnet 540(+2.2g/+402.9v M, 5.9%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.62 impMove=2.5% earnings=?"
+  },
+  {
+   "ticker": "XYZ",
+   "structure": "spot 78.37 · KING 77(+1.1g/-2.7v M, -1.7%) · floor 77(+1.1g/-2.7v M, -1.7%) · ceiling 82.5(+0.1g/+2.0v M, 5.3%) · barney 80(-0.5g/-5.7v M, 2.1%) · vanna-magnet 90(-0.4g/-11.8v M, 14.8%)",
+   "uw": "bias=BULL netCallPrem=$0M 52wPos=0.78 impMove=6.7% earnings=2026-11-05"
+  },
+  {
+   "ticker": "UNH",
+   "structure": "spot 406.11 · KING 400(+17.8g/-434.5v M, -1.5%) · floor 400(+17.8g/-434.5v M, -1.5%) · ceiling 410(+1.6g/+26.6v M, 1.0%) · barney 415(-1.6g/-51.0v M, 2.2%) · vanna-magnet 400(+17.8g/-434.5v M, -1.5%)",
+   "uw": "bias=BULL netCallPrem=$-1M 52wPos=0.73 impMove=4.8% earnings=2026-10-27"
+  }
+ ],
+ "synthesis": "## Top Bullish GEX+VEX Setups\n\n**1. AVGO — spot $415.12**\n**Thesis:** Barney (neg-gamma) sits just 1.2% below spot at $410, feeding acceleration fuel right under price, while the 420 king/ceiling wall is thin enough (only 1.2% away) to clear quickly — opening a big air pocket to the $490 vanna magnet.\n**GEX:** Floor 400 (-3.6%) solid, king=ceiling stacked tight at 420 (1.2%) — a real wall but very close, easily testable this week.\n**VEX:** Vanna magnet 490 (+116.7v, 18% away) is dominant and far beyond the wall — strong upside vanna pull once 420 clears.\n**Conviction:** 0.7\n**Confirm:** Sustained close >420 → targets 490 vanna zone. **Invalidate:** Loss of 410 barney / close back under 400 floor.\n\n**2. CSCO — spot $118.75**\n**Thesis:** Floor at 110 gives room, king/ceiling confluence at 130 (9.5% away) is the only real wall, and barney fuel sits just above it at 132 with a big vanna magnet at 140 pulling further — classic breakout-then-run structure.\n**GEX:** Floor -7.4% (a bit distant but intact), ceiling/king coincide 9.5% out — genuine air pocket in between.\n**VEX:** Vanna magnet 140 (+65.1v, 17.9%) is well clear of the ceiling — magnet only engages after the wall breaks, which is clean sequencing.\n**Conviction:** 0.65\n**Confirm:** Break/hold >130 → run toward 140. **Invalidate:** Break of 110 floor.\n\n**3. MS — spot $218.36**\n**Thesis:** Barney fuel sits immediately above spot (222.5, +1.9%), and ceiling/vanna magnet coincide at 230 (5.3%) — a tight, well-aligned bullish stack even though the floor is distant.\n**GEX:** Floor 200 is far (-8.4%), so downside cushion is thin, but near-term structure above spot is clean.\n**VEX:** Vanna magnet exactly at the ceiling (230, +62.8v) — magnet and resistance aligned, so a break there should run rather than stall.\n**Conviction:** 0.6\n**Confirm:** Close >230. **Invalidate:** Break <222.5 barney zone / slide toward 200.\n\n**4. AMAT — spot $552.40**\n**Thesis:** Barney negative-gamma sits essentially at spot (550, -0.4%) providing immediate squeeze energy, with a large air pocket up to the 610 king/ceiling/vanna-magnet confluence.\n**GEX:** Floor is far (-9.5%, weak), so this is more of a squeeze/momentum play than a supported dip-buy.\n**VEX:** Vanna magnet stacks exactly with ceiling at 610 (+28.3v, 10.4%) — good alignment but the wall+magnet combo could also cap/consolidate before breaking.\n**Conviction:** 0.6\n**Confirm:** Above 552-555 and holding, trending toward 610. **Invalidate:** Back below 550 barney flips this bearish fast (floor too far below to help).\n\n**5. SHOP — spot $151.48**\n**Thesis:** Massive single-strike confluence (king=ceiling=vanna magnet, 160, +547v) suggests a powerful magnet — but the floor underneath (147) is thin, so this is a magnet play, not a supported swing.\n**GEX:** Floor 147 tiny (0.3g) — barely a support, only -3% away.\n**VEX:** Vanna magnitude at 160 is enormous — strong pull, but also means price could just as easily consolidate under it as squeeze through.\n**Conviction:** 0.5\n**Confirm:** Break/hold >160 with volume. **Invalidate:** Break <147 (thin floor fails fast).\n\n---\n\n### Weak / Capped — flagged, not recommended long\n- **VRT, DAL, UNH, CRWD:** all have their dominant vanna mass **below** spot (VRT king@260/-10.3%, DAL magnet@75/-16.4%, UNH king/floor@400 with -434.5v, CRWD magnet@187.5/-15.3%) — per the framework this actively weakens/kills the bullish case regardless of the \"BULL\" label from UW. UNH is additionally capped by a ceiling only 1% overhead.\n- **WBD:** King/ceiling wall is only 1.6% away — a genuine near-term cap; only interesting as a post-breakout squeeze into the 29 vanna magnet, not a clean pre-breakout entry.\n- **BA:** King is negative-gamma **below** spot (-2.7%) — structurally unstable, not a clean bullish base.\n- **XYZ, MRNA:** gamma/vanna magnitudes too small to trust; XYZ's magnet above spot is actually negative-vanna (not a true bullish pull).\n- **BRKB:** decent tiered vanna stack above spot (ceiling 2%, magnet 5.9%) and tight floor, but gamma magnitudes are small relative to a $500 mega-cap and implied move is only 2.5% — more of a slow grind than a swing trigger. Honorable mention, conviction ~0.45.\n\nGEX/VEX here is confirmation for a discretionary entry — none of these are \"free lunch\" setups; use price action/trigger at the confirm levels before sizing in.\n\n**RANKED:** AVGO > CSCO > MS > AMAT > SHOP > BRKB > WBD (squeeze-only) > VRT/DAL/UNH/CRWD/BA/XYZ/MRNA (avoid long)"
+}

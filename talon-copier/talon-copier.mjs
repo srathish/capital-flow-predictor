@@ -56,6 +56,32 @@ async function flowSignals(t) {
   return { spot, oiAccum, volSurge, netPremM, askLean, mom1, mom5, callOI: now.call_open_interest };
 }
 
+// ── NODE-PERSISTENCE (the core — Han's read, automated): is there a dominant gamma node PARKED ABOVE spot that has
+//    PERSISTED / been BUILDING for ~a week? That "primed king" is what price gets pulled toward (validated: MU $1000,
+//    NBIS $250 sat above spot the whole week before their rips). Uses UW dated strike-GEX history (any past date). ──
+async function nodeStructure(t) {
+  const dates = [10, 8, 6, 4, 2, 0].map(d => { const dt = new Date(Date.now() - d * 864e5); return dt.toISOString().slice(0, 10); });   // ~10 sessions back → now (weekends just return no-data, skipped)
+  const oh = await uw(`stock/${t}/ohlc/1d?limit=400`); const closes = {}; (oh?.data || oh || []).filter(x => x.market_time === 'r').forEach(x => closes[x.date] = +x.close);
+  const spotAt = (d) => closes[d] ?? closes[Object.keys(closes).filter(k => k <= d).sort().pop()] ?? null;
+  const snaps = [];
+  for (const d of dates) {
+    const r = await uw(`stock/${t}/greek-exposure/strike?date=${d}`); const rows = r?.data || r || []; if (!rows.length) continue;
+    const spot = spotAt(d); if (spot == null) continue;
+    const nodes = rows.map(x => ({ k: +x.strike, g: (+x.call_gex + +x.put_gex) })).filter(n => Number.isFinite(n.k));
+    const up = nodes.filter(n => n.g > 0 && n.k > spot).sort((a, b) => b.g - a.g)[0] || null;            // dominant LONG node above spot = the magnet/target
+    const dn = nodes.filter(n => n.g > 0 && n.k < spot).sort((a, b) => b.g - a.g)[0] || null;            // dominant LONG node below = support/floor
+    if (up) snaps.push({ date: d, spot: +spot.toFixed(2), king: up.k, king_g: up.g, support: dn ? dn.k : null });
+  }
+  if (snaps.length < 3) return null;
+  const last = snaps[snaps.length - 1], first = snaps[0];
+  // PERSISTENCE: how many recent snaps had the magnet at ~the SAME level as now (within ~3%)
+  const persist = snaps.filter(s => Math.abs(s.king - last.king) / last.king < 0.03).length;
+  const growth = (first.king_g && last.king_g) ? +(((last.king_g - first.king_g) / Math.abs(first.king_g)) * 100).toFixed(0) : null;   // node BUILD % over the window
+  const runwayPct = last.spot ? +(((last.king - last.spot) / last.spot) * 100).toFixed(1) : null;
+  return { magnet: last.king, magnet_g_K: +(last.king_g / 1e3).toFixed(0), support: last.support, runwayPct, days_persisted: persist, of_snaps: snaps.length, node_growth_pct: growth, spot: last.spot,
+    primed: persist >= 3 && runwayPct != null && runwayPct > 1 && runwayPct < 30 };   // a magnet held above spot for 3+ recent sessions with real (not spent) runway
+}
+
 // ── Skylit GEX structure (SAME auth as falcon-copier) — upside RUNWAY on the target expiry (top candidates only) ──
 let _sk = false;
 async function skPull(t) {
@@ -91,10 +117,30 @@ function talonScore(f, themeHeat) {
   return +(s_oi + s_vol + s_mom + s_flow + s_theme).toFixed(1);
 }
 
+// ── AGENT (the read, not a score) — falcon's GEX/VEX doctrine on the PERSISTENT stock timeframe ──
+const AKEY = process.env.ANTHROPIC_API_KEY, AMODEL = process.env.TALON_MODEL || 'claude-sonnet-5';
+const DOCTRINE = `You read stock GEX/VEX the SAME way as 0DTE index doctrine — but stocks carry PERSISTENT WEEKLY nodes, not daily 0DTE ones, so a setup is readable a WEEK ahead (indexes reset daily and move fast; stocks coil for days). Your job: reason like a gamma trader about ONE stock and lay out the real possibilities — not a score.
+READ:
+- KING / MAGNET = the biggest positive-gamma node. A big long-gamma king ABOVE spot is a MAGNET price gets pulled toward (the "primed target"); short-gamma above it accelerates through. (NBIS sat under a $250→$275 king for a week then ran to it; MU under $1000.)
+- SUPPORT = the dominant positive-gamma node BELOW spot (the floor to hold). Losing it INVALIDATES the long.
+- The bullish PRIMED setup = spot holding a long-gamma support + a big magnet/king above with an AIR POCKET (no heavy wall between) + that magnet PERSISTING/BUILDING over days (dealers telegraphing it). Persistence + build = conviction; a one-day node is noise.
+- Cross-check with the FLOW: call-OI ACCUMULATION (positioning building) and theme heat corroborate; a spent/already-ripped move (magnet just below/at spot, momentum already +25%+) is LATE.
+Give BOTH cases. State: the magnet TARGET + %, the SUPPORT/invalidation, whether it's genuinely PRIMED (and how long the node's held) vs late/thin, and the single clearest CALL to buy (or "pass"). Be concrete and honest — most names are NOT primed.`;
+async function agentRead(t, a) {
+  if (!AKEY) return null;
+  const state = `${t} @ spot ${a.sk_spot || a.spot}  (target expiry ${EXP})\nSKYLIT NODES (gamma $M, all-expiry surface):\n  upper magnets/kings: ${a._skUp || '?'}\n  lower support: ${a._skDn || '?'}\nNODE-PERSISTENCE (UW dated history): magnet ${a.magnet ?? '?'} held ${a.days_persisted ?? '?'}/${a.of_snaps ?? '?'} recent sessions, node growth ${a.node_growth_pct ?? '?'}%, runway +${a.runwayPct ?? '?'}% ${a.primed ? '→ PRIMED' : ''}\nFLOW: call-OI accum ${a.oiAccum >= 0 ? '+' : ''}${a.oiAccum}% · vol-surge ${a.volSurge}x · momentum 5d ${a.mom5 >= 0 ? '+' : ''}${a.mom5}% · net-call-prem ${a.netPremM >= 0 ? '+' : ''}$${a.netPremM}M\nTHEME: ${a.theme || 'none'}${a.themeHeat >= 1.5 ? ' (HOT 🔥)' : ''}`;
+  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': AKEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: AMODEL, max_tokens: 900, system: DOCTRINE, messages: [{ role: 'user', content: state + '\n\nRead this stock: is it primed to rip toward the magnet, or late/thin? Give the bull + bear case, the target + invalidation, and the call to buy or pass.' }] }) }).then(x => x.ok ? x.json() : null).catch(() => null);
+  return (r?.content || []).map(c => c.text).filter(Boolean).join('').trim() || null;
+}
+
 // ── MAIN ───────────────────────────────────────────────────────────────────
 const TCK = (() => { const i = process.argv.indexOf('--tickers'); return i > 0 ? process.argv[i + 1].split(',').map(s => s.trim().toUpperCase()) : null; })();   // test/override a custom list
 const uni = JSON.parse(fs.readFileSync(path.join(HERE, '../apps/gex/scanner/data/symbols.json'), 'utf8')).symbols.filter(s => s && s.name && !s.is_index).map(s => s.name);
 const tickers = TCK || (LIM ? uni.slice(0, LIM) : uni);
+if (process.argv.includes('--node')) {   // debug/validate: node-persistence read only (no Skylit needed — UW dated strike-GEX)
+  for (const t of tickers) { const ns = await nodeStructure(t).catch(e => ({ err: e.message })); console.log(`${t.padEnd(6)} ${ns ? (ns.primed ? 'PRIMED ✅' : ns.err ? 'err ' + ns.err : 'not-primed') : 'no-data'}  ${ns && !ns.err ? `magnet ${ns.magnet} (${ns.magnet_g_K}K) +${ns.runwayPct}% · held ${ns.days_persisted}/${ns.of_snaps}d · nodeGrowth ${ns.node_growth_pct}% · support ${ns.support} · spot ${ns.spot}` : ''}`); }
+  process.exit(0);
+}
 console.log(`TALON-COPIER · ${tickers.length} stocks · target expiry ${EXP}\n(pre-rip scan: call-OI accumulation + vol-surge + early momentum + hot-theme; Skylit runway on the top ${TOPN})\n`);
 
 // 1) UW flow signals for the whole universe (fast, paced)

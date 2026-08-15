@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-07-15",
-  "generated": "2026-07-16T00:00:00Z",
+  "as_of": "2026-08-12",
+  "generated": null,
   "gates": {
     "MIN_OI": 300000,
     "MIN_MCAP": 20000000000,
@@ -15,34 +15,34 @@
     "_move": 0.08,
     "_regime": 0.08
   },
-  "count": 8,
+  "count": 56,
   "candidates": [
     {
       "rank": 1,
-      "ticker": "AAPL",
-      "name": "APPLE INC",
+      "ticker": "MSTR",
+      "name": "MICROSTRATEGY INC",
       "sector": "Technology",
-      "close": 327.5,
-      "marketcap": 4810109090000,
-      "bias": "BULL",
-      "score": 0.821,
+      "close": 94.83,
+      "marketcap": 34573643060,
+      "bias": "BEAR",
+      "score": 0.788,
       "signals": {
-        "total_oi": 4938702,
-        "call_day_vs_avg": 2.03,
-        "net_call_premium": 90570763,
-        "implied_move_pct": 5.5,
-        "range_pos_52w": 0.99,
-        "iv_rank": 66.9426,
-        "uw_gex_regime_hint": 0.392,
-        "next_earnings": "2026-07-30"
+        "total_oi": 2774269,
+        "call_day_vs_avg": 0.76,
+        "net_call_premium": -3383388,
+        "implied_move_pct": 12.6,
+        "range_pos_52w": 0.04,
+        "iv_rank": 20.4256,
+        "uw_gex_regime_hint": 0.069,
+        "next_earnings": "2026-10-29"
       },
       "breakdown": {
-        "liq": 0.95,
-        "conviction": 0.81,
-        "move": 0.13,
-        "trend": 0.97,
-        "activity": 0.92,
-        "regime": 0.55
+        "liq": 0.8,
+        "conviction": 0.98,
+        "move": 0.95,
+        "trend": 0.85,
+        "activity": 0.51,
+        "regime": 0.29
       }
     },
     {
@@ -50,195 +50,1539 @@
       "ticker": "NFLX",
       "name": "NETFLIX INC",
       "sector": "Communication Services",
-      "close": 73.68,
-      "marketcap": 310398681887,
+      "close": 74.21,
+      "marketcap": 309005963356,
       "bias": "BEAR",
-      "score": 0.804,
+      "score": 0.767,
       "signals": {
-        "total_oi": 5975895,
-        "call_day_vs_avg": 0.92,
-        "net_call_premium": -3709924,
-        "implied_move_pct": 9.8,
-        "range_pos_52w": 0.05,
-        "iv_rank": 100,
-        "uw_gex_regime_hint": 0.644,
-        "next_earnings": "2026-07-16"
+        "total_oi": 5623372,
+        "call_day_vs_avg": 0.55,
+        "net_call_premium": -13991110,
+        "implied_move_pct": 5.8,
+        "range_pos_52w": 0.15,
+        "iv_rank": 20.7955,
+        "uw_gex_regime_hint": 0.537,
+        "next_earnings": "2026-10-20"
       },
       "breakdown": {
         "liq": 0.98,
-        "conviction": 0.71,
-        "move": 0.68,
-        "trend": 0.89,
-        "activity": 0.55,
-        "regime": 0.71
+        "conviction": 0.95,
+        "move": 0.36,
+        "trend": 0.73,
+        "activity": 0.25,
+        "regime": 0.8
       }
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
-      "name": "ALPHABET INC",
-      "sector": "Communication Services",
-      "close": 370.92,
-      "marketcap": 2160238080000,
+      "ticker": "AMD",
+      "name": "ADVANCED MICRO DEVICES INC",
+      "sector": "Technology",
+      "close": 482.93,
+      "marketcap": 788371172033,
       "bias": "BULL",
-      "score": 0.783,
+      "score": 0.757,
       "signals": {
-        "total_oi": 3150940,
-        "call_day_vs_avg": 1.83,
-        "net_call_premium": 52870474,
-        "implied_move_pct": 7.6,
-        "range_pos_52w": 0.83,
-        "iv_rank": 72.6522,
-        "uw_gex_regime_hint": 1.514,
-        "next_earnings": "2026-07-22"
+        "total_oi": 3234511,
+        "call_day_vs_avg": 0.93,
+        "net_call_premium": -15558825,
+        "implied_move_pct": 10.6,
+        "range_pos_52w": 0.77,
+        "iv_rank": 31.2064,
+        "uw_gex_regime_hint": 13.611,
+        "next_earnings": "2026-11-03"
       },
       "breakdown": {
-        "liq": 0.87,
-        "conviction": 0.87,
-        "move": 0.42,
-        "trend": 0.61,
-        "activity": 0.89,
-        "regime": 0.9
+        "liq": 0.84,
+        "conviction": 0.84,
+        "move": 0.82,
+        "trend": 0.56,
+        "activity": 0.58,
+        "regime": 1
       }
     },
     {
       "rank": 4,
-      "ticker": "IBM",
-      "name": "INTERNATIONAL BUSINESS MACHINES CORP",
-      "sector": "Technology",
-      "close": 211.2,
-      "marketcap": 198503771136,
+      "ticker": "NKE",
+      "name": "NIKE INC",
+      "sector": "Consumer Cyclical",
+      "close": 40.51,
+      "marketcap": 48697514625,
       "bias": "BEAR",
-      "score": 0.782,
+      "score": 0.743,
       "signals": {
-        "total_oi": 746893,
-        "call_day_vs_avg": 2.28,
-        "net_call_premium": -15386462,
-        "implied_move_pct": 10.1,
-        "range_pos_52w": 0,
-        "iv_rank": 77.5525,
-        "uw_gex_regime_hint": 1.083,
-        "next_earnings": "2026-07-22"
+        "total_oi": 2038299,
+        "call_day_vs_avg": 0.93,
+        "net_call_premium": -913424,
+        "implied_move_pct": 6.2,
+        "range_pos_52w": 0.01,
+        "iv_rank": 21.7929,
+        "uw_gex_regime_hint": 0.139,
+        "next_earnings": "2026-09-29"
       },
       "breakdown": {
-        "liq": 0.39,
-        "conviction": 0.97,
-        "move": 0.73,
-        "trend": 1,
-        "activity": 0.95,
-        "regime": 0.85
+        "liq": 0.75,
+        "conviction": 0.82,
+        "move": 0.38,
+        "trend": 0.95,
+        "activity": 0.6,
+        "regime": 0.55
       }
     },
     {
       "rank": 5,
-      "ticker": "ORCL",
-      "name": "ORACLE CORP",
-      "sector": "Technology",
-      "close": 132.49,
-      "marketcap": 381633602790,
+      "ticker": "TSLA",
+      "name": "TESLA INC",
+      "sector": "Consumer Cyclical",
+      "close": 327.51,
+      "marketcap": 1293516267009,
       "bias": "BEAR",
-      "score": 0.772,
+      "score": 0.723,
       "signals": {
-        "total_oi": 2821791,
-        "call_day_vs_avg": 1.15,
-        "net_call_premium": -4831874,
-        "implied_move_pct": 11.9,
-        "range_pos_52w": 0.02,
-        "iv_rank": 56.3071,
-        "uw_gex_regime_hint": 0.106,
-        "next_earnings": "2026-09-08"
+        "total_oi": 5792159,
+        "call_day_vs_avg": 0.92,
+        "net_call_premium": -16107324,
+        "implied_move_pct": 7.2,
+        "range_pos_52w": 0.15,
+        "iv_rank": 0,
+        "uw_gex_regime_hint": 0.056,
+        "next_earnings": "2026-10-28"
       },
       "breakdown": {
-        "liq": 0.84,
-        "conviction": 0.73,
-        "move": 0.85,
-        "trend": 0.95,
-        "activity": 0.68,
-        "regime": 0.23
+        "liq": 1,
+        "conviction": 0.75,
+        "move": 0.49,
+        "trend": 0.71,
+        "activity": 0.56,
+        "regime": 0.2
       }
     },
     {
       "rank": 6,
-      "ticker": "SOFI",
-      "name": "SOFI TECHNOLOGIES INC",
-      "sector": "Financial Services",
-      "close": 17.87,
-      "marketcap": 22922585244,
+      "ticker": "META",
+      "name": "META PLATFORMS INC",
+      "sector": "Communication Services",
+      "close": 578.85,
+      "marketcap": 1276438637435,
       "bias": "BEAR",
-      "score": 0.732,
+      "score": 0.707,
       "signals": {
-        "total_oi": 4226374,
-        "call_day_vs_avg": 0.8,
-        "net_call_premium": -2049011,
-        "implied_move_pct": 13.6,
-        "range_pos_52w": 0.17,
-        "iv_rank": 54.3696,
-        "uw_gex_regime_hint": 0.042,
-        "next_earnings": "2026-07-29"
+        "total_oi": 3296343,
+        "call_day_vs_avg": 1.13,
+        "net_call_premium": -56250609,
+        "implied_move_pct": 6.4,
+        "range_pos_52w": 0.21,
+        "iv_rank": 29.2959,
+        "uw_gex_regime_hint": 0.003,
+        "next_earnings": "2026-11-04"
       },
       "breakdown": {
-        "liq": 0.9,
-        "conviction": 0.98,
-        "move": 0.92,
-        "trend": 0.6,
-        "activity": 0.44,
-        "regime": 0.06
+        "liq": 0.85,
+        "conviction": 0.93,
+        "move": 0.42,
+        "trend": 0.62,
+        "activity": 0.78,
+        "regime": 0
       }
     },
     {
       "rank": 7,
-      "ticker": "CRWD",
-      "name": "CROWDSTRIKE HOLDINGS INC",
-      "sector": "Technology",
-      "close": 206.77,
-      "marketcap": 210545471326,
-      "bias": "BULL",
-      "score": 0.731,
+      "ticker": "SOFI",
+      "name": "SOFI TECHNOLOGIES INC",
+      "sector": "Financial Services",
+      "close": 17.94,
+      "marketcap": 23170771613,
+      "bias": "BEAR",
+      "score": 0.7,
       "signals": {
-        "total_oi": 1464923,
-        "call_day_vs_avg": 1.39,
-        "net_call_premium": -6077452,
-        "implied_move_pct": 12.1,
-        "range_pos_52w": 0.92,
-        "iv_rank": 75.3445,
-        "uw_gex_regime_hint": 0.07,
-        "next_earnings": "2026-08-26"
+        "total_oi": 4073052,
+        "call_day_vs_avg": 0.57,
+        "net_call_premium": -515559,
+        "implied_move_pct": 8.5,
+        "range_pos_52w": 0.17,
+        "iv_rank": 0,
+        "uw_gex_regime_hint": 0.066,
+        "next_earnings": "2026-10-27"
       },
       "breakdown": {
-        "liq": 0.68,
-        "conviction": 0.89,
-        "move": 0.87,
-        "trend": 0.76,
-        "activity": 0.81,
-        "regime": 0.16
+        "liq": 0.91,
+        "conviction": 0.87,
+        "move": 0.58,
+        "trend": 0.65,
+        "activity": 0.35,
+        "regime": 0.27
       }
     },
     {
       "rank": 8,
+      "ticker": "WBD",
+      "name": "WARNER BROS DISCOVERY INC",
+      "sector": "Communication Services",
+      "close": 27.65,
+      "marketcap": 69420946632,
+      "bias": "BULL",
+      "score": 0.672,
+      "signals": {
+        "total_oi": 2895977,
+        "call_day_vs_avg": 1.38,
+        "net_call_premium": 278778,
+        "implied_move_pct": 4.1,
+        "range_pos_52w": 0.87,
+        "iv_rank": 17.0583,
+        "uw_gex_regime_hint": 2.147,
+        "next_earnings": "2026-11-05"
+      },
+      "breakdown": {
+        "liq": 0.82,
+        "conviction": 0.35,
+        "move": 0.09,
+        "trend": 0.78,
+        "activity": 0.91,
+        "regime": 0.98
+      }
+    },
+    {
+      "rank": 9,
+      "ticker": "UBER",
+      "name": "UBER TECHNOLOGIES INC",
+      "sector": "Technology",
+      "close": 75.36,
+      "marketcap": 153927330719,
+      "bias": "BEAR",
+      "score": 0.655,
+      "signals": {
+        "total_oi": 1314754,
+        "call_day_vs_avg": 1.19,
+        "net_call_premium": -3491638,
+        "implied_move_pct": 6.2,
+        "range_pos_52w": 0.27,
+        "iv_rank": 16.3121,
+        "uw_gex_regime_hint": 0.179,
+        "next_earnings": "2026-11-03"
+      },
+      "breakdown": {
+        "liq": 0.6,
+        "conviction": 0.89,
+        "move": 0.38,
+        "trend": 0.51,
+        "activity": 0.84,
+        "regime": 0.6
+      }
+    },
+    {
+      "rank": 10,
+      "ticker": "PLTR",
+      "name": "PALANTIR TECHNOLOGIES INC",
+      "sector": "Technology",
+      "close": 171.04,
+      "marketcap": 393514007792,
+      "bias": "BULL",
+      "score": 0.653,
+      "signals": {
+        "total_oi": 3854595,
+        "call_day_vs_avg": 0.67,
+        "net_call_premium": -10476359,
+        "implied_move_pct": 8.7,
+        "range_pos_52w": 0.64,
+        "iv_rank": 13.1655,
+        "uw_gex_regime_hint": 0.139,
+        "next_earnings": "2026-11-02"
+      },
+      "breakdown": {
+        "liq": 0.89,
+        "conviction": 0.91,
+        "move": 0.64,
+        "trend": 0.25,
+        "activity": 0.45,
+        "regime": 0.53
+      }
+    },
+    {
+      "rank": 11,
+      "ticker": "APP",
+      "name": "APPLOVIN CORP",
+      "sector": "Technology",
+      "close": 303.76,
+      "marketcap": 92477605680,
+      "bias": "BEAR",
+      "score": 0.647,
+      "signals": {
+        "total_oi": 344025,
+        "call_day_vs_avg": 1.91,
+        "net_call_premium": -4637302,
+        "implied_move_pct": 10.7,
+        "range_pos_52w": 0,
+        "iv_rank": 12.4003,
+        "uw_gex_regime_hint": 0.093,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.02,
+        "conviction": 0.96,
+        "move": 0.84,
+        "trend": 1,
+        "activity": 0.96,
+        "regime": 0.35
+      }
+    },
+    {
+      "rank": 12,
+      "ticker": "COIN",
+      "name": "COINBASE GLOBAL INC",
+      "sector": "Technology",
+      "close": 149.04,
+      "marketcap": 33206563889,
+      "bias": "BEAR",
+      "score": 0.64,
+      "signals": {
+        "total_oi": 1097887,
+        "call_day_vs_avg": 0.47,
+        "net_call_premium": -474492,
+        "implied_move_pct": 11.8,
+        "range_pos_52w": 0.04,
+        "iv_rank": 27.9294,
+        "uw_gex_regime_hint": 0.107,
+        "next_earnings": "2026-10-29"
+      },
+      "breakdown": {
+        "liq": 0.55,
+        "conviction": 0.78,
+        "move": 0.91,
+        "trend": 0.87,
+        "activity": 0.16,
+        "regime": 0.38
+      }
+    },
+    {
+      "rank": 13,
+      "ticker": "CSCO",
+      "name": "CISCO SYSTEMS INC",
+      "sector": "Technology",
+      "close": 123.88,
+      "marketcap": 488264926300,
+      "bias": "BULL",
+      "score": 0.618,
+      "signals": {
+        "total_oi": 946686,
+        "call_day_vs_avg": 6.3,
+        "net_call_premium": -3675229,
+        "implied_move_pct": 9.8,
+        "range_pos_52w": 0.9,
+        "iv_rank": 93.4267,
+        "uw_gex_regime_hint": 0.12,
+        "next_earnings": "2026-08-12"
+      },
+      "breakdown": {
+        "liq": 0.42,
+        "conviction": 0.51,
+        "move": 0.73,
+        "trend": 0.8,
+        "activity": 1,
+        "regime": 0.44
+      }
+    },
+    {
+      "rank": 14,
+      "ticker": "GOOGL",
+      "name": "ALPHABET INC",
+      "sector": "Communication Services",
+      "close": 343.54,
+      "marketcap": 2015892720000,
+      "bias": "BULL",
+      "score": 0.604,
+      "signals": {
+        "total_oi": 3458210,
+        "call_day_vs_avg": 1.08,
+        "net_call_premium": -9758201,
+        "implied_move_pct": 5.5,
+        "range_pos_52w": 0.69,
+        "iv_rank": 15.8927,
+        "uw_gex_regime_hint": 0.753,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.87,
+        "conviction": 0.4,
+        "move": 0.33,
+        "trend": 0.4,
+        "activity": 0.75,
+        "regime": 0.85
+      }
+    },
+    {
+      "rank": 15,
+      "ticker": "FSLR",
+      "name": "FIRST SOLAR INC",
+      "sector": "Technology",
+      "close": 226.77,
+      "marketcap": 24370923825,
+      "bias": "BEAR",
+      "score": 0.596,
+      "signals": {
+        "total_oi": 618350,
+        "call_day_vs_avg": 1.3,
+        "net_call_premium": -2768152,
+        "implied_move_pct": 10.5,
+        "range_pos_52w": 0.35,
+        "iv_rank": 25.7314,
+        "uw_gex_regime_hint": 0.223,
+        "next_earnings": "2026-10-29"
+      },
+      "breakdown": {
+        "liq": 0.29,
+        "conviction": 1,
+        "move": 0.8,
+        "trend": 0.33,
+        "activity": 0.87,
+        "regime": 0.67
+      }
+    },
+    {
+      "rank": 16,
+      "ticker": "AMZN",
+      "name": "AMAZON.COM",
+      "sector": "Consumer Cyclical",
+      "close": 267.28,
+      "marketcap": 2882965891524,
+      "bias": "BULL",
+      "score": 0.592,
+      "signals": {
+        "total_oi": 4878127,
+        "call_day_vs_avg": 0.75,
+        "net_call_premium": -20884762,
+        "implied_move_pct": 5.4,
+        "range_pos_52w": 0.78,
+        "iv_rank": 18.551,
+        "uw_gex_regime_hint": 0.046,
+        "next_earnings": "2026-10-29"
+      },
+      "breakdown": {
+        "liq": 0.95,
+        "conviction": 0.45,
+        "move": 0.27,
+        "trend": 0.6,
+        "activity": 0.49,
+        "regime": 0.18
+      }
+    },
+    {
+      "rank": 17,
+      "ticker": "MRNA",
+      "name": "MODERNA INC",
+      "sector": "Healthcare",
+      "close": 63.67,
+      "marketcap": 25419349053,
+      "bias": "BULL",
+      "score": 0.571,
+      "signals": {
+        "total_oi": 614218,
+        "call_day_vs_avg": 1.13,
+        "net_call_premium": 506606,
+        "implied_move_pct": 13.3,
+        "range_pos_52w": 0.65,
+        "iv_rank": 29.4979,
+        "uw_gex_regime_hint": 0.211,
+        "next_earnings": "2026-11-05"
+      },
+      "breakdown": {
+        "liq": 0.27,
+        "conviction": 0.85,
+        "move": 0.98,
+        "trend": 0.36,
+        "activity": 0.8,
+        "regime": 0.65
+      }
+    },
+    {
+      "rank": 18,
+      "ticker": "RIVN",
+      "name": "RIVIAN AUTOMOTIVE INC",
+      "sector": "Consumer Cyclical",
+      "close": 15.93,
+      "marketcap": 23002093711,
+      "bias": "BEAR",
+      "score": 0.569,
+      "signals": {
+        "total_oi": 2252313,
+        "call_day_vs_avg": 0.61,
+        "net_call_premium": -358962,
+        "implied_move_pct": 9.8,
+        "range_pos_52w": 0.38,
+        "iv_rank": 7.9703,
+        "uw_gex_regime_hint": 0.13,
+        "next_earnings": "2026-11-03"
+      },
+      "breakdown": {
+        "liq": 0.76,
+        "conviction": 0.8,
+        "move": 0.73,
+        "trend": 0.16,
+        "activity": 0.38,
+        "regime": 0.49
+      }
+    },
+    {
+      "rank": 19,
+      "ticker": "AAPL",
+      "name": "APPLE INC",
+      "sector": "Technology",
+      "close": 302.25,
+      "marketcap": 4411090905000,
+      "bias": "BULL",
+      "score": 0.565,
+      "signals": {
+        "total_oi": 5022694,
+        "call_day_vs_avg": 0.87,
+        "net_call_premium": -26748527,
+        "implied_move_pct": 4.5,
+        "range_pos_52w": 0.65,
+        "iv_rank": 36.783,
+        "uw_gex_regime_hint": 0.27,
+        "next_earnings": "2026-10-29"
+      },
+      "breakdown": {
+        "liq": 0.96,
+        "conviction": 0.42,
+        "move": 0.15,
+        "trend": 0.31,
+        "activity": 0.55,
+        "regime": 0.73
+      }
+    },
+    {
+      "rank": 20,
+      "ticker": "FCX",
+      "name": "FREEPORT-MCMORAN INC",
+      "sector": "Basic Materials",
+      "close": 69.22,
+      "marketcap": 99401132942,
+      "bias": "BULL",
+      "score": 0.555,
+      "signals": {
+        "total_oi": 1165897,
+        "call_day_vs_avg": 0.45,
+        "net_call_premium": -1185588,
+        "implied_move_pct": 9.1,
+        "range_pos_52w": 0.92,
+        "iv_rank": 44.3034,
+        "uw_gex_regime_hint": 0.02,
+        "next_earnings": "2026-10-22"
+      },
+      "breakdown": {
+        "liq": 0.56,
+        "conviction": 0.69,
+        "move": 0.65,
+        "trend": 0.82,
+        "activity": 0.07,
+        "regime": 0.05
+      }
+    },
+    {
+      "rank": 21,
+      "ticker": "HOOD",
+      "name": "ROBINHOOD MARKETS INC",
+      "sector": "Technology",
+      "close": 94.91,
+      "marketcap": 75038715509,
+      "bias": "BEAR",
+      "score": 0.55,
+      "signals": {
+        "total_oi": 1698415,
+        "call_day_vs_avg": 0.47,
+        "net_call_premium": -847764,
+        "implied_move_pct": 11.1,
+        "range_pos_52w": 0.35,
+        "iv_rank": 19.1336,
+        "uw_gex_regime_hint": 0.32,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.65,
+        "conviction": 0.65,
+        "move": 0.85,
+        "trend": 0.35,
+        "activity": 0.15,
+        "regime": 0.76
+      }
+    },
+    {
+      "rank": 22,
       "ticker": "MSFT",
       "name": "MICROSOFT CORP",
       "sector": "Technology",
-      "close": 395.63,
-      "marketcap": 2938911621944,
-      "bias": "BEAR",
-      "score": 0.729,
+      "close": 492.43,
+      "marketcap": 3656561366133,
+      "bias": "BULL",
+      "score": 0.531,
       "signals": {
-        "total_oi": 4554076,
-        "call_day_vs_avg": 1.26,
-        "net_call_premium": 46171076,
-        "implied_move_pct": 9,
-        "range_pos_52w": 0.23,
-        "iv_rank": 100,
-        "uw_gex_regime_hint": 1.065,
-        "next_earnings": "2026-07-29"
+        "total_oi": 4303129,
+        "call_day_vs_avg": 0.55,
+        "net_call_premium": -27054355,
+        "implied_move_pct": 5,
+        "range_pos_52w": 0.7,
+        "iv_rank": 27.7025,
+        "uw_gex_regime_hint": 0.062,
+        "next_earnings": "2026-11-04"
       },
       "breakdown": {
-        "liq": 0.92,
-        "conviction": 0.76,
-        "move": 0.63,
-        "trend": 0.45,
-        "activity": 0.74,
+        "liq": 0.93,
+        "conviction": 0.49,
+        "move": 0.18,
+        "trend": 0.44,
+        "activity": 0.27,
+        "regime": 0.25
+      }
+    },
+    {
+      "rank": 23,
+      "ticker": "KLAC",
+      "name": "KLA CORP",
+      "sector": "Technology",
+      "close": 208.25,
+      "marketcap": 272088367560,
+      "bias": "BEAR",
+      "score": 0.531,
+      "signals": {
+        "total_oi": 496233,
+        "call_day_vs_avg": 0.96,
+        "net_call_premium": -1193063,
+        "implied_move_pct": 11.9,
+        "range_pos_52w": 0.02,
+        "iv_rank": 46.0893,
+        "uw_gex_regime_hint": 0.174,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.16,
+        "conviction": 0.38,
+        "move": 0.93,
+        "trend": 0.93,
+        "activity": 0.64,
+        "regime": 0.58
+      }
+    },
+    {
+      "rank": 24,
+      "ticker": "CCL",
+      "name": "CARNIVAL CORP",
+      "sector": "Consumer Cyclical",
+      "close": 27.67,
+      "marketcap": 37898191123,
+      "bias": "BEAR",
+      "score": 0.523,
+      "signals": {
+        "total_oi": 984499,
+        "call_day_vs_avg": 1.03,
+        "net_call_premium": -452756,
+        "implied_move_pct": 7.6,
+        "range_pos_52w": 0.4,
+        "iv_rank": 18.4766,
+        "uw_gex_regime_hint": 1.309,
+        "next_earnings": "2026-10-05"
+      },
+      "breakdown": {
+        "liq": 0.49,
+        "conviction": 0.73,
+        "move": 0.53,
+        "trend": 0.11,
+        "activity": 0.71,
+        "regime": 0.93
+      }
+    },
+    {
+      "rank": 25,
+      "ticker": "AMAT",
+      "name": "APPLIED MATERIALS INC",
+      "sector": "Technology",
+      "close": 548.15,
+      "marketcap": 435208861555,
+      "bias": "BULL",
+      "score": 0.518,
+      "signals": {
+        "total_oi": 503176,
+        "call_day_vs_avg": 1.03,
+        "net_call_premium": -4998863,
+        "implied_move_pct": 13,
+        "range_pos_52w": 0.67,
+        "iv_rank": 56.5782,
+        "uw_gex_regime_hint": 0.666,
+        "next_earnings": "2026-08-13"
+      },
+      "breakdown": {
+        "liq": 0.2,
+        "conviction": 0.67,
+        "move": 0.96,
+        "trend": 0.38,
+        "activity": 0.73,
         "regime": 0.82
+      }
+    },
+    {
+      "rank": 26,
+      "ticker": "PCG",
+      "name": "PG&E CORP",
+      "sector": "Utilities",
+      "close": 17.38,
+      "marketcap": 46580320420,
+      "bias": "BULL",
+      "score": 0.505,
+      "signals": {
+        "total_oi": 1804211,
+        "call_day_vs_avg": 0.83,
+        "net_call_premium": 388755,
+        "implied_move_pct": 9.7,
+        "range_pos_52w": 0.63,
+        "iv_rank": 65.2548,
+        "uw_gex_regime_hint": 0.071,
+        "next_earnings": "2026-10-22"
+      },
+      "breakdown": {
+        "liq": 0.67,
+        "conviction": 0.55,
+        "move": 0.71,
+        "trend": 0.24,
+        "activity": 0.53,
+        "regime": 0.31
+      }
+    },
+    {
+      "rank": 27,
+      "ticker": "GOOG",
+      "name": "ALPHABET INC",
+      "sector": "Communication Services",
+      "close": 342.37,
+      "marketcap": 1879382770000,
+      "bias": "BULL",
+      "score": 0.492,
+      "signals": {
+        "total_oi": 1856228,
+        "call_day_vs_avg": 0.99,
+        "net_call_premium": -1906461,
+        "implied_move_pct": 5.4,
+        "range_pos_52w": 0.7,
+        "iv_rank": 17.2914,
+        "uw_gex_regime_hint": 0.991,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.71,
+        "conviction": 0.11,
+        "move": 0.27,
+        "trend": 0.42,
+        "activity": 0.69,
+        "regime": 0.91
+      }
+    },
+    {
+      "rank": 28,
+      "ticker": "CRWD",
+      "name": "CROWDSTRIKE HOLDINGS INC",
+      "sector": "Technology",
+      "close": 221.78,
+      "marketcap": 225829543118,
+      "bias": "BULL",
+      "score": 0.491,
+      "signals": {
+        "total_oi": 1331984,
+        "call_day_vs_avg": 0.45,
+        "net_call_premium": 360369,
+        "implied_move_pct": 11.6,
+        "range_pos_52w": 0.96,
+        "iv_rank": 68.3345,
+        "uw_gex_regime_hint": 0.028,
+        "next_earnings": "2026-08-26"
+      },
+      "breakdown": {
+        "liq": 0.62,
+        "conviction": 0.15,
+        "move": 0.89,
+        "trend": 0.89,
+        "activity": 0.09,
+        "regime": 0.09
+      }
+    },
+    {
+      "rank": 29,
+      "ticker": "BSX",
+      "name": "BOSTON SCIENTIFIC CORP",
+      "sector": "Healthcare",
+      "close": 51.42,
+      "marketcap": 74519382227,
+      "bias": "BEAR",
+      "score": 0.487,
+      "signals": {
+        "total_oi": 969041,
+        "call_day_vs_avg": 0.49,
+        "net_call_premium": 534200,
+        "implied_move_pct": 6.9,
+        "range_pos_52w": 0.14,
+        "iv_rank": 46.1559,
+        "uw_gex_regime_hint": 0.137,
+        "next_earnings": "2026-10-28"
+      },
+      "breakdown": {
+        "liq": 0.44,
+        "conviction": 0.44,
+        "move": 0.45,
+        "trend": 0.76,
+        "activity": 0.2,
+        "regime": 0.51
+      }
+    },
+    {
+      "rank": 30,
+      "ticker": "VRT",
+      "name": "VERTIV HOLDINGS CO",
+      "sector": "Industrials",
+      "close": 288.36,
+      "marketcap": 111015189566,
+      "bias": "BULL",
+      "score": 0.472,
+      "signals": {
+        "total_oi": 475473,
+        "call_day_vs_avg": 1.31,
+        "net_call_premium": -967801,
+        "implied_move_pct": 11.2,
+        "range_pos_52w": 0.65,
+        "iv_rank": 28.6621,
+        "uw_gex_regime_hint": 1.915,
+        "next_earnings": "2026-10-28"
+      },
+      "breakdown": {
+        "liq": 0.11,
+        "conviction": 0.56,
+        "move": 0.87,
+        "trend": 0.29,
+        "activity": 0.89,
+        "regime": 0.96
+      }
+    },
+    {
+      "rank": 31,
+      "ticker": "BA",
+      "name": "BOEING CO",
+      "sector": "Industrials",
+      "close": 231.2,
+      "marketcap": 182733548624,
+      "bias": "BULL",
+      "score": 0.468,
+      "signals": {
+        "total_oi": 824671,
+        "call_day_vs_avg": 0.62,
+        "net_call_premium": -2036769,
+        "implied_move_pct": 5.5,
+        "range_pos_52w": 0.7,
+        "iv_rank": 24.0109,
+        "uw_gex_regime_hint": 0.173,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.38,
+        "conviction": 0.64,
+        "move": 0.33,
+        "trend": 0.45,
+        "activity": 0.42,
+        "regime": 0.56
+      }
+    },
+    {
+      "rank": 32,
+      "ticker": "CNC",
+      "name": "CENTENE CORP",
+      "sector": "Healthcare",
+      "close": 67.07,
+      "marketcap": 33132244650,
+      "bias": "BULL",
+      "score": 0.467,
+      "signals": {
+        "total_oi": 305797,
+        "call_day_vs_avg": 0.94,
+        "net_call_premium": 332583,
+        "implied_move_pct": 7.3,
+        "range_pos_52w": 0.95,
+        "iv_rank": 1.3162,
+        "uw_gex_regime_hint": 0.125,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0,
+        "conviction": 0.6,
+        "move": 0.51,
+        "trend": 0.84,
+        "activity": 0.62,
+        "regime": 0.45
+      }
+    },
+    {
+      "rank": 33,
+      "ticker": "VST",
+      "name": "VISTRA CORP",
+      "sector": "Utilities",
+      "close": 146.68,
+      "marketcap": 49230970403,
+      "bias": "BEAR",
+      "score": 0.464,
+      "signals": {
+        "total_oi": 539700,
+        "call_day_vs_avg": 0.33,
+        "net_call_premium": -511851,
+        "implied_move_pct": 8.4,
+        "range_pos_52w": 0.16,
+        "iv_rank": 4.8432,
+        "uw_gex_regime_hint": 0.913,
+        "next_earnings": "2026-11-05"
+      },
+      "breakdown": {
+        "liq": 0.22,
+        "conviction": 0.62,
+        "move": 0.56,
+        "trend": 0.67,
+        "activity": 0.02,
+        "regime": 0.89
+      }
+    },
+    {
+      "rank": 34,
+      "ticker": "QCOM",
+      "name": "QUALCOMM INC",
+      "sector": "Technology",
+      "close": 163.07,
+      "marketcap": 171223500000,
+      "bias": "BEAR",
+      "score": 0.46,
+      "signals": {
+        "total_oi": 993166,
+        "call_day_vs_avg": 0.51,
+        "net_call_premium": -605772,
+        "implied_move_pct": 8.6,
+        "range_pos_52w": 0.3,
+        "iv_rank": 28.6564,
+        "uw_gex_regime_hint": 0.685,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.51,
+        "conviction": 0.33,
+        "move": 0.6,
+        "trend": 0.47,
+        "activity": 0.22,
+        "regime": 0.84
+      }
+    },
+    {
+      "rank": 35,
+      "ticker": "SBUX",
+      "name": "STARBUCKS CORP",
+      "sector": "Consumer Cyclical",
+      "close": 108.49,
+      "marketcap": 123678600000,
+      "bias": "BULL",
+      "score": 0.459,
+      "signals": {
+        "total_oi": 485853,
+        "call_day_vs_avg": 1.27,
+        "net_call_premium": 345752,
+        "implied_move_pct": 5.2,
+        "range_pos_52w": 0.98,
+        "iv_rank": 11.3589,
+        "uw_gex_regime_hint": 0.103,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.15,
+        "conviction": 0.31,
+        "move": 0.24,
+        "trend": 0.91,
+        "activity": 0.85,
+        "regime": 0.36
+      }
+    },
+    {
+      "rank": 36,
+      "ticker": "AVGO",
+      "name": "BROADCOM INC",
+      "sector": "Technology",
+      "close": 416.05,
+      "marketcap": 1979391241378,
+      "bias": "BULL",
+      "score": 0.457,
+      "signals": {
+        "total_oi": 2026084,
+        "call_day_vs_avg": 0.68,
+        "net_call_premium": -3883128,
+        "implied_move_pct": 9.6,
+        "range_pos_52w": 0.63,
+        "iv_rank": 44.54,
+        "uw_gex_regime_hint": 0.258,
+        "next_earnings": "2026-09-02"
+      },
+      "breakdown": {
+        "liq": 0.73,
+        "conviction": 0.18,
+        "move": 0.67,
+        "trend": 0.22,
+        "activity": 0.47,
+        "regime": 0.69
+      }
+    },
+    {
+      "rank": 37,
+      "ticker": "JPM",
+      "name": "JPMORGAN CHASE & CO",
+      "sector": "Financial Services",
+      "close": 365.18,
+      "marketcap": 970716434690,
+      "bias": "BULL",
+      "score": 0.437,
+      "signals": {
+        "total_oi": 691578,
+        "call_day_vs_avg": 0.62,
+        "net_call_premium": -2222100,
+        "implied_move_pct": 3.8,
+        "range_pos_52w": 0.99,
+        "iv_rank": 0,
+        "uw_gex_regime_hint": 0.061,
+        "next_earnings": "2026-10-13"
+      },
+      "breakdown": {
+        "liq": 0.33,
+        "conviction": 0.27,
+        "move": 0.04,
+        "trend": 0.98,
+        "activity": 0.4,
+        "regime": 0.24
+      }
+    },
+    {
+      "rank": 38,
+      "ticker": "V",
+      "name": "VISA INC",
+      "sector": "Financial Services",
+      "close": 359.42,
+      "marketcap": 612492184477,
+      "bias": "BULL",
+      "score": 0.434,
+      "signals": {
+        "total_oi": 471937,
+        "call_day_vs_avg": 1.59,
+        "net_call_premium": -5716670,
+        "implied_move_pct": 3.8,
+        "range_pos_52w": 0.82,
+        "iv_rank": 24.3056,
+        "uw_gex_regime_hint": 0.086,
+        "next_earnings": "2026-10-27"
+      },
+      "breakdown": {
+        "liq": 0.09,
+        "conviction": 0.58,
+        "move": 0.04,
+        "trend": 0.64,
+        "activity": 0.93,
+        "regime": 0.33
+      }
+    },
+    {
+      "rank": 39,
+      "ticker": "CRM",
+      "name": "SALESFORCE INC",
+      "sector": "Technology",
+      "close": 193.32,
+      "marketcap": 158329080000,
+      "bias": "BEAR",
+      "score": 0.427,
+      "signals": {
+        "total_oi": 975650,
+        "call_day_vs_avg": 0.46,
+        "net_call_premium": -1891258,
+        "implied_move_pct": 9.8,
+        "range_pos_52w": 0.38,
+        "iv_rank": 75.7976,
+        "uw_gex_regime_hint": 0.126,
+        "next_earnings": "2026-08-26"
+      },
+      "breakdown": {
+        "liq": 0.45,
+        "conviction": 0.71,
+        "move": 0.73,
+        "trend": 0.15,
+        "activity": 0.13,
+        "regime": 0.47
+      }
+    },
+    {
+      "rank": 40,
+      "ticker": "ADBE",
+      "name": "ADOBE INC",
+      "sector": "Technology",
+      "close": 258.75,
+      "marketcap": 102853125000,
+      "bias": "BEAR",
+      "score": 0.421,
+      "signals": {
+        "total_oi": 722020,
+        "call_day_vs_avg": 0.64,
+        "net_call_premium": -775233,
+        "implied_move_pct": 9.6,
+        "range_pos_52w": 0.38,
+        "iv_rank": 66.3616,
+        "uw_gex_regime_hint": 0.268,
+        "next_earnings": "2026-09-10"
+      },
+      "breakdown": {
+        "liq": 0.36,
+        "conviction": 0.53,
+        "move": 0.67,
+        "trend": 0.18,
+        "activity": 0.44,
+        "regime": 0.71
+      }
+    },
+    {
+      "rank": 41,
+      "ticker": "SHOP",
+      "name": "SHOPIFY INC",
+      "sector": "Technology",
+      "close": 150.41,
+      "marketcap": 181781065892,
+      "bias": "BULL",
+      "score": 0.419,
+      "signals": {
+        "total_oi": 831583,
+        "call_day_vs_avg": 0.48,
+        "net_call_premium": -2315292,
+        "implied_move_pct": 8.3,
+        "range_pos_52w": 0.64,
+        "iv_rank": 12.1069,
+        "uw_gex_regime_hint": 0.045,
+        "next_earnings": "2026-11-03"
+      },
+      "breakdown": {
+        "liq": 0.4,
+        "conviction": 0.76,
+        "move": 0.55,
+        "trend": 0.27,
+        "activity": 0.18,
+        "regime": 0.16
+      }
+    },
+    {
+      "rank": 42,
+      "ticker": "MS",
+      "name": "MORGAN STANLEY",
+      "sector": "Financial Services",
+      "close": 217.64,
+      "marketcap": 341818047791,
+      "bias": "BULL",
+      "score": 0.408,
+      "signals": {
+        "total_oi": 375010,
+        "call_day_vs_avg": 2.3,
+        "net_call_premium": -656101,
+        "implied_move_pct": 5.4,
+        "range_pos_52w": 0.84,
+        "iv_rank": 26.7974,
+        "uw_gex_regime_hint": 0.911,
+        "next_earnings": "2026-10-21"
+      },
+      "breakdown": {
+        "liq": 0.04,
+        "conviction": 0.16,
+        "move": 0.27,
+        "trend": 0.69,
+        "activity": 0.98,
+        "regime": 0.87
+      }
+    },
+    {
+      "rank": 43,
+      "ticker": "UNH",
+      "name": "UNITEDHEALTH GROUP INC",
+      "sector": "Healthcare",
+      "close": 405.59,
+      "marketcap": 364055493995,
+      "bias": "BULL",
+      "score": 0.397,
+      "signals": {
+        "total_oi": 981141,
+        "call_day_vs_avg": 0.53,
+        "net_call_premium": -913257,
+        "implied_move_pct": 4.8,
+        "range_pos_52w": 0.73,
+        "iv_rank": 1.9694,
+        "uw_gex_regime_hint": 0.211,
+        "next_earnings": "2026-10-27"
+      },
+      "breakdown": {
+        "liq": 0.47,
+        "conviction": 0.29,
+        "move": 0.16,
+        "trend": 0.49,
+        "activity": 0.24,
+        "regime": 0.64
+      }
+    },
+    {
+      "rank": 44,
+      "ticker": "DAL",
+      "name": "DELTA AIR LINES INC",
+      "sector": "Industrials",
+      "close": 89.93,
+      "marketcap": 59140039088,
+      "bias": "BULL",
+      "score": 0.379,
+      "signals": {
+        "total_oi": 397011,
+        "call_day_vs_avg": 1.83,
+        "net_call_premium": -49590,
+        "implied_move_pct": 6.9,
+        "range_pos_52w": 0.86,
+        "iv_rank": 11.7438,
+        "uw_gex_regime_hint": 0.12,
+        "next_earnings": "2026-10-08"
+      },
+      "breakdown": {
+        "liq": 0.05,
+        "conviction": 0.07,
+        "move": 0.45,
+        "trend": 0.75,
+        "activity": 0.95,
+        "regime": 0.42
+      }
+    },
+    {
+      "rank": 45,
+      "ticker": "BKNG",
+      "name": "BOOKING HOLDINGS INC",
+      "sector": "Consumer Cyclical",
+      "close": 212.26,
+      "marketcap": 159488024930,
+      "bias": "BEAR",
+      "score": 0.374,
+      "signals": {
+        "total_oi": 641462,
+        "call_day_vs_avg": 0.39,
+        "net_call_premium": 342774,
+        "implied_move_pct": 5.1,
+        "range_pos_52w": 0.01,
+        "iv_rank": 18.0564,
+        "uw_gex_regime_hint": 0.004,
+        "next_earnings": "2026-10-27"
+      },
+      "breakdown": {
+        "liq": 0.31,
+        "conviction": 0.24,
+        "move": 0.2,
+        "trend": 0.96,
+        "activity": 0.04,
+        "regime": 0.04
+      }
+    },
+    {
+      "rank": 46,
+      "ticker": "NOW",
+      "name": "SERVICENOW INC",
+      "sector": "Technology",
+      "close": 124.94,
+      "marketcap": 129187960000,
+      "bias": "BEAR",
+      "score": 0.361,
+      "signals": {
+        "total_oi": 1378348,
+        "call_day_vs_avg": 0.43,
+        "net_call_premium": 552334,
+        "implied_move_pct": 10.1,
+        "range_pos_52w": 0.39,
+        "iv_rank": 48.3791,
+        "uw_gex_regime_hint": 0.028,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.64,
+        "conviction": 0.36,
+        "move": 0.78,
+        "trend": 0.13,
+        "activity": 0.05,
+        "regime": 0.07
+      }
+    },
+    {
+      "rank": 47,
+      "ticker": "XYZ",
+      "name": "Block",
+      "sector": "Technology",
+      "close": 78.28,
+      "marketcap": 42335076480,
+      "bias": "BULL",
+      "score": 0.357,
+      "signals": {
+        "total_oi": 499303,
+        "call_day_vs_avg": 1.14,
+        "net_call_premium": -83421,
+        "implied_move_pct": 6.7,
+        "range_pos_52w": 0.78,
+        "iv_rank": 0,
+        "uw_gex_regime_hint": 0.004,
+        "next_earnings": "2026-11-05"
+      },
+      "breakdown": {
+        "liq": 0.18,
+        "conviction": 0.2,
+        "move": 0.44,
+        "trend": 0.58,
+        "activity": 0.82,
+        "regime": 0.02
+      }
+    },
+    {
+      "rank": 48,
+      "ticker": "CCJ",
+      "name": "CAMECO CORP",
+      "sector": "Energy",
+      "close": 99.03,
+      "marketcap": 43123403561,
+      "bias": "MIXED",
+      "score": 0.339,
+      "signals": {
+        "total_oi": 410692,
+        "call_day_vs_avg": 0.96,
+        "net_call_premium": -313658,
+        "implied_move_pct": 8.6,
+        "range_pos_52w": 0.45,
+        "iv_rank": 17.1089,
+        "uw_gex_regime_hint": 1.412,
+        "next_earnings": "2026-11-04"
+      },
+      "breakdown": {
+        "liq": 0.07,
+        "conviction": 0.47,
+        "move": 0.6,
+        "trend": 0.05,
+        "activity": 0.65,
+        "regime": 0.95
+      }
+    },
+    {
+      "rank": 49,
+      "ticker": "XOM",
+      "name": "EXXON MOBIL CORP",
+      "sector": "Energy",
+      "close": 159.75,
+      "marketcap": 656877935610,
+      "bias": "BULL",
+      "score": 0.322,
+      "signals": {
+        "total_oi": 1030986,
+        "call_day_vs_avg": 0.46,
+        "net_call_premium": -102717,
+        "implied_move_pct": 5.1,
+        "range_pos_52w": 0.76,
+        "iv_rank": 46.3243,
+        "uw_gex_regime_hint": 0.06,
+        "next_earnings": "2026-10-30"
+      },
+      "breakdown": {
+        "liq": 0.53,
+        "conviction": 0.04,
+        "move": 0.2,
+        "trend": 0.55,
+        "activity": 0.11,
+        "regime": 0.22
+      }
+    },
+    {
+      "rank": 50,
+      "ticker": "PFE",
+      "name": "PFIZER INC",
+      "sector": "Healthcare",
+      "close": 26.31,
+      "marketcap": 149958412127,
+      "bias": "MIXED",
+      "score": 0.312,
+      "signals": {
+        "total_oi": 2611845,
+        "call_day_vs_avg": 0.57,
+        "net_call_premium": -34727,
+        "implied_move_pct": 3.7,
+        "range_pos_52w": 0.53,
+        "iv_rank": 6.6356,
+        "uw_gex_regime_hint": 0.114,
+        "next_earnings": "2026-11-03"
+      },
+      "breakdown": {
+        "liq": 0.78,
+        "conviction": 0.05,
+        "move": 0.02,
+        "trend": 0.04,
+        "activity": 0.33,
+        "regime": 0.4
+      }
+    },
+    {
+      "rank": 51,
+      "ticker": "T",
+      "name": "AT&T INC",
+      "sector": "Communication Services",
+      "close": 24.25,
+      "marketcap": 166170352013,
+      "bias": "MIXED",
+      "score": 0.294,
+      "signals": {
+        "total_oi": 1194059,
+        "call_day_vs_avg": 0.57,
+        "net_call_premium": -157414,
+        "implied_move_pct": 4.4,
+        "range_pos_52w": 0.44,
+        "iv_rank": 24.1192,
+        "uw_gex_regime_hint": 0.195,
+        "next_earnings": "2026-10-28"
+      },
+      "breakdown": {
+        "liq": 0.58,
+        "conviction": 0.09,
+        "move": 0.11,
+        "trend": 0.07,
+        "activity": 0.31,
+        "regime": 0.62
+      }
+    },
+    {
+      "rank": 52,
+      "ticker": "PYPL",
+      "name": "PAYPAL HOLDINGS INC",
+      "sector": "Financial Services",
+      "close": 59.2,
+      "marketcap": 50643283741,
+      "bias": "BULL",
+      "score": 0.28,
+      "signals": {
+        "total_oi": 1804672,
+        "call_day_vs_avg": 0.29,
+        "net_call_premium": 113626,
+        "implied_move_pct": 5.3,
+        "range_pos_52w": 0.51,
+        "iv_rank": 5.8008,
+        "uw_gex_regime_hint": 0.035,
+        "next_earnings": "2026-10-27"
+      },
+      "breakdown": {
+        "liq": 0.69,
+        "conviction": 0.25,
+        "move": 0.25,
+        "trend": 0,
+        "activity": 0,
+        "regime": 0.13
+      }
+    },
+    {
+      "rank": 53,
+      "ticker": "CVX",
+      "name": "CHEVRON CORP",
+      "sector": "Energy",
+      "close": 196.6,
+      "marketcap": 388436632468,
+      "bias": "BULL",
+      "score": 0.271,
+      "signals": {
+        "total_oi": 561135,
+        "call_day_vs_avg": 0.56,
+        "net_call_premium": -570894,
+        "implied_move_pct": 4.4,
+        "range_pos_52w": 0.73,
+        "iv_rank": 33.3961,
+        "uw_gex_regime_hint": 0.042,
+        "next_earnings": "2026-10-30"
+      },
+      "breakdown": {
+        "liq": 0.25,
+        "conviction": 0.13,
+        "move": 0.11,
+        "trend": 0.53,
+        "activity": 0.29,
+        "regime": 0.15
+      }
+    },
+    {
+      "rank": 54,
+      "ticker": "WDC",
+      "name": "WESTERN DIGITAL CORP",
+      "sector": "Technology",
+      "close": 454.1,
+      "marketcap": 156520155687,
+      "bias": "BULL",
+      "score": 0.267,
+      "signals": {
+        "total_oi": 479444,
+        "call_day_vs_avg": 0.98,
+        "net_call_premium": 22744,
+        "implied_move_pct": 13.5,
+        "range_pos_52w": 0.52,
+        "iv_rank": 44.5504,
+        "uw_gex_regime_hint": 0.398,
+        "next_earnings": "2026-10-29"
+      },
+      "breakdown": {
+        "liq": 0.13,
+        "conviction": 0.02,
+        "move": 1,
+        "trend": 0.02,
+        "activity": 0.67,
+        "regime": 0.78
+      }
+    },
+    {
+      "rank": 55,
+      "ticker": "BRKB",
+      "name": "Berkshire Hathaway Inc.",
+      "sector": "Financial Services",
+      "close": 510,
+      "marketcap": 592100194133,
+      "bias": "BULL",
+      "score": 0.261,
+      "signals": {
+        "total_oi": 547076,
+        "call_day_vs_avg": 1.1,
+        "net_call_premium": 37748,
+        "implied_move_pct": 2.5,
+        "range_pos_52w": 0.62,
+        "iv_rank": 16.7503,
+        "uw_gex_regime_hint": 0.313,
+        "next_earnings": null
+      },
+      "breakdown": {
+        "liq": 0.24,
+        "conviction": 0,
+        "move": 0,
+        "trend": 0.2,
+        "activity": 0.76,
+        "regime": 0.75
+      }
+    },
+    {
+      "rank": 56,
+      "ticker": "DIS",
+      "name": "WALT DISNEY CO",
+      "sector": "Communication Services",
+      "close": 103.22,
+      "marketcap": 178228622024,
+      "bias": "BEAR",
+      "score": 0.223,
+      "signals": {
+        "total_oi": 706572,
+        "call_day_vs_avg": 0.61,
+        "net_call_premium": -369194,
+        "implied_move_pct": 3.9,
+        "range_pos_52w": 0.4,
+        "iv_rank": 4.5773,
+        "uw_gex_regime_hint": 0.031,
+        "next_earnings": "2026-11-12"
+      },
+      "breakdown": {
+        "liq": 0.35,
+        "conviction": 0.22,
+        "move": 0.07,
+        "trend": 0.09,
+        "activity": 0.36,
+        "regime": 0.11
       }
     }
   ]

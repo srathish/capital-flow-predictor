@@ -1,0 +1,1941 @@
+{
+ "generated": "2026-08-14T20:16:31.438Z",
+ "expiry": "2026-08-21",
+ "scanned": 374,
+ "cost_usd": 1.08,
+ "finalists": [
+  "KRE",
+  "HYG",
+  "SPY",
+  "TSM",
+  "AMZN",
+  "ETHA",
+  "XYZ",
+  "ASTS",
+  "LCID",
+  "QS",
+  "DKNG",
+  "TE",
+  "RKLB",
+  "OKLO",
+  "HUT",
+  "AAOI",
+  "UPST",
+  "CAR",
+  "JOBY",
+  "CLOU",
+  "DBX",
+  "LASR",
+  "NNE",
+  "OMDA",
+  "DIS",
+  "MRK",
+  "HON",
+  "SOFI",
+  "KEEL",
+  "BMNR",
+  "DELL",
+  "BP",
+  "RDDT",
+  "NBIS",
+  "ANET",
+  "TEM",
+  "GTLB",
+  "EBAY",
+  "SRPT",
+  "UEC",
+  "VNET",
+  "WING",
+  "SBUX",
+  "XLE",
+  "IVV",
+  "RKT",
+  "FIVE",
+  "VLO",
+  "BA",
+  "CRCL",
+  "MELI",
+  "EXPE",
+  "RTX",
+  "MGM",
+  "MARA",
+  "IWM",
+  "WBD",
+  "WFC",
+  "XOM",
+  "NVDA"
+ ],
+ "ranked_all": [
+  {
+   "ticker": "KRE",
+   "score": 87.71,
+   "line": "spot 78.00999999999999 · KING 78(+90.17g/+0.1v, -0.0%) · floor 78(+90.17g/+0.1v, -0.0%) · ceiling 79(+1.99g/+11.8v, 1.3%) · barney 76(-8.15g/+77.1v, -2.6%) · vanna 76(-8.15g/+77.1v, -2.6%)"
+  },
+  {
+   "ticker": "HYG",
+   "score": 51.88,
+   "line": "spot 79.66499999999999 · KING 80(-256.39g/-3349.3v, 0.4%) · floor 77(+64.64g/-1041.4v, -3.3%) · ceiling 82(+0.85g/+20.2v, 2.9%) · barney 80(-256.39g/-3349.3v, 0.4%) · vanna 80(-256.39g/-3349.3v, 0.4%)"
+  },
+  {
+   "ticker": "SPY",
+   "score": 42.87,
+   "line": "spot 776.06 · KING 775(-262.13g/+5517.2v, -0.1%) · floor 760(+43.70g/-6419.1v, -2.1%) · ceiling 784(+12.25g/+1106.5v, 1.0%) · barney 775(-262.13g/+5517.2v, -0.1%) · vanna 780(-173.42g/-6505.9v, 0.5%)"
+  },
+  {
+   "ticker": "TSM",
+   "score": 31.14,
+   "line": "spot 426.995 · KING 425(+12.00g/-61.0v, -0.5%) · floor 425(+12.00g/-61.0v, -0.5%) · ceiling 450(+10.79g/+779.1v, 5.4%) · barney 440(-7.62g/-332.5v, 3.0%) · vanna 450(+10.79g/+779.1v, 5.4%)"
+  },
+  {
+   "ticker": "AMZN",
+   "score": 25.39,
+   "line": "spot 262.68499999999995 · KING 260(+48.61g/-508.7v, -1.0%) · floor 260(+48.61g/-508.7v, -1.0%) · ceiling 270(+9.99g/+284.1v, 2.8%) · barney 275(-4.35g/-205.5v, 4.7%) · vanna 260(+48.61g/-508.7v, -1.0%)"
+  },
+  {
+   "ticker": "ETHA",
+   "score": 23.92,
+   "line": "spot 14.18 · KING 14(+27.29g/-14.2v, -1.3%) · floor 14(+27.29g/-14.2v, -1.3%) · ceiling 14.5(+3.99g/+3.8v, 2.3%) · barney 13(-9.46g/+24.7v, -8.3%) · vanna 13(-9.46g/+24.7v, -8.3%)"
+  },
+  {
+   "ticker": "MU",
+   "score": 20.4,
+   "line": "spot 971.575 · KING 1100(+1.40g/+267.4v, 13.2%) · floor 930(+0.33g/-22.1v, -4.3%) · ceiling 1100(+1.40g/+267.4v, 13.2%) · barney 950(-0.82g/+27.3v, -2.2%) · vanna 1100(+1.40g/+267.4v, 13.2%)"
+  },
+  {
+   "ticker": "ORCL",
+   "score": 19.73,
+   "line": "spot 150.32 · KING 150(+6.24g/-0.9v, -0.2%) · floor 150(+6.24g/-0.9v, -0.2%) · ceiling 160(+5.17g/+93.3v, 6.4%) · barney 140(-2.16g/+43.3v, -6.9%) · vanna 160(+5.17g/+93.3v, 6.4%)"
+  },
+  {
+   "ticker": "UBER",
+   "score": 18.22,
+   "line": "spot 75.94 · KING 75(+19.93g/-56.2v, -1.2%) · floor 75(+19.93g/-56.2v, -1.2%) · ceiling 80(+1.86g/+24.1v, 5.3%) · barney 78(-2.36g/-16.2v, 2.7%) · vanna 75(+19.93g/-56.2v, -1.2%)"
+  },
+  {
+   "ticker": "DRAM",
+   "score": 14.36,
+   "line": "spot 57.345 · KING 60(-42.99g/-192.4v, 4.6%) · floor 50(+2.10g/-24.0v, -12.8%) · ceiling 65(+4.59g/+54.0v, 13.3%) · barney 60(-42.99g/-192.4v, 4.6%) · vanna 60(-42.99g/-192.4v, 4.6%)"
+  },
+  {
+   "ticker": "META",
+   "score": 13.62,
+   "line": "spot 590.035 · KING 590(+1.80g/+2.1v, -0.0%) · floor 590(+1.80g/+2.1v, -0.0%) · ceiling 625(+1.37g/+135.6v, 5.9%) · barney 580(-1.69g/+53.9v, -1.7%) · vanna 625(+1.37g/+135.6v, 5.9%)"
+  },
+  {
+   "ticker": "UNH",
+   "score": 13.53,
+   "line": "spot 401.505 · KING 400(+24.11g/-176.9v, -0.4%) · floor 400(+24.11g/-176.9v, -0.4%) · ceiling 410(+0.91g/+31.6v, 2.1%) · barney 430(-0.21g/-20.5v, 7.1%) · vanna 400(+24.11g/-176.9v, -0.4%)"
+  },
+  {
+   "ticker": "GOOGL",
+   "score": 11.95,
+   "line": "spot 345.975 · KING 350(-11.00g/-174.8v, 1.2%) · floor 345(+1.88g/-7.1v, -0.3%) · ceiling 347.5(+3.30g/+19.4v, 0.4%) · barney 350(-11.00g/-174.8v, 1.2%) · vanna 350(-11.00g/-174.8v, 1.2%)"
+  },
+  {
+   "ticker": "SMH",
+   "score": 10.69,
+   "line": "spot 587.415 · KING 600(+2.44g/+99.7v, 2.1%) · floor 560(+1.72g/-136.2v, -4.7%) · ceiling 600(+2.44g/+99.7v, 2.1%) · barney 530(-0.47g/+68.5v, -9.8%) · vanna 620(+1.48g/+151.0v, 5.5%)"
+  },
+  {
+   "ticker": "PG",
+   "score": 10.6,
+   "line": "spot 144.595 · KING 150(-2.28g/-62.5v, 3.7%) · floor 140(+0.56g/-14.9v, -3.2%) · ceiling 155(+1.93g/+81.3v, 7.2%) · barney 150(-2.28g/-62.5v, 3.7%) · vanna 155(+1.93g/+81.3v, 7.2%)"
+  },
+  {
+   "ticker": "LRCX",
+   "score": 10,
+   "line": "spot 332.24 · KING 310(-1.59g/+63.8v, -6.7%) · floor 315(+0.12g/-3.6v, -5.2%) · ceiling 355(+0.74g/+28.8v, 6.9%) · barney 310(-1.59g/+63.8v, -6.7%) · vanna 360(-1.47g/-65.7v, 8.4%)"
+  },
+  {
+   "ticker": "CVX",
+   "score": 9.99,
+   "line": "spot 200.015 · KING 205(+8.32g/+185.7v, 2.5%) · floor 197.5(+3.38g/-41.3v, -1.3%) · ceiling 205(+8.32g/+185.7v, 2.5%) · barney 195(-1.23g/+32.2v, -2.5%) · vanna 205(+8.32g/+185.7v, 2.5%)"
+  },
+  {
+   "ticker": "QCOM",
+   "score": 9.99,
+   "line": "spot 165.785 · KING 165(+2.10g/-3.6v, -0.5%) · floor 165(+2.10g/-3.6v, -0.5%) · ceiling 177.5(+1.43g/+40.6v, 7.1%) · barney 160(-1.71g/+25.8v, -3.5%) · vanna 177.5(+1.43g/+40.6v, 7.1%)"
+  },
+  {
+   "ticker": "KO",
+   "score": 9.89,
+   "line": "spot 87.63 · KING 89(-11.87g/-100.0v, 1.6%) · floor 86(+3.52g/-35.6v, -1.9%) · ceiling 92.5(+0.43g/+10.2v, 5.6%) · barney 89(-11.87g/-100.0v, 1.6%) · vanna 89(-11.87g/-100.0v, 1.6%)"
+  },
+  {
+   "ticker": "IBIT",
+   "score": 9.51,
+   "line": "spot 35.635000000000005 · KING 35(-21.59g/+49.4v, -1.8%) · floor 33.5(+2.37g/-15.4v, -6.0%) · ceiling 36.5(+2.82g/+9.0v, 2.4%) · barney 35(-21.59g/+49.4v, -1.8%) · vanna 37.5(-9.09g/-59.2v, 5.2%)"
+  },
+  {
+   "ticker": "AAPL",
+   "score": 9.45,
+   "line": "spot 305.655 · KING 310(+10.12g/+206.2v, 1.4%) · floor 305(+5.22g/-23.8v, -0.2%) · ceiling 310(+10.12g/+206.2v, 1.4%) · barney 300(-4.87g/+145.8v, -1.9%) · vanna 315(+5.63g/+256.8v, 3.1%)"
+  },
+  {
+   "ticker": "QQQ",
+   "score": 9.27,
+   "line": "spot 731.0699999999999 · KING 730(-32.58g/+307.2v, -0.1%) · floor 700(+8.86g/-1442.4v, -4.2%) · ceiling 750(+25.73g/+3718.7v, 2.6%) · barney 730(-32.58g/+307.2v, -0.1%) · vanna 750(+25.73g/+3718.7v, 2.6%)"
+  },
+  {
+   "ticker": "GOOG",
+   "score": 9.15,
+   "line": "spot 343.41499999999996 · KING 350(-1.87g/-55.0v, 1.9%) · floor 340(+0.97g/-12.4v, -1.0%) · ceiling 345(+1.15g/+7.2v, 0.5%) · barney 350(-1.87g/-55.0v, 1.9%) · vanna 385(-1.34g/-117.4v, 12.1%)"
+  },
+  {
+   "ticker": "ARM",
+   "score": 9.07,
+   "line": "spot 279.22 · KING 300(-1.98g/-58.9v, 7.4%) · floor 270(+1.28g/-18.5v, -3.3%) · ceiling 320(+0.12g/+5.4v, 14.6%) · barney 300(-1.98g/-58.9v, 7.4%) · vanna 300(-1.98g/-58.9v, 7.4%)"
+  },
+  {
+   "ticker": "MCD",
+   "score": 8.85,
+   "line": "spot 273.575 · KING 275(-2.69g/-30.5v, 0.5%) · floor 270(+1.58g/-24.9v, -1.3%) · ceiling 290(+0.66g/+43.3v, 6.0%) · barney 275(-2.69g/-30.5v, 0.5%) · vanna 290(+0.66g/+43.3v, 6.0%)"
+  },
+  {
+   "ticker": "ASML",
+   "score": 8.47,
+   "line": "spot 1843.3449999999998 · KING 1850(-0.40g/-24.0v, 0.4%) · floor 1800(+0.09g/-9.4v, -2.4%) · ceiling 1980(+0.07g/+25.5v, 7.4%) · barney 1850(-0.40g/-24.0v, 0.4%) · vanna 1900(-0.34g/-52.9v, 3.1%)"
+  },
+  {
+   "ticker": "TMUS",
+   "score": 8.35,
+   "line": "spot 183.07999999999998 · KING 185(-2.59g/-20.8v, 1.0%) · floor 165(+0.12g/-5.4v, -9.9%) · ceiling 195(+0.35g/+14.4v, 6.5%) · barney 185(-2.59g/-20.8v, 1.0%) · vanna 200(-1.80g/-54.1v, 9.2%)"
+  },
+  {
+   "ticker": "TSLA",
+   "score": 8.03,
+   "line": "spot 341.95 · KING 335(-2.08g/+41.9v, -2.0%) · floor 340(+0.71g/-3.7v, -0.6%) · ceiling 357.5(+1.15g/+45.3v, 4.5%) · barney 335(-2.08g/+41.9v, -2.0%) · vanna 360(-1.88g/-85.1v, 5.3%)"
+  },
+  {
+   "ticker": "MRVL",
+   "score": 7.99,
+   "line": "spot 222.13 · KING 250(+1.21g/+46.9v, 12.5%) · floor 215(+0.75g/-6.8v, -3.2%) · ceiling 250(+1.21g/+46.9v, 12.5%) · barney 200(-1.07g/+33.4v, -10.0%) · vanna 250(+1.21g/+46.9v, 12.5%)"
+  },
+  {
+   "ticker": "BAC",
+   "score": 7.89,
+   "line": "spot 64.42500000000001 · KING 65(-27.40g/-93.3v, 0.9%) · floor 64(+8.36g/-23.0v, -0.7%) · ceiling 66(+7.38g/+69.6v, 2.4%) · barney 65(-27.40g/-93.3v, 0.9%) · vanna 65(-27.40g/-93.3v, 0.9%)"
+  },
+  {
+   "ticker": "BE",
+   "score": 7.88,
+   "line": "spot 229.9 · KING 250(-2.14g/-50.4v, 8.7%) · floor 220(+0.70g/-7.4v, -4.3%) · ceiling 270(+0.31g/+13.6v, 17.4%) · barney 250(-2.14g/-50.4v, 8.7%) · vanna 250(-2.14g/-50.4v, 8.7%)"
+  },
+  {
+   "ticker": "MA",
+   "score": 7.84,
+   "line": "spot 568.9200000000001 · KING 560(+0.64g/-33.2v, -1.6%) · floor 560(+0.64g/-33.2v, -1.6%) · ceiling 625(+0.09g/+10.9v, 9.9%) · barney 580(-0.59g/-36.3v, 1.9%) · vanna 580(-0.59g/-36.3v, 1.9%)"
+  },
+  {
+   "ticker": "EOSE",
+   "score": 7.68,
+   "line": "spot 4.01 · KING 4(+2.89g/+0.0v, -0.2%) · floor 4(+2.89g/+0.0v, -0.2%) · ceiling — · barney 4.5(-0.18g/-0.1v, 12.2%) · vanna 4.5(-0.18g/-0.1v, 12.2%)"
+  },
+  {
+   "ticker": "MSTR",
+   "score": 7.63,
+   "line": "spot 93.17500000000001 · KING 95(-20.75g/-74.2v, 2.0%) · floor 93(+0.72g/+0.3v, -0.2%) · ceiling 100(+1.99g/+21.8v, 7.3%) · barney 95(-20.75g/-74.2v, 2.0%) · vanna 95(-20.75g/-74.2v, 2.0%)"
+  },
+  {
+   "ticker": "WDC",
+   "score": 7.63,
+   "line": "spot 511.185 · KING 500(+0.80g/-3.7v, -2.2%) · floor 500(+0.80g/-3.7v, -2.2%) · ceiling 600(+0.08g/+8.8v, 17.4%) · barney 590(-0.30g/-33.7v, 15.4%) · vanna 590(-0.30g/-33.7v, 15.4%)"
+  },
+  {
+   "ticker": "WMT",
+   "score": 7.62,
+   "line": "spot 115.38499999999999 · KING 125(+1.60g/+33.7v, 8.3%) · floor 114(+1.52g/-3.5v, -1.2%) · ceiling 125(+1.60g/+33.7v, 8.3%) · barney 115(-0.71g/+0.0v, -0.3%) · vanna 125(+1.60g/+33.7v, 8.3%)"
+  },
+  {
+   "ticker": "USO",
+   "score": 7.59,
+   "line": "spot 126.59 · KING 130(-2.06g/-15.5v, 2.7%) · floor 125(+1.32g/-4.0v, -1.3%) · ceiling 140(+1.39g/+33.7v, 10.6%) · barney 130(-2.06g/-15.5v, 2.7%) · vanna 140(+1.39g/+33.7v, 10.6%)"
+  },
+  {
+   "ticker": "LLY",
+   "score": 7.56,
+   "line": "spot 1180.915 · KING 1200(-0.49g/-35.2v, 1.6%) · floor 1180(+0.26g/-2.1v, -0.1%) · ceiling 1240(+0.15g/+31.6v, 5.0%) · barney 1200(-0.49g/-35.2v, 1.6%) · vanna 1250(-0.39g/-88.6v, 5.9%)"
+  },
+  {
+   "ticker": "RIOT",
+   "score": 7.02,
+   "line": "spot 19.015 · KING 19(+1.91g/+0.3v, -0.1%) · floor 19(+1.91g/+0.3v, -0.1%) · ceiling 22(+1.81g/+6.6v, 15.7%) · barney 21(-1.77g/-4.4v, 10.4%) · vanna 22(+1.81g/+6.6v, 15.7%)"
+  },
+  {
+   "ticker": "PBR",
+   "score": 6.56,
+   "line": "spot 17.875 · KING 17(+5.96g/-18.5v, -4.9%) · floor 17(+5.96g/-18.5v, -4.9%) · ceiling 21(+1.14g/+5.4v, 17.5%) · barney 19(-2.67g/-9.0v, 6.3%) · vanna 17(+5.96g/-18.5v, -4.9%)"
+  },
+  {
+   "ticker": "FIG",
+   "score": 6.46,
+   "line": "spot 25.415 · KING 25(+2.03g/-0.9v, -1.6%) · floor 25(+2.03g/-0.9v, -1.6%) · ceiling 27(+1.12g/+2.7v, 6.2%) · barney 29.5(-0.19g/-0.8v, 16.1%) · vanna 27(+1.12g/+2.7v, 6.2%)"
+  },
+  {
+   "ticker": "BABA",
+   "score": 6.45,
+   "line": "spot 123.805 · KING 120(-1.37g/+7.1v, -3.1%) · floor 110(+0.54g/-13.0v, -11.2%) · ceiling 140(+1.05g/+24.5v, 13.1%) · barney 120(-1.37g/+7.1v, -3.1%) · vanna 140(+1.05g/+24.5v, 13.1%)"
+  },
+  {
+   "ticker": "INTU",
+   "score": 6.38,
+   "line": "spot 346.015 · KING 380(+0.39g/+28.9v, 9.8%) · floor 330(+0.19g/-5.9v, -4.6%) · ceiling 380(+0.39g/+28.9v, 9.8%) · barney 360(-0.07g/-2.4v, 4.0%) · vanna 380(+0.39g/+28.9v, 9.8%)"
+  },
+  {
+   "ticker": "INTC",
+   "score": 6.37,
+   "line": "spot 102.55 · KING 110(+2.25g/+27.5v, 7.3%) · floor 102(+0.78g/-0.3v, -0.5%) · ceiling 110(+2.25g/+27.5v, 7.3%) · barney 115(-1.49g/-27.8v, 12.1%) · vanna 115(-1.49g/-27.8v, 12.1%)"
+  },
+  {
+   "ticker": "V",
+   "score": 6.35,
+   "line": "spot 364.08 · KING 357.5(+1.48g/-54.9v, -1.8%) · floor 357.5(+1.48g/-54.9v, -1.8%) · ceiling 370(+0.43g/+14.1v, 1.6%) · barney 375(-1.00g/-60.2v, 3.0%) · vanna 375(-1.00g/-60.2v, 3.0%)"
+  },
+  {
+   "ticker": "NOW",
+   "score": 6.15,
+   "line": "spot 124.175 · KING 120(+4.32g/-34.9v, -3.4%) · floor 120(+4.32g/-34.9v, -3.4%) · ceiling 130(+3.08g/+37.8v, 4.7%) · barney 135(-1.49g/-28.7v, 8.7%) · vanna 130(+3.08g/+37.8v, 4.7%)"
+  },
+  {
+   "ticker": "IONQ",
+   "score": 6.1,
+   "line": "spot 46.42 · KING 50(+3.54g/+17.0v, 7.7%) · floor 45(+2.58g/-4.1v, -3.1%) · ceiling 50(+3.54g/+17.0v, 7.7%) · barney 40(-0.64g/+6.2v, -13.8%) · vanna 55(+2.19g/+18.8v, 18.5%)"
+  },
+  {
+   "ticker": "LAES",
+   "score": 6.04,
+   "line": "spot 3.01 · KING 3(-6.76g/+0.1v, -0.3%) · floor 2.5(+0.21g/-0.1v, -16.9%) · ceiling 3.5(+0.34g/+0.2v, 16.3%) · barney 3(-6.76g/+0.1v, -0.3%) · vanna 3.5(+0.34g/+0.2v, 16.3%)"
+  },
+  {
+   "ticker": "XYZ",
+   "score": 5.96,
+   "line": "spot 82.95 · KING 95(+0.95g/+24.6v, 14.5%) · floor 82(+0.23g/-0.0v, -1.1%) · ceiling 95(+0.95g/+24.6v, 14.5%) · barney 80(-0.67g/+2.2v, -3.6%) · vanna 95(+0.95g/+24.6v, 14.5%)"
+  },
+  {
+   "ticker": "HIMS",
+   "score": 5.86,
+   "line": "spot 28.15 · KING 28(-3.66g/+0.4v, -0.5%) · floor 25(+0.68g/-4.2v, -11.2%) · ceiling 30(+2.82g/+9.1v, 6.6%) · barney 28(-3.66g/+0.4v, -0.5%) · vanna 30(+2.82g/+9.1v, 6.6%)"
+  },
+  {
+   "ticker": "SNDK",
+   "score": 5.82,
+   "line": "spot 1651.94 · KING 1600(+0.52g/-19.9v, -3.1%) · floor 1600(+0.52g/-19.9v, -3.1%) · ceiling 1660(+0.05g/+1.7v, 0.5%) · barney 1700(-0.36g/-28.9v, 2.9%) · vanna 1900(-0.23g/-64.3v, 15.0%)"
+  },
+  {
+   "ticker": "LCID",
+   "score": 5.73,
+   "line": "spot 6.225 · KING 6(+1.98g/-0.5v, -3.6%) · floor 6(+1.98g/-0.5v, -3.6%) · ceiling 7(+0.73g/+0.6v, 12.4%) · barney — · vanna 7(+0.73g/+0.6v, 12.4%)"
+  },
+  {
+   "ticker": "TWLO",
+   "score": 5.55,
+   "line": "spot 240.35500000000002 · KING 260(+0.44g/+19.0v, 8.2%) · floor 240(+0.10g/+0.7v, -0.1%) · ceiling 260(+0.44g/+19.0v, 8.2%) · barney 230(-0.28g/+4.3v, -4.3%) · vanna 260(+0.44g/+19.0v, 8.2%)"
+  },
+  {
+   "ticker": "FSLR",
+   "score": 5.51,
+   "line": "spot 225.78500000000003 · KING 220(-1.13g/+11.7v, -2.6%) · floor 212.5(+0.14g/-3.6v, -5.9%) · ceiling 250(+0.32g/+13.7v, 10.7%) · barney 220(-1.13g/+11.7v, -2.6%) · vanna 250(+0.32g/+13.7v, 10.7%)"
+  },
+  {
+   "ticker": "EWY",
+   "score": 5.4,
+   "line": "spot 179.73000000000002 · KING 170(+2.43g/-46.1v, -5.4%) · floor 170(+2.43g/-46.1v, -5.4%) · ceiling 190(+2.25g/+48.2v, 5.7%) · barney 175(-0.71g/+6.8v, -2.6%) · vanna 190(+2.25g/+48.2v, 5.7%)"
+  },
+  {
+   "ticker": "AMAT",
+   "score": 5.33,
+   "line": "spot 507.04999999999995 · KING 500(-0.45g/+5.1v, -1.4%) · floor 505(+0.10g/-0.1v, -0.4%) · ceiling 580(+0.10g/+11.0v, 14.4%) · barney 500(-0.45g/+5.1v, -1.4%) · vanna 550(-0.17g/-13.2v, 8.5%)"
+  },
+  {
+   "ticker": "CRDO",
+   "score": 5.33,
+   "line": "spot 259.9 · KING 250(-0.55g/+6.1v, -3.8%) · floor 240(+0.06g/-1.0v, -7.7%) · ceiling 300(+0.29g/+13.9v, 15.4%) · barney 250(-0.55g/+6.1v, -3.8%) · vanna 300(+0.29g/+13.9v, 15.4%)"
+  },
+  {
+   "ticker": "QS",
+   "score": 5.32,
+   "line": "spot 6.175000000000001 · KING 6(+1.34g/-0.4v, -2.8%) · floor 6(+1.34g/-0.4v, -2.8%) · ceiling 7(+0.57g/+0.6v, 13.4%) · barney — · vanna 7(+0.57g/+0.6v, 13.4%)"
+  },
+  {
+   "ticker": "LEN",
+   "score": 5.31,
+   "line": "spot 86.88 · KING 93(+1.19g/+19.3v, 7.0%) · floor 83(+0.11g/-1.1v, -4.5%) · ceiling 93(+1.19g/+19.3v, 7.0%) · barney 88(-0.08g/-0.3v, 1.3%) · vanna 93(+1.19g/+19.3v, 7.0%)"
+  },
+  {
+   "ticker": "HTZ",
+   "score": 5.27,
+   "line": "spot 2.245 · KING 2(-4.47g/+0.9v, -10.9%) · floor — · ceiling — · barney 2(-4.47g/+0.9v, -10.9%) · vanna 2(-4.47g/+0.9v, -10.9%)"
+  },
+  {
+   "ticker": "VALE",
+   "score": 5.25,
+   "line": "spot 13.67 · KING 13(-2.22g/+5.0v, -4.9%) · floor 13.5(+0.05g/-0.0v, -1.2%) · ceiling 15(+1.91g/+6.5v, 9.7%) · barney 13(-2.22g/+5.0v, -4.9%) · vanna 15(+1.91g/+6.5v, 9.7%)"
+  },
+  {
+   "ticker": "TE",
+   "score": 5.16,
+   "line": "spot 5.115 · KING 5(+1.12g/-0.0v, -2.2%) · floor 5(+1.12g/-0.0v, -2.2%) · ceiling 6(+0.29g/+0.2v, 17.3%) · barney 5.5(-0.14g/-0.1v, 7.5%) · vanna 6(+0.29g/+0.2v, 17.3%)"
+  },
+  {
+   "ticker": "ENPH",
+   "score": 5.14,
+   "line": "spot 40.400000000000006 · KING 40(-2.74g/+2.2v, -1.0%) · floor 37(+0.09g/-0.5v, -8.4%) · ceiling 45(+0.55g/+3.8v, 11.4%) · barney 40(-2.74g/+2.2v, -1.0%) · vanna 45(+0.55g/+3.8v, 11.4%)"
+  },
+  {
+   "ticker": "DXCM",
+   "score": 5.04,
+   "line": "spot 90.39 · KING 90(-1.70g/-0.7v, -0.4%) · floor 85(+0.16g/-2.5v, -6.0%) · ceiling 97(+0.06g/+0.6v, 7.3%) · barney 90(-1.70g/-0.7v, -0.4%) · vanna 95(-0.39g/-5.8v, 5.1%)"
+  },
+  {
+   "ticker": "DKNG",
+   "score": 5.02,
+   "line": "spot 26.215 · KING 30(+2.45g/+16.8v, 14.4%) · floor 25.5(+0.55g/-0.8v, -2.7%) · ceiling 30(+2.45g/+16.8v, 14.4%) · barney 25(-0.65g/+1.5v, -4.6%) · vanna 30(+2.45g/+16.8v, 14.4%)"
+  },
+  {
+   "ticker": "TFC",
+   "score": 4.97,
+   "line": "spot 52.755 · KING 55(-2.16g/-18.3v, 4.3%) · floor 47.5(+0.19g/-2.5v, -10.0%) · ceiling — · barney 55(-2.16g/-18.3v, 4.3%) · vanna 55(-2.16g/-18.3v, 4.3%)"
+  },
+  {
+   "ticker": "FRSH",
+   "score": 4.92,
+   "line": "spot 12.524999999999999 · KING 12.5(+0.70g/-0.0v, -0.2%) · floor 12.5(+0.70g/-0.0v, -0.2%) · ceiling — · barney 15(-0.12g/-0.3v, 19.8%) · vanna 15(-0.12g/-0.3v, 19.8%)"
+  },
+  {
+   "ticker": "IBRX",
+   "score": 4.85,
+   "line": "spot 7.555 · KING 7.5(+0.68g/-0.1v, -0.7%) · floor 7.5(+0.68g/-0.1v, -0.7%) · ceiling 8.5(+0.01g/+0.0v, 12.5%) · barney 8(-0.44g/-0.3v, 5.9%) · vanna 8(-0.44g/-0.3v, 5.9%)"
+  },
+  {
+   "ticker": "QBTS",
+   "score": 4.81,
+   "line": "spot 21.08 · KING 23(+1.16g/+2.6v, 9.1%) · floor 21(+0.99g/-0.1v, -0.4%) · ceiling 23(+1.16g/+2.6v, 9.1%) · barney 20(-0.31g/+0.5v, -5.1%) · vanna 23(+1.16g/+2.6v, 9.1%)"
+  },
+  {
+   "ticker": "LITE",
+   "score": 4.69,
+   "line": "spot 928.655 · KING 890(+0.75g/-25.4v, -4.2%) · floor 890(+0.75g/-25.4v, -4.2%) · ceiling 945(+0.08g/+2.3v, 1.8%) · barney 1000(-0.52g/-50.1v, 7.7%) · vanna 1000(-0.52g/-50.1v, 7.7%)"
+  },
+  {
+   "ticker": "CMG",
+   "score": 4.64,
+   "line": "spot 33.445 · KING 33(-6.58g/+10.8v, -1.3%) · floor 32.5(+1.63g/-4.8v, -2.8%) · ceiling 34(+1.32g/+1.9v, 1.7%) · barney 33(-6.58g/+10.8v, -1.3%) · vanna 36(-5.48g/-33.1v, 7.6%)"
+  },
+  {
+   "ticker": "ASTS",
+   "score": 4.61,
+   "line": "spot 71.065 · KING 85(+0.68g/+9.5v, 19.6%) · floor 66(+0.21g/-1.7v, -7.1%) · ceiling 85(+0.68g/+9.5v, 19.6%) · barney 65(-0.42g/+4.7v, -8.5%) · vanna 85(+0.68g/+9.5v, 19.6%)"
+  },
+  {
+   "ticker": "CMCSA",
+   "score": 4.57,
+   "line": "spot 26.125 · KING 27(-1.23g/-4.8v, 3.3%) · floor 25(+0.91g/-2.8v, -4.3%) · ceiling 28(+0.27g/+1.7v, 7.2%) · barney 27(-1.23g/-4.8v, 3.3%) · vanna 27(-1.23g/-4.8v, 3.3%)"
+  },
+  {
+   "ticker": "TEAM",
+   "score": 4.56,
+   "line": "spot 163.57 · KING 170(-0.29g/-4.0v, 3.9%) · floor 155(+0.25g/-3.2v, -5.2%) · ceiling 175(+0.29g/+6.5v, 7.0%) · barney 170(-0.29g/-4.0v, 3.9%) · vanna 175(+0.29g/+6.5v, 7.0%)"
+  },
+  {
+   "ticker": "PATH",
+   "score": 4.55,
+   "line": "spot 16.035 · KING 15(+1.54g/-2.9v, -6.5%) · floor 15(+1.54g/-2.9v, -6.5%) · ceiling 18(+0.89g/+2.4v, 12.3%) · barney 16.5(-0.21g/-0.2v, 2.9%) · vanna 15(+1.54g/-2.9v, -6.5%)"
+  },
+  {
+   "ticker": "CIEN",
+   "score": 4.48,
+   "line": "spot 429.495 · KING 410(-0.14g/+3.7v, -4.5%) · floor 425(+0.06g/-0.2v, -1.0%) · ceiling 457.5(+0.01g/+0.1v, 6.5%) · barney 410(-0.14g/+3.7v, -4.5%) · vanna 450(-0.11g/-4.6v, 4.8%)"
+  },
+  {
+   "ticker": "CLSK",
+   "score": 4.48,
+   "line": "spot 12.17 · KING 12(-1.36g/+0.0v, -1.4%) · floor 10(+0.19g/-0.5v, -17.8%) · ceiling 13(+0.16g/+0.1v, 6.8%) · barney 12(-1.36g/+0.0v, -1.4%) · vanna 13.5(-0.55g/-0.9v, 10.9%)"
+  },
+  {
+   "ticker": "SQQQ",
+   "score": 4.48,
+   "line": "spot 36.224999999999994 · KING 38(-2.51g/-9.4v, 4.9%) · floor 35(+0.48g/-1.4v, -3.4%) · ceiling 42(+0.04g/+0.4v, 15.9%) · barney 38(-2.51g/-9.4v, 4.9%) · vanna 40(-1.64g/-11.3v, 10.4%)"
+  },
+  {
+   "ticker": "TGT",
+   "score": 4.48,
+   "line": "spot 154.55 · KING 150(+1.15g/-7.5v, -2.9%) · floor 150(+1.15g/-7.5v, -2.9%) · ceiling 170(+0.08g/+1.9v, 10.0%) · barney 160(-0.30g/-2.6v, 3.5%) · vanna 150(+1.15g/-7.5v, -2.9%)"
+  },
+  {
+   "ticker": "PCT",
+   "score": 4.46,
+   "line": "spot 6.845000000000001 · KING 6(-1.24g/+1.1v, -12.3%) · floor 5.5(+0.00g/-0.0v, -19.6%) · ceiling 7.5(+0.03g/+0.0v, 9.6%) · barney 6(-1.24g/+1.1v, -12.3%) · vanna 8(-1.02g/-1.1v, 16.9%)"
+  },
+  {
+   "ticker": "HUT",
+   "score": 4.43,
+   "line": "spot 85.7 · KING 95(+0.76g/+7.8v, 10.9%) · floor 79(+0.19g/-1.4v, -7.8%) · ceiling 95(+0.76g/+7.8v, 10.9%) · barney 75(-0.30g/+3.4v, -12.5%) · vanna 95(+0.76g/+7.8v, 10.9%)"
+  },
+  {
+   "ticker": "APLD",
+   "score": 4.38,
+   "line": "spot 31.229999999999997 · KING 30(+0.54g/-0.7v, -3.9%) · floor 30(+0.54g/-0.7v, -3.9%) · ceiling 34(+0.16g/+0.6v, 8.9%) · barney 31(-0.34g/+0.0v, -0.7%) · vanna 30(+0.54g/-0.7v, -3.9%)"
+  },
+  {
+   "ticker": "CHWY",
+   "score": 4.36,
+   "line": "spot 22.545 · KING 22.5(-0.51g/-0.1v, -0.2%) · floor 20.5(+0.37g/-1.5v, -9.1%) · ceiling 26(+0.17g/+1.0v, 15.3%) · barney 22.5(-0.51g/-0.1v, -0.2%) · vanna 25(-0.48g/-2.4v, 10.9%)"
+  },
+  {
+   "ticker": "SOXL",
+   "score": 4.36,
+   "line": "spot 144.905 · KING 144(-0.23g/-0.1v, -0.6%) · floor 136(+0.09g/-0.6v, -6.1%) · ceiling 160(+0.17g/+2.6v, 10.4%) · barney 144(-0.23g/-0.1v, -0.6%) · vanna 171(-0.13g/-3.3v, 18.0%)"
+  },
+  {
+   "ticker": "OSCR",
+   "score": 4.35,
+   "line": "spot 32.805 · KING 32(+0.46g/-0.3v, -2.5%) · floor 32(+0.46g/-0.3v, -2.5%) · ceiling 35(+0.24g/+0.9v, 6.7%) · barney 33(-0.26g/-0.2v, 0.6%) · vanna 28(+0.26g/-2.0v, -14.6%)"
+  },
+  {
+   "ticker": "RH",
+   "score": 4.34,
+   "line": "spot 181.5 · KING 192.5(-0.20g/-4.0v, 6.1%) · floor 175(+0.13g/-0.8v, -3.6%) · ceiling 210(+0.00g/+0.1v, 15.7%) · barney 192.5(-0.20g/-4.0v, 6.1%) · vanna 192.5(-0.20g/-4.0v, 6.1%)"
+  },
+  {
+   "ticker": "AAOI",
+   "score": 4.33,
+   "line": "spot 150.77499999999998 · KING 170(+0.27g/+4.9v, 12.8%) · floor 130(+0.14g/-2.6v, -13.8%) · ceiling 170(+0.27g/+4.9v, 12.8%) · barney 137(-0.10g/+1.3v, -9.1%) · vanna 170(+0.27g/+4.9v, 12.8%)"
+  },
+  {
+   "ticker": "OKLO",
+   "score": 4.32,
+   "line": "spot 44.345 · KING 50(+1.16g/+8.0v, 12.8%) · floor 37(+0.11g/-1.1v, -16.6%) · ceiling 50(+1.16g/+8.0v, 12.8%) · barney 42(-0.66g/+2.4v, -5.3%) · vanna 50(+1.16g/+8.0v, 12.8%)"
+  },
+  {
+   "ticker": "FUBO",
+   "score": 4.31,
+   "line": "spot 10.219999999999999 · KING 10(+0.31g/-0.1v, -2.2%) · floor 10(+0.31g/-0.1v, -2.2%) · ceiling 12(+0.04g/+0.1v, 17.4%) · barney 11(-0.11g/-0.1v, 7.6%) · vanna 10(+0.31g/-0.1v, -2.2%)"
+  },
+  {
+   "ticker": "OPEN",
+   "score": 4.31,
+   "line": "spot 3.635 · KING 3(+1.31g/-1.0v, -17.5%) · floor 3(+1.31g/-1.0v, -17.5%) · ceiling — · barney 4(-1.18g/-0.5v, 10.0%) · vanna 3(+1.31g/-1.0v, -17.5%)"
+  },
+  {
+   "ticker": "RKLB",
+   "score": 4.31,
+   "line": "spot 80.15 · KING 85(+0.71g/+4.9v, 6.1%) · floor 75(+0.60g/-3.7v, -6.4%) · ceiling 85(+0.71g/+4.9v, 6.1%) · barney 65(-0.19g/+2.7v, -18.9%) · vanna 85(+0.71g/+4.9v, 6.1%)"
+  },
+  {
+   "ticker": "ALAB",
+   "score": 4.28,
+   "line": "spot 321.355 · KING 350(+0.09g/+3.2v, 8.9%) · floor 300(+0.06g/-1.5v, -6.6%) · ceiling 350(+0.09g/+3.2v, 8.9%) · barney 360(-0.08g/-3.6v, 12.0%) · vanna 360(-0.08g/-3.6v, 12.0%)"
+  },
+  {
+   "ticker": "IREN",
+   "score": 4.27,
+   "line": "spot 44.055 · KING 41(+2.22g/-8.3v, -6.9%) · floor 41(+2.22g/-8.3v, -6.9%) · ceiling 50(+0.34g/+1.7v, 13.5%) · barney 39(-0.52g/+3.2v, -11.5%) · vanna 41(+2.22g/-8.3v, -6.9%)"
+  },
+  {
+   "ticker": "BBAI",
+   "score": 4.25,
+   "line": "spot 3.275 · KING 3(+0.93g/-0.4v, -8.4%) · floor 3(+0.93g/-0.4v, -8.4%) · ceiling — · barney 3.5(-0.66g/-0.2v, 6.9%) · vanna 3(+0.93g/-0.4v, -8.4%)"
+  },
+  {
+   "ticker": "CAR",
+   "score": 4.25,
+   "line": "spot 137.01999999999998 · KING 150(+0.12g/+2.8v, 9.5%) · floor 135(+0.06g/-0.3v, -1.5%) · ceiling 150(+0.12g/+2.8v, 9.5%) · barney 144(-0.04g/-0.4v, 5.1%) · vanna 150(+0.12g/+2.8v, 9.5%)"
+  },
+  {
+   "ticker": "COIN",
+   "score": 4.22,
+   "line": "spot 148.65 · KING 160(-3.12g/-60.6v, 7.6%) · floor 145(+0.62g/-3.5v, -2.5%) · ceiling 152.5(+0.47g/+3.4v, 2.6%) · barney 160(-3.12g/-60.6v, 7.6%) · vanna 160(-3.12g/-60.6v, 7.6%)"
+  },
+  {
+   "ticker": "RBLX",
+   "score": 4.22,
+   "line": "spot 38.375 · KING 37(-0.38g/+0.8v, -3.6%) · floor 34(+0.09g/-0.7v, -11.4%) · ceiling 42(+0.19g/+1.3v, 9.4%) · barney 37(-0.38g/+0.8v, -3.6%) · vanna 42(+0.19g/+1.3v, 9.4%)"
+  },
+  {
+   "ticker": "VUG",
+   "score": 4.21,
+   "line": "spot 89.525 · KING 90(-0.25g/-1.1v, 0.5%) · floor 87(+0.12g/-0.9v, -2.8%) · ceiling 99(+0.01g/+0.2v, 10.6%) · barney 90(-0.25g/-1.1v, 0.5%) · vanna 91(-0.13g/-1.7v, 1.6%)"
+  },
+  {
+   "ticker": "AMKR",
+   "score": 4.19,
+   "line": "spot 59.09 · KING 59(+0.42g/+0.4v, -0.2%) · floor 59(+0.42g/+0.4v, -0.2%) · ceiling 64(+0.06g/+0.5v, 8.3%) · barney 49(-0.26g/+4.1v, -17.1%) · vanna 49(-0.26g/+4.1v, -17.1%)"
+  },
+  {
+   "ticker": "ALGN",
+   "score": 4.17,
+   "line": "spot 181.125 · KING 182.5(-0.24g/-1.6v, 0.8%) · floor 170(+0.02g/-0.3v, -6.1%) · ceiling — · barney 182.5(-0.24g/-1.6v, 0.8%) · vanna 200(-0.06g/-2.1v, 10.4%)"
+  },
+  {
+   "ticker": "GLXY",
+   "score": 4.16,
+   "line": "spot 21.73 · KING 20(+0.69g/-0.9v, -8.0%) · floor 20(+0.69g/-0.9v, -8.0%) · ceiling 24(+0.26g/+0.7v, 10.4%) · barney 22.5(-0.30g/-0.4v, 3.5%) · vanna 20(+0.69g/-0.9v, -8.0%)"
+  },
+  {
+   "ticker": "DECK",
+   "score": 4.15,
+   "line": "spot 93.25 · KING 90(-0.08g/+0.8v, -3.5%) · floor 85(+0.01g/-0.3v, -8.8%) · ceiling 102(+0.04g/+0.8v, 9.4%) · barney 90(-0.08g/+0.8v, -3.5%) · vanna 105(-0.07g/-1.5v, 12.6%)"
+  },
+  {
+   "ticker": "POET",
+   "score": 4.12,
+   "line": "spot 9.57 · KING 8(-0.61g/+1.1v, -16.4%) · floor 9.5(+0.03g/+0.0v, -0.7%) · ceiling — · barney 8(-0.61g/+1.1v, -16.4%) · vanna 8(-0.61g/+1.1v, -16.4%)"
+  },
+  {
+   "ticker": "AUR",
+   "score": 4.11,
+   "line": "spot 7.005 · KING 7(-0.39g/-0.0v, -0.1%) · floor — · ceiling 8(+0.05g/+0.1v, 14.2%) · barney 7(-0.39g/-0.0v, -0.1%) · vanna 6.5(-0.23g/+0.1v, -7.2%)"
+  },
+  {
+   "ticker": "W",
+   "score": 4.11,
+   "line": "spot 101.61 · KING 100(-0.90g/+3.3v, -1.6%) · floor 99(+0.18g/-1.3v, -2.6%) · ceiling 110(+0.23g/+3.3v, 8.3%) · barney 100(-0.90g/+3.3v, -1.6%) · vanna 100(-0.90g/+3.3v, -1.6%)"
+  },
+  {
+   "ticker": "AMPX",
+   "score": 4.1,
+   "line": "spot 12.495000000000001 · KING 12(-0.40g/+0.3v, -4.0%) · floor 11(+0.02g/-0.0v, -12.0%) · ceiling 14(+0.08g/+0.1v, 12.0%) · barney 12(-0.40g/+0.3v, -4.0%) · vanna 12(-0.40g/+0.3v, -4.0%)"
+  },
+  {
+   "ticker": "SYM",
+   "score": 4.09,
+   "line": "spot 42.585 · KING 45(-0.23g/-1.1v, 5.7%) · floor 42.5(+0.07g/-0.0v, -0.2%) · ceiling 46(+0.04g/+0.3v, 8.0%) · barney 45(-0.23g/-1.1v, 5.7%) · vanna 45(-0.23g/-1.1v, 5.7%)"
+  },
+  {
+   "ticker": "CRSP",
+   "score": 4.08,
+   "line": "spot 53.9 · KING 52.5(+0.12g/-0.5v, -2.6%) · floor 52.5(+0.12g/-0.5v, -2.6%) · ceiling 57.5(+0.04g/+0.3v, 6.7%) · barney 50(-0.08g/+0.4v, -7.2%) · vanna 52.5(+0.12g/-0.5v, -2.6%)"
+  },
+  {
+   "ticker": "RGTI",
+   "score": 4.08,
+   "line": "spot 18.775 · KING 17(+1.33g/-3.8v, -9.5%) · floor 17(+1.33g/-3.8v, -9.5%) · ceiling 22(+0.50g/+1.8v, 17.2%) · barney 21(-0.49g/-1.3v, 11.9%) · vanna 17(+1.33g/-3.8v, -9.5%)"
+  },
+  {
+   "ticker": "LWLG",
+   "score": 4.07,
+   "line": "spot 7.585 · KING 7(+0.17g/-0.1v, -7.7%) · floor 7(+0.17g/-0.1v, -7.7%) · ceiling 9(+0.16g/+0.2v, 18.7%) · barney 8(-0.07g/-0.0v, 5.5%) · vanna 9(+0.16g/+0.2v, 18.7%)"
+  },
+  {
+   "ticker": "ON",
+   "score": 4.06,
+   "line": "spot 82.9 · KING 80(-1.63g/+6.9v, -3.5%) · floor 82(+0.16g/+0.0v, -1.1%) · ceiling 95(+0.29g/+4.1v, 14.6%) · barney 80(-1.63g/+6.9v, -3.5%) · vanna 80(-1.63g/+6.9v, -3.5%)"
+  },
+  {
+   "ticker": "PL",
+   "score": 4.06,
+   "line": "spot 24.57 · KING 25(-0.72g/-0.6v, 1.8%) · floor 22(+0.05g/-0.2v, -10.5%) · ceiling 27(+0.50g/+1.6v, 9.9%) · barney 25(-0.72g/-0.6v, 1.8%) · vanna 27(+0.50g/+1.6v, 9.9%)"
+  },
+  {
+   "ticker": "PTON",
+   "score": 4.06,
+   "line": "spot 5.58 · KING 5(-0.28g/+0.3v, -10.4%) · floor 4.5(+0.00g/-0.0v, -19.4%) · ceiling 6(+0.27g/+0.2v, 7.5%) · barney 5(-0.28g/+0.3v, -10.4%) · vanna 5(-0.28g/+0.3v, -10.4%)"
+  },
+  {
+   "ticker": "SEDG",
+   "score": 4.06,
+   "line": "spot 32.375 · KING 30(+0.29g/-1.0v, -7.3%) · floor 30(+0.29g/-1.0v, -7.3%) · ceiling 35(+0.20g/+0.8v, 8.1%) · barney 32.5(-0.09g/-0.0v, 0.4%) · vanna 30(+0.29g/-1.0v, -7.3%)"
+  },
+  {
+   "ticker": "TRU",
+   "score": 4.05,
+   "line": "spot 78.5 · KING 77.5(+0.12g/-1.0v, -1.3%) · floor 77.5(+0.12g/-1.0v, -1.3%) · ceiling 85(+0.08g/+1.1v, 8.3%) · barney 82.5(-0.05g/-0.2v, 5.1%) · vanna 75(+0.09g/-1.1v, -4.5%)"
+  },
+  {
+   "ticker": "TIGR",
+   "score": 4.04,
+   "line": "spot 4.595 · KING 5.5(-0.10g/-0.1v, 19.7%) · floor 4.5(+0.08g/-0.0v, -2.1%) · ceiling 5(+0.09g/+0.1v, 8.8%) · barney 5.5(-0.10g/-0.1v, 19.7%) · vanna 5.5(-0.10g/-0.1v, 19.7%)"
+  },
+  {
+   "ticker": "UAMY",
+   "score": 4.04,
+   "line": "spot 5.51 · KING 5(+0.16g/-0.1v, -9.3%) · floor 5(+0.16g/-0.1v, -9.3%) · ceiling 6.5(+0.01g/+0.0v, 18.0%) · barney 6(-0.05g/-0.0v, 8.9%) · vanna 5(+0.16g/-0.1v, -9.3%)"
+  },
+  {
+   "ticker": "UPST",
+   "score": 4.04,
+   "line": "spot 30.475 · KING 33(+0.71g/+3.1v, 8.3%) · floor 27.5(+0.09g/-0.5v, -9.8%) · ceiling 33(+0.71g/+3.1v, 8.3%) · barney 34(-0.31g/-1.7v, 11.6%) · vanna 33(+0.71g/+3.1v, 8.3%)"
+  },
+  {
+   "ticker": "VKTX",
+   "score": 4.04,
+   "line": "spot 33.235 · KING 35(-0.27g/-0.9v, 5.3%) · floor 30(+0.13g/-0.7v, -9.7%) · ceiling 37.5(+0.23g/+1.4v, 12.8%) · barney 35(-0.27g/-0.9v, 5.3%) · vanna 37.5(+0.23g/+1.4v, 12.8%)"
+  },
+  {
+   "ticker": "PZZA",
+   "score": 4.03,
+   "line": "spot 24.355 · KING 27.5(-0.29g/-1.4v, 12.9%) · floor 22.5(+0.11g/-0.4v, -7.6%) · ceiling — · barney 27.5(-0.29g/-1.4v, 12.9%) · vanna 27.5(-0.29g/-1.4v, 12.9%)"
+  },
+  {
+   "ticker": "JOBY",
+   "score": 4.02,
+   "line": "spot 7.925 · KING 8(-1.59g/-0.3v, 0.9%) · floor 7.5(+0.22g/-0.1v, -5.4%) · ceiling 9(+0.38g/+0.5v, 13.6%) · barney 8(-1.59g/-0.3v, 0.9%) · vanna 9(+0.38g/+0.5v, 13.6%)"
+  },
+  {
+   "ticker": "CLOU",
+   "score": 4.01,
+   "line": "spot 29.115000000000002 · KING 28(+0.01g/-0.0v, -3.8%) · floor 28(+0.01g/-0.0v, -3.8%) · ceiling — · barney 31(-0.01g/-0.0v, 6.5%) · vanna 31(-0.01g/-0.0v, 6.5%)"
+  },
+  {
+   "ticker": "DBX",
+   "score": 4.01,
+   "line": "spot 33.515 · KING 36(-0.26g/-1.0v, 7.4%) · floor 27.5(+0.00g/-0.0v, -17.9%) · ceiling 37(+0.00g/+0.0v, 10.4%) · barney 36(-0.26g/-1.0v, 7.4%) · vanna 36(-0.26g/-1.0v, 7.4%)"
+  },
+  {
+   "ticker": "LASR",
+   "score": 4.01,
+   "line": "spot 52.14 · KING 56(-0.05g/-0.3v, 7.4%) · floor 45(+0.00g/-0.1v, -13.7%) · ceiling 58(+0.03g/+0.2v, 11.2%) · barney 56(-0.05g/-0.3v, 7.4%) · vanna 56(-0.05g/-0.3v, 7.4%)"
+  },
+  {
+   "ticker": "NNE",
+   "score": 4.01,
+   "line": "spot 19.68 · KING 20(-0.20g/-0.1v, 1.6%) · floor 18.5(+0.01g/-0.0v, -6.0%) · ceiling 22(+0.10g/+0.3v, 11.8%) · barney 20(-0.20g/-0.1v, 1.6%) · vanna 22(+0.10g/+0.3v, 11.8%)"
+  },
+  {
+   "ticker": "OMDA",
+   "score": 4.01,
+   "line": "spot 24.29 · KING 22.5(+0.03g/-0.1v, -7.4%) · floor 22.5(+0.03g/-0.1v, -7.4%) · ceiling — · barney 25(-0.01g/-0.0v, 2.9%) · vanna 22.5(+0.03g/-0.1v, -7.4%)"
+  },
+  {
+   "ticker": "BLNK",
+   "score": 4,
+   "line": "spot 0.59355 · KING 0.5(-0.00g/+0.0v, -15.8%) · floor — · ceiling — · barney 0.5(-0.00g/+0.0v, -15.8%) · vanna 0.5(-0.00g/+0.0v, -15.8%)"
+  },
+  {
+   "ticker": "BYND",
+   "score": 4,
+   "line": "spot 13.535 · KING — · floor — · ceiling — · barney — · vanna —"
+  },
+  {
+   "ticker": "CAN",
+   "score": 4,
+   "line": "spot 0.22820000000000001 · KING — · floor — · ceiling — · barney — · vanna —"
+  },
+  {
+   "ticker": "FLNA",
+   "score": 4,
+   "line": "spot 0.925 · KING 1(-0.01g/-0.0v, 8.1%) · floor — · ceiling — · barney 1(-0.01g/-0.0v, 8.1%) · vanna 1(-0.01g/-0.0v, 8.1%)"
+  },
+  {
+   "ticker": "GPRO",
+   "score": 4,
+   "line": "spot 0.5995999999999999 · KING 0.5(+0.01g/-0.0v, -16.6%) · floor 0.5(+0.01g/-0.0v, -16.6%) · ceiling — · barney — · vanna 0.5(+0.01g/-0.0v, -16.6%)"
+  },
+  {
+   "ticker": "UPXI",
+   "score": 4,
+   "line": "spot 0.8075 · KING — · floor — · ceiling — · barney — · vanna —"
+  },
+  {
+   "ticker": "PENN",
+   "score": 3.99,
+   "line": "spot 18.535 · KING 20(-0.26g/-0.7v, 7.9%) · floor 17(+0.06g/-0.2v, -8.3%) · ceiling 21(+0.16g/+0.6v, 13.3%) · barney 20(-0.26g/-0.7v, 7.9%) · vanna 20(-0.26g/-0.7v, 7.9%)"
+  },
+  {
+   "ticker": "ZETA",
+   "score": 3.99,
+   "line": "spot 29.12 · KING 24(+0.68g/-3.4v, -17.6%) · floor 24(+0.68g/-3.4v, -17.6%) · ceiling 31(+0.30g/+1.0v, 6.5%) · barney 29.5(-0.34g/-0.3v, 1.3%) · vanna 24(+0.68g/-3.4v, -17.6%)"
+  },
+  {
+   "ticker": "FVRR",
+   "score": 3.98,
+   "line": "spot 9.04 · KING 10(-0.09g/-0.1v, 10.6%) · floor — · ceiling — · barney 10(-0.09g/-0.1v, 10.6%) · vanna 10(-0.09g/-0.1v, 10.6%)"
+  },
+  {
+   "ticker": "JKS",
+   "score": 3.98,
+   "line": "spot 16.6 · KING 17.5(-0.09g/-0.1v, 5.4%) · floor — · ceiling — · barney 17.5(-0.09g/-0.1v, 5.4%) · vanna 17.5(-0.09g/-0.1v, 5.4%)"
+  },
+  {
+   "ticker": "MVST",
+   "score": 3.98,
+   "line": "spot 0.8365 · KING 1(+0.06g/+0.0v, 19.5%) · floor — · ceiling 1(+0.06g/+0.0v, 19.5%) · barney — · vanna 1(+0.06g/+0.0v, 19.5%)"
+  },
+  {
+   "ticker": "ZVRA",
+   "score": 3.98,
+   "line": "spot 11.205 · KING 12(+0.12g/+0.1v, 7.1%) · floor 9(+0.02g/-0.0v, -19.7%) · ceiling 12(+0.12g/+0.1v, 7.1%) · barney 11(-0.01g/+0.0v, -1.8%) · vanna 12(+0.12g/+0.1v, 7.1%)"
+  },
+  {
+   "ticker": "ELF",
+   "score": 3.97,
+   "line": "spot 91.5 · KING 90(-0.55g/+1.3v, -1.6%) · floor 75(+0.10g/-2.3v, -18.0%) · ceiling 100(+0.01g/+0.2v, 9.3%) · barney 90(-0.55g/+1.3v, -1.6%) · vanna 75(+0.10g/-2.3v, -18.0%)"
+  },
+  {
+   "ticker": "LUNR",
+   "score": 3.97,
+   "line": "spot 19.04 · KING 20(-0.56g/-0.7v, 5.0%) · floor 18.5(+0.12g/-0.0v, -2.8%) · ceiling 21(+0.22g/+0.5v, 10.3%) · barney 20(-0.56g/-0.7v, 5.0%) · vanna 20(-0.56g/-0.7v, 5.0%)"
+  },
+  {
+   "ticker": "SG",
+   "score": 3.96,
+   "line": "spot 6.265000000000001 · KING 6.5(-0.28g/-0.1v, 3.8%) · floor 6(+0.02g/-0.0v, -4.2%) · ceiling 7(+0.17g/+0.2v, 11.7%) · barney 6.5(-0.28g/-0.1v, 3.8%) · vanna 7(+0.17g/+0.2v, 11.7%)"
+  },
+  {
+   "ticker": "UPWK",
+   "score": 3.94,
+   "line": "spot 8.594999999999999 · KING 10(-0.34g/-0.4v, 16.3%) · floor 7.5(+0.19g/-0.3v, -12.7%) · ceiling — · barney 10(-0.34g/-0.4v, 16.3%) · vanna 10(-0.34g/-0.4v, 16.3%)"
+  },
+  {
+   "ticker": "WW",
+   "score": 3.93,
+   "line": "spot 14.205 · KING 15(-0.28g/-0.2v, 5.6%) · floor — · ceiling — · barney 15(-0.28g/-0.2v, 5.6%) · vanna 15(-0.28g/-0.2v, 5.6%)"
+  },
+  {
+   "ticker": "FCEL",
+   "score": 3.92,
+   "line": "spot 22.43 · KING 23(-0.27g/-0.2v, 2.5%) · floor 19(+0.16g/-0.5v, -15.3%) · ceiling 25(+0.10g/+0.2v, 11.5%) · barney 23(-0.27g/-0.2v, 2.5%) · vanna 19(+0.16g/-0.5v, -15.3%)"
+  },
+  {
+   "ticker": "TLRY",
+   "score": 3.92,
+   "line": "spot 4.63 · KING 5(-0.32g/-0.2v, 8.0%) · floor — · ceiling 5.5(+0.04g/+0.0v, 18.8%) · barney 5(-0.32g/-0.2v, 8.0%) · vanna 5(-0.32g/-0.2v, 8.0%)"
+  },
+  {
+   "ticker": "DJT",
+   "score": 3.89,
+   "line": "spot 8.325 · KING 9(+0.75g/+0.7v, 8.1%) · floor 8(+0.11g/-0.1v, -3.9%) · ceiling 9(+0.75g/+0.7v, 8.1%) · barney — · vanna 9(+0.75g/+0.7v, 8.1%)"
+  },
+  {
+   "ticker": "DNUT",
+   "score": 3.88,
+   "line": "spot 3.3899999999999997 · KING 3.5(-0.67g/-0.1v, 3.2%) · floor 3(+0.03g/-0.0v, -11.5%) · ceiling 4(+0.15g/+0.1v, 18.0%) · barney 3.5(-0.67g/-0.1v, 3.2%) · vanna 3.5(-0.67g/-0.1v, 3.2%)"
+  },
+  {
+   "ticker": "DOCU",
+   "score": 3.88,
+   "line": "spot 61.855000000000004 · KING 60(-0.31g/+1.0v, -3.0%) · floor 58(+0.20g/-3.1v, -6.2%) · ceiling 67(+0.12g/+1.1v, 8.3%) · barney 60(-0.31g/+1.0v, -3.0%) · vanna 58(+0.20g/-3.1v, -6.2%)"
+  },
+  {
+   "ticker": "IDCC",
+   "score": 3.88,
+   "line": "spot 343.66499999999996 · KING 340(+0.04g/-2.0v, -1.1%) · floor 340(+0.04g/-2.0v, -1.1%) · ceiling 380(+0.01g/+0.8v, 10.6%) · barney 320(-0.01g/+0.0v, -6.9%) · vanna 340(+0.04g/-2.0v, -1.1%)"
+  },
+  {
+   "ticker": "KTOS",
+   "score": 3.88,
+   "line": "spot 64.455 · KING 60(-0.69g/+5.0v, -6.9%) · floor 62.5(+0.15g/-0.4v, -3.0%) · ceiling 70(+0.49g/+4.4v, 8.6%) · barney 60(-0.69g/+5.0v, -6.9%) · vanna 60(-0.69g/+5.0v, -6.9%)"
+  },
+  {
+   "ticker": "AMC",
+   "score": 3.87,
+   "line": "spot 2.495 · KING 2.5(-8.83g/-0.2v, 0.2%) · floor — · ceiling — · barney 2.5(-8.83g/-0.2v, 0.2%) · vanna 2(-0.41g/+0.3v, -19.8%)"
+  },
+  {
+   "ticker": "AXTI",
+   "score": 3.87,
+   "line": "spot 81.78999999999999 · KING 70(+0.30g/-2.6v, -14.4%) · floor 70(+0.30g/-2.6v, -14.4%) · ceiling 90(+0.07g/+0.5v, 10.0%) · barney 80(-0.07g/+0.1v, -2.2%) · vanna 70(+0.30g/-2.6v, -14.4%)"
+  },
+  {
+   "ticker": "BB",
+   "score": 3.83,
+   "line": "spot 8.885000000000002 · KING 10(+1.03g/+1.7v, 12.5%) · floor 7.5(+0.12g/-0.3v, -15.6%) · ceiling 10(+1.03g/+1.7v, 12.5%) · barney 9.5(-0.96g/-1.0v, 6.9%) · vanna 10(+1.03g/+1.7v, 12.5%)"
+  },
+  {
+   "ticker": "DOCN",
+   "score": 3.83,
+   "line": "spot 129.315 · KING 120(-0.21g/+2.8v, -7.2%) · floor 115(+0.09g/-1.8v, -11.1%) · ceiling 155(+0.05g/+1.2v, 19.9%) · barney 120(-0.21g/+2.8v, -7.2%) · vanna 120(-0.21g/+2.8v, -7.2%)"
+  },
+  {
+   "ticker": "ASAN",
+   "score": 3.81,
+   "line": "spot 9.15 · KING 10(-0.88g/-0.9v, 9.3%) · floor — · ceiling — · barney 10(-0.88g/-0.9v, 9.3%) · vanna 10(-0.88g/-0.9v, 9.3%)"
+  },
+  {
+   "ticker": "LMND",
+   "score": 3.81,
+   "line": "spot 52.99 · KING 56(-0.17g/-1.1v, 5.7%) · floor 45(+0.13g/-1.6v, -15.1%) · ceiling 63(+0.02g/+0.2v, 18.9%) · barney 56(-0.17g/-1.1v, 5.7%) · vanna 45(+0.13g/-1.6v, -15.1%)"
+  },
+  {
+   "ticker": "VEEV",
+   "score": 3.81,
+   "line": "spot 245.905 · KING 240(-0.13g/+1.0v, -2.4%) · floor 210(+0.01g/-0.6v, -14.6%) · ceiling 280(+0.00g/+0.1v, 13.9%) · barney 240(-0.13g/+1.0v, -2.4%) · vanna 220(-0.06g/+2.7v, -10.5%)"
+  },
+  {
+   "ticker": "CROX",
+   "score": 3.8,
+   "line": "spot 130.405 · KING 120(-0.13g/+2.9v, -8.0%) · floor 125(+0.00g/-0.4v, -4.1%) · ceiling 150(+0.04g/+1.1v, 15.0%) · barney 120(-0.13g/+2.9v, -8.0%) · vanna 120(-0.13g/+2.9v, -8.0%)"
+  },
+  {
+   "ticker": "PLUG",
+   "score": 3.71,
+   "line": "spot 2.325 · KING 2.5(-1.04g/-0.2v, 7.5%) · floor 2(+0.05g/-0.0v, -14.0%) · ceiling — · barney 2.5(-1.04g/-0.2v, 7.5%) · vanna 2.5(-1.04g/-0.2v, 7.5%)"
+  },
+  {
+   "ticker": "RR",
+   "score": 3.7,
+   "line": "spot 1.79 · KING 2(-1.07g/-0.2v, 11.7%) · floor 1.5(+0.02g/-0.0v, -16.2%) · ceiling — · barney 2(-1.07g/-0.2v, 11.7%) · vanna 2(-1.07g/-0.2v, 11.7%)"
+  },
+  {
+   "ticker": "TLT",
+   "score": 3.63,
+   "line": "spot 82.08 · KING 83(-138.15g/-1294.0v, 1.1%) · floor 81(+97.58g/-1004.5v, -1.3%) · ceiling 82.5(+83.86g/+395.4v, 0.5%) · barney 83(-138.15g/-1294.0v, 1.1%) · vanna 83(-138.15g/-1294.0v, 1.1%)"
+  },
+  {
+   "ticker": "C",
+   "score": 3.61,
+   "line": "spot 138.805 · KING 140(-6.14g/-20.3v, 0.9%) · floor 130(+0.91g/-15.7v, -6.3%) · ceiling 145(+1.47g/+35.4v, 4.5%) · barney 140(-6.14g/-20.3v, 0.9%) · vanna 150(+1.19g/+50.3v, 8.1%)"
+  },
+  {
+   "ticker": "GRAB",
+   "score": 3.59,
+   "line": "spot 3.625 · KING 4(-1.63g/-1.0v, 10.3%) · floor 3(+0.23g/-0.2v, -17.2%) · ceiling — · barney 4(-1.63g/-1.0v, 10.3%) · vanna 4(-1.63g/-1.0v, 10.3%)"
+  },
+  {
+   "ticker": "CAKE",
+   "score": 3.58,
+   "line": "spot 112.695 · KING 105(+0.55g/-8.0v, -6.8%) · floor 105(+0.55g/-8.0v, -6.8%) · ceiling 120(+0.02g/+0.4v, 6.5%) · barney 110(-0.49g/+2.5v, -2.4%) · vanna 105(+0.55g/-8.0v, -6.8%)"
+  },
+  {
+   "ticker": "XLC",
+   "score": 3.58,
+   "line": "spot 112.8 · KING 113.5(-0.90g/-4.7v, 0.6%) · floor 108(+0.21g/-4.0v, -4.3%) · ceiling 120(+0.13g/+1.6v, 6.4%) · barney 113.5(-0.90g/-4.7v, 0.6%) · vanna 99(+0.18g/-5.8v, -12.2%)"
+  },
+  {
+   "ticker": "BMNR",
+   "score": 3.5,
+   "line": "spot 18.075 · KING 19(-3.55g/-4.8v, 5.1%) · floor 16(+0.96g/-3.1v, -11.5%) · ceiling 20(+2.63g/+6.8v, 10.7%) · barney 19(-3.55g/-4.8v, 5.1%) · vanna 20(+2.63g/+6.8v, 10.7%)"
+  },
+  {
+   "ticker": "MRNA",
+   "score": 3.5,
+   "line": "spot 63.15 · KING 65(-0.43g/-1.0v, 2.9%) · floor 55(+0.40g/-5.0v, -12.9%) · ceiling 75(+0.11g/+1.8v, 18.8%) · barney 65(-0.43g/-1.0v, 2.9%) · vanna 55(+0.40g/-5.0v, -12.9%)"
+  },
+  {
+   "ticker": "LUMN",
+   "score": 3.47,
+   "line": "spot 6.71 · KING 7(-1.77g/-0.7v, 4.3%) · floor 5.5(+0.70g/-0.9v, -18.0%) · ceiling — · barney 7(-1.77g/-0.7v, 4.3%) · vanna 5.5(+0.70g/-0.9v, -18.0%)"
+  },
+  {
+   "ticker": "DASH",
+   "score": 3.44,
+   "line": "spot 216.41 · KING 220(-0.58g/-4.2v, 1.7%) · floor 200(+0.15g/-6.1v, -7.6%) · ceiling 230(+0.06g/+1.7v, 6.3%) · barney 220(-0.58g/-4.2v, 1.7%) · vanna 200(+0.15g/-6.1v, -7.6%)"
+  },
+  {
+   "ticker": "NOK",
+   "score": 3.38,
+   "line": "spot 10.78 · KING 11(-6.60g/-2.3v, 2.0%) · floor — · ceiling — · barney 11(-6.60g/-2.3v, 2.0%) · vanna 11(-6.60g/-2.3v, 2.0%)"
+  },
+  {
+   "ticker": "CMI",
+   "score": 3.34,
+   "line": "spot 631.775 · KING 650(-0.09g/-5.6v, 2.9%) · floor 610(+0.08g/-6.3v, -3.4%) · ceiling 670(+0.03g/+3.2v, 6.1%) · barney 650(-0.09g/-5.6v, 2.9%) · vanna 560(-0.05g/+8.2v, -11.4%)"
+  },
+  {
+   "ticker": "CCJ",
+   "score": 3.31,
+   "line": "spot 97.73 · KING 100(-0.83g/-5.0v, 2.3%) · floor 80(+0.25g/-6.9v, -18.1%) · ceiling 110(+0.23g/+5.6v, 12.6%) · barney 100(-0.83g/-5.0v, 2.3%) · vanna 80(+0.25g/-6.9v, -18.1%)"
+  },
+  {
+   "ticker": "WULF",
+   "score": 3.18,
+   "line": "spot 17.38 · KING 18(-5.97g/-5.4v, 3.6%) · floor 16(+1.38g/-2.2v, -7.9%) · ceiling 20.5(+0.10g/+0.3v, 18.0%) · barney 18(-5.97g/-5.4v, 3.6%) · vanna 18(-5.97g/-5.4v, 3.6%)"
+  },
+  {
+   "ticker": "GS",
+   "score": 3.17,
+   "line": "spot 1040.87 · KING 1050(-0.99g/-37.1v, 0.9%) · floor 1015(+0.21g/-11.1v, -2.5%) · ceiling 1095(+0.12g/+24.7v, 5.2%) · barney 1050(-0.99g/-37.1v, 0.9%) · vanna 1050(-0.99g/-37.1v, 0.9%)"
+  },
+  {
+   "ticker": "VRTX",
+   "score": 3.08,
+   "line": "spot 506 · KING 500(-0.50g/+12.8v, -1.2%) · floor 450(+0.01g/-1.8v, -11.1%) · ceiling 540(+0.08g/+7.8v, 6.7%) · barney 500(-0.50g/+12.8v, -1.2%) · vanna 500(-0.50g/+12.8v, -1.2%)"
+  },
+  {
+   "ticker": "KEEL",
+   "score": 3.06,
+   "line": "spot 3.5199999999999996 · KING 4(+3.65g/+1.9v, 13.6%) · floor 3(+1.39g/-0.7v, -14.8%) · ceiling 4(+3.65g/+1.9v, 13.6%) · barney 3.5(-1.04g/-0.0v, -0.6%) · vanna 4(+3.65g/+1.9v, 13.6%)"
+  },
+  {
+   "ticker": "NIO",
+   "score": 2.98,
+   "line": "spot 4.529999999999999 · KING 5(+4.31g/+3.3v, 10.4%) · floor — · ceiling 5(+4.31g/+3.3v, 10.4%) · barney 4(-2.70g/+2.2v, -11.7%) · vanna 5(+4.31g/+3.3v, 10.4%)"
+  },
+  {
+   "ticker": "DIS",
+   "score": 2.89,
+   "line": "spot 106.815 · KING 110(+10.85g/+149.6v, 3.0%) · floor 106(+0.25g/-1.1v, -0.8%) · ceiling 110(+10.85g/+149.6v, 3.0%) · barney 105(-2.61g/+25.5v, -1.7%) · vanna 110(+10.85g/+149.6v, 3.0%)"
+  },
+  {
+   "ticker": "PDD",
+   "score": 2.87,
+   "line": "spot 84.845 · KING 80(+1.50g/-24.1v, -5.7%) · floor 80(+1.50g/-24.1v, -5.7%) · ceiling 90(+1.15g/+18.6v, 6.1%) · barney 83.5(-0.41g/+2.1v, -1.6%) · vanna 80(+1.50g/-24.1v, -5.7%)"
+  },
+  {
+   "ticker": "HPQ",
+   "score": 2.75,
+   "line": "spot 30.105 · KING 30(+2.56g/-0.6v, -0.3%) · floor 30(+2.56g/-0.6v, -0.3%) · ceiling 31(+1.24g/+2.5v, 3.0%) · barney 32(-0.82g/-3.3v, 6.3%) · vanna 32(-0.82g/-3.3v, 6.3%)"
+  },
+  {
+   "ticker": "TXN",
+   "score": 2.7,
+   "line": "spot 279.91499999999996 · KING 290(-1.07g/-28.3v, 3.6%) · floor 260(+0.46g/-21.9v, -7.1%) · ceiling 295(+0.68g/+28.0v, 5.4%) · barney 290(-1.07g/-28.3v, 3.6%) · vanna 300(-0.69g/-35.6v, 7.2%)"
+  },
+  {
+   "ticker": "DPZ",
+   "score": 2.68,
+   "line": "spot 349 · KING 340(-0.41g/+17.3v, -2.6%) · floor 290(+0.02g/-1.2v, -16.9%) · ceiling 370(+0.05g/+3.0v, 6.0%) · barney 340(-0.41g/+17.3v, -2.6%) · vanna 340(-0.41g/+17.3v, -2.6%)"
+  },
+  {
+   "ticker": "MMM",
+   "score": 2.55,
+   "line": "spot 182.99 · KING 182.5(-0.96g/+0.8v, -0.3%) · floor 175(+0.62g/-19.7v, -4.4%) · ceiling 195(+0.05g/+1.9v, 6.6%) · barney 182.5(-0.96g/+0.8v, -0.3%) · vanna 170(-0.49g/+24.2v, -7.1%)"
+  },
+  {
+   "ticker": "CDNS",
+   "score": 2.48,
+   "line": "spot 327 · KING 325(-0.82g/+2.6v, -0.6%) · floor 300(+0.05g/-3.7v, -8.3%) · ceiling 330(+0.48g/+6.3v, 0.9%) · barney 325(-0.82g/+2.6v, -0.6%) · vanna 380(+0.31g/+32.7v, 16.2%)"
+  },
+  {
+   "ticker": "ACHR",
+   "score": 2.39,
+   "line": "spot 6.605 · KING 7(-6.25g/-3.2v, 6.0%) · floor 6(+0.25g/-0.2v, -9.2%) · ceiling 7.5(+0.11g/+0.1v, 13.6%) · barney 7(-6.25g/-3.2v, 6.0%) · vanna 7(-6.25g/-3.2v, 6.0%)"
+  },
+  {
+   "ticker": "BKNG",
+   "score": 2.33,
+   "line": "spot 212.14499999999998 · KING 215(-0.83g/-7.2v, 1.3%) · floor 202.5(+0.18g/-6.0v, -4.5%) · ceiling 227.5(+0.02g/+0.4v, 7.2%) · barney 215(-0.83g/-7.2v, 1.3%) · vanna 200(-0.48g/+20.1v, -5.7%)"
+  },
+  {
+   "ticker": "MRK",
+   "score": 2.2,
+   "line": "spot 135.41 · KING 140(+2.92g/+52.5v, 3.4%) · floor 134(+0.26g/-2.0v, -1.0%) · ceiling 140(+2.92g/+52.5v, 3.4%) · barney 135(-1.10g/+3.9v, -0.3%) · vanna 140(+2.92g/+52.5v, 3.4%)"
+  },
+  {
+   "ticker": "APP",
+   "score": 2.12,
+   "line": "spot 315.24 · KING 330(-0.42g/-11.6v, 4.7%) · floor 290(+0.40g/-21.2v, -8.0%) · ceiling 335(+0.32g/+11.2v, 6.3%) · barney 330(-0.42g/-11.6v, 4.7%) · vanna 290(+0.40g/-21.2v, -8.0%)"
+  },
+  {
+   "ticker": "ACN",
+   "score": 1.96,
+   "line": "spot 176.72 · KING 190(-0.90g/-28.1v, 7.5%) · floor 160(+0.10g/-3.8v, -9.5%) · ceiling 185(+0.42g/+8.5v, 4.7%) · barney 190(-0.90g/-28.1v, 7.5%) · vanna 190(-0.90g/-28.1v, 7.5%)"
+  },
+  {
+   "ticker": "F",
+   "score": 1.96,
+   "line": "spot 14.364999999999998 · KING 14.5(-7.51g/-3.7v, 0.9%) · floor 14(+4.49g/-5.2v, -2.5%) · ceiling 15(+0.79g/+1.5v, 4.4%) · barney 14.5(-7.51g/-3.7v, 0.9%) · vanna 14(+4.49g/-5.2v, -2.5%)"
+  },
+  {
+   "ticker": "WM",
+   "score": 1.73,
+   "line": "spot 225.45999999999998 · KING 220(-1.22g/+31.7v, -2.4%) · floor 185(+0.00g/-0.1v, -17.9%) · ceiling — · barney 220(-1.22g/+31.7v, -2.4%) · vanna 220(-1.22g/+31.7v, -2.4%)"
+  },
+  {
+   "ticker": "COHR",
+   "score": 1.72,
+   "line": "spot 326.115 · KING 350(-0.38g/-14.0v, 7.3%) · floor 320(+0.07g/-0.2v, -1.9%) · ceiling 332.5(+0.03g/+0.4v, 2.0%) · barney 350(-0.38g/-14.0v, 7.3%) · vanna 380(-0.35g/-21.6v, 16.5%)"
+  },
+  {
+   "ticker": "VZ",
+   "score": 1.66,
+   "line": "spot 48.405 · KING 50(-4.84g/-35.9v, 3.3%) · floor 46(+1.74g/-12.8v, -5.0%) · ceiling 48.5(+0.90g/-0.0v, 0.2%) · barney 50(-4.84g/-35.9v, 3.3%) · vanna 50(-4.84g/-35.9v, 3.3%)"
+  },
+  {
+   "ticker": "COP",
+   "score": 1.65,
+   "line": "spot 126.36 · KING 125(+3.55g/-26.7v, -1.1%) · floor 125(+3.55g/-26.7v, -1.1%) · ceiling 128(+0.32g/+1.8v, 1.3%) · barney 130(-0.24g/-3.7v, 2.9%) · vanna 125(+3.55g/-26.7v, -1.1%)"
+  },
+  {
+   "ticker": "PANW",
+   "score": 1.65,
+   "line": "spot 384.72 · KING 405(-0.46g/-22.8v, 5.3%) · floor 350(+0.08g/-5.2v, -9.0%) · ceiling 390(+0.12g/+2.0v, 1.4%) · barney 405(-0.46g/-22.8v, 5.3%) · vanna 405(-0.46g/-22.8v, 5.3%)"
+  },
+  {
+   "ticker": "AXP",
+   "score": 1.58,
+   "line": "spot 342.375 · KING 350(-0.61g/-20.0v, 2.2%) · floor 340(+0.34g/-3.1v, -0.7%) · ceiling 347.5(+0.35g/+7.2v, 1.5%) · barney 350(-0.61g/-20.0v, 2.2%) · vanna 350(-0.61g/-20.0v, 2.2%)"
+  },
+  {
+   "ticker": "GM",
+   "score": 1.57,
+   "line": "spot 87.68 · KING 87.5(+1.77g/+3.6v, -0.2%) · floor 87.5(+1.77g/+3.6v, -0.2%) · ceiling 90(+0.10g/+1.5v, 2.6%) · barney 91(-0.49g/-6.7v, 3.8%) · vanna 85(+1.34g/-7.8v, -3.1%)"
+  },
+  {
+   "ticker": "HON",
+   "score": 1.55,
+   "line": "spot 234.48000000000002 · KING 240(+1.21g/+30.3v, 2.4%) · floor 232.5(+0.31g/-1.5v, -0.8%) · ceiling 240(+1.21g/+30.3v, 2.4%) · barney 230(-0.60g/+8.4v, -1.9%) · vanna 240(+1.21g/+30.3v, 2.4%)"
+  },
+  {
+   "ticker": "BULL",
+   "score": 1.48,
+   "line": "spot 8.045 · KING 7.5(+3.79g/-2.5v, -6.8%) · floor 7.5(+3.79g/-2.5v, -6.8%) · ceiling 8.5(+0.41g/+0.2v, 5.7%) · barney 9(-0.89g/-1.0v, 11.9%) · vanna 7.5(+3.79g/-2.5v, -6.8%)"
+  },
+  {
+   "ticker": "SOFI",
+   "score": 1.46,
+   "line": "spot 18.28 · KING 19(+10.74g/+17.8v, 3.9%) · floor 18(+8.32g/-5.6v, -1.5%) · ceiling 19(+10.74g/+17.8v, 3.9%) · barney 18.5(-1.08g/-0.6v, 1.2%) · vanna 20(+7.49g/+25.8v, 9.4%)"
+  },
+  {
+   "ticker": "IBM",
+   "score": 1.42,
+   "line": "spot 234.64999999999998 · KING 240(+2.12g/+36.2v, 2.3%) · floor 220(+0.57g/-31.5v, -6.2%) · ceiling 240(+2.12g/+36.2v, 2.3%) · barney 235(-1.68g/-0.6v, 0.1%) · vanna 240(+2.12g/+36.2v, 2.3%)"
+  },
+  {
+   "ticker": "SOUN",
+   "score": 1.38,
+   "line": "spot 7.425 · KING 8(+14.79g/+12.3v, 7.7%) · floor 6.5(+0.43g/-0.6v, -12.5%) · ceiling 8(+14.79g/+12.3v, 7.7%) · barney 7.5(-3.31g/-0.5v, 1.0%) · vanna 8(+14.79g/+12.3v, 7.7%)"
+  },
+  {
+   "ticker": "ANET",
+   "score": 1.32,
+   "line": "spot 198.89499999999998 · KING 190(+0.49g/-9.4v, -4.5%) · floor 190(+0.49g/-9.4v, -4.5%) · ceiling 210(+0.48g/+12.0v, 5.6%) · barney 185(-0.23g/+6.6v, -7.0%) · vanna 210(+0.48g/+12.0v, 5.6%)"
+  },
+  {
+   "ticker": "FDX",
+   "score": 1.26,
+   "line": "spot 332.9 · KING 332.5(+0.38g/-2.2v, -0.1%) · floor 332.5(+0.38g/-2.2v, -0.1%) · ceiling 345(+0.26g/+10.4v, 3.6%) · barney 340(-0.19g/-4.4v, 2.1%) · vanna 345(+0.26g/+10.4v, 3.6%)"
+  },
+  {
+   "ticker": "TJX",
+   "score": 1.25,
+   "line": "spot 152.53 · KING 149(+0.77g/-5.4v, -2.3%) · floor 149(+0.77g/-5.4v, -2.3%) · ceiling 160(+0.33g/+6.6v, 4.9%) · barney 150(-0.34g/+1.7v, -1.7%) · vanna 160(+0.33g/+6.6v, 4.9%)"
+  },
+  {
+   "ticker": "MS",
+   "score": 1.07,
+   "line": "spot 217 · KING 217.5(+0.59g/+0.2v, 0.2%) · floor 212.5(+0.15g/-3.0v, -2.1%) · ceiling 217.5(+0.59g/+0.2v, 0.2%) · barney 222.5(-0.21g/-3.9v, 2.5%) · vanna 230(+0.50g/+21.5v, 6.0%)"
+  },
+  {
+   "ticker": "LULU",
+   "score": 1.04,
+   "line": "spot 120.31 · KING 115(+0.78g/-9.3v, -4.4%) · floor 115(+0.78g/-9.3v, -4.4%) · ceiling 122(+0.76g/+4.8v, 1.4%) · barney 126(-0.27g/-4.4v, 4.7%) · vanna 130(+0.53g/+13.8v, 8.1%)"
+  },
+  {
+   "ticker": "NBIS",
+   "score": 0.91,
+   "line": "spot 277.595 · KING 250(+0.40g/-10.3v, -9.9%) · floor 250(+0.40g/-10.3v, -9.9%) · ceiling 290(+0.38g/+5.5v, 4.5%) · barney 320(-0.18g/-7.2v, 15.3%) · vanna 330(+0.23g/+10.9v, 18.9%)"
+  },
+  {
+   "ticker": "SYK",
+   "score": 0.87,
+   "line": "spot 339.395 · KING 360(-0.16g/-11.0v, 6.1%) · floor 330(+0.10g/-6.1v, -2.8%) · ceiling 350(+0.12g/+3.1v, 3.1%) · barney 360(-0.16g/-11.0v, 6.1%) · vanna 360(-0.16g/-11.0v, 6.1%)"
+  },
+  {
+   "ticker": "PEP",
+   "score": 0.85,
+   "line": "spot 140.77499999999998 · KING 140(-6.58g/+30.7v, -0.6%) · floor 139(+0.44g/-5.2v, -1.3%) · ceiling 142(+5.99g/+36.9v, 0.9%) · barney 140(-6.58g/+30.7v, -0.6%) · vanna 145(-2.69g/-55.8v, 3.0%)"
+  },
+  {
+   "ticker": "RIVN",
+   "score": 0.78,
+   "line": "spot 15.370000000000001 · KING 15(+0.89g/-0.7v, -2.4%) · floor 15(+0.89g/-0.7v, -2.4%) · ceiling 16(+0.69g/+1.0v, 4.1%) · barney 16.5(-0.29g/-0.6v, 7.4%) · vanna 17(+0.62g/+1.8v, 10.6%)"
+  },
+  {
+   "ticker": "SNOW",
+   "score": 0.78,
+   "line": "spot 329.355 · KING 332.5(+0.41g/+3.9v, 1.0%) · floor 315(+0.16g/-4.8v, -4.4%) · ceiling 332.5(+0.41g/+3.9v, 1.0%) · barney 347.5(-0.35g/-14.9v, 5.5%) · vanna 347.5(-0.35g/-14.9v, 5.5%)"
+  },
+  {
+   "ticker": "MDB",
+   "score": 0.75,
+   "line": "spot 459 · KING 480(+0.24g/+10.1v, 4.6%) · floor 420(+0.08g/-4.3v, -8.5%) · ceiling 480(+0.24g/+10.1v, 4.6%) · barney 460(-0.14g/-0.3v, 0.2%) · vanna 500(+0.13g/+10.1v, 8.9%)"
+  },
+  {
+   "ticker": "CCL",
+   "score": 0.74,
+   "line": "spot 28.145000000000003 · KING 27.5(+1.65g/-3.4v, -2.3%) · floor 27.5(+1.65g/-3.4v, -2.3%) · ceiling 29(+1.08g/+2.5v, 3.0%) · barney 26(-0.22g/+1.3v, -7.6%) · vanna 27.5(+1.65g/-3.4v, -2.3%)"
+  },
+  {
+   "ticker": "ZS",
+   "score": 0.68,
+   "line": "spot 184.835 · KING 200(-0.41g/-12.5v, 8.2%) · floor 170(+0.32g/-7.9v, -8.0%) · ceiling 190(+0.38g/+5.0v, 2.8%) · barney 200(-0.41g/-12.5v, 8.2%) · vanna 200(-0.41g/-12.5v, 8.2%)"
+  },
+  {
+   "ticker": "AXON",
+   "score": 0.62,
+   "line": "spot 613.79 · KING 600(-0.09g/+2.1v, -2.2%) · floor 550(+0.02g/-1.6v, -10.4%) · ceiling 650(+0.08g/+7.1v, 5.9%) · barney 600(-0.09g/+2.1v, -2.2%) · vanna 650(+0.08g/+7.1v, 5.9%)"
+  },
+  {
+   "ticker": "CEG",
+   "score": 0.53,
+   "line": "spot 282.69 · KING 280(+1.13g/-8.1v, -1.0%) · floor 280(+1.13g/-8.1v, -1.0%) · ceiling 290(+0.20g/+2.8v, 2.6%) · barney 300(-0.13g/-5.9v, 6.1%) · vanna 280(+1.13g/-8.1v, -1.0%)"
+  },
+  {
+   "ticker": "NU",
+   "score": 0.52,
+   "line": "spot 15.184999999999999 · KING 14(-15.48g/+41.6v, -7.8%) · floor 13.5(+0.42g/-1.4v, -11.1%) · ceiling 15.5(+0.83g/+0.7v, 2.1%) · barney 14(-15.48g/+41.6v, -7.8%) · vanna 14(-15.48g/+41.6v, -7.8%)"
+  },
+  {
+   "ticker": "CRWV",
+   "score": 0.5,
+   "line": "spot 104.775 · KING 100(+5.41g/-36.4v, -4.6%) · floor 100(+5.41g/-36.4v, -4.6%) · ceiling 105(+0.36g/-0.0v, 0.2%) · barney 110(-1.67g/-11.1v, 5.0%) · vanna 100(+5.41g/-36.4v, -4.6%)"
+  },
+  {
+   "ticker": "DUOL",
+   "score": 0.5,
+   "line": "spot 134.685 · KING 130(+0.40g/-1.7v, -3.5%) · floor 130(+0.40g/-1.7v, -3.5%) · ceiling 140(+0.19g/+2.3v, 3.9%) · barney 131(-0.10g/+0.9v, -2.7%) · vanna 150(+0.10g/+2.7v, 11.4%)"
+  },
+  {
+   "ticker": "NRG",
+   "score": 0.48,
+   "line": "spot 124.875 · KING 121(-0.53g/+3.6v, -3.1%) · floor 115(+0.01g/-0.3v, -7.9%) · ceiling 131(+0.33g/+3.9v, 4.9%) · barney 121(-0.53g/+3.6v, -3.1%) · vanna 140(+0.17g/+4.7v, 12.1%)"
+  },
+  {
+   "ticker": "UUUU",
+   "score": 0.44,
+   "line": "spot 15.155000000000001 · KING 14(-0.64g/+1.0v, -7.6%) · floor 15(+0.41g/-0.0v, -1.0%) · ceiling 15.5(+0.03g/+0.0v, 2.3%) · barney 14(-0.64g/+1.0v, -7.6%) · vanna 14(-0.64g/+1.0v, -7.6%)"
+  },
+  {
+   "ticker": "RDDT",
+   "score": 0.43,
+   "line": "spot 177.58499999999998 · KING 180(+1.32g/+5.4v, 1.4%) · floor 177.5(+0.44g/-0.4v, -0.0%) · ceiling 180(+1.32g/+5.4v, 1.4%) · barney 190(-0.17g/-3.5v, 7.0%) · vanna 200(+0.61g/+19.3v, 12.6%)"
+  },
+  {
+   "ticker": "DHI",
+   "score": 0.4,
+   "line": "spot 150 · KING 145(+0.27g/-3.0v, -3.3%) · floor 145(+0.27g/-3.0v, -3.3%) · ceiling 155(+0.22g/+3.4v, 3.3%) · barney 140(-0.10g/+2.4v, -6.7%) · vanna 155(+0.22g/+3.4v, 3.3%)"
+  },
+  {
+   "ticker": "NVAX",
+   "score": 0.4,
+   "line": "spot 8.02 · KING 8(+0.31g/+0.1v, -0.2%) · floor 8(+0.31g/+0.1v, -0.2%) · ceiling 8.5(+0.09g/+0.1v, 6.0%) · barney 7.5(-0.09g/+0.1v, -6.5%) · vanna 8.5(+0.09g/+0.1v, 6.0%)"
+  },
+  {
+   "ticker": "DE",
+   "score": 0.39,
+   "line": "spot 610.35 · KING 630(-0.14g/-5.4v, 3.2%) · floor 565(+0.03g/-3.0v, -7.4%) · ceiling 622.5(+0.04g/+0.7v, 2.0%) · barney 630(-0.14g/-5.4v, 3.2%) · vanna 630(-0.14g/-5.4v, 3.2%)"
+  },
+  {
+   "ticker": "UNM",
+   "score": 0.39,
+   "line": "spot 93.405 · KING 92.5(-0.55g/+1.6v, -1.0%) · floor 85(+0.10g/-1.7v, -9.0%) · ceiling 97.5(+0.29g/+3.8v, 4.4%) · barney 92.5(-0.55g/+1.6v, -1.0%) · vanna 97.5(+0.29g/+3.8v, 4.4%)"
+  },
+  {
+   "ticker": "XLY",
+   "score": 0.39,
+   "line": "spot 118.28999999999999 · KING 118(-1.70g/+3.7v, -0.2%) · floor 113(+0.29g/-7.0v, -4.5%) · ceiling 119(+1.22g/+4.8v, 0.6%) · barney 118(-1.70g/+3.7v, -0.2%) · vanna 122(-0.67g/-12.9v, 3.1%)"
+  },
+  {
+   "ticker": "LEU",
+   "score": 0.37,
+   "line": "spot 190.51 · KING 200(-0.32g/-4.7v, 5.0%) · floor 185(+0.14g/-2.0v, -2.9%) · ceiling 195(+0.02g/+0.0v, 2.4%) · barney 200(-0.32g/-4.7v, 5.0%) · vanna 200(-0.32g/-4.7v, 5.0%)"
+  },
+  {
+   "ticker": "DELL",
+   "score": 0.33,
+   "line": "spot 491.565 · KING 500(+2.37g/+36.7v, 1.7%) · floor 450(+0.35g/-21.9v, -8.5%) · ceiling 500(+2.37g/+36.7v, 1.7%) · barney 470(-0.16g/+5.0v, -4.4%) · vanna 500(+2.37g/+36.7v, 1.7%)"
+  },
+  {
+   "ticker": "ASST",
+   "score": 0.32,
+   "line": "spot 12.29 · KING 12(-1.05g/+0.1v, -2.4%) · floor 10(+0.06g/-0.1v, -18.6%) · ceiling 13(+0.19g/+0.2v, 5.8%) · barney 12(-1.05g/+0.1v, -2.4%) · vanna 13(+0.19g/+0.2v, 5.8%)"
+  },
+  {
+   "ticker": "WOLF",
+   "score": 0.24,
+   "line": "spot 31.11 · KING 30(+0.35g/+0.0v, -3.6%) · floor 30(+0.35g/+0.0v, -3.6%) · ceiling 32(+0.06g/+0.0v, 2.9%) · barney 34(-0.05g/-0.1v, 9.3%) · vanna 25(+0.04g/-0.1v, -19.6%)"
+  },
+  {
+   "ticker": "FCX",
+   "score": 0.22,
+   "line": "spot 66.565 · KING 70(-3.30g/-25.7v, 5.2%) · floor 63(+1.02g/-9.5v, -5.4%) · ceiling 67(+1.19g/+1.7v, 0.7%) · barney 70(-3.30g/-25.7v, 5.2%) · vanna 70(-3.30g/-25.7v, 5.2%)"
+  },
+  {
+   "ticker": "DKS",
+   "score": 0.2,
+   "line": "spot 202.05 · KING 210(+0.18g/+3.2v, 3.9%) · floor 195(+0.02g/-0.7v, -3.5%) · ceiling 210(+0.18g/+3.2v, 3.9%) · barney 230(-0.09g/-3.7v, 13.8%) · vanna 220(+0.12g/+3.8v, 8.9%)"
+  },
+  {
+   "ticker": "STT",
+   "score": 0.2,
+   "line": "spot 190.5 · KING 195(+0.38g/+5.7v, 2.4%) · floor 190(+0.12g/-0.7v, -0.3%) · ceiling 195(+0.38g/+5.7v, 2.4%) · barney 180(-0.04g/+1.3v, -5.5%) · vanna 195(+0.38g/+5.7v, 2.4%)"
+  },
+  {
+   "ticker": "TEM",
+   "score": 0.2,
+   "line": "spot 52.15 · KING 55(+1.05g/+5.2v, 5.5%) · floor 50(+0.41g/-1.1v, -4.1%) · ceiling 55(+1.05g/+5.2v, 5.5%) · barney 60(-0.21g/-2.6v, 15.1%) · vanna 55(+1.05g/+5.2v, 5.5%)"
+  },
+  {
+   "ticker": "BROS",
+   "score": 0.18,
+   "line": "spot 52.03 · KING 50(-0.48g/+3.2v, -3.9%) · floor 52(+0.32g/-0.0v, -0.1%) · ceiling 55(+0.23g/+1.6v, 5.7%) · barney 50(-0.48g/+3.2v, -3.9%) · vanna 50(-0.48g/+3.2v, -3.9%)"
+  },
+  {
+   "ticker": "ROKU",
+   "score": 0.18,
+   "line": "spot 157.29000000000002 · KING 160(+0.52g/+7.7v, 1.7%) · floor 149(+0.16g/-2.0v, -5.3%) · ceiling 160(+0.52g/+7.7v, 1.7%) · barney 157.5(-0.29g/+0.3v, 0.1%) · vanna 160(+0.52g/+7.7v, 1.7%)"
+  },
+  {
+   "ticker": "TTD",
+   "score": 0.18,
+   "line": "spot 14.129999999999999 · KING 14(-1.34g/+0.3v, -0.9%) · floor 13(+0.53g/-1.2v, -8.0%) · ceiling 14.5(+0.57g/+0.3v, 2.6%) · barney 14(-1.34g/+0.3v, -0.9%) · vanna 15(-1.21g/-2.0v, 6.2%)"
+  },
+  {
+   "ticker": "BP",
+   "score": 0.14,
+   "line": "spot 42.545 · KING 44.5(+2.48g/+17.0v, 4.6%) · floor 41.5(+0.24g/-1.0v, -2.5%) · ceiling 44.5(+2.48g/+17.0v, 4.6%) · barney 39(-1.56g/+13.0v, -8.3%) · vanna 44.5(+2.48g/+17.0v, 4.6%)"
+  },
+  {
+   "ticker": "PHM",
+   "score": 0.1,
+   "line": "spot 131.005 · KING 142(-0.13g/-2.6v, 8.4%) · floor 120(+0.06g/-1.7v, -8.4%) · ceiling 132(+0.07g/+0.4v, 0.8%) · barney 142(-0.13g/-2.6v, 8.4%) · vanna 142(-0.13g/-2.6v, 8.4%)"
+  },
+  {
+   "ticker": "WING",
+   "score": 0.1,
+   "line": "spot 125.75 · KING 125(-0.15g/+0.2v, -0.6%) · floor 110(+0.01g/-0.3v, -12.5%) · ceiling 130(+0.07g/+0.5v, 3.4%) · barney 125(-0.15g/+0.2v, -0.6%) · vanna 135(-0.07g/-1.2v, 7.4%)"
+  },
+  {
+   "ticker": "XLRE",
+   "score": 0.09,
+   "line": "spot 44.94 · KING 45(-1.03g/+2.4v, 0.1%) · floor 43(+0.28g/-2.4v, -4.3%) · ceiling 46(+0.37g/+2.9v, 2.4%) · barney 45(-1.03g/+2.4v, 0.1%) · vanna 46(+0.37g/+2.9v, 2.4%)"
+  },
+  {
+   "ticker": "CELH",
+   "score": 0.08,
+   "line": "spot 29.325 · KING 30(-2.04g/-3.2v, 2.3%) · floor 27.5(+0.46g/-1.4v, -6.2%) · ceiling 31(+0.13g/+0.4v, 5.7%) · barney 30(-2.04g/-3.2v, 2.3%) · vanna 30(-2.04g/-3.2v, 2.3%)"
+  },
+  {
+   "ticker": "GTLB",
+   "score": 0.08,
+   "line": "spot 42.51 · KING 47.5(-0.14g/-1.1v, 11.7%) · floor 42(+0.08g/-0.1v, -1.2%) · ceiling 43(+0.04g/+0.0v, 1.2%) · barney 47.5(-0.14g/-1.1v, 11.7%) · vanna 47.5(-0.14g/-1.1v, 11.7%)"
+  },
+  {
+   "ticker": "PYPL",
+   "score": 0.07,
+   "line": "spot 61.400000000000006 · KING 62.5(-7.10g/-13.0v, 1.8%) · floor 57.5(+0.34g/-3.4v, -6.4%) · ceiling 62(+0.32g/+0.2v, 1.0%) · barney 62.5(-7.10g/-13.0v, 1.8%) · vanna 62.5(-7.10g/-13.0v, 1.8%)"
+  },
+  {
+   "ticker": "EBAY",
+   "score": 0.04,
+   "line": "spot 103.305 · KING 105(+0.16g/+1.1v, 1.6%) · floor 103(+0.03g/-0.1v, -0.3%) · ceiling 105(+0.16g/+1.1v, 1.6%) · barney 100(-0.09g/+0.7v, -3.2%) · vanna 115(+0.10g/+2.4v, 11.3%)"
+  },
+  {
+   "ticker": "FUTU",
+   "score": 0.04,
+   "line": "spot 105.185 · KING 110(+0.36g/+3.0v, 4.6%) · floor 92.45(+0.02g/-0.4v, -12.1%) · ceiling 110(+0.36g/+3.0v, 4.6%) · barney 102.45(-0.15g/+0.4v, -2.6%) · vanna 110(+0.36g/+3.0v, 4.6%)"
+  },
+  {
+   "ticker": "PRI",
+   "score": 0,
+   "line": "spot 307.47 · KING 310(+0.00g/-0.1v, 0.8%) · floor 280(+0.00g/-0.0v, -8.9%) · ceiling 310(+0.00g/-0.1v, 0.8%) · barney — · vanna 330(+0.00g/+0.1v, 7.3%)"
+  },
+  {
+   "ticker": "SBET",
+   "score": 0,
+   "line": "spot 6.199999999999999 · KING 6.5(+0.22g/+0.1v, 4.8%) · floor 6(+0.16g/-0.0v, -3.2%) · ceiling 6.5(+0.22g/+0.1v, 4.8%) · barney 7(-0.22g/-0.2v, 12.9%) · vanna 7(-0.22g/-0.2v, 12.9%)"
+  },
+  {
+   "ticker": "SRPT",
+   "score": 0,
+   "line": "spot 18.095 · KING 20(-0.27g/-0.8v, 10.5%) · floor 17.5(+0.07g/+0.1v, -3.3%) · ceiling 19(+0.12g/+0.2v, 5.0%) · barney 20(-0.27g/-0.8v, 10.5%) · vanna 20(-0.27g/-0.8v, 10.5%)"
+  },
+  {
+   "ticker": "UEC",
+   "score": 0,
+   "line": "spot 11.355 · KING 12(-2.36g/-3.1v, 5.7%) · floor 11(+0.99g/-0.5v, -3.1%) · ceiling 11.5(+0.16g/+0.1v, 1.3%) · barney 12(-2.36g/-3.1v, 5.7%) · vanna 12(-2.36g/-3.1v, 5.7%)"
+  },
+  {
+   "ticker": "MSFT",
+   "score": -0.03,
+   "line": "spot 495.075 · KING 480(+18.72g/-1269.3v, -3.0%) · floor 480(+18.72g/-1269.3v, -3.0%) · ceiling 510(+6.90g/+474.6v, 3.0%) · barney 500(-14.74g/-315.1v, 1.0%) · vanna 480(+18.72g/-1269.3v, -3.0%)"
+  },
+  {
+   "ticker": "NVTS",
+   "score": -0.04,
+   "line": "spot 14.469999999999999 · KING 13.5(-0.43g/+0.4v, -6.7%) · floor 12(+0.03g/-0.1v, -17.1%) · ceiling 15(+0.28g/+0.2v, 3.7%) · barney 13.5(-0.43g/+0.4v, -6.7%) · vanna 13(-0.24g/+0.4v, -10.2%)"
+  },
+  {
+   "ticker": "UVXY",
+   "score": -0.04,
+   "line": "spot 20.125 · KING 20(-0.95g/+0.1v, -0.6%) · floor 18(+0.19g/-0.9v, -10.6%) · ceiling 20.5(+0.28g/+0.2v, 1.9%) · barney 20(-0.95g/+0.1v, -0.6%) · vanna 19(-0.42g/+1.1v, -5.6%)"
+  },
+  {
+   "ticker": "HAL",
+   "score": -0.05,
+   "line": "spot 34.45 · KING 31.5(+0.60g/-3.5v, -8.6%) · floor 31.5(+0.60g/-3.5v, -8.6%) · ceiling 34.5(+0.02g/+0.0v, 0.1%) · barney 35(-0.43g/-0.8v, 1.6%) · vanna 31.5(+0.60g/-3.5v, -8.6%)"
+  },
+  {
+   "ticker": "U",
+   "score": -0.05,
+   "line": "spot 46.03 · KING 48(+0.35g/+1.2v, 4.3%) · floor 39(+0.11g/-1.1v, -15.3%) · ceiling 48(+0.35g/+1.2v, 4.3%) · barney 46(-0.17g/+0.0v, -0.1%) · vanna 50(+0.30g/+2.2v, 8.6%)"
+  },
+  {
+   "ticker": "SDY",
+   "score": -0.08,
+   "line": "spot 158.365 · KING 150(-0.04g/+0.8v, -5.3%) · floor 140(+0.01g/-0.1v, -11.6%) · ceiling 159(+0.02g/+0.1v, 0.4%) · barney 150(-0.04g/+0.8v, -5.3%) · vanna 150(-0.04g/+0.8v, -5.3%)"
+  },
+  {
+   "ticker": "TOST",
+   "score": -0.08,
+   "line": "spot 34.775 · KING 36(+0.29g/+0.8v, 3.5%) · floor 31(+0.24g/-1.5v, -10.9%) · ceiling 36(+0.29g/+0.8v, 3.5%) · barney 30(-0.21g/+1.4v, -13.7%) · vanna 40(+0.20g/+1.9v, 15.0%)"
+  },
+  {
+   "ticker": "SPCE",
+   "score": -0.09,
+   "line": "spot 3.3099999999999996 · KING 3.5(+0.26g/+0.1v, 5.7%) · floor 3(+0.03g/-0.0v, -9.4%) · ceiling 3.5(+0.26g/+0.1v, 5.7%) · barney — · vanna 3.5(+0.26g/+0.1v, 5.7%)"
+  },
+  {
+   "ticker": "HD",
+   "score": -0.14,
+   "line": "spot 338.28499999999997 · KING 340(+1.10g/+5.5v, 0.5%) · floor 337.5(+0.15g/-0.2v, -0.2%) · ceiling 340(+1.10g/+5.5v, 0.5%) · barney 335(-0.31g/+2.7v, -1.0%) · vanna 360(+0.29g/+15.0v, 6.4%)"
+  },
+  {
+   "ticker": "EL",
+   "score": -0.15,
+   "line": "spot 86.62 · KING 87(+0.12g/+0.1v, 0.4%) · floor 84(+0.08g/-0.2v, -3.0%) · ceiling 87(+0.12g/+0.1v, 0.4%) · barney 85(-0.07g/+0.1v, -1.9%) · vanna 80(+0.04g/-0.3v, -7.6%)"
+  },
+  {
+   "ticker": "SE",
+   "score": -0.16,
+   "line": "spot 122.13 · KING 120(-1.34g/+5.4v, -1.7%) · floor 115(+0.27g/-4.0v, -5.8%) · ceiling 125(+0.26g/+2.2v, 2.3%) · barney 120(-1.34g/+5.4v, -1.7%) · vanna 120(-1.34g/+5.4v, -1.7%)"
+  },
+  {
+   "ticker": "VNET",
+   "score": -0.17,
+   "line": "spot 7.595000000000001 · KING 9(-0.66g/-0.7v, 18.5%) · floor 7(+0.22g/-0.1v, -7.8%) · ceiling 8(+0.27g/+0.1v, 5.3%) · barney 9(-0.66g/-0.7v, 18.5%) · vanna 9(-0.66g/-0.7v, 18.5%)"
+  },
+  {
+   "ticker": "NKE",
+   "score": -0.19,
+   "line": "spot 40.845 · KING 40(-5.98g/+15.9v, -2.1%) · floor 40.5(+1.38g/-1.0v, -0.8%) · ceiling 42(+2.98g/+12.9v, 2.8%) · barney 40(-5.98g/+15.9v, -2.1%) · vanna 40(-5.98g/+15.9v, -2.1%)"
+  },
+  {
+   "ticker": "STLD",
+   "score": -0.21,
+   "line": "spot 259.455 · KING 250(+0.45g/-7.3v, -3.6%) · floor 250(+0.45g/-7.3v, -3.6%) · ceiling 270(+0.07g/+1.6v, 4.1%) · barney 260(-0.15g/-1.4v, 0.2%) · vanna 250(+0.45g/-7.3v, -3.6%)"
+  },
+  {
+   "ticker": "BIIB",
+   "score": -0.22,
+   "line": "spot 209.74 · KING 202.5(+0.14g/-3.7v, -3.5%) · floor 202.5(+0.14g/-3.7v, -3.5%) · ceiling 210(+0.03g/-0.0v, 0.1%) · barney 220(-0.05g/-1.6v, 4.9%) · vanna 202.5(+0.14g/-3.7v, -3.5%)"
+  },
+  {
+   "ticker": "ALIT",
+   "score": -0.23,
+   "line": "spot 13.82 · KING 14(+0.19g/+0.1v, 1.3%) · floor 13(+0.00g/-0.0v, -5.9%) · ceiling 14(+0.19g/+0.1v, 1.3%) · barney 12(-0.03g/+0.0v, -13.2%) · vanna 14(+0.19g/+0.1v, 1.3%)"
+  },
+  {
+   "ticker": "JD",
+   "score": -0.23,
+   "line": "spot 29.04 · KING 30(+1.37g/+4.4v, 3.3%) · floor 28.5(+0.73g/-1.4v, -1.9%) · ceiling 30(+1.37g/+4.4v, 3.3%) · barney 28(-0.99g/+3.4v, -3.6%) · vanna 30(+1.37g/+4.4v, 3.3%)"
+  },
+  {
+   "ticker": "REGN",
+   "score": -0.28,
+   "line": "spot 801.69 · KING 800(-0.28g/+3.1v, -0.2%) · floor 790(+0.07g/-4.8v, -1.5%) · ceiling 825(+0.03g/+2.1v, 2.9%) · barney 800(-0.28g/+3.1v, -0.2%) · vanna 790(+0.07g/-4.8v, -1.5%)"
+  },
+  {
+   "ticker": "WYNN",
+   "score": -0.29,
+   "line": "spot 104.13499999999999 · KING 105(+0.67g/+6.4v, 0.8%) · floor 97.5(+0.40g/-5.7v, -6.4%) · ceiling 105(+0.67g/+6.4v, 0.8%) · barney 110(-0.16g/-3.3v, 5.6%) · vanna 105(+0.67g/+6.4v, 0.8%)"
+  },
+  {
+   "ticker": "XLU",
+   "score": -0.29,
+   "line": "spot 44.31 · KING 44(-18.33g/+33.4v, -0.7%) · floor 42.5(+0.66g/-6.1v, -4.1%) · ceiling 45(+3.75g/+32.8v, 1.6%) · barney 44(-18.33g/+33.4v, -0.7%) · vanna 44(-18.33g/+33.4v, -0.7%)"
+  },
+  {
+   "ticker": "CIFR",
+   "score": -0.32,
+   "line": "spot 17.97 · KING 19(+1.27g/+1.6v, 5.7%) · floor 16(+0.24g/-0.4v, -11.0%) · ceiling 19(+1.27g/+1.6v, 5.7%) · barney 20.5(-0.27g/-0.7v, 14.1%) · vanna 19(+1.27g/+1.6v, 5.7%)"
+  },
+  {
+   "ticker": "XLB",
+   "score": -0.34,
+   "line": "spot 52.35 · KING 52(-3.50g/+12.8v, -0.7%) · floor 49(+0.25g/-3.1v, -6.4%) · ceiling 54(+0.65g/+5.2v, 3.2%) · barney 52(-3.50g/+12.8v, -0.7%) · vanna 52(-3.50g/+12.8v, -0.7%)"
+  },
+  {
+   "ticker": "ABNB",
+   "score": -0.4,
+   "line": "spot 184.005 · KING 185(-0.73g/-3.2v, 0.5%) · floor 180(+0.55g/-8.6v, -2.2%) · ceiling 187.5(+0.07g/+0.8v, 1.9%) · barney 185(-0.73g/-3.2v, 0.5%) · vanna 180(+0.55g/-8.6v, -2.2%)"
+  },
+  {
+   "ticker": "TER",
+   "score": -0.43,
+   "line": "spot 414.405 · KING 420(-0.39g/-1.6v, 1.4%) · floor 390(+0.23g/-5.3v, -5.9%) · ceiling 430(+0.04g/+1.3v, 3.8%) · barney 420(-0.39g/-1.6v, 1.4%) · vanna 390(+0.23g/-5.3v, -5.9%)"
+  },
+  {
+   "ticker": "NFLX",
+   "score": -0.44,
+   "line": "spot 78.19999999999999 · KING 80(+5.53g/+34.2v, 2.3%) · floor 74(+2.18g/-27.6v, -5.4%) · ceiling 80(+5.53g/+34.2v, 2.3%) · barney 81(-5.34g/-49.7v, 3.6%) · vanna 81(-5.34g/-49.7v, 3.6%)"
+  },
+  {
+   "ticker": "Z",
+   "score": -0.44,
+   "line": "spot 34.650000000000006 · KING 37.5(-0.37g/-0.9v, 8.2%) · floor 30(+0.17g/-1.3v, -13.4%) · ceiling 35(+0.22g/+0.1v, 1.0%) · barney 37.5(-0.37g/-0.9v, 8.2%) · vanna 30(+0.17g/-1.3v, -13.4%)"
+  },
+  {
+   "ticker": "AFRM",
+   "score": -0.47,
+   "line": "spot 78.265 · KING 75(-0.82g/+5.7v, -4.2%) · floor 73(+0.19g/-2.2v, -6.7%) · ceiling 80(+0.36g/+1.3v, 2.2%) · barney 75(-0.82g/+5.7v, -4.2%) · vanna 75(-0.82g/+5.7v, -4.2%)"
+  },
+  {
+   "ticker": "DDOG",
+   "score": -0.52,
+   "line": "spot 255.445 · KING 250(+0.59g/-5.0v, -2.1%) · floor 250(+0.59g/-5.0v, -2.1%) · ceiling 260(+0.20g/+1.6v, 1.8%) · barney 240(-0.40g/+11.5v, -6.0%) · vanna 240(-0.40g/+11.5v, -6.0%)"
+  },
+  {
+   "ticker": "SBUX",
+   "score": -0.53,
+   "line": "spot 107.76 · KING 107(-3.79g/+14.4v, -0.7%) · floor 105(+3.20g/-36.7v, -2.6%) · ceiling 111(+1.32g/+17.4v, 3.0%) · barney 107(-3.79g/+14.4v, -0.7%) · vanna 105(+3.20g/-36.7v, -2.6%)"
+  },
+  {
+   "ticker": "XLE",
+   "score": -0.55,
+   "line": "spot 61.84 · KING 61(-24.07g/+107.0v, -1.4%) · floor 60(+15.64g/-151.1v, -3.0%) · ceiling 63(+4.40g/+21.7v, 1.9%) · barney 61(-24.07g/+107.0v, -1.4%) · vanna 59.5(-15.50g/+152.9v, -3.8%)"
+  },
+  {
+   "ticker": "IVV",
+   "score": -0.62,
+   "line": "spot 779.755 · KING 780(-0.09g/+3.1v, 0.0%) · floor 745(+0.00g/-1.0v, -4.5%) · ceiling 790(+0.00g/+0.4v, 1.3%) · barney 780(-0.09g/+3.1v, 0.0%) · vanna 773(-0.06g/+7.4v, -0.9%)"
+  },
+  {
+   "ticker": "RKT",
+   "score": -0.64,
+   "line": "spot 14.68 · KING 13(+2.88g/-5.1v, -11.4%) · floor 13(+2.88g/-5.1v, -11.4%) · ceiling 15(+1.41g/+0.7v, 2.2%) · barney 15.5(-1.30g/-2.0v, 5.6%) · vanna 13(+2.88g/-5.1v, -11.4%)"
+  },
+  {
+   "ticker": "FIVE",
+   "score": -0.65,
+   "line": "spot 241.5 · KING 230(+0.25g/-9.2v, -4.8%) · floor 230(+0.25g/-9.2v, -4.8%) · ceiling 250(+0.11g/+2.0v, 3.5%) · barney 210(-0.04g/+2.6v, -13.0%) · vanna 230(+0.25g/-9.2v, -4.8%)"
+  },
+  {
+   "ticker": "VLO",
+   "score": -0.65,
+   "line": "spot 341.075 · KING 330(+0.31g/-8.4v, -3.2%) · floor 330(+0.31g/-8.4v, -3.2%) · ceiling 345(+0.27g/+2.6v, 1.2%) · barney 350(-0.22g/-4.3v, 2.6%) · vanna 330(+0.31g/-8.4v, -3.2%)"
+  },
+  {
+   "ticker": "TMO",
+   "score": -0.68,
+   "line": "spot 588.135 · KING 600(-0.17g/-6.3v, 2.0%) · floor 550(+0.06g/-8.0v, -6.5%) · ceiling 620(+0.05g/+3.9v, 5.4%) · barney 600(-0.17g/-6.3v, 2.0%) · vanna 550(+0.06g/-8.0v, -6.5%)"
+  },
+  {
+   "ticker": "ULTA",
+   "score": -0.73,
+   "line": "spot 513.155 · KING 505(-0.16g/+1.7v, -1.6%) · floor 485(+0.05g/-8.2v, -5.5%) · ceiling 520(+0.12g/+5.2v, 1.3%) · barney 505(-0.16g/+1.7v, -1.6%) · vanna 485(+0.05g/-8.2v, -5.5%)"
+  },
+  {
+   "ticker": "PINS",
+   "score": -0.78,
+   "line": "spot 23.994999999999997 · KING 25(+1.76g/+4.5v, 4.2%) · floor 20(+0.17g/-0.8v, -16.6%) · ceiling 25(+1.76g/+4.5v, 4.2%) · barney 23(-0.57g/+1.7v, -4.1%) · vanna 25(+1.76g/+4.5v, 4.2%)"
+  },
+  {
+   "ticker": "NOC",
+   "score": -0.79,
+   "line": "spot 586.05 · KING 570(-0.19g/+10.1v, -2.7%) · floor 575(+0.19g/-11.8v, -1.9%) · ceiling 620(+0.03g/+4.2v, 5.8%) · barney 570(-0.19g/+10.1v, -2.7%) · vanna 575(+0.19g/-11.8v, -1.9%)"
+  },
+  {
+   "ticker": "SNPS",
+   "score": -0.83,
+   "line": "spot 419.495 · KING 420(+0.19g/-0.9v, 0.1%) · floor 400(+0.12g/-7.2v, -4.6%) · ceiling 420(+0.19g/-0.9v, 0.1%) · barney 450(-0.06g/-4.6v, 7.3%) · vanna 400(+0.12g/-7.2v, -4.6%)"
+  },
+  {
+   "ticker": "CART",
+   "score": -0.85,
+   "line": "spot 48.974999999999994 · KING 50(+1.04g/+3.2v, 2.1%) · floor 45(+0.22g/-2.0v, -8.1%) · ceiling 50(+1.04g/+3.2v, 2.1%) · barney 46(-0.13g/+0.6v, -6.1%) · vanna 50(+1.04g/+3.2v, 2.1%)"
+  },
+  {
+   "ticker": "CAVA",
+   "score": -0.89,
+   "line": "spot 74.57499999999999 · KING 70(+0.95g/-10.7v, -6.1%) · floor 70(+0.95g/-10.7v, -6.1%) · ceiling 75(+0.46g/+0.2v, 0.6%) · barney 72(-0.13g/+0.9v, -3.5%) · vanna 70(+0.95g/-10.7v, -6.1%)"
+  },
+  {
+   "ticker": "ISRG",
+   "score": -0.9,
+   "line": "spot 397.03499999999997 · KING 380(-0.21g/+10.5v, -4.3%) · floor 360(+0.09g/-7.9v, -9.3%) · ceiling 410(+0.07g/+3.4v, 3.3%) · barney 380(-0.21g/+10.5v, -4.3%) · vanna 370(-0.13g/+11.1v, -6.8%)"
+  },
+  {
+   "ticker": "OKTA",
+   "score": -0.91,
+   "line": "spot 147.85500000000002 · KING 150(+0.52g/+3.0v, 1.5%) · floor 145(+0.08g/-0.6v, -1.9%) · ceiling 150(+0.52g/+3.0v, 1.5%) · barney 140(-0.25g/+4.0v, -5.3%) · vanna 140(-0.25g/+4.0v, -5.3%)"
+  },
+  {
+   "ticker": "ONDS",
+   "score": -0.91,
+   "line": "spot 9.22 · KING 10(-1.33g/-1.3v, 8.5%) · floor 8(+0.73g/-1.2v, -13.2%) · ceiling 9.5(+1.04g/+0.4v, 3.0%) · barney 10(-1.33g/-1.3v, 8.5%) · vanna 10(-1.33g/-1.3v, 8.5%)"
+  },
+  {
+   "ticker": "GILD",
+   "score": -0.92,
+   "line": "spot 137.85500000000002 · KING 135(+6.42g/-69.3v, -2.1%) · floor 135(+6.42g/-69.3v, -2.1%) · ceiling 140(+2.05g/+17.1v, 1.6%) · barney 136(-0.46g/+4.1v, -1.3%) · vanna 135(+6.42g/-69.3v, -2.1%)"
+  },
+  {
+   "ticker": "RCL",
+   "score": -0.97,
+   "line": "spot 305.57 · KING 290(+0.32g/-13.8v, -5.1%) · floor 290(+0.32g/-13.8v, -5.1%) · ceiling 315(+0.08g/+2.1v, 3.1%) · barney 310(-0.08g/-1.1v, 1.4%) · vanna 290(+0.32g/-13.8v, -5.1%)"
+  },
+  {
+   "ticker": "BIDU",
+   "score": -0.98,
+   "line": "spot 103.715 · KING 91(+0.51g/-10.1v, -12.3%) · floor 91(+0.51g/-10.1v, -12.3%) · ceiling 105(+0.30g/+0.8v, 1.2%) · barney 115(-0.21g/-3.4v, 10.9%) · vanna 91(+0.51g/-10.1v, -12.3%)"
+  },
+  {
+   "ticker": "WMB",
+   "score": -1.05,
+   "line": "spot 74.77000000000001 · KING 75(-2.05g/+0.4v, 0.3%) · floor 70(+0.58g/-8.0v, -6.4%) · ceiling 76(+0.54g/+1.8v, 1.6%) · barney 75(-2.05g/+0.4v, 0.3%) · vanna 70(+0.58g/-8.0v, -6.4%)"
+  },
+  {
+   "ticker": "ZM",
+   "score": -1.05,
+   "line": "spot 106.09 · KING 110(-0.98g/-9.9v, 3.7%) · floor 100(+0.70g/-12.2v, -5.7%) · ceiling 112(+0.16g/+2.4v, 5.6%) · barney 110(-0.98g/-9.9v, 3.7%) · vanna 100(+0.70g/-12.2v, -5.7%)"
+  },
+  {
+   "ticker": "HOOD",
+   "score": -1.06,
+   "line": "spot 95.56 · KING 90(+2.17g/-22.5v, -5.8%) · floor 90(+2.17g/-22.5v, -5.8%) · ceiling 100(+1.59g/+13.1v, 4.6%) · barney 102(-1.11g/-12.7v, 6.7%) · vanna 90(+2.17g/-22.5v, -5.8%)"
+  },
+  {
+   "ticker": "CRM",
+   "score": -1.07,
+   "line": "spot 196.13 · KING 200(+9.42g/+104.1v, 2.0%) · floor 185(+2.32g/-67.5v, -5.7%) · ceiling 200(+9.42g/+104.1v, 2.0%) · barney 212.5(-0.31g/-13.1v, 8.3%) · vanna 200(+9.42g/+104.1v, 2.0%)"
+  },
+  {
+   "ticker": "NET",
+   "score": -1.09,
+   "line": "spot 317.595 · KING 330(+0.32g/+9.2v, 3.9%) · floor 295(+0.24g/-10.7v, -7.1%) · ceiling 330(+0.32g/+9.2v, 3.9%) · barney 340(-0.13g/-6.5v, 7.1%) · vanna 295(+0.24g/-10.7v, -7.1%)"
+  },
+  {
+   "ticker": "CRWD",
+   "score": -1.11,
+   "line": "spot 217.075 · KING 210(+0.49g/-6.3v, -3.3%) · floor 210(+0.49g/-6.3v, -3.3%) · ceiling 220(+0.36g/+2.7v, 1.3%) · barney 200(-0.42g/+14.5v, -7.9%) · vanna 200(-0.42g/+14.5v, -7.9%)"
+  },
+  {
+   "ticker": "ETSY",
+   "score": -1.12,
+   "line": "spot 79.85 · KING 75(+0.89g/-9.9v, -6.1%) · floor 75(+0.89g/-9.9v, -6.1%) · ceiling 80(+0.66g/+0.6v, 0.2%) · barney 85(-0.23g/-2.6v, 6.4%) · vanna 75(+0.89g/-9.9v, -6.1%)"
+  },
+  {
+   "ticker": "XLK",
+   "score": -1.14,
+   "line": "spot 190 · KING 188(-3.88g/+33.2v, -1.1%) · floor 186(+1.06g/-15.7v, -2.1%) · ceiling 193(+0.37g/+5.4v, 1.6%) · barney 188(-3.88g/+33.2v, -1.1%) · vanna 188(-3.88g/+33.2v, -1.1%)"
+  },
+  {
+   "ticker": "TTWO",
+   "score": -1.17,
+   "line": "spot 246.34 · KING 240(-0.95g/+19.4v, -2.6%) · floor 235(+0.39g/-8.3v, -4.6%) · ceiling 260(+0.04g/+0.7v, 5.5%) · barney 240(-0.95g/+19.4v, -2.6%) · vanna 240(-0.95g/+19.4v, -2.6%)"
+  },
+  {
+   "ticker": "AI",
+   "score": -1.18,
+   "line": "spot 9.905000000000001 · KING 10(+0.93g/+0.2v, 1.0%) · floor 9(+0.10g/-0.1v, -9.1%) · ceiling 10(+0.93g/+0.2v, 1.0%) · barney 11(-0.31g/-0.6v, 11.1%) · vanna 11(-0.31g/-0.6v, 11.1%)"
+  },
+  {
+   "ticker": "DAL",
+   "score": -1.23,
+   "line": "spot 89.275 · KING 90(+2.22g/+5.6v, 0.8%) · floor 87.5(+1.23g/-7.3v, -2.0%) · ceiling 90(+2.22g/+5.6v, 0.8%) · barney 92.5(-0.92g/-8.9v, 3.6%) · vanna 92.5(-0.92g/-8.9v, 3.6%)"
+  },
+  {
+   "ticker": "AMD",
+   "score": -1.28,
+   "line": "spot 514.225 · KING 500(-3.30g/+81.6v, -2.8%) · floor 490(+1.29g/-54.5v, -4.7%) · ceiling 600(+0.43g/+54.9v, 16.7%) · barney 500(-3.30g/+81.6v, -2.8%) · vanna 500(-3.30g/+81.6v, -2.8%)"
+  },
+  {
+   "ticker": "UAL",
+   "score": -1.29,
+   "line": "spot 125 · KING 125(-0.80g/+0.6v, 0.0%) · floor 120(+0.61g/-10.3v, -4.0%) · ceiling 126(+0.49g/+1.1v, 0.8%) · barney 125(-0.80g/+0.6v, 0.0%) · vanna 120(+0.61g/-10.3v, -4.0%)"
+  },
+  {
+   "ticker": "GLW",
+   "score": -1.3,
+   "line": "spot 165.66500000000002 · KING 170(+0.41g/+3.0v, 2.6%) · floor 160(+0.32g/-2.6v, -3.4%) · ceiling 170(+0.41g/+3.0v, 2.6%) · barney 140(-0.33g/+13.0v, -15.5%) · vanna 140(-0.33g/+13.0v, -15.5%)"
+  },
+  {
+   "ticker": "CPNG",
+   "score": -1.41,
+   "line": "spot 16.11 · KING 17(+6.16g/+12.4v, 5.5%) · floor 14(+0.27g/-0.6v, -13.1%) · ceiling 17(+6.16g/+12.4v, 5.5%) · barney 16(-2.17g/+0.8v, -0.7%) · vanna 17(+6.16g/+12.4v, 5.5%)"
+  },
+  {
+   "ticker": "AMGN",
+   "score": -1.53,
+   "line": "spot 414.89 · KING 405(+0.71g/-26.9v, -2.4%) · floor 405(+0.71g/-26.9v, -2.4%) · ceiling 430(+0.07g/+4.5v, 3.6%) · barney 420(-0.16g/-3.9v, 1.2%) · vanna 405(+0.71g/-26.9v, -2.4%)"
+  },
+  {
+   "ticker": "ADBE",
+   "score": -1.59,
+   "line": "spot 263.94 · KING 250(+0.57g/-21.1v, -5.3%) · floor 250(+0.57g/-21.1v, -5.3%) · ceiling 272.5(+0.38g/+8.0v, 3.2%) · barney 275(-0.31g/-8.5v, 4.2%) · vanna 250(+0.57g/-21.1v, -5.3%)"
+  },
+  {
+   "ticker": "GE",
+   "score": -1.63,
+   "line": "spot 366.635 · KING 360(+0.79g/-24.3v, -1.8%) · floor 360(+0.79g/-24.3v, -1.8%) · ceiling 372.5(+0.30g/+1.8v, 1.6%) · barney 370(-0.46g/-3.1v, 0.9%) · vanna 350(+0.43g/-27.8v, -4.5%)"
+  },
+  {
+   "ticker": "GLD",
+   "score": -1.63,
+   "line": "spot 401.52 · KING 400(+13.15g/-106.6v, -0.4%) · floor 400(+13.15g/-106.6v, -0.4%) · ceiling 402(+4.95g/+9.7v, 0.1%) · barney 397(-1.89g/+46.1v, -1.1%) · vanna 395(+4.33g/-147.5v, -1.6%)"
+  },
+  {
+   "ticker": "MP",
+   "score": -1.64,
+   "line": "spot 58.92 · KING 60(+1.12g/+2.2v, 1.8%) · floor 55(+1.06g/-6.7v, -6.7%) · ceiling 60(+1.12g/+2.2v, 1.8%) · barney 65(-0.05g/-0.4v, 10.3%) · vanna 55(+1.06g/-6.7v, -6.7%)"
+  },
+  {
+   "ticker": "LYFT",
+   "score": -1.66,
+   "line": "spot 17.47 · KING 18(-13.16g/-18.0v, 3.0%) · floor 16(+0.19g/-0.6v, -8.4%) · ceiling 17.5(+0.66g/+0.0v, 0.2%) · barney 18(-13.16g/-18.0v, 3.0%) · vanna 18(-13.16g/-18.0v, 3.0%)"
+  },
+  {
+   "ticker": "BA",
+   "score": -1.72,
+   "line": "spot 231.575 · KING 225(-4.99g/+127.5v, -2.8%) · floor 230(+3.73g/-20.6v, -0.7%) · ceiling 250(+1.05g/+62.2v, 8.0%) · barney 225(-4.99g/+127.5v, -2.8%) · vanna 225(-4.99g/+127.5v, -2.8%)"
+  },
+  {
+   "ticker": "CRCL",
+   "score": -1.77,
+   "line": "spot 71.855 · KING 75(+1.66g/+7.9v, 4.4%) · floor 65(+0.87g/-9.7v, -9.5%) · ceiling 75(+1.66g/+7.9v, 4.4%) · barney 73(-0.37g/-0.8v, 1.6%) · vanna 65(+0.87g/-9.7v, -9.5%)"
+  },
+  {
+   "ticker": "MELI",
+   "score": -1.79,
+   "line": "spot 1841.19 · KING 1850(+0.18g/+7.3v, 0.5%) · floor 1770(+0.08g/-18.9v, -3.9%) · ceiling 1850(+0.18g/+7.3v, 0.5%) · barney 1812.5(-0.08g/+6.3v, -1.6%) · vanna 1770(+0.08g/-18.9v, -3.9%)"
+  },
+  {
+   "ticker": "EXPE",
+   "score": -1.81,
+   "line": "spot 331.305 · KING 315(-0.48g/+22.6v, -4.9%) · floor 300(+0.02g/-1.6v, -9.4%) · ceiling 335(+0.07g/+0.6v, 1.1%) · barney 315(-0.48g/+22.6v, -4.9%) · vanna 315(-0.48g/+22.6v, -4.9%)"
+  },
+  {
+   "ticker": "RTX",
+   "score": -1.82,
+   "line": "spot 222.015 · KING 210(-0.50g/+23.0v, -5.4%) · floor 220(+0.18g/-2.1v, -0.9%) · ceiling 230(+0.45g/+15.4v, 3.6%) · barney 210(-0.50g/+23.0v, -5.4%) · vanna 210(-0.50g/+23.0v, -5.4%)"
+  },
+  {
+   "ticker": "MGM",
+   "score": -1.98,
+   "line": "spot 43.85 · KING 44(+1.46g/-0.3v, 0.3%) · floor 40(+0.13g/-0.7v, -8.8%) · ceiling 44(+1.46g/-0.3v, 0.3%) · barney 46(-0.19g/-1.3v, 4.9%) · vanna 46(-0.19g/-1.3v, 4.9%)"
+  },
+  {
+   "ticker": "CVS",
+   "score": -2.04,
+   "line": "spot 97.125 · KING 92.5(+1.10g/-19.6v, -4.8%) · floor 92.5(+1.10g/-19.6v, -4.8%) · ceiling 97.5(+1.05g/+2.1v, 0.4%) · barney 96(-1.02g/+3.7v, -1.2%) · vanna 92.5(+1.10g/-19.6v, -4.8%)"
+  },
+  {
+   "ticker": "ARKK",
+   "score": -2.1,
+   "line": "spot 81.07499999999999 · KING 84(+1.05g/+11.3v, 3.6%) · floor 74(+0.70g/-15.4v, -8.7%) · ceiling 84(+1.05g/+11.3v, 3.6%) · barney 67(-0.59g/+12.7v, -17.4%) · vanna 74(+0.70g/-15.4v, -8.7%)"
+  },
+  {
+   "ticker": "GEV",
+   "score": -2.13,
+   "line": "spot 1063.5700000000002 · KING 1000(-0.24g/+27.7v, -6.0%) · floor 1040(+0.17g/-6.7v, -2.2%) · ceiling 1110(+0.04g/+4.2v, 4.4%) · barney 1000(-0.24g/+27.7v, -6.0%) · vanna 1000(-0.24g/+27.7v, -6.0%)"
+  },
+  {
+   "ticker": "WDAY",
+   "score": -2.14,
+   "line": "spot 197.99 · KING 200(+2.40g/+7.9v, 1.0%) · floor 195(+0.08g/-0.5v, -1.5%) · ceiling 200(+2.40g/+7.9v, 1.0%) · barney 205(-0.15g/-2.2v, 3.5%) · vanna 210(+0.43g/+10.6v, 6.1%)"
+  },
+  {
+   "ticker": "TQQQ",
+   "score": -2.27,
+   "line": "spot 76.795 · KING 77(+2.74g/+2.0v, 0.3%) · floor 75(+1.19g/-4.7v, -2.3%) · ceiling 77(+2.74g/+2.0v, 0.3%) · barney 76.5(-1.76g/+0.9v, -0.4%) · vanna 80(-1.24g/-10.2v, 4.2%)"
+  },
+  {
+   "ticker": "KHC",
+   "score": -2.38,
+   "line": "spot 25.445 · KING 25(-4.35g/+9.8v, -1.7%) · floor 24(+0.65g/-3.4v, -5.7%) · ceiling 25.5(+2.64g/+0.0v, 0.2%) · barney 25(-4.35g/+9.8v, -1.7%) · vanna 25(-4.35g/+9.8v, -1.7%)"
+  },
+  {
+   "ticker": "UPS",
+   "score": -2.39,
+   "line": "spot 104.655 · KING 105(+1.39g/+3.1v, 0.3%) · floor 103(+1.17g/-11.3v, -1.6%) · ceiling 105(+1.39g/+3.1v, 0.3%) · barney 104(-0.32g/+2.5v, -0.6%) · vanna 100(+0.84g/-16.1v, -4.4%)"
+  },
+  {
+   "ticker": "CVNA",
+   "score": -2.51,
+   "line": "spot 74.965 · KING 69(-1.77g/+23.9v, -8.0%) · floor 70(+0.98g/-10.9v, -6.6%) · ceiling 75(+1.02g/-0.8v, 0.0%) · barney 69(-1.77g/+23.9v, -8.0%) · vanna 69(-1.77g/+23.9v, -8.0%)"
+  },
+  {
+   "ticker": "STX",
+   "score": -2.66,
+   "line": "spot 973.71 · KING 960(-0.58g/+7.4v, -1.4%) · floor 850(+0.19g/-31.9v, -12.7%) · ceiling 1000(+0.26g/+11.4v, 2.7%) · barney 960(-0.58g/+7.4v, -1.4%) · vanna 850(+0.19g/-31.9v, -12.7%)"
+  },
+  {
+   "ticker": "SHOP",
+   "score": -2.71,
+   "line": "spot 154.15 · KING 155(+0.91g/+2.5v, 0.6%) · floor 152.5(+0.10g/-0.4v, -1.1%) · ceiling 155(+0.91g/+2.5v, 0.6%) · barney 135(-0.68g/+18.4v, -12.4%) · vanna 135(-0.68g/+18.4v, -12.4%)"
+  },
+  {
+   "ticker": "HPE",
+   "score": -2.72,
+   "line": "spot 58.68 · KING 60(+3.53g/+8.6v, 2.2%) · floor 55(+1.15g/-8.2v, -6.3%) · ceiling 60(+3.53g/+8.6v, 2.2%) · barney 59(-0.08g/-0.0v, 0.5%) · vanna 60(+3.53g/+8.6v, 2.2%)"
+  },
+  {
+   "ticker": "VTI",
+   "score": -2.76,
+   "line": "spot 383.71000000000004 · KING 380(-0.78g/+30.6v, -1.0%) · floor 350(+0.01g/-1.2v, -8.8%) · ceiling 385(+0.39g/+5.6v, 0.3%) · barney 380(-0.78g/+30.6v, -1.0%) · vanna 380(-0.78g/+30.6v, -1.0%)"
+  },
+  {
+   "ticker": "USB",
+   "score": -2.99,
+   "line": "spot 65.12 · KING 66(+2.00g/+7.8v, 1.4%) · floor 64(+0.42g/-3.3v, -1.7%) · ceiling 66(+2.00g/+7.8v, 1.4%) · barney 62.5(-0.86g/+10.3v, -4.0%) · vanna 62.5(-0.86g/+10.3v, -4.0%)"
+  },
+  {
+   "ticker": "CORZ",
+   "score": -3.07,
+   "line": "spot 20.314999999999998 · KING 21(+3.19g/+4.3v, 3.4%) · floor 19(+0.82g/-1.3v, -6.5%) · ceiling 21(+3.19g/+4.3v, 3.4%) · barney 18(-2.35g/+7.1v, -11.4%) · vanna 18(-2.35g/+7.1v, -11.4%)"
+  },
+  {
+   "ticker": "SNAP",
+   "score": -3.09,
+   "line": "spot 5.42 · KING 5.5(+2.50g/+0.5v, 1.5%) · floor 5(+1.01g/-1.3v, -7.7%) · ceiling 5.5(+2.50g/+0.5v, 1.5%) · barney 6(-0.97g/-0.9v, 10.7%) · vanna 5(+1.01g/-1.3v, -7.7%)"
+  },
+  {
+   "ticker": "GME",
+   "score": -3.55,
+   "line": "spot 18.645000000000003 · KING 19(+4.63g/+5.4v, 1.9%) · floor 18(+1.66g/-3.5v, -3.5%) · ceiling 19(+4.63g/+5.4v, 1.9%) · barney 15(-0.07g/+0.4v, -19.5%) · vanna 20(+2.63g/+8.3v, 7.3%)"
+  },
+  {
+   "ticker": "PLTR",
+   "score": -3.72,
+   "line": "spot 174.075 · KING 180(-3.28g/-48.1v, 3.4%) · floor 170(+2.70g/-24.4v, -2.3%) · ceiling 182.5(+0.47g/+9.5v, 4.8%) · barney 180(-3.28g/-48.1v, 3.4%) · vanna 160(+1.83g/-58.2v, -8.1%)"
+  },
+  {
+   "ticker": "GDX",
+   "score": -3.94,
+   "line": "spot 89.905 · KING 85(+4.52g/-53.3v, -5.5%) · floor 85(+4.52g/-53.3v, -5.5%) · ceiling 91(+3.45g/+9.8v, 1.2%) · barney 90(-3.40g/-1.1v, 0.1%) · vanna 85(+4.52g/-53.3v, -5.5%)"
+  },
+  {
+   "ticker": "BX",
+   "score": -4.04,
+   "line": "spot 143.885 · KING 145(+2.39g/+2.5v, 0.8%) · floor 140(+0.78g/-9.1v, -2.7%) · ceiling 145(+2.39g/+2.5v, 0.8%) · barney 142(-0.29g/+2.0v, -1.3%) · vanna 130(+0.45g/-16.0v, -9.7%)"
+  },
+  {
+   "ticker": "XLP",
+   "score": -4.15,
+   "line": "spot 85.78999999999999 · KING 85(-8.74g/+58.1v, -0.9%) · floor 83.5(+0.24g/-3.1v, -2.7%) · ceiling 86.5(+1.13g/+2.7v, 0.8%) · barney 85(-8.74g/+58.1v, -0.9%) · vanna 84(-5.42g/+69.2v, -2.1%)"
+  },
+  {
+   "ticker": "CAT",
+   "score": -4.34,
+   "line": "spot 856.905 · KING 820(+0.51g/-56.8v, -4.3%) · floor 820(+0.51g/-56.8v, -4.3%) · ceiling 900(+0.28g/+33.5v, 5.0%) · barney 880(-0.40g/-25.4v, 2.7%) · vanna 820(+0.51g/-56.8v, -4.3%)"
+  },
+  {
+   "ticker": "LMT",
+   "score": -4.39,
+   "line": "spot 607.25 · KING 585(+0.58g/-58.4v, -3.7%) · floor 585(+0.58g/-58.4v, -3.7%) · ceiling 615(+0.06g/+1.9v, 1.3%) · barney 610(-0.14g/-1.2v, 0.5%) · vanna 585(+0.58g/-58.4v, -3.7%)"
+  },
+  {
+   "ticker": "SLV",
+   "score": -4.46,
+   "line": "spot 58.46 · KING 60(+13.40g/+56.5v, 2.6%) · floor 57(+5.63g/-23.2v, -2.5%) · ceiling 60(+13.40g/+56.5v, 2.6%) · barney 65(-3.12g/-41.7v, 11.2%) · vanna 60(+13.40g/+56.5v, 2.6%)"
+  },
+  {
+   "ticker": "XLI",
+   "score": -4.62,
+   "line": "spot 186.815 · KING 188(-2.33g/-22.7v, 0.6%) · floor 186(+0.80g/-3.5v, -0.4%) · ceiling 192(+1.28g/+40.0v, 2.8%) · barney 188(-2.33g/-22.7v, 0.6%) · vanna 180(-1.34g/+53.5v, -3.6%)"
+  },
+  {
+   "ticker": "SMCI",
+   "score": -5.63,
+   "line": "spot 39.705 · KING 40(+4.10g/+1.9v, 0.7%) · floor 39(+0.71g/-0.6v, -1.8%) · ceiling 40(+4.10g/+1.9v, 0.7%) · barney 34(-1.05g/+7.8v, -14.4%) · vanna 34(-1.05g/+7.8v, -14.4%)"
+  },
+  {
+   "ticker": "JPM",
+   "score": -5.83,
+   "line": "spot 362.57 · KING 355(+1.85g/-78.6v, -2.1%) · floor 355(+1.85g/-78.6v, -2.1%) · ceiling 370(+1.02g/+44.5v, 2.0%) · barney 365(-0.65g/-8.5v, 0.7%) · vanna 350(+1.60g/-85.4v, -3.5%)"
+  },
+  {
+   "ticker": "RUN",
+   "score": -6.37,
+   "line": "spot 10.29 · KING 10.5(+6.13g/+3.8v, 2.0%) · floor 9(+0.21g/-0.3v, -12.5%) · ceiling 10.5(+6.13g/+3.8v, 2.0%) · barney 10(-0.51g/+0.0v, -2.8%) · vanna 10.5(+6.13g/+3.8v, 2.0%)"
+  },
+  {
+   "ticker": "OXY",
+   "score": -6.76,
+   "line": "spot 58.31 · KING 60(+5.32g/+28.6v, 2.9%) · floor 55(+2.85g/-32.4v, -5.7%) · ceiling 60(+5.32g/+28.6v, 2.9%) · barney 58(-0.45g/+0.5v, -0.5%) · vanna 55(+2.85g/-32.4v, -5.7%)"
+  },
+  {
+   "ticker": "AVGO",
+   "score": -6.81,
+   "line": "spot 392.72 · KING 400(+2.54g/+51.3v, 1.9%) · floor 385(+1.03g/-19.4v, -2.0%) · ceiling 400(+2.54g/+51.3v, 1.9%) · barney 380(-1.91g/+56.6v, -3.2%) · vanna 380(-1.91g/+56.6v, -3.2%)"
+  },
+  {
+   "ticker": "COST",
+   "score": -7.1,
+   "line": "spot 961.36 · KING 942.5(+0.94g/-96.4v, -2.0%) · floor 942.5(+0.94g/-96.4v, -2.0%) · ceiling 975(+0.07g/+4.8v, 1.4%) · barney 950(-0.92g/+58.9v, -1.2%) · vanna 942.5(+0.94g/-96.4v, -2.0%)"
+  },
+  {
+   "ticker": "CLOV",
+   "score": -7.23,
+   "line": "spot 4.494999999999999 · KING 4.5(+4.95g/-0.6v, 0.1%) · floor 4(+0.14g/-0.2v, -11.0%) · ceiling 4.5(+4.95g/-0.6v, 0.1%) · barney 5(-1.69g/-1.1v, 11.2%) · vanna 5(-1.69g/-1.1v, 11.2%)"
+  },
+  {
+   "ticker": "NVO",
+   "score": -7.72,
+   "line": "spot 45.925 · KING 46(+4.36g/+2.3v, 0.2%) · floor 42.5(+1.62g/-17.1v, -7.5%) · ceiling 46(+4.36g/+2.3v, 0.2%) · barney 48.5(-0.34g/-2.7v, 5.6%) · vanna 42.5(+1.62g/-17.1v, -7.5%)"
+  },
+  {
+   "ticker": "JNJ",
+   "score": -8.1,
+   "line": "spot 260.515 · KING 257.5(-6.21g/+113.3v, -1.2%) · floor 245(+0.58g/-38.3v, -6.0%) · ceiling 265(+0.79g/+17.0v, 1.7%) · barney 257.5(-6.21g/+113.3v, -1.2%) · vanna 257.5(-6.21g/+113.3v, -1.2%)"
+  },
+  {
+   "ticker": "SPOT",
+   "score": -8.53,
+   "line": "spot 512.5 · KING 460(+0.73g/-105.9v, -10.2%) · floor 460(+0.73g/-105.9v, -10.2%) · ceiling 540(+0.26g/+19.5v, 5.4%) · barney 520(-0.53g/-11.7v, 1.5%) · vanna 460(+0.73g/-105.9v, -10.2%)"
+  },
+  {
+   "ticker": "XLV",
+   "score": -8.96,
+   "line": "spot 167.54 · KING 168(+4.24g/+18.7v, 0.3%) · floor 163(+0.33g/-7.2v, -2.7%) · ceiling 168(+4.24g/+18.7v, 0.3%) · barney 165(-1.91g/+36.6v, -1.5%) · vanna 165(-1.91g/+36.6v, -1.5%)"
+  },
+  {
+   "ticker": "XLF",
+   "score": -10.12,
+   "line": "spot 58.2 · KING 57(+17.34g/-167.4v, -2.1%) · floor 57(+17.34g/-167.4v, -2.1%) · ceiling 58.5(+14.58g/+41.2v, 0.5%) · barney 59(-8.04g/-56.7v, 1.4%) · vanna 57(+17.34g/-167.4v, -2.1%)"
+  },
+  {
+   "ticker": "WFC",
+   "score": -11.08,
+   "line": "spot 88.775 · KING 89(+10.03g/+11.8v, 0.3%) · floor 82.5(+1.37g/-31.7v, -7.1%) · ceiling 89(+10.03g/+11.8v, 0.3%) · barney 87(-0.64g/+5.4v, -2.0%) · vanna 97.5(+1.77g/+39.6v, 9.8%)"
+  },
+  {
+   "ticker": "MARA",
+   "score": -11.12,
+   "line": "spot 9.16 · KING 9.5(+17.44g/+8.0v, 3.7%) · floor 9(+1.82g/-0.4v, -1.7%) · ceiling 9.5(+17.44g/+8.0v, 3.7%) · barney 8(-0.53g/+0.9v, -12.7%) · vanna 9.5(+17.44g/+8.0v, 3.7%)"
+  },
+  {
+   "ticker": "EA",
+   "score": -13.57,
+   "line": "spot 209.7 · KING 210(+3.09g/+131.2v, 0.1%) · floor 207.5(+2.24g/-131.7v, -1.0%) · ceiling 210(+3.09g/+131.2v, 0.1%) · barney 170(-0.21g/+13.9v, -18.9%) · vanna 207.5(+2.24g/-131.7v, -1.0%)"
+  },
+  {
+   "ticker": "XOM",
+   "score": -14.27,
+   "line": "spot 160.04500000000002 · KING 150(-5.81g/+210.3v, -6.3%) · floor 160(+1.94g/-1.4v, -0.0%) · ceiling 165(+2.19g/+43.8v, 3.1%) · barney 150(-5.81g/+210.3v, -6.3%) · vanna 150(-5.81g/+210.3v, -6.3%)"
+  },
+  {
+   "ticker": "IGV",
+   "score": -15.65,
+   "line": "spot 104.9 · KING 90(+6.50g/-226.9v, -14.2%) · floor 90(+6.50g/-226.9v, -14.2%) · ceiling 108(+1.57g/+20.4v, 3.0%) · barney 110(-2.91g/-59.1v, 4.9%) · vanna 90(+6.50g/-226.9v, -14.2%)"
+  },
+  {
+   "ticker": "KWEB",
+   "score": -15.67,
+   "line": "spot 26.895000000000003 · KING 27(+10.04g/-0.4v, 0.4%) · floor 26.5(+1.06g/-2.0v, -1.5%) · ceiling 27(+10.04g/-0.4v, 0.4%) · barney 25(-4.75g/+27.1v, -7.0%) · vanna 25(-4.75g/+27.1v, -7.0%)"
+  },
+  {
+   "ticker": "DIA",
+   "score": -17.91,
+   "line": "spot 536.685 · KING 535(-15.33g/+345.3v, -0.3%) · floor 530(+3.73g/-269.8v, -1.2%) · ceiling 540(+8.36g/+241.6v, 0.6%) · barney 535(-15.33g/+345.3v, -0.3%) · vanna 535(-15.33g/+345.3v, -0.3%)"
+  },
+  {
+   "ticker": "IWM",
+   "score": -19.04,
+   "line": "spot 305.01 · KING 310(+45.59g/+1871.5v, 1.6%) · floor 295(+17.10g/-1018.6v, -3.3%) · ceiling 310(+45.59g/+1871.5v, 1.6%) · barney 285(-9.51g/+850.9v, -6.6%) · vanna 310(+45.59g/+1871.5v, 1.6%)"
+  },
+  {
+   "ticker": "T",
+   "score": -26.1,
+   "line": "spot 24.86 · KING 25(+18.08g/+10.6v, 0.6%) · floor 23(+2.67g/-14.3v, -7.5%) · ceiling 25(+18.08g/+10.6v, 0.6%) · barney 24(-1.64g/+6.0v, -3.5%) · vanna 23(+2.67g/-14.3v, -7.5%)"
+  },
+  {
+   "ticker": "NVDA",
+   "score": -46.56,
+   "line": "spot 224.88 · KING 227.5(+42.33g/+330.1v, 1.2%) · floor 220(+23.38g/-409.5v, -2.2%) · ceiling 227.5(+42.33g/+330.1v, 1.2%) · barney 217.5(-6.38g/+161.4v, -3.3%) · vanna 220(+23.38g/-409.5v, -2.2%)"
+  },
+  {
+   "ticker": "WBD",
+   "score": -58.49,
+   "line": "spot 27.84 · KING 28(+63.24g/-2.5v, 0.6%) · floor 27(+3.44g/-13.9v, -3.0%) · ceiling 28(+63.24g/-2.5v, 0.6%) · barney 27.5(-1.88g/+4.9v, -1.2%) · vanna 29(+42.80g/+167.9v, 4.2%)"
+  },
+  {
+   "ticker": "FXI",
+   "score": -131.85,
+   "line": "spot 34.89 · KING 35(+114.70g/+42.8v, 0.3%) · floor 34(+15.56g/-72.5v, -2.6%) · ceiling 35(+114.70g/+42.8v, 0.3%) · barney 32(-3.26g/+26.7v, -8.3%) · vanna 34(+15.56g/-72.5v, -2.6%)"
+  }
+ ],
+ "synthesis": ""
+}

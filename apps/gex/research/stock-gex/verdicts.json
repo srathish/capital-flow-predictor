@@ -1,27 +1,353 @@
 {
-  "generated": "2026-07-16T19:00:37.004Z",
+  "generated": "2026-08-13T00:05:02.245Z",
   "verdicts": [
     {
-      "ticker": "AAPL",
+      "ticker": "GOOG",
       "side": "BULL",
-      "grade": 79,
+      "grade": 86,
       "verdict": "ENTER",
-      "spot": 333.25,
+      "spot": 342.1,
       "reasons": [
-        "floor 330(19.0M) 1.0% below =KING",
-        "ceiling 350(15.7M) 5.0% above = minor block",
-        "barney 345(-8.4M) = squeeze fuel up"
+        "floor 340(7.5M) 0.6% below =KING",
+        "clear headroom",
+        "barney 342.5(-3.2M) = squeeze fuel up"
+      ]
+    },
+    {
+      "ticker": "CRWD",
+      "side": "BULL",
+      "grade": 84,
+      "verdict": "ENTER",
+      "spot": 221.325,
+      "reasons": [
+        "floor 220(2.3M) 0.6% below =KING",
+        "ceiling 232.5(0.4M) 5.0% above = minor block"
+      ]
+    },
+    {
+      "ticker": "UBER",
+      "side": "BULL",
+      "grade": 82,
+      "verdict": "ENTER",
+      "spot": 75.725,
+      "reasons": [
+        "floor 75(16.7M) 1.0% below =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "NFLX",
+      "side": "BULL",
+      "grade": 69,
+      "verdict": "ENTER",
+      "spot": 75.16,
+      "reasons": [
+        "floor 73(12.7M) 2.9% below =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "AMZN",
+      "side": "BULL",
+      "grade": 65,
+      "verdict": "ENTER",
+      "spot": 267.26,
+      "reasons": [
+        "floor 260(30.2M) 2.7% below =KING",
+        "ceiling 280(14.3M) 4.8% above = minor block"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "side": "BULL",
+      "grade": 64,
+      "verdict": "ENTER",
+      "spot": 489.35,
+      "reasons": [
+        "floor 480(21.9M) 1.9% below =KING",
+        "ceiling 495(8.0M) 1.2% above = CAP",
+        "barney 490(-11.7M) = squeeze fuel up"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "side": "BULL",
+      "grade": 62,
+      "verdict": "ENTER",
+      "spot": 149.25,
+      "reasons": [
+        "floor 145(3.7M) 2.8% below =KING",
+        "ceiling 155(1.1M) 3.9% above = minor block"
+      ]
+    },
+    {
+      "ticker": "APP",
+      "side": "BULL",
+      "grade": 53,
+      "verdict": "WAIT",
+      "spot": 305.565,
+      "reasons": [
+        "floor 290(0.4M) 5.1% below =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "FCX",
+      "side": "BULL",
+      "grade": 51,
+      "verdict": "WAIT",
+      "spot": 69.35,
+      "reasons": [
+        "floor 67(1.5M) 3.4% below",
+        "clear headroom",
+        "barney 70(-1.4M) = squeeze fuel up"
+      ]
+    },
+    {
+      "ticker": "GOOGL",
+      "side": "BULL",
+      "grade": 50,
+      "verdict": "WAIT",
+      "spot": 343.39,
+      "reasons": [
+        "floor 330(4.6M) 3.9% below",
+        "clear headroom",
+        "barney 350(-3.9M) = squeeze fuel up"
       ]
     },
     {
       "ticker": "HOOD",
       "side": "BULL",
-      "grade": 60,
+      "grade": 46,
       "verdict": "WAIT",
-      "spot": 107.03,
+      "spot": 94.975,
       "reasons": [
-        "floor 105(10.3M) 1.9% below =KING",
-        "ceiling 110(7.7M) 2.8% above = CAP"
+        "floor 93(4.2M) 2.1% below =KING",
+        "ceiling 95(2.9M) 0.0% above = CAP"
+      ]
+    },
+    {
+      "ticker": "VRT",
+      "side": "BULL",
+      "grade": 46,
+      "verdict": "WAIT",
+      "spot": 289.71500000000003,
+      "reasons": [
+        "floor 260(1.6M) 10.3% below =KING",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "CCL",
+      "side": "BULL",
+      "grade": 45,
+      "verdict": "WAIT",
+      "spot": 27.685000000000002,
+      "reasons": [
+        "floor 27.5(2.2M) 0.7% below",
+        "ceiling 28(2.3M) 1.1% above = CAP"
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "side": "BULL",
+      "grade": 36,
+      "verdict": "AVOID",
+      "spot": 483.1,
+      "reasons": [
+        "floor 470(1.7M) 2.7% below",
+        "ceiling 490(2.0M) 1.4% above = CAP",
+        "barney 500(-2.6M) = squeeze fuel up"
+      ]
+    },
+    {
+      "ticker": "CSCO",
+      "side": "BULL",
+      "grade": 35,
+      "verdict": "AVOID",
+      "spot": 118.75,
+      "reasons": [
+        "floor 110(1.6M) 7.4% below",
+        "clear headroom"
+      ]
+    },
+    {
+      "ticker": "META",
+      "side": "BULL",
+      "grade": 32,
+      "verdict": "AVOID",
+      "spot": 578.395,
+      "reasons": [
+        "floor 575(1.9M) 0.6% below",
+        "ceiling 590(8.2M) 2.0% above = CAP"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "side": "BULL",
+      "grade": 30,
+      "verdict": "AVOID",
+      "spot": 170.275,
+      "reasons": [
+        "floor 160(7.2M) 6.0% below",
+        "ceiling 177.5(2.5M) 4.2% above = minor block"
+      ]
+    },
+    {
+      "ticker": "MSTR",
+      "side": "BULL",
+      "grade": 24,
+      "verdict": "AVOID",
+      "spot": 94.94,
+      "reasons": [
+        "floor 80(0.8M) 15.7% below",
+        "clear headroom",
+        "barney 95(-20.1M) = squeeze fuel up",
+        "⚠ barney 90(-3.3M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "WBD",
+      "side": "BULL",
+      "grade": 23,
+      "verdict": "AVOID",
+      "spot": 27.555,
+      "reasons": [
+        "floor 27(10.7M) 2.0% below",
+        "ceiling 28(54.0M) 1.6% above = CAP"
+      ]
+    },
+    {
+      "ticker": "FSLR",
+      "side": "BULL",
+      "grade": 23,
+      "verdict": "AVOID",
+      "spot": 227,
+      "reasons": [
+        "floor 200(0.3M) 11.9% below",
+        "clear headroom",
+        "barney 230(-1.2M) = squeeze fuel up",
+        "⚠ barney 220(-1.2M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "PCG",
+      "side": "BULL",
+      "grade": 21,
+      "verdict": "AVOID",
+      "spot": 17.325,
+      "reasons": [
+        "floor 16.5(0.9M) 4.8% below",
+        "clear headroom",
+        "⚠ barney 17(-2.7M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "AMAT",
+      "side": "BULL",
+      "grade": 19,
+      "verdict": "AVOID",
+      "spot": 552.4,
+      "reasons": [
+        "floor 500(0.2M) 9.5% below",
+        "clear headroom",
+        "⚠ barney 550(-0.2M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "BSX",
+      "side": "BULL",
+      "grade": 19,
+      "verdict": "AVOID",
+      "spot": 51.620000000000005,
+      "reasons": [
+        "floor 45(0.8M) 12.8% below",
+        "clear headroom",
+        "⚠ barney 50(-5.3M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "TSLA",
+      "side": "BULL",
+      "grade": 18,
+      "verdict": "AVOID",
+      "spot": 326.935,
+      "reasons": [
+        "floor 322.5(3.0M) 1.4% below",
+        "ceiling 330(9.6M) 0.9% above = CAP",
+        "barney 327.5(-8.1M) = squeeze fuel up",
+        "⚠ barney 325(-16.7M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "NKE",
+      "side": "BULL",
+      "grade": 16,
+      "verdict": "AVOID",
+      "spot": 40.675,
+      "reasons": [
+        "floor 35(0.7M) 14.0% below",
+        "ceiling 42.5(2.8M) 4.5% above = minor block",
+        "barney 41(-1.2M) = squeeze fuel up",
+        "⚠ barney 40(-3.3M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "AAPL",
+      "side": "BULL",
+      "grade": 16,
+      "verdict": "AVOID",
+      "spot": 301.36,
+      "reasons": [
+        "floor 290(10.1M) 3.8% below",
+        "ceiling 305(37.4M) 1.2% above = CAP"
+      ]
+    },
+    {
+      "ticker": "SOFI",
+      "side": "BULL",
+      "grade": 13,
+      "verdict": "AVOID",
+      "spot": 17.83,
+      "reasons": [
+        "floor 17(10.4M) 4.7% below",
+        "ceiling 18(18.1M) 1.0% above = CAP"
+      ]
+    },
+    {
+      "ticker": "KLAC",
+      "side": "BULL",
+      "grade": 3,
+      "verdict": "AVOID",
+      "spot": 208.775,
+      "reasons": [
+        "floor 185(0.2M) 11.4% below",
+        "ceiling 210(0.5M) 0.6% above = CAP",
+        "⚠ barney 190(-0.5M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "MRNA",
+      "side": "BULL",
+      "grade": 2,
+      "verdict": "AVOID",
+      "spot": 63.650000000000006,
+      "reasons": [
+        "floor 59(0.3M) 7.3% below",
+        "ceiling 64(0.4M) 0.5% above = CAP",
+        "⚠ barney 61(-0.3M) accelerant against you"
+      ]
+    },
+    {
+      "ticker": "RIVN",
+      "side": "BULL",
+      "grade": 1,
+      "verdict": "AVOID",
+      "spot": 15.96,
+      "reasons": [
+        "⚠ PINNED at king 16(5.9M) — wait for a break",
+        "floor 15(3.3M) 6.0% below",
+        "ceiling 16(5.9M) 0.3% above = CAP"
       ]
     }
   ]
