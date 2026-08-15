@@ -47,6 +47,11 @@ Doctrine:
 - The target MUST be an actual node strike from the map (within 1%). The invalidation is applied on a CLOSING basis. For a long: invalidation < entry_trigger < target and the contract is a call. For a short: target < entry_trigger < invalidation and the contract is a put.
 - If the structure is not clean (no real magnet, heavy path resistance, magnet gamma mostly dies before your expiry), choose direction "no_trade" and null every level.
 
+CRITICAL field rules:
+- For a "long" or "short" plan, ALL of entry_trigger, invalidation, target, time_stop, and contract are REQUIRED and must be concrete values — NEVER null. entry_trigger is the concrete price that confirms entry (e.g. a reclaim/breakout level at or just beyond spot); it is always a number, never null.
+- null is used ONLY when direction is "no_trade" — then null entry_trigger, invalidation, target, runner_target, time_stop, AND contract.
+- runner_target may be null in any case (it is the only optional level).
+
 You MUST answer by calling emit_trade_plan exactly once. Do not write any prose outside the tool call.`;
 
 // Build the ONE-ticker snapshot handed to the model. No raw chains; no other tickers.
@@ -161,6 +166,23 @@ function extractToolUse(resp) {
   return tu ? tu.input : null;
 }
 
+// Defensive repair for a known model serialization glitch where tool-call parameters
+// leak into a preceding string field as `</field><parameter name="X">Y` fragments
+// (the value is present, just misplaced). Re-extract any leaked params into their
+// proper (currently null/undefined) fields and strip the stray tags from the string.
+export function repairLeakedToolParams(plan) {
+  if (!plan || typeof plan !== 'object') return plan;
+  const coerce = (v) => { const t = String(v).trim(); if (/^-?\d+(\.\d+)?$/.test(t)) return +t; if (t === 'null') return null; if (t === 'true' || t === 'false') return t === 'true'; return t; };
+  for (const [k, val] of Object.entries(plan)) {
+    if (typeof val !== 'string' || !/<parameter name=|<\/[a-z_]+>/i.test(val)) continue;
+    const re = /<parameter name="([a-z_]+)">([^<]*)/gi;
+    let mm;
+    while ((mm = re.exec(val))) { const key = mm[1]; if (plan[key] == null) plan[key] = coerce(mm[2]); }
+    plan[k] = val.replace(/\s*<\/?[a-z_]+>[\s\S]*$/i, '').replace(/\s*<parameter name=[\s\S]*$/i, '').trim();
+  }
+  return plan;
+}
+
 // Plan one ticker: soft-forced tool (thinking on) or hard-forced (thinking off), then
 // validate; on failure, ONE retry with the errors appended; discard on a second failure.
 export async function planTicker(m, { config, targetExpiry = null, runDate, llm }) {
@@ -169,15 +191,21 @@ export async function planTicker(m, { config, targetExpiry = null, runDate, llm 
   const ctx = { nodeStrikes, targetExpiry, runDate, targetWithinPct: config.planner.target_within_node_pct };
   const useThinking = (config.planner.thinking_budget || 0) > 0;
 
-  const messages = [{ role: 'user', content: user }];
   let attempts = 0, lastErrors = null, rawPlan = null;
   const maxAttempts = 1 + (config.planner.retries ?? 1);
 
   while (attempts < maxAttempts) {
     attempts++;
+    // Each attempt is a fresh, stateless single-turn call. On retry we append the
+    // concrete validator errors to the prompt rather than simulating a tool_use/
+    // tool_result cycle — forcing the tool AFTER a tool_result makes the model emit
+    // a degenerate empty tool call. The LLM never sees the validator after success.
+    const content = attempts === 1
+      ? user
+      : `${user}\n\nYour previous emit_trade_plan call was REJECTED by the validator:\n- ${lastErrors.join('\n- ')}\nEmit a corrected emit_trade_plan call that fixes ALL of these. Use only node strikes from the map for the target.`;
     const req = {
       model: config.planner.model, max_tokens: config.planner.max_tokens, system,
-      messages, tools: [EMIT_TRADE_PLAN_TOOL],
+      messages: [{ role: 'user', content }], tools: [EMIT_TRADE_PLAN_TOOL],
       tool_choice: useThinking ? { type: 'auto' } : { type: 'tool', name: 'emit_trade_plan' },
     };
     if (useThinking) req.thinking = { type: 'enabled', budget_tokens: config.planner.thinking_budget };
@@ -185,13 +213,8 @@ export async function planTicker(m, { config, targetExpiry = null, runDate, llm 
     try { resp = await llm(req); }
     catch (e) { lastErrors = [`llm error: ${String(e.message || e).slice(0, 120)}`]; break; }
 
-    const plan = extractToolUse(resp);
-    if (!plan) {
-      lastErrors = ['no emit_trade_plan tool call in response'];
-      messages.push({ role: 'assistant', content: resp.content || 'ok' });
-      messages.push({ role: 'user', content: 'You did not call emit_trade_plan. You MUST call it exactly once, with all required fields. Do not write prose.' });
-      continue;
-    }
+    const plan = repairLeakedToolParams(extractToolUse(resp));
+    if (!plan || Object.keys(plan).length === 0) { lastErrors = ['empty or missing emit_trade_plan tool call']; continue; }
     rawPlan = plan;
     const v = validatePlan(plan, ctx);
     if (v.ok) {
@@ -203,9 +226,6 @@ export async function planTicker(m, { config, targetExpiry = null, runDate, llm 
       };
     }
     lastErrors = v.errors;
-    // Re-prompt with the concrete violations appended (LLM never sees this after success).
-    messages.push({ role: 'assistant', content: [{ type: 'tool_use', id: 'retry', name: 'emit_trade_plan', input: plan }] });
-    messages.push({ role: 'user', content: [{ type: 'tool_result', tool_use_id: 'retry', content: `Plan rejected by validator:\n- ${v.errors.join('\n- ')}\nFix ALL of these and call emit_trade_plan again.` }] });
   }
   return { ticker: m.ticker, status: 'discarded', attempts, errors: lastErrors, rejected_plan: rawPlan, flow_through_score: m.flow_through_score, snapshot };
 }

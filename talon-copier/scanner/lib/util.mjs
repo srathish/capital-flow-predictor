@@ -34,6 +34,21 @@ export function exists(file) {
   return fs.existsSync(file);
 }
 
+// Load specific keys from an env file into process.env WITHOUT clobbering values
+// already set (so ENV_FILE=session-b.env keeps the Skylit session while we pull the
+// Anthropic + UW keys from the repo-root .env).
+export function loadEnvKeysFrom(file, keys = null) {
+  if (!fs.existsSync(file)) return;
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (!m) continue;
+    const [, k, vRaw] = m;
+    if (keys && !keys.includes(k)) continue;
+    if (process.env[k]) continue;
+    process.env[k] = vRaw.replace(/^["']|["']$/g, '');
+  }
+}
+
 // Token-bucket limiter: at most `capacity` bursts, refilling `refillPerSec`,
 // with a hard `minIntervalMs` floor between acquisitions. Async, backpressuring.
 export class RateLimiter {

@@ -1,7 +1,7 @@
 // plan.test.mjs — Stage 2 planner with a MOCKED LLM (no network). Covers the full
 // contract: valid plan, retry-fixes-violation, persistent-violation-discard,
 // no_trade nulls, no-tool-call, circuit breaker, and validatePlan cross-field rules.
-import { planTicker, planAll, validatePlan, buildPlannerInput } from '../stage2-plan.mjs';
+import { planTicker, planAll, validatePlan, buildPlannerInput, repairLeakedToolParams } from '../stage2-plan.mjs';
 
 let pass = 0, fail = 0;
 function ok(name, cond) { if (cond) pass++; else { fail++; console.log(`  ✗ ${name}`); } }
@@ -44,8 +44,8 @@ eq('A direction long', rA.plan.direction, 'long');
 eq('A sizing budget from confidence 4', rA.deterministic.sizing_budget_usd, 4000);
 eq('A invalidation basis = close', rA.deterministic.invalidation_basis, 'close');
 
-// B: bad target first, corrected on retry → ok, attempts 2
-const rB = await planTicker(makeMetrics(), { config: CONFIG, targetExpiry: EXP, runDate: RUN, llm: async (req) => mkResp(req.messages.length === 1 ? badTarget : goodPlan) });
+// B: bad target first, corrected on retry → ok, attempts 2 (retry carries the rejection text)
+const rB = await planTicker(makeMetrics(), { config: CONFIG, targetExpiry: EXP, runDate: RUN, llm: async (req) => mkResp(/REJECTED/.test(req.messages[0].content) ? goodPlan : badTarget) });
 eq('B status ok after retry', rB.status, 'ok');
 eq('B attempts 2', rB.attempts, 2);
 
@@ -63,7 +63,7 @@ eq('D direction no_trade', rD.plan.direction, 'no_trade');
 // E: never calls the tool → discarded
 const rE = await planTicker(makeMetrics(), { config: CONFIG, targetExpiry: EXP, runDate: RUN, llm: async () => ({ content: [{ type: 'text', text: 'I think MU looks good but I will not call the tool.' }] }) });
 eq('E status discarded (no tool call)', rE.status, 'discarded');
-ok('E errors mention missing tool call', rE.errors.some((e) => /no emit_trade_plan/.test(e)));
+ok('E errors mention missing tool call', rE.errors.some((e) => /emit_trade_plan/.test(e)));
 
 // F: circuit breaker trips at >50% schema failures over >=4
 const ranked = Array.from({ length: 6 }, (_, i) => makeMetrics({ ticker: `T${i}` }));
@@ -81,6 +81,13 @@ ok('long invalidation on wrong side caught', validatePlan({ ...goodPlan, invalid
 ok('long must use a call', validatePlan({ ...goodPlan, contract: { ...goodPlan.contract, type: 'put' } }, ctx).errors.some((e) => /long must use a call/.test(e)));
 ok('no_trade with non-null level caught', validatePlan({ ...noTrade, target: 1000 }, ctx).errors.some((e) => /no_trade requires target=null/.test(e)));
 ok('confidence out of range caught', !validatePlan({ ...goodPlan, confidence: 7 }, ctx).ok);
+
+// repairLeakedToolParams: recover a parameter that leaked into the thesis string
+const leaked = { ticker: 'MU', direction: 'long', thesis: 'Spot below the primed 1000 wall.</thesis>\n<parameter name="entry_trigger">975.5', entry_trigger: null, invalidation: 964, target: 1000, runner_target: 1100, time_stop: 5, contract: { type: 'call', expiry: EXP, strike: 1000, selection_note: 'x' }, confidence: 3, structural_risks: ['r'] };
+const rep = repairLeakedToolParams(leaked);
+eq('repair recovers leaked entry_trigger', rep.entry_trigger, 975.5);
+ok('repair strips stray tags from thesis', !/<parameter|<\/thesis>/.test(rep.thesis));
+ok('repaired plan now validates', validatePlan(rep, ctx).ok);
 
 // buildPlannerInput hygiene: one ticker only, includes OPEX + before-target context, no raw chains
 const { system, user, snapshot } = buildPlannerInput(makeMetrics(), { targetExpiry: EXP, runDate: RUN, config: CONFIG });
