@@ -19,7 +19,14 @@ const STRUCTURE_SYSTEM = `You are a GEX/VEX structural options trader. You read 
 - VANNA MAGNETS: large positive vanna pulls price on IV compression (melt-up); negative vanna the reverse.
 - Short-gamma pockets are FUEL (easy travel); long-gamma walls are RESISTANCE en route and TARGET/PIN at the destination.
 
-Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes from the structure. Pick a contract expiry from the provided list with enough time for the move (a far target needs more DTE). If the structure is muddled/conflicting, or spot is pinned with no fuel and no migration, choose no_trade. You MUST answer by calling emit_trade_plan exactly once; no prose outside it.`;
+Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes.
+
+CONTRACT SELECTION — match the instrument to the setup's convexity (this is where the money is):
+- SQUEEZE (explosive negative-gamma king): buy a NEAR-expiry (this or next weekly from the list) call struck ABOVE the target — FAR-OTM and CHEAP, for maximum convexity. The move is fast and violent, so near expiry is correct and the small premium IS the risk. setup_type="squeeze", size="lotto". This is how a squeeze pays 10-40x; a $1 far-OTM call becomes $40 when spot rips through it. Do NOT buy a fat near-the-money 5-week call for a squeeze — that mutes the whole edge.
+- FLOW-THROUGH / GRIND / PIN: moderate DTE, strike near or just below the target wall — you are capturing a slower pin, so give it time and stay closer to the money. setup_type="flow_through"/"pin", size="small"/"core".
+- Pick a real expiry from the provided list and a real node strike for both the contract and the target.
+
+If the structure is muddled/conflicting, or spot is pinned with no fuel and no migration, choose no_trade. You MUST answer by calling emit_trade_plan exactly once; no prose outside it.`;
 
 export function buildStructurePrompt(structure, { runDate }) {
   const user = `Complete dealer-gamma/vanna structure for ${structure.ticker}, as of ${structure.as_of || runDate} (ONE ticker; positive gex = long gamma, negative = short gamma):\n\n${JSON.stringify(structure, null, 1)}\n\nAvailable contract expirations: ${(structure.expirations || []).join(', ')}\n\nRead the WHOLE structure and its evolution (trend fields = building/dissolving over recent sessions; king_migration = where the dominant node is drifting). Recognize whichever formation is present and emit the plan. Every price level must be a real node strike above.`;
@@ -85,6 +92,8 @@ export const EMIT_TRADE_PLAN_TOOL = {
       },
       confidence: { type: 'integer', minimum: 1, maximum: 5 },
       structural_risks: { type: 'array', items: { type: 'string' } },
+      setup_type: { type: 'string', enum: ['squeeze', 'flow_through', 'reversal', 'trend_continuation', 'pin', 'none'], description: 'The formation. squeeze = explosive negative-gamma king. Drives contract convexity.' },
+      size: { type: 'string', enum: ['lotto', 'small', 'core'], description: 'lotto = cheap far-OTM convexity bet (most expire worthless); core = conviction position.' },
     },
     required: ['ticker', 'direction', 'thesis', 'entry_trigger', 'invalidation', 'target', 'runner_target', 'time_stop', 'contract', 'confidence', 'structural_risks'],
   },

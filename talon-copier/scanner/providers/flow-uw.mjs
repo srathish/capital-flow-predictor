@@ -8,6 +8,15 @@ const BASE = 'https://api.unusualwhales.com/api/';
 
 const num = (x) => (x == null || x === '' ? null : (Number.isFinite(+x) ? +x : null));
 
+// OCC option symbol: TICKER + YYMMDD + C/P + strike*1000 (8 digits). e.g.
+// occSymbol('SNDK','2026-08-14','call',1600) -> 'SNDK260814C01600000'
+export function occSymbol(ticker, expiry, type, strike) {
+  const [Y, M, D] = expiry.split('-');
+  const cp = String(type)[0].toUpperCase();
+  const strk = String(Math.round(strike * 1000)).padStart(8, '0');
+  return `${ticker}${Y.slice(2)}${M}${D}${cp}${strk}`;
+}
+
 export class FlowProvider {
   constructor({ timeoutMs = 12000, limiter = null } = {}) {
     this.key = process.env.UNUSUAL_WHALES_API_KEY || process.env.UW_API_KEY || null;
@@ -92,6 +101,17 @@ export class FlowProvider {
     const alerts = live ? await this.getAlerts(ticker) : [];
     const darkpool = live ? await this.getDarkpool(ticker) : [];
     return { ticker, source: 'uw', asOfDate, asOfDay, series: trimmed, alerts, darkpool, live };
+  }
+
+  // Daily price history for ONE option contract (OCC symbol). Real prices — lets us
+  // measure option P&L (the convexity) exactly, not model it.
+  async getOptionHistory(occ) {
+    const j = await this._get(`option-contract/${encodeURIComponent(occ)}/historic`);
+    const rows = (j && j.chains) || (Array.isArray(j) ? j : []);
+    return rows.map((r) => {
+      const bid = num(r.nbbo_bid), ask = num(r.nbbo_ask);
+      return { date: String(r.date || '').slice(0, 10), last: num(r.last_price), bid, ask, mid: (bid != null && ask != null) ? (bid + ask) / 2 : num(r.last_price), avg: num(r.avg_price), iv: num(r.implied_volatility), oi: num(r.open_interest), volume: num(r.volume) };
+    }).filter((r) => r.date).sort((a, b) => (a.date < b.date ? -1 : 1));
   }
 
   // Daily OHLC (regular session). Used by the resolver/backtest to score cards on a
