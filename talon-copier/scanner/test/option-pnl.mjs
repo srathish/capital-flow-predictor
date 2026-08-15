@@ -8,8 +8,10 @@ const { FlowProvider, occSymbol } = await import('../providers/flow-uw.mjs');
 const flow = new FlowProvider();
 const T = process.argv[2] || 'SNDK';
 const MODE = process.argv[3] || 'trend';
+const FROM = process.argv[4] || '2026-07-01';
+const TO = process.argv[5] || '2026-08-14';
 const TRAIL = 0.06;
-const fwd = readJson(resolveFromRoot(`data/backtest/forward_${T}_2026-07-01_2026-08-14.json`));
+const fwd = readJson(resolveFromRoot(`data/backtest/forward_${T}_${FROM}_${TO}.json`));
 const ohlc = readJson(resolveFromRoot(`data/backtest/ohlc/${T}.json`))?.ohlc || [];
 const byDate = {}; for (const o of ohlc) byDate[o.date] = o;
 

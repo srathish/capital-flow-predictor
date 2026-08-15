@@ -355,11 +355,22 @@ export async function planAll(ranked, { config, targetExpiry = null, runDate, ll
 export async function anthropicLLM(req) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error('ANTHROPIC_API_KEY missing');
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify(req), signal: AbortSignal.timeout(90000),
-  });
-  if (!r.ok) { const t = await r.text(); throw new Error(`anthropic ${r.status} ${t.slice(0, 200)}`); }
-  return r.json();
+  const ctrl = new AbortController();
+  const abortTimer = setTimeout(() => ctrl.abort(), 90000);
+  // Hard backstop: an occasional fetch stalls without honoring the AbortSignal, which
+  // hangs a whole daily loop at 0% CPU. Promise.race guarantees a rejection within
+  // 110s so the caller can move on to the next day instead of hanging forever.
+  const hardStop = new Promise((_, rej) => setTimeout(() => rej(new Error('anthropic hard-timeout (110s)')), 110000));
+  try {
+    const r = await Promise.race([
+      fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+        body: JSON.stringify(req), signal: ctrl.signal,
+      }),
+      hardStop,
+    ]);
+    if (!r.ok) { const t = await r.text(); throw new Error(`anthropic ${r.status} ${t.slice(0, 200)}`); }
+    return await r.json();
+  } finally { clearTimeout(abortTimer); }
 }
