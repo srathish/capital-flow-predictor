@@ -49,9 +49,10 @@
   "target_expiry": null,
 
   "planner": {
-    "model": "claude-sonnet",
+    "model": "claude-sonnet-5",
     "max_tokens": 3000,
-    "thinking_budget": 1600,
+    "thinking_budget": 0,
+    "_thinking_note": "0 => hard-forced emit_trade_plan tool call (deterministic structured output). Extended thinking + forced tool are mutually exclusive on the API; the thesis field carries the rationale.",
     "max_calls_per_run": 12,
     "circuit_breaker_fail_pct": 0.5,
     "retries": 1,

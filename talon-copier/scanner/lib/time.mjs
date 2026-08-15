@@ -103,4 +103,12 @@ export function forwardSessions(dateStr, n) {
   return out;
 }
 
+// Count of trading sessions in (from, to] — i.e. contract DTE in trading days.
+export function tradingDaysBetween(from, to) {
+  if (!to || to <= from) return 0;
+  let n = 0;
+  for (const d of forwardSessions(from, 400)) { if (d > to) break; n++; }
+  return n;
+}
+
 export { TZ };
