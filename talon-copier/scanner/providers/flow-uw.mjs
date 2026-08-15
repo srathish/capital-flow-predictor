@@ -93,7 +93,9 @@ export class FlowProvider {
   // Everything Stage 3 needs, sliced to be historically honest for backtests:
   // the flow series is trimmed to rows on/before asOfDate.
   async getFlow(ticker, { asOfDate = null, lookbackSessions = 20 } = {}) {
-    const series = await this.getFlowSeries(ticker, Math.max(lookbackSessions + 6, 30));
+    // Pull deep enough that the trailing-lookback window is covered even for a scan
+    // date ~2 months back (UW options-volume history is ~60 sessions).
+    const series = await this.getFlowSeries(ticker, Math.max(lookbackSessions * 2 + 25, 65));
     const trimmed = asOfDate ? series.filter((r) => r.date <= asOfDate) : series;
     const asOfDay = trimmed.length ? trimmed[trimmed.length - 1] : null;
     // Alerts/darkpool are only historically reliable for recent (live) runs.

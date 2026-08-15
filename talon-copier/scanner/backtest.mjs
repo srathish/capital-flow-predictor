@@ -168,13 +168,23 @@ export async function forwardTestStructure({ config, ticker, dates, llm }) {
 
     const r = await planFromStructure(profile, history, { config, runDate, llm });
     const s = r.structure || {};
+    // UW option FLOW validation (independent of the Skylit structure) — record the
+    // verdict per trade (confirmed/neutral/contradicted), do NOT veto yet, so we can
+    // test honestly whether flow-confirmed trades beat flow-contradicted ones.
+    let flow_state = null;
+    if (r.status === 'ok' && r.plan.direction !== 'no_trade' && config.flow_gate?.enabled) {
+      try {
+        const fl = await flow.getFlow(ticker, { asOfDate: runDate, lookbackSessions: config.flow_gate.lookback_sessions });
+        flow_state = gateCard({ status: 'ok', ticker, plan: r.plan }, fl, config).state;
+      } catch { flow_state = 'unvalidated'; }
+    }
     let resolution = null;
     if (r.status === 'ok' && r.plan.direction !== 'no_trade') resolution = resolveCard({ ...r.plan, ticker }, ohlc, runDate);
     rows.push({
       date: runDate, spot: Math.round(profile.spot * 100) / 100,
       king: s.gamma?.king ? `${s.gamma.king.strike}${s.gamma.king.sign === 'neg' ? '−' : '+'}` : null,
       migration: s.gamma?.king_migration?.direction || null,
-      verdict: r.status === 'ok' ? r.plan.direction : 'discarded',
+      verdict: r.status === 'ok' ? r.plan.direction : 'discarded', flow_state,
       plan: r.status === 'ok' ? r.plan : null, resolution, errors: r.errors || null,
     });
     log(`[fwd] ${runDate} ${ticker} → ${rows[rows.length - 1].verdict}`);
