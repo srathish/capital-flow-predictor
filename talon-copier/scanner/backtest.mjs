@@ -199,6 +199,7 @@ export async function backtestSignal({ config, dates, symbols, threshold, minPer
         const row = {
           date: runDate, ticker: t, spot: r?.spot ?? null, score,
           magnet: r?.magnet?.strike ?? null, magnet_norm: r?.magnet?.magnet_norm ?? null, dist_pct: r?.magnet?.dist_pct ?? null,
+          king_strike: r?.king?.strike ?? null, king_sign: r?.king?.sign ?? null, king_pos: r?.king?.position ?? null,
           persistence_days: persist, weekly_expiry: r?.suggested_weekly_expiry ?? null,
           no_setup: r?.dropped ?? (score == null ? 'no-magnet' : null),
           get_in: gi, llm_verdict: null, card: null, validation: null, resolution: null, vetoed: false,
@@ -259,10 +260,22 @@ export function renderSignalReport(rows, priceByTicker, symbols, threshold, minP
     const movePct = startSpot && peak.high > -Infinity ? (peak.high - startSpot) / startSpot * 100 : null;
     L.push(`\n## ${t} — $${startSpot?.toFixed(2)} → peak $${peak.high > -Infinity ? peak.high.toFixed(2) : '—'} (${peak.date || '—'})  ${movePct == null ? '' : (movePct >= 0 ? '+' : '') + movePct.toFixed(1) + '%'}`);
     L.push('```');
+    L.push('king$ ' + spark(tr.map((r) => r.king_strike)));
     L.push('score ' + spark(tr.map((r) => r.score)));
     L.push('build ' + tr.map((r) => (r.get_in ? '▲' : (r.score == null ? '·' : ' '))).join(''));
     L.push('buy   ' + tr.map((r) => { if (!r.get_in || r.llm_verdict == null) return ' '; if (r.vetoed) return '🚫'; if (r.llm_verdict === 'long') return '🟢'; if (r.llm_verdict === 'no_trade') return '⏸'; return '·'; }).join(''));
     L.push('```');
+    // King-node migration: where the dominant gamma wall is drifting (↑ bullish / ↓ bearish).
+    const ks = tr.map((r) => r.king_strike).filter((x) => x != null);
+    if (ks.length >= 4) {
+      const h = Math.floor(ks.length / 2);
+      const early = ks.slice(0, h).reduce((a, b) => a + b, 0) / h;
+      const late = ks.slice(h).reduce((a, b) => a + b, 0) / (ks.length - h);
+      const chg = (late - early) / early;
+      const dir = chg > 0.01 ? `↑ **bullish migration**` : chg < -0.01 ? `↓ **bearish migration**` : `~ flat`;
+      const lastKing = tr.filter((r) => r.king_strike != null).slice(-1)[0];
+      L.push(`King node: ${ks[0]} → ${ks[ks.length - 1]}  ${dir} (${(chg * 100).toFixed(1)}%)${lastKing ? ` · now ${lastKing.king_sign}-gamma ${lastKing.king_pos} spot` : ''}`);
+    }
     const buys = tr.filter((r) => r.card && r.card.direction === 'long' && !r.vetoed);
     if (buys.length) {
       const fb = buys[0], res = fb.resolution || {};
