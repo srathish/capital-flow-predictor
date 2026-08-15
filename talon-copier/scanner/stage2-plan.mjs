@@ -20,10 +20,11 @@ GAMMA book = dealer PRICE-hedging:
 - NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large short-gamma (neg) king AT/near spot = dealers short gamma must BUY into any rally → violent moves. Price turning UP off/through a neg-gamma king (or that king flipping positive) = explosive LONG, and it appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for downside = explosive short.
 - gamma king_migration UP = bullish (ceiling pulled up); DOWN = bearish. Short-gamma pockets = FUEL; long-gamma walls = RESISTANCE en route, TARGET/PIN at the destination.
 
-VANNA book = dealer VOL-hedging (READ IT AS SERIOUSLY AS GAMMA — often the bigger force on recovery grinds):
-- POSITIVE vanna above spot = MELT-UP MAGNET: as IV compresses (vol falls after a scare/crash), dealers hedging positive vanna BUY, pulling price UP to those strikes. A post-crash recovery grind is a VANNA rally — price melts up to the positive-vanna magnets. Target them.
-- The vanna king is where dealer vol-hedging concentrates; vanna king_migration UP = the melt-up target rising (bullish). Negative vanna = the reverse (vol-driven downside).
-- The BEST setups are when BOTH books agree: e.g. a neg-gamma squeeze (gamma fuel) INTO stacked positive-vanna magnets above (vol melt-up target) — gamma provides the violence, vanna provides the destination. Conflicting books (gamma bullish, vanna bearish) = lower conviction or no_trade.
+VANNA book = dealer VOL-hedging. Read it SYMMETRICALLY, exactly like gamma — the DIRECTION comes from the vanna king's MIGRATION and the vol regime, NOT from the mere presence of positive vanna above spot. (Positive vanna sits above spot by default — that is where call vanna lives — so it is NOT itself a buy signal. Do not read bullish just because positive-vanna magnets exist overhead.)
+- vanna king_migration UP = the vol-hedging magnet is rising → supports higher prices (bullish CONFIRMATION). Migration DOWN = falling → bearish. FLAT = neutral.
+- MELT-UP is a SPECIFIC scenario, not the default: a post-scare RECOVERY where IV is COMPRESSING and the vanna king is migrating UP — only then does positive vanna above pull price up to those magnets.
+- In a DECLINE or rising-IV regime, vanna is NOT bullish: if the vanna king is migrating DOWN, it reinforces the downside. NEVER go long into a falling gamma king just because positive vanna sits overhead — that is the classic trap.
+- Use vanna to CONFIRM or CONFLICT with gamma: both books' kings migrating the SAME way = high conviction; conflict (gamma bearish, vanna bullish or vice-versa) = LOW conviction or no_trade. The gamma king's direction leads; vanna confirms or vetoes.
 
 Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes.
 
