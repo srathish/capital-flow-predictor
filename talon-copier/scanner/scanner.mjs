@@ -18,6 +18,8 @@ const { gateAll } = await import('./stage3-gate.mjs');
 const { FlowProvider } = await import('./providers/flow-uw.mjs');
 const { GexProvider } = await import('./providers/gex-skylit.mjs');
 const { assemblePlans, writePlans, writeReport, discordSummary, postDiscord } = await import('./stage4-report.mjs');
+const { backtestScore, renderBacktestReport, sessionsInRange } = await import('./backtest.mjs');
+const { resolveOutcomes } = await import('./stage7-outcomes.mjs');
 
 function parseArgs(argv) {
   const a = { _: [] };
@@ -115,6 +117,28 @@ async function cmdPremarket(args, config) {
   log(`→ ${outFile}`);
 }
 
+// Walk-forward backtest: replay past dates, resolve magnet-reach top-rank vs control.
+async function cmdBacktest(args, config) {
+  const from = args.from, to = args.to || from;
+  if (!from) { log('backtest needs --from YYYY-MM-DD [--to YYYY-MM-DD]'); return; }
+  const dates = sessionsInRange(from, to, args.every ? +args.every : 1);
+  if (!dates.length) { log('no trading sessions in range'); return; }
+  const symbols = args.tickers ? String(args.tickers).split(',') : null;
+  log(`[backtest] ${dates.length} dates ${dates[0]}…${dates[dates.length - 1]} · horizon ${args.horizon || 5}d · ${symbols ? symbols.length + ' tickers' : args.theme || 'full universe'}`);
+  const { summary, outFile } = await backtestScore({
+    config, dates, symbols, theme: args.theme || null,
+    horizonDays: args.horizon ? +args.horizon : 5, stopPct: args.stop ? +args.stop : 0.05,
+    topK: args.topk ? +args.topk : 10, controlK: args.control ? +args.control : 10, refresh: !!args.refresh,
+  });
+  log(`\n[backtest] → ${outFile}\n`);
+  console.log(renderBacktestReport(summary));
+}
+
+async function cmdOutcomes(args, config) {
+  const date = args.date || etToday();
+  await resolveOutcomes({ config, date });
+}
+
 async function cmdAuth() {
   const gex = new GexProvider({});
   const s = await gex.authStatus();
@@ -129,9 +153,11 @@ const config = loadConfig();
 try {
   if (cmd === 'run') await cmdRun(args, config);
   else if (cmd === 'scan') await cmdScan(args, config);
+  else if (cmd === 'backtest') await cmdBacktest(args, config);
+  else if (cmd === 'outcomes') await cmdOutcomes(args, config);
   else if (cmd === 'premarket') await cmdPremarket(args, config);
   else if (cmd === 'auth') await cmdAuth();
-  else { console.log('commands: run | scan | premarket | auth'); process.exit(1); }
+  else { console.log('commands: run | scan | backtest | outcomes | premarket | auth'); process.exit(1); }
 } catch (e) {
   console.error(`[scanner] ${cmd} failed: ${e.message}`);
   process.exit(1);
