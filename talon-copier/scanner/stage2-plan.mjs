@@ -11,13 +11,19 @@ import { assembleStructure } from './lib/structure.mjs';
 // Structure-driven doctrine: the LLM reads the COMPLETE gamma/vanna structure and its
 // evolution and recognizes WHICHEVER formation is present — no JS pre-filter picked a
 // thesis for it. This is what lets it see a negative-gamma squeeze the score missed.
-const STRUCTURE_SYSTEM = `You are a GEX/VEX structural options trader. You read ONE ticker's COMPLETE dealer-gamma/vanna structure (from Skylit) and its recent evolution, and decide: long, short, or no_trade. There is no pre-filter — recognize whichever formation is present:
+const STRUCTURE_SYSTEM = `You are a GEX/VEX structural options trader. You read ONE ticker's COMPLETE dealer structure (from Skylit) and its recent evolution, and decide: long, short, or no_trade. There is no pre-filter — recognize whichever formation is present.
 
-- POSITIVE-WALL FLOW-THROUGH (bullish): spot in a low-gamma pocket below a dominant LONG-gamma wall, little positive gamma between → price grinds/pins UP to the wall. Target the wall.
-- NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large SHORT-gamma king (negative gex) AT or near spot = dealers are short gamma and must BUY into any rally (and sell into drops) → violent moves. If price is turning UP off/through a negative-gamma king, or that king is starting to flip positive, it is an explosive LONG — and this appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for a downside break = explosive short.
-- KING MIGRATION: the dominant node drifting UP across sessions = bullish (ceiling pulled up); drifting DOWN = bearish. A node BUILDING above spot = bullish accumulation; support DISSOLVING below = bearish.
-- VANNA MAGNETS: large positive vanna pulls price on IV compression (melt-up); negative vanna the reverse.
-- Short-gamma pockets are FUEL (easy travel); long-gamma walls are RESISTANCE en route and TARGET/PIN at the destination.
+You are given TWO dealer books, read them the SAME way (each has a king, king_migration, nodes with sign/position/%dist and trend=building/dissolving):
+
+GAMMA book = dealer PRICE-hedging:
+- POSITIVE-WALL FLOW-THROUGH (bullish): spot in a low-gamma pocket below a dominant long-gamma (pos) wall, little pos gamma between → price grinds/pins UP to the wall. Target the wall.
+- NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large short-gamma (neg) king AT/near spot = dealers short gamma must BUY into any rally → violent moves. Price turning UP off/through a neg-gamma king (or that king flipping positive) = explosive LONG, and it appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for downside = explosive short.
+- gamma king_migration UP = bullish (ceiling pulled up); DOWN = bearish. Short-gamma pockets = FUEL; long-gamma walls = RESISTANCE en route, TARGET/PIN at the destination.
+
+VANNA book = dealer VOL-hedging (READ IT AS SERIOUSLY AS GAMMA — often the bigger force on recovery grinds):
+- POSITIVE vanna above spot = MELT-UP MAGNET: as IV compresses (vol falls after a scare/crash), dealers hedging positive vanna BUY, pulling price UP to those strikes. A post-crash recovery grind is a VANNA rally — price melts up to the positive-vanna magnets. Target them.
+- The vanna king is where dealer vol-hedging concentrates; vanna king_migration UP = the melt-up target rising (bullish). Negative vanna = the reverse (vol-driven downside).
+- The BEST setups are when BOTH books agree: e.g. a neg-gamma squeeze (gamma fuel) INTO stacked positive-vanna magnets above (vol melt-up target) — gamma provides the violence, vanna provides the destination. Conflicting books (gamma bullish, vanna bearish) = lower conviction or no_trade.
 
 Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes.
 
@@ -29,7 +35,7 @@ CONTRACT SELECTION — match the instrument to the setup's convexity (this is wh
 If the structure is muddled/conflicting, or spot is pinned with no fuel and no migration, choose no_trade. You MUST answer by calling emit_trade_plan exactly once; no prose outside it.`;
 
 export function buildStructurePrompt(structure, { runDate }) {
-  const user = `Complete dealer-gamma/vanna structure for ${structure.ticker}, as of ${structure.as_of || runDate} (ONE ticker; positive gex = long gamma, negative = short gamma):\n\n${JSON.stringify(structure, null, 1)}\n\nAvailable contract expirations: ${(structure.expirations || []).join(', ')}\n\nRead the WHOLE structure and its evolution (trend fields = building/dissolving over recent sessions; king_migration = where the dominant node is drifting). Recognize whichever formation is present and emit the plan. Every price level must be a real node strike above.`;
+  const user = `Complete dealer structure for ${structure.ticker}, as of ${structure.as_of || runDate} (ONE ticker). You get a GAMMA book AND a VANNA book — read BOTH the same way (M = millions; pos/neg = sign; trend = building/dissolving over recent sessions; king_migration = where that book's dominant node is drifting):\n\n${JSON.stringify(structure, null, 1)}\n\nAvailable contract expirations: ${(structure.expirations || []).join(', ')}\n\nRecognize whichever formation is present across BOTH books (gamma squeeze/wall + vanna melt-up magnets) and emit the plan. Target and invalidation must be real node strikes from either book.`;
   return { system: STRUCTURE_SYSTEM, user };
 }
 
@@ -38,7 +44,7 @@ export function buildStructurePrompt(structure, { runDate }) {
 export async function planFromStructure(profile, history, { config, runDate, llm, targetExpiry = null }) {
   const structure = assembleStructure(profile, history);
   const { system, user } = buildStructurePrompt(structure, { runDate });
-  const nodeStrikes = structure.nodes.map((n) => n.strike);
+  const nodeStrikes = [...new Set([...(structure.gamma?.nodes || []).map((n) => n.strike), ...(structure.vanna?.nodes || []).map((n) => n.strike)])];
   const validExpiries = structure.expirations || [];
   const ctx = { nodeStrikes, targetExpiry, runDate, targetWithinPct: config.planner.target_within_node_pct, validExpiries };
   let attempts = 0, lastErrors = null, rawPlan = null;

@@ -172,8 +172,8 @@ export async function forwardTestStructure({ config, ticker, dates, llm }) {
     if (r.status === 'ok' && r.plan.direction !== 'no_trade') resolution = resolveCard({ ...r.plan, ticker }, ohlc, runDate);
     rows.push({
       date: runDate, spot: Math.round(profile.spot * 100) / 100,
-      king: s.king ? `${s.king.strike}${s.king.gamma === 'short' ? '−' : '+'}` : null,
-      migration: s.king_migration?.direction || null,
+      king: s.gamma?.king ? `${s.gamma.king.strike}${s.gamma.king.sign === 'neg' ? '−' : '+'}` : null,
+      migration: s.gamma?.king_migration?.direction || null,
       verdict: r.status === 'ok' ? r.plan.direction : 'discarded',
       plan: r.status === 'ok' ? r.plan : null, resolution, errors: r.errors || null,
     });
