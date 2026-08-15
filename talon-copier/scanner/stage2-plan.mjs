@@ -20,6 +20,13 @@ GAMMA book = dealer PRICE-hedging:
 - NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large short-gamma (neg) king AT/near spot = dealers short gamma must BUY into any rally → violent moves. Price turning UP off/through a neg-gamma king (or that king flipping positive) = explosive LONG, and it appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for downside = explosive short.
 - gamma king_migration UP = bullish (ceiling pulled up); DOWN = bearish. Short-gamma pockets = FUEL; long-gamma walls = RESISTANCE en route, TARGET/PIN at the destination.
 
+DIRECTION GATE (critical — this is where the long-bias mistakes happen): the GAMMA king's MIGRATION is the PRIMARY direction filter and OVERRIDES the mere presence of a wall. There is ALWAYS a positive-gamma wall somewhere above spot, so "flow-through to the wall above" is NOT a valid long reason by itself — every name has one. Only go LONG when the gamma king is migrating UP (or a short-gamma king AT spot is clearly turning up). If the gamma king is migrating DOWN, the structure is BEARISH — go SHORT or no_trade, NEVER long. Do not let a positive wall above or a bullish vanna read talk you into a long against a down-migrating gamma king.
+
+BEARISH formations are as real as bullish ones — actively look for them (the system must be two-sided):
+- NEGATIVE-WALL FLOW-THROUGH DOWN: spot above a low-gamma pocket with a dominant long-gamma wall BELOW → price grinds/pins DOWN to it. Short, target the wall below.
+- DISTRIBUTION / KING BREAKING DOWN: gamma king migrating DOWN, positive support walls DISSOLVING below spot, negative-gamma building below = fuel for a slide. Short.
+- FAILED SQUEEZE: a short-gamma king turning DOWN (not up) = explosive short.
+
 VANNA book = dealer VOL-hedging. Read it SYMMETRICALLY, exactly like gamma — the DIRECTION comes from the vanna king's MIGRATION and the vol regime, NOT from the mere presence of positive vanna above spot. (Positive vanna sits above spot by default — that is where call vanna lives — so it is NOT itself a buy signal. Do not read bullish just because positive-vanna magnets exist overhead.)
 - vanna king_migration UP = the vol-hedging magnet is rising → supports higher prices (bullish CONFIRMATION). Migration DOWN = falling → bearish. FLAT = neutral.
 - MELT-UP is a SPECIFIC scenario, not the default: a post-scare RECOVERY where IV is COMPRESSING and the vanna king is migrating UP — only then does positive vanna above pull price up to those magnets.
@@ -64,6 +71,14 @@ export async function planFromStructure(profile, history, { config, runDate, llm
     if (plan.direction !== 'no_trade' && plan.contract && plan.contract.expiry && validExpiries.length && !validExpiries.includes(plan.contract.expiry)) {
       v.ok = false; v.errors.push(`contract.expiry ${plan.contract.expiry} not in the available expirations`);
     }
+    // HARD structural gate: the GAMMA king's migration governs direction. There is
+    // always a positive wall above spot, so a bullish "flow-through" thesis can always
+    // be constructed — that is the long-bias engine. Block a long into a down-migrating
+    // king and a short into an up-migrating king (flat/unknown = no gate). This still
+    // allows a genuine squeeze long (king migrating UP off a negative king).
+    const kingMig = structure.gamma?.king_migration?.direction;
+    if (plan.direction === 'long' && kingMig === 'down_bearish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: long while the gamma king is migrating DOWN_BEARISH (dominant node falling). A positive wall above is not a long signal by itself. Choose short or no_trade unless the gamma king is turning up.'); }
+    if (plan.direction === 'short' && kingMig === 'up_bullish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: short while the gamma king is migrating UP_BULLISH. Choose long or no_trade.'); }
     if (v.ok) {
       const budget = config.sizing_budget_usd[String(plan.confidence)] ?? null;
       return { ticker: profile.ticker, status: 'ok', attempts, plan, deterministic: { invalidation_basis: config.invalidation_basis, sizing_budget_usd: budget }, structure };
