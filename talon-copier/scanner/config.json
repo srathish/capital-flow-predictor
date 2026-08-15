@@ -1,0 +1,83 @@
+{
+  "_doc": "GEX Node Scanner — single source of all thresholds/weights/maps. Nothing magic in code. GEX/VEX = Skylit ONLY; UW = flow/price/OI only. Timezone America/New_York everywhere.",
+  "timezone": "America/New_York",
+
+  "universe": {
+    "symbols_file": "../../apps/gex/scanner/data/symbols.json",
+    "exclude_indexes": true,
+    "extra_symbols": [],
+    "themes": {
+      "ai_semis": ["NVDA", "MU", "AVGO", "AMD", "TSM", "MRVL", "SMH", "ALAB", "NBIS", "SNDK"],
+      "space": ["ASTS", "RKLB", "LUNR", "SATL", "SPIR", "IRDM", "RDW"],
+      "crypto": ["MARA", "MSTR", "COIN", "IBIT", "BMNR", "HOOD", "CRCL"]
+    }
+  },
+
+  "ingest": {
+    "max_strikes": 200,
+    "max_expirations": 10,
+    "skylit_eod_hhmm": "16:00",
+    "history_sessions": 12,
+    "request_timeout_ms": 15000,
+    "max_retries": 2,
+    "rate_limit": { "capacity": 6, "refill_per_sec": 4, "min_interval_ms": 260 },
+    "cache_dir": "data/raw"
+  },
+
+  "liquidity": {
+    "min_options_volume": 300,
+    "min_oi_atm": 150,
+    "max_rel_spread": 0.18,
+    "atm_band_pct": 0.05,
+    "enforce": true
+  },
+
+  "scan": {
+    "top_n_nodes": 5,
+    "top_k": 10,
+    "proximity_band_pct": 0.10,
+    "wall_penalty_threshold": 0.4,
+    "wall_penalty_action": "respecify",
+    "neg_gamma_path_bonus": 1.2,
+    "persistence": { "max_mult": 1.5, "days_for_max": 5, "strike_tolerance_steps": 1 },
+    "proximity_weight": { "half_life_pct": 0.04 },
+    "magnet_norm_method": "fraction_total_abs",
+    "scans_dir": "data/scans"
+  },
+
+  "target_expiry": null,
+
+  "planner": {
+    "model": "claude-sonnet",
+    "max_tokens": 3000,
+    "thinking_budget": 1600,
+    "max_calls_per_run": 12,
+    "circuit_breaker_fail_pct": 0.5,
+    "retries": 1,
+    "target_within_node_pct": 0.01,
+    "plans_dir": "data/plans"
+  },
+
+  "sizing_budget_usd": { "1": 1000, "2": 1500, "3": 2500, "4": 4000, "5": 6000 },
+  "invalidation_basis": "close",
+
+  "flow_gate": {
+    "enabled": true,
+    "lookback_sessions": 20,
+    "confirm_percentile": 0.60,
+    "contradict_percentile": 0.60,
+    "require_sweep_or_block": false,
+    "darkpool_bonus": true,
+    "confidence_cap": 5
+  },
+
+  "output": {
+    "report_markdown": true,
+    "discord_webhook": null,
+    "reports_dir": "data/reports"
+  },
+
+  "outcomes": { "dir": "data/outcomes", "max_horizon_days": 20 },
+
+  "premarket_recheck": { "gap_band_pct": 0.004 }
+}

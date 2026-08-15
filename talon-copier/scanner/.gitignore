@@ -1,0 +1,4 @@
+# Generated pipeline artifacts (re-derivable from Skylit replay + UW). Not committed.
+data/
+*.log
+node_modules/
