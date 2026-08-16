@@ -1,2 +1,4 @@
 data/
 session-b.env
+session-a.env
+session-*.env
