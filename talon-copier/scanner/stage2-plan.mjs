@@ -21,7 +21,10 @@ GAMMA book = dealer PRICE-hedging:
 - NEGATIVE-GAMMA SQUEEZE / BARNEY (explosive): a large short-gamma (neg) king AT/near spot = dealers short gamma must BUY into any rally → violent moves. Price turning UP off/through a neg-gamma king (or that king flipping positive) = explosive LONG, and it appears BEFORE positive walls build, so it is the EARLIEST signal. Mirror for downside = explosive short.
 - gamma king_migration UP = bullish (ceiling pulled up); DOWN = bearish. Short-gamma pockets = FUEL; long-gamma walls = RESISTANCE en route, TARGET/PIN at the destination.
 
-DIRECTION GATE (critical — this is where the long-bias mistakes happen): the GAMMA king's MIGRATION is the PRIMARY direction filter and OVERRIDES the mere presence of a wall. There is ALWAYS a positive-gamma wall somewhere above spot, so "flow-through to the wall above" is NOT a valid long reason by itself — every name has one. Only go LONG when the gamma king is migrating UP (or a short-gamma king AT spot is clearly turning up). If the gamma king is migrating DOWN, the structure is BEARISH — go SHORT or no_trade, NEVER long. Do not let a positive wall above or a bullish vanna read talk you into a long against a down-migrating gamma king.
+DIRECTION — read the CURRENT structure, not just the trailing migration. King-migration is ONE input and it LAGS; it is NOT a veto. Weigh where price sits in the node map RIGHT NOW:
+- LONG is valid when price has pulled back to a real support node with walls/room above, OR is reclaiming a rising node, OR sits on a negative-gamma king that is turning up — EVEN IF last week's king drifted down. The turn shows in the current snapshot BEFORE the migration flips (a short-gamma king turning up is the EARLIEST bull signal). A down-migrating king that has arrived at a strong support and is basing is a LONG-setup-forming, not an automatic short.
+- SHORT when price is breaking DOWN through its supports, walls are dissolving below/only far above, and negative gamma is building below.
+- Do NOT reflexively no_trade or short a name just because trailing migration was down; equally do not chase a long in a name breaking down. (History: an over-strict "never long a down-migrating king" rule made this system MISS a +13% NVDA week and sit out an entire market rip — that mistake is banned.) The mere presence of a positive wall above is not by itself a long reason (every name has one) — but a wall above PLUS price holding/reclaiming a support below IS the flow-through long.
 
 BEARISH formations are as real as bullish ones — actively look for them (the system must be two-sided):
 - NEGATIVE-WALL FLOW-THROUGH DOWN: spot above a low-gamma pocket with a dominant long-gamma wall BELOW → price grinds/pins DOWN to it. Short, target the wall below.
@@ -35,6 +38,12 @@ VANNA book = dealer VOL-hedging. Read it SYMMETRICALLY, exactly like gamma — t
 - Use vanna to CONFIRM or CONFLICT with gamma: both books' kings migrating the SAME way = high conviction; conflict (gamma bearish, vanna bullish or vice-versa) = LOW conviction or no_trade. The gamma king's direction leads; vanna confirms or vetoes.
 
 Rules: long → call; short → put. INVALIDATION IS STRUCTURAL — the real support/resistance NODE whose break kills the thesis (below a support node for a long), never a tight % off entry; these names swing hard. Target and invalidation must be REAL node strikes.
+
+THE EDGE IS ASYMMETRIC — MANAGE FOR IT (this is the core of the strategy, proven on 4 weeks of real data):
+- The structural stop caps every loss near ~1R. A winner runs the vanna/gamma LADDER to many R. Over a cycle a few big ladder-runners pay for all the small stops. So the goal is EXPECTANCY (average R), NOT hit-rate. A high win-rate of tiny wins is a LOSING profile — do not clip a small nearby target to "bank a win."
+- LET WINNERS RUN: set target = the first real wall (T1), but ALWAYS set runner_target FURTHER up the ladder — the next vanna magnet / gamma node the move can reach if the theme holds. The runner is where the money is made (a name that pays +6R does it on the runner, not T1). Never set runner_target = target.
+- PARTICIPATE — do not over-decline. Declining a setup forfeits the asymmetry: you dodge a ~1R chop-loss but also miss the multi-R rip that pays for the whole cycle. Reserve no_trade for genuinely MUDDLED/CONFLICTING structure (gamma and vanna fighting, pinned with no fuel and no room) — NOT for "this might chop." When a clean directional setup exists, take it and let the stop do the risk management.
+- ENTER SO YOU ACTUALLY FILL: set entry_trigger to get you IN the move. For a momentum/at-support setup (spot sitting on/just above a support node with room above), enter AT or just through spot (a breakout trigger) — do NOT set a deep pullback entry that a gap-up will never revisit (that is how the system no-filled an entire up-week). Only use a pullback entry_trigger when there is a clear, CLOSE support to buy the dip into and reason to expect the dip.
 
 CONTRACT SELECTION — match the instrument to the setup's convexity (this is where the money is):
 - SQUEEZE (explosive negative-gamma king): buy a NEAR-expiry (this or next weekly from the list) call struck ABOVE the target — FAR-OTM and CHEAP, for maximum convexity. The move is fast and violent, so near expiry is correct and the small premium IS the risk. setup_type="squeeze", size="lotto". This is how a squeeze pays 10-40x; a $1 far-OTM call becomes $40 when spot rips through it. Do NOT buy a fat near-the-money 5-week call for a squeeze — that mutes the whole edge.
@@ -72,14 +81,12 @@ export async function planFromStructure(profile, history, { config, runDate, llm
     if (plan.direction !== 'no_trade' && plan.contract && plan.contract.expiry && validExpiries.length && !validExpiries.includes(plan.contract.expiry)) {
       v.ok = false; v.errors.push(`contract.expiry ${plan.contract.expiry} not in the available expirations`);
     }
-    // HARD structural gate: the GAMMA king's migration governs direction. There is
-    // always a positive wall above spot, so a bullish "flow-through" thesis can always
-    // be constructed — that is the long-bias engine. Block a long into a down-migrating
-    // king and a short into an up-migrating king (flat/unknown = no gate). This still
-    // allows a genuine squeeze long (king migrating UP off a negative king).
-    const kingMig = structure.gamma?.king_migration?.direction;
-    if (plan.direction === 'long' && kingMig === 'down_bearish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: long while the gamma king is migrating DOWN_BEARISH (dominant node falling). A positive wall above is not a long signal by itself. Choose short or no_trade unless the gamma king is turning up.'); }
-    if (plan.direction === 'short' && kingMig === 'up_bullish') { v.ok = false; v.errors.push('DIRECTION CONFLICT: short while the gamma king is migrating UP_BULLISH. Choose long or no_trade.'); }
+    // NO hard direction veto. The 4-week Talon backtest (2026-08-16) proved the old
+    // king-migration veto was NET-NEGATIVE: it is a lagging, trend-following filter that
+    // stood the system aside at the TURN — it blocked NVDA the day before a +13% week and
+    // forced no_trade on the whole up-week rip. Direction is the LLM's call, guided by the
+    // doctrine (migration is one INPUT, a fresh reclaim/turn overrides it). Deterministic
+    // code protects via the STRUCTURAL STOP, not by overriding the model's read.
     if (v.ok) {
       // Deterministic convex contract for squeezes (config.contract.enabled; off by
       // default → plan.contract unchanged). Applied after validation — the OTM strike
@@ -107,8 +114,8 @@ export const EMIT_TRADE_PLAN_TOOL = {
       thesis: { type: 'string', description: '<=3 sentences: why this flows to the magnet (or why no trade).' },
       entry_trigger: { type: ['number', 'null'], description: 'Price that confirms entry. null iff no_trade.' },
       invalidation: { type: ['number', 'null'], description: 'Level that kills the thesis (applied on a CLOSING basis in code). null iff no_trade.' },
-      target: { type: ['number', 'null'], description: 'Primary target — MUST be within 1% of a node strike from the map. null iff no_trade.' },
-      runner_target: { type: ['number', 'null'], description: 'Optional stretch target at a further node, or null.' },
+      target: { type: ['number', 'null'], description: 'First target = the nearest real wall/node in the trade direction. MUST be within 1% of a node strike from the map. null iff no_trade.' },
+      runner_target: { type: ['number', 'null'], description: 'The LADDER runner — a FURTHER node/vanna magnet beyond target that the move reaches if the theme holds. This is where expectancy comes from (winners pay on the runner, not the first target). Set it for EVERY directional trade (not null unless no_trade) and NEVER equal to target. Must be a real node strike.' },
       time_stop: { type: ['integer', 'null'], description: 'Exit after N trading days if unresolved. <= contract DTE. null iff no_trade.' },
       contract: {
         type: ['object', 'null'],
