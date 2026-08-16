@@ -36,6 +36,15 @@ const bar = (date, o, h, l, c) => ({ date, open: o, high: h, low: l, close: c })
   ok('long open outcome', r.outcome === 'open');
   near('long open R (mark 104)', r.R, (104 - 100) / 5);
 }
+// ---- RECLAIM long: OTE ABOVE current — fills when price RISES to it, not on the dip ----
+// current 10.70, ote 11.50, inval 10.39, t1 12.00 (MARA-like). Day1 dips but stays under
+// 11.50 → NO fill yet; day2 rises through 11.50 → fill, then tags 12.00 target.
+{
+  const oh = [bar('2026-07-20', 10.70, 11.20, 10.50, 11.00), bar('2026-07-21', 11.10, 12.10, 11.00, 12.00)];
+  const r = resolveOteSetup({ direction: 'bullish', current: 10.70, ote: 11.50, invalidation: 10.39, first_target: 12.00 }, oh, {});
+  ok('reclaim long does NOT fill on day1 dip', r.entry_date === '2026-07-21');
+  ok('reclaim long hits target', r.outcome === 'target');
+}
 // ---- SHORT target: price rallies to OTE (fill), then drops through T1 ----
 // ote 100 · inval 105 · t1 90 → risk 5, reward 10 → R +2
 {

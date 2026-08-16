@@ -1,0 +1,27 @@
+{
+  "week": "2026-07-20",
+  "entry_date": "2026-07-17",
+  "resolve_from": "2026-07-20",
+  "resolve_to": "2026-07-24",
+  "source": "Talon Weekly Sector Watchlist Jul 20-24 2026 (published Jul 19). Primary window (0-5d first target). Hedge dashboard flagged ACTIVE (SQQQ/VXX/VIX/IWM/SMH warning).",
+  "notes": "`current` = Talon scan spot → decides pullback-vs-reclaim fill. MARA/CRCL/SQQQ OTE sits ABOVE spot (reclaim entries). F/HOOD first_target = ladder start (swing). IWM/SMH are the 2 bearish rally-fail setups.",
+  "names": [
+    { "ticker": "MARA", "direction": "bullish", "current": 10.70,  "ote": 11.50,  "invalidation": 10.39,  "first_target": 12.00,  "theme": "miner" },
+    { "ticker": "RIOT", "direction": "bullish", "current": 18.26,  "ote": 18.00,  "invalidation": 17.82,  "first_target": 20.00,  "theme": "miner" },
+    { "ticker": "HOOD", "direction": "bullish", "current": 99.97,  "ote": 98.00,  "invalidation": 96.00,  "first_target": 108.00, "theme": "fintech" },
+    { "ticker": "F",    "direction": "bullish", "current": 14.21,  "ote": 14.00,  "invalidation": 13.00,  "first_target": 16.85,  "theme": "ev" },
+    { "ticker": "LRCX", "direction": "bullish", "current": 313.29, "ote": 310.00, "invalidation": 306.90, "first_target": 335.00, "theme": "semi-equip" },
+    { "ticker": "TQQQ", "direction": "bullish", "current": 67.50,  "ote": 67.00,  "invalidation": 66.33,  "first_target": 70.00,  "theme": "growth-confirm" },
+    { "ticker": "MCD",  "direction": "bullish", "current": 267.80, "ote": 265.00, "invalidation": 262.35, "first_target": 280.00, "theme": "consumer" },
+    { "ticker": "NKE",  "direction": "bullish", "current": 43.78,  "ote": 43.50,  "invalidation": 43.06,  "first_target": 45.00,  "theme": "consumer" },
+    { "ticker": "LULU", "direction": "bullish", "current": 116.16, "ote": 116.16, "invalidation": 114.84, "first_target": 120.00, "theme": "consumer" },
+    { "ticker": "PG",   "direction": "bullish", "current": 150.01, "ote": 150.01, "invalidation": 148.50, "first_target": 152.50, "theme": "defensive" },
+    { "ticker": "PFE",  "direction": "bullish", "current": 25.05,  "ote": 25.05,  "invalidation": 24.75,  "first_target": 25.50,  "theme": "healthcare" },
+    { "ticker": "CRCL", "direction": "bullish", "current": 60.55,  "ote": 62.00,  "invalidation": 57.50,  "first_target": 65.00,  "theme": "crypto-beta" },
+    { "ticker": "OPEN", "direction": "bullish", "current": 4.50,   "ote": 4.50,   "invalidation": 4.46,   "first_target": 5.00,   "theme": "speculative" },
+    { "ticker": "SQQQ", "direction": "bullish", "current": 42.78,  "ote": 43.00,  "invalidation": 42.08,  "first_target": 44.00,  "theme": "hedge" },
+    { "ticker": "VXX",  "direction": "bullish", "current": 22.51,  "ote": 22.51,  "invalidation": 22.27,  "first_target": 23.00,  "theme": "vol" },
+    { "ticker": "IWM",  "direction": "bearish", "current": 294.12, "ote": 296.00, "invalidation": 297.50, "first_target": 290.00, "theme": "small-cap-rally-fail" },
+    { "ticker": "SMH",  "direction": "bearish", "current": 556.06, "ote": 562.50, "invalidation": 580.00, "first_target": 550.00, "theme": "semis-rally-fail" }
+  ]
+}

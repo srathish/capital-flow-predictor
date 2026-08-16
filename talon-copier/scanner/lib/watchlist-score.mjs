@@ -27,7 +27,7 @@ const norm = (d) => (d === 'bullish' || d === 'long' ? 'long' : d === 'bearish' 
 //   target hit → +reward/risk ; invalidation → ~ -1 (or worse on a gap) ; open → marked-to-close.
 export function resolveOteSetup(setup, ohlc, { from = null, to = null } = {}) {
   const direction = norm(setup.direction);
-  const { ote, invalidation, first_target } = setup;
+  const { ote, invalidation, first_target, current = null } = setup;
   const out = { direction, entered: false, entry_date: null, outcome: 'no_fill', exit_date: null, exit_price: null, R: 0, R_stop: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
   if (!direction || ote == null || invalidation == null || first_target == null) { out.outcome = 'incomplete'; return out; }
   const long = direction === 'long';
@@ -37,10 +37,17 @@ export function resolveOteSetup(setup, ohlc, { from = null, to = null } = {}) {
   out.bars = win.length;
   if (!win.length) return out;
 
-  // entry = pullback fill
+  // entry fill = price REACHES the OTE from wherever it is now. Talon OTEs come in two
+  // flavors and the fill side depends on spot-vs-OTE, not on long/short:
+  //   pullback (current > ote): a limit fills when price DIPS   → low  <= ote
+  //   reclaim  (current < ote): you enter when price RISES to it → high >= ote
+  // (no `current` given → fall back to long=pullback / short=rally, the common case.)
+  const fillAt = (b) => (current != null
+    ? (current < ote ? b.high >= ote : b.low <= ote)
+    : (long ? b.low <= ote : b.high >= ote));
   let ei = -1;
-  for (let i = 0; i < win.length; i++) { const b = win[i]; if (long ? b.low <= ote : b.high >= ote) { ei = i; break; } }
-  if (ei < 0) return out; // never pulled back to the OTE — no fill
+  for (let i = 0; i < win.length; i++) { if (fillAt(win[i])) { ei = i; break; } }
+  if (ei < 0) return out; // price never reached the OTE — no fill
   out.entered = true; out.entry_date = win[ei].date;
 
   const signed = (px) => (long ? px - ote : ote - px) / risk;
@@ -134,8 +141,8 @@ export async function scoreWatchlist(gex, flow, config, watchlist, { llm, planFr
     // getDailyOHLC returns the most recent ~N daily 'r' candles; the resolver filters to
     // [resolve_from, resolve_to]. 90 rows (~4 months) comfortably covers a July/Aug window.
     try { ohlc = await flow.getDailyOHLC(ticker, { limit: 90 }); } catch { /* leave empty */ }
-    // Talon's own published setup, scored against reality
-    const talon = resolveOteSetup({ direction: nm.direction, ote: nm.ote, invalidation: nm.invalidation, first_target: nm.first_target }, ohlc, { from: resolve_from, to: resolve_to });
+    // Talon's own published setup, scored against reality (current = scan spot → fill side)
+    const talon = resolveOteSetup({ direction: nm.direction, ote: nm.ote, invalidation: nm.invalidation, first_target: nm.first_target, current: nm.current ?? null }, ohlc, { from: resolve_from, to: resolve_to });
     // Our system's read as-of the entry date, its own levels scored against the same window.
     // Only an actual directional call (long/short) is resolved as a trade; no_trade / watch /
     // neutral = we STOOD ASIDE (0R) — never coerce it into a bogus trade against the levels.
@@ -145,13 +152,14 @@ export async function scoreWatchlist(gex, flow, config, watchlist, { llm, planFr
       const dir = norm(ourRow.direction);
       if (dir === 'long' || dir === 'short') {
         const L = ourRow.levels || {};
-        ours = resolveOteSetup({ direction: dir, ote: L.ote, invalidation: L.invalidation, first_target: L.first_target }, ohlc, { from: resolve_from, to: resolve_to });
+        ours = resolveOteSetup({ direction: dir, ote: L.ote, invalidation: L.invalidation, first_target: L.first_target, current: ourRow.spot ?? null }, ohlc, { from: resolve_from, to: resolve_to });
       } else {
-        ours = { direction: dir, entered: false, outcome: 'stand_aside', R: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
+        ours = { direction: dir, entered: false, outcome: 'stand_aside', R: 0, R_stop: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
       }
     } catch (e) { if (e.message === 'AUTH') throw e; ours = { outcome: 'error', error: String(e.message).slice(0, 60), entered: false, R: 0 }; }
     const agree_dir = ourRow ? norm(ourRow.direction) === norm(nm.direction) : null;
     const row = { ticker, talon_direction: norm(nm.direction), our_direction: ourRow?.direction ?? null, agree_dir, talon, ours,
+      talon_current: nm.current ?? null, our_current: ourRow?.spot ?? null,
       talon_levels: { ote: nm.ote, invalidation: nm.invalidation, first_target: nm.first_target }, our_levels: ourRow?.levels ?? null, our_conf: ourRow?.confidence ?? null };
     rows.push(row);
     if (onName) onName(row);

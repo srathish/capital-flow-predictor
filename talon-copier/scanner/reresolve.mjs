@@ -19,11 +19,11 @@ const flow = new FlowProvider();
 const rows = [];
 for (const r of saved.rows) {
   const ohlc = await flow.getDailyOHLC(r.ticker, { limit: 90 }).catch(() => []);
-  const talon = resolveOteSetup({ direction: r.talon_direction, ...r.talon_levels }, ohlc, { from, to });
+  const talon = resolveOteSetup({ direction: r.talon_direction, ...r.talon_levels, current: r.talon_current ?? null }, ohlc, { from, to });
   const dir = norm(r.our_direction);
   let ours;
-  if (dir === 'long' || dir === 'short') ours = resolveOteSetup({ direction: dir, ote: r.our_levels?.ote, invalidation: r.our_levels?.invalidation, first_target: r.our_levels?.first_target }, ohlc, { from, to });
-  else ours = { direction: dir, entered: false, outcome: 'stand_aside', R: 0 };
+  if (dir === 'long' || dir === 'short') ours = resolveOteSetup({ direction: dir, ote: r.our_levels?.ote, invalidation: r.our_levels?.invalidation, first_target: r.our_levels?.first_target, current: r.our_current ?? null }, ohlc, { from, to });
+  else ours = { direction: dir, entered: false, outcome: 'stand_aside', R: 0, R_stop: 0 };
   rows.push({ ...r, talon, ours });
   log(`  ${r.ticker.padEnd(6)} talon ${talon.outcome}(${(talon.R ?? 0).toFixed(1)}R) · ours ${r.our_direction} ${ours.outcome}(${(ours.R ?? 0).toFixed(1)}R)`);
 }
