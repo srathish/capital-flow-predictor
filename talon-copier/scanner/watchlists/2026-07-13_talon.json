@@ -1,0 +1,26 @@
+{
+  "week": "2026-07-13",
+  "entry_date": "2026-07-10",
+  "resolve_from": "2026-07-13",
+  "resolve_to": "2026-08-07",
+  "source": "Talon Weekly Sector Watchlist Jul 13-17 2026 (published Jul 12). Names with complete OTE+invalidation+first_target. resolve_to spans Talon's primary (Jul 13-17) + swing (Jul 20-Aug 7) windows.",
+  "notes": "For 'execution zone: current' names, OTE = the scan-snapshot price (enter around here). RUN/BMNR first_target is the ladder start (swing-target names). SMH is the lone bearish (rally-fail) setup.",
+  "names": [
+    { "ticker": "QBTS", "direction": "bullish", "ote": 20.00,  "invalidation": 19.80,  "first_target": 23.00,  "theme": "quantum" },
+    { "ticker": "SMR",  "direction": "bullish", "ote": 9.02,   "invalidation": 8.91,   "first_target": 9.50,   "theme": "nuclear" },
+    { "ticker": "IREN", "direction": "bullish", "ote": 41.12,  "invalidation": 40.59,  "first_target": 43.00,  "theme": "miner" },
+    { "ticker": "PYPL", "direction": "bullish", "ote": 46.33,  "invalidation": 45.54,  "first_target": 48.00,  "theme": "fintech" },
+    { "ticker": "RUN",  "direction": "bullish", "ote": 12.00,  "invalidation": 11.00,  "first_target": 17.00,  "theme": "clean-energy" },
+    { "ticker": "FSLR", "direction": "bullish", "ote": 220.00, "invalidation": 212.85, "first_target": 240.00, "theme": "clean-energy" },
+    { "ticker": "AVGO", "direction": "bullish", "ote": 400.00, "invalidation": 390.00, "first_target": 410.00, "theme": "ai-semis" },
+    { "ticker": "META", "direction": "bullish", "ote": 650.00, "invalidation": 630.00, "first_target": 700.00, "theme": "mega-ai" },
+    { "ticker": "HD",   "direction": "bullish", "ote": 343.22, "invalidation": 339.07, "first_target": 350.00, "theme": "consumer" },
+    { "ticker": "DIS",  "direction": "bullish", "ote": 95.00,  "invalidation": 94.05,  "first_target": 97.00,  "theme": "consumer" },
+    { "ticker": "JD",   "direction": "bullish", "ote": 28.20,  "invalidation": 27.72,  "first_target": 28.50,  "theme": "china-adr" },
+    { "ticker": "BMNR", "direction": "bullish", "ote": 14.00,  "invalidation": 13.00,  "first_target": 18.00,  "theme": "crypto-beta" },
+    { "ticker": "COP",  "direction": "bullish", "ote": 105.00, "invalidation": 102.96, "first_target": 112.00, "theme": "oil" },
+    { "ticker": "TQQQ", "direction": "bullish", "ote": 77.05,  "invalidation": 76.23,  "first_target": 78.00,  "theme": "growth-confirm" },
+    { "ticker": "SQQQ", "direction": "bullish", "ote": 38.00,  "invalidation": 37.12,  "first_target": 38.50,  "theme": "hedge" },
+    { "ticker": "SMH",  "direction": "bearish", "ote": 640.00, "invalidation": 656.50, "first_target": 600.00, "theme": "semis-rally-fail" }
+  ]
+}

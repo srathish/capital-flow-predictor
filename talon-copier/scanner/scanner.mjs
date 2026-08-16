@@ -22,6 +22,7 @@ const { backtestScore, backtestCards, backtestSignal, forwardTestStructure, rend
 const { resolveOutcomes } = await import('./stage7-outcomes.mjs');
 const { loadUniverse } = await import('./stage0-ingest.mjs');
 const { buildWatchlist, renderWatchlist } = await import('./lib/watchlist.mjs');
+const { scoreWatchlist, renderScoreReport, combineResults } = await import('./lib/watchlist-score.mjs');
 
 function parseArgs(argv) {
   const a = { _: [] };
@@ -209,6 +210,40 @@ async function cmdWatchlist(args, config) {
   console.log(md);
 }
 
+// Validate the Talon framework against reality: score published (resolved) watchlists —
+// BOTH Talon's own levels and our system's picks — vs actual prices.
+//   node scanner.mjs score-watchlist --file wk1.json,wk2.json
+async function cmdScoreWatchlist(args, config) {
+  if (!args.file) { log('score-watchlist needs --file <watchlist.json>[,<wk2.json>…] (schema in lib/watchlist-score.mjs)'); return; }
+  if (!process.env.ANTHROPIC_API_KEY) { log('ANTHROPIC_API_KEY missing — needs the LLM for our-system direction.'); return; }
+  const files = String(args.file).split(',').map((f) => f.trim());
+  const gex = new GexProvider({ maxStrikes: config.ingest.max_strikes, maxExpirations: config.ingest.max_expirations, eodHHMM: config.ingest.skylit_eod_hhmm });
+  await gex.init();
+  const flow = new FlowProvider();
+  if (!flow.available) { log('UW key missing — cannot resolve outcomes.'); return; }
+  const results = [];
+  for (const f of files) {
+    const wl = readJson(resolveFromRoot(f)) || readJson(f);
+    if (!wl) { log(`  · could not read ${f}`); continue; }
+    log(`[score] week ${wl.week} · ${wl.names.length} names · entry ${wl.entry_date} → resolve ${wl.resolve_from}…${wl.resolve_to}`);
+    const res = await scoreWatchlist(gex, flow, config, wl, {
+      llm: anthropicLLM, planFromStructure,
+      onName: (r) => log(`  ${r.agree_dir ? '✓' : r.agree_dir === false ? '✗' : '·'} ${r.ticker.padEnd(6)} talon ${r.talon.outcome}(${(r.talon.R ?? 0).toFixed(1)}R) · ours ${r.our_direction ?? '—'} ${r.ours?.outcome ?? '—'}(${(r.ours?.R ?? 0).toFixed(1)}R)`),
+    });
+    const outFile = resolveFromRoot(path.join(config.planner.plans_dir, `${wl.week}_score.json`));
+    writeJson(outFile, res);
+    results.push(res);
+    log(`\n${renderScoreReport(res)}\n`);
+  }
+  if (results.length > 1) {
+    const c = combineResults(results);
+    log(`\n═══ COMBINED (${c.weeks} weeks) ═══`);
+    log(`Talon baseline: ${c.talon_baseline.hits}/${c.talon_baseline.entered} T1 · win ${((c.talon_baseline.hit_rate ?? 0) * 100).toFixed(0)}% · mean ${(c.talon_baseline.avg_R ?? 0).toFixed(2)}R · median ${(c.talon_baseline.median_R ?? 0).toFixed(2)}R`);
+    log(`Our system:     ${c.our_result.hits}/${c.our_result.entered} T1 · win ${((c.our_result.hit_rate ?? 0) * 100).toFixed(0)}% · mean ${(c.our_result.avg_R ?? 0).toFixed(2)}R · median ${(c.our_result.median_R ?? 0).toFixed(2)}R`);
+    log(`Agreement:      ${c.agreement.direction_match}/${c.agreement.of} directions matched Talon`);
+  }
+}
+
 async function cmdAuth() {
   const gex = new GexProvider({});
   const s = await gex.authStatus();
@@ -230,8 +265,9 @@ try {
   else if (cmd === 'outcomes') await cmdOutcomes(args, config);
   else if (cmd === 'premarket') await cmdPremarket(args, config);
   else if (cmd === 'watchlist') await cmdWatchlist(args, config);
+  else if (cmd === 'score-watchlist') await cmdScoreWatchlist(args, config);
   else if (cmd === 'auth') await cmdAuth();
-  else { console.log('commands: run | scan | watchlist | backtest | outcomes | premarket | auth'); process.exit(1); }
+  else { console.log('commands: run | scan | watchlist | score-watchlist | backtest | outcomes | premarket | auth'); process.exit(1); }
 } catch (e) {
   console.error(`[scanner] ${cmd} failed: ${e.message}`);
   process.exit(1);

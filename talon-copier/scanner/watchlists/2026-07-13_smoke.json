@@ -1,0 +1,11 @@
+{
+  "week": "2026-07-13",
+  "entry_date": "2026-07-10",
+  "resolve_from": "2026-07-13",
+  "resolve_to": "2026-08-07",
+  "source": "Talon Weekly Sector Watchlist Jul 13-17 (smoke: 1 bull + 1 bear)",
+  "names": [
+    { "ticker": "QBTS", "direction": "bullish", "ote": 20.00, "invalidation": 19.80, "first_target": 23.00 },
+    { "ticker": "SMH",  "direction": "bearish", "ote": 640.00, "invalidation": 656.50, "first_target": 600.00 }
+  ]
+}
