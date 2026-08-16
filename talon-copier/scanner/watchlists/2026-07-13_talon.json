@@ -2,7 +2,7 @@
   "week": "2026-07-13",
   "entry_date": "2026-07-10",
   "resolve_from": "2026-07-13",
-  "resolve_to": "2026-08-07",
+  "resolve_to": "2026-07-17",
   "source": "Talon Weekly Sector Watchlist Jul 13-17 2026 (published Jul 12). Names with complete OTE+invalidation+first_target. resolve_to spans Talon's primary (Jul 13-17) + swing (Jul 20-Aug 7) windows.",
   "notes": "For 'execution zone: current' names, OTE = the scan-snapshot price (enter around here). RUN/BMNR first_target is the ladder start (swing-target names). SMH is the lone bearish (rally-fail) setup.",
   "names": [
