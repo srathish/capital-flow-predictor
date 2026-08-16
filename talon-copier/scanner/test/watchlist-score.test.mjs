@@ -20,7 +20,8 @@ const bar = (date, o, h, l, c) => ({ date, open: o, high: h, low: l, close: c })
   const oh = [bar('2026-08-03', 101, 103, 99, 100), bar('2026-08-04', 99, 100, 93, 94)];
   const r = resolveOteSetup({ direction: 'long', ote: 100, invalidation: 95, first_target: 110 }, oh, {});
   ok('long invalidation outcome', r.outcome === 'invalidation');
-  near('long invalidation R (close 94)', r.R, (94 - 100) / 5);
+  near('long invalidation R (close 94, close-basis)', r.R, (94 - 100) / 5);
+  near('long invalidation R_stop (hard stop = -1R)', r.R_stop, -1);
 }
 // ---- LONG no-fill: price never dips to the OTE ----
 {

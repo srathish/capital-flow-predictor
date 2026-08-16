@@ -225,6 +225,11 @@ async function cmdScoreWatchlist(args, config) {
   for (const f of files) {
     const wl = readJson(resolveFromRoot(f)) || readJson(f);
     if (!wl) { log(`  · could not read ${f}`); continue; }
+    // Optional window overrides — e.g. resolve the 0-5 day FIRST target over the primary
+    // window (--resolve-to 2026-07-17) vs the full swing window in the file.
+    if (args['resolve-from']) wl.resolve_from = args['resolve-from'];
+    if (args['resolve-to']) wl.resolve_to = args['resolve-to'];
+    if (args['entry-date']) wl.entry_date = args['entry-date'];
     log(`[score] week ${wl.week} · ${wl.names.length} names · entry ${wl.entry_date} → resolve ${wl.resolve_from}…${wl.resolve_to}`);
     const res = await scoreWatchlist(gex, flow, config, wl, {
       llm: anthropicLLM, planFromStructure,

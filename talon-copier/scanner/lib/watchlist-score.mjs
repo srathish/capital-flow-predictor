@@ -28,7 +28,7 @@ const norm = (d) => (d === 'bullish' || d === 'long' ? 'long' : d === 'bearish' 
 export function resolveOteSetup(setup, ohlc, { from = null, to = null } = {}) {
   const direction = norm(setup.direction);
   const { ote, invalidation, first_target } = setup;
-  const out = { direction, entered: false, entry_date: null, outcome: 'no_fill', exit_date: null, exit_price: null, R: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
+  const out = { direction, entered: false, entry_date: null, outcome: 'no_fill', exit_date: null, exit_price: null, R: 0, R_stop: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
   if (!direction || ote == null || invalidation == null || first_target == null) { out.outcome = 'incomplete'; return out; }
   const long = direction === 'long';
   const risk = Math.abs(ote - invalidation);
@@ -51,12 +51,17 @@ export function resolveOteSetup(setup, ohlc, { from = null, to = null } = {}) {
     if (fav > out.mfe_pct) out.mfe_pct = fav;
     if (adv < out.mae_pct) out.mae_pct = adv;
     // target intraday resolves before the close-basis invalidation on the same bar
-    if (long ? b.high >= first_target : b.low <= first_target) { out.outcome = 'target'; out.exit_date = b.date; out.exit_price = first_target; out.R = signed(first_target); return out; }
-    if (long ? b.close < invalidation : b.close > invalidation) { out.outcome = 'invalidation'; out.exit_date = b.date; out.exit_price = b.close; out.R = signed(b.close); return out; }
+    if (long ? b.high >= first_target : b.low <= first_target) { out.outcome = 'target'; out.exit_date = b.date; out.exit_price = first_target; out.R = signed(first_target); out.R_stop = out.R; return out; }
+    if (long ? b.close < invalidation : b.close > invalidation) {
+      out.outcome = 'invalidation'; out.exit_date = b.date; out.exit_price = b.close;
+      out.R = signed(b.close);   // close-basis (Talon's "acceptance below" rule) — a gap costs > 1R
+      out.R_stop = -1;           // hard-stop-at-floor sensitivity — caps the loss at exactly 1R
+      return out;
+    }
   }
   // window ended with the trade still open → mark to the last close
   const last = win[win.length - 1];
-  out.outcome = 'open'; out.exit_date = last.date; out.exit_price = last.close; out.R = signed(last.close);
+  out.outcome = 'open'; out.exit_date = last.date; out.exit_price = last.close; out.R = signed(last.close); out.R_stop = out.R;
   return out;
 }
 
@@ -67,6 +72,7 @@ export function aggregate(resolved) {
   const n = entered.length;
   const Rs = entered.map((r) => r.R || 0).sort((a, b) => a - b);
   const sumR = Rs.reduce((s, r) => s + r, 0);
+  const sumRstop = entered.reduce((s, r) => s + (r.R_stop ?? r.R ?? 0), 0);
   const median = Rs.length ? (Rs.length % 2 ? Rs[(Rs.length - 1) / 2] : (Rs[Rs.length / 2 - 1] + Rs[Rs.length / 2]) / 2) : null;
   return {
     setups: resolved.length,
@@ -78,7 +84,8 @@ export function aggregate(resolved) {
     median_R: median,                 // robust to one gappy close-basis stop
     worst_R: Rs.length ? Rs[0] : null,
     best_R: Rs.length ? Rs[Rs.length - 1] : null,
-    total_R: sumR,
+    total_R: sumR,                    // close-basis (Talon's acceptance rule)
+    total_R_stop: sumRstop,           // hard-stop-at-floor sensitivity (caps each loss at -1R)
   };
 }
 
@@ -129,12 +136,19 @@ export async function scoreWatchlist(gex, flow, config, watchlist, { llm, planFr
     try { ohlc = await flow.getDailyOHLC(ticker, { limit: 90 }); } catch { /* leave empty */ }
     // Talon's own published setup, scored against reality
     const talon = resolveOteSetup({ direction: nm.direction, ote: nm.ote, invalidation: nm.invalidation, first_target: nm.first_target }, ohlc, { from: resolve_from, to: resolve_to });
-    // Our system's read as-of the entry date, its own levels scored against the same window
+    // Our system's read as-of the entry date, its own levels scored against the same window.
+    // Only an actual directional call (long/short) is resolved as a trade; no_trade / watch /
+    // neutral = we STOOD ASIDE (0R) — never coerce it into a bogus trade against the levels.
     let ours = null, ourRow = null;
     try {
       ourRow = await watchlistRow(gex, config, ticker, { date: entry_date, llm, planFromStructure });
-      const L = ourRow.levels || {};
-      ours = resolveOteSetup({ direction: ourRow.direction, ote: L.ote, invalidation: L.invalidation, first_target: L.first_target }, ohlc, { from: resolve_from, to: resolve_to });
+      const dir = norm(ourRow.direction);
+      if (dir === 'long' || dir === 'short') {
+        const L = ourRow.levels || {};
+        ours = resolveOteSetup({ direction: dir, ote: L.ote, invalidation: L.invalidation, first_target: L.first_target }, ohlc, { from: resolve_from, to: resolve_to });
+      } else {
+        ours = { direction: dir, entered: false, outcome: 'stand_aside', R: 0, mfe_pct: 0, mae_pct: 0, bars: 0 };
+      }
     } catch (e) { if (e.message === 'AUTH') throw e; ours = { outcome: 'error', error: String(e.message).slice(0, 60), entered: false, R: 0 }; }
     const agree_dir = ourRow ? norm(ourRow.direction) === norm(nm.direction) : null;
     const row = { ticker, talon_direction: norm(nm.direction), our_direction: ourRow?.direction ?? null, agree_dir, talon, ours,
