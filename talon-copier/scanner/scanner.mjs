@@ -13,13 +13,15 @@ loadEnvKeysFrom(resolveFromRoot('../../.env'), ['ANTHROPIC_API_KEY', 'UNUSUAL_WH
 
 const { ingest, effectiveScanDate } = await import('./stage0-ingest.mjs');
 const { scan } = await import('./stage1-scan.mjs');
-const { planAll, anthropicLLM } = await import('./stage2-plan.mjs');
+const { planAll, planFromStructure, anthropicLLM } = await import('./stage2-plan.mjs');
 const { gateAll } = await import('./stage3-gate.mjs');
 const { FlowProvider } = await import('./providers/flow-uw.mjs');
 const { GexProvider } = await import('./providers/gex-skylit.mjs');
 const { assemblePlans, writePlans, writeReport, discordSummary, postDiscord } = await import('./stage4-report.mjs');
 const { backtestScore, backtestCards, backtestSignal, forwardTestStructure, renderBacktestReport, renderCardsReport, renderSignalReport, renderForwardReport, sessionsInRange } = await import('./backtest.mjs');
 const { resolveOutcomes } = await import('./stage7-outcomes.mjs');
+const { loadUniverse } = await import('./stage0-ingest.mjs');
+const { buildWatchlist, renderWatchlist } = await import('./lib/watchlist.mjs');
 
 function parseArgs(argv) {
   const a = { _: [] };
@@ -180,6 +182,33 @@ async function cmdForward(args, config) {
   console.log(renderForwardReport(ticker, rows));
 }
 
+// Weekly Talon-style watchlist: hedge throttle + breadth + per-name cards
+// (LLM direction/theme + DETERMINISTIC talonLevels). The "make us focused" deliverable.
+//   node scanner.mjs watchlist --theme ai_semis [--date YYYY-MM-DD] [--tickers A,B]
+async function cmdWatchlist(args, config) {
+  if (!process.env.ANTHROPIC_API_KEY) { log('ANTHROPIC_API_KEY missing — watchlist needs the LLM for direction.'); return; }
+  const date = args.date && !isPast(args.date) ? null : (args.date || null); // null = live/today; past date = replay
+  const tickers = args.tickers ? String(args.tickers).split(',').map((s) => s.toUpperCase())
+    : loadUniverse(config, { theme: args.theme || null }).slice(0, args.limit ? +args.limit : 40);
+  const expiry = args.expiry || config.target_expiry || null;
+  const gex = new GexProvider({ maxStrikes: config.ingest.max_strikes, maxExpirations: config.ingest.max_expirations, eodHHMM: config.ingest.skylit_eod_hhmm });
+  await gex.init();
+  log(`[watchlist] ${tickers.length} names${args.theme ? ` (${args.theme})` : ''} · ${date ? 'replay ' + date : 'live'} · LLM direction + deterministic levels`);
+  const wl = await buildWatchlist(gex, config, {
+    tickers, date, llm: anthropicLLM, targetExpiry: expiry, planFromStructure,
+    onRow: (r) => log(`  ${r.error ? '· ' : r.direction === 'long' ? '🟢' : r.direction === 'short' ? '🔴' : '🟡'} ${r.ticker.padEnd(6)} ${r.error || r.direction}${r.levels?.ote ? ` · OTE ${r.levels.ote} T1 ${r.levels.first_target ?? '—'}` : ''}`),
+  });
+  const md = renderWatchlist(wl);
+  const outDir = resolveFromRoot(config.planner.plans_dir);
+  const stamp = date || etToday();
+  const jsonFile = path.join(outDir, `${stamp}_watchlist.json`);
+  const mdFile = path.join(outDir, `${stamp}_watchlist.md`);
+  writeJson(jsonFile, wl);
+  await import('node:fs').then((fs) => fs.writeFileSync(mdFile, md));
+  log(`\n[watchlist] → ${jsonFile}\n[watchlist] → ${mdFile}\n`);
+  console.log(md);
+}
+
 async function cmdAuth() {
   const gex = new GexProvider({});
   const s = await gex.authStatus();
@@ -200,8 +229,9 @@ try {
   else if (cmd === 'forward') await cmdForward(args, config);
   else if (cmd === 'outcomes') await cmdOutcomes(args, config);
   else if (cmd === 'premarket') await cmdPremarket(args, config);
+  else if (cmd === 'watchlist') await cmdWatchlist(args, config);
   else if (cmd === 'auth') await cmdAuth();
-  else { console.log('commands: run | scan | backtest | outcomes | premarket | auth'); process.exit(1); }
+  else { console.log('commands: run | scan | watchlist | backtest | outcomes | premarket | auth'); process.exit(1); }
 } catch (e) {
   console.error(`[scanner] ${cmd} failed: ${e.message}`);
   process.exit(1);
