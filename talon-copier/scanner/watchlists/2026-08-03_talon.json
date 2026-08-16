@@ -1,0 +1,28 @@
+{
+  "week": "2026-08-03",
+  "entry_date": "2026-07-31",
+  "resolve_from": "2026-08-03",
+  "resolve_to": "2026-08-07",
+  "source": "Talon Weekly Sector Watchlist Aug 3-7 2026 (published Aug 2). 98.2% bullish. THE UP WEEK: QQQ +5.0%, SPY +3.2%, SMH +9.9%, NVDA +13.3%, SQQQ -14.4% (risk-on).",
+  "notes": "THE decisive test — does our selectivity CAPTURE an up week or miss it? first_target = nearest ladder rung above OTE (bull)/below OTE (bear). MARA/SLV/SQQQ/TQQQ OTE above spot (reclaim). SOFI/PYPL/BE/BABA first_target is a swing rung. SPY = lone bearish (rally-fail, should FAIL this week). SMCI/RGTI excluded (no target / inval==OTE).",
+  "names": [
+    { "ticker": "NVDA", "direction": "bullish", "current": 200.76, "ote": 200.00, "invalidation": 195.00, "first_target": 210.00, "theme": "ai-semis" },
+    { "ticker": "AMZN", "direction": "bullish", "current": 271.34, "ote": 271.34, "invalidation": 267.30, "first_target": 280.00, "theme": "mega-ai" },
+    { "ticker": "ORCL", "direction": "bullish", "current": 129.85, "ote": 129.85, "invalidation": 125.00, "first_target": 135.00, "theme": "software" },
+    { "ticker": "MARA", "direction": "bullish", "current": 11.29,  "ote": 11.50,  "invalidation": 11.00,  "first_target": 12.00,  "theme": "miner" },
+    { "ticker": "IREN", "direction": "bullish", "current": 36.86,  "ote": 34.00,  "invalidation": 33.00,  "first_target": 40.00,  "theme": "crypto-dc" },
+    { "ticker": "HOOD", "direction": "bullish", "current": 86.57,  "ote": 86.57,  "invalidation": 82.50,  "first_target": 92.00,  "theme": "fintech" },
+    { "ticker": "SOFI", "direction": "bullish", "current": 16.30,  "ote": 15.50,  "invalidation": 14.50,  "first_target": 19.00,  "theme": "fintech" },
+    { "ticker": "PYPL", "direction": "bullish", "current": 57.20,  "ote": 55.00,  "invalidation": 52.50,  "first_target": 70.00,  "theme": "fintech" },
+    { "ticker": "SLV",  "direction": "bullish", "current": 52.37,  "ote": 53.00,  "invalidation": 50.98,  "first_target": 60.00,  "theme": "metals" },
+    { "ticker": "NKE",  "direction": "bullish", "current": 41.72,  "ote": 41.50,  "invalidation": 41.09,  "first_target": 42.50,  "theme": "consumer" },
+    { "ticker": "MCD",  "direction": "bullish", "current": 270.67, "ote": 270.67, "invalidation": 267.30, "first_target": 285.00, "theme": "consumer" },
+    { "ticker": "BABA", "direction": "bullish", "current": 122.28, "ote": 115.00, "invalidation": 110.00, "first_target": 130.00, "theme": "china-adr" },
+    { "ticker": "PDD",  "direction": "bullish", "current": 88.67,  "ote": 88.00,  "invalidation": 86.00,  "first_target": 90.00,  "theme": "china-adr" },
+    { "ticker": "BE",   "direction": "bullish", "current": 205.66, "ote": 192.50, "invalidation": 186.72, "first_target": 230.00, "theme": "clean-energy" },
+    { "ticker": "XBI",  "direction": "bullish", "current": 147.04, "ote": 145.00, "invalidation": 143.55, "first_target": 155.00, "theme": "biotech" },
+    { "ticker": "SQQQ", "direction": "bullish", "current": 43.77,  "ote": 44.00,  "invalidation": 43.06,  "first_target": 46.00,  "theme": "hedge" },
+    { "ticker": "TQQQ", "direction": "bullish", "current": 64.56,  "ote": 65.00,  "invalidation": 62.37,  "first_target": 67.00,  "theme": "growth-confirm" },
+    { "ticker": "SPY",  "direction": "bearish", "current": 746.62, "ote": 752.00, "invalidation": 754.00, "first_target": 725.00, "theme": "broad-rally-fail" }
+  ]
+}
