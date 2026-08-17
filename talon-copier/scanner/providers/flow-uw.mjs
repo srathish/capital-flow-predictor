@@ -116,6 +116,38 @@ export class FlowProvider {
     }).filter((r) => r.date).sort((a, b) => (a.date < b.date ? -1 : 1));
   }
 
+  // Latest day-state: IV rank, realized vol, implied move, next earnings. Single-name raw
+  // material — makes the vanna term event-aware and flags pre-earnings maps (validity condition).
+  async getStockState(ticker, today = null) {
+    const [ivj, ernj] = await Promise.all([
+      this._get(`stock/${encodeURIComponent(ticker)}/iv-rank`).catch(() => null),
+      this._get(`earnings/${encodeURIComponent(ticker)}`).catch(() => null),
+    ]);
+    const ivrows = ((ivj && ivj.data) || []).slice().sort((a, b) => (a.date < b.date ? -1 : 1));
+    const ivr = ivrows.length ? ivrows[ivrows.length - 1] : {};
+    const t0 = today || new Date().toISOString().slice(0, 10);
+    const next = ((ernj && ernj.data) || []).map((e) => String(e.report_date || '').slice(0, 10)).filter((d) => d >= t0).sort()[0] || null;
+    return { iv_rank: num(ivr.iv_rank_1y), iv: num(ivr.volatility), next_earnings: next };
+  }
+
+  // "Is the match lit?" — the squeeze-IGNITION raw material. Negative-gamma structure is dry
+  // tinder; aggressive ASK-SIDE call buying + BUILDING net-call premium is someone lighting it.
+  // Surfaced for the LLM to weigh against the squeeze structure — NOT a hard-coded gate.
+  async getSqueezeFlow(ticker, days = 5) {
+    const s = await this.getFlowSeries(ticker, 30).catch(() => []);
+    if (!s.length) return {};
+    const w = s.slice(-days);
+    const sum = (arr, f) => arr.reduce((a, r) => a + (f(r) || 0), 0);
+    const callAsk = sum(w, (r) => r.call_ask), callBid = sum(w, (r) => r.call_bid);
+    const askPct = (callAsk + callBid) ? Math.round((callAsk / (callAsk + callBid)) * 100) : null;
+    const netCallPrem = sum(w, (r) => r.net_call_premium); // net premium into calls over the window
+    // building? mean net-call premium of the last 2 sessions vs the prior 3
+    const recent = s.slice(-2).length ? sum(s.slice(-2), (r) => r.net_call_premium) / s.slice(-2).length : 0;
+    const prior = s.slice(-5, -2).length ? sum(s.slice(-5, -2), (r) => r.net_call_premium) / s.slice(-5, -2).length : 0;
+    const last = s[s.length - 1];
+    return { askPct, netCallPrem, todayNetCall: last.net_call_premium, building: recent > prior && recent > 0, days };
+  }
+
   // Daily OHLC (regular session). Used by the resolver/backtest to score cards on a
   // closing basis and measure MFE/MAE. UW price data — allowed.
   async getDailyOHLC(ticker, { limit = 60 } = {}) {
