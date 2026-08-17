@@ -31,6 +31,32 @@ async function sonnet(system, user, maxTok = 8000) {
   return (j.content || []).map(c => c.text).filter(Boolean).join('');
 }
 
+// ── Tournament prompts (hoisted so --resynth can reuse F_SYS without re-running Tiers 1-2) ──
+const B_SYS = `You rank INDIVIDUAL STOCKS by BULLISH GEX/VEX structure for the ${EXP} options expiry (Skylit, that single expiry). On single names the hierarchy is NOT the index one — weigh it like this:
+1) SQUEEZE (PRIMARY): a "barney" = NEGATIVE gamma ABOVE spot means dealers must CHASE price up if it breaks — the most potent single-name move. Neg-gamma overhead near spot is strongly bullish (dry tinder — on the desk you'd confirm with ask-side flow, but rank it top-tier here).
+2) VANNA magnet above spot (EVENT-AWARE): a positive vanna node above = melt-up pull, but only real if IV has room to compress — DISCOUNT it when the line shows a low IV rank (IVr<25 / ⤓lowvol).
+3) PINNING (SECONDARY on stocks): a positive-gamma floor/king just below spot = support, + an air pocket above (no big near ceiling). Trust this LESS than on an index. A near ceiling wall or a big vanna mass below spot weakens the bull.
+VALIDITY FLAGS on each line: ⚠PRE-ERN(Nd) → the map vaporizes at the print, discount heavily / demote. IVr low → the vanna magnet is dead weight. ⚠conc → the king may be ONE institutional block/collar, not a durable dealer wall.
+Return ONLY the genuinely bullish names from this batch — UP TO ${PER_BATCH_KEEP}, and FEWER (even zero) if fewer qualify — as JSON: [{"ticker":"XXX","note":"<=10 words"}]. No prose.`;
+const F_SYS = `You are a single-name GEX/VEX swing analyst on the Skylit ${EXP} expiry (one expiry, for a buy-this-week / sell-into-${EXP} trade). Each line: KING (biggest gamma node), floor (pos-gamma support below), ceiling (pos-gamma resistance above), barney (NEG-gamma above = squeeze fuel), biggest vanna magnet, then validity flags. $M; % = distance from spot.
+Rank the TOP 10 most bullish using the SINGLE-NAME hierarchy: (1) SQUEEZE first — neg-gamma overhead is the biggest mover; (2) VANNA magnet above, but only if IV has room to compress (discount low-IVr names); (3) PINNING floor+air-pocket is secondary support, trust it less than on an index. Apply the validity flags: ⚠PRE-ERN = map expires at the print (demote unless the thesis IS the event); ⚠conc = the king may be one block/collar, not a wall. Be selective — a live squeeze or a clean floor+air-pocket+compressible-vanna beats a big-but-capped or pre-earnings name.
+For each: **thesis** (1-2 sent), **GEX**, **VEX**, **conviction** 0-1, **confirm/invalidate** levels. End with "RANKED:" (10 tickers). GEX/VEX is confirmation for a discretionary entry, not a standalone signal.`;
+const finalLine = (r) => `${r.ticker}: ${r.line}${r.flags ? ' · ' + r.flags : ''}`;
+
+// --resynth: re-run ONLY Tier-3 from the cached verdicts (salvage a max_tokens-truncated synthesis; no Skylit/UW).
+if (process.argv.includes('--resynth')) {
+  const P = path.join(HERE, 'universe-verdicts.json');
+  const V = JSON.parse(fs.readFileSync(P, 'utf8'));
+  const finalRows = V.ranked_all.filter(r => V.finalists.includes(r.ticker));
+  console.log(`Re-synthesizing Tier-3 from cache: ${finalRows.length} finalists for ${V.expiry}…\n`);
+  const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${V.expiry} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${finalRows.map(finalLine).join('\n')}\n\nRank the TOP 10 bullish.`, 16000);
+  console.log(synth);
+  V.synthesis = synth; V.resynth_at = new Date().toISOString(); V.cost_usd = +((V.cost_usd || 0) + spend).toFixed(2);
+  fs.writeFileSync(P, JSON.stringify(V, null, 1));
+  console.log(`\n(resynth spend $${spend.toFixed(2)}) -> universe-verdicts.json`);
+  process.exit(0);
+}
+
 const uni = JSON.parse(fs.readFileSync(path.join(HERE, '../../scanner/data/symbols.json'), 'utf8')).symbols
   .filter(s => s && s.name && !s.is_index).map(s => s.name);
 const tickers = LIM ? uni.slice(0, LIM) : uni;
@@ -122,15 +148,9 @@ const NB = Math.max(1, Math.ceil(rows.length / BATCH));
 const batches = Array.from({ length: NB }, () => []);
 rows.forEach((r, i) => batches[i % NB].push(r));
 console.log(`\nRound 1 — Sonnet ranks ${NB} round-robin batches of ~${Math.ceil(rows.length / NB)} (every stock seen, each batch a cross-section)…`);
-const B_SYS = `You rank INDIVIDUAL STOCKS by BULLISH GEX/VEX structure for the ${EXP} options expiry (Skylit, that single expiry). On single names the hierarchy is NOT the index one — weigh it like this:
-1) SQUEEZE (PRIMARY): a "barney" = NEGATIVE gamma ABOVE spot means dealers must CHASE price up if it breaks — the most potent single-name move. Neg-gamma overhead near spot is strongly bullish (dry tinder — on the desk you'd confirm with ask-side flow, but rank it top-tier here).
-2) VANNA magnet above spot (EVENT-AWARE): a positive vanna node above = melt-up pull, but only real if IV has room to compress — DISCOUNT it when the line shows a low IV rank (IVr<25 / ⤓lowvol).
-3) PINNING (SECONDARY on stocks): a positive-gamma floor/king just below spot = support, + an air pocket above (no big near ceiling). Trust this LESS than on an index. A near ceiling wall or a big vanna mass below spot weakens the bull.
-VALIDITY FLAGS on each line: ⚠PRE-ERN(Nd) → the map vaporizes at the print, discount heavily / demote. IVr low → the vanna magnet is dead weight. ⚠conc → the king may be ONE institutional block/collar, not a durable dealer wall.
-Return ONLY the genuinely bullish names from this batch — UP TO ${PER_BATCH_KEEP}, and FEWER (even zero) if fewer qualify — as JSON: [{"ticker":"XXX","note":"<=10 words"}]. No prose.`;
 let finalists = [];
 for (let b = 0; b < batches.length; b++) {
-  const u = batches[b].map(r => `${r.ticker}: ${r.line}${r.flags ? ' · ' + r.flags : ''}`).join('\n');
+  const u = batches[b].map(finalLine).join('\n');
   let picks = [];
   try { const t = await sonnet(B_SYS, `Batch ${b + 1}/${batches.length}:\n${u}`, 6000); picks = JSON.parse(t.match(/\[[\s\S]*\]/)[0]); }
   catch { picks = batches[b].slice(0, PER_BATCH_KEEP).map(r => ({ ticker: r.ticker, note: 'mech-fallback' })); }
@@ -141,12 +161,9 @@ const fset = [...new Set(finalists.map(f => f.ticker))];
 const finalRows = rows.filter(r => fset.includes(r.ticker));
 console.log(`\n${finalRows.length} finalists → Round 2 final synthesis…\n`);
 
-// ── TIER 3: final deep synthesis → TOP 10 ──
-const F_SYS = `You are a single-name GEX/VEX swing analyst on the Skylit ${EXP} expiry (one expiry, for a buy-this-week / sell-into-${EXP} trade). Each line: KING (biggest gamma node), floor (pos-gamma support below), ceiling (pos-gamma resistance above), barney (NEG-gamma above = squeeze fuel), biggest vanna magnet, then validity flags. $M; % = distance from spot.
-Rank the TOP 10 most bullish using the SINGLE-NAME hierarchy: (1) SQUEEZE first — neg-gamma overhead is the biggest mover; (2) VANNA magnet above, but only if IV has room to compress (discount low-IVr names); (3) PINNING floor+air-pocket is secondary support, trust it less than on an index. Apply the validity flags: ⚠PRE-ERN = map expires at the print (demote unless the thesis IS the event); ⚠conc = the king may be one block/collar, not a wall. Be selective — a live squeeze or a clean floor+air-pocket+compressible-vanna beats a big-but-capped or pre-earnings name.
-For each: **thesis** (1-2 sent), **GEX**, **VEX**, **conviction** 0-1, **confirm/invalidate** levels. End with "RANKED:" (10 tickers). GEX/VEX is confirmation for a discretionary entry, not a standalone signal.`;
-const fu = finalRows.map(r => `${r.ticker}: ${r.line}${r.flags ? ' · ' + r.flags : ''}`).join('\n');
-const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 9000);
+// ── TIER 3: final deep synthesis → TOP 10 (16k budget — Sonnet-5 thinking + 10 theses overran 9k) ──
+const fu = finalRows.map(finalLine).join('\n');
+const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 16000);
 console.log(synth);
 console.log(`\n═══ TOTAL Sonnet spend: $${spend.toFixed(2)} · ${rows.length} stocks scanned for ${EXP} · ${err} errors ═══`);
 fs.writeFileSync(path.join(HERE, 'universe-verdicts.json'), JSON.stringify({ generated: new Date().toISOString(), expiry: EXP, scanned: rows.length, cost_usd: +spend.toFixed(2), finalists: fset, ranked_all: rows, synthesis: synth }, null, 1));
