@@ -85,7 +85,9 @@ for (const t of process.argv.slice(2).filter((a) => !a.startsWith('--')).map((x)
   try {
     const now = await gex.getProfile(t);
     if (!now) { log(`\n${t}: no structure`); continue; }
-    const past = await gex.getProfile(t, { date: daysAgo(9) }).catch(() => null);
+    let past = await gex.getProfile(t, { date: daysAgo(9) }).catch(() => null);
+    // reject a Skylit fallback surface mislabeled as "~1wk ago" — must ACTUALLY be ≥4 sessions old
+    if (past && (!past.asofDate || (Date.now() - Date.parse(past.asofDate)) / 864e5 < 4)) past = null;
     const peers = [];
     for (const p of (SECTOR[t] || []).slice(0, 2)) { try { const pr = await gex.getProfile(p); if (pr) peers.push(peerLine(p, pr)); } catch { } }
     const oh = await flow.getDailyOHLC(t, { limit: 40 }).catch(() => []);
@@ -108,7 +110,7 @@ for (const t of process.argv.slice(2).filter((a) => !a.startsWith('--')).map((x)
     // PRINT the data (the chart the human reads)
     log(`\n═══════════ ${t} ═══════════`);
     log(matrix(now, 'NOW'));
-    if (past) log(matrix(past, `~1wk ago (${past.asofDate || daysAgo(9)})`).split('\n').slice(0, 4).join('\n'));
+    if (past) log(matrix(past, `~1wk ago (${past.asofDate})`).split('\n').slice(0, 4).join('\n'));
     log(`  SECTOR: ${peers.join('  |  ') || '(no peer map)'}`);
     log(`  PRICE: ${priceLine}`);
     log(`  CONTEXT: ${ctxLine}`);
