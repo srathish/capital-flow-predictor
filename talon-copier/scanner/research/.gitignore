@@ -1,0 +1,7 @@
+.venv-scrape/
+err.log
+__pycache__/
+*.pyc
+scrape_test.py
+screener_test.py
+tracking/catalysts-latest.json
