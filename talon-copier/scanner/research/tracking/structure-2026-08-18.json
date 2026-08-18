@@ -1,0 +1,827 @@
+{
+ "date": "2026-08-18",
+ "asof": "current-eod",
+ "baseline": "2026-08-14",
+ "top10": [
+  "TSM",
+  "DRAM",
+  "MSFT",
+  "NKE",
+  "PLTR",
+  "PYPL",
+  "NVDA",
+  "DIS",
+  "BMNR",
+  "VST"
+ ],
+ "nodes": {
+  "MU": {
+   "spot": 1017.13,
+   "king": {
+    "k": 1100,
+    "v": 2.51,
+    "pct": 8.1
+   },
+   "floor": {
+    "k": 1000,
+    "v": 2.46,
+    "pct": -1.7
+   },
+   "barney": {
+    "k": 1090,
+    "v": -0.42,
+    "pct": 7.2
+   },
+   "magnet": {
+    "k": 1100,
+    "v": 312.4,
+    "pct": 8.1
+   }
+  },
+  "NVDA": {
+   "spot": 225.14,
+   "king": {
+    "k": 227.5,
+    "v": 59.35,
+    "pct": 1
+   },
+   "floor": {
+    "k": 225,
+    "v": 10.04,
+    "pct": -0.1
+   },
+   "barney": {
+    "k": 240,
+    "v": -5.73,
+    "pct": 6.6
+   },
+   "magnet": {
+    "k": 227.5,
+    "v": 444.36,
+    "pct": 1
+   }
+  },
+  "PLTR": {
+   "spot": 171.61,
+   "king": {
+    "k": 160,
+    "v": 4.94,
+    "pct": -6.8
+   },
+   "floor": {
+    "k": 170,
+    "v": 4.67,
+    "pct": -0.9
+   },
+   "barney": {
+    "k": 180,
+    "v": -4.19,
+    "pct": 4.9
+   },
+   "magnet": {
+    "k": 200,
+    "v": 30.47,
+    "pct": 16.5
+   }
+  },
+  "MRVL": {
+   "spot": 236,
+   "king": {
+    "k": 250,
+    "v": 2.6,
+    "pct": 5.9
+   },
+   "floor": {
+    "k": 235,
+    "v": 0.5,
+    "pct": -0.4
+   },
+   "barney": {
+    "k": 280,
+    "v": -0.84,
+    "pct": 18.6
+   },
+   "magnet": {
+    "k": 250,
+    "v": 52.76,
+    "pct": 5.9
+   }
+  },
+  "WDC": {
+   "spot": 536.47,
+   "king": {
+    "k": 590,
+    "v": -0.66,
+    "pct": 10
+   },
+   "floor": {
+    "k": 535,
+    "v": 0.07,
+    "pct": -0.3
+   },
+   "barney": {
+    "k": 590,
+    "v": -0.66,
+    "pct": 10
+   },
+   "magnet": {
+    "k": 600,
+    "v": 14.57,
+    "pct": 11.8
+   }
+  },
+  "TSM": {
+   "spot": 431.27,
+   "king": {
+    "k": 450,
+    "v": 15.48,
+    "pct": 4.3
+   },
+   "floor": {
+    "k": 425,
+    "v": 12.47,
+    "pct": -1.5
+   },
+   "barney": {
+    "k": 440,
+    "v": -8.05,
+    "pct": 2
+   },
+   "magnet": {
+    "k": 450,
+    "v": 752,
+    "pct": 4.3
+   }
+  },
+  "ORCL": {
+   "spot": 146.8,
+   "king": {
+    "k": 150,
+    "v": 9.36,
+    "pct": 2.2
+   },
+   "floor": {
+    "k": 146,
+    "v": 0.16,
+    "pct": -0.5
+   },
+   "barney": {
+    "k": 152.5,
+    "v": -0.45,
+    "pct": 3.9
+   },
+   "magnet": {
+    "k": 160,
+    "v": 147.99,
+    "pct": 9
+   }
+  },
+  "META": {
+   "spot": 568.33,
+   "king": {
+    "k": 577.5,
+    "v": 2.48,
+    "pct": 1.6
+   },
+   "floor": {
+    "k": 565,
+    "v": 1.48,
+    "pct": -0.6
+   },
+   "barney": {
+    "k": 580,
+    "v": -1.62,
+    "pct": 2.1
+   },
+   "magnet": {
+    "k": 650,
+    "v": 321.23,
+    "pct": 14.4
+   }
+  },
+  "MSFT": {
+   "spot": 480.12,
+   "king": {
+    "k": 480,
+    "v": 40.43,
+    "pct": 0
+   },
+   "floor": {
+    "k": 480,
+    "v": 40.43,
+    "pct": 0
+   },
+   "barney": {
+    "k": 490,
+    "v": -9.25,
+    "pct": 2.1
+   },
+   "magnet": {
+    "k": 525,
+    "v": 1341.02,
+    "pct": 9.3
+   }
+  },
+  "HOOD": {
+   "spot": 96.31,
+   "king": {
+    "k": 100,
+    "v": 5.32,
+    "pct": 3.8
+   },
+   "floor": {
+    "k": 96,
+    "v": 0.81,
+    "pct": -0.3
+   },
+   "barney": {
+    "k": 102,
+    "v": -1.25,
+    "pct": 5.9
+   },
+   "magnet": {
+    "k": 100,
+    "v": 46.67,
+    "pct": 3.8
+   }
+  },
+  "PYPL": {
+   "spot": 60.45,
+   "king": {
+    "k": 62.5,
+    "v": -8.21,
+    "pct": 3.4
+   },
+   "floor": {
+    "k": 60,
+    "v": 1.86,
+    "pct": -0.7
+   },
+   "barney": {
+    "k": 62.5,
+    "v": -8.21,
+    "pct": 3.4
+   },
+   "magnet": {
+    "k": 70,
+    "v": 28.94,
+    "pct": 15.8
+   }
+  },
+  "MARA": {
+   "spot": 9.73,
+   "king": {
+    "k": 9.5,
+    "v": 18.33,
+    "pct": -2.4
+   },
+   "floor": {
+    "k": 9.5,
+    "v": 18.33,
+    "pct": -2.4
+   },
+   "barney": {
+    "k": 12,
+    "v": -1.34,
+    "pct": 23.3
+   },
+   "magnet": {
+    "k": 14.5,
+    "v": 1.82,
+    "pct": 48.9
+   }
+  },
+  "NKE": {
+   "spot": 39.23,
+   "king": {
+    "k": 42.5,
+    "v": 3.69,
+    "pct": 8.3
+   },
+   "floor": {
+    "k": 39,
+    "v": 1.11,
+    "pct": -0.6
+   },
+   "barney": {
+    "k": 39.5,
+    "v": -2.43,
+    "pct": 0.7
+   },
+   "magnet": {
+    "k": 42.5,
+    "v": 33.84,
+    "pct": 8.3
+   }
+  },
+  "DIS": {
+   "spot": 103.7,
+   "king": {
+    "k": 110,
+    "v": 3.8,
+    "pct": 6.1
+   },
+   "floor": {
+    "k": 102,
+    "v": 0.16,
+    "pct": -1.6
+   },
+   "barney": {
+    "k": 115,
+    "v": -0.9,
+    "pct": 10.9
+   },
+   "magnet": {
+    "k": 110,
+    "v": 76.14,
+    "pct": 6.1
+   }
+  },
+  "HD": {
+   "spot": 339.16,
+   "king": {
+    "k": 340,
+    "v": 1.29,
+    "pct": 0.2
+   },
+   "floor": {
+    "k": 337.5,
+    "v": 0.18,
+    "pct": -0.5
+   },
+   "barney": {
+    "k": 400,
+    "v": -0.2,
+    "pct": 17.9
+   },
+   "magnet": {
+    "k": 360,
+    "v": 37.52,
+    "pct": 6.1
+   }
+  },
+  "GDX": {
+   "spot": 92.2,
+   "king": {
+    "k": 91,
+    "v": 4.49,
+    "pct": -1.3
+   },
+   "floor": {
+    "k": 92,
+    "v": 2.3,
+    "pct": -0.2
+   },
+   "barney": {
+    "k": 105,
+    "v": -0.28,
+    "pct": 13.9
+   },
+   "magnet": {
+    "k": 115,
+    "v": 61.52,
+    "pct": 24.7
+   }
+  },
+  "XBI": {
+   "spot": 157.97,
+   "king": {
+    "k": 155,
+    "v": 11.62,
+    "pct": -1.9
+   },
+   "floor": {
+    "k": 157.5,
+    "v": 0.17,
+    "pct": -0.3
+   },
+   "barney": {
+    "k": 158,
+    "v": -0.5,
+    "pct": 0
+   },
+   "magnet": {
+    "k": 200,
+    "v": 73.63,
+    "pct": 26.6
+   }
+  },
+  "HAL": {
+   "spot": 34.7,
+   "king": {
+    "k": 35,
+    "v": 3.58,
+    "pct": 0.9
+   },
+   "floor": {
+    "k": 34,
+    "v": 0.58,
+    "pct": -2
+   },
+   "barney": {
+    "k": 50,
+    "v": -0.27,
+    "pct": 44.1
+   },
+   "magnet": {
+    "k": 40,
+    "v": 29.44,
+    "pct": 15.3
+   }
+  },
+  "VST": {
+   "spot": 146.65,
+   "king": {
+    "k": 140,
+    "v": -1.99,
+    "pct": -4.5
+   },
+   "floor": {
+    "k": 145,
+    "v": 0.2,
+    "pct": -1.1
+   },
+   "barney": {
+    "k": 155,
+    "v": -1.93,
+    "pct": 5.7
+   },
+   "magnet": {
+    "k": 210,
+    "v": 146.89,
+    "pct": 43.2
+   }
+  },
+  "IONQ": {
+   "spot": 46.78,
+   "king": {
+    "k": 50,
+    "v": 3.99,
+    "pct": 6.9
+   },
+   "floor": {
+    "k": 46.5,
+    "v": 0.1,
+    "pct": -0.6
+   },
+   "barney": {
+    "k": 52,
+    "v": -0.4,
+    "pct": 11.2
+   },
+   "magnet": {
+    "k": 55,
+    "v": 21.21,
+    "pct": 17.6
+   }
+  },
+  "RGTI": {
+   "spot": 18.55,
+   "king": {
+    "k": 17,
+    "v": 1.41,
+    "pct": -8.3
+   },
+   "floor": {
+    "k": 18.5,
+    "v": 1.03,
+    "pct": -0.2
+   },
+   "barney": {
+    "k": 27,
+    "v": -0.55,
+    "pct": 45.6
+   },
+   "magnet": {
+    "k": 22,
+    "v": 1.41,
+    "pct": 18.6
+   }
+  },
+  "ON": {
+   "spot": 83.6,
+   "king": {
+    "k": 80,
+    "v": -2.75,
+    "pct": -4.3
+   },
+   "floor": {
+    "k": 83,
+    "v": 0.41,
+    "pct": -0.7
+   },
+   "barney": {
+    "k": 105,
+    "v": -0.27,
+    "pct": 25.6
+   },
+   "magnet": {
+    "k": 125,
+    "v": 5.82,
+    "pct": 49.5
+   }
+  },
+  "DRAM": {
+   "spot": 60.68,
+   "king": {
+    "k": 60,
+    "v": -49.08,
+    "pct": -1.1
+   },
+   "floor": {
+    "k": 60.5,
+    "v": 0.04,
+    "pct": -0.3
+   },
+   "barney": {
+    "k": 62,
+    "v": -15.88,
+    "pct": 2.2
+   },
+   "magnet": {
+    "k": 65,
+    "v": 97.25,
+    "pct": 7.1
+   }
+  },
+  "BMNR": {
+   "spot": 18.78,
+   "king": {
+    "k": 19,
+    "v": -5.09,
+    "pct": 1.2
+   },
+   "floor": {
+    "k": 17,
+    "v": 0,
+    "pct": -9.5
+   },
+   "barney": {
+    "k": 19,
+    "v": -5.09,
+    "pct": 1.2
+   },
+   "magnet": {
+    "k": 40,
+    "v": 20.67,
+    "pct": 113
+   }
+  },
+  "SMH": {
+   "spot": 595.45,
+   "king": {
+    "k": 600,
+    "v": 3.29,
+    "pct": 0.8
+   },
+   "floor": {
+    "k": 595,
+    "v": 0.34,
+    "pct": -0.1
+   },
+   "barney": {
+    "k": 625,
+    "v": -1.37,
+    "pct": 5
+   },
+   "magnet": {
+    "k": 620,
+    "v": 61.02,
+    "pct": 4.1
+   }
+  }
+ },
+ "baseline_nodes": {
+  "TSM": {
+   "spot": 426.51,
+   "king": {
+    "k": 425,
+    "v": 12.12,
+    "pct": -0.4
+   },
+   "floor": {
+    "k": 425,
+    "v": 12.12,
+    "pct": -0.4
+   },
+   "barney": {
+    "k": 440,
+    "v": -5.01,
+    "pct": 3.2
+   },
+   "magnet": {
+    "k": 450,
+    "v": 864.39,
+    "pct": 5.5
+   }
+  },
+  "DRAM": {
+   "spot": 57.37,
+   "king": {
+    "k": 60,
+    "v": -35.96,
+    "pct": 4.6
+   },
+   "floor": {
+    "k": 57,
+    "v": 3.48,
+    "pct": -0.6
+   },
+   "barney": {
+    "k": 60,
+    "v": -35.96,
+    "pct": 4.6
+   },
+   "magnet": {
+    "k": 65,
+    "v": 76.84,
+    "pct": 13.3
+   }
+  },
+  "MSFT": {
+   "spot": 495.36,
+   "king": {
+    "k": 480,
+    "v": 24.27,
+    "pct": -3.1
+   },
+   "floor": {
+    "k": 495,
+    "v": 2.91,
+    "pct": -0.1
+   },
+   "barney": {
+    "k": 500,
+    "v": -2.86,
+    "pct": 0.9
+   },
+   "magnet": {
+    "k": 520,
+    "v": 538.57,
+    "pct": 5
+   }
+  },
+  "NKE": {
+   "spot": 40.73,
+   "king": {
+    "k": 42,
+    "v": 3.22,
+    "pct": 3.1
+   },
+   "floor": {
+    "k": 40.5,
+    "v": 1.59,
+    "pct": -0.6
+   },
+   "barney": {
+    "k": 43,
+    "v": -1.09,
+    "pct": 5.6
+   },
+   "magnet": {
+    "k": 47.5,
+    "v": 31.35,
+    "pct": 16.6
+   }
+  },
+  "PLTR": {
+   "spot": 174.01,
+   "king": {
+    "k": 160,
+    "v": 4.73,
+    "pct": -8.1
+   },
+   "floor": {
+    "k": 172.5,
+    "v": 2.36,
+    "pct": -0.9
+   },
+   "barney": {
+    "k": 185,
+    "v": -4.52,
+    "pct": 6.3
+   },
+   "magnet": {
+    "k": 200,
+    "v": 41.04,
+    "pct": 14.9
+   }
+  },
+  "PYPL": {
+   "spot": 61.67,
+   "king": {
+    "k": 62.5,
+    "v": -6.04,
+    "pct": 1.3
+   },
+   "floor": {
+    "k": 61,
+    "v": 0.18,
+    "pct": -1.1
+   },
+   "barney": {
+    "k": 62.5,
+    "v": -6.04,
+    "pct": 1.3
+   },
+   "magnet": {
+    "k": 70,
+    "v": 24.59,
+    "pct": 13.5
+   }
+  },
+  "NVDA": {
+   "spot": 225.24,
+   "king": {
+    "k": 227.5,
+    "v": 51.09,
+    "pct": 1
+   },
+   "floor": {
+    "k": 225,
+    "v": 28.53,
+    "pct": -0.1
+   },
+   "barney": {
+    "k": 247.5,
+    "v": -1.43,
+    "pct": 9.9
+   },
+   "magnet": {
+    "k": 230,
+    "v": 459.02,
+    "pct": 2.1
+   }
+  },
+  "DIS": {
+   "spot": 106.86,
+   "king": {
+    "k": 110,
+    "v": 11.78,
+    "pct": 2.9
+   },
+   "floor": {
+    "k": 106,
+    "v": 0.19,
+    "pct": -0.8
+   },
+   "barney": {
+    "k": 115,
+    "v": -1.42,
+    "pct": 7.6
+   },
+   "magnet": {
+    "k": 110,
+    "v": 161.58,
+    "pct": 2.9
+   }
+  },
+  "BMNR": {
+   "spot": 18.09,
+   "king": {
+    "k": 19,
+    "v": -4.17,
+    "pct": 5
+   },
+   "floor": {
+    "k": 16,
+    "v": 1.13,
+    "pct": -11.6
+   },
+   "barney": {
+    "k": 19,
+    "v": -4.17,
+    "pct": 5
+   },
+   "magnet": {
+    "k": 40,
+    "v": 19.68,
+    "pct": 121.1
+   }
+  },
+  "VST": {
+   "spot": 148.28,
+   "king": {
+    "k": 155,
+    "v": -2.31,
+    "pct": 4.5
+   },
+   "floor": {
+    "k": 142,
+    "v": 0,
+    "pct": -4.2
+   },
+   "barney": {
+    "k": 155,
+    "v": -2.31,
+    "pct": 4.5
+   },
+   "magnet": {
+    "k": 210,
+    "v": 156.24,
+    "pct": 41.6
+   }
+  }
+ },
+ "synthesis": "# Bullish Structure Ranking — 2026-08-18 EOD (Skylit)\n\n1. **TSM** — Massive 3d squeeze: -10.32G negative gamma at 440 (2%) sits directly under a monster +667.96 vanna magnet at 450 (4.3%), the single largest vanna print in the entire dataset — dealers forced to chase into size.\n\n2. **DRAM** — Near-ATM barney: -56.55G at 60 (-1.1%, essentially spot) plus -15.48G at 62 (2.2%) is the tightest, largest negative-gamma cluster right at price seen anywhere — textbook squeeze ignition zone, with 65 vanna (+55.28, 7.1%) as the follow-through magnet.\n\n3. **MSFT** — 480 pin (+34.14G) anchors spot, but -7.62G squeeze at 490 (2.1%) is backed by a huge -328.2 vanna wall at 500 (4.1%) — mega-cap size means this hedging flow moves real dollars.\n\n4. **NKE** — Sharp squeeze at 40 (1.9%, -9.55G) sits right on top of spot with matching -22.53 vanna — clean, close, high-conviction gamma flip zone for a small-price name.\n\n5. **PLTR** — 180 strike (4.9%) carries both negative gamma (-4.58) and negative vanna (-69.96), a coincident squeeze/magnet combo just above spot — dealers short gamma into a real vanna wall.\n\n6. **PYPL** — 62.5 (3.4%) negative gamma (-9.52) matched by -47.64 vanna is proportionally one of the largest squeeze setups relative to the stock's book — near-dated, sizable, and close to spot.\n\n7. **NVDA** — No clean squeeze, but stacked vanna magnets at 227.5/230/232.5 (1-3.3%) sit right above spot with a giant +49G pin at 227.5 — dealer-supported melt-up path is short and well-defined.\n\n8. **DIS** — 105 (1.3%) shows tight negative gamma (-2.96) directly over spot with matching -17.27 vanna, plus a bigger 110 (6.1%) vanna magnet (+63.23) as secondary target.\n\n9. **BMNR** — 19 strike (1.2%) negative gamma (-4.65) essentially at spot, feeding into 20 (+5.55 vanna, 6.5%) — small-cap but very near-dated squeeze geometry.\n\n10. **VST** — 155 (5.7%) negative gamma (-2.21) aligned with -37.19 vanna gives a coherent, if slightly farther, squeeze/magnet combo above spot.\n\nTOP10: TSM,DRAM,MSFT,NKE,PLTR,PYPL,NVDA,DIS,BMNR,VST"
+}
