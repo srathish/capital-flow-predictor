@@ -49,7 +49,7 @@ if (process.argv.includes('--resynth')) {
   const V = JSON.parse(fs.readFileSync(P, 'utf8'));
   const finalRows = V.ranked_all.filter(r => V.finalists.includes(r.ticker));
   console.log(`Re-synthesizing Tier-3 from cache: ${finalRows.length} finalists for ${V.expiry}…\n`);
-  const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${V.expiry} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${finalRows.map(finalLine).join('\n')}\n\nRank the TOP 10 bullish.`, 16000);
+  const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${V.expiry} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${finalRows.map(finalLine).join('\n')}\n\nRank the TOP 10 bullish.`, 32000);
   console.log(synth);
   V.synthesis = synth; V.resynth_at = new Date().toISOString(); V.cost_usd = +((V.cost_usd || 0) + spend).toFixed(2);
   fs.writeFileSync(P, JSON.stringify(V, null, 1));
@@ -163,7 +163,7 @@ console.log(`\n${finalRows.length} finalists → Round 2 final synthesis…\n`);
 
 // ── TIER 3: final deep synthesis → TOP 10 (16k budget — Sonnet-5 thinking + 10 theses overran 9k) ──
 const fu = finalRows.map(finalLine).join('\n');
-const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 16000);
+const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 32000);
 console.log(synth);
 console.log(`\n═══ TOTAL Sonnet spend: $${spend.toFixed(2)} · ${rows.length} stocks scanned for ${EXP} · ${err} errors ═══`);
 fs.writeFileSync(path.join(HERE, 'universe-verdicts.json'), JSON.stringify({ generated: new Date().toISOString(), expiry: EXP, scanned: rows.length, cost_usd: +spend.toFixed(2), finalists: fset, ranked_all: rows, synthesis: synth }, null, 1));
