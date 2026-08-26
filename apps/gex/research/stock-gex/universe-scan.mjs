@@ -98,6 +98,11 @@ function analyze(spot, nodes) {
   const netGex = nodes.reduce((a, n) => a + n.g, 0);
   const regime = Math.max(-1, Math.min(1, netGex / totAbs)); // −1 (fully short-γ / amplify) … +1 (fully long-γ / suppress)
   const regimeTag = regime > 0.15 ? 'suppress' : regime < -0.15 ? 'amplify' : 'neutral';
+  // ── PIN: spot magnetized to a DOMINANT +γ king (Talon's "Pika") within ~1 gate of spot = a MEAN-REVERSION
+  //    magnet, NOT a launchpad. Talon defers to the chart here ("$11 is the magnet, not a breakout"); we must
+  //    not let a positive-gamma pin masquerade as a bullish squeeze via the floor/king support terms.
+  const kingPct = king ? pct(king.k, spot) : 999;
+  const pinned = !!(king && king.g > 0 && Math.abs(kingPct) <= 2.5 && conc >= 30);
   // MECH SCORE = cheap TRIAGE only (surfacing rank for the tournament — NOT a return predictor). Single-name
   // lean: SQUEEZE (barney above spot) primary; PINNING (floor) secondary AND CAPPED so a mega-gamma ETF floor
   // (e.g. TLT +153g) can't run away with the raw score — it's node QUALITY we want, not raw size.
@@ -112,8 +117,10 @@ function analyze(spot, nodes) {
   //    (net +GEX, dealers cap rips) dampens it (down to ×0.5). Scale only the bullish (positive) score so a
   //    weak/negative setup isn't "rescued" by suppression.
   if (s > 0) s *= (1 - 0.5 * regime);
+  // ── PIN DISCOUNT: spot sitting on the +γ king = mean-reversion magnet, not a breakout → demote hard (defer-to-chart).
+  if (pinned && s > 0) s *= 0.35;
   const fmt = (n) => n ? `${n.k}(${(n.g >= 0 ? '+' : '') + n.g.toFixed(2)}g/${(n.v >= 0 ? '+' : '') + n.v.toFixed(1)}v, ${pct(n.k, spot).toFixed(1)}%)` : '—';
-  return { score: +s.toFixed(2), conc, regime: +regime.toFixed(2), line: `spot ${spot} · net-GEX ${regime >= 0 ? '+' : ''}${regime.toFixed(2)}(${regimeTag}) · KING ${fmt(king)} · floor ${fmt(floor)} · ceiling ${fmt(ceiling)} · barney↑squeeze ${fmt(barney)} · vanna ${fmt(vmag)}` };
+  return { score: +s.toFixed(2), conc, regime: +regime.toFixed(2), pinned, line: `spot ${spot} · net-GEX ${regime >= 0 ? '+' : ''}${regime.toFixed(2)}(${regimeTag})${pinned ? ' ⚑PIN(mean-revert)' : ''} · KING ${fmt(king)} · floor ${fmt(floor)} · ceiling ${fmt(ceiling)} · barney↑squeeze ${fmt(barney)} · vanna ${fmt(vmag)}` };
 }
 
 // ── TIER 1: pull, isolate expiry, structure every stock ──
@@ -146,6 +153,7 @@ for (let i = 0; i < rows.length; i++) {
     if ((i + 1) % 40 === 0) console.log(`  enrich …${i + 1}/${Math.min(ENRICH, rows.length)}`);
   }
   if (r.conc >= 45) f.push(`⚠conc${r.conc}%`);
+  if (r.pinned) f.push('⚑pin');
   r.flags = f.join(' ');
 }
 
