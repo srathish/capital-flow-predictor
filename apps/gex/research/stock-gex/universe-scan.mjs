@@ -102,7 +102,7 @@ function analyze(spot, nodes) {
   //    magnet, NOT a launchpad. Talon defers to the chart here ("$11 is the magnet, not a breakout"); we must
   //    not let a positive-gamma pin masquerade as a bullish squeeze via the floor/king support terms.
   const kingPct = king ? pct(king.k, spot) : 999;
-  const pinned = !!(king && king.g > 0 && Math.abs(kingPct) <= 2.5 && conc >= 30);
+  const pinned = !!(king && king.g > 0 && Math.abs(kingPct) <= 4 && conc >= 30);
   // MECH SCORE = cheap TRIAGE only (surfacing rank for the tournament — NOT a return predictor). Single-name
   // lean: SQUEEZE (barney above spot) primary; PINNING (floor) secondary AND CAPPED so a mega-gamma ETF floor
   // (e.g. TLT +153g) can't run away with the raw score — it's node QUALITY we want, not raw size.
