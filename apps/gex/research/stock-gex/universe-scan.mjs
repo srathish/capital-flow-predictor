@@ -91,17 +91,29 @@ function analyze(spot, nodes) {
   const vmag = nodes.slice().sort((a, b) => Math.abs(b.v) - Math.abs(a.v))[0] || null;
   const totAbs = nodes.reduce((a, n) => a + Math.abs(n.g), 0) || 1;
   const conc = Math.round(Math.max(0, ...nodes.map(n => Math.abs(n.g))) / totAbs * 100); // biggest node % of |gamma|
+  // ── NET-GEX REGIME (priority-1 layer, per the desk read): sum of near-spot gamma. POSITIVE = dealers LONG
+  //    gamma → mean-reversion, SUPPRESSES breakouts (dealers sell rips/buy dips); NEGATIVE = dealers SHORT
+  //    gamma → AMPLIFIES moves (trend/acceleration in whichever way price is already going). Sets the context
+  //    BEFORE the node read, exactly like reading the heatmap top-down.
+  const netGex = nodes.reduce((a, n) => a + n.g, 0);
+  const regime = Math.max(-1, Math.min(1, netGex / totAbs)); // −1 (fully short-γ / amplify) … +1 (fully long-γ / suppress)
+  const regimeTag = regime > 0.15 ? 'suppress' : regime < -0.15 ? 'amplify' : 'neutral';
   // MECH SCORE = cheap TRIAGE only (surfacing rank for the tournament — NOT a return predictor). Single-name
-  // lean: SQUEEZE (barney above spot) promoted to ~parity; PINNING (floor) kept modest (secondary on stocks).
+  // lean: SQUEEZE (barney above spot) primary; PINNING (floor) secondary AND CAPPED so a mega-gamma ETF floor
+  // (e.g. TLT +153g) can't run away with the raw score — it's node QUALITY we want, not raw size.
   let s = 0;
-  if (floor) s += floor.g * prox(pct(floor.k, spot), 8) * 0.6;                              // pinning: secondary
-  if (ceiling) s -= ceiling.g * prox(pct(ceiling.k, spot), 6) * 1.2;                         // near ceiling wall caps
+  if (floor) s += Math.min(Math.abs(floor.g), 20) * prox(pct(floor.k, spot), 8) * 0.6;       // pinning: secondary (CAPPED)
+  if (ceiling) s -= Math.min(Math.abs(ceiling.g), 20) * prox(pct(ceiling.k, spot), 6) * 1.2;  // near ceiling wall caps (CAPPED)
   if (!ceiling || Math.abs(pct(ceiling.k, spot)) >= 6) s += 4;                               // air pocket above
   if (vmag) s += (pct(vmag.k, spot) > 0 ? 1 : -1) * Math.min(Math.abs(vmag.v), 200) / 12;    // vanna magnet above
   if (king) s += (king.k < spot ? 1 : -1) * Math.min(Math.abs(king.g), 20) * 0.3;
   if (barney && barney.k > spot) s += Math.min(Math.abs(barney.g), 15) * prox(pct(barney.k, spot), 6) * 1.0; // SQUEEZE: primary
+  // ── REGIME MULTIPLIER: an AMPLIFY regime (net −GEX) fuels a bullish breakout (up to ×1.5); a SUPPRESS regime
+  //    (net +GEX, dealers cap rips) dampens it (down to ×0.5). Scale only the bullish (positive) score so a
+  //    weak/negative setup isn't "rescued" by suppression.
+  if (s > 0) s *= (1 - 0.5 * regime);
   const fmt = (n) => n ? `${n.k}(${(n.g >= 0 ? '+' : '') + n.g.toFixed(2)}g/${(n.v >= 0 ? '+' : '') + n.v.toFixed(1)}v, ${pct(n.k, spot).toFixed(1)}%)` : '—';
-  return { score: +s.toFixed(2), conc, line: `spot ${spot} · KING ${fmt(king)} · floor ${fmt(floor)} · ceiling ${fmt(ceiling)} · barney↑squeeze ${fmt(barney)} · vanna ${fmt(vmag)}` };
+  return { score: +s.toFixed(2), conc, regime: +regime.toFixed(2), line: `spot ${spot} · net-GEX ${regime >= 0 ? '+' : ''}${regime.toFixed(2)}(${regimeTag}) · KING ${fmt(king)} · floor ${fmt(floor)} · ceiling ${fmt(ceiling)} · barney↑squeeze ${fmt(barney)} · vanna ${fmt(vmag)}` };
 }
 
 // ── TIER 1: pull, isolate expiry, structure every stock ──
@@ -162,9 +174,15 @@ const finalRows = rows.filter(r => fset.includes(r.ticker));
 console.log(`\n${finalRows.length} finalists → Round 2 final synthesis…\n`);
 
 // ── TIER 3: final deep synthesis → TOP 10 (16k budget — Sonnet-5 thinking + 10 theses overran 9k) ──
-const fu = finalRows.map(finalLine).join('\n');
-const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 32000);
-console.log(synth);
-console.log(`\n═══ TOTAL Sonnet spend: $${spend.toFixed(2)} · ${rows.length} stocks scanned for ${EXP} · ${err} errors ═══`);
-fs.writeFileSync(path.join(HERE, 'universe-verdicts.json'), JSON.stringify({ generated: new Date().toISOString(), expiry: EXP, scanned: rows.length, cost_usd: +spend.toFixed(2), finalists: fset, ranked_all: rows, synthesis: synth }, null, 1));
-console.log('-> universe-verdicts.json');
+try {
+  const fu = finalRows.map(finalLine).join('\n');
+  const synth = await sonnet(F_SYS, `Finalists (${finalRows.length}) for the ${EXP} expiry (order = triage rank, provenance only — NOT a return signal):\n\n${fu}\n\nRank the TOP 10 bullish.`, 32000);
+  console.log(synth);
+  console.log(`\n═══ TOTAL Sonnet spend: $${spend.toFixed(2)} · ${rows.length} stocks scanned for ${EXP} · ${err} errors ═══`);
+  fs.writeFileSync(path.join(HERE, 'universe-verdicts.json'), JSON.stringify({ generated: new Date().toISOString(), expiry: EXP, scanned: rows.length, cost_usd: +spend.toFixed(2), finalists: fset, ranked_all: rows, synthesis: synth }, null, 1));
+  console.log('-> universe-verdicts.json');
+} catch (e) {
+  console.log(`\n⚠ Sonnet synthesis skipped (${(e.message || '').slice(0, 70)}).`);
+  console.log('   Mech-ranked structures (with net-GEX regime) are cached in universe-structures.json — rank the top-N from there, no API needed.');
+  process.exit(0);
+}
