@@ -32,7 +32,15 @@ _COUNTS = "stocktwits_counts.json"
 
 
 def feed_stocktwits() -> list[Signal]:
-    """Trending-stream mentions → per-symbol velocity Signals. Returns [] on error."""
+    """Trending-stream mentions → per-symbol velocity Signals. Returns [] on error.
+
+    Stocktwits' public API 403s from datacenter IPs (verified from Railway), so this is
+    OPT-IN: set NEST_ENABLE_RETAIL_SOCIAL=1 only where the egress is residential (or behind
+    a residential proxy). Off by default so it doesn't 403 every cycle in the cloud."""
+    import os
+
+    if not os.environ.get("NEST_ENABLE_RETAIL_SOCIAL"):
+        return []
     counts: dict[str, int] = {}
     lean: dict[str, int] = {}
     try:
