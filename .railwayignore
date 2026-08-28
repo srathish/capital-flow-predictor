@@ -1,0 +1,30 @@
+# The nest service's Dockerfile only COPYies apps/nest. Exclude the rest of the
+# monorepo from `railway up` uploads so the build context stays small. Other services
+# deploy from GitHub, not `railway up`, so this only affects nest deploys.
+falcon-copier/
+talon-copier/
+talon_analysis/
+sniper/
+research/
+local-chat/
+node_modules/
+.venv/
+.git/
+apps/api/
+apps/athena/
+apps/backtester/
+apps/brain/
+apps/discord_listener/
+apps/gex/
+apps/jobs/
+apps/screener/
+apps/uw_socket/
+apps/web/
+packages/
+*.jsonl
+*.jsonl.gz
+*.gz
+*.html
+*.lock
+uv.lock
+pnpm-lock.yaml
