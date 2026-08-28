@@ -58,7 +58,12 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_darkpool": "flow",
     "uw_flow": "flow",
     "uw_lit_flow": "flow",
+    "uw_sweep": "flow",
+    "uw_netprem": "flow",
     "uw_gex": "levels",
+    "uw_vex": "levels",
+    "uw_charm": "levels",
+    "uw_maxpain": "levels",
     "gexclaw": "levels",
     "uw_oi": "positioning",
     "uw_short": "positioning",
@@ -74,8 +79,11 @@ SOURCE_FAMILY: dict[str, str] = {
     "kalshi": "macro",
     "polymarket": "macro",
     "uw_chart": "chart",
+    "uw_breakout": "chart",
+    "uw_volsurge": "chart",
     "uw_fundamentals": "fundamental",
     "uw_fda": "catalyst",
+    "uw_earnings": "catalyst",
 }
 
 # Emergent universe: ingestion is market-wide (one call → signals for every ticker),
@@ -108,8 +116,16 @@ SOURCE_PRIOR: dict[str, float] = {
     "kalshi": 0.20,
     "polymarket": 0.20,
     "uw_chart": 0.40,          # trend/momentum — a solid confirmation source
+    "uw_breakout": 0.40,       # range breakout on volume
+    "uw_volsurge": 0.30,       # relative volume surge
     "uw_fundamentals": 0.35,   # valuation/growth — slow-moving context
     "uw_fda": 0.45,            # resolved FDA outcome — a hard binary catalyst
+    "uw_earnings": 0.30,       # earnings-proximity flag (why-now)
+    "uw_sweep": 0.42,          # aggressive sweeps — a stronger flow tell
+    "uw_netprem": 0.32,        # intraday net-premium tilt
+    "uw_vex": 0.30,            # vanna magnet (weak-real; earns or decays)
+    "uw_charm": 0.18,          # charm — subtle, low prior
+    "uw_maxpain": 0.30,        # max-pain gravity
 }
 DEFAULT_PRIOR = 0.20  # anything unseen (e.g. a brand-new discord caller)
 

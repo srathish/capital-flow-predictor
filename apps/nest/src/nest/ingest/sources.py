@@ -196,8 +196,158 @@ def enrich_short(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
+def _greek_magnet(uw: UWClient, ticker: str, source: str, call_key: str, put_key: str,
+                  ttl: float, prior_min: float) -> list[Signal]:
+    """Shared magnet read over the greek-exposure/strike surface: the dominant |net greek|
+    strike pulls price toward it (magnet above spot → bull, below → bear). Powers vex/charm."""
+    try:
+        state = uw.get("stock_state", ticker=ticker) or {}
+        spot = _f(state, "close", "last", "price")
+        rows = uw.get("greek_exposure_strike", ticker=ticker) or []
+        if not spot or not rows:
+            return []
+
+        def net(r: dict) -> float:
+            return _f(r, call_key) + _f(r, put_key)
+
+        total = sum(abs(net(r)) for r in rows) or 1.0
+        node = max(rows, key=lambda r: abs(net(r)))
+        strike = _f(node, "strike")
+        if not strike or net(node) == 0:
+            return []
+        dist = abs(strike - spot) / spot
+        share = abs(net(node)) / total
+        strength = _clamp(share * max(0.0, 1 - dist / 0.06))
+        if strength < prior_min:
+            return []
+        direction = "bull" if strike >= spot else "bear"
+        return [Signal(source=source, ticker=ticker, direction=direction, strength=strength,
+                       ttl_hours=ttl, meta={"magnet": round(strike, 2), "spot": round(spot, 2),
+                                            "share": round(share, 3)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("%s %s failed: %s", source, ticker, e)
+        return []
+
+
+def enrich_vex(uw: UWClient, ticker: str) -> list[Signal]:
+    """Vanna magnet (levels) — the dominant net-vanna strike."""
+    return _greek_magnet(uw, ticker, "uw_vex", "call_vanna", "put_vanna", 24, 0.04)
+
+
+def enrich_charm(uw: UWClient, ticker: str) -> list[Signal]:
+    """Charm magnet (levels) — subtle delta-decay pull into expiry; low weight."""
+    return _greek_magnet(uw, ticker, "uw_charm", "call_charm", "put_charm", 24, 0.05)
+
+
+def enrich_maxpain(uw: UWClient, ticker: str) -> list[Signal]:
+    """Max-pain gravity (levels) — nearest expiry. Spot below max-pain pulls up (bull)."""
+    try:
+        rows = uw.get("max_pain", ticker=ticker) or []
+        if not rows:
+            return []
+        r = rows[0]  # nearest expiry
+        mp = _f(r, "max_pain")
+        close = _f(r, "close")
+        if not mp or not close:
+            return []
+        gap = (mp - close) / close
+        if abs(gap) < 0.005:
+            return []
+        return [Signal(source="uw_maxpain", ticker=ticker,
+                       direction="bull" if gap > 0 else "bear",
+                       strength=_clamp(abs(gap) / 0.05), ttl_hours=24,
+                       meta={"max_pain": round(mp, 2), "close": round(close, 2),
+                             "gap_pct": round(gap * 100, 1)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_maxpain %s failed: %s", ticker, e)
+        return []
+
+
+def _bars(uw: UWClient, ticker: str, n: int = 70) -> list[dict]:
+    return uw.get("ohlc", params={"limit": n}, ticker=ticker, candle_size="1d") or []
+
+
+def enrich_breakout(uw: UWClient, ticker: str) -> list[Signal]:
+    """Range breakout on volume (chart) — close pressing the 60-day high with a volume
+    expansion is a bull breakout; pressing the low, a bear breakdown."""
+    try:
+        bars = _bars(uw, ticker)
+        if len(bars) < 40:
+            return []
+        highs = [_f(b, "high") for b in bars]
+        lows = [_f(b, "low") for b in bars]
+        vols = [_f(b, "volume") for b in bars]
+        close = _f(bars[-1], "close")
+        hi = max(highs[-60:])
+        lo = min(lows[-60:])
+        avgvol = sum(vols[-20:]) / min(20, len(vols)) or 1.0
+        surge = vols[-1] > 1.3 * avgvol
+        if not surge or not close:
+            return []
+        if close >= 0.985 * hi:
+            direction, ref = "bull", hi
+        elif close <= 1.015 * lo:
+            direction, ref = "bear", lo
+        else:
+            return []
+        return [Signal(source="uw_breakout", ticker=ticker, direction=direction,
+                       strength=_clamp(vols[-1] / avgvol / 3.0), ttl_hours=48,
+                       meta={"close": round(close, 2), "ref": round(ref, 2),
+                             "rel_vol": round(vols[-1] / avgvol, 2)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_breakout %s failed: %s", ticker, e)
+        return []
+
+
+def enrich_volsurge(uw: UWClient, ticker: str) -> list[Signal]:
+    """Relative-volume surge (chart) — today's volume >> 20d average, directional by the
+    day's close vs open."""
+    try:
+        bars = _bars(uw, ticker, 30)
+        if len(bars) < 20:
+            return []
+        vols = [_f(b, "volume") for b in bars]
+        avg = sum(vols[-20:]) / 20 or 1.0
+        ratio = vols[-1] / avg
+        if ratio < 1.5:
+            return []
+        o, c = _f(bars[-1], "open"), _f(bars[-1], "close")
+        if not o or c == o:
+            return []
+        return [Signal(source="uw_volsurge", ticker=ticker,
+                       direction="bull" if c > o else "bear",
+                       strength=_clamp((ratio - 1) / 2.0), ttl_hours=36,
+                       meta={"rel_vol": round(ratio, 2), "day_pct": round((c - o) / o * 100, 1)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_volsurge %s failed: %s", ticker, e)
+        return []
+
+
+def enrich_netprem(uw: UWClient, ticker: str) -> list[Signal]:
+    """Intraday net-premium tilt (flow) — net call vs net put premium on the tape (latest)."""
+    try:
+        rows = uw.get("net_prem_ticks", ticker=ticker) or []
+        if not rows:
+            return []
+        last = rows[-1]
+        call_p = _f(last, "net_call_premium")
+        put_p = _f(last, "net_put_premium")
+        net = call_p - put_p
+        if abs(net) < 5.0e5:
+            return []
+        return [Signal(source="uw_netprem", ticker=ticker,
+                       direction="bull" if net > 0 else "bear",
+                       strength=_clamp(abs(net) / 1.0e7), ttl_hours=12,
+                       meta={"net_prem": round(net), "call": round(call_p), "put": round(put_p)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_netprem %s failed: %s", ticker, e)
+        return []
+
+
 # per-ticker enrichment run on each surfaced name
-ENRICHERS = [enrich_gex, enrich_chart, enrich_fundamentals, enrich_short]
+ENRICHERS = [enrich_gex, enrich_vex, enrich_charm, enrich_maxpain, enrich_chart,
+             enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_short,
+             enrich_netprem]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints

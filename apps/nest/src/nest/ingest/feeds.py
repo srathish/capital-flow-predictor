@@ -314,9 +314,40 @@ def feed_fda(uw: UWClient, limit: int = 300) -> list[Signal]:
     return _safe(run, "uw_fda")
 
 
+def feed_sweep(uw: UWClient, limit: int = 200) -> list[Signal]:
+    """Aggressive sweeps → per-ticker net directional sweep premium. A sweep (order split
+    across exchanges to fill NOW) is a stronger urgency tell than a resting order; tracked
+    separately from uw_flow. Ask-side, single-leg, ETFs excluded."""
+    def run() -> list[Signal]:
+        rows = uw.get("flow_alerts_market", params={"limit": limit}) or []
+        agg: dict[str, dict] = {}
+        for r in rows:
+            if not r.get("has_sweep") or r.get("has_multileg"):
+                continue
+            if str(r.get("issue_type", "")) in config.EXCLUDE_ISSUE_TYPES:
+                continue
+            ask = _f(r.get("total_ask_side_prem"))
+            bid = _f(r.get("total_bid_side_prem"))
+            if ask <= bid:
+                continue
+            tkr = str(r.get("ticker") or "")
+            if not tkr:
+                continue
+            cp = str(r.get("type", "")).lower()
+            a = agg.setdefault(tkr, {"net": 0.0})
+            a["net"] += (ask - bid) * (1 if cp == "call" else -1 if cp == "put" else 0)
+        return _emit_group(
+            agg, "uw_sweep", 36,
+            strength_fn=lambda a: abs(a["net"]) / 2.0e6 if abs(a["net"]) >= 2e5 else 0.0,
+            meta_fn=lambda a: {"net_sweep_prem": round(a["net"])},
+        )
+
+    return _safe(run, "uw_sweep")
+
+
 # The market-wide feeds run once per cycle; each returns Signals across many tickers.
 FEEDS = [feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
-         feed_analyst, feed_oi, feed_fda]
+         feed_analyst, feed_oi, feed_fda, feed_sweep]
 
 
 def collect_all(uw: UWClient) -> list[Signal]:
