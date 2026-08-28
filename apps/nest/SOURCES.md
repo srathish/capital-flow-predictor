@@ -71,7 +71,8 @@ Reddit-velocity ticker as their own tracked source:
 - chart (3): `uw_chart`, `uw_breakout`, `uw_volsurge`
 - fundamental (2): `uw_fundamentals`, `uw_margins`
 - catalyst (2): `uw_fda`, `uw_earnings`
-- social (N): `discord:<caller>` (per-caller), `reddit_velocity`
+- social: `wiki_attention` (Wikipedia pageview velocity — **active, no creds, datacenter-ok**);
+  plus `discord:<caller>`, `reddit_velocity`, `stocktwits` (credential/proxy-gated extras)
 - macro/regime: Fed tone + market-tide breadth + econ-calendar (scales the floor)
 
 **Needs credentials to activate** (adapters built, no-op until set):

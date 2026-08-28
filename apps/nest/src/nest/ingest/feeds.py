@@ -40,6 +40,8 @@ def _safe(fn, name: str) -> list[Signal]:
     try:
         return fn()
     except Exception as e:  # noqa: BLE001 — one bad feed must not kill the cycle
+        from nest.ingest import health
+        health.record_error(name, str(e))
         log.warning("feed %s failed: %s", name, e)
         return []
 

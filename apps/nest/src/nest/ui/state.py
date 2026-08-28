@@ -4,6 +4,8 @@ Used by both the live server (/api/state) and any baked static snapshot. Read-on
 
 from __future__ import annotations
 
+import json
+from collections import Counter
 from datetime import UTC, datetime
 
 from nest import config
@@ -82,4 +84,139 @@ def build_state(log: EventLog, now: datetime | None = None) -> dict:
         "weights": weights,
         "calibration": calibration,
         "calls": calls,
+    }
+
+
+# --- pipeline view (medallion DAG) ------------------------------------------
+
+# medallion stage → the Nest's actual architecture
+_STAGES = [
+    ("sources", "SOURCES"),
+    ("bronze", "BRONZE · raw signals"),
+    ("silver", "SILVER · conviction"),
+    ("gold", "GOLD · gate + synthesis"),
+    ("marts", "MARTS · outputs"),
+]
+
+
+def _log_level(msg: str) -> str:
+    m = msg.lower()
+    if "call fired" in m or "hit" in m:
+        return "good"
+    if "degraded" in m or "miss" in m or "retry" in m:
+        return "warn"
+    if "failed" in m:
+        return "bad"
+    return "info"
+
+
+def build_pipeline(log: EventLog, now: datetime | None = None) -> dict:
+    now = now or datetime.now(UTC)
+    pstate = {"wave": 0, "cycles": []}
+    ppath = config.DATA_DIR / "pipeline.json"
+    if ppath.exists():
+        try:
+            pstate = json.loads(ppath.read_text())
+        except (ValueError, OSError):
+            pass
+    cycles = pstate.get("cycles", [])
+    last = cycles[-1] if cycles else {}
+    counts = last.get("source_counts", {})
+    err_srcs = {e["source"] for e in last.get("errors", [])}
+    live_w = wmod.compute_all(log, "5d")
+    rates = wmod._hit_rates(log, "5d")
+
+    # SOURCES stage — every wired source + any dynamic discord callers seen
+    wired = list(config.SOURCE_PRIOR) + [s for s in counts if s.startswith("discord:")]
+    src_nodes = []
+    for src in sorted(set(wired)):
+        if src in ("edgar_8k", "edgar_s1"):  # placeholders folded into edgar_offering
+            continue
+        rate = int(counts.get(src, 0))
+        status = "degraded" if src in err_srcs else "ok" if rate > 0 else "idle"
+        hits, n = rates.get(src, (0, 0))
+        src_nodes.append({
+            "id": src, "label": src.replace("uw_", "").replace("_", " "),
+            "family": config.family_of(src), "rate": rate, "status": status,
+            "weight": round(wmod.source_weight(src, live_w), 2),
+            "hit_rate": round(hits / n, 2) if n else None, "n": n,
+        })
+
+    # BRONZE — one node per family (aggregated signal rate)
+    fam_rate: Counter = Counter()
+    fam_status: dict[str, bool] = {}
+    for s in src_nodes:
+        fam_rate[s["family"]] += s["rate"]
+        fam_status[s["family"]] = fam_status.get(s["family"], False) or s["status"] == "ok"
+    bronze = [{"id": f"bronze:{f}", "label": f, "family": f, "rate": fam_rate.get(f, 0),
+               "status": "ok" if fam_status.get(f) else "idle"}
+              for f in config.FAMILIES]
+
+    book = log.latest_scores(500)
+    scored = int(last.get("scored", len(book)))
+    gated = int(last.get("gated", 0))
+    calls_today = log.calls_today(now.date().isoformat())
+    total_grades = len(log.grades())
+    reg = log.latest_score(macro.MACRO_TICKER)
+    regime_tone = (reg.meta or {}).get("tone", "neutral") if reg else "neutral"
+
+    silver = [
+        {"id": "accumulate", "label": "accumulate", "family": "levels",
+         "rate": scored, "status": "ok" if scored else "idle",
+         "detail": f"{scored} tickers scored · Layer-1 decay"},
+        {"id": "gate", "label": "convergence gate", "family": "flow",
+         "rate": gated, "status": "ok" if scored else "idle",
+         "detail": f"{gated} passed · need 3 signals / 2 families"},
+    ]
+    gold = [
+        {"id": "synthesis", "label": "synthesis", "family": "catalyst",
+         "rate": len(last.get("calls", [])), "status": "ok" if scored else "idle",
+         "detail": "Haiku (gated + rate-limited)"},
+        {"id": "calls", "label": "calls", "family": "social",
+         "rate": calls_today, "status": "ok" if calls_today else "idle",
+         "detail": f"{calls_today}/{config.MAX_CALLS_PER_DAY} today"},
+    ]
+    marts = [
+        {"id": "book", "label": "conviction book", "family": "chart",
+         "rate": len(book), "status": "ok" if book else "idle",
+         "detail": f"{len(book)} names"},
+        {"id": "alerts", "label": "alert feed", "family": "fundamental",
+         "rate": calls_today, "status": "ok" if calls_today else "idle", "detail": "Discord"},
+        {"id": "calibration", "label": "calibration", "family": "positioning",
+         "rate": total_grades, "status": "ok" if total_grades else "idle",
+         "detail": f"{total_grades} grades"},
+        {"id": "regime", "label": f"regime · {regime_tone}", "family": "macro",
+         "rate": 1, "status": "ok", "detail": (reg.meta or {}).get("note", "")[:80] if reg else ""},
+    ]
+
+    # orchestrator log — from recent cycles (throughput, self-recovery, calls) + grades
+    logs = []
+    for c in cycles[-16:]:
+        logs.append({"ts": c["ts"], "level": "info",
+                     "msg": f"wave #{c['wave']} · {c.get('feed_signals', 0)} feed + "
+                            f"{c.get('enriched', 0)} enrich rows · scored {c.get('scored', 0)} · "
+                            f"gated {c.get('gated', 0)} · floor {c.get('floor', 70):.0f}"})
+        for e in c.get("errors", []):
+            logs.append({"ts": c["ts"], "level": "warn",
+                         "msg": f"{e['source']} degraded — {e['msg'][:60]} · isolated, "
+                                f"cycle continued"})
+        for tk in c.get("calls", []):
+            logs.append({"ts": c["ts"], "level": "good", "msg": f"CALL fired — {tk}"})
+    for g in log.grades()[-6:]:
+        logs.append({"ts": g.ts, "level": "info" if g.hit else "warn",
+                     "msg": f"backfill grade {g.ticker} {g.horizon} — "
+                            f"{'HIT' if g.hit else 'miss'} {g.return_pct:+.1f}%"})
+    logs.sort(key=lambda x: x["ts"], reverse=True)
+
+    healthy = sum(1 for s in src_nodes if s["status"] == "ok")
+    return {
+        "now": now.isoformat(timespec="seconds"),
+        "wave": pstate.get("wave", 0),
+        "throughput": int(last.get("feed_signals", 0)) + int(last.get("enriched", 0)),
+        "nodes_healthy": healthy, "nodes_total": len(src_nodes),
+        "stages": [{"key": k, "label": lbl} for k, lbl in _STAGES],
+        "sources": src_nodes, "bronze": bronze, "silver": silver, "gold": gold, "marts": marts,
+        "log": logs[:40],
+        "regime_tone": regime_tone,
+        "floor": last.get("floor", config.CONVICTION_FLOOR),
     }

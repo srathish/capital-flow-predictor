@@ -106,10 +106,12 @@ def run_cycle(log_db: EventLog, uw: UWClient | None, limiter: RateLimiter | None
 
     # --- 3. enrich the active set ---
     active = _active_set(new_signals)
+    enrich_signals = []
     if uw is not None:
         for tkr in active:
             for s in sources.enrich(uw, tkr):
                 log_db.append(s)
+                enrich_signals.append(s)
                 summary["enriched"] += 1
 
     # --- 4. score every ticker with live signals in the window ---
@@ -153,4 +155,39 @@ def run_cycle(log_db: EventLog, uw: UWClient | None, limiter: RateLimiter | None
         summary["calls"].append({"ticker": tkr, "conviction": syn.conviction,
                                  "used_llm": syn.used_llm, "direction": ts.direction})
 
+    # --- 5. pipeline telemetry: per-source counts, health, and a persistent cycle ring ---
+    if uw is not None:
+        from collections import Counter
+
+        from nest.ingest import health
+        counts = Counter(s.source for s in new_signals + enrich_signals)
+        _persist_cycle(now, summary, dict(counts), health.drain())
     return summary
+
+
+def _persist_cycle(now, summary, source_counts, errors) -> None:
+    """Append a compact cycle record to NEST_HOME/pipeline.json (ring of the last 60) and
+    bump the wave counter — the pipeline view's throughput + orchestrator log read this."""
+    import json
+
+    path = config.DATA_DIR / "pipeline.json"
+    state = {"wave": 0, "cycles": []}
+    if path.exists():
+        try:
+            state = json.loads(path.read_text())
+        except (ValueError, OSError):
+            pass
+    state["wave"] = int(state.get("wave", 0)) + 1
+    rec = {
+        "ts": now.isoformat(timespec="seconds"), "wave": state["wave"],
+        "feed_signals": summary["feed_signals"], "enriched": summary["enriched"],
+        "scored": summary["scored"], "gated": summary["gated"],
+        "calls": [c["ticker"] for c in summary["calls"]], "floor": summary["floor"],
+        "source_counts": source_counts, "errors": errors,
+    }
+    state["cycles"] = (state.get("cycles", []) + [rec])[-60:]
+    try:
+        config.DATA_DIR.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(state))
+    except OSError:
+        pass

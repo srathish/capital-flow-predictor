@@ -15,7 +15,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 
 from nest.events.log import EventLog
 from nest.ui.page import render_page
-from nest.ui.state import build_state
+from nest.ui.pipeline import render_pipeline
+from nest.ui.state import build_pipeline, build_state
 
 log = logging.getLogger(__name__)
 _scheduler_started = False
@@ -48,6 +49,15 @@ app = FastAPI(title="Conviction Nest", lifespan=_lifespan)
 def index() -> str:
     log_db = EventLog()
     try:
+        return render_pipeline(build_pipeline(log_db), poll_url="/api/pipeline")
+    finally:
+        log_db.close()
+
+
+@app.get("/field", response_class=HTMLResponse)
+def field() -> str:
+    log_db = EventLog()
+    try:
         return render_page(build_state(log_db), poll_url="/api/state")
     finally:
         log_db.close()
@@ -58,6 +68,15 @@ def state() -> JSONResponse:
     log_db = EventLog()
     try:
         return JSONResponse(build_state(log_db))
+    finally:
+        log_db.close()
+
+
+@app.get("/api/pipeline")
+def pipeline() -> JSONResponse:
+    log_db = EventLog()
+    try:
+        return JSONResponse(build_pipeline(log_db))
     finally:
         log_db.close()
 
