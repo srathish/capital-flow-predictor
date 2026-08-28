@@ -54,10 +54,18 @@ def cycle(
 
 @app.command()
 def run() -> None:
-    """Run the resident daemon — the market-clock scheduler (for Railway / launchd)."""
+    """Run the resident scheduler only (no web) — for launchd."""
     from nest import daemon
 
     daemon.run()
+
+
+@app.command()
+def serve(port: int = typer.Option(None, "--port", help="Default: $PORT or 8080")) -> None:
+    """Serve the field UI + /api/state AND run the scheduler — the hosted entrypoint."""
+    from nest.ui.server import serve as _serve
+
+    _serve(port)
 
 
 @app.command()

@@ -161,8 +161,14 @@ def enrich_fundamentals(uw: UWClient, ticker: str) -> list[Signal]:
 ENRICHERS = [enrich_gex, enrich_chart, enrich_fundamentals]
 
 
+# index / non-stock symbols that don't support the per-ticker stock endpoints
+_SKIP_ENRICH = {"SPX", "SPXW", "NDX", "RUT", "VIX", "XSP", "VVIX", "DJX"}
+
+
 def enrich(uw: UWClient, ticker: str) -> list[Signal]:
-    """All per-ticker enrichment for one surfaced name."""
+    """All per-ticker enrichment for one surfaced name (index symbols skipped)."""
+    if ticker in _SKIP_ENRICH:
+        return []
     signals: list[Signal] = []
     for fn in ENRICHERS:
         signals.extend(fn(uw, ticker))

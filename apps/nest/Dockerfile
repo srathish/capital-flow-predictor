@@ -19,4 +19,6 @@ COPY apps/nest/src /app/src
 
 RUN pip install . && mkdir -p /data
 
-CMD ["python", "-m", "nest.cli", "run"]
+# Serve the field UI + /api/state and run the market-clock scheduler in one process.
+# Railway provides $PORT and gives the service a public URL.
+CMD ["python", "-m", "nest.cli", "serve"]
