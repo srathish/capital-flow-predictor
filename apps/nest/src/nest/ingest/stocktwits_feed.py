@@ -18,7 +18,13 @@ from nest.events.schema import Signal
 
 log = logging.getLogger(__name__)
 
-_UA = {"User-Agent": "Mozilla/5.0 (ConvictionNest research)"}
+_UA = {
+    "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
+    "Accept": "application/json",
+    "Referer": "https://stocktwits.com/",
+    "Origin": "https://stocktwits.com",
+}
 _TRENDING = "https://api.stocktwits.com/api/2/streams/trending.json"
 _BULL = ("buy", "long", "call", "bull", "moon", "breakout", "squeeze", "rip", "🚀", "🔥")
 _BEAR = ("sell", "short", "put", "bear", "dump", "crash", "breakdown", "tank", "puts")
@@ -32,6 +38,7 @@ def feed_stocktwits() -> list[Signal]:
     try:
         r = httpx.get(_TRENDING, headers=_UA, timeout=20)
         if r.status_code != 200:
+            log.warning("stocktwits trending non-200: %s", r.status_code)
             return []
         for m in r.json().get("messages", []):
             body = str(m.get("body") or "")
