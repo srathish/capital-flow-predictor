@@ -21,6 +21,8 @@ log = logging.getLogger(__name__)
 
 # congress amount range "$1,001 - $15,000" -> midpoint
 _AMT_RE = re.compile(r"\$([\d,]+)")
+# option symbol -> C/P for OI fan-out
+_CP_RE = re.compile(r"\d{6}([CP])")
 
 
 def _f(v, default: float = 0.0) -> float:
@@ -215,8 +217,71 @@ def feed_news(uw: UWClient, limit: int = 100) -> list[Signal]:
     return _safe(run, "uw_news")
 
 
+def feed_analyst(uw: UWClient, limit: int = 100) -> list[Signal]:
+    """Analyst ratings screener → per-ticker net rating direction. Upgrades/initiations→bull,
+    downgrades→bear, maintained weighted by the buy/hold/sell recommendation. Filings family."""
+    def run() -> list[Signal]:
+        rows = uw.get("analysts_screener", params={"limit": limit}) or []
+        agg: dict[str, dict] = {}
+        for r in rows:
+            tkr = str(r.get("ticker") or "")
+            if not tkr:
+                continue
+            action = str(r.get("action") or "").lower()
+            rec = str(r.get("recommendation") or "").lower()
+            if "upgrad" in action or "raised" in action or "initiat" in action:
+                d = 1.0 if rec != "sell" else -1.0
+            elif "downgrad" in action or "lowered" in action:
+                d = -1.0
+            elif action == "maintained":
+                d = 0.3 if rec == "buy" else -0.3 if rec == "sell" else 0.0
+            else:
+                d = 0.0
+            if d:
+                agg.setdefault(tkr, {"net": 0.0})["net"] += d
+        return _emit_group(
+            agg, "uw_analyst", 168,
+            strength_fn=lambda a: _clamp(abs(a["net"]) / 3.0),
+            meta_fn=lambda a: {"net_rating": round(a["net"], 1)},
+        )
+
+    return _safe(run, "uw_analyst")
+
+
+def feed_oi(uw: UWClient, limit: int = 200) -> list[Signal]:
+    """Market-wide OI change → per-ticker net-new call vs put OI (C/P from the option
+    symbol). Growing call-side OI is fresh bullish positioning. Positioning family."""
+    def run() -> list[Signal]:
+        rows = uw.get("oi_change_market", params={"limit": limit}) or []
+        agg: dict[str, dict] = {}
+        for r in rows:
+            d = _f(r.get("oi_change")) or _f(r.get("oi_diff_plain"))
+            if d <= 0:
+                continue
+            m = _CP_RE.search(str(r.get("option_symbol") or ""))
+            tkr = str(r.get("underlying_symbol") or "")
+            if not m or not tkr:
+                continue
+            a = agg.setdefault(tkr, {"net": 0.0, "call": 0.0, "put": 0.0})
+            if m.group(1) == "C":
+                a["net"] += d
+                a["call"] += d
+            else:
+                a["net"] -= d
+                a["put"] += d
+        return _emit_group(
+            agg, "uw_oi", 72,
+            strength_fn=lambda a: _clamp(abs(a["net"]) / ((a["call"] + a["put"]) or 1))
+            if (a["call"] + a["put"]) >= 1000 else 0.0,
+            meta_fn=lambda a: {"net_oi": int(a["net"]), "call": int(a["call"]), "put": int(a["put"])},
+        )
+
+    return _safe(run, "uw_oi")
+
+
 # The market-wide feeds run once per cycle; each returns Signals across many tickers.
-FEEDS = [feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news]
+FEEDS = [feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
+         feed_analyst, feed_oi]
 
 
 def collect_all(uw: UWClient) -> list[Signal]:

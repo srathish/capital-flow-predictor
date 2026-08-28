@@ -61,6 +61,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_gex": "levels",
     "gexclaw": "levels",
     "uw_oi": "positioning",
+    "uw_short": "positioning",
     "uw_insider": "positioning",
     "uw_congress": "positioning",
     "uw_institutional": "positioning",
@@ -94,6 +95,7 @@ SOURCE_PRIOR: dict[str, float] = {
     "uw_gex": 0.40,
     "gexclaw": 0.45,
     "uw_oi": 0.35,
+    "uw_short": 0.30,   # squeeze fuel — real but bidirectional; earns its keep on setups
     "uw_insider": 0.55,  # Form-4 opening buys have the best base rate
     "uw_congress": 0.30,
     "uw_institutional": 0.30,

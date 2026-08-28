@@ -26,11 +26,15 @@ WHITELIST: dict[str, str] = {
     "congress_recent": "/api/congress/recent-trades",
     "news_headlines": "/api/news/headlines",
     "economic_calendar": "/api/market/economic-calendar",
+    "analysts_screener": "/api/screener/analysts",
+    "oi_change_market": "/api/market/oi-change",
     # per-ticker (enrichment on surfaced names only)
     "greek_exposure_strike": "/api/stock/{ticker}/greek-exposure/strike",
     "stock_state": "/api/stock/{ticker}/stock-state",
     "ohlc": "/api/stock/{ticker}/ohlc/{candle_size}",
     "financials": "/api/stock/{ticker}/financials",
+    "short_interest_float": "/api/shorts/{ticker}/interest-float",
+    "short_data": "/api/shorts/{ticker}/data",
 }
 
 _TTL: dict[str, int] = {
@@ -40,10 +44,14 @@ _TTL: dict[str, int] = {
     "congress_recent": 1800,
     "news_headlines": 120,
     "economic_calendar": 1800,
+    "analysts_screener": 300,
+    "oi_change_market": 600,
     "greek_exposure_strike": 300,
     "stock_state": 30,
     "ohlc": 60,
     "financials": 86400,
+    "short_interest_float": 43200,
+    "short_data": 3600,
 }
 
 _cache: dict[str, tuple[float, Any]] = {}

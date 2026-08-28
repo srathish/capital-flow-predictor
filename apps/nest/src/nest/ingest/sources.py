@@ -157,8 +157,47 @@ def enrich_fundamentals(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
-# per-ticker enrichment run on each surfaced name (add "financials" to the client whitelist)
-ENRICHERS = [enrich_gex, enrich_chart, enrich_fundamentals]
+def enrich_short(uw: UWClient, ticker: str) -> list[Signal]:
+    """Short-squeeze fuel → a positioning-family Signal. Driven by cost-to-borrow (live) +
+    borrow scarcity; short-interest %float / days-to-cover are added only when fresh (the
+    interest-float series is stale on our tier). Expensive, hard-to-borrow names are crowded
+    shorts prone to a squeeze (bull lean). Bidirectional in truth → modest prior."""
+    try:
+        data = uw.get("short_data", params={"limit": 1}, ticker=ticker) or []
+        fee = _f(data[0], "fee_rate") if data else 0.0        # cost-to-borrow %
+        avail = _f(data[0], "short_shares_available") if data else 1e9
+        # short interest only if the latest snapshot is recent (< ~90d); else it's stale
+        si_pct = dtc = 0.0
+        rows = uw.get("short_interest_float", ticker=ticker) or []
+        if rows:
+            from datetime import UTC, datetime, timedelta
+            latest = max(rows, key=lambda r: str(r.get("market_date") or ""))
+            md = str(latest.get("market_date") or "")
+            try:
+                fresh = datetime.fromisoformat(md).replace(tzinfo=UTC) > datetime.now(UTC) - timedelta(days=90)
+            except ValueError:
+                fresh = False
+            if fresh:
+                si_pct = _f(latest, "percent_returned")
+                dtc = _f(latest, "days_to_cover_returned")
+        if fee < 5 and si_pct < 15:  # cheap, uncrowded borrow — no squeeze fuel
+            return []
+        score = _clamp(fee / 30.0 + si_pct / 40.0 + dtc / 20.0 + (0.15 if avail < 1e6 else 0.0))
+        if score < 0.1:
+            return []
+        return [Signal(
+            source="uw_short", ticker=ticker, direction="bull", strength=score,
+            ttl_hours=168,
+            meta={"cost_to_borrow": round(fee, 1), "si_pct_float": round(si_pct, 1),
+                  "days_to_cover": round(dtc, 1), "shares_available": int(avail)},
+        )]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_short %s failed: %s", ticker, e)
+        return []
+
+
+# per-ticker enrichment run on each surfaced name
+ENRICHERS = [enrich_gex, enrich_chart, enrich_fundamentals, enrich_short]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints
