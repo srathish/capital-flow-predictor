@@ -105,6 +105,14 @@ def run() -> None:
     last_cycle_minute = -1
     done: dict[str, str] = {"digest": "", "grade": ""}  # task -> yyyy-mm-dd last run
 
+    # Boot cycle: run one cycle immediately on startup so every deploy/restart refreshes the
+    # book right away (and populates after hours with EOD data), instead of waiting for the
+    # next 5-minute RTH mark. Guarded — a bad boot must not stop the daemon coming up.
+    try:
+        _run_cycle()
+    except Exception:  # noqa: BLE001
+        log.exception("boot cycle failed — continuing to the scheduler")
+
     while True:
         now = datetime.now(ET)
         today = now.date().isoformat()
