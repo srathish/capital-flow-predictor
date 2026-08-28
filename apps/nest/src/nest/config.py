@@ -52,7 +52,7 @@ LLM_MAX_PER_DAY = 40  # hard daily ceiling on synthesis calls
 # Families are what the convergence gate counts for independence: three signals
 # from one family (three whale prints) is NOT convergence.
 FAMILIES = ("flow", "levels", "positioning", "filings", "social", "macro",
-            "chart", "fundamental")
+            "chart", "fundamental", "catalyst")
 
 SOURCE_FAMILY: dict[str, str] = {
     "uw_darkpool": "flow",
@@ -75,6 +75,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "polymarket": "macro",
     "uw_chart": "chart",
     "uw_fundamentals": "fundamental",
+    "uw_fda": "catalyst",
 }
 
 # Emergent universe: ingestion is market-wide (one call → signals for every ticker),
@@ -108,6 +109,7 @@ SOURCE_PRIOR: dict[str, float] = {
     "polymarket": 0.20,
     "uw_chart": 0.40,          # trend/momentum — a solid confirmation source
     "uw_fundamentals": 0.35,   # valuation/growth — slow-moving context
+    "uw_fda": 0.45,            # resolved FDA outcome — a hard binary catalyst
 }
 DEFAULT_PRIOR = 0.20  # anything unseen (e.g. a brand-new discord caller)
 

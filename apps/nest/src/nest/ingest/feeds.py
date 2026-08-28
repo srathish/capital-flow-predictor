@@ -279,9 +279,44 @@ def feed_oi(uw: UWClient, limit: int = 200) -> list[Signal]:
     return _safe(run, "uw_oi")
 
 
+_FDA_BULL = ("approv", "positive", "pass", "met endpoint", "success", "breakthrough")
+_FDA_BEAR = ("crl", "complete response", "reject", "fail", "negative", "not approv",
+             "missed", "halt")
+
+
+def feed_fda(uw: UWClient, limit: int = 300) -> list[Signal]:
+    """FDA calendar → catalyst-family Signal on RESOLVED outcomes (approval→bull, CRL→bear).
+    A hard binary — big, discrete moves. Pending events carry no direction and are skipped
+    here (a future catalyst-flag layer will surface upcoming PDUFA dates as 'why now')."""
+    def run() -> list[Signal]:
+        rows = uw.get("fda_calendar") or []
+        agg: dict[str, dict] = {}
+        for r in rows:
+            tkr = str(r.get("ticker") or "")
+            if not tkr:
+                continue
+            text = (str(r.get("outcome") or "") + " " + str(r.get("status") or "")).lower()
+            if any(k in text for k in _FDA_BULL):
+                d = 1.0
+            elif any(k in text for k in _FDA_BEAR):
+                d = -1.0
+            else:
+                continue
+            a = agg.setdefault(tkr, {"net": 0.0, "last": ""})
+            a["net"] += d
+            a["last"] = str(r.get("description") or r.get("event_type") or "")[:120]
+        return _emit_group(
+            agg, "uw_fda", 120,
+            strength_fn=lambda a: _clamp(0.7 + abs(a["net"]) * 0.15),  # resolved FDA = strong
+            meta_fn=lambda a: {"net": a["net"], "event": a["last"]},
+        )
+
+    return _safe(run, "uw_fda")
+
+
 # The market-wide feeds run once per cycle; each returns Signals across many tickers.
 FEEDS = [feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
-         feed_analyst, feed_oi]
+         feed_analyst, feed_oi, feed_fda]
 
 
 def collect_all(uw: UWClient) -> list[Signal]:

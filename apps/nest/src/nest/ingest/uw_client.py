@@ -28,6 +28,8 @@ WHITELIST: dict[str, str] = {
     "economic_calendar": "/api/market/economic-calendar",
     "analysts_screener": "/api/screener/analysts",
     "oi_change_market": "/api/market/oi-change",
+    "market_tide": "/api/market/market-tide",
+    "fda_calendar": "/api/market/fda-calendar",
     # per-ticker (enrichment on surfaced names only)
     "greek_exposure_strike": "/api/stock/{ticker}/greek-exposure/strike",
     "stock_state": "/api/stock/{ticker}/stock-state",
@@ -46,6 +48,8 @@ _TTL: dict[str, int] = {
     "economic_calendar": 1800,
     "analysts_screener": 300,
     "oi_change_market": 600,
+    "market_tide": 120,
+    "fda_calendar": 3600,
     "greek_exposure_strike": 300,
     "stock_state": 30,
     "ohlc": 60,

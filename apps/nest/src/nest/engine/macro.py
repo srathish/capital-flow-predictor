@@ -70,6 +70,21 @@ def _fed_tone(uw: UWClient) -> tuple[int, int, str]:
     return hawk, dov, latest
 
 
+def _tide_tilt(uw: UWClient) -> tuple[float, str]:
+    """Market breadth from the options tape: net call vs net put premium (latest tick).
+    Returns (tilt in [-1,1] risk-on positive, note). Risk-on tape loosens the floor a touch;
+    risk-off tightens it — breadth context on top of the Fed-tone read."""
+    rows = uw.get("market_tide") or []
+    if not rows:
+        return 0.0, ""
+    last = rows[-1]
+    call = float(last.get("net_call_premium") or 0)
+    put = float(last.get("net_put_premium") or 0)
+    denom = abs(call) + abs(put) or 1.0
+    tilt = max(-1.0, min(1.0, (call - put) / denom))
+    return tilt, f"tide {'risk-on' if tilt > 0.1 else 'risk-off' if tilt < -0.1 else 'flat'}"
+
+
 def _imminent_event(uw: UWClient, now: datetime) -> str | None:
     """Name of a high-impact scheduled event within the next ~24h, if any."""
     rows = uw.get("economic_calendar") or []
@@ -96,29 +111,34 @@ def assess(uw: UWClient, now: datetime | None = None) -> Regime:
     now = now or datetime.now(UTC)
     hawk, dov, latest = _fed_tone(uw)
     imminent = _imminent_event(uw, now)
+    tilt, tide_note = _tide_tilt(uw)
 
-    # tone score: 50 neutral, hawkish pulls down (risk-off), dovish pulls up (risk-on)
+    # tone score: 50 neutral, hawkish pulls down (risk-off), dovish pulls up (risk-on);
+    # breadth tilt nudges it further either way
     net = dov - hawk
-    score = 50 + max(-40, min(40, net * 6))
+    score = 50 + max(-40, min(40, net * 6)) + tilt * 8
     tone = "hawkish" if net < -1 else "dovish" if net > 1 else "neutral"
 
-    # floor delta: risk-off raises the floor; an imminent high-impact event adds caution
+    # floor delta: risk-off raises the floor; an imminent high-impact event adds caution;
+    # a risk-off tape tightens, a risk-on tape loosens (bounded)
     floor_delta = 0.0
     if tone == "hawkish":
         floor_delta += min(10.0, hawk * 2.0)
     elif tone == "dovish":
         floor_delta -= min(5.0, dov * 1.0)
+    floor_delta -= max(-3.0, min(3.0, tilt * 3.0))  # risk-on tilt lowers floor
     if imminent:
         floor_delta += 5.0
         score -= 5
 
-    note_bits = [f"tone={tone} (hawk {hawk}/dov {dov})"]
+    note_bits = [f"tone={tone} (hawk {hawk}/dov {dov})", tide_note]
     if imminent:
         note_bits.append(f"imminent: {imminent}")
     if latest:
         note_bits.append(f"latest: {latest[:120]}")
     return Regime(score=round(max(0, min(100, score)), 1), tone=tone,
-                  floor_delta=round(floor_delta, 1), note=" · ".join(note_bits),
+                  floor_delta=round(floor_delta, 1),
+                  note=" · ".join(b for b in note_bits if b),
                   imminent_event=imminent)
 
 
