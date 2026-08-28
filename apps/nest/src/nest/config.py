@@ -77,6 +77,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "edgar_offering": "filings",
     "reddit_velocity": "social",
     "stocktwits": "social",
+    "wiki_attention": "social",
     # discord callers are dynamic: "discord:<caller>" -> social (see family_of)
     "kalshi": "macro",
     "polymarket": "macro",
@@ -117,7 +118,8 @@ SOURCE_PRIOR: dict[str, float] = {
     "edgar_s1": 0.25,
     "edgar_offering": 0.40,   # 424B/S-1/S-3 dilution — reliably bearish short-term
     "reddit_velocity": 0.15,
-    "stocktwits": 0.15,        # retail-herd velocity (no creds needed)
+    "stocktwits": 0.15,        # retail-herd velocity (residential only)
+    "wiki_attention": 0.15,    # Wikipedia pageview velocity — retail attention, no creds
     "kalshi": 0.20,
     "polymarket": 0.20,
     "uw_chart": 0.40,          # trend/momentum — a solid confirmation source

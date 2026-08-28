@@ -6,12 +6,21 @@ family so the convergence gate can fire. Field names validated against live UW (
 
 from __future__ import annotations
 
+import json
 import logging
+import urllib.parse
+from datetime import UTC, datetime, timedelta
 
+import httpx
+
+from nest import config
 from nest.events.schema import Signal
 from nest.ingest.uw_client import UWClient
 
 log = logging.getLogger(__name__)
+
+_WIKI_UA = {"User-Agent": "ConvictionNest/0.1 (research; saieagle@gmail.com)"}
+_wiki_titles: dict[str, str] | None = None
 
 
 def _f(d: dict, *keys: str, default: float = 0.0) -> float:
@@ -408,10 +417,85 @@ def enrich_margins(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
+def _wiki_title(uw: UWClient, ticker: str) -> str | None:
+    """Resolve ticker → best Wikipedia article title (company name via UW, matched through
+    Wikipedia opensearch). Cached to disk — titles rarely change."""
+    global _wiki_titles
+    if _wiki_titles is None:
+        path = config.DATA_DIR / "wiki_titles.json"
+        try:
+            _wiki_titles = json.loads(path.read_text()) if path.exists() else {}
+        except (ValueError, OSError):
+            _wiki_titles = {}
+    if ticker in _wiki_titles:
+        return _wiki_titles[ticker] or None
+    title = None
+    try:
+        info = uw.get("stock_info", ticker=ticker) or {}
+        raw = str(info.get("full_name") or "").strip()
+        name = " ".join(w.capitalize() for w in raw.split())  # UW returns UPPERCASE
+        if name:
+            r = httpx.get("https://en.wikipedia.org/w/api.php", headers=_WIKI_UA, timeout=15,
+                          params={"action": "opensearch", "search": name,
+                                  "limit": 1, "namespace": 0, "format": "json"})
+            if r.status_code == 200:
+                hits = r.json()
+                if len(hits) >= 2 and hits[1]:
+                    title = hits[1][0]
+    except (httpx.HTTPError, ValueError, IndexError):
+        pass
+    _wiki_titles[ticker] = title or ""
+    try:
+        (config.DATA_DIR / "wiki_titles.json").write_text(json.dumps(_wiki_titles))
+    except OSError:
+        pass
+    return title
+
+
+def enrich_wiki(uw: UWClient, ticker: str) -> list[Signal]:
+    """Wikipedia pageview velocity (social family) — a retail-ATTENTION gauge that needs no
+    credentials and works from datacenter IPs (unlike Reddit/Stocktwits). A spike in a
+    company's pageviews vs its prior-week baseline is a retail-interest surge; direction
+    leans with 3-day price momentum (attention riding a move)."""
+    try:
+        title = _wiki_title(uw, ticker)
+        if not title:
+            return []
+        end = datetime.now(UTC).date() - timedelta(days=1)
+        start = end - timedelta(days=14)
+        enc = urllib.parse.quote(title.replace(" ", "_"), safe="")
+        url = (f"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
+               f"en.wikipedia/all-access/all-agents/{enc}/daily/"
+               f"{start.strftime('%Y%m%d')}/{end.strftime('%Y%m%d')}")
+        r = httpx.get(url, headers=_WIKI_UA, timeout=15)
+        if r.status_code != 200:
+            return []
+        views = [i.get("views", 0) for i in r.json().get("items", [])]
+        if len(views) < 8:
+            return []
+        baseline = sum(views[-8:-1]) / 7 or 1.0
+        velocity = views[-1] / baseline
+        if velocity < 1.4:  # need a real attention spike
+            return []
+        bars = _bars(uw, ticker, 8)
+        closes = [_f(b, "close") for b in bars if _f(b, "close") > 0]
+        if len(closes) < 4:
+            return []
+        mom = closes[-1] - closes[-4]
+        return [Signal(source="wiki_attention", ticker=ticker,
+                       direction="bull" if mom >= 0 else "bear",
+                       strength=_clamp((velocity - 1.0) / 2.0), ttl_hours=24,
+                       meta={"pageview_velocity": round(velocity, 2), "title": title,
+                             "views_today": views[-1]})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_wiki %s failed: %s", ticker, e)
+        return []
+
+
 # per-ticker enrichment run on each surfaced name
 ENRICHERS = [enrich_gex, enrich_vex, enrich_charm, enrich_maxpain, enrich_chart,
              enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_margins,
-             enrich_short, enrich_netprem, enrich_earnings]
+             enrich_short, enrich_netprem, enrich_earnings, enrich_wiki]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints
