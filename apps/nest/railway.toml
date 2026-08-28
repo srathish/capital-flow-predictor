@@ -1,0 +1,36 @@
+# Railway service config for the Conviction Nest daemon.
+#
+# Next service in the Bellwether project on Railway (after api / gex / discord / uw-socket):
+#   capital-flow-predictor-nest   (conviction daemon)   — this file
+#
+# Setup (one-time, via the Railway dashboard):
+#   1. In the existing project, "+ New Service" → "GitHub repo" → this repo + main
+#   2. Settings → Source: Root Directory = /   (Dockerfile path is repo-relative)
+#   3. Settings → Build: Dockerfile Path = apps/nest/Dockerfile
+#   4. Settings → Variables:
+#        UNUSUAL_WHALES_API_KEY   (same key the API + jobs + uw-socket use)
+#        DISCORD_WEBHOOK_URL      (Calls + morning digest post here)
+#        ANTHROPIC_API_KEY        (Layer-3 synthesis + digest; omit → mechanical fallback)
+#        NEST_HOME                /data
+#        LOG_LEVEL                INFO
+#   5. Settings → Volumes: ADD A VOLUME, mount path = /data.
+#        ^ REQUIRED. SQLite lives here. Without the volume, every redeploy/restart
+#          wipes the container filesystem and the entire conviction memory with it.
+#          A volume attaches to exactly one service — this one is the sole writer, so
+#          that's fine. ~1 GB is decades of headroom at this volume.
+#   6. NO public networking — this service never accepts inbound HTTP.
+#
+# Redeploy note: unlike the ensemble runs, a redeploy here is safe — all conviction is
+# derived from the persisted event log, so a restart just resumes on the next cycle and
+# loses nothing (as long as the /data volume is mounted). Still, avoid redeploying during
+# RTH out of habit; a restart skips at most one 5-minute cycle.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/nest/Dockerfile"
+
+[deploy]
+# Long-running scheduler loop; process-alive is the liveness signal. Per-tick errors
+# are caught inside the app, so a restart only happens on a hard process crash.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

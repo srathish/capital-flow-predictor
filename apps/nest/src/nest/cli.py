@@ -63,6 +63,14 @@ def cycle(
 
 
 @app.command()
+def run() -> None:
+    """Run the resident daemon — the market-clock scheduler (for Railway / launchd)."""
+    from nest import daemon
+
+    daemon.run()
+
+
+@app.command()
 def grade() -> None:
     """Grade matured Calls at 1d/5d/20d and roll up source weights."""
     from nest.ingest.uw_client import UWClient
