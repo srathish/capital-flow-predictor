@@ -74,6 +74,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_news": "filings",
     "edgar_8k": "filings",
     "edgar_s1": "filings",
+    "edgar_offering": "filings",
     "reddit_velocity": "social",
     # discord callers are dynamic: "discord:<caller>" -> social (see family_of)
     "kalshi": "macro",
@@ -112,6 +113,7 @@ SOURCE_PRIOR: dict[str, float] = {
     "uw_news": 0.20,
     "edgar_8k": 0.40,
     "edgar_s1": 0.25,
+    "edgar_offering": 0.40,   # 424B/S-1/S-3 dilution — reliably bearish short-term
     "reddit_velocity": 0.15,
     "kalshi": 0.20,
     "polymarket": 0.20,

@@ -13,6 +13,9 @@ dependencies = [
     "rich>=13.9",
     "fastapi>=0.115",
     "uvicorn>=0.30",
+    # optional: Discord source reads Bellwether's discord_messages (Postgres) when
+    # DATABASE_URL is set; the feed no-ops without it.
+    "asyncpg>=0.30",
     # LLM synthesis (Layer 3) is optional at runtime — the engine falls back to a
     # mechanical thesis if anthropic is unavailable or no key is set.
     "anthropic>=0.39",

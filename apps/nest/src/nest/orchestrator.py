@@ -84,6 +84,10 @@ def run_cycle(log_db: EventLog, uw: UWClient | None, limiter: RateLimiter | None
     new_signals = []
     if uw is not None:
         new_signals = feeds.collect_all(uw)
+        # non-UW sources: EDGAR offerings (free) + Discord callers (Bellwether Postgres)
+        from nest.ingest import discord_feed, edgar
+        new_signals += edgar.feed_edgar()
+        new_signals += discord_feed.feed_discord()
         for s in new_signals:
             log_db.append(s)
         summary["feed_signals"] = len(new_signals)

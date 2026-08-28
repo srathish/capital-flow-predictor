@@ -344,10 +344,47 @@ def enrich_netprem(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
+def enrich_earnings(uw: UWClient, ticker: str) -> list[Signal]:
+    """Earnings-proximity catalyst (the 'why-now' layer). A name reporting within ~7 sessions
+    carries a live catalyst; direction leans with pre-earnings drift (5-day momentum, a real
+    if weak effect). The Call's gate also uses this to avoid knife-catching into the print
+    (see orchestrator). Low strength — it's a timing flag, not a thesis."""
+    try:
+        from datetime import UTC, date, datetime
+
+        info = uw.get("stock_info", ticker=ticker) or {}
+        ned = str(info.get("next_earnings_date") or "")
+        if not ned:
+            return []
+        try:
+            edate = date.fromisoformat(ned[:10])
+        except ValueError:
+            return []
+        days = (edate - datetime.now(UTC).date()).days
+        if days < 0 or days > 10:
+            return []
+        # drift direction from 5-day momentum
+        bars = _bars(uw, ticker, 12)
+        closes = [_f(b, "close") for b in bars if _f(b, "close") > 0]
+        if len(closes) < 6:
+            return []
+        drift = (closes[-1] - closes[-6]) / closes[-6]
+        if abs(drift) < 0.005:
+            return []
+        return [Signal(source="uw_earnings", ticker=ticker,
+                       direction="bull" if drift > 0 else "bear",
+                       strength=_clamp(0.15 + (10 - days) / 10 * 0.25), ttl_hours=48,
+                       meta={"days_to_earnings": days, "drift_5d_pct": round(drift * 100, 1),
+                             "announce": info.get("announce_time")})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_earnings %s failed: %s", ticker, e)
+        return []
+
+
 # per-ticker enrichment run on each surfaced name
 ENRICHERS = [enrich_gex, enrich_vex, enrich_charm, enrich_maxpain, enrich_chart,
              enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_short,
-             enrich_netprem]
+             enrich_netprem, enrich_earnings]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints

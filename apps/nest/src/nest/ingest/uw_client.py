@@ -39,6 +39,7 @@ WHITELIST: dict[str, str] = {
     "short_data": "/api/shorts/{ticker}/data",
     "max_pain": "/api/stock/{ticker}/max-pain",
     "net_prem_ticks": "/api/stock/{ticker}/net-prem-ticks",
+    "stock_info": "/api/stock/{ticker}/info",
 }
 
 _TTL: dict[str, int] = {
@@ -60,6 +61,7 @@ _TTL: dict[str, int] = {
     "short_data": 3600,
     "max_pain": 900,
     "net_prem_ticks": 120,
+    "stock_info": 21600,
 }
 
 _cache: dict[str, tuple[float, Any]] = {}
