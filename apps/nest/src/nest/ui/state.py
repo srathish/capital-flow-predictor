@@ -33,8 +33,14 @@ def build_state(log: EventLog, now: datetime | None = None) -> dict:
         "families": s.families, "contributors": s.contributors[:6], "delta": round(s.delta, 1),
     } for s in log.latest_scores(40)]
 
+    # pull a full-cycle-sized window so the header's source/family counts reflect ALL
+    # sources (feeds write before the ~500 enrichment signals, so a last-80 tail would
+    # only ever show enrichment). The signal-log panel shows the freshest slice.
+    recent = log.tail(700, type="signal")
+    active_sources = sorted({s.source for s in recent})
+    active_families = sorted({config.family_of(s.source) for s in recent})
     signals = []
-    for s in log.tail(80, type="signal"):
+    for s in recent[:120]:
         signals.append({
             "ts": s.ts, "source": s.source, "family": config.family_of(s.source),
             "ticker": s.ticker, "direction": s.direction, "strength": round(s.strength, 2),
@@ -61,15 +67,15 @@ def build_state(log: EventLog, now: datetime | None = None) -> dict:
         "calibration_note": c.calibration_note,
     } for c in reversed(log.calls()[-15:])]
 
-    sources_seen = sorted({s["source"] for s in signals})
     return {
         "now": now.isoformat(timespec="seconds"),
         "header": {
-            "watched": len(book), "sources": len(sources_seen),
-            "families": sorted({f for s in book for f in s["families"]}),
+            "watched": len(book), "sources": len(active_sources),
+            "families": active_families,
             "floor": round(floor, 0), "alerts_today": log.calls_today(day_iso),
             "max_alerts": config.MAX_CALLS_PER_DAY,
         },
+        "active_sources": active_sources,
         "regime": regime,
         "book": book,
         "signals": signals,
