@@ -23,7 +23,6 @@ load_dotenv()
 import logging  # noqa: E402
 
 import typer  # noqa: E402
-import yaml  # noqa: E402
 from rich.console import Console  # noqa: E402
 from rich.table import Table  # noqa: E402
 
@@ -35,27 +34,18 @@ console = Console()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 
-def _watchlist() -> list[str]:
-    path = config.PACKAGE_ROOT / "src" / "nest" / "watchlist.yaml"
-    if path.exists():
-        return list((yaml.safe_load(path.read_text()) or {}).get("tickers", []))
-    return []
-
-
 @app.command()
 def cycle(
     offline: bool = typer.Option(False, "--offline", help="Score the log without hitting UW"),
     no_deliver: bool = typer.Option(False, "--no-deliver", help="Don't post Calls to Discord"),
-    ticker: str | None = typer.Option(None, "--ticker", help="Single ticker override"),
 ) -> None:
-    """Run one conviction cycle."""
+    """Run one market-wide conviction cycle (ingest feeds → enrich → score → maybe Call)."""
     from nest import orchestrator
     from nest.ingest.uw_client import UWClient
 
     log = EventLog()
-    tickers = [ticker] if ticker else _watchlist()
     uw = None if offline else UWClient()
-    result = orchestrator.run_cycle(log, uw, tickers, deliver=not no_deliver)
+    result = orchestrator.run_cycle(log, uw, deliver=not no_deliver)
     if uw:
         uw.close()
     log.close()
@@ -85,19 +75,17 @@ def grade() -> None:
 
 
 @app.command()
-def book() -> None:
-    """Current conviction book — latest score per watched ticker."""
+def book(limit: int = typer.Option(25, "--limit")) -> None:
+    """Current conviction book — top names across the emergent universe."""
     log = EventLog()
+    reg = log.latest_score("__MACRO__")
+    if reg:
+        console.print(f"[bold]Regime[/bold]: {reg.meta.get('tone','?')} "
+                      f"(dial {reg.conviction:.0f}, floor Δ{reg.meta.get('floor_delta',0):+.0f})")
     table = Table(title="Conviction book")
     for col in ("ticker", "conviction", "direction", "contributors", "families", "delta"):
         table.add_column(col)
-    rows = []
-    for t in _watchlist():
-        s = log.latest_score(t)
-        if s:
-            rows.append(s)
-    rows.sort(key=lambda s: s.conviction, reverse=True)
-    for s in rows:
+    for s in log.latest_scores(limit):
         table.add_row(s.ticker, f"{s.conviction:.0f}", s.direction,
                       ", ".join(s.contributors[:4]), ", ".join(s.families), f"{s.delta:+.0f}")
     console.print(table)
@@ -159,7 +147,7 @@ def digest(send: bool = typer.Option(False, "--send", help="Deliver to Discord")
     from nest.delivery import discord
 
     log = EventLog()
-    text = dg.build(log, _watchlist())
+    text = dg.build(log)
     console.print(text)
     if send:
         discord.send_digest(text)

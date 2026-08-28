@@ -53,6 +53,7 @@ class Score(BaseModel):
     contributors: list[str] = Field(default_factory=list)  # distinct source ids
     families: list[str] = Field(default_factory=list)  # distinct families present
     delta: float = 0.0  # change vs the previous score for this ticker
+    meta: dict[str, Any] = Field(default_factory=dict)  # regime dial detail on __MACRO__
 
 
 class Call(BaseModel):

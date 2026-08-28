@@ -73,7 +73,7 @@ class TickerScore:
 
 def score_ticker(
     ticker: str, live_signals: list[Signal], weights: dict[str, float],
-    now: datetime | None = None,
+    now: datetime | None = None, floor: float | None = None,
 ) -> TickerScore:
     now = now or datetime.now(UTC)
     contribs: list[Contribution] = []
@@ -94,25 +94,26 @@ def score_ticker(
     conviction = 100.0 * (1.0 - math.exp(-abs(net) / config.SCORE_SCALE))
     ts = TickerScore(ticker=ticker, conviction=round(conviction, 1),
                      direction=direction, contributions=contribs)
-    _apply_gate(ts)
+    _apply_gate(ts, floor if floor is not None else config.CONVICTION_FLOOR)
     return ts
 
 
-def _apply_gate(ts: TickerScore) -> None:
+def _apply_gate(ts: TickerScore, floor: float) -> None:
     n_sig = sum(1 for c in ts.contributions if c.direction == ts.direction)
     n_fam = len(ts.families)
     if n_sig < config.GATE_MIN_SIGNALS:
         ts.gate_reason = f"only {n_sig} agreeing signals (need {config.GATE_MIN_SIGNALS})"
     elif n_fam < config.GATE_MIN_FAMILIES:
         ts.gate_reason = f"only {n_fam} source family (need {config.GATE_MIN_FAMILIES})"
-    elif ts.conviction < config.CONVICTION_FLOOR:
-        ts.gate_reason = f"conviction {ts.conviction:.0f} < floor {config.CONVICTION_FLOOR}"
+    elif ts.conviction < floor:
+        ts.gate_reason = f"conviction {ts.conviction:.0f} < floor {floor:.0f}"
     else:
         ts.passed_gate = True
         ts.gate_reason = "passed"
 
 
-def evaluate(log: EventLog, ticker: str, now: datetime | None = None) -> TickerScore:
+def evaluate(log: EventLog, ticker: str, now: datetime | None = None,
+             floor: float | None = None) -> TickerScore:
     """Full Layer 1+2 evaluation for one ticker off the event log, and append the Score.
     Returns the TickerScore (whether or not it passed the gate — the tracker shadow-grades
     names that scored but failed the gate, to check the gate filters noise not alpha)."""
@@ -120,7 +121,7 @@ def evaluate(log: EventLog, ticker: str, now: datetime | None = None) -> TickerS
     since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
     live = log.signals_since(since, ticker=ticker)
     weights = weights_mod.compute_all(log)
-    ts = score_ticker(ticker, live, weights, now=now)
+    ts = score_ticker(ticker, live, weights, now=now, floor=floor)
 
     prev = log.latest_score(ticker)
     delta = round(ts.conviction - prev.conviction, 1) if prev else ts.conviction

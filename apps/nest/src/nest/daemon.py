@@ -56,10 +56,10 @@ def _run_cycle() -> None:
     log_db = EventLog()
     uw = UWClient()
     try:
-        tickers = _watchlist()
-        summary = orchestrator.run_cycle(log_db, uw, tickers, deliver=True)
-        log.info("cycle: evaluated=%d gated=%d calls=%d",
-                 summary["evaluated"], summary["gated"], len(summary["calls"]))
+        summary = orchestrator.run_cycle(log_db, uw, deliver=True)
+        log.info("cycle: feed_signals=%d enriched=%d scored=%d gated=%d calls=%d floor=%.0f",
+                 summary["feed_signals"], summary["enriched"], summary["scored"],
+                 summary["gated"], len(summary["calls"]), summary["floor"])
     finally:
         uw.close()
         log_db.close()
@@ -71,7 +71,7 @@ def _run_digest() -> None:
 
     log_db = EventLog()
     try:
-        text = dg.build(log_db, _watchlist())
+        text = dg.build(log_db)
         discord.send_digest(text)
         log.info("digest sent")
     finally:
@@ -93,12 +93,9 @@ def _run_grade() -> None:
 
 
 def _watchlist() -> list[str]:
-    import yaml
-
-    path = config.PACKAGE_ROOT / "src" / "nest" / "watchlist.yaml"
-    if path.exists():
-        return list((yaml.safe_load(path.read_text()) or {}).get("tickers", []))
-    return []
+    # emergent universe: the digest shows the pinned core + whatever the book surfaced;
+    # digest.build pulls top-scored names from the log itself.
+    return list(config.PINNED)
 
 
 def run() -> None:

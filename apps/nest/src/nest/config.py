@@ -51,7 +51,8 @@ LLM_MAX_PER_DAY = 40  # hard daily ceiling on synthesis calls
 # --- source taxonomy ---------------------------------------------------------
 # Families are what the convergence gate counts for independence: three signals
 # from one family (three whale prints) is NOT convergence.
-FAMILIES = ("flow", "levels", "positioning", "filings", "social", "macro")
+FAMILIES = ("flow", "levels", "positioning", "filings", "social", "macro",
+            "chart", "fundamental")
 
 SOURCE_FAMILY: dict[str, str] = {
     "uw_darkpool": "flow",
@@ -71,7 +72,18 @@ SOURCE_FAMILY: dict[str, str] = {
     # discord callers are dynamic: "discord:<caller>" -> social (see family_of)
     "kalshi": "macro",
     "polymarket": "macro",
+    "uw_chart": "chart",
+    "uw_fundamentals": "fundamental",
 }
+
+# Emergent universe: ingestion is market-wide (one call → signals for every ticker),
+# so the watchlist is not curated — any name a feed surfaces starts accumulating. To
+# bound the expensive per-ticker GEX enrichment, only the top-N most-active names each
+# cycle get enriched. ETFs are excluded from stock signals (issue_type gate).
+ENRICH_TOP_N = 40
+EXCLUDE_ISSUE_TYPES = {"ETF", "ETN", "Index"}
+# Names always enriched regardless of feed activity (pin your conviction core here).
+PINNED = ["IREN", "MU", "MARA", "HIMS", "PYPL", "NKE", "AAPL", "AMD", "CRDO", "MRVL"]
 
 # New sources start at a low prior weight and earn their way up via the tracker;
 # a bad feed decays toward zero and costs nothing but a config line.
@@ -92,6 +104,8 @@ SOURCE_PRIOR: dict[str, float] = {
     "reddit_velocity": 0.15,
     "kalshi": 0.20,
     "polymarket": 0.20,
+    "uw_chart": 0.40,          # trend/momentum — a solid confirmation source
+    "uw_fundamentals": 0.35,   # valuation/growth — slow-moving context
 }
 DEFAULT_PRIOR = 0.20  # anything unseen (e.g. a brand-new discord caller)
 

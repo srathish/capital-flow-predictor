@@ -19,25 +19,31 @@ log = logging.getLogger(__name__)
 # Spec-verified paths only (anti-hallucination gate). Confirmed trap: the flow-alerts
 # endpoint is /api/stock/{ticker}/flow-alerts, not /api/options/flow.
 WHITELIST: dict[str, str] = {
-    "flow_alerts": "/api/stock/{ticker}/flow-alerts",
-    "darkpool_ticker": "/api/darkpool/{ticker}",
+    # market-wide feeds (one call → all tickers) — the emergent-universe firehoses
+    "darkpool_recent": "/api/darkpool/recent",
+    "flow_alerts_market": "/api/option-trades/flow-alerts",
+    "insider_transactions": "/api/insider/transactions",
+    "congress_recent": "/api/congress/recent-trades",
+    "news_headlines": "/api/news/headlines",
+    "economic_calendar": "/api/market/economic-calendar",
+    # per-ticker (enrichment on surfaced names only)
     "greek_exposure_strike": "/api/stock/{ticker}/greek-exposure/strike",
-    "oi_change": "/api/stock/{ticker}/oi-change",
-    "insider_ticker": "/api/insider/{ticker}/ticker-flow",
     "stock_state": "/api/stock/{ticker}/stock-state",
     "ohlc": "/api/stock/{ticker}/ohlc/{candle_size}",
-    "market_tide": "/api/market/market-tide",
+    "financials": "/api/stock/{ticker}/financials",
 }
 
 _TTL: dict[str, int] = {
-    "flow_alerts": 60,
-    "darkpool_ticker": 120,
+    "darkpool_recent": 60,
+    "flow_alerts_market": 60,
+    "insider_transactions": 900,
+    "congress_recent": 1800,
+    "news_headlines": 120,
+    "economic_calendar": 1800,
     "greek_exposure_strike": 300,
-    "oi_change": 600,
-    "insider_ticker": 3600,
     "stock_state": 30,
     "ohlc": 60,
-    "market_tide": 120,
+    "financials": 86400,
 }
 
 _cache: dict[str, tuple[float, Any]] = {}

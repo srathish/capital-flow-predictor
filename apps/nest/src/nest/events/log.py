@@ -124,6 +124,17 @@ class EventLog:
         q += " ORDER BY ts"
         return self._hydrate(self.conn.execute(q, args).fetchall())
 
+    def latest_scores(self, limit: int = 25, exclude: tuple[str, ...] = ("__MACRO__",)) -> list[Score]:
+        """Latest Score per ticker across the whole emergent universe, top conviction first."""
+        rows = self.conn.execute(
+            "SELECT e.type, e.payload FROM events e "
+            "JOIN (SELECT ticker, MAX(id) mid FROM events WHERE type='score' GROUP BY ticker) g "
+            "ON e.id = g.mid ORDER BY e.id DESC"
+        ).fetchall()
+        scores = [s for s in self._hydrate(rows) if s.ticker not in exclude]
+        scores.sort(key=lambda s: s.conviction, reverse=True)
+        return scores[:limit]
+
     def latest_score(self, ticker: str) -> Score | None:
         row = self.conn.execute(
             "SELECT type, payload FROM events WHERE type='score' AND ticker=? "
