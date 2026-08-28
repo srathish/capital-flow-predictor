@@ -1,0 +1,132 @@
+"""Layers 1 & 2 — free, every cycle.
+
+Layer 1 (accumulation): each live Signal contributes
+    strength * source_weight * time_decay
+to a signed tally (bull positive, bear negative). Decay is exponential with a half-life
+of ttl/2, so evidence fades instead of vanishing; a signal past its TTL contributes 0.
+Conviction is the saturated magnitude of the net tally; direction is its sign.
+
+Layer 2 (convergence gate): a score never triggers on its own. To pass, the signals
+agreeing with the net direction must number >= GATE_MIN_SIGNALS from >= GATE_MIN_FAMILIES
+independent families inside GATE_WINDOW_HOURS. This is the anti-noise mechanism — one
+whale print or one loud Discord room can't page you by itself.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
+
+from nest import config
+from nest.engine import weights as weights_mod
+from nest.events.log import EventLog
+from nest.events.schema import Score, Signal
+
+
+def _age_hours(ts: str, now: datetime) -> float:
+    return (now - datetime.fromisoformat(ts)).total_seconds() / 3600.0
+
+
+def time_decay(age_hours: float, ttl_hours: float) -> float:
+    """Exponential decay, half-life = ttl/2; hard zero once past the TTL."""
+    if age_hours >= ttl_hours or ttl_hours <= 0:
+        return 0.0
+    half_life = ttl_hours / 2.0
+    return 0.5 ** (age_hours / half_life)
+
+
+@dataclass
+class Contribution:
+    source: str
+    family: str
+    direction: str
+    signed: float  # strength*weight*decay, signed by direction
+    signal: Signal
+
+
+@dataclass
+class TickerScore:
+    ticker: str
+    conviction: float
+    direction: str
+    contributions: list[Contribution] = field(default_factory=list)
+    passed_gate: bool = False
+    gate_reason: str = ""
+
+    @property
+    def contributors(self) -> list[str]:
+        # distinct sources agreeing with net direction, strongest first
+        agree = [c for c in self.contributions if c.direction == self.direction]
+        agree.sort(key=lambda c: abs(c.signed), reverse=True)
+        seen, out = set(), []
+        for c in agree:
+            if c.source not in seen:
+                seen.add(c.source)
+                out.append(c.source)
+        return out
+
+    @property
+    def families(self) -> list[str]:
+        return sorted({c.family for c in self.contributions if c.direction == self.direction})
+
+
+def score_ticker(
+    ticker: str, live_signals: list[Signal], weights: dict[str, float],
+    now: datetime | None = None,
+) -> TickerScore:
+    now = now or datetime.now(UTC)
+    contribs: list[Contribution] = []
+    net = 0.0
+    for s in live_signals:
+        decay = time_decay(_age_hours(s.ts, now), s.ttl_hours)
+        if decay <= 0.0 or s.direction == "neutral":
+            continue
+        w = weights_mod.source_weight(s.source, weights)
+        magnitude = s.strength * w * decay
+        signed = magnitude if s.direction == "bull" else -magnitude
+        net += signed
+        contribs.append(Contribution(
+            source=s.source, family=config.family_of(s.source),
+            direction=s.direction, signed=signed, signal=s,
+        ))
+    direction = "bull" if net >= 0 else "bear"
+    conviction = 100.0 * (1.0 - math.exp(-abs(net) / config.SCORE_SCALE))
+    ts = TickerScore(ticker=ticker, conviction=round(conviction, 1),
+                     direction=direction, contributions=contribs)
+    _apply_gate(ts)
+    return ts
+
+
+def _apply_gate(ts: TickerScore) -> None:
+    n_sig = sum(1 for c in ts.contributions if c.direction == ts.direction)
+    n_fam = len(ts.families)
+    if n_sig < config.GATE_MIN_SIGNALS:
+        ts.gate_reason = f"only {n_sig} agreeing signals (need {config.GATE_MIN_SIGNALS})"
+    elif n_fam < config.GATE_MIN_FAMILIES:
+        ts.gate_reason = f"only {n_fam} source family (need {config.GATE_MIN_FAMILIES})"
+    elif ts.conviction < config.CONVICTION_FLOOR:
+        ts.gate_reason = f"conviction {ts.conviction:.0f} < floor {config.CONVICTION_FLOOR}"
+    else:
+        ts.passed_gate = True
+        ts.gate_reason = "passed"
+
+
+def evaluate(log: EventLog, ticker: str, now: datetime | None = None) -> TickerScore:
+    """Full Layer 1+2 evaluation for one ticker off the event log, and append the Score.
+    Returns the TickerScore (whether or not it passed the gate — the tracker shadow-grades
+    names that scored but failed the gate, to check the gate filters noise not alpha)."""
+    now = now or datetime.now(UTC)
+    since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
+    live = log.signals_since(since, ticker=ticker)
+    weights = weights_mod.compute_all(log)
+    ts = score_ticker(ticker, live, weights, now=now)
+
+    prev = log.latest_score(ticker)
+    delta = round(ts.conviction - prev.conviction, 1) if prev else ts.conviction
+    log.append(Score(
+        ts=now.isoformat(timespec="seconds"), ticker=ticker, conviction=ts.conviction,
+        direction=ts.direction, contributors=ts.contributors, families=ts.families,
+        delta=delta,
+    ))
+    return ts

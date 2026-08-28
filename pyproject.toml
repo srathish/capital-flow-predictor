@@ -10,6 +10,7 @@ members = [
     "apps/athena",
     "apps/brain",
     "apps/jobs",
+    "apps/nest",
     "packages/shared",
     "packages/features",
     "packages/models",

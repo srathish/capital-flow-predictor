@@ -17,6 +17,7 @@ members = [
     "cfp-features",
     "cfp-jobs",
     "cfp-models",
+    "cfp-nest",
     "cfp-shared",
 ]
 
@@ -495,6 +496,44 @@ requires-dist = [
     { name = "scikit-learn", specifier = ">=1.4" },
     { name = "scipy", specifier = ">=1.11" },
     { name = "xgboost", specifier = ">=2.1" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "cfp-nest"
+version = "0.1.0"
+source = { editable = "apps/nest" }
+dependencies = [
+    { name = "anthropic" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=0.39" },
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13" },
+    { name = "pydantic", specifier = ">=2.9" },
+    { name = "pydantic-settings", specifier = ">=2.6" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3" },
+    { name = "python-dotenv", specifier = ">=1.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "rich", specifier = ">=13.9" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.7" },
+    { name = "typer", specifier = ">=0.12" },
 ]
 provides-extras = ["dev"]
 

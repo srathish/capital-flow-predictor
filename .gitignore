@@ -57,6 +57,9 @@ apps/brain/index.db-*
 # Athena — local signal journal
 apps/athena/data/
 
+# Nest — local append-only event log
+apps/nest/data/
+
 # Claude Code working state (per-machine)
 .claude/
 

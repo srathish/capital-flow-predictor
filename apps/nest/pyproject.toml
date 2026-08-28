@@ -1,0 +1,38 @@
+[project]
+name = "cfp-nest"
+version = "0.1.0"
+description = "Conviction Nest — a persistent multi-source signal daemon. Watches everything, remembers what it saw, grades itself against realized price, and interrupts only when independent signals converge. It does not trade."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "python-dotenv>=1.0",
+    "pyyaml>=6.0",
+    "typer>=0.12",
+    "rich>=13.9",
+    # LLM synthesis (Layer 3) is optional at runtime — the engine falls back to a
+    # mechanical thesis if anthropic is unavailable or no key is set.
+    "anthropic>=0.39",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.7",
+    "mypy>=1.13",
+]
+
+[project.scripts]
+nest = "nest.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nest"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

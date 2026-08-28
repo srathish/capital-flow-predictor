@@ -1,0 +1,176 @@
+"""Nest CLI.
+
+Usage:
+    nest cycle                       # one live cycle over the watchlist (ingest+score+call)
+    nest cycle --offline             # score/gate the existing log without hitting UW
+    nest grade                       # grade matured Calls at 1d/5d/20d, roll up weights
+    nest book                        # current conviction book (latest score per ticker)
+    nest tail --limit 40             # recent events (the field viz signal-log, in text)
+    nest weights                     # live source weights + hit rates
+    nest calibration --horizon 5d    # nest calibration by conviction bucket
+    nest digest [--send]             # build (and optionally deliver) the morning digest
+    nest kill / nest unkill          # the alert kill switch
+"""
+
+from __future__ import annotations
+
+import json
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import logging  # noqa: E402
+
+import typer  # noqa: E402
+import yaml  # noqa: E402
+from rich.console import Console  # noqa: E402
+from rich.table import Table  # noqa: E402
+
+from nest import config  # noqa: E402
+from nest.events.log import EventLog  # noqa: E402
+
+app = typer.Typer(add_completion=False, help="Conviction Nest — persistent signal daemon (no execution)")
+console = Console()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+
+
+def _watchlist() -> list[str]:
+    path = config.PACKAGE_ROOT / "src" / "nest" / "watchlist.yaml"
+    if path.exists():
+        return list((yaml.safe_load(path.read_text()) or {}).get("tickers", []))
+    return []
+
+
+@app.command()
+def cycle(
+    offline: bool = typer.Option(False, "--offline", help="Score the log without hitting UW"),
+    no_deliver: bool = typer.Option(False, "--no-deliver", help="Don't post Calls to Discord"),
+    ticker: str | None = typer.Option(None, "--ticker", help="Single ticker override"),
+) -> None:
+    """Run one conviction cycle."""
+    from nest import orchestrator
+    from nest.ingest.uw_client import UWClient
+
+    log = EventLog()
+    tickers = [ticker] if ticker else _watchlist()
+    uw = None if offline else UWClient()
+    result = orchestrator.run_cycle(log, uw, tickers, deliver=not no_deliver)
+    if uw:
+        uw.close()
+    log.close()
+    console.print_json(json.dumps(result, default=str))
+
+
+@app.command()
+def grade() -> None:
+    """Grade matured Calls at 1d/5d/20d and roll up source weights."""
+    from nest.ingest.uw_client import UWClient
+    from nest.tracker import grader
+
+    log = EventLog()
+    uw = UWClient()
+    written = grader.grade_due(log, grader._uw_price_fn(uw))
+    uw.close()
+    log.close()
+    console.print(f"[green]wrote {len(written)} grades[/green]")
+
+
+@app.command()
+def book() -> None:
+    """Current conviction book — latest score per watched ticker."""
+    log = EventLog()
+    table = Table(title="Conviction book")
+    for col in ("ticker", "conviction", "direction", "contributors", "families", "delta"):
+        table.add_column(col)
+    rows = []
+    for t in _watchlist():
+        s = log.latest_score(t)
+        if s:
+            rows.append(s)
+    rows.sort(key=lambda s: s.conviction, reverse=True)
+    for s in rows:
+        table.add_row(s.ticker, f"{s.conviction:.0f}", s.direction,
+                      ", ".join(s.contributors[:4]), ", ".join(s.families), f"{s.delta:+.0f}")
+    console.print(table)
+    log.close()
+
+
+@app.command()
+def tail(limit: int = typer.Option(40, "--limit"),
+         type: str | None = typer.Option(None, "--type", help="signal|score|call|grade")) -> None:
+    """Recent events — the field viz signal-log, as text."""
+    log = EventLog()
+    for e in reversed(log.tail(limit, type=type)):
+        console.print_json(e.model_dump_json())
+    log.close()
+
+
+@app.command()
+def weights(horizon: str = typer.Option("5d", "--horizon")) -> None:
+    """Live source weights and hit rates (watching a source decay to zero is the system working)."""
+    from nest.engine import weights as w
+
+    log = EventLog()
+    live = w.compute_all(log, horizon)
+    rates = w._hit_rates(log, horizon)
+    table = Table(title=f"Source weights ({horizon})")
+    for col in ("source", "family", "prior", "weight", "hits", "n"):
+        table.add_column(col)
+    seen = sorted(set(list(config.SOURCE_PRIOR) + list(live)))
+    for src in seen:
+        hits, n = rates.get(src, (0, 0))
+        table.add_row(src, config.family_of(src), f"{config.prior_of(src):.2f}",
+                      f"{w.source_weight(src, live):.3f}", str(hits), str(n))
+    console.print(table)
+    log.close()
+
+
+@app.command()
+def calibration(horizon: str = typer.Option("5d", "--horizon")) -> None:
+    """Nest calibration by conviction bucket — does 80+ mean 64% or a coin flip?"""
+    from nest.tracker import grader
+
+    log = EventLog()
+    cal = grader.calibration(log, horizon)
+    table = Table(title=f"Calibration ({horizon})")
+    for col in ("bucket", "n", "hits", "hit_rate", "avg_ret"):
+        table.add_column(col)
+    for key, b in cal.buckets.items():
+        table.add_row(key, str(b["n"]), str(b["hits"]),
+                      f"{b['hit_rate']:.0%}" if b["hit_rate"] is not None else "—",
+                      f"{b['avg_ret']:+.1f}%" if b["avg_ret"] is not None else "—")
+    console.print(table)
+    log.close()
+
+
+@app.command()
+def digest(send: bool = typer.Option(False, "--send", help="Deliver to Discord")) -> None:
+    """Build (and optionally deliver) the morning digest."""
+    from nest.delivery import digest as dg
+    from nest.delivery import discord
+
+    log = EventLog()
+    text = dg.build(log, _watchlist())
+    console.print(text)
+    if send:
+        discord.send_digest(text)
+    log.close()
+
+
+@app.command()
+def kill() -> None:
+    """Activate the kill switch — blocks every Call until `nest unkill`."""
+    config.DATA_DIR.mkdir(parents=True, exist_ok=True)
+    config.KILL_FILE.touch()
+    console.print("[red]KILL SWITCH ACTIVE[/red] — all Calls blocked")
+
+
+@app.command()
+def unkill() -> None:
+    config.KILL_FILE.unlink(missing_ok=True)
+    console.print("[green]kill switch cleared[/green]")
+
+
+if __name__ == "__main__":
+    app()
