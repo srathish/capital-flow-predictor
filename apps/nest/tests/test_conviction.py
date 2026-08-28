@@ -59,6 +59,23 @@ def test_opposing_signals_net_out_direction():
     assert ts.direction == "bear"
 
 
+def test_repolling_same_source_does_not_stack():
+    # the same source re-emitting each cycle (drifting meta) must NOT inflate conviction
+    weights = {"uw_gex": 1.0, "uw_chart": 1.0, "uw_fundamentals": 1.0}
+    base = [_sig("uw_gex", spot=40.0), _sig("uw_chart"), _sig("uw_fundamentals")]
+    once = engine.score_ticker("T", base, weights)
+    # simulate 10 cycles of re-polling: same 3 sources, slightly newer timestamps
+    many = []
+    for k in range(10):
+        many += [_sig("uw_gex", age_h=0.01 * k, spot=40.0 + k),
+                 _sig("uw_chart", age_h=0.01 * k),
+                 _sig("uw_fundamentals", age_h=0.01 * k)]
+    stacked = engine.score_ticker("T", many, weights)
+    # conviction from 30 stacked signals must match ~the 3 distinct sources, not balloon
+    assert abs(stacked.conviction - once.conviction) < 2.0
+    assert len(stacked.contributors) == 3  # still just 3 distinct sources
+
+
 def test_expired_signal_contributes_nothing():
     weights = {"uw_flow": 1.0, "uw_darkpool": 1.0, "uw_gex": 1.0}
     sigs = [_sig("uw_flow"), _sig("uw_darkpool"), _sig("uw_gex", age_h=100, ttl=48, spot=40.0)]

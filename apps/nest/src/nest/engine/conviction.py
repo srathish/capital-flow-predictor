@@ -71,6 +71,19 @@ class TickerScore:
         return sorted({c.family for c in self.contributions if c.direction == self.direction})
 
 
+def _latest_per_source(live_signals: list[Signal]) -> list[Signal]:
+    """Collapse to the most recent signal per source. A source re-polled every cycle
+    (GEX wall still there, trend still up) must REFRESH its one reading, not stack — the
+    dedupe hash misses re-polls because volatile meta (spot, SMA) drifts. Conviction should
+    reflect how many DISTINCT sources agree and how fresh each is, not how often we polled."""
+    latest: dict[str, Signal] = {}
+    for s in live_signals:
+        cur = latest.get(s.source)
+        if cur is None or s.ts > cur.ts:
+            latest[s.source] = s
+    return list(latest.values())
+
+
 def score_ticker(
     ticker: str, live_signals: list[Signal], weights: dict[str, float],
     now: datetime | None = None, floor: float | None = None,
@@ -78,7 +91,7 @@ def score_ticker(
     now = now or datetime.now(UTC)
     contribs: list[Contribution] = []
     net = 0.0
-    for s in live_signals:
+    for s in _latest_per_source(live_signals):
         decay = time_decay(_age_hours(s.ts, now), s.ttl_hours)
         if decay <= 0.0 or s.direction == "neutral":
             continue
