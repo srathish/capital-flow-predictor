@@ -59,8 +59,27 @@ Legend: ✅ ingested · 🔜 planned · ➖ context/regime (not a per-ticker con
 - ❌ anything that can't be timestamped against a price for grading
 - ❌ per-ticker drill-down variants already covered by a market-wide feed
 
-## Count
-Wired today: 8 (`uw_flow`, `uw_darkpool`, `uw_gex`, `uw_insider`, `uw_congress`,
-`uw_news`, `uw_chart`, `uw_fundamentals`) + regime dial. Packs 1–3 + vanna/charm/sweep
-decomposition + social + EDGAR reach the ~50 target. Each earns its weight via the
-tracker — a source that doesn't pay decays to zero, so breadth is safe (brief §12).
+## Count — wired (2026-08-28)
+
+**23 distinct source types across all 9 families**, plus each Discord caller and each
+Reddit-velocity ticker as their own tracked source:
+
+- flow (5): `uw_flow`, `uw_darkpool`, `uw_sweep`, `uw_netprem`, (lit-flow = 404, skipped)
+- levels (4): `uw_gex`, `uw_vex`, `uw_charm`, `uw_maxpain`
+- positioning (4): `uw_insider`, `uw_congress`, `uw_oi`, `uw_short`
+- filings (3): `uw_news`, `uw_analyst`, `edgar_offering`
+- chart (3): `uw_chart`, `uw_breakout`, `uw_volsurge`
+- fundamental (2): `uw_fundamentals`, `uw_margins`
+- catalyst (2): `uw_fda`, `uw_earnings`
+- social (N): `discord:<caller>` (per-caller), `reddit_velocity`
+- macro/regime: Fed tone + market-tide breadth + econ-calendar (scales the floor)
+
+**Needs credentials to activate** (adapters built, no-op until set):
+- Discord: `DATABASE_URL` (set on Railway → reads Bellwether `discord_messages`; needs the
+  discord_listener to be capturing)
+- Reddit: `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` (Reddit blocks anon datacenter IPs)
+
+**Skipped** (low-value / unavailable): FCF (bad field mapping), 13F ownership snapshot
+(non-directional), lit-flow / prediction-markets (404 on tier), 8-K (non-directional from
+metadata). Each wired source earns its weight via the tracker — a source that doesn't pay
+decays to zero, so breadth is safe (brief §12).

@@ -381,10 +381,37 @@ def enrich_earnings(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
+def enrich_margins(uw: UWClient, ticker: str) -> list[Signal]:
+    """Margin trend (fundamental) — net margin expanding YoY is bull, compressing is bear."""
+    try:
+        inc = (uw.get("financials", ticker=ticker) or {}).get("income_statements") or []
+        if len(inc) < 5:
+            return []
+
+        def margin(r: dict) -> float | None:
+            rev = _f(r, "total_revenue")
+            return _f(r, "net_income") / rev if rev else None
+
+        now, yoy = margin(inc[0]), margin(inc[4])  # newest-first; 4 quarters back
+        if now is None or yoy is None:
+            return []
+        delta = now - yoy
+        if abs(delta) < 0.01:  # <1pp change is noise
+            return []
+        return [Signal(source="uw_margins", ticker=ticker,
+                       direction="bull" if delta > 0 else "bear",
+                       strength=_clamp(abs(delta) / 0.08), ttl_hours=480,
+                       meta={"net_margin_pct": round(now * 100, 1),
+                             "yoy_delta_pp": round(delta * 100, 1)})]
+    except Exception as e:  # noqa: BLE001
+        log.warning("enrich_margins %s failed: %s", ticker, e)
+        return []
+
+
 # per-ticker enrichment run on each surfaced name
 ENRICHERS = [enrich_gex, enrich_vex, enrich_charm, enrich_maxpain, enrich_chart,
-             enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_short,
-             enrich_netprem, enrich_earnings]
+             enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_margins,
+             enrich_short, enrich_netprem, enrich_earnings]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints

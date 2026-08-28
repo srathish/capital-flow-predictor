@@ -84,10 +84,12 @@ def run_cycle(log_db: EventLog, uw: UWClient | None, limiter: RateLimiter | None
     new_signals = []
     if uw is not None:
         new_signals = feeds.collect_all(uw)
-        # non-UW sources: EDGAR offerings (free) + Discord callers (Bellwether Postgres)
-        from nest.ingest import discord_feed, edgar
+        # non-UW sources: EDGAR offerings (free) + Discord callers (Bellwether Postgres) +
+        # Reddit velocity (needs OAuth creds). Each no-ops when unavailable.
+        from nest.ingest import discord_feed, edgar, reddit_feed
         new_signals += edgar.feed_edgar()
         new_signals += discord_feed.feed_discord()
+        new_signals += reddit_feed.feed_reddit()
         for s in new_signals:
             log_db.append(s)
         summary["feed_signals"] = len(new_signals)

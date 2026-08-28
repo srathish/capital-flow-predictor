@@ -83,6 +83,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_breakout": "chart",
     "uw_volsurge": "chart",
     "uw_fundamentals": "fundamental",
+    "uw_margins": "fundamental",
     "uw_fda": "catalyst",
     "uw_earnings": "catalyst",
 }
@@ -120,7 +121,8 @@ SOURCE_PRIOR: dict[str, float] = {
     "uw_chart": 0.40,          # trend/momentum — a solid confirmation source
     "uw_breakout": 0.40,       # range breakout on volume
     "uw_volsurge": 0.30,       # relative volume surge
-    "uw_fundamentals": 0.35,   # valuation/growth — slow-moving context
+    "uw_fundamentals": 0.35,   # revenue growth + profitability
+    "uw_margins": 0.35,        # margin expansion/compression YoY
     "uw_fda": 0.45,            # resolved FDA outcome — a hard binary catalyst
     "uw_earnings": 0.30,       # earnings-proximity flag (why-now)
     "uw_sweep": 0.42,          # aggressive sweeps — a stronger flow tell
