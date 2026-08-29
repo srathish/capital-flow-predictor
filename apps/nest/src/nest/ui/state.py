@@ -298,3 +298,57 @@ def build_picks(log: EventLog, now: datetime | None = None) -> dict:
         "shorts": [pick_row(s) for s in bear[:12]],
         "sectors": sorted(sec_heat.items(), key=lambda kv: -kv[1]),
     }
+
+
+# --- 3D nexus graph (the orbitable stock galaxy) ----------------------------
+
+def build_graph(log: EventLog, now: datetime | None = None) -> dict:
+    """Nodes = tracked stocks (size ∝ conviction, grows with confluence), grouped into
+    sector clusters (the 'islands'); side data = names whose confluence is rising. As more
+    stocks are tracked the cloud grows; as a name gains agreement its node swells."""
+    from datetime import timedelta
+    now = now or datetime.now(UTC)
+    since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
+    sig_by_ticker: dict[str, dict] = {}
+    universe = set()
+    for s in log.signals_since(since):
+        if not s.ticker or s.ticker == macro.MACRO_TICKER:
+            continue
+        universe.add(s.ticker)
+        sig_by_ticker.setdefault(s.ticker, {})[s.source] = s
+
+    def sector_of(t: str) -> str:
+        sig = sig_by_ticker.get(t, {})
+        for src in ("uw_momentum", "uw_chart", "uw_theme"):
+            if src in sig and sig[src].meta.get("sector"):
+                return sig[src].meta["sector"]
+        return "Other"
+
+    scored = log.latest_scores(400)
+    nodes = []
+    for s in scored[:200]:                       # cap the cloud for a fluid 3D layout
+        nfam = len(s.families)
+        nodes.append({
+            "id": s.ticker, "conv": round(s.conviction, 1), "dir": s.direction,
+            "sector": sector_of(s.ticker), "delta": round(s.delta, 1), "fam": nfam,
+        })
+    sectors = sorted({n["sector"] for n in nodes})
+    rising = sorted([n for n in nodes if n["delta"] > 0], key=lambda n: -n["delta"])[:16]
+
+    # sector breadth (heat) from theme signals
+    heat: dict[str, float] = {}
+    for sig in sig_by_ticker.values():
+        t = sig.get("uw_theme")
+        if t and t.meta.get("sector"):
+            heat[t.meta["sector"]] = t.meta.get("sector_breadth", 0.5)
+
+    reg = log.latest_score(macro.MACRO_TICKER)
+    floor = config.CONVICTION_FLOOR + (reg.meta.get("floor_delta", 0.0) if reg else 0.0)
+    return {
+        "now": now.isoformat(timespec="seconds"),
+        "universe": len(universe), "shown": len(nodes),
+        "regime": (reg.meta.get("tone") if reg else "neutral"),
+        "floor": round(floor, 0),
+        "nodes": nodes, "sectors": sectors, "rising": rising,
+        "sector_heat": sorted(heat.items(), key=lambda kv: -kv[1]),
+    }

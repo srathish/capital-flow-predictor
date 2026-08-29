@@ -14,10 +14,11 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from nest.events.log import EventLog
+from nest.ui.graph import render_graph
 from nest.ui.page import render_page
 from nest.ui.picks import render_picks
 from nest.ui.pipeline import render_pipeline
-from nest.ui.state import build_picks, build_pipeline, build_state
+from nest.ui.state import build_graph, build_picks, build_pipeline, build_state
 
 log = logging.getLogger(__name__)
 _scheduler_started = False
@@ -60,6 +61,24 @@ def picks() -> JSONResponse:
     log_db = EventLog()
     try:
         return JSONResponse(build_picks(log_db))
+    finally:
+        log_db.close()
+
+
+@app.get("/nexus", response_class=HTMLResponse)
+def nexus() -> str:
+    log_db = EventLog()
+    try:
+        return render_graph(build_graph(log_db), poll_url="/api/nexus")
+    finally:
+        log_db.close()
+
+
+@app.get("/api/nexus")
+def api_nexus() -> JSONResponse:
+    log_db = EventLog()
+    try:
+        return JSONResponse(build_graph(log_db))
     finally:
         log_db.close()
 

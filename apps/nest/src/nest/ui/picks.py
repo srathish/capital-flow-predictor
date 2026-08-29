@@ -96,7 +96,7 @@ _HTML = r"""<!doctype html>
 <div class="wrap">
   <header>
     <span class="brand">NEST <b>·</b> FINDS</span>
-    <div class="tabs"><a class="tab on" href="/">FINDS</a><a class="tab" href="/pipeline">PIPELINE</a><a class="tab" href="/field">FIELD</a></div>
+    <div class="tabs"><a class="tab on" href="/">FINDS</a><a class="tab" href="/nexus">NEXUS</a><a class="tab" href="/pipeline">PIPELINE</a><a class="tab" href="/field">FIELD</a></div>
     <span class="stat push live" id="s-stream">LIVE</span>
     <span class="stat">SCANNING <b id="s-univ">–</b></span>
     <span class="stat">REGIME <b id="s-regime">–</b></span>
