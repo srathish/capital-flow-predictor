@@ -347,8 +347,47 @@ def feed_sweep(uw: UWClient, limit: int = 200) -> list[Signal]:
     return _safe(run, "uw_sweep")
 
 
+def feed_momentum(uw: UWClient, limit: int = 500) -> list[Signal]:
+    """WHOLE-UNIVERSE momentum finder (chart family) — the validated stock-selector, in ONE
+    call. The stock screener returns ~350 liquid names with 52-week high/low + relative
+    volume; a name's position in its 52-week range is a lookahead-safe momentum proxy that
+    backtested at 20d IC ~0.16 (t+2.8). This is what lets the Nest rank the whole liquid
+    universe by a validated signal instead of only the names a flow feed happened to surface.
+    Bull near the 52w high, bear near the low; strength from range position + relative volume.
+    """
+    def run() -> list[Signal]:
+        rows = uw.get("screener_stocks", params={"limit": limit}) or []
+        out: list[Signal] = []
+        for r in rows:
+            if str(r.get("issue_type", "")) in config.EXCLUDE_ISSUE_TYPES:
+                continue
+            if float(r.get("marketcap") or 0) < 1e9:   # liquid names only
+                continue
+            tkr = str(r.get("ticker") or "")
+            close = _f(r.get("close"))
+            hi = _f(r.get("week_52_high"))
+            lo = _f(r.get("week_52_low"))
+            if not tkr or not close or hi <= lo:
+                continue
+            pos = (close - lo) / (hi - lo)             # 0 = at 52w low, 1 = at 52w high
+            relvol = _f(r.get("relative_volume")) or 1.0
+            if 0.35 <= pos <= 0.65:                     # mid-range = no momentum edge
+                continue
+            direction = "bull" if pos > 0.65 else "bear"
+            strength = _clamp(abs(pos - 0.5) * 1.6 * min(1.5, 0.7 + relvol * 0.3))
+            out.append(Signal(
+                source="uw_momentum", ticker=tkr, direction=direction, strength=strength,
+                ttl_hours=72,
+                meta={"range_pos": round(pos, 2), "from_52w_high_pct": round((close / hi - 1) * 100, 1),
+                      "rel_vol": round(relvol, 2), "sector": r.get("sector")},
+            ))
+        return out
+
+    return _safe(run, "uw_momentum")
+
+
 # The market-wide feeds run once per cycle; each returns Signals across many tickers.
-FEEDS = [feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
+FEEDS = [feed_momentum, feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
          feed_analyst, feed_oi, feed_fda, feed_sweep]
 
 

@@ -166,7 +166,7 @@ def spearman(xs: list[float], ys: list[float]) -> float:
 
 def _sig_variants(b: dict, i: int) -> dict:
     """Candidate signals at index i (all lookahead-safe from OHLC up to i)."""
-    c, hi, low, vol = b["close"], b["high"], b["low"], b["vol"]
+    c, hi = b["close"], b["high"]
     if i < 130:
         return {}
     sma20 = sum(c[i - 19:i + 1]) / 20

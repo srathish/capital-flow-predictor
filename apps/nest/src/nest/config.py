@@ -57,30 +57,24 @@ FAMILIES = ("flow", "levels", "positioning", "filings", "social", "macro",
 SOURCE_FAMILY: dict[str, str] = {
     "uw_darkpool": "flow",
     "uw_flow": "flow",
-    "uw_lit_flow": "flow",
     "uw_sweep": "flow",
     "uw_netprem": "flow",
     "uw_gex": "levels",
     "uw_vex": "levels",
     "uw_charm": "levels",
     "uw_maxpain": "levels",
-    "gexclaw": "levels",
     "uw_oi": "positioning",
     "uw_short": "positioning",
     "uw_insider": "positioning",
     "uw_congress": "positioning",
-    "uw_institutional": "positioning",
     "uw_analyst": "filings",
     "uw_news": "filings",
-    "edgar_8k": "filings",
-    "edgar_s1": "filings",
     "edgar_offering": "filings",
     "reddit_velocity": "social",
     "stocktwits": "social",
     "wiki_attention": "social",
     # discord callers are dynamic: "discord:<caller>" -> social (see family_of)
-    "kalshi": "macro",
-    "polymarket": "macro",
+    "uw_momentum": "chart",
     "uw_chart": "chart",
     "uw_breakout": "chart",
     "uw_volsurge": "chart",
@@ -99,41 +93,46 @@ EXCLUDE_ISSUE_TYPES = {"ETF", "ETN", "Index"}
 # Names always enriched regardless of feed activity (pin your conviction core here).
 PINNED = ["IREN", "MU", "MARA", "HIMS", "PYPL", "NKE", "AAPL", "AMD", "CRDO", "MRVL"]
 
-# New sources start at a low prior weight and earn their way up via the tracker;
-# a bad feed decays toward zero and costs nothing but a config line.
+# EVIDENCE-BASED PRIORS. Two independent bodies of evidence set these, not intuition:
+#   (1) our own lookahead-safe backtest (research/backtest.py): cross-sectional MOMENTUM/
+#       QUALITY predicts 20d forward excess return (IC ~0.17, t~3.7, top-decile +2.7%/mo,
+#       11/12 OOS). This is the one selection signal that survives OOS.
+#   (2) the repo's five permutation-tested systems (gex/talon/falcon/whale-plays): GEX &
+#       flow predict WHERE/HOW-MUCH (reach, pins, exits) — NEVER direction ("every scalar
+#       GEX conditioner rejected"; "flow 47% coin flip"; direction OOS-AUC ~0.51).
+# So: DIRECTION/SELECTION sources (momentum, quality, catalyst, insider) get HIGH priors;
+# MAP/CONFIRMATION sources (GEX, flow, dark pool) get LOW priors — they confirm/locate, they
+# don't pick the name. The tracker still adjusts all of these from live grades.
 SOURCE_PRIOR: dict[str, float] = {
-    "uw_darkpool": 0.35,
-    "uw_flow": 0.30,
-    "uw_lit_flow": 0.25,
-    "uw_gex": 0.40,
-    "gexclaw": 0.45,
-    "uw_oi": 0.35,
-    "uw_short": 0.30,   # squeeze fuel — real but bidirectional; earns its keep on setups
-    "uw_insider": 0.55,  # Form-4 opening buys have the best base rate
-    "uw_congress": 0.30,
-    "uw_institutional": 0.30,
-    "uw_analyst": 0.20,
-    "uw_news": 0.20,
-    "edgar_8k": 0.40,
-    "edgar_s1": 0.25,
-    "edgar_offering": 0.40,   # 424B/S-1/S-3 dilution — reliably bearish short-term
+    # --- direction / selection (validated) — HIGH ---
+    "uw_momentum": 0.65,       # whole-universe 52w-momentum (screener) — the finder
+    "uw_chart": 0.65,          # vol-adj 3-6mo momentum + trend (backtest IC ~0.17 @20d)
+    "uw_breakout": 0.45,       # range breakout on volume (momentum companion)
+    "uw_insider": 0.55,        # Form-4 open-market buys — best positioning base rate
+    "uw_fundamentals": 0.45,   # revenue growth + profitability (quality)
+    "uw_margins": 0.45,        # margin expansion (quality)
+    "uw_fda": 0.55,            # resolved FDA outcome — a hard binary catalyst
+    "uw_earnings": 0.45,       # earnings-proximity catalyst (why-now)
+    "edgar_offering": 0.45,    # 424B/S-1/S-3 dilution — reliably bearish
+    # --- confirmation / map (NOT directional per repo) — LOW ---
+    "uw_flow": 0.18,           # flow = confirmation only, never thesis (47% coin flip)
+    "uw_sweep": 0.20,
+    "uw_darkpool": 0.12,       # "retire dark-pool as a signal" — magnet, not direction
+    "uw_netprem": 0.15,
+    "uw_oi": 0.20,
+    "uw_gex": 0.15,            # a MAP (levels/exits), not a direction — every conditioner rejected
+    "uw_vex": 0.10,            # vanna = weak confirm/veto at best (corr +0.11)
+    "uw_charm": 0.08,
+    "uw_maxpain": 0.15,
+    "uw_short": 0.25,          # squeeze fuel — bidirectional
+    "uw_analyst": 0.30,        # ratings — modest
+    "uw_news": 0.18,           # sentiment — noisy
+    "uw_congress": 0.15,
+    "uw_volsurge": 0.25,
+    # --- social (retail context) — LOW ---
     "reddit_velocity": 0.15,
-    "stocktwits": 0.15,        # retail-herd velocity (residential only)
-    "wiki_attention": 0.15,    # Wikipedia pageview velocity — retail attention, no creds
-    "kalshi": 0.20,
-    "polymarket": 0.20,
-    "uw_chart": 0.40,          # trend/momentum — a solid confirmation source
-    "uw_breakout": 0.40,       # range breakout on volume
-    "uw_volsurge": 0.30,       # relative volume surge
-    "uw_fundamentals": 0.35,   # revenue growth + profitability
-    "uw_margins": 0.35,        # margin expansion/compression YoY
-    "uw_fda": 0.45,            # resolved FDA outcome — a hard binary catalyst
-    "uw_earnings": 0.30,       # earnings-proximity flag (why-now)
-    "uw_sweep": 0.42,          # aggressive sweeps — a stronger flow tell
-    "uw_netprem": 0.32,        # intraday net-premium tilt
-    "uw_vex": 0.30,            # vanna magnet (weak-real; earns or decays)
-    "uw_charm": 0.18,          # charm — subtle, low prior
-    "uw_maxpain": 0.30,        # max-pain gravity
+    "stocktwits": 0.15,
+    "wiki_attention": 0.15,
 }
 DEFAULT_PRIOR = 0.20  # anything unseen (e.g. a brand-new discord caller)
 
