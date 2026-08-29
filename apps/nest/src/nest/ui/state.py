@@ -369,16 +369,25 @@ _SRC_LABEL = {
 }
 
 
-def build_ticker(log: EventLog, ticker: str, now: datetime | None = None) -> dict:
+def build_ticker(log: EventLog, ticker: str, now: datetime | None = None, uw=None) -> dict:
     """Everything the Nest knows about one stock — for the click-to-open detail drawer.
     Organizes its live signals into readable sections (momentum, quality, catalyst, LEVELS
-    for entry/target/stop, confirmation, positioning, news, social) with the actual numbers."""
+    for entry/target/stop, confirmation, positioning, news, social) with the actual numbers,
+    plus a conviction-history sparkline and (when a UW client is passed) a price sparkline."""
     from datetime import timedelta
     now = now or datetime.now(UTC)
     ticker = ticker.upper()
     since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
     sig = {s.source: s for s in log.signals_since(since, ticker=ticker)}
     score = log.latest_score(ticker)
+    conv_hist = [round(s.conviction, 1) for s in log.score_history(ticker, 48)]
+    price_spark = []
+    if uw is not None:
+        try:
+            bars = uw.get("ohlc", params={"limit": 60}, ticker=ticker, candle_size="1d") or []
+            price_spark = [round(float(b.get("close")), 2) for b in bars if b.get("close")][-60:]
+        except Exception:  # noqa: BLE001
+            price_spark = []
 
     def m(src, key, default=None):
         return sig[src].meta.get(key, default) if src in sig else default
@@ -464,6 +473,8 @@ def build_ticker(log: EventLog, ticker: str, now: datetime | None = None) -> dic
         ],
         "confirms": confirms, "vetoes": vetoes,
         "n_signals": len(sig),
+        "conv_history": conv_hist,
+        "price_spark": price_spark,
     }
 
 
@@ -490,13 +501,31 @@ def build_console(log: EventLog, now: datetime | None = None) -> dict:
                        "rate": counts.get(src, 0), "weight": round(wmod.source_weight(src, live_w), 2),
                        "dir": src in config.DIRECTION_SOURCES})
     cal = grader.calibration(log, "5d")
+    # catalyst-ahead: names in the book with an earnings/FDA signal live (why-now)
+    from datetime import timedelta
+    since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
+    cats: dict[str, dict] = {}
+    all_tickers = set()
+    for s in log.signals_since(since):
+        if s.ticker and s.ticker != macro.MACRO_TICKER:
+            all_tickers.add(s.ticker)
+        if s.source == "uw_earnings":
+            cats[s.ticker] = {"ticker": s.ticker, "kind": "ER",
+                              "days": s.meta.get("days_to_earnings"), "dir": s.direction}
+        elif s.source == "uw_fda":
+            cats.setdefault(s.ticker, {"ticker": s.ticker, "kind": "FDA",
+                                       "days": None, "dir": s.direction})
+    catalysts = sorted(cats.values(), key=lambda c: (c["days"] if c["days"] is not None else 99))
     return {
         "now": now.isoformat(timespec="seconds"),
         "universe": g["universe"], "shown": g["shown"], "regime": g["regime"], "floor": g["floor"],
         "nodes": g["nodes"], "sectors": g["sectors"], "sector_heat": g["sector_heat"],
         "rising": g["rising"],
-        "longs": p["longs"][:24], "shorts": p["shorts"][:8],
+        "longs": p["longs"][:24], "shorts": p["shorts"][:10],
+        "n_long": len(p["longs"]), "n_short": len(p["shorts"]),
         "signals": signals, "health": health,
         "calibration": {k: v for k, v in cal.buckets.items()},
         "alerts": sum(1 for x in p["longs"] if x.get("gated")),
+        "catalysts": catalysts[:10],
+        "tickers": sorted(all_tickers),
     }

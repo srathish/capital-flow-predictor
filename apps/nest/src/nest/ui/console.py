@@ -93,6 +93,21 @@ _HTML = r"""<!doctype html>
   .dsec.empty{display:none}
   .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:19;display:none}
   .backdrop.on{display:block}
+  /* search + filters + spark */
+  #search{background:#140f08;border:1px solid var(--line);border-radius:7px;color:var(--ink);
+    font:inherit;font-size:11px;padding:3px 9px;width:130px;outline:none}
+  #search:focus{border-color:#4a3d16}
+  #search::placeholder{color:var(--dim)}
+  .filt{display:flex;gap:4px;margin-bottom:6px}
+  .fb{font-size:9.5px;padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:var(--dim);cursor:pointer}
+  .fb.on{color:var(--amber);border-color:#4a3d16;background:#1a1608}
+  .spark{width:100%;height:38px;display:block}
+  .spark .ln{fill:none;stroke-width:1.5}
+  .crow{display:flex;align-items:center;gap:7px;padding:2px 0;cursor:pointer}
+  .crow:hover .nm{color:var(--ink)}
+  .crow .tag{font-size:9px;padding:0 5px;border-radius:4px;border:1px solid var(--line)}
+  .crow .nm{flex:1;color:var(--muted);font-weight:600}
+  .crow .dd{color:var(--amber);font-variant-numeric:tabular-nums;font-size:10px}
   @media(max-width:900px){.main{grid-template-columns:1fr}.rail.l,.stagewrap{display:none}}
 </style>
 </head>
@@ -100,7 +115,10 @@ _HTML = r"""<!doctype html>
 <div class="app">
   <div class="bar">
     <span class="brand">NEST <b>·</b> CONSOLE</span>
+    <input id="search" list="tklist" placeholder="⌕ ticker" autocomplete="off">
+    <datalist id="tklist"></datalist>
     <span class="stat">UNIVERSE <b id="s-univ">–</b></span>
+    <span class="stat">L/S <b id="s-ls">–</b></span>
     <span class="stat">⚡ALERTS <b id="s-alerts">–</b></span>
     <span class="stat">REGIME <b id="s-regime">–</b></span>
     <span class="stat">GATE <b id="s-floor">–</b></span>
@@ -109,12 +127,18 @@ _HTML = r"""<!doctype html>
   <div class="main">
     <div class="rail l">
       <div class="card"><h3>Rising confluence</h3><div id="rising"></div></div>
+      <div class="card"><h3>Catalysts ahead</h3><div id="cats"></div></div>
       <div class="card"><h3>Sector heat</h3><div id="heat"></div></div>
       <div class="card"><h3>Calibration · 5d</h3><div id="cal"></div></div>
     </div>
     <div class="stagewrap"><canvas id="cv"></canvas><div class="hint">drag to orbit · scroll to zoom · click a star</div></div>
     <div class="rail r">
       <div class="card"><h3>Top picks <span style="color:var(--dim)">momentum·quality·theme</span></h3>
+        <div class="filt" id="filt">
+          <span class="fb on" data-f="long">longs</span>
+          <span class="fb" data-f="short">shorts</span>
+          <span class="fb" data-f="gated">⚡ only</span>
+        </div>
         <div class="picks" id="picks"></div></div>
     </div>
   </div>
@@ -188,13 +212,30 @@ function pk(p){const dc=p.direction==='bull'?'var(--bull)':'var(--bear)';
   const chips=(p.why||[]).slice(0,3).map(w=>`<span class="chip">${esc(w)}</span>`).join('')+(p.gated?'<span class="chip fired">⚡</span>':'');
   return `<div class="pk" onclick="openDrawer('${p.ticker}')"><div class="t"><span class="dir" style="color:${dc}"></span>${esc(p.ticker)}</div>
     <div class="cv" style="color:${dc}">${p.conviction.toFixed(0)}</div><div class="why">${chips}</div></div>`}
+let filt='long';
+document.getElementById('filt').addEventListener('click',e=>{const f=e.target.dataset.f;if(!f)return;
+  filt=f;[...document.querySelectorAll('.fb')].forEach(b=>b.classList.toggle('on',b.dataset.f===f));renderPicks()});
+function renderPicks(){const s=STATE;let list;
+  if(filt==='short')list=s.shorts||[]; else if(filt==='gated')list=(s.longs||[]).filter(x=>x.gated); else list=s.longs||[];
+  document.getElementById('picks').innerHTML=list.map(pk).join('')||'<div style="color:var(--dim)">— none —</div>';}
+// search
+const sb=document.getElementById('search');
+sb.addEventListener('change',()=>{const v=sb.value.trim().toUpperCase();if(v){openDrawer(v);sb.value=''}});
+sb.addEventListener('keydown',e=>{if(e.key==='Enter'){const v=sb.value.trim().toUpperCase();if(v){openDrawer(v);sb.value=''}}});
 function render(){const s=STATE;
   document.getElementById('s-univ').textContent=s.universe;
+  document.getElementById('s-ls').textContent=(s.n_long||0)+' / '+(s.n_short||0);
   document.getElementById('s-alerts').textContent=s.alerts;
   document.getElementById('s-regime').textContent=(s.regime||'neutral').toUpperCase();
   document.getElementById('s-floor').textContent=Math.round(s.floor||70);
   baseAge=0;baseAt=performance.now();tickAge();
-  document.getElementById('picks').innerHTML=(s.longs||[]).map(pk).join('')||'<div style="color:var(--dim)">scanning…</div>';
+  document.getElementById('tklist').innerHTML=(s.tickers||[]).map(t=>`<option value="${t}">`).join('');
+  renderPicks();
+  document.getElementById('cats').innerHTML=(s.catalysts||[]).map(c=>{
+    const col=c.dir==='bull'?'var(--bull)':'var(--bear)';
+    return `<div class="crow" onclick="openDrawer('${c.ticker}')"><span class="tag" style="color:${col};border-color:${col}">${c.kind}</span>
+     <span class="nm">${c.ticker}</span>${c.days!=null?`<span class="dd">${c.days}d</span>`:''}</div>`;
+  }).join('')||'<div style="color:var(--dim)">none in window</div>';
   document.getElementById('rising').innerHTML=(s.rising||[]).slice(0,12).map(n=>
     `<div class="rrow"><span class="tk">${n.id}</span><span class="cv">${n.conv|0}</span><span class="dl">▲${n.delta}</span></div>`).join('')||'<div style="color:var(--dim)">— steady —</div>';
   document.getElementById('heat').innerHTML=(s.sector_heat||[]).slice(0,7).map(([nm,b])=>{
@@ -218,12 +259,22 @@ async function openDrawer(t){
 }
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('backdrop').classList.remove('on')}
 document.getElementById('backdrop').onclick=closeDrawer;
+function spark(arr,color){
+  if(!arr||arr.length<2)return '<div style="color:var(--dim);font-size:10px">no history yet</div>';
+  const w=344,h=38,mn=Math.min(...arr),mx=Math.max(...arr),rng=(mx-mn)||1;
+  const pts=arr.map((v,i)=>`${(i/(arr.length-1)*w).toFixed(1)},${(h-((v-mn)/rng)*h*0.9-h*0.05).toFixed(1)}`).join(' ');
+  const last=arr[arr.length-1],up=last>=arr[0],c=up?color:'#ff6b5a';
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline class="ln" points="${pts}" stroke="${c}"/></svg>
+    <div style="display:flex;justify-content:space-between;color:var(--dim);font-size:10px"><span>${arr[0]}</span><span style="color:${c}">${last}</span></div>`;
+}
 function renderDrawer(x){
   const dc=x.direction==='bull'?'var(--bull)':'var(--bear)';
   let h=`<div class="dh"><span class="x" onclick="closeDrawer()">✕</span>
     <div class="tkr" style="color:${dc}">${esc(x.ticker)} ${x.gated?'⚡':''}</div>
     <div class="meta">${x.direction.toUpperCase()} · conviction <b style="color:var(--amber)">${x.conviction}</b> · ${esc(x.sector||'')} · ${x.n_signals} signals${x.delta?` · Δ${x.delta>0?'+':''}${x.delta}`:''}</div>
     <div class="meta">${(x.confirms||[]).length?'✓ '+x.confirms.join(' '):''} ${(x.vetoes||[]).length?'· ✕ '+x.vetoes.join(' '):''}</div></div>`;
+  h+=`<div class="dsec"><h4>Conviction trend</h4>${spark(x.conv_history,'#ffc24b')}</div>`;
+  if(x.price_spark&&x.price_spark.length>1)h+=`<div class="dsec"><h4>Price · 60d</h4>${spark(x.price_spark,'#5b9dff')}</div>`;
   for(const sec of (x.sections||[])){
     const rows=(sec.rows||[]);const cls=rows.length?'dsec':'dsec empty';
     h+=`<div class="${cls}"><h4 style="color:${FAM[sec.tone]||'var(--dim)'}">${esc(sec.title)}</h4>`+

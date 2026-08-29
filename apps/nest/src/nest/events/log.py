@@ -135,6 +135,14 @@ class EventLog:
         scores.sort(key=lambda s: s.conviction, reverse=True)
         return scores[:limit]
 
+    def score_history(self, ticker: str, limit: int = 48) -> list[Score]:
+        """Conviction over time for one ticker (oldest→newest) — for the drawer sparkline."""
+        rows = self.conn.execute(
+            "SELECT type, payload FROM events WHERE type='score' AND ticker=? "
+            "ORDER BY id DESC LIMIT ?", (ticker, limit),
+        ).fetchall()
+        return list(reversed(self._hydrate(rows)))
+
     def latest_score(self, ticker: str) -> Score | None:
         row = self.conn.execute(
             "SELECT type, payload FROM events WHERE type='score' AND ticker=? "

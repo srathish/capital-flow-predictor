@@ -93,10 +93,18 @@ def picks() -> JSONResponse:
 
 @app.get("/api/ticker/{ticker}")
 def ticker(ticker: str) -> JSONResponse:
+    from nest.ingest.uw_client import UWClient
     log_db = EventLog()
+    uw = None
     try:
-        return JSONResponse(build_ticker(log_db, ticker))
+        uw = UWClient()
+    except Exception:  # noqa: BLE001 — price spark is optional
+        uw = None
+    try:
+        return JSONResponse(build_ticker(log_db, ticker, uw=uw))
     finally:
+        if uw:
+            uw.close()
         log_db.close()
 
 
