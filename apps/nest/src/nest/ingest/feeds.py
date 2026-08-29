@@ -370,16 +370,20 @@ def feed_momentum(uw: UWClient, limit: int = 500) -> list[Signal]:
             if not tkr or not close or hi <= lo:
                 continue
             pos = (close - lo) / (hi - lo)             # 0 = at 52w low, 1 = at 52w high
-            relvol = _f(r.get("relative_volume")) or 1.0
             if 0.35 <= pos <= 0.65:                     # mid-range = no momentum edge
                 continue
-            direction = "bull" if pos > 0.65 else "bear"
-            strength = _clamp(abs(pos - 0.5) * 1.6 * min(1.5, 0.7 + relvol * 0.3))
+            # VOL-ADJUSTED momentum — the backtest's strongest single signal (IC 0.17, t+3.9):
+            # low-vol names at the same range position rank higher (cleaner trend, less crash).
+            vol = _f(r.get("realized_volatility")) or _f(r.get("volatility_30")) or 0.35
+            voladj = (pos - 0.5) / max(0.12, vol)
+            direction = "bull" if pos > 0.5 else "bear"
+            strength = _clamp(abs(voladj) * 0.62)
             out.append(Signal(
                 source="uw_momentum", ticker=tkr, direction=direction, strength=strength,
                 ttl_hours=72,
                 meta={"range_pos": round(pos, 2), "from_52w_high_pct": round((close / hi - 1) * 100, 1),
-                      "rel_vol": round(relvol, 2), "sector": r.get("sector")},
+                      "voladj_mom": round(voladj, 2), "realized_vol": round(vol, 2),
+                      "sector": r.get("sector")},
             ))
         return out
 

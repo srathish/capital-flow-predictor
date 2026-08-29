@@ -188,6 +188,32 @@ def _sig_variants(b: dict, i: int) -> dict:
     }
 
 
+def _adv_variants(b: dict, i: int, spy: dict) -> dict:
+    """Momentum enhancers that need the market benchmark: residual (beta-adjusted) momentum,
+    short-term reversal, and momentum + short-term-reversal (buy the dip in an uptrend)."""
+    c, dates = b["close"], b["dates"]
+    if i < 130:
+        return {}
+    ret5 = c[i] / c[i - 5] - 1
+    out = {"st_reversal": -ret5, "mom_minus_st": (c[i] / c[i - 120] - 1) - 2.0 * ret5}
+    # residual momentum: 60d return minus beta * SPY 60d return
+    sret, kret = [], []
+    for k in range(i - 59, i + 1):
+        s0, s1 = spy["idx"].get(dates[k - 1]), spy["idx"].get(dates[k])
+        if s0 is None or s1 is None:
+            continue
+        sret.append((c[k] - c[k - 1]) / c[k - 1])
+        kret.append((spy["close"][s1] - spy["close"][s0]) / spy["close"][s0])
+    if len(sret) > 30:
+        mk, ms = sum(kret) / len(kret), sum(sret) / len(sret)
+        var = sum((x - mk) ** 2 for x in kret) or 1e-9
+        beta = sum((a - ms) * (x - mk) for a, x in zip(sret, kret)) / var
+        sa, sb = spy["idx"].get(dates[i - 60]), spy["idx"].get(dates[i])
+        spy60 = (spy["close"][sb] - spy["close"][sa]) / spy["close"][sa] if sa is not None and sb is not None else 0.0
+        out["resid_mom"] = (c[i] / c[i - 60] - 1) - beta * spy60
+    return out
+
+
 def main():
     print(f"Loading bars for {len(UNIVERSE)} names + SPY (GEX={'on' if USE_GEX else 'off'})...")
     spy = load_bars("SPY")
@@ -199,19 +225,20 @@ def main():
     print(f"  loaded {len(bars)} names")
 
     # --- variant sweep: which signal best predicts 20d/5d forward excess return? ---
-    SIGS = ["trend", "mom20", "mom60", "mom120", "mom_12_1", "hi_prox", "voladj_mom", "chart_combo"]
+    SIGS = ["trend", "mom20", "mom60", "mom120", "mom_12_1", "hi_prox", "voladj_mom",
+            "chart_combo", "resid_mom", "st_reversal", "mom_minus_st"]
     for hz in (5, 20):
         print(f"\n=== SIGNAL SWEEP @ {hz}d forward excess (14 OOS dates) ===")
-        print(f"  {'signal':12} {'mean IC':>8} {'t-stat':>7} {'IC>0':>6} {'topDec%':>8}")
+        print(f"  {'signal':13} {'mean IC':>8} {'t-stat':>7} {'IC>0':>6} {'topDec%':>8} {'L-S%':>7}")
         for sig in SIGS:
-            ics, topdec = [], []
+            ics, topdec, lspread = [], [], []
             for date in AS_OF:
                 conv, fwd = {}, {}
                 for t, b in bars.items():
                     i = as_of_index(b, date)
                     if i is None:
                         continue
-                    v = _sig_variants(b, i)
+                    v = {**_sig_variants(b, i), **_adv_variants(b, i, spy)}
                     fe = fwd_excess(b, spy, i, hz)
                     if sig in v and fe is not None:
                         conv[t] = v[sig]
@@ -222,14 +249,17 @@ def main():
                 ics.append(spearman([conv[t] for t in common], [fwd[t] for t in common]))
                 ranked = sorted(common, key=lambda t: conv[t])
                 k = max(1, len(ranked) // 10)
-                topdec.append(statistics.mean(fwd[t] for t in ranked[-k:]))
+                top = statistics.mean(fwd[t] for t in ranked[-k:])
+                bot = statistics.mean(fwd[t] for t in ranked[:k])
+                topdec.append(top)
+                lspread.append(top - bot)          # long-short (market-neutral) spread
             ics = [x for x in ics if not math.isnan(x)]
             if not ics:
                 continue
             mic = statistics.mean(ics)
             tic = mic / (statistics.pstdev(ics) / math.sqrt(len(ics))) if len(ics) > 1 and statistics.pstdev(ics) else 0.0
-            print(f"  {sig:12} {mic:+8.3f} {tic:+7.2f} {sum(1 for x in ics if x>0):>4}/{len(ics)} "
-                  f"{statistics.mean(topdec)*100:+8.2f}")
+            print(f"  {sig:13} {mic:+8.3f} {tic:+7.2f} {sum(1 for x in ics if x>0):>4}/{len(ics)} "
+                  f"{statistics.mean(topdec)*100:+8.2f} {statistics.mean(lspread)*100:+7.2f}")
     # --- blended composite (cross-sectional rank average) + per-date top-decile P&L ---
     BLEND = ["voladj_mom", "mom120", "chart_combo", "hi_prox"]
     print(f"\n=== BLENDED FINDER (rank-avg of {BLEND}) @ 20d ===")
