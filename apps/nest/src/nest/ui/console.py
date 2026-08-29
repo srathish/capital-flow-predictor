@@ -139,7 +139,7 @@ function resize(){const r=cv.parentElement.getBoundingClientRect();W=r.width;H=r
   cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}
 addEventListener('resize',resize);
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-let N=[],centers={},hub={},rotX=-0.3,rotY=0.6,dist=1.95,tDist=1.95,drag=false,lx=0,ly=0,autov=0.0015;
+let N=[],centers={},hub={},rotX=-0.3,rotY=0.6,dist=1.95,tDist=1.95,drag=false,lx=0,ly=0,settle=220;
 const WORLD=300,FOCAL=900;
 function fib(i,n){const ga=Math.PI*(3-Math.sqrt(5)),y=1-(i/Math.max(1,n-1))*2,r=Math.sqrt(Math.max(0,1-y*y)),t=ga*i;return[Math.cos(t)*r,y,Math.sin(t)*r]}
 function col(n){const t=Math.min(1,n.conv/85);return n.dir==='bull'?[255,190+40*t|0,80+70*t|0]:[255,90+30*t|0,70+20*t|0]}
@@ -148,7 +148,7 @@ function ingest(){const prev={};N.forEach(n=>prev[n.id]=n);const secs=STATE.sect
   hub={};const best={};(STATE.nodes||[]).forEach(n=>{if(!(n.sector in best)||n.conv>best[n.sector]){best[n.sector]=n.conv;hub[n.sector]=n.id}});
   N=(STATE.nodes||[]).map(nd=>{const c=centers[nd.sector]||[0,0,0],p=prev[nd.id],cc=col(nd);
     return{...nd,x:p?p.x:c[0]+(Math.random()-.5)*.4,y:p?p.y:c[1]+(Math.random()-.5)*.4,z:p?p.z:c[2]+(Math.random()-.5)*.4,
-      vx:p?p.vx:0,vy:p?p.vy:0,vz:p?p.vz:0,r:cc[0],g:cc[1],b:cc[2]}})}
+      vx:p?p.vx:0,vy:p?p.vy:0,vz:p?p.vz:0,r:cc[0],g:cc[1],b:cc[2]}});settle=Math.max(settle,140)}
 function step(){const KC=.01,KG=.0016,KR=.00055,dp=.86;
   for(const n of N){const c=centers[n.sector]||[0,0,0];n._fx=(c[0]*1.15-n.x)*KC-n.x*KG;n._fy=(c[1]*1.15-n.y)*KC-n.y*KG;n._fz=(c[2]*1.15-n.z)*KC-n.z*KG}
   for(let i=0;i<N.length;i++){const a=N[i];for(let j=i+1;j<N.length;j++){const b=N[j];
@@ -159,7 +159,7 @@ function proj(n){const cy=Math.cos(rotY),sy=Math.sin(rotY),cx=Math.cos(rotX),sx=
   let x=n.x*cy-n.z*sy,z=n.x*sy+n.z*cy,y=n.y,y2=y*cx-z*sx,z2=y*sx+z*cx;const s=FOCAL/(FOCAL+(z2+dist)*WORLD);
   return{sx:W/2+x*s*WORLD,sy:H/2+y2*s*WORLD,scale:s,z:z2}}
 let hover=null;
-function frame(){if(!reduce)step();if(!drag)rotY+=autov;dist+=(tDist-dist)*.1;ctx.clearRect(0,0,W,H);
+function frame(){if(!reduce&&settle>0){step();settle--}dist+=(tDist-dist)*.1;ctx.clearRect(0,0,W,H);
   const P={};for(const n of N)P[n.id]=proj(n);
   ctx.lineWidth=1;for(const n of N){const h=hub[n.sector];if(!h||h===n.id)continue;const a=P[n.id],b=P[h];
     ctx.strokeStyle='rgba(255,190,90,'+(0.05+0.05*Math.min(1,n.conv/80))*a.scale+')';ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke()}

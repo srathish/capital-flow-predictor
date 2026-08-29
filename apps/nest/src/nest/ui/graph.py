@@ -120,6 +120,7 @@ function ingest(){
       z:p?p.z:c[2]+(Math.random()-.5)*.4, vx:p?p.vx:0, vy:p?p.vy:0, vz:p?p.vz:0,
       r:col[0],g:col[1],b:col[2]};
   });
+  settle=Math.max(settle||0,140);
 }
 function step(){ // one light force iteration (clusters into sector islands)
   const KspringC=0.010, Kgrav=0.0016, Krep=0.00055, damp=0.86;
@@ -149,9 +150,9 @@ function project(n){
   return {sx:W/2 + x*scale*WORLD, sy:H/2 + y2*scale*WORLD, scale, z:z2};
 }
 let hover=null;
+let settle=240;
 function frame(){
-  if(!reduce) step();
-  if(!dragging) rotY+=autov;
+  if(!reduce && settle>0){ step(); settle--; }
   dist += (targetDist-dist)*0.1;
   ctx.clearRect(0,0,W,H);
   // faint core glow
