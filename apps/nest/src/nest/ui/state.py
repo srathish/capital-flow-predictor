@@ -468,6 +468,8 @@ def build_ticker(log: EventLog, ticker: str, now: datetime | None = None, uw=Non
              "rows": sec("uw_insider", "uw_short", "uw_oi", "uw_congress")},
             {"title": "News / filings", "tone": "filings",
              "rows": sec("uw_news", "uw_analyst", "edgar_offering")},
+            {"title": "Web headlines (Google News)", "tone": "filings",
+             "rows": [(h, "") for h in (m("web_news", "headlines") or [])]},
             {"title": "Social", "tone": "social",
              "rows": sec("wiki_attention", "stocktwits", "reddit_velocity")},
         ],

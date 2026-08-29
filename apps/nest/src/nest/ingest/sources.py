@@ -494,10 +494,16 @@ def enrich_wiki(uw: UWClient, ticker: str) -> list[Signal]:
         return []
 
 
+def enrich_web(uw: UWClient, ticker: str) -> list[Signal]:
+    """Web-news scrape (Google News headlines) — delegates to ingest.web_news."""
+    from nest.ingest import web_news
+    return web_news.enrich_web_news(uw, ticker)
+
+
 # per-ticker enrichment run on each surfaced name
 ENRICHERS = [enrich_gex, enrich_vex, enrich_charm, enrich_maxpain, enrich_chart,
              enrich_breakout, enrich_volsurge, enrich_fundamentals, enrich_margins,
-             enrich_short, enrich_netprem, enrich_earnings, enrich_wiki]
+             enrich_short, enrich_netprem, enrich_earnings, enrich_wiki, enrich_web]
 
 
 # index / non-stock symbols that don't support the per-ticker stock endpoints

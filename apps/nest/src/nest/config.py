@@ -80,6 +80,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_congress": "positioning",
     "uw_analyst": "filings",
     "uw_news": "filings",
+    "web_news": "filings",
     "edgar_offering": "filings",
     "reddit_velocity": "social",
     "stocktwits": "social",
@@ -140,6 +141,7 @@ SOURCE_PRIOR: dict[str, float] = {
     "uw_short": 0.25,          # squeeze fuel — bidirectional
     "uw_analyst": 0.30,        # ratings — modest
     "uw_news": 0.18,           # sentiment — noisy
+    "web_news": 0.18,          # Google-News headline sentiment — noisy, confirmation only
     "uw_congress": 0.15,
     "uw_volsurge": 0.25,
     # --- social (retail context) — LOW ---
