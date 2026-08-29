@@ -87,7 +87,9 @@ def _run_grade() -> None:
     uw = UWClient()
     try:
         written = grader.grade_due(log_db, grader._uw_price_fn(uw))
-        log.info("grade: wrote %d grades", len(written))
+        from nest.tracker import shadow
+        n_shadow = shadow.grade_due(uw)
+        log.info("grade: wrote %d call-grades + %d shadow-grade groups", len(written), n_shadow)
     finally:
         uw.close()
         log_db.close()

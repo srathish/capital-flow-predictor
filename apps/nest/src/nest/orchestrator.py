@@ -162,6 +162,12 @@ def run_cycle(log_db: EventLog, uw: UWClient | None, limiter: RateLimiter | None
         from nest.ingest import health
         counts = Counter(s.source for s in new_signals + enrich_signals)
         _persist_cycle(now, summary, dict(counts), health.drain())
+        # live-proof: snapshot the top book once/day for forward shadow-grading
+        try:
+            from nest.tracker import shadow
+            shadow.record_snapshot(log_db, uw, now)
+        except Exception:  # noqa: BLE001 — never let the track-record loop break a cycle
+            log.exception("shadow snapshot failed")
     return summary
 
 

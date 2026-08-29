@@ -585,4 +585,13 @@ def build_console(log: EventLog, now: datetime | None = None) -> dict:
         "alerts": sum(1 for x in p["longs"] if x.get("gated")),
         "catalysts": catalysts[:10],
         "tickers": sorted(all_tickers),
+        "track": _shadow_summary(),
     }
+
+
+def _shadow_summary() -> dict:
+    from nest.tracker import shadow
+    try:
+        return shadow.summary()
+    except Exception:  # noqa: BLE001
+        return {"graded_total": 0, "flagship": {}, "by_horizon": {}}

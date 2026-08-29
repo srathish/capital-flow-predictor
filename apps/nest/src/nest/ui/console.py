@@ -129,7 +129,7 @@ _HTML = r"""<!doctype html>
       <div class="card"><h3>Rising confluence</h3><div id="rising"></div></div>
       <div class="card"><h3>Catalysts ahead</h3><div id="cats"></div></div>
       <div class="card"><h3>Sector heat</h3><div id="heat"></div></div>
-      <div class="card"><h3>Calibration · 5d</h3><div id="cal"></div></div>
+      <div class="card"><h3>Live track record <span style="color:var(--dim)" id="trk-n"></span></h3><div id="track"></div></div>
     </div>
     <div class="stagewrap"><canvas id="cv"></canvas><div class="hint">drag to orbit · scroll to zoom · click a star</div></div>
     <div class="rail r">
@@ -241,8 +241,14 @@ function render(){const s=STATE;
   document.getElementById('heat').innerHTML=(s.sector_heat||[]).slice(0,7).map(([nm,b])=>{
     const c=b>.55?'var(--bull)':b<.45?'var(--bear)':'var(--muted)';
     return `<div class="hrow"><span class="nm">${esc(nm)}</span><span class="hb"><i style="width:${Math.round(b*100)}%;background:${c}"></i></span></div>`}).join('')||'<div style="color:var(--dim)">—</div>';
-  const cb=s.calibration||{};document.getElementById('cal').innerHTML=Object.entries(cb).map(([k,v])=>
-    `<div class="calrow"><span>${k}</span><span>${v.hit_rate!=null?Math.round(v.hit_rate*100)+'% · n'+v.n:'no history'}</span></div>`).join('');
+  const tr=(s.track&&s.track.by_horizon)||{}, g=(s.track&&s.track.graded_total)||0;
+  document.getElementById('trk-n').textContent=g?('n='+g):'';
+  if(!g){document.getElementById('track').innerHTML='<div style="color:var(--dim);font-size:10.5px;line-height:1.5">accruing — the top book is snapshotted daily and graded forward at 1d/5d/20d vs SPY (excess). First numbers in ~1 day, the 20d proof in ~4 weeks.</div>';}
+  else{document.getElementById('track').innerHTML='<div class="calrow" style="color:var(--dim)"><span>70+ conv</span><span>hit · excess</span></div>'+
+    ['1d','5d','20d'].map(hz=>{const b=(tr[hz]||{})['70+']||{};
+      if(b.hit_rate==null)return `<div class="calrow"><span>${hz}</span><span style="color:var(--dim)">— n${b.n||0}</span></div>`;
+      const c=b.mean_excess>=0?'var(--bull)':'var(--bear)';
+      return `<div class="calrow"><span>${hz}</span><span>${Math.round(b.hit_rate*100)}% · <b style="color:${c}">${b.mean_excess>0?'+':''}${b.mean_excess}%</b> · n${b.n}</span></div>`;}).join('');}
   document.getElementById('log').innerHTML=(s.signals||[]).map(x=>
     `<div class="lg"><span class="ts">${x.ts}</span><span class="sr"><span class="fam" style="background:${FAM[x.family]||'#666'}"></span>${esc(x.source)}</span>
      <span class="tk2">${esc(x.ticker)}</span><span style="color:${x.dir==='bull'?'var(--bull)':'var(--bear)'}">${x.dir}</span></div>`).join('');
