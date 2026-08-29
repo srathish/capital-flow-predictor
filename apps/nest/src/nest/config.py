@@ -22,9 +22,12 @@ UW_TOKEN_ENV = "UNUSUAL_WHALES_API_KEY"  # same env var the rest of the repo use
 DISCORD_WEBHOOK_ENV = "DISCORD_WEBHOOK_URL"
 ANTHROPIC_KEY_ENV = "ANTHROPIC_API_KEY"
 
-# Layer 3 synthesis is Haiku (cheap, gated, cached); the once-a-day digest is Sonnet.
-SYNTH_MODEL = os.environ.get("NEST_MODEL", "claude-haiku-4-5-20251001")
-DIGEST_MODEL = os.environ.get("NEST_DIGEST_MODEL", "claude-sonnet-5")
+# LLM policy — LOCAL-FIRST. All analysis is mechanical (see ui.state.local_read); the LLM is
+# an OPT-IN premium layer, OFF by default even if an API key exists. Turn it on only when you
+# want it, with NEST_LLM=on, and even then it's rate-limited + only fires on gated picks.
+LLM_ENABLED = os.environ.get("NEST_LLM", "off").lower() in ("1", "on", "true", "yes")
+SYNTH_MODEL = os.environ.get("NEST_MODEL", "claude-haiku-4-5-20251001")  # cheap, gated, cached
+DIGEST_MODEL = os.environ.get("NEST_DIGEST_MODEL", "claude-sonnet-5")    # once/day when enabled
 
 # --- alert policy (scarcity) -------------------------------------------------
 CONVICTION_FLOOR = 70  # 0-100; scores below this never become a Call

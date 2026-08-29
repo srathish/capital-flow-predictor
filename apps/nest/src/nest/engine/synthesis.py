@@ -119,7 +119,8 @@ def _stack_lines(ts: TickerScore) -> str:
 def synthesize(ts: TickerScore, ref_price: float | None,
                limiter: RateLimiter | None = None) -> Synthesis:
     limiter = limiter or RateLimiter()
-    if not os.environ.get(config.ANTHROPIC_KEY_ENV) or not limiter.allow():
+    # LOCAL-FIRST: the LLM is opt-in (NEST_LLM=on) and off by default even with a key set.
+    if not config.LLM_ENABLED or not os.environ.get(config.ANTHROPIC_KEY_ENV) or not limiter.allow():
         return _mechanical(ts, ref_price)
     try:
         import anthropic

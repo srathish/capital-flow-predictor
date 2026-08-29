@@ -36,8 +36,8 @@ def build(log: EventLog, now: datetime | None = None) -> str:
             lines.append(f"{key}: {b['hit_rate']:.0%} hit (n={b['n']}, avg {b['avg_ret']:+.1f}%)")
     plain = "\n".join(lines)
 
-    if not os.environ.get(config.ANTHROPIC_KEY_ENV):
-        return plain
+    if not config.LLM_ENABLED or not os.environ.get(config.ANTHROPIC_KEY_ENV):
+        return plain  # local-first: mechanical digest unless NEST_LLM=on
     try:
         import anthropic
 

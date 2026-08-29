@@ -354,6 +354,60 @@ def build_graph(log: EventLog, now: datetime | None = None) -> dict:
     }
 
 
+# --- LOCAL analysis engine (a readable bull/bear thesis, ZERO LLM) -----------
+
+def local_read(score, sig: dict) -> str:
+    """Compose a plain-English bull/bear thesis from the mechanical signals — no LLM. This is
+    the default 'analysis' for every stock; the LLM (if ever enabled) is only a premium layer
+    on the top few gated picks. Local math does the reasoning."""
+    if score is None:
+        return "No score yet — awaiting the next cycle."
+    d = score.direction
+
+    def meta(src, key):
+        return sig[src].meta.get(key) if src in sig else None
+
+    parts: list[str] = []
+    ch = sig.get("uw_chart")
+    if ch:
+        m6 = ch.meta.get("mom120_pct")
+        hh = ch.meta.get("from_52w_high_pct")
+        loc = "near its 52-week high" if hh is not None and hh > -8 else f"{hh:+.0f}% off its 52w high"
+        parts.append(f"Momentum leads — 6-month {m6:+.0f}%, {loc}, vol-adjusted {ch.meta.get('voladj_mom')}")
+    elif "uw_momentum" in sig:
+        parts.append(f"52-week momentum: {int((meta('uw_momentum','range_pos') or 0)*100)}% up its range")
+    q = []
+    if meta("uw_fundamentals", "rev_growth_qoq_pct"):
+        q.append(f"revenue {meta('uw_fundamentals','rev_growth_qoq_pct'):+.0f}% QoQ")
+    if "uw_margins" in sig:
+        q.append(f"net margin {meta('uw_margins','net_margin_pct')}% ({meta('uw_margins','yoy_delta_pp'):+}pp YoY)")
+    if q:
+        parts.append("quality backs it (" + ", ".join(q) + ")")
+    if "uw_theme" in sig:
+        parts.append(f"riding the {meta('uw_theme','sector')} cohort (sector breadth "
+                     f"{int((meta('uw_theme','sector_breadth') or 0)*100)}%)")
+    if "uw_earnings" in sig:
+        parts.append(f"earnings in {meta('uw_earnings','days_to_earnings')} sessions")
+    if "uw_fda" in sig:
+        parts.append("live FDA catalyst")
+    confirms = [s.replace("uw_", "") for s in sig
+                if s not in config.DIRECTION_SOURCES and sig[s].direction == d]
+    vetoes = [s.replace("uw_", "") for s in sig
+              if s not in config.DIRECTION_SOURCES and sig[s].direction != d]
+    if confirms:
+        parts.append("confirmed by " + ", ".join(confirms[:4]))
+    lead = f"{d.upper()} · conviction {score.conviction:.0f}. " + "; ".join(parts) + "."
+    if "uw_gex" in sig:
+        lead += (f" Map: gamma wall ${meta('uw_gex','wall_strike')} vs spot "
+                 f"${meta('uw_gex','spot')} (the level to watch).")
+    if vetoes:
+        lead += f" ⚠ opposed by {', '.join(vetoes[:3])} — read the stack."
+    wn = sig.get("web_news")
+    if wn and wn.meta.get("latest"):
+        lead += f' Latest: "{wn.meta["latest"][:90]}".'
+    return lead
+
+
 # --- per-stock detail (the drill-down: show EVERY captured field) ------------
 
 _SRC_LABEL = {
@@ -477,6 +531,7 @@ def build_ticker(log: EventLog, ticker: str, now: datetime | None = None, uw=Non
         "n_signals": len(sig),
         "conv_history": conv_hist,
         "price_spark": price_spark,
+        "read": local_read(score, sig),
     }
 
 

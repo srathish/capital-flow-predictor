@@ -273,6 +273,7 @@ function renderDrawer(x){
     <div class="tkr" style="color:${dc}">${esc(x.ticker)} ${x.gated?'⚡':''}</div>
     <div class="meta">${x.direction.toUpperCase()} · conviction <b style="color:var(--amber)">${x.conviction}</b> · ${esc(x.sector||'')} · ${x.n_signals} signals${x.delta?` · Δ${x.delta>0?'+':''}${x.delta}`:''}</div>
     <div class="meta">${(x.confirms||[]).length?'✓ '+x.confirms.join(' '):''} ${(x.vetoes||[]).length?'· ✕ '+x.vetoes.join(' '):''}</div></div>`;
+  h+=`<div class="dsec"><h4>Local read · no LLM</h4><div style="color:var(--ink);line-height:1.65;font-size:12px">${esc(x.read||'')}</div></div>`;
   h+=`<div class="dsec"><h4>Conviction trend</h4>${spark(x.conv_history,'#ffc24b')}</div>`;
   if(x.price_spark&&x.price_spark.length>1)h+=`<div class="dsec"><h4>Price · 60d</h4>${spark(x.price_spark,'#5b9dff')}</div>`;
   for(const sec of (x.sections||[])){
