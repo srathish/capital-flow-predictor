@@ -218,3 +218,83 @@ def build_pipeline(log: EventLog, now: datetime | None = None) -> dict:
         "regime_tone": regime_tone,
         "floor": last.get("floor", config.CONVICTION_FLOOR),
     }
+
+
+# --- picks board (the finder's output) --------------------------------------
+
+def build_picks(log: EventLog, now: datetime | None = None) -> dict:
+    """The finder's ranked output — what to actually look at. For the top names by
+    conviction, gather the 'why' from their live signals: momentum, sector + theme tailwind,
+    catalysts, and which confirmation sources agree/oppose. Picks are LIVE every cycle."""
+    from datetime import timedelta
+    now = now or datetime.now(UTC)
+    since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
+    # group live signals by ticker (one pass)
+    by_ticker: dict[str, dict] = {}
+    universe = set()
+    for s in log.signals_since(since):
+        if not s.ticker or s.ticker == macro.MACRO_TICKER:
+            continue
+        universe.add(s.ticker)
+        by_ticker.setdefault(s.ticker, {})[s.source] = s
+
+    reg = log.latest_score(macro.MACRO_TICKER)
+    floor = config.CONVICTION_FLOOR + (reg.meta.get("floor_delta", 0.0) if reg else 0.0)
+
+    def pick_row(score) -> dict:
+        sigs = by_ticker.get(score.ticker, {})
+        mom = sigs.get("uw_chart") or sigs.get("uw_momentum")
+        theme = sigs.get("uw_theme")
+        earn = sigs.get("uw_earnings")
+        fda = sigs.get("uw_fda")
+        # confirmation sources present and whether they agree with the pick's direction
+        confirms, vetoes = [], []
+        for src, s in sigs.items():
+            if src in config.DIRECTION_SOURCES:
+                continue
+            (confirms if s.direction == score.direction else vetoes).append(src.replace("uw_", ""))
+        why = []
+        if mom:
+            mp = mom.meta.get("mom60_pct")
+            why.append(f"momentum {mp:+.0f}%" if mp is not None else "momentum")
+        if any(s in sigs for s in ("uw_fundamentals", "uw_margins")):
+            why.append("quality")
+        if theme:
+            why.append(f"theme:{theme.meta.get('sector', '?')}")
+        if earn:
+            why.append(f"earnings {earn.meta.get('days_to_earnings', '?')}d")
+        if fda:
+            why.append("FDA")
+        return {
+            "ticker": score.ticker, "conviction": round(score.conviction, 1),
+            "direction": score.direction, "delta": round(score.delta, 1),
+            "sector": (mom.meta.get("sector") if mom else None)
+                      or (theme.meta.get("sector") if theme else None),
+            "mom60_pct": (mom.meta.get("mom60_pct") if mom else None),
+            "from_52w_high_pct": (mom.meta.get("from_52w_high_pct") if mom else None),
+            "range_pos": (mom.meta.get("range_pos") if mom else None),
+            "theme_breadth": (theme.meta.get("sector_breadth") if theme else None),
+            "families": score.families, "why": why,
+            "confirms": confirms[:5], "vetoes": vetoes[:4],
+            "gated": score.conviction >= floor,
+        }
+
+    scored = log.latest_scores(300)
+    bull = [s for s in scored if s.direction == "bull"]
+    bear = [s for s in scored if s.direction == "bear"]
+    # sector heat (bull cohorts) from theme signals
+    sec_heat: dict[str, float] = {}
+    for s in by_ticker.values():
+        t = s.get("uw_theme")
+        if t and t.meta.get("sector"):
+            sec_heat[t.meta["sector"]] = t.meta.get("sector_breadth", 0.5)
+
+    return {
+        "now": now.isoformat(timespec="seconds"),
+        "universe": len(universe),
+        "floor": round(floor, 0),
+        "regime": (reg.meta.get("tone") if reg else "neutral"),
+        "longs": [pick_row(s) for s in bull[:30]],
+        "shorts": [pick_row(s) for s in bear[:12]],
+        "sectors": sorted(sec_heat.items(), key=lambda kv: -kv[1]),
+    }

@@ -361,7 +361,7 @@ def feed_momentum(uw: UWClient, limit: int = 500) -> list[Signal]:
         for r in rows:
             if str(r.get("issue_type", "")) in config.EXCLUDE_ISSUE_TYPES:
                 continue
-            if float(r.get("marketcap") or 0) < 1e9:   # liquid names only
+            if float(r.get("marketcap") or 0) < 3e8:   # skip micro-caps (momentum too noisy)
                 continue
             tkr = str(r.get("ticker") or "")
             close = _f(r.get("close"))
