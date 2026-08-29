@@ -137,9 +137,44 @@ def track_record() -> dict:
     return out
 
 
+def leg_record(min_conv: float = 55.0) -> dict:
+    """Long-SHORT book proof: per horizon, split the graded actionable book (conv ≥ min_conv)
+    into its long leg and short leg. Each row's `excess` is already sign-adjusted to "profit"
+    (short rows were negated at grade time), so a working leg has positive mean_excess. The
+    `spread` is long+short mean — the market-neutral book's edge, and the backtest's biggest
+    alpha lever. This is the honest test of whether the short side actually pays."""
+    d = _load()
+    out: dict[str, dict] = {}
+    for hz in _HORIZONS:
+        legs = {"long": {"n": 0, "hits": 0, "sum": 0.0},
+                "short": {"n": 0, "hits": 0, "sum": 0.0}}
+        for snap in d["snaps"]:
+            for row in snap["graded"].get(hz, []):
+                if row["conv"] < min_conv:
+                    continue
+                leg = legs["short" if row["dir"] == "bear" else "long"]
+                leg["n"] += 1
+                leg["hits"] += int(row["hit"])
+                leg["sum"] += row["excess"]
+
+        def roll(b: dict) -> dict:
+            return {"n": b["n"],
+                    "hit_rate": round(b["hits"] / b["n"], 3) if b["n"] else None,
+                    "mean_excess": round(b["sum"] / b["n"], 2) if b["n"] else None}
+
+        lo_r, sh_r = roll(legs["long"]), roll(legs["short"])
+        spread = (round(lo_r["mean_excess"] + sh_r["mean_excess"], 2)
+                  if lo_r["mean_excess"] is not None and sh_r["mean_excess"] is not None
+                  else None)
+        out[hz] = {"long": lo_r, "short": sh_r, "spread": spread}
+    return out
+
+
 def summary() -> dict:
-    """Headline numbers for the UI: the 20d 70+ bucket (the finder's flagship claim)."""
+    """Headline numbers for the UI: the 20d 70+ bucket (the finder's flagship claim), plus the
+    long/short leg split (does the market-neutral book earn its spread?)."""
     tr = track_record()
+    lr = leg_record()
     flagship = tr.get("20d", {}).get("70+", {})
     total = sum(v["n"] for hz in tr.values() for v in hz.values())
-    return {"graded_total": total, "flagship": flagship, "by_horizon": tr}
+    return {"graded_total": total, "flagship": flagship, "by_horizon": tr, "by_leg": lr}

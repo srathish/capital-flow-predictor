@@ -58,6 +58,8 @@ _HTML = r"""<!doctype html>
   .chip{font-size:9.5px;padding:0 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
   .chip.fired{color:var(--amber);border-color:#4a3d16;background:#1a1608}
   .picks{display:flex;flex-direction:column;gap:5px}
+  .pkhead{font-size:9px;letter-spacing:.16em;font-weight:700;padding:4px 0 1px;opacity:.8}
+  .pkhead:first-child{padding-top:0}
   /* rising / heat */
   .rrow{display:flex;align-items:center;gap:7px;padding:2px 0}
   .rrow .tk{font-weight:600;width:46px}.rrow .cv{color:var(--muted);width:26px;text-align:right;font-variant-numeric:tabular-nums}
@@ -135,7 +137,8 @@ _HTML = r"""<!doctype html>
     <div class="rail r">
       <div class="card"><h3>Top picks <span style="color:var(--dim)">momentum·quality·theme</span></h3>
         <div class="filt" id="filt">
-          <span class="fb on" data-f="long">longs</span>
+          <span class="fb on" data-f="book">book</span>
+          <span class="fb" data-f="long">longs</span>
           <span class="fb" data-f="short">shorts</span>
           <span class="fb" data-f="gated">⚡ only</span>
         </div>
@@ -212,12 +215,17 @@ function pk(p){const dc=p.direction==='bull'?'var(--bull)':'var(--bear)';
   const chips=(p.why||[]).slice(0,3).map(w=>`<span class="chip">${esc(w)}</span>`).join('')+(p.gated?'<span class="chip fired">⚡</span>':'');
   return `<div class="pk" onclick="openDrawer('${p.ticker}')"><div class="t"><span class="dir" style="color:${dc}"></span>${esc(p.ticker)}</div>
     <div class="cv" style="color:${dc}">${p.conviction.toFixed(0)}</div><div class="why">${chips}</div></div>`}
-let filt='long';
+let filt='book';
 document.getElementById('filt').addEventListener('click',e=>{const f=e.target.dataset.f;if(!f)return;
   filt=f;[...document.querySelectorAll('.fb')].forEach(b=>b.classList.toggle('on',b.dataset.f===f));renderPicks()});
-function renderPicks(){const s=STATE;let list;
-  if(filt==='short')list=s.shorts||[]; else if(filt==='gated')list=(s.longs||[]).filter(x=>x.gated); else list=s.longs||[];
-  document.getElementById('picks').innerHTML=list.map(pk).join('')||'<div style="color:var(--dim)">— none —</div>';}
+function subhead(t,c){return `<div class="pkhead" style="color:${c}">${t}</div>`}
+function renderPicks(){const s=STATE;const el=document.getElementById('picks');
+  if(filt==='book'){const L=(s.longs||[]).slice(0,14),S=(s.shorts||[]).slice(0,10);
+    el.innerHTML=subhead('▲ LONG · '+L.length,'var(--bull)')+(L.map(pk).join('')||'<div style="color:var(--dim)">—</div>')+
+      subhead('▼ SHORT · '+S.length,'var(--bear)')+(S.map(pk).join('')||'<div style="color:var(--dim)">—</div>');return;}
+  let list;
+  if(filt==='short')list=s.shorts||[]; else if(filt==='gated')list=[...(s.longs||[]),...(s.shorts||[])].filter(x=>x.gated); else list=s.longs||[];
+  el.innerHTML=list.map(pk).join('')||'<div style="color:var(--dim)">— none —</div>';}
 // search
 const sb=document.getElementById('search');
 sb.addEventListener('change',()=>{const v=sb.value.trim().toUpperCase();if(v){openDrawer(v);sb.value=''}});
@@ -244,11 +252,16 @@ function render(){const s=STATE;
   const tr=(s.track&&s.track.by_horizon)||{}, g=(s.track&&s.track.graded_total)||0;
   document.getElementById('trk-n').textContent=g?('n='+g):'';
   if(!g){document.getElementById('track').innerHTML='<div style="color:var(--dim);font-size:10.5px;line-height:1.5">accruing — the top book is snapshotted daily and graded forward at 1d/5d/20d vs SPY (excess). First numbers in ~1 day, the 20d proof in ~4 weeks.</div>';}
-  else{document.getElementById('track').innerHTML='<div class="calrow" style="color:var(--dim)"><span>70+ conv</span><span>hit · excess</span></div>'+
-    ['1d','5d','20d'].map(hz=>{const b=(tr[hz]||{})['70+']||{};
-      if(b.hit_rate==null)return `<div class="calrow"><span>${hz}</span><span style="color:var(--dim)">— n${b.n||0}</span></div>`;
-      const c=b.mean_excess>=0?'var(--bull)':'var(--bear)';
-      return `<div class="calrow"><span>${hz}</span><span>${Math.round(b.hit_rate*100)}% · <b style="color:${c}">${b.mean_excess>0?'+':''}${b.mean_excess}%</b> · n${b.n}</span></div>`;}).join('');}
+  else{const lg=(s.track&&s.track.by_leg)||{};
+    const exc=(o)=>{if(!o||o.mean_excess==null)return `<span style="color:var(--dim)">— n${(o&&o.n)||0}</span>`;
+      const c=o.mean_excess>=0?'var(--bull)':'var(--bear)';
+      return `${Math.round(o.hit_rate*100)}% · <b style="color:${c}">${o.mean_excess>0?'+':''}${o.mean_excess}%</b> · n${o.n}`};
+    document.getElementById('track').innerHTML='<div class="calrow" style="color:var(--dim)"><span>70+ conv</span><span>hit · excess vs SPY</span></div>'+
+    ['1d','5d','20d'].map(hz=>`<div class="calrow"><span>${hz}</span><span>${exc((tr[hz]||{})['70+'])}</span></div>`).join('')+
+    '<div class="calrow" style="color:var(--dim);margin-top:5px;border-top:1px solid var(--line);padding-top:5px"><span>long − short book</span><span>spread</span></div>'+
+    ['5d','20d'].map(hz=>{const b=lg[hz]||{};
+      const sp=b.spread==null?'<span style="color:var(--dim)">—</span>':`<b style="color:${b.spread>=0?'var(--bull)':'var(--bear)'}">${b.spread>0?'+':''}${b.spread}%</b>`;
+      return `<div class="calrow"><span style="color:var(--dim)">${hz}</span><span style="font-size:9.5px">L ${exc(b.long)} &nbsp;·&nbsp; S ${exc(b.short)} &nbsp;⇒&nbsp; ${sp}</span></div>`;}).join('');}
   document.getElementById('log').innerHTML=(s.signals||[]).map(x=>
     `<div class="lg"><span class="ts">${x.ts}</span><span class="sr"><span class="fam" style="background:${FAM[x.family]||'#666'}"></span>${esc(x.source)}</span>
      <span class="tk2">${esc(x.ticker)}</span><span style="color:${x.dir==='bull'?'var(--bull)':'var(--bear)'}">${x.dir}</span></div>`).join('');

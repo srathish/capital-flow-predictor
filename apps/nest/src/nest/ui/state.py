@@ -582,7 +582,7 @@ def build_console(log: EventLog, now: datetime | None = None) -> dict:
         "n_long": len(p["longs"]), "n_short": len(p["shorts"]),
         "signals": signals, "health": health,
         "calibration": {k: v for k, v in cal.buckets.items()},
-        "alerts": sum(1 for x in p["longs"] if x.get("gated")),
+        "alerts": sum(1 for x in (p["longs"] + p["shorts"]) if x.get("gated")),
         "catalysts": catalysts[:10],
         "tickers": sorted(all_tickers),
         "track": _shadow_summary(),
