@@ -21,42 +21,43 @@ def test_time_decay_halves_at_half_ttl():
     assert engine.time_decay(100, 48) == 0.0
 
 
-def test_gate_blocks_single_family_even_when_loud():
-    # three signals but all from the flow family -> not independent -> gate blocks
-    weights = {"uw_flow": 1.0, "uw_darkpool": 1.0, "uw_lit_flow": 1.0}
-    sigs = [_sig("uw_flow"), _sig("uw_darkpool"), _sig("uw_lit_flow")]
-    ts = engine.score_ticker("T", sigs, weights)
-    assert not ts.passed_gate
-    assert "family" in ts.gate_reason
-
-
-def test_gate_blocks_too_few_signals():
-    weights = {"uw_flow": 1.0, "uw_gex": 1.0}
-    ts = engine.score_ticker("T", [_sig("uw_flow"), _sig("uw_gex")], weights)
-    assert not ts.passed_gate
-    assert "agreeing signals" in ts.gate_reason
-
-
-def test_gate_passes_on_three_signals_two_families():
+def test_confirmation_only_has_no_direction_and_is_blocked():
+    # flow + darkpool + gex are all CONFIRMATION sources — loud, but they don't pick a name.
+    # No direction signal -> no conviction -> gate blocks (the core evidence-based rule).
     weights = {"uw_flow": 1.0, "uw_darkpool": 1.0, "uw_gex": 1.0}
     sigs = [_sig("uw_flow"), _sig("uw_darkpool"), _sig("uw_gex", spot=40.0)]
     ts = engine.score_ticker("T", sigs, weights)
-    assert ts.passed_gate, ts.gate_reason
-    assert ts.conviction >= 70
-    assert ts.direction == "bull"
-    assert set(ts.families) == {"flow", "levels"}
+    assert not ts.passed_gate
+    assert "direction" in ts.gate_reason
 
 
-def test_opposing_signals_net_out_direction():
-    weights = {"uw_flow": 1.0, "uw_darkpool": 1.0, "uw_gex": 1.0, "uw_insider": 1.0}
-    sigs = [
-        _sig("uw_flow", direction="bear", strength=0.9),
-        _sig("uw_darkpool", direction="bear", strength=0.9),
-        _sig("uw_gex", direction="bull", strength=0.2),
-        _sig("uw_insider", direction="bull", strength=0.2),
-    ]
+def test_direction_source_drives_direction_over_loud_confirmation():
+    # bearish flow is loud, but the only DIRECTION source (momentum, bull) sets the call.
+    weights = {"uw_flow": 1.0, "uw_darkpool": 1.0, "uw_chart": 1.0}
+    sigs = [_sig("uw_flow", direction="bear", strength=0.9),
+            _sig("uw_darkpool", direction="bear", strength=0.9),
+            _sig("uw_chart", direction="bull", strength=0.8)]
     ts = engine.score_ticker("T", sigs, weights)
-    assert ts.direction == "bear"
+    assert ts.direction == "bull"  # momentum drives, not the coin-flip flow
+
+
+def test_opposing_confirmation_vetoes_conviction():
+    # momentum + quality bull; adding opposing (bear) flow should LOWER conviction (veto).
+    weights = {"uw_chart": 1.0, "uw_fundamentals": 1.0, "uw_flow": 1.0}
+    base = [_sig("uw_chart", strength=0.8), _sig("uw_fundamentals", strength=0.7)]
+    clean = engine.score_ticker("T", base, weights)
+    vetoed = engine.score_ticker("T", base + [_sig("uw_flow", direction="bear", strength=0.9)], weights)
+    assert vetoed.conviction < clean.conviction
+
+
+def test_strong_direction_stack_gates():
+    # momentum + quality + catalyst all agreeing -> real direction, high conviction, passes.
+    weights = {"uw_chart": 1.0, "uw_fundamentals": 1.0, "uw_fda": 1.0}
+    sigs = [_sig("uw_chart", strength=0.9), _sig("uw_fundamentals", strength=0.8),
+            _sig("uw_fda", strength=0.9)]
+    ts = engine.score_ticker("T", sigs, weights)
+    assert ts.passed_gate, ts.gate_reason
+    assert ts.direction == "bull" and ts.conviction >= 70
 
 
 def test_repolling_same_source_does_not_stack():

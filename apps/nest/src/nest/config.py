@@ -32,16 +32,27 @@ MAX_CALLS_PER_DAY = 3
 COOLDOWN_SESSIONS = 5  # per-ticker cooldown unless conviction jumps by...
 COOLDOWN_OVERRIDE_DELTA = 15  # ...this many points on new evidence
 
-# --- convergence gate (anti-noise) -------------------------------------------
-# A score alone never triggers. The gate needs enough independent evidence.
-GATE_MIN_SIGNALS = 3  # live contributing signals agreeing on direction
-GATE_MIN_FAMILIES = 2  # from at least this many independent source families
-GATE_WINDOW_HOURS = 72  # rolling window signals must fall inside
+# --- direction vs confirmation (evidence-based) ------------------------------
+# Backtest + repo both say: only these DIRECTION sources predict which-way (momentum/
+# quality/catalyst/insider). Everything else LOCATES or CONFIRMS (GEX=map, flow=47% coin
+# flip) — it can confirm or veto a direction, it cannot create one. So conviction is driven
+# by the direction sources; confirmation sources only modulate it (bounded bonus / veto).
+DIRECTION_SOURCES = {
+    "uw_momentum", "uw_chart", "uw_breakout", "uw_fundamentals", "uw_margins",
+    "uw_fda", "uw_earnings", "uw_insider", "edgar_offering",
+}
+CONFIRM_BONUS_CAP = 0.5    # most a confirming stack can add to the direction magnitude
+CONFIRM_VETO_SCALE = 0.7   # how hard opposing confirmation (e.g. flow against) pulls down
+
+# --- gate (anti-noise) -------------------------------------------------------
+GATE_MIN_DIRECTION = 0.35  # need a real DIRECTION signal of at least this net magnitude
+GATE_WINDOW_HOURS = 72     # rolling window signals must fall inside
 
 # --- Layer 1 mechanical accumulation -----------------------------------------
-# conviction = 100 * (1 - exp(-|net_raw| / SCORE_SCALE)); SCORE_SCALE tunes how much
-# weighted evidence saturates the scale. ~2 units of net evidence -> ~74.
-SCORE_SCALE = 1.5
+# conviction = 100 * (1 - exp(-effective / SCORE_SCALE)); effective = direction magnitude +
+# bounded confirmation. Tuned so a strong momentum + quality + catalyst stack (~1.6) reaches
+# ~80, momentum + quality (~1.1) ~67, momentum alone (~0.6) ~45.
+SCORE_SCALE = 1.0
 
 # --- Layer 3 rate limiter (load-bearing: the only way to blow the budget is
 # letting the LLM into the hot loop) -----------------------------------------

@@ -53,6 +53,7 @@ class TickerScore:
     contributions: list[Contribution] = field(default_factory=list)
     passed_gate: bool = False
     gate_reason: str = ""
+    net_dir: float = 0.0   # magnitude of the DIRECTION stack (momentum/quality/catalyst)
 
     @property
     def contributors(self) -> list[str]:
@@ -90,34 +91,39 @@ def score_ticker(
 ) -> TickerScore:
     now = now or datetime.now(UTC)
     contribs: list[Contribution] = []
-    net = 0.0
+    net_dir = 0.0   # DIRECTION sources (momentum/quality/catalyst) — these pick the name
+    net_con = 0.0   # CONFIRMATION sources (flow/GEX/social) — locate/confirm, never create
     for s in _latest_per_source(live_signals):
         decay = time_decay(_age_hours(s.ts, now), s.ttl_hours)
         if decay <= 0.0 or s.direction == "neutral":
             continue
         w = weights_mod.source_weight(s.source, weights)
-        magnitude = s.strength * w * decay
-        signed = magnitude if s.direction == "bull" else -magnitude
-        net += signed
+        signed = (s.strength * w * decay) * (1 if s.direction == "bull" else -1)
+        if s.source in config.DIRECTION_SOURCES:
+            net_dir += signed
+        else:
+            net_con += signed
         contribs.append(Contribution(
             source=s.source, family=config.family_of(s.source),
             direction=s.direction, signed=signed, signal=s,
         ))
-    direction = "bull" if net >= 0 else "bear"
-    conviction = 100.0 * (1.0 - math.exp(-abs(net) / config.SCORE_SCALE))
+    # direction comes from the direction stack; confirmation only modulates the magnitude
+    direction = "bull" if net_dir >= 0 else "bear"
+    agree = (net_con >= 0) == (net_dir >= 0)
+    confirm = min(config.CONFIRM_BONUS_CAP, abs(net_con)) if agree \
+        else -min(config.CONFIRM_BONUS_CAP, abs(net_con)) * config.CONFIRM_VETO_SCALE
+    effective = max(0.0, abs(net_dir) + confirm)
+    conviction = 100.0 * (1.0 - math.exp(-effective / config.SCORE_SCALE))
     ts = TickerScore(ticker=ticker, conviction=round(conviction, 1),
-                     direction=direction, contributions=contribs)
+                     direction=direction, contributions=contribs, net_dir=abs(net_dir))
     _apply_gate(ts, floor if floor is not None else config.CONVICTION_FLOOR)
     return ts
 
 
 def _apply_gate(ts: TickerScore, floor: float) -> None:
-    n_sig = sum(1 for c in ts.contributions if c.direction == ts.direction)
-    n_fam = len(ts.families)
-    if n_sig < config.GATE_MIN_SIGNALS:
-        ts.gate_reason = f"only {n_sig} agreeing signals (need {config.GATE_MIN_SIGNALS})"
-    elif n_fam < config.GATE_MIN_FAMILIES:
-        ts.gate_reason = f"only {n_fam} source family (need {config.GATE_MIN_FAMILIES})"
+    if ts.net_dir < config.GATE_MIN_DIRECTION:
+        ts.gate_reason = (f"no real direction signal (dir mag {ts.net_dir:.2f} < "
+                          f"{config.GATE_MIN_DIRECTION})")
     elif ts.conviction < floor:
         ts.gate_reason = f"conviction {ts.conviction:.0f} < floor {floor:.0f}"
     else:
