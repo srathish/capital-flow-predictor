@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 ET = ZoneInfo("America/New_York")
 
 # cadence / phase boundaries (ET)
-CYCLE_MINUTES = 5       # RTH cadence — market data moves fast
+CYCLE_MINUTES = 2       # RTH cadence — fast enough to feel live as flow/prints stream
 OFFHOURS_MINUTES = 30   # nights/weekends — news, EDGAR, congress, wiki still move; poll slower
 DIGEST_AT = (8, 30)
 RTH_OPEN = (9, 31)
