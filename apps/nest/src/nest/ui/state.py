@@ -352,3 +352,151 @@ def build_graph(log: EventLog, now: datetime | None = None) -> dict:
         "nodes": nodes, "sectors": sectors, "rising": rising,
         "sector_heat": sorted(heat.items(), key=lambda kv: -kv[1]),
     }
+
+
+# --- per-stock detail (the drill-down: show EVERY captured field) ------------
+
+_SRC_LABEL = {
+    "uw_flow": "options flow", "uw_sweep": "sweeps", "uw_darkpool": "dark pool",
+    "uw_netprem": "net premium", "uw_gex": "gamma wall", "uw_vex": "vanna magnet",
+    "uw_charm": "charm", "uw_maxpain": "max pain", "uw_oi": "OI change",
+    "uw_short": "short squeeze", "uw_insider": "insider", "uw_congress": "congress",
+    "uw_analyst": "analysts", "uw_news": "news", "edgar_offering": "SEC offering",
+    "uw_chart": "momentum", "uw_momentum": "52w momentum", "uw_breakout": "breakout",
+    "uw_volsurge": "vol surge", "uw_fundamentals": "growth", "uw_margins": "margins",
+    "uw_fda": "FDA", "uw_earnings": "earnings", "uw_theme": "sector theme",
+    "wiki_attention": "wiki attention", "stocktwits": "stocktwits", "reddit_velocity": "reddit",
+}
+
+
+def build_ticker(log: EventLog, ticker: str, now: datetime | None = None) -> dict:
+    """Everything the Nest knows about one stock — for the click-to-open detail drawer.
+    Organizes its live signals into readable sections (momentum, quality, catalyst, LEVELS
+    for entry/target/stop, confirmation, positioning, news, social) with the actual numbers."""
+    from datetime import timedelta
+    now = now or datetime.now(UTC)
+    ticker = ticker.upper()
+    since = (now - timedelta(hours=config.GATE_WINDOW_HOURS)).isoformat()
+    sig = {s.source: s for s in log.signals_since(since, ticker=ticker)}
+    score = log.latest_score(ticker)
+
+    def m(src, key, default=None):
+        return sig[src].meta.get(key, default) if src in sig else default
+
+    momentum = sig.get("uw_chart")
+    mom_rows = []
+    if momentum:
+        mom_rows = [
+            ("3-month", f"{m('uw_chart','mom60_pct')}%"),
+            ("6-month", f"{m('uw_chart','mom120_pct')}%"),
+            ("vol-adjusted", str(m("uw_chart", "voladj_mom"))),
+            ("vs 52w high", f"{m('uw_chart','from_52w_high_pct')}%"),
+        ]
+    if "uw_momentum" in sig:
+        mom_rows.append(("52w range position", f"{int((m('uw_momentum','range_pos') or 0)*100)}%"))
+    if "uw_volsurge" in sig:
+        mom_rows.append(("rel. volume", f"{m('uw_volsurge','rel_vol')}x  (today {m('uw_volsurge','day_pct')}%)"))
+
+    qual_rows = []
+    if "uw_fundamentals" in sig:
+        qual_rows.append(("revenue growth", f"{m('uw_fundamentals','rev_growth_qoq_pct')}% QoQ"))
+    if "uw_margins" in sig:
+        qual_rows.append(("net margin", f"{m('uw_margins','net_margin_pct')}%  ({m('uw_margins','yoy_delta_pp'):+}pp YoY)"))
+
+    cat_rows = []
+    if "uw_earnings" in sig:
+        cat_rows.append(("earnings in", f"{m('uw_earnings','days_to_earnings')} sessions ({m('uw_earnings','announce') or '?'})"))
+    if "uw_fda" in sig:
+        cat_rows.append(("FDA", str(m("uw_fda", "event"))))
+    if "uw_theme" in sig:
+        cat_rows.append(("sector theme", f"{m('uw_theme','sector')} · breadth {m('uw_theme','sector_breadth')}"))
+
+    # LEVELS — the map: entry/target/stop from GEX/VEX/max-pain (captured from UW)
+    lvl_rows = []
+    spot = m("uw_gex", "spot") or m("uw_vex", "spot")
+    if spot:
+        lvl_rows.append(("spot", f"${spot}"))
+    if "uw_gex" in sig:
+        sgn = "support" if m("uw_gex", "gamma_sign") == "pos" and (m("uw_gex", "wall_strike") or 0) <= (spot or 0) else "wall"
+        lvl_rows.append(("gamma wall", f"${m('uw_gex','wall_strike')}  ({sgn}, {m('uw_gex','dist_pct')}% away)"))
+    if "uw_vex" in sig:
+        lvl_rows.append(("vanna magnet", f"${m('uw_vex','magnet')}"))
+    if "uw_maxpain" in sig:
+        lvl_rows.append(("max pain", f"${m('uw_maxpain','max_pain')}  (gap {m('uw_maxpain','gap_pct')}%)"))
+
+    def sec(*srcs):
+        rows = []
+        for s in srcs:
+            if s in sig:
+                sg = sig[s]
+                bits = " · ".join(f"{k} {v}" for k, v in list(sg.meta.items())[:3]
+                                  if k not in ("sector",))
+                rows.append((_SRC_LABEL.get(s, s), f"{sg.direction} · {bits}"))
+        return rows
+
+    d = score.direction if score else "bull"
+    confirms = [s.replace("uw_", "") for s in sig
+                if s not in config.DIRECTION_SOURCES and sig[s].direction == d]
+    vetoes = [s.replace("uw_", "") for s in sig
+              if s not in config.DIRECTION_SOURCES and sig[s].direction != d]
+
+    return {
+        "ticker": ticker,
+        "conviction": round(score.conviction, 1) if score else 0,
+        "direction": d,
+        "sector": m("uw_momentum", "sector") or m("uw_theme", "sector"),
+        "families": score.families if score else [],
+        "delta": round(score.delta, 1) if score else 0,
+        "gated": bool(score and score.conviction >= config.CONVICTION_FLOOR),
+        "sections": [
+            {"title": "Momentum (the finder)", "tone": "chart", "rows": mom_rows},
+            {"title": "Quality", "tone": "fundamental", "rows": qual_rows},
+            {"title": "Catalyst", "tone": "catalyst", "rows": cat_rows},
+            {"title": "Levels — entry / target / stop", "tone": "levels", "rows": lvl_rows},
+            {"title": "Flow (confirmation)", "tone": "flow",
+             "rows": sec("uw_flow", "uw_sweep", "uw_darkpool", "uw_netprem")},
+            {"title": "Positioning", "tone": "positioning",
+             "rows": sec("uw_insider", "uw_short", "uw_oi", "uw_congress")},
+            {"title": "News / filings", "tone": "filings",
+             "rows": sec("uw_news", "uw_analyst", "edgar_offering")},
+            {"title": "Social", "tone": "social",
+             "rows": sec("wiki_attention", "stocktwits", "reddit_velocity")},
+        ],
+        "confirms": confirms, "vetoes": vetoes,
+        "n_signals": len(sig),
+    }
+
+
+# --- unified console (everything on one screen) ------------------------------
+
+def build_console(log: EventLog, now: datetime | None = None) -> dict:
+    """One payload for the single-screen dashboard: the galaxy + picks + rising confluence
+    + sector heat + signal log + source health + regime — so nothing lives on a separate tab."""
+    now = now or datetime.now(UTC)
+    g = build_graph(log, now)
+    p = build_picks(log, now)
+    # recent signal log (freshest slice)
+    signals = []
+    for s in log.tail(60, type="signal"):
+        signals.append({"source": s.source.replace("uw_", ""), "family": config.family_of(s.source),
+                        "ticker": s.ticker, "dir": s.direction, "str": round(s.strength, 2),
+                        "ts": s.ts[11:19]})
+    # source health (which sources are emitting + their tracked weight)
+    live_w = wmod.compute_all(log, "5d")
+    counts = Counter(s.source for s in log.tail(700, type="signal"))
+    health = []
+    for src in sorted(config.SOURCE_PRIOR, key=lambda s: -counts.get(s, 0)):
+        health.append({"source": src.replace("uw_", ""), "family": config.family_of(src),
+                       "rate": counts.get(src, 0), "weight": round(wmod.source_weight(src, live_w), 2),
+                       "dir": src in config.DIRECTION_SOURCES})
+    cal = grader.calibration(log, "5d")
+    return {
+        "now": now.isoformat(timespec="seconds"),
+        "universe": g["universe"], "shown": g["shown"], "regime": g["regime"], "floor": g["floor"],
+        "nodes": g["nodes"], "sectors": g["sectors"], "sector_heat": g["sector_heat"],
+        "rising": g["rising"],
+        "longs": p["longs"][:24], "shorts": p["shorts"][:8],
+        "signals": signals, "health": health,
+        "calibration": {k: v for k, v in cal.buckets.items()},
+        "alerts": sum(1 for x in p["longs"] if x.get("gated")),
+    }

@@ -14,11 +14,19 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from nest.events.log import EventLog
+from nest.ui.console import render_console
 from nest.ui.graph import render_graph
 from nest.ui.page import render_page
 from nest.ui.picks import render_picks
 from nest.ui.pipeline import render_pipeline
-from nest.ui.state import build_graph, build_picks, build_pipeline, build_state
+from nest.ui.state import (
+    build_console,
+    build_graph,
+    build_picks,
+    build_pipeline,
+    build_state,
+    build_ticker,
+)
 
 log = logging.getLogger(__name__)
 _scheduler_started = False
@@ -51,6 +59,24 @@ app = FastAPI(title="Conviction Nest", lifespan=_lifespan)
 def index() -> str:
     log_db = EventLog()
     try:
+        return render_console(build_console(log_db), poll_url="/api/console")
+    finally:
+        log_db.close()
+
+
+@app.get("/api/console")
+def api_console() -> JSONResponse:
+    log_db = EventLog()
+    try:
+        return JSONResponse(build_console(log_db))
+    finally:
+        log_db.close()
+
+
+@app.get("/finds", response_class=HTMLResponse)
+def finds() -> str:
+    log_db = EventLog()
+    try:
         return render_picks(build_picks(log_db), poll_url="/api/picks")
     finally:
         log_db.close()
@@ -61,6 +87,15 @@ def picks() -> JSONResponse:
     log_db = EventLog()
     try:
         return JSONResponse(build_picks(log_db))
+    finally:
+        log_db.close()
+
+
+@app.get("/api/ticker/{ticker}")
+def ticker(ticker: str) -> JSONResponse:
+    log_db = EventLog()
+    try:
+        return JSONResponse(build_ticker(log_db, ticker))
     finally:
         log_db.close()
 
