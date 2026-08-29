@@ -47,7 +47,9 @@ def _headlines(ticker: str) -> list[tuple[str, str]]:
     out = []
     for i, t in enumerate(titles):
         clean = re.sub(r"\s*-\s*[^-]+$", "", t).strip()  # strip trailing " - Source"
-        if not clean or clean.lower() in ("google news", ticker.lower()):
+        low = clean.lower()
+        if not clean or low in ("google news", ticker.lower()) or "when:" in low \
+                or low.startswith(ticker.lower() + " stock"):
             continue
         out.append((clean, pubs[i][:16] if i < len(pubs) else ""))
         if len(out) >= 10:
