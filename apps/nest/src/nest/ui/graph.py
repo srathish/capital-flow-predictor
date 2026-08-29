@@ -92,9 +92,9 @@ const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let N=[];                 // nodes {id,conv,dir,sector,delta, x,y,z, vx,vy,vz, r,g,b}
 let centers={};           // sector -> unit-sphere center
 let hub={};               // sector -> node id (max conviction)
-let rotX=-0.35, rotY=0.6, dist=2.15, targetDist=2.15;
+let rotX=-0.30, rotY=0.6, dist=1.95, targetDist=1.95;
 let dragging=false, lastX=0, lastY=0, autov=0.0016;
-const WORLD=230, FOCAL=920;
+const WORLD=330, FOCAL=920;
 
 function fib(i,n){ // fibonacci sphere point
   const ga=Math.PI*(3-Math.sqrt(5)); const y=1-(i/(Math.max(1,n-1)))*2; const r=Math.sqrt(Math.max(0,1-y*y));
@@ -136,6 +136,10 @@ function step(){ // one light force iteration (clusters into sector islands)
     }}
   for(const n of N){ n.vx=(n.vx+n._fx)*damp; n.vy=(n.vy+n._fy)*damp; n.vz=(n.vz+n._fz)*damp;
     n.x+=n.vx; n.y+=n.vy; n.z+=n.vz; }
+  // keep the cloud centered: lock its centroid to the origin so it never drifts off-screen
+  if(N.length){let cx=0,cy=0,cz=0; for(const n of N){cx+=n.x;cy+=n.y;cz+=n.z}
+    cx/=N.length;cy/=N.length;cz/=N.length;
+    for(const n of N){n.x-=cx;n.y-=cy;n.z-=cz}}
 }
 function project(n){
   const cy=Math.cos(rotY),sy=Math.sin(rotY),cx=Math.cos(rotX),sx=Math.sin(rotX);
