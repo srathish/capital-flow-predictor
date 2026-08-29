@@ -39,7 +39,7 @@ COOLDOWN_OVERRIDE_DELTA = 15  # ...this many points on new evidence
 # by the direction sources; confirmation sources only modulate it (bounded bonus / veto).
 DIRECTION_SOURCES = {
     "uw_momentum", "uw_chart", "uw_breakout", "uw_fundamentals", "uw_margins",
-    "uw_fda", "uw_earnings", "uw_insider", "edgar_offering",
+    "uw_fda", "uw_earnings", "uw_theme", "uw_insider", "edgar_offering",
 }
 CONFIRM_BONUS_CAP = 0.5    # most a confirming stack can add to the direction magnitude
 CONFIRM_VETO_SCALE = 0.7   # how hard opposing confirmation (e.g. flow against) pulls down
@@ -93,6 +93,7 @@ SOURCE_FAMILY: dict[str, str] = {
     "uw_margins": "fundamental",
     "uw_fda": "catalyst",
     "uw_earnings": "catalyst",
+    "uw_theme": "catalyst",
 }
 
 # Emergent universe: ingestion is market-wide (one call → signals for every ticker),
@@ -124,6 +125,7 @@ SOURCE_PRIOR: dict[str, float] = {
     "uw_margins": 0.45,        # margin expansion (quality)
     "uw_fda": 0.55,            # resolved FDA outcome — a hard binary catalyst
     "uw_earnings": 0.45,       # earnings-proximity catalyst (why-now)
+    "uw_theme": 0.40,          # sector/theme breadth — cohort tailwind (whale-plays)
     "edgar_offering": 0.45,    # 424B/S-1/S-3 dilution — reliably bearish
     # --- confirmation / map (NOT directional per repo) — LOW ---
     "uw_flow": 0.18,           # flow = confirmation only, never thesis (47% coin flip)

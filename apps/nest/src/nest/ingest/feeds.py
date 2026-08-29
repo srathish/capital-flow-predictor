@@ -386,9 +386,58 @@ def feed_momentum(uw: UWClient, limit: int = 500) -> list[Signal]:
     return _safe(run, "uw_momentum")
 
 
+def feed_theme(uw: UWClient, limit: int = 500) -> list[Signal]:
+    """Sector/theme breadth (catalyst family) — the whale-plays theme-turn, mechanized. From
+    the same screener call, compute each sector's momentum BREADTH (share of its names near
+    52w highs). A name whose SECTOR is moving as a cohort has tailwind (validated in-repo:
+    theme-turns lead print clusters ~1 week; talon's "theme coherence"). Names in the
+    strongest sectors get a bull theme confirmation, weakest a bear — a direction source, but
+    modest, so it earns/decays via the tracker."""
+    def run() -> list[Signal]:
+        rows = uw.get("screener_stocks", params={"limit": limit}) or []
+        by_sector: dict[str, list[float]] = {}
+        rng: dict[str, tuple[str, float]] = {}
+        for r in rows:
+            if str(r.get("issue_type", "")) in config.EXCLUDE_ISSUE_TYPES:
+                continue
+            sec = str(r.get("sector") or "")
+            close, hi, lo = _f(r.get("close")), _f(r.get("week_52_high")), _f(r.get("week_52_low"))
+            tkr = str(r.get("ticker") or "")
+            if not sec or not tkr or hi <= lo:
+                continue
+            pos = (close - lo) / (hi - lo)
+            by_sector.setdefault(sec, []).append(pos)
+            rng[tkr] = (sec, pos)
+        # sector breadth = mean range position; rank sectors
+        breadth = {s: sum(v) / len(v) for s, v in by_sector.items() if len(v) >= 3}
+        if not breadth:
+            return []
+        hi_b = max(breadth.values())
+        lo_b = min(breadth.values())
+        out = []
+        for tkr, (sec, pos) in rng.items():
+            b = breadth.get(sec)
+            if b is None:
+                continue
+            # a name confirmed by its sector: strong sector + the name participating
+            if b > 0.60 and pos > 0.55:
+                strength = _clamp((b - 0.5) * 1.5)
+                out.append(Signal(source="uw_theme", ticker=tkr, direction="bull",
+                                  strength=strength, ttl_hours=96,
+                                  meta={"sector": sec, "sector_breadth": round(b, 2)}))
+            elif b < 0.40 and pos < 0.45:
+                out.append(Signal(source="uw_theme", ticker=tkr, direction="bear",
+                                  strength=_clamp((0.5 - b) * 1.5), ttl_hours=96,
+                                  meta={"sector": sec, "sector_breadth": round(b, 2)}))
+        _ = (hi_b, lo_b)
+        return out
+
+    return _safe(run, "uw_theme")
+
+
 # The market-wide feeds run once per cycle; each returns Signals across many tickers.
-FEEDS = [feed_momentum, feed_flow, feed_darkpool, feed_insider, feed_congress, feed_news,
-         feed_analyst, feed_oi, feed_fda, feed_sweep]
+FEEDS = [feed_momentum, feed_theme, feed_flow, feed_darkpool, feed_insider, feed_congress,
+         feed_news, feed_analyst, feed_oi, feed_fda, feed_sweep]
 
 
 def collect_all(uw: UWClient) -> list[Signal]:
