@@ -163,6 +163,53 @@ def digest(send: bool = typer.Option(False, "--send", help="Deliver to Discord")
 
 
 @app.command()
+def learn(
+    action: str = typer.Argument("show", help="propose | show | apply"),
+    source: str = typer.Option(None, "--source", help="apply only this source (else all pending)"),
+) -> None:
+    """The human-gated learning loop. `propose` re-runs the backtest and writes prior
+    proposals; `show` prints pending proposals + watch list; `apply` approves them into
+    prior_overrides.json (takes effect next cycle, no redeploy)."""
+    from nest.learn import proposer
+
+    if action == "propose":
+        from nest.ingest.uw_client import UWClient
+        uw = UWClient()
+        try:
+            rec = proposer.propose(uw)
+        finally:
+            uw.close()
+    elif action == "apply":
+        applied = proposer.apply([source] if source else None)
+        if not applied:
+            console.print("[yellow]nothing to apply[/yellow]")
+            return
+        for a in applied:
+            console.print(f"[green]applied[/green] {a['source']}: "
+                          f"{a['current_prior']:.2f} → {a['suggested_prior']:.2f}")
+        return
+    else:  # show
+        rec = proposer.pending()
+
+    console.print(f"[bold]Learning proposals[/bold] — {rec.get('status','none')} "
+                  f"({rec.get('window','')}) {rec.get('ts','')}")
+    props = rec.get("proposals", [])
+    if props:
+        table = Table("source", "signal", "current", "suggested", "Δ", "20d IC", "t", "OOS", "L-S%")
+        for p in props:
+            table.add_row(p["source"], p["signal"], f"{p['current_prior']:.2f}",
+                          f"{p['suggested_prior']:.2f}", f"{p['delta']:+.2f}",
+                          f"{p['mean_ic']:+.3f}", f"{p['t_stat']:+.2f}", p["oos"],
+                          str(p["ls_spread"]))
+        console.print(table)
+        console.print("[dim]run `nest learn apply` (or --source X) to approve[/dim]")
+    else:
+        console.print("[dim]no actionable proposals[/dim]")
+    for w in rec.get("watch", []):
+        console.print(f"[yellow]watch[/yellow] {w['source']}: {w['rationale']} — {w['note']}")
+
+
+@app.command()
 def kill() -> None:
     """Activate the kill switch — blocks every Call until `nest unkill`."""
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)

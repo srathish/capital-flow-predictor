@@ -15,6 +15,8 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = Path(os.environ.get("NEST_HOME", PACKAGE_ROOT / "data"))
 EVENT_DB = DATA_DIR / "nest.db"  # the append-only event spine
 KILL_FILE = DATA_DIR / "KILL"  # presence blocks every Call — the kill switch
+PRIOR_OVERRIDES = DATA_DIR / "prior_overrides.json"  # human-APPROVED prior changes (learn loop)
+PROPOSALS_FILE = DATA_DIR / "proposals.json"  # the learn loop's pending prior proposals
 
 # --- external services -------------------------------------------------------
 UW_BASE = "https://api.unusualwhales.com"
@@ -163,7 +165,48 @@ def family_of(source: str) -> str:
     return SOURCE_FAMILY.get(source, "flow")
 
 
+# --- runtime prior overrides (the learn loop's human-gated output) ----------
+# The proposer writes suggestions to proposals.json; a human runs `nest learn apply`, which
+# lands APPROVED priors here. prior_of() layers these over the code defaults, so an approved
+# change takes effect on the next cycle WITHOUT a code deploy — and the code default stays the
+# audited baseline. Cached with an mtime check so the hot loop doesn't stat/parse every call.
+_OVR_CACHE: tuple[float, dict[str, float]] = (-1.0, {})
+
+
+def load_prior_overrides() -> dict[str, float]:
+    """Approved prior overrides from disk, mtime-cached. Empty if none/malformed."""
+    global _OVR_CACHE
+    import json
+
+    try:
+        mtime = PRIOR_OVERRIDES.stat().st_mtime
+    except OSError:
+        _OVR_CACHE = (-1.0, {})
+        return {}
+    if mtime == _OVR_CACHE[0]:
+        return _OVR_CACHE[1]
+    try:
+        data = json.loads(PRIOR_OVERRIDES.read_text())
+        data = {str(k): float(v) for k, v in data.items()}
+    except (ValueError, OSError, TypeError):
+        data = {}
+    _OVR_CACHE = (mtime, data)
+    return data
+
+
+def save_prior_overrides(overrides: dict[str, float]) -> None:
+    import json
+
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    PRIOR_OVERRIDES.write_text(json.dumps(overrides, indent=2, sort_keys=True))
+    global _OVR_CACHE
+    _OVR_CACHE = (-1.0, {})  # invalidate so the next read reloads
+
+
 def prior_of(source: str) -> float:
+    ovr = load_prior_overrides()
+    if source in ovr:
+        return ovr[source]
     if source.startswith("discord:"):
         return DEFAULT_PRIOR
     return SOURCE_PRIOR.get(source, DEFAULT_PRIOR)

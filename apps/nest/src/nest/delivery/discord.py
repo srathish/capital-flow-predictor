@@ -60,3 +60,34 @@ def send_call(call: Call) -> bool:
 
 def send_digest(text: str) -> bool:
     return _post({"content": text[:1900]})
+
+
+def send_proposal(record: dict) -> bool:
+    """Post the learning loop's monthly result — actionable prior proposals (need a human
+    `nest learn apply`) and any watch-list divergences that aren't yet significant."""
+    props = record.get("proposals", [])
+    watch = record.get("watch", [])
+    if not props and not watch:
+        lines = [f"🧠 **Nest learning — {record.get('ts','')[:10]}**",
+                 (f"Re-ran the backtest ({record.get('window','')}). "
+                  "No material prior divergence — the model stands.")]
+        return _post({"content": "\n".join(lines)[:1900]})
+    fields = []
+    if props:
+        fields.append({"name": f"⚠️ Prior proposals ({len(props)}) — need approval",
+                       "value": "\n".join(f"• `{p['source']}` {p['current_prior']:.2f}→"
+                                          f"{p['suggested_prior']:.2f} ({p['rationale']})"
+                                          for p in props[:6])[:1024]})
+    if watch:
+        fields.append({"name": f"👁 Watch ({len(watch)}) — divergence, not yet significant",
+                       "value": "\n".join(f"• `{w['source']}` {w['rationale']}"
+                                          for w in watch[:6])[:1024]})
+    payload = {"embeds": [{
+        "title": f"🧠 NEST learning loop — {record.get('window','')}",
+        "description": ("The monthly self-check re-measured each selection signal's forward "
+                        "edge. Proposals are ADVISORY — run `nest learn apply` to approve."),
+        "color": 0xF1C40F if props else 0x95A5A6,
+        "fields": fields,
+        "footer": {"text": "The Nest never rewrites its own priors — a human approves every change."},
+    }]}
+    return _post(payload)

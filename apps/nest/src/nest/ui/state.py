@@ -586,7 +586,19 @@ def build_console(log: EventLog, now: datetime | None = None) -> dict:
         "catalysts": catalysts[:10],
         "tickers": sorted(all_tickers),
         "track": _shadow_summary(),
+        "learn": _learn_summary(),
     }
+
+
+def _learn_summary() -> dict:
+    from nest.learn import proposer
+    try:
+        rec = proposer.pending()
+        return {"status": rec.get("status", "none"), "ts": rec.get("ts", "")[:10],
+                "window": rec.get("window", ""),
+                "proposals": rec.get("proposals", [])[:6], "watch": rec.get("watch", [])[:6]}
+    except Exception:  # noqa: BLE001
+        return {"status": "none", "proposals": [], "watch": []}
 
 
 def _shadow_summary() -> dict:

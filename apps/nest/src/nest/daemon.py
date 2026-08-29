@@ -34,6 +34,8 @@ DIGEST_AT = (8, 30)
 RTH_OPEN = (9, 31)
 RTH_CLOSE = (16, 0)
 GRADE_AT = (16, 15)
+LEARN_AT = (17, 0)      # after the grade pass; only on LEARN_DOM
+LEARN_DOM = 1           # day-of-month for the monthly learning re-check
 IDLE_SLEEP_S = 60  # poll the clock once a minute when nothing is due
 
 
@@ -95,6 +97,21 @@ def _run_grade() -> None:
         log_db.close()
 
 
+def _run_learn() -> None:
+    from nest.delivery import discord
+    from nest.ingest.uw_client import UWClient
+    from nest.learn import proposer
+
+    uw = UWClient()
+    try:
+        rec = proposer.propose(uw)
+        discord.send_proposal(rec)
+        log.info("learn: %d proposal(s), %d watch — %s",
+                 len(rec.get("proposals", [])), len(rec.get("watch", [])), rec.get("status"))
+    finally:
+        uw.close()
+
+
 def _watchlist() -> list[str]:
     # emergent universe: the digest shows the pinned core + whatever the book surfaced;
     # digest.build pulls top-scored names from the log itself.
@@ -106,7 +123,7 @@ def run() -> None:
     log.info("🪶 Nest daemon up — ET now %s, watchlist %s",
              datetime.now(ET).isoformat(timespec="minutes"), _watchlist())
     last_cycle_at: datetime | None = None
-    done: dict[str, str] = {"digest": "", "grade": ""}  # task -> yyyy-mm-dd last run
+    done: dict[str, str] = {"digest": "", "grade": "", "learn": ""}  # task -> yyyy-mm-dd last run
 
     # Boot cycle: run one cycle immediately on startup so every deploy/restart refreshes the
     # book right away (and populates after hours with EOD data), instead of waiting for the
@@ -116,6 +133,14 @@ def run() -> None:
         last_cycle_at = datetime.now(ET)
     except Exception:  # noqa: BLE001
         log.exception("boot cycle failed — continuing to the scheduler")
+
+    # First-run bootstrap: if the learning loop has never produced a proposal record, run it
+    # once now so the panel shows a real measurement immediately (thereafter it's monthly only).
+    try:
+        if not config.PROPOSALS_FILE.exists():
+            _run_learn()
+    except Exception:  # noqa: BLE001
+        log.exception("boot learn bootstrap failed — continuing")
 
     while True:
         now = datetime.now(ET)
@@ -127,6 +152,9 @@ def run() -> None:
             elif _due(now, GRADE_AT) and done["grade"] != today:
                 _run_grade()
                 done["grade"] = today
+            elif _due(now, LEARN_AT) and now.day == LEARN_DOM and done["learn"] != today:
+                _run_learn()
+                done["learn"] = today
             else:
                 # Cycle cadence: fast in RTH, slow off-hours. Off-hours cycles keep the
                 # 24/7 sources (news / EDGAR / congress / wiki) flowing on nights & weekends;

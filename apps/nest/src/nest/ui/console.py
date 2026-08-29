@@ -68,6 +68,12 @@ _HTML = r"""<!doctype html>
   .hrow .nm{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .hb{width:48px;height:5px;border-radius:3px;background:#1a140c;overflow:hidden}.hb i{display:block;height:100%}
   .calrow{display:flex;justify-content:space-between;color:var(--muted);padding:2px 0}
+  .lrow{display:flex;align-items:baseline;gap:6px;padding:3px 0;font-size:10px;border-top:1px solid var(--line)}
+  .lrow .tk{font-weight:700;min-width:74px}
+  .lrow .d{font-variant-numeric:tabular-nums}
+  .lrow .ic{margin-left:auto;color:var(--dim);font-variant-numeric:tabular-nums}
+  .lrow.prop{color:var(--amber)} .lrow.watch{color:var(--muted)}
+  .lrow code,.card code{background:#1a1608;padding:0 4px;border-radius:3px;font-size:9.5px;color:var(--amber)}
   /* bottom log strip */
   .strip{border-top:1px solid var(--line);display:grid;grid-template-columns:1.4fr 1fr;height:150px}
   .strip .col{overflow:auto;padding:8px 12px}
@@ -132,6 +138,7 @@ _HTML = r"""<!doctype html>
       <div class="card"><h3>Catalysts ahead</h3><div id="cats"></div></div>
       <div class="card"><h3>Sector heat</h3><div id="heat"></div></div>
       <div class="card"><h3>Live track record <span style="color:var(--dim)" id="trk-n"></span></h3><div id="track"></div></div>
+      <div class="card"><h3>Learning loop <span style="color:var(--dim)" id="lrn-st"></span></h3><div id="learn"></div></div>
     </div>
     <div class="stagewrap"><canvas id="cv"></canvas><div class="hint">drag to orbit · scroll to zoom · click a star</div></div>
     <div class="rail r">
@@ -262,6 +269,17 @@ function render(){const s=STATE;
     ['5d','20d'].map(hz=>{const b=lg[hz]||{};
       const sp=b.spread==null?'<span style="color:var(--dim)">—</span>':`<b style="color:${b.spread>=0?'var(--bull)':'var(--bear)'}">${b.spread>0?'+':''}${b.spread}%</b>`;
       return `<div class="calrow"><span style="color:var(--dim)">${hz}</span><span style="font-size:9.5px">L ${exc(b.long)} &nbsp;·&nbsp; S ${exc(b.short)} &nbsp;⇒&nbsp; ${sp}</span></div>`;}).join('');}
+  // learning loop
+  const ln=s.learn||{status:'none',proposals:[],watch:[]};
+  document.getElementById('lrn-st').textContent=ln.ts?(ln.ts):'';
+  const props=ln.proposals||[],wch=ln.watch||[];
+  let lh;
+  if(ln.status==='none'||(!ln.ts)){lh='<div style="color:var(--dim);font-size:10.5px;line-height:1.5">idle — re-runs a lookahead-safe backtest monthly; proposes prior changes only when the measured edge shifts significantly. Human approves via <code>nest learn apply</code>.</div>';}
+  else{lh=`<div class="calrow" style="color:var(--dim)"><span>${esc(ln.window||'')}</span><span>${props.length?'⚠ '+props.length+' proposal':'model stands'}</span></div>`;
+    lh+=props.map(p=>`<div class="lrow prop"><span class="tk">${esc(p.source)}</span><span class="d">${p.current_prior.toFixed(2)}→<b>${p.suggested_prior.toFixed(2)}</b></span><span class="ic">IC ${p.mean_ic>0?'+':''}${p.mean_ic} t${p.t_stat>0?'+':''}${p.t_stat}</span></div>`).join('');
+    lh+=wch.map(w=>`<div class="lrow watch"><span class="tk">👁 ${esc(w.source)}</span><span class="ic">${w.signal} IC ${w.mean_ic>0?'+':''}${w.mean_ic} · t${w.t_stat>0?'+':''}${w.t_stat} (monitoring)</span></div>`).join('');
+    if(props.length)lh+='<div style="color:var(--dim);font-size:9.5px;margin-top:3px">approve: <code>nest learn apply</code></div>';}
+  document.getElementById('learn').innerHTML=lh;
   document.getElementById('log').innerHTML=(s.signals||[]).map(x=>
     `<div class="lg"><span class="ts">${x.ts}</span><span class="sr"><span class="fam" style="background:${FAM[x.family]||'#666'}"></span>${esc(x.source)}</span>
      <span class="tk2">${esc(x.ticker)}</span><span style="color:${x.dir==='bull'?'var(--bull)':'var(--bear)'}">${x.dir}</span></div>`).join('');
