@@ -99,17 +99,6 @@ _STAGES = [
 ]
 
 
-def _log_level(msg: str) -> str:
-    m = msg.lower()
-    if "call fired" in m or "hit" in m:
-        return "good"
-    if "degraded" in m or "miss" in m or "retry" in m:
-        return "warn"
-    if "failed" in m:
-        return "bad"
-    return "info"
-
-
 def build_pipeline(log: EventLog, now: datetime | None = None) -> dict:
     now = now or datetime.now(UTC)
     pstate = {"wave": 0, "cycles": []}
@@ -209,9 +198,18 @@ def build_pipeline(log: EventLog, now: datetime | None = None) -> dict:
     logs.sort(key=lambda x: x["ts"], reverse=True)
 
     healthy = sum(1 for s in src_nodes if s["status"] == "ok")
+    last_ts = last.get("ts")
+    age = None
+    if last_ts:
+        try:
+            age = int((now - datetime.fromisoformat(last_ts)).total_seconds())
+        except ValueError:
+            age = None
     return {
         "now": now.isoformat(timespec="seconds"),
         "wave": pstate.get("wave", 0),
+        "last_cycle_ts": last_ts,
+        "age_seconds": age,
         "throughput": int(last.get("feed_signals", 0)) + int(last.get("enriched", 0)),
         "nodes_healthy": healthy, "nodes_total": len(src_nodes),
         "stages": [{"key": k, "label": lbl} for k, lbl in _STAGES],

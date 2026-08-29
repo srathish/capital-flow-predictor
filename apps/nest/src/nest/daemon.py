@@ -28,7 +28,8 @@ log = logging.getLogger(__name__)
 ET = ZoneInfo("America/New_York")
 
 # cadence / phase boundaries (ET)
-CYCLE_MINUTES = 5
+CYCLE_MINUTES = 5       # RTH cadence — market data moves fast
+OFFHOURS_MINUTES = 30   # nights/weekends — news, EDGAR, congress, wiki still move; poll slower
 DIGEST_AT = (8, 30)
 RTH_OPEN = (9, 31)
 RTH_CLOSE = (16, 0)
@@ -102,7 +103,7 @@ def run() -> None:
     """Block forever on the market clock. Kill via SIGTERM (Railway) or Ctrl-C."""
     log.info("🪶 Nest daemon up — ET now %s, watchlist %s",
              datetime.now(ET).isoformat(timespec="minutes"), _watchlist())
-    last_cycle_minute = -1
+    last_cycle_at: datetime | None = None
     done: dict[str, str] = {"digest": "", "grade": ""}  # task -> yyyy-mm-dd last run
 
     # Boot cycle: run one cycle immediately on startup so every deploy/restart refreshes the
@@ -110,6 +111,7 @@ def run() -> None:
     # next 5-minute RTH mark. Guarded — a bad boot must not stop the daemon coming up.
     try:
         _run_cycle()
+        last_cycle_at = datetime.now(ET)
     except Exception:  # noqa: BLE001
         log.exception("boot cycle failed — continuing to the scheduler")
 
@@ -120,12 +122,19 @@ def run() -> None:
             if _due(now, DIGEST_AT) and done["digest"] != today:
                 _run_digest()
                 done["digest"] = today
-            elif _in_rth(now) and now.minute % CYCLE_MINUTES == 0 and now.minute != last_cycle_minute:
-                _run_cycle()
-                last_cycle_minute = now.minute
             elif _due(now, GRADE_AT) and done["grade"] != today:
                 _run_grade()
                 done["grade"] = today
+            else:
+                # Cycle cadence: fast in RTH, slow off-hours. Off-hours cycles keep the
+                # 24/7 sources (news / EDGAR / congress / wiki) flowing on nights & weekends;
+                # market-data sources just re-report their last close (deduped downstream).
+                cadence = CYCLE_MINUTES if _in_rth(now) else OFFHOURS_MINUTES
+                due = last_cycle_at is None or \
+                    (now - last_cycle_at).total_seconds() >= cadence * 60
+                if due:
+                    _run_cycle()
+                    last_cycle_at = now
         except Exception:  # noqa: BLE001 — a bad tick must never kill the daemon
             log.exception("tick failed (%s) — continuing", now.isoformat(timespec="minutes"))
         time.sleep(IDLE_SLEEP_S)

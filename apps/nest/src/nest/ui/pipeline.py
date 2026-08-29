@@ -81,13 +81,13 @@ _HTML = r"""<!doctype html>
   <div class="statusbar">
     <span class="brand">NEST <b>·</b> PIPELINE</span>
     <div class="tabs"><a class="tab on" href="/">PIPELINE</a><a class="tab" href="/field">FIELD</a></div>
-    <span class="sb-item pushed live">STREAM LIVE</span>
+    <span class="sb-item pushed" id="s-stream">IDLE</span>
     <span class="sb-item">NODES <b id="s-nodes">–</b></span>
     <span class="sb-item">WAVE <b id="s-wave">–</b></span>
+    <span class="sb-item">UPDATED <b id="s-age">–</b></span>
     <span class="sb-item">THROUGHPUT <b id="s-tput">–</b>/cy</span>
     <span class="sb-item">FLOOR <b id="s-floor">–</b></span>
     <span class="sb-item">REGIME <b id="s-regime">–</b></span>
-    <span class="sb-item">LLM <b>$0/d</b></span>
   </div>
 
   <div class="main">
@@ -182,41 +182,42 @@ function bez(a,b,t){ // point on horizontal bezier
   const y=(1-t)**3*a.y+3*(1-t)**2*t*a.y+3*(1-t)*t*t*b.y+t**3*b.y;
   return {x,y};
 }
-let tphase=0;
+// A "wave" pulse sweeps SOURCES→MARTS ONLY when a new cycle brings data (wave increments).
+// Between cycles the DAG is quiet — motion means new information, not decoration.
+const PULSE_MS=2800; let pulseStart=-1e9;
+function triggerPulse(){pulseStart=performance.now()}
 function frame(t){
   ctx.clearRect(0,0,W,H);
-  // column labels
   ctx.font='10px ui-monospace,monospace';ctx.textAlign='left';
   LABELS.forEach(l=>{ctx.fillStyle='#3a4256';ctx.fillText(l.label.toUpperCase(),l.x-18,22)});
+  const pe=t-pulseStart, pulsing=pe>=0&&pe<PULSE_MS&&!reduce;
+  const front=pulsing?pe/PULSE_MS:-1;               // 0→1 wavefront position (normalized x)
   // edges
-  if(!reduce)tphase=(tphase+0.006)%1;
   EDGES.forEach(([a,b,rate])=>{
     const mx=(a.x+b.x)/2;
-    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.bezierCurveTo(mx,a.y,mx,b.y,b.x,b.y);
     const active=(a.status==='ok'||a.status===undefined)&&rate>0;
-    ctx.strokeStyle=active?'rgba(49,208,170,0.18)':'rgba(120,131,154,0.07)';
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.bezierCurveTo(mx,a.y,mx,b.y,b.x,b.y);
+    ctx.strokeStyle=active?'rgba(49,208,170,0.12)':'rgba(120,131,154,0.05)';
     ctx.lineWidth=1;ctx.stroke();
-    if(active&&!reduce){ // flow particles
-      const k=Math.min(3,1+Math.floor((rate||0)/20));
-      for(let j=0;j<k;j++){
-        const tt=(tphase+j/k)%1; const p=bez(a,b,tt);
-        ctx.fillStyle='rgba(120,230,200,'+(0.9*(1-Math.abs(0.5-tt)*2)+0.1)+')';
-        ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,6.28);ctx.fill();
-      }
+    if(active&&pulsing){                              // a particle rides the wavefront through
+      const fa=a.x/W, fb=b.x/W, seg=(fb-fa)||0.15;
+      const tt=(front-fa)/seg;
+      if(tt>=0&&tt<=1){const p=bez(a,b,tt);
+        ctx.fillStyle='rgba(140,240,210,'+(0.85*Math.sin(tt*Math.PI)+0.15)+')';
+        ctx.beginPath();ctx.arc(p.x,p.y,2,0,6.28);ctx.fill();}
     }
   });
-  // nodes
+  // nodes — flash briefly as the wavefront passes their column
   NODES.forEach(n=>{
-    const c=fam(n), st=n.status||'ok';
-    const ring=COL[st]||COL.ok;
-    if(st==='ok'){ctx.shadowColor=c;ctx.shadowBlur=10}else{ctx.shadowBlur=0}
-    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,6.28);
+    const c=fam(n), st=n.status||'ok', ring=COL[st]||COL.ok;
+    const near=pulsing?Math.max(0,1-Math.abs(front-n.x/W)/0.06):0;   // 0..1 flash
+    if(st==='ok'){ctx.shadowColor=c;ctx.shadowBlur=8+near*16}else{ctx.shadowBlur=0}
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r+near*2,0,6.28);
     ctx.fillStyle=st==='idle'?'#161c28':c;ctx.fill();ctx.shadowBlur=0;
     ctx.lineWidth=1.4;ctx.strokeStyle=ring;
-    if(st==='degraded'){ctx.setLineDash([2,2])}ctx.stroke();ctx.setLineDash([]);
+    if(st==='degraded')ctx.setLineDash([2,2]);ctx.stroke();ctx.setLineDash([]);
     if(n===hover||n===pinned){ctx.beginPath();ctx.arc(n.x,n.y,n.r+4,0,6.28);
       ctx.strokeStyle=ring;ctx.globalAlpha=0.5;ctx.stroke();ctx.globalAlpha=1}
-    // labels: sources to the left, others to the right; skip tiny source labels unless hover
     if(n.col!=='sources'||n===hover){
       ctx.font=(n.col==='sources'?'9px':'10px')+' ui-monospace,monospace';
       ctx.fillStyle=st==='idle'?'#454f63':'#c3ccdb';
@@ -248,8 +249,24 @@ function showInspector(n){
     (n.col==='sources'?'Raw observations from this source, normalized into Signal events. Its weight is earned from its graded record.':'');
 }
 
+let lastWave=-1, baseAge=0, baseAgeAt=0;
+function fmtAge(sec){sec=Math.max(0,Math.round(sec));
+  return sec<60?sec+'s ago':sec<3600?Math.floor(sec/60)+'m ago':Math.floor(sec/3600)+'h ago'}
+function tickAge(){
+  const live=baseAge+(performance.now()-baseAgeAt)/1000;
+  document.getElementById('s-age').textContent=fmtAge(live);
+  const el=document.getElementById('s-stream'), fresh=live<90;
+  el.textContent=fresh?'STREAM LIVE':'IDLE · waiting';
+  el.classList.toggle('live',fresh);
+}
 function render(){
   const s=STATE;
+  // pulse the DAG ONLY when a new cycle actually brought data (wave up AND rows flowed)
+  if(s.wave!==lastWave){
+    if(lastWave===-1 || (s.wave>lastWave && s.throughput>0)) triggerPulse();
+    lastWave=s.wave;
+  }
+  baseAge=s.age_seconds||0; baseAgeAt=performance.now(); tickAge();
   document.getElementById('s-nodes').textContent=s.nodes_healthy+'/'+s.nodes_total+' HEALTHY';
   document.getElementById('s-wave').textContent='#'+s.wave;
   document.getElementById('s-tput').textContent=s.throughput;
@@ -275,6 +292,7 @@ function render(){
 async function poll(){if(!POLL)return;try{const r=await fetch(POLL,{cache:'no-store'});
   if(r.ok){STATE=await r.json();render()}}catch(e){}}
 resize();render();requestAnimationFrame(frame);
+setInterval(tickAge,1000);
 if(POLL)setInterval(poll,4000);
 </script>
 </body>
