@@ -51,10 +51,15 @@ if (wl) {
 }
 console.log(`\n${wl ? 'PUT (update)' : 'POST (create)'} Talon-20 -> ${res.status}`);
 
-// verify (eventual consistency)
-await new Promise((r) => setTimeout(r, 2500));
-const after = await (await fetch(B + '/api/watchlists', { headers: H })).json();
-const now = (after.watchlists || []).find((w) => w.name === 'Talon-20');
-console.log(`\n✅ Talon-20 now holds ${now?.symbols?.length ?? '?'} names:`);
+// verify — poll for eventual consistency (writes can lag several seconds)
+let now = null;
+for (let attempt = 0; attempt < 6; attempt++) {
+  await new Promise((r) => setTimeout(r, 2000));
+  const after = await (await fetch(B + '/api/watchlists', { headers: H })).json();
+  now = (after.watchlists || []).find((w) => w.name === 'Talon-20');
+  if (now && now.symbols && now.symbols.length === symbols.length) break;
+}
+const ok = now && now.symbols && now.symbols.length === symbols.length;
+console.log(`\n${ok ? '✅' : '⚠️'} Talon-20 now holds ${now?.symbols?.length ?? '?'} names:`);
 console.log('   ' + (now?.symbols || []).join(' '));
 console.log(`\nIn Talon: type /watchlist → pick "Talon-20" → run your scan.`);
