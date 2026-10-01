@@ -26,6 +26,7 @@ const byMap = (arr) => Object.fromEntries(arr.map((s) => [s.symbol, s]));
 
 async function at(hhmm) {
   const t = etToUnix(date, hhmm);
+  if (t > Math.floor(Date.now() / 1000) - 90) { console.log(`\n(${date} ${hhmm} ET is in the future — stopping here; re-run after the close for the rest of the day)`); return null; }
   const [cur, prev] = await Promise.all([
     heatmapAt(symbols, iso(t), { expirations: date }),
     heatmapAt(symbols, iso(t - 15 * 60), { expirations: date }).catch(() => []),
