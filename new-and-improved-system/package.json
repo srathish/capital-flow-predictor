@@ -1,0 +1,11 @@
+{
+  "name": "new-and-improved-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Skylit-doctrine decision-support agent for SPX/SPY/QQQ (9-step loop, day type, living map, card)",
+  "scripts": {
+    "replay": "node replay.mjs",
+    "live": "node live.mjs"
+  }
+}
