@@ -1,7 +1,8 @@
 // Cross-index confluence. DOCTRINE §7. Input: per-symbol reads {symbol, bias:'bullish'|'bearish'|'neutral', strength 0..1, hasRange}
 export function trinity(reads) {
   const dir = { bullish: 1, bearish: -1, neutral: 0 };
-  const votes = reads.map((r) => ({ symbol: r.symbol, v: dir[r.bias] ?? 0, s: r.strength ?? 0 }));
+  // A weak lean (strength < 0.3, e.g. a setup still forming away from price) is not a vote.
+  const votes = reads.map((r) => ({ symbol: r.symbol, v: (r.strength ?? 0) >= 0.3 ? (dir[r.bias] ?? 0) : 0, s: r.strength ?? 0 }));
   const bulls = votes.filter((x) => x.v > 0).length, bears = votes.filter((x) => x.v < 0).length;
   const agree = Math.max(bulls, bears), lead = bulls >= bears ? 'bullish' : 'bearish';
   const opposing = bulls > 0 && bears > 0;

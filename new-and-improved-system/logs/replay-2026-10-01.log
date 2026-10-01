@@ -1,0 +1,367 @@
+════════ 2026-10-01 09:35 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 1/3 · rolling 1/3)   TRINITY: divergence none (SPXW:neu SPY:neu QQQ:bear)
+RULES: fade the EXTREME ends only; respect both sides; no chasing · positive gamma: quick in/out, theta burns
+credits ? · rate-left ? · calls 8
+
+── SPXW  spot 7674.03  regime positive (0.561)  king 7635  floor 7635  ceiling 7730
+   chart: neutral (above VWAP, EMA5 < EMA20)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: pika_cloud 69%
+   ▸ PASS at step 4: node 7675 is decaying (-14%) and not dominant
+
+── SPY  spot 764.79  regime negative (-0.544)  king 765  floor 760  ceiling 765
+   chart: bullish (above VWAP, EMA5 > EMA20)
+   patterns: reverse_rug 100%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 760 (bullish); price 9.6× zone away. Let the map bring price to you.
+
+── QQQ  spot 742.75  regime positive (0.164)  king 744  floor 739  ceiling 744
+   chart: neutral (above VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence) · floor rolling DOWN → downside opening (bearish evidence)
+   patterns: rug 76%, pika_cloud 100%
+   ▸ PASS at step 2: WATCH — RUG forming at 744 (bearish); price 2.5× zone away. Let the map bring price to you.
+════════ 2026-10-01 09:50 ET ════════
+DAY: TREND  (neg-gamma 2/3 · air pockets 1/3 · rolling 3/3)   TRINITY: partial_with_conflict bullish (SPXW:bear SPY:bull QQQ:bull)
+RULES: don't fade strength; if entry missed wait for a clear pivot; structure in direction of the move
+credits ? · rate-left ? · calls 10
+
+── SPXW  spot 7655.33  regime mixed (0.065)  king 7620  floor 7620  ceiling 7665
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence) · floor rolling DOWN → downside opening (bearish evidence)
+   patterns: pika_cloud 63%
+   ▸ PASS at step 7: no recognized setup at 7660 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── SPY  spot 762.63  regime negative (-0.586)  king 765  floor 761  ceiling 765
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 763 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── QQQ  spot 740.41  regime negative (-0.227)  king 740  floor 740  ceiling 744
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ▸ PASS at step 8: trinity partial_with_conflict (SPXW:bear SPY:bull QQQ:bull)
+════════ 2026-10-01 10:05 ET ════════
+DAY: TREND  (neg-gamma 2/3 · air pockets 1/3 · rolling 2/3)   TRINITY: partial_alignment bearish (SPXW:bear SPY:neu QQQ:bear)
+RULES: don't fade strength; if entry missed wait for a clear pivot; structure in direction of the move
+credits ? · rate-left ? · calls 12
+
+── SPXW  spot 7630.41  regime mixed (-0.068)  king 7620  floor 7620  ceiling 7635
+   chart: neutral (at session low (held), below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence)
+   patterns: none
+   ▸ PASS at step 9: R:R 0.5 < 2 (stop 7665 / target 7620)
+
+── SPY  spot 760.10  regime negative (-0.513)  king 765  floor 757  ceiling 765
+   chart: neutral (at session low (held), below VWAP, EMA5 < EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence)
+   patterns: rug 76%
+   ▸ PASS at step 2: WATCH — RUG forming at 762 (bearish); price 3.8× zone away. Let the map bring price to you.
+
+── QQQ  spot 738.48  regime negative (-0.164)  king 740  floor 735  ceiling 740
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence) · floor rolling DOWN → downside opening (bearish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 738 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 10:20 ET ════════
+DAY: WHIPSAW  (neg-gamma 2/3 · air pockets 2/3 · rolling 2/3)   TRINITY: partial_with_conflict bearish (SPXW:bear SPY:bear QQQ:bull)
+RULES: extreme ends of ranges only; when in doubt, sit out
+credits ? · rate-left ? · calls 14
+
+── SPXW  spot 7634.52  regime mixed (-0.062)  king 7620  floor 7620  ceiling 7635
+   chart: bearish (below VWAP, EMA5 < EMA20)
+   patterns: none
+   ▸ PASS at step 8: trinity partial_with_conflict (SPXW:bear SPY:bear QQQ:bull)
+
+── SPY  spot 760.59  regime negative (-0.317)  king 762  floor 757  ceiling 762
+   chart: bearish (below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence)
+   patterns: rug 91%
+   ▸ PASS at step 2: WATCH — RUG forming at 762 (bearish); price 2.8× zone away. Let the map bring price to you.
+
+── QQQ  spot 738.40  regime negative (-0.206)  king 740  floor 733  ceiling 740
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence) · one-directional accumulation ABOVE spot (velocity fuel)
+   patterns: pika_cloud 52%
+   ▸ PASS at step 7: no recognized setup at 739 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 10:35 ET ════════
+DAY: RANGE  (neg-gamma 2/3 · air pockets 2/3 · rolling 1/3)   TRINITY: full_alignment bearish (SPXW:bear SPY:bear QQQ:bear)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 16
+
+── SPXW  spot 7643.09  regime mixed (-0.059)  king 7620  floor 7620  ceiling 7650
+   chart: neutral (at prior-day low, higher low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 7645 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── SPY  spot 761.51  regime negative (-0.244)  king 762  floor 757  ceiling 762
+   chart: neutral (at prior-day low, higher low, below VWAP, EMA5 < EMA20)
+   patterns: rug 90%
+   ★ CARD  PUTS off 762 (king/pika, 18%, delivered)  setup: rug
+   reaction: direct tap (positive node): enter on the deflection
+   plan: entry 762 → stop 764 [break AND hold above 764 (gatekeeper/barney)] → T1 760 (R:R 1) · T2 757 (R:R 2.5)   size ×0.165
+   invalidation: 762 fails to hold · floor rolls up · trinity breaks
+   steps: 1 ✓ trend=range, below VWAP 762.27 | 2 ✓ at node 762 (king/pika, 18% share) = rug reaction node | 3 ✓ king 762 · floor 757 · ceiling 762 · regime negative (-0.244) | 4 ✓ node 762: delivered (tap #3), GROWING +24% | 5 ✓ direct tap (positive node): enter on the deflection | 6 ✓ expansive: assume overshoot first, never fade velocity, follow continuation | 7 ✓ rug → down; path 3 gatekeeper(s) down | 8 ✓ full_alignment bearish (3/3) | 9 ✓ chart neutral · R:R 2.5 (below 3:1 standard — reduced)
+
+── QQQ  spot 739.83  regime negative (-0.215)  king 740  floor 739  ceiling 740
+   chart: neutral (at prior-day low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ★ CARD  PUTS off 740 (king/barney, 31%, delivered)  setup: fade_ceiling
+   reaction: overshoot-then-stall (negative node): enter as the overshoot stalls
+   plan: entry 740 → stop 741 [break AND hold above 741 (pika/pika)] → T1 739 (R:R 1) · T2 737 (R:R 3)   size ×0.33
+   invalidation: 740 fails to hold · floor rolls up · trinity breaks
+   steps: 1 ✓ trend=range, below VWAP 740.34 | 2 ✓ at node 740 (king/barney, 31% share) | 3 ✓ king 740 · floor 739 · ceiling 740 · regime negative (-0.215) | 4 ✓ node 740: delivered (tap #3) | 5 ✓ overshoot-then-stall (negative node): enter as the overshoot stalls | 6 ✓ expansive: assume overshoot first, never fade velocity, follow continuation | 7 ✓ fade_ceiling → down; path AIR POCKET down | 8 ✓ full_alignment bearish (3/3) | 9 ✓ chart neutral · R:R 3
+════════ 2026-10-01 10:50 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 1/3 · rolling 1/3)   TRINITY: divergence none (SPXW:neu SPY:bull QQQ:bear)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 18
+
+── SPXW  spot 7641.31  regime mixed (-0.088)  king 7620  floor 7620  ceiling 7650
+   chart: neutral (higher low, below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 7645 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── SPY  spot 761.24  regime negative (-0.212)  king 764  floor 760  ceiling 764
+   chart: neutral (at prior-day low, lower high, higher low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence) · ceiling rolling UP → upside opening (bullish evidence)
+   patterns: rug 87%, reverse_rug 98%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 760 (bullish); price 2.5× zone away. Let the map bring price to you.
+
+── QQQ  spot 739.75  regime mixed (-0.044)  king 740  floor 739  ceiling 740
+   chart: neutral (at prior-day low, lower high, below VWAP, EMA5 < EMA20)
+   patterns: pika_cloud 77%
+   ▸ PASS at step 8: trinity divergence (SPXW:neu SPY:bull QQQ:bear)
+════════ 2026-10-01 11:05 ET ════════
+DAY: RANGE  (neg-gamma 0/3 · air pockets 3/3 · rolling 2/3)   TRINITY: partial_alignment bearish (SPXW:bear SPY:bear QQQ:neu)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 20
+
+── SPXW  spot 7623.67  regime mixed (-0.112)  king 7620  floor 7620  ceiling 7635
+   chart: neutral (double bottom, higher low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence)
+   patterns: rug 100%
+   ▸ PASS at step 2: WATCH — RUG forming at 7635 (bearish); price 2.3× zone away. Let the map bring price to you.
+
+── SPY  spot 759.49  regime mixed (-0.101)  king 760  floor 757  ceiling 760
+   chart: neutral (double bottom, lower high, higher low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence) · floor rolling DOWN → downside opening (bearish evidence)
+   patterns: rug 100%
+   ★ CARD  PUTS off 760 (king/pika, 18%, delivered)  setup: rug
+   reaction: direct tap (positive node): enter on the deflection
+   plan: entry 760 → stop 761 [break AND hold above 761 (barney/barney)] → T1 759 (R:R 1) · T2 757 (R:R 3)   size ×0.17
+   invalidation: 760 fails to hold · floor rolls up · trinity breaks
+   steps: 1 ✓ trend=down, below VWAP 761.86 | 2 ✓ at node 760 (king/pika, 18% share) = rug reaction node | 3 ✓ king 760 · floor 757 · ceiling 760 · regime mixed (-0.101) | 4 ✓ node 760: delivered (tap #3), GROWING +37% | 5 ✓ direct tap (positive node): enter on the deflection | 6 ✓ mixed: expect inconsistent reactions, demand confluence | 7 ✓ rug → down; path 1 gatekeeper(s) down | 8 ✓ partial_alignment bearish (2/3) | 9 ✓ chart neutral · R:R 3
+
+── QQQ  spot 737.94  regime mixed (0.011)  king 740  floor 737  ceiling 740
+   chart: bearish (making new session lows (continuation), lower high, below VWAP, EMA5 < EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 738 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 11:20 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 1/3 · rolling 0/3)   TRINITY: divergence none (SPXW:neu SPY:neu QQQ:neu)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 22
+
+── SPXW  spot 7636.37  regime mixed (0.011)  king 7620  floor 7620  ceiling 7650
+   chart: neutral (below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 7635 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── SPY  spot 760.69  regime negative (-0.259)  king 764  floor 757  ceiling 764
+   chart: neutral (lower high, below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 761 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── QQQ  spot 739.16  regime mixed (-0.077)  king 740  floor 737  ceiling 740
+   chart: neutral (at prior-day low, lower high, below VWAP, EMA5 < EMA20)
+   patterns: pika_cloud 61%
+   ▸ PASS at step 7: no recognized setup at 739 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 11:35 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 2/3 · rolling 2/3)   TRINITY: partial_with_conflict bullish (SPXW:bull SPY:bear QQQ:bull)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 24
+
+── SPXW  spot 7624.70  regime mixed (-0.006)  king 7620  floor 7620  ceiling 7635
+   chart: bearish (making new session lows (continuation), lower high, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 7625 (no rug/reverse rug/beach ball, not floor/ceiling)
+
+── SPY  spot 759.53  regime negative (-0.269)  king 764  floor 757  ceiling 764
+   chart: bearish (making new session lows (continuation), lower high, below VWAP, EMA5 < EMA20)
+   living map: one-directional accumulation BELOW spot (velocity fuel)
+   patterns: none
+   ▸ PASS at step 4: node 760 is decaying (-27%) and not dominant
+
+── QQQ  spot 737.24  regime mixed (-0.11)  king 740  floor 737  ceiling 740
+   chart: bearish (double bottom, making new session lows (continuation), lower high, below VWAP, EMA5 < EMA20)
+   patterns: none
+   ▸ PASS at step 4: node 737 is on its 4th tap (decaying)
+════════ 2026-10-01 11:50 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 2/3 · rolling 1/3)   TRINITY: partial_with_conflict bullish (SPXW:bear SPY:bull QQQ:bull)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 26
+
+── SPXW  spot 7630.52  regime mixed (-0.036)  king 7620  floor 7620  ceiling 7635
+   chart: neutral (double bottom, lower high, higher low, below VWAP, EMA5 < EMA20)
+   patterns: rug 100%
+   ▸ PASS at step 8: trinity partial_with_conflict (SPXW:bear SPY:bull QQQ:bull)
+
+── SPY  spot 760.15  regime negative (-0.41)  king 765  floor 757  ceiling 765
+   chart: neutral (double bottom, lower high, higher low, below VWAP, EMA5 < EMA20)
+   living map: ceiling rolling UP → upside opening (bullish evidence) · one-directional accumulation ABOVE spot (velocity fuel)
+   patterns: none
+   ▸ PASS at step 2: spot in the MIDPOINT between floor 757 and ceiling 765
+
+── QQQ  spot 737.60  regime mixed (-0.107)  king 740  floor 737  ceiling 740
+   chart: neutral (double bottom, lower high, higher low, below VWAP, EMA5 < EMA20)
+   patterns: none
+   ▸ PASS at step 4: node 737 is on its 4th tap (decaying)
+════════ 2026-10-01 12:05 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 0/3 · rolling 0/3)   TRINITY: divergence none (SPXW:bull SPY:neu QQQ:neu)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 28
+
+── SPXW  spot 7639.59  regime mixed (-0.09)  king 7620  floor 7620  ceiling 7650
+   chart: neutral (lower high, higher low, below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: reverse_rug 59%, beach_ball 60%
+   ▸ PASS at step 8: trinity divergence (SPXW:bull SPY:neu QQQ:neu)
+
+── SPY  spot 761.06  regime negative (-0.411)  king 765  floor 757  ceiling 765
+   chart: neutral (lower high, higher low, below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   patterns: none
+   ▸ PASS at step 4: node 761 is decaying (-54%) and not dominant
+
+── QQQ  spot 738.45  regime mixed (-0.049)  king 740  floor 736  ceiling 740
+   chart: neutral (at prior-day low, lower high, higher low, below VWAP, EMA5 < EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 738 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 12:20 ET ════════
+DAY: RANGE  (neg-gamma 1/3 · air pockets 2/3 · rolling 1/3)   TRINITY: partial_alignment bullish (SPXW:bull SPY:bull QQQ:neu)
+RULES: fade the EXTREME ends only; respect both sides; no chasing
+credits ? · rate-left ? · calls 30
+
+── SPXW  spot 7639.97  regime mixed (-0.13)  king 7620  floor 7620  ceiling 7650
+   chart: neutral (lower high, higher low, above VWAP, EMA5 > EMA20, MIDRANGE — no structural edge)
+   patterns: reverse_rug 64%
+   ★ CARD  CALLS off 7635 (gatekeeper/pika, 13%, tested)  setup: reverse_rug
+   reaction: direct tap (positive node): enter on the deflection
+   plan: entry 7635 → stop 7630 [break AND hold below 7630 (pika/pika)] → T1 7645 (R:R 2) · T2 7650 (R:R 3)   size ×0.33
+   invalidation: 7635 fails to hold · ceiling rolls down · trinity breaks
+   steps: 1 ✓ trend=up, above VWAP 7639.79 | 2 ✓ at node 7635 (gatekeeper/pika, 13% share) = reverse_rug reaction node | 3 ✓ king 7620 · floor 7620 · ceiling 7650 · regime mixed (-0.13) | 4 ✓ node 7635: tested (tap #2), GROWING +13% | 5 ✓ direct tap (positive node): enter on the deflection | 6 ✓ mixed: expect inconsistent reactions, demand confluence | 7 ✓ reverse_rug → up; path 1 gatekeeper(s) up | 8 ✓ partial_alignment bullish (2/3) | 9 ✓ chart neutral · R:R 3
+
+── SPY  spot 761.07  regime negative (-0.487)  king 765  floor 761  ceiling 765
+   chart: neutral (lower high, higher low, below VWAP, EMA5 > EMA20, MIDRANGE — no structural edge)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ▸ PASS at step 9: R:R 1.5 < 2 (stop 759 / target 764)
+
+── QQQ  spot 738.34  regime mixed (-0.043)  king 740  floor 736  ceiling 740
+   chart: neutral (lower high, higher low, below VWAP, EMA5 < EMA20, MIDRANGE — no structural edge)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 738 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 12:35 ET ════════
+DAY: WHIPSAW  (neg-gamma 2/3 · air pockets 2/3 · rolling 2/3)   TRINITY: divergence none (SPXW:neu SPY:bull QQQ:bear)
+RULES: extreme ends of ranges only; when in doubt, sit out
+credits ? · rate-left ? · calls 32
+
+── SPXW  spot 7651.88  regime mixed (-0.094)  king 7620  floor 7620  ceiling 7680
+   chart: bullish (at prior-day low, lower high, higher low, above VWAP, EMA5 > EMA20)
+   living map: ceiling rolling UP → upside opening (bullish evidence)
+   patterns: reverse_rug 68%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 7635 (bullish); price 3.4× zone away. Let the map bring price to you.
+
+── SPY  spot 762.34  regime negative (-0.538)  king 765  floor 762  ceiling 765
+   chart: bullish (at prior-day low, lower high, higher low, above VWAP, EMA5 > EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ▸ PASS at step 4: node 762 is on its 4th tap (decaying)
+
+── QQQ  spot 739.31  regime negative (-0.293)  king 740  floor 738  ceiling 740
+   chart: bullish (at prior-day low, lower high, higher low, above VWAP, EMA5 > EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence)
+   patterns: none
+   ▸ PASS at step 7: no recognized setup at 739 (no rug/reverse rug/beach ball, not floor/ceiling)
+════════ 2026-10-01 12:50 ET ════════
+DAY: WHIPSAW  (neg-gamma 2/3 · air pockets 3/3 · rolling 1/3)   TRINITY: divergence none (SPXW:bull SPY:neu QQQ:neu)
+RULES: extreme ends of ranges only; when in doubt, sit out
+credits ? · rate-left ? · calls 34
+
+── SPXW  spot 7647.29  regime mixed (-0.138)  king 7620  floor 7620  ceiling 7650
+   chart: bullish (at prior-day low, higher low, above VWAP, EMA5 > EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence)
+   patterns: reverse_rug 72%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 7635 (bullish); price 2.5× zone away. Let the map bring price to you.
+
+── SPY  spot 761.87  regime negative (-0.601)  king 765  floor 760  ceiling 765
+   chart: bullish (at prior-day low, higher low, above VWAP, EMA5 > EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence)
+   patterns: none
+   ▸ PASS at step 4: node 762 is on its 4th tap (decaying)
+
+── QQQ  spot 738.96  regime negative (-0.298)  king 740  floor 738  ceiling 740
+   chart: neutral (double top, at prior-day low, higher low, below VWAP, EMA5 > EMA20)
+   patterns: none
+   ▸ PASS at step 2: spot in the MIDPOINT between floor 738 and ceiling 740
+════════ 2026-10-01 13:05 ET ════════
+DAY: WHIPSAW  (neg-gamma 3/3 · air pockets 2/3 · rolling 1/3)   TRINITY: whipsaw none (SPXW:bull SPY:bear QQQ:neu)
+RULES: extreme ends of ranges only; when in doubt, sit out
+credits ? · rate-left ? · calls 36
+
+── SPXW  spot 7647.45  regime negative (-0.164)  king 7620  floor 7620  ceiling 7650
+   chart: bullish (at prior-day low, higher low, above VWAP, EMA5 > EMA20)
+   patterns: reverse_rug 81%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 7635 (bullish); price 2.5× zone away. Let the map bring price to you.
+
+── SPY  spot 761.88  regime negative (-0.5)  king 764  floor 758  ceiling 764
+   chart: bullish (at prior-day low, above VWAP, EMA5 > EMA20)
+   living map: ceiling rolling DOWN → upside being capped (bearish evidence) · floor rolling DOWN → downside opening (bearish evidence)
+   patterns: rug 77%
+   ▸ PASS at step 4: node 762 is on its 4th tap (decaying)
+
+── QQQ  spot 738.96  regime negative (-0.256)  king 740  floor 737  ceiling 740
+   chart: neutral (double top, at prior-day low, higher low, below VWAP, EMA5 > EMA20)
+   living map: floor rolling DOWN → downside opening (bearish evidence)
+   patterns: none
+   ▸ PASS at step 2: no location: nearest major node 740 is 2.1× zone away
+════════ 2026-10-01 13:20 ET ════════
+DAY: TREND  (neg-gamma 2/3 · air pockets 2/3 · rolling 3/3)   TRINITY: partial_alignment bullish (SPXW:neu SPY:bull QQQ:bull)
+RULES: don't fade strength; if entry missed wait for a clear pivot; structure in direction of the move
+credits ? · rate-left ? · calls 38
+
+── SPXW  spot 7654.67  regime mixed (-0.113)  king 7620  floor 7620  ceiling 7660
+   chart: bullish (at prior-day low, higher low, above VWAP, EMA5 > EMA20)
+   living map: ceiling rolling UP → upside opening (bullish evidence) · one-directional accumulation ABOVE spot (velocity fuel)
+   patterns: reverse_rug 85%
+   ▸ PASS at step 2: WATCH — REVERSE_RUG forming at 7635 (bullish); price 3.9× zone away. Let the map bring price to you.
+
+── SPY  spot 762.54  regime negative (-0.547)  king 765  floor 762  ceiling 765
+   chart: bullish (at prior-day low, above VWAP, EMA5 > EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence) · ceiling rolling UP → upside opening (bullish evidence)
+   patterns: none
+   ▸ PASS at step 4: node 763 is on its 5th tap (decaying)
+
+── QQQ  spot 740.37  regime negative (-0.32)  king 740  floor 740  ceiling 744
+   chart: bullish (double top, at prior-day low, higher low, above VWAP, EMA5 > EMA20)
+   living map: floor rolling UP → downside being removed (bullish evidence) · ceiling rolling UP → upside opening (bullish evidence) · one-directional accumulation ABOVE spot (velocity fuel)
+   patterns: pika_cloud 50%
+   ▸ PASS at step 4: node 740 is on its 6th tap (decaying)
+file:///Users/saiyeeshrathish/the%20final%20plan/new-and-improved-system/feeds/skylit.js:55
+  if (!res.ok) throw new Error(`rest ${pathAndQuery.split('?')[0]} ${res.status}: ${JSON.stringify(j?.error ?? j).slice(0, 200)}`);
+                     ^
+
+Error: rest /v1/historical 400: {"code":"invalid_parameter","message":"The 'at' timestamp cannot be in the future."}
+    at rest (file:///Users/saiyeeshrathish/the%20final%20plan/new-and-improved-system/feeds/skylit.js:55:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async heatmapAt (file:///Users/saiyeeshrathish/the%20final%20plan/new-and-improved-system/feeds/skylit.js:71:13)
+    at async Promise.all (index 0)
+    at async at (file:///Users/saiyeeshrathish/the%20final%20plan/new-and-improved-system/replay.mjs:29:23)
+    at async file:///Users/saiyeeshrathish/the%20final%20plan/new-and-improved-system/replay.mjs:48:63
+
+Node.js v20.20.2

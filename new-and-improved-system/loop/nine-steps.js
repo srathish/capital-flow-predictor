@@ -11,7 +11,7 @@ export function nineSteps(ctx) {
   const ok = (n, what) => steps.push(`${n} ✓ ${what}`);
 
   // 1 PRICE
-  if (!bars || bars.length < 15) return pass(1, 'not enough price data');
+  if (!bars || bars.length < 5) return pass(1, 'not enough price data (need 5 one-minute bars)');
   const last5 = bars.slice(-5); const r5 = (Math.max(...last5.map((b) => b.h)) - Math.min(...last5.map((b) => b.l))) / board.spot;
   if (r5 < 0.0002) return pass(1, 'price not moving (5-min range < 0.02%)');
   ok(1, `trend=${chart.trend}, ${chart.belowVwap ? 'below' : 'above'} VWAP ${chart.vwap}`);
