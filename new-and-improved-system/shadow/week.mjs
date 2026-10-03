@@ -11,11 +11,20 @@ import { boardsAt, minuteBars, dailyBars, stats } from './cache.js';
 import { simulate, RULES } from './paper.js';
 import { etToUnix } from '../lib/time.js';
 import { account } from '../feeds/skylit.js';
+import { vixPivot, vixSide } from '../chart/vixpivot.js';
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
 const from = arg('from'), to = arg('to', from), step = Number(arg('step', 5));
 const variant = arg('criteria', 'current');
-const criteria = { current: {}, location: { locationOnly: true }, noking: { noKing: true } }[variant] ?? {};
+const criteria = {
+  current: {}, location: { locationOnly: true }, noking: { noKing: true },
+  vix: { vixFilter: true },                                // current setups, VIX pivot gate only
+  std: { stdConfluence: true },                            // current setups, std-dev-on-node gate only
+  confluence: { stdConfluence: true, vixFilter: true },    // current setups + both gates
+  calf: { calf: true, vixFilter: true },                   // std-dev-on-node IS the entry (fade the leg) + VIX gate
+  calfnovix: { calf: true },                               // same without the VIX gate
+}[variant];
+if (!criteria) { console.error(`unknown --criteria ${variant}`); process.exit(1); }
 const symbols = arg('symbols', 'SPXW,SPY,QQQ').split(',');
 if (!from) { console.error('need --from YYYY-MM-DD'); process.exit(1); }
 
@@ -35,6 +44,7 @@ for (const date of days) {
   const pxs = [...new Set(symbols.map((s) => PRICE_SYMBOL[s] ?? s))];
   const fullBars = {}, daily = {};
   for (const px of pxs) { fullBars[px] = await minuteBars(px, date); daily[px] = await dailyBars(px, date); }
+  const vixMin = await minuteBars('VIX', date), vpiv = vixPivot(await dailyBars('VIX', date), date);
   const jf = path.join(JDIR, `${date}.${variant}.jsonl`); fs.writeFileSync(jf, '');
   const frames = new Map(); // hhmm -> boards
   const busyUntil = {};     // symbol -> unix (open trade or cooldown)
@@ -46,12 +56,13 @@ for (const date of days) {
     const boards = await boardsAt(symbols, date, hm(m)); frames.set(m, boards);
     const prev = frames.get(m - 15) ?? null;
     const bars = Object.fromEntries(pxs.map((px) => [px, fullBars[px].filter((b) => b.t <= t)]));
-    const out = runPass({ symbols, boards, prevBoards: prev, bars, daily, date, criteria });
+    const vix = { pivot: vpiv, side: vixSide(vixMin, vpiv, t) };
+    const out = runPass({ symbols, boards, prevBoards: prev, bars, daily, date, criteria, vix });
     for (const sym of symbols) {
       const r = out.results[sym]; if (!r) continue;
       const c = out.ctx[sym];
       const rec = { t, et: hm(m), symbol: sym, decision: r.decision, step: r.stepFailed ?? null, why: r.why ?? null, setup: r.setup ?? null, direction: r.direction ?? null, plan: r.plan ?? null,
-        day: out.day.type, trinity: out.tri.klass, regime: c.regime.label, spot: c.board.spot, king: c.hier.king?.strike ?? null, floor: c.hier.floor?.strike ?? null, ceiling: c.hier.ceiling?.strike ?? null, chart: c.chart.bias };
+        day: out.day.type, trinity: out.tri.klass, regime: c.regime.label, spot: c.board.spot, vix: vix.side, vixPivot: vix.pivot, stdLevels: c.legs.length, king: c.hier.king?.strike ?? null, floor: c.hier.floor?.strike ?? null, ceiling: c.hier.ceiling?.strike ?? null, chart: c.chart.bias };
       fs.appendFileSync(jf, JSON.stringify(rec) + '\n'); passes.push(rec);
       if (r.decision !== 'CARD') continue;
       cards++;

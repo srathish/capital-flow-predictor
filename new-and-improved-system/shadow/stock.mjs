@@ -14,9 +14,15 @@ import { buildPlan } from '../execution/plan.js';
 import { minuteBars, dailyBars, optionBars } from './cache.js';
 import { occ } from '../feeds/uw.js';
 import { etToUnix, iso } from '../lib/time.js';
+import { projections } from '../chart/legs.js';
+import { vixPivot, vixSide } from '../chart/vixpivot.js';
+import { majorNodes } from '../map/board.js';
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
 const SYM = arg('symbol', 'MSFT'), FROM = arg('from'), TO = arg('to');
+const VAR = arg('criteria', 'current');
+const CRIT = { current: {}, vix: { vixFilter: true }, std: { stdConfluence: true }, confluence: { stdConfluence: true, vixFilter: true }, calf: { calf: true, vixFilter: true }, calfnovix: { calf: true } }[VAR];
+if (!CRIT) { console.error(`unknown --criteria ${VAR}`); process.exit(1); }
 const REACH = 0.015, ZONE_PCT = 0.0015, MIN_RR = 2, MAX_DAYS = 5;
 const HERE = decodeURIComponent(new URL('.', import.meta.url).pathname);
 const CACHE = path.join(HERE, '..', '.cache', 'stock');
@@ -90,23 +96,46 @@ for (let di = 0; di < tradeDays.length; di++) {
     if (!plan.ok || plan.rr < MIN_RR) return;
     cands.push({ direction, node, setup, plan, chartOk: chart === 'mixed' || (chart === 'up') === (direction === 'up') });
   };
-  add('up', rr.detected ? rr.reactionNode : null, 'reverse_rug');
-  if (!cands.some((c) => c.direction === 'up')) add('up', hier.floor, 'floor');
-  add('down', rg.detected ? rg.reactionNode : null, 'rug');
-  if (!cands.some((c) => c.direction === 'down')) add('down', hier.ceiling, 'ceiling');
-  plans.push({ D, exp, spot: board.spot, king: hier.king?.strike, floor: hier.floor?.strike, ceiling: hier.ceiling?.strike, regime: reg.label, chart, cands: cands.map((c) => `${c.setup}@${c.node.strike} ${c.direction} rr${c.plan.rr}${c.chartOk ? '' : ' (vs chart)'}`) });
+  if (CRIT.calf) {
+    // calf: every major node in reach is a candidate; direction is decided at the touch by the std-dev projection on it
+    for (const n of majorNodes(board)) if (Math.abs(n.strike - board.spot) / board.spot <= REACH) cands.push({ direction: null, node: n, setup: 'calf', plan: null, chartOk: true });
+  } else {
+    add('up', rr.detected ? rr.reactionNode : null, 'reverse_rug');
+    if (!cands.some((c) => c.direction === 'up')) add('up', hier.floor, 'floor');
+    add('down', rg.detected ? rg.reactionNode : null, 'rug');
+    if (!cands.some((c) => c.direction === 'down')) add('down', hier.ceiling, 'ceiling');
+  }
+  plans.push({ D, exp, spot: board.spot, king: hier.king?.strike, floor: hier.floor?.strike, ceiling: hier.ceiling?.strike, regime: reg.label, chart, cands: cands.map((c) => `${c.setup}@${c.node.strike} ${c.direction ?? '?'}${c.plan ? ` rr${c.plan.rr}` : ''}${c.chartOk ? '' : ' (vs chart)'}`) });
   if (!cands.length) continue;
 
-  // ---- intraday: OCO resting limits, first touch fills ----
+  // ---- intraday: OCO resting limits, first touch that PASSES THE GATES fills ----
   const bars = await minuteBars(SYM, D);
+  const vixMin = (CRIT.vixFilter) ? await minuteBars('VIX', D) : null, vp = CRIT.vixFilter ? vixPivot(await dailyBars('VIX', D), D) : null;
   const startT = etToUnix(D, '09:35'), lastEntry = etToUnix(D, '15:30');
+  const gate = { vix: 0, std: 0, rr: 0 };
   let fill = null;
-  for (const b of bars) {
+  for (let bi = 0; bi < bars.length && !fill; bi++) {
+    const b = bars[bi];
     if (b.t < startT || b.t > lastEntry) continue;
-    for (const c of cands) if (b.l <= c.node.strike + board.zone && b.h >= c.node.strike - board.zone) { fill = { ...c, t: b.t }; break; }
-    if (fill) break;
+    for (const c of cands) {
+      if (!(b.l <= c.node.strike + board.zone && b.h >= c.node.strike - board.zone)) continue;
+      let direction = c.direction, plan = c.plan, setup = c.setup;
+      const needStd = CRIT.calf || CRIT.stdConfluence;
+      const pr = needStd ? projections(bars.slice(0, bi + 1)).filter((l) => Math.abs(l.level - c.node.strike) <= board.zone).sort((x, y) => y.k - x.k) : [];
+      if (CRIT.calf) {
+        if (!pr.length) { gate.std++; continue; }
+        direction = pr[0].fade; setup = `std${pr[0].k}_${c.node.skylitType}`;
+        plan = buildPlan({ board, hier, direction, entryNode: c.node });
+        if (!plan.ok || plan.rr < MIN_RR) { gate.rr++; continue; }
+      } else if (CRIT.stdConfluence) {
+        const al = pr.filter((l) => l.fade === direction); if (!al.length) { gate.std++; continue; }
+        setup = `${setup}+std${al[0].k}`;
+      }
+      if (CRIT.vixFilter) { const s = vixSide(vixMin, vp, b.t); if (direction === 'up' ? s !== 'below' : s !== 'above') { gate.vix++; continue; } }
+      fill = { ...c, direction, plan, setup, t: b.t }; break;
+    }
   }
-  if (!fill) { plans[plans.length - 1].status = 'no fill'; continue; }
+  if (!fill) { plans[plans.length - 1].status = `no fill (blocked: std ${gate.std}, vix ${gate.vix}, rr ${gate.rr})`; continue; }
 
   // ---- contract ----
   const type = fill.direction === 'up' ? 'call' : 'put';
@@ -150,7 +179,7 @@ const sum = (a) => a.reduce((x, y) => x + y, 0), mean = (a) => (a.length ? sum(a
 const sd = (a) => { const m = mean(a); return Math.sqrt(sum(a.map((x) => (x - m) ** 2)) / Math.max(1, a.length - 1)); };
 const line = (label, T) => T.length ? `${label.padEnd(26)} n=${String(T.length).padStart(2)}  win ${String(Math.round(T.filter((x) => x.retMid > 0).length / T.length * 100)).padStart(3)}%  @$1k/trade mid ${(sum(T.map((x) => x.retMid)) * 1000 >= 0 ? '+' : '-')}$${Math.abs(sum(T.map((x) => x.retMid)) * 1000).toFixed(0)}  worst ${(sum(T.map((x) => x.retWorst)) * 1000 >= 0 ? '+' : '-')}$${Math.abs(sum(T.map((x) => x.retWorst)) * 1000).toFixed(0)}  avg ${(mean(T.map((x) => x.retMid)) * 100).toFixed(0)}%  SQN ${(T.length > 1 ? Math.sqrt(T.length) * mean(T.map((x) => x.retMid)) / (sd(T.map((x) => x.retMid)) || 1) : 0).toFixed(2)}` : `${label.padEnd(26)} n= 0`;
 const first = dmap.get(tradeDays[0]), last = dmap.get(tradeDays[tradeDays.length - 1]);
-console.log(`\n=========== ${SYM} weekly-option swing shadow · ${FROM} → ${TO} · ${tradeDays.length} trading days ===========`);
+console.log(`\n=========== ${SYM} weekly-option swing shadow · ${FROM} → ${TO} · ${tradeDays.length} trading days · criteria=${VAR} ===========`);
 console.log(`${SYM} itself: ${first.o.toFixed(2)} → ${last.c.toFixed(2)} (${((last.c / first.o - 1) * 100).toFixed(1)}%)`);
 console.log(line('ALL trades', trades));
 console.log(line('  chart-aligned only', trades.filter((x) => x.chartOk)));
@@ -163,6 +192,6 @@ console.log('\nday outcomes:', Object.entries(st).map(([k, v]) => `${k} ${v}`).j
 console.log('\n-- every trade --');
 for (const x of trades) console.log(`  ${x.D} ${x.et} ${x.direction === 'up' ? 'CALL' : 'PUT '} ${x.setup.padEnd(11)} @${x.node} (${x.nodeType}) stop ${x.stop} T1 ${x.t1} T2 ${x.t2} rr ${x.rr} ${x.chartOk ? '' : '[vs chart]'}  ${x.contract} in $${x.entryOpt} → ${x.exits}  =  ${(x.retMid * 100).toFixed(0)}%`);
 fs.mkdirSync(path.join(HERE, 'journal'), { recursive: true });
-fs.writeFileSync(path.join(HERE, 'journal', `stock.${SYM}.${FROM}_${TO}.json`), JSON.stringify({ plans, trades }, null, 1));
+fs.writeFileSync(path.join(HERE, 'journal', `stock.${SYM}.${FROM}_${TO}.${VAR}.json`), JSON.stringify({ plans, trades }, null, 1));
 const acct1 = await account().catch(() => null);
 console.log(`\ncredits used ${acct0 && acct1 ? acct0.creditsBalance - acct1.creditsBalance : '?'}`);

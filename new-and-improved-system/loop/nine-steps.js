@@ -1,5 +1,6 @@
 // The real-time 9-step loop (Academy Ch.11) for ONE symbol. Returns CARD or PASS with the failing step.
 import { nearestMajor } from '../map/hierarchy.js';
+import { majorNodes } from '../map/board.js';
 import { tapCount } from '../map/living.js';
 import { buildPlan } from '../execution/plan.js';
 
@@ -21,8 +22,18 @@ export function nineSteps(ctx) {
   // (rug → its pika ceiling, reverse rug → its pika floor, beach ball → the overshot node); otherwise the nearest major node.
   const setup = patterns.primary;
   const up = nearestMajor(board, 'up'), dn = nearestMajor(board, 'down');
-  let node, dist;
-  if (setup?.reactionNode) { node = setup.reactionNode; dist = Math.abs(node.strike - board.spot); }
+  // std-dev projections (TheQuietCalf): price-leg extensions that land on a node = confluence
+  const std = ctx.legs || [];
+  const stdAt = (strike) => std.filter((l) => Math.abs(l.level - strike) <= board.zone);
+  let node, dist, calfLeg = null;
+  if (crit.calf) {
+    // CALF ENTRY: a major node at price WITH a std-dev projection on it. Direction = fade the projected leg.
+    const near = majorNodes(board).filter((n) => Math.abs(n.strike - board.spot) <= 1.5 * board.zone)
+      .map((n) => ({ n, al: stdAt(n.strike).sort((a, b) => b.k - a.k) })).filter((x) => x.al.length)
+      .sort((a, b) => b.al[0].k - a.al[0].k || b.n.abs - a.n.abs);
+    if (!near.length) return pass(2, `no node + std-dev confluence at price (${std.length} projection levels live)`);
+    node = near[0].n; dist = Math.abs(node.strike - board.spot); calfLeg = near[0].al[0];
+  } else if (setup?.reactionNode) { node = setup.reactionNode; dist = Math.abs(node.strike - board.spot); }
   else { const cand = [up, dn].filter(Boolean).map((n) => ({ n, d: Math.abs(n.strike - board.spot) })).sort((a, b) => a.d - b.d)[0]; node = cand?.n ?? null; dist = cand?.d ?? Infinity; }
   if (!node) return pass(2, 'no major node near spot');
   if (crit.locationOnly && node.strike !== hier.floor?.strike && node.strike !== hier.ceiling?.strike) {
@@ -59,8 +70,9 @@ export function nineSteps(ctx) {
 
   // 7 PATH + direction
   // location-only: the pattern only counts if its reaction node IS the floor/ceiling we're at
-  const setupHere = setup && (!crit.locationOnly || setup.reactionNode?.strike === node.strike) ? setup : null;
+  const setupHere = !crit.calf && setup && (!crit.locationOnly || setup.reactionNode?.strike === node.strike) ? setup : null;
   let direction = setupHere ? dirOf(setupHere.bias) : null, setupName = setupHere?.pattern ?? null;
+  if (crit.calf) { direction = calfLeg.fade; setupName = `std${calfLeg.k}_${node.skylitType}`; }
   if (!direction) {
     // Range-day fade at an extreme: ceiling → down, floor → up (DOCTRINE §4 range)
     const kingOk = !crit.locationOnly && node.skylitType === 'king';
@@ -73,6 +85,19 @@ export function nineSteps(ctx) {
     if (trendDir && trendDir !== direction) return pass(7, `TREND day in negative gamma: would be fading the ${trendDir}-move (never fade velocity)`);
   }
   if (setupName === 'reverse_rug' && direction !== 'up') return pass(7, 'never fade a reverse rug');
+  if (crit.calf && patterns.primary?.pattern === 'reverse_rug' && direction === 'down' && patterns.primary.reactionNode?.strike === node.strike) return pass(7, 'never fade a reverse rug');
+  // confluence gate: the setup's node must carry a std-dev projection that fades the same way
+  if (crit.stdConfluence && !crit.calf) {
+    const al = stdAt(node.strike).filter((l) => l.fade === direction);
+    if (!al.length) return pass(7, `no std-dev projection on ${node.strike} agreeing with ${direction} (${stdAt(node.strike).length} other)`);
+    setupName = `${setupName}+std${al.sort((a, b) => b.k - a.k)[0].k}`;
+  }
+  // VIX pivot gate (TheArchitect): calls only with VIX confirmed below its pivot, puts only confirmed above
+  if (crit.vixFilter) {
+    const vs = ctx.vix?.side;
+    if (direction === 'up' && vs !== 'below') return pass(7, `VIX ${vs ?? 'n/a'} vs pivot ${ctx.vix?.pivot ?? '?'} — no calls`);
+    if (direction === 'down' && vs !== 'above') return pass(7, `VIX ${vs ?? 'n/a'} vs pivot ${ctx.vix?.pivot ?? '?'} — no puts`);
+  }
   const friction = patterns.friction && ((direction === 'up' && patterns.friction.where === 'above') || (direction === 'down' && patterns.friction.where === 'below'));
   ok(7, `${setupName} → ${direction}; path ${direction === 'up' ? (hier.airPocketUp ? 'AIR POCKET up' : `${hier.gatekeepersAbove.length} gatekeeper(s) up`) : (hier.airPocketDown ? 'AIR POCKET down' : `${hier.gatekeepersBelow.length} gatekeeper(s) down`)}${friction ? ' · PIKA CLOUD friction in path' : ''}`);
 
@@ -83,7 +108,8 @@ export function nineSteps(ctx) {
   ok(8, `${tri.klass} ${tri.direction} (${tri.agree}/3)`);
 
   // 9 DECIDE — charts first, then the plan
-  if (chart.bias !== 'neutral' && chart.bias !== want) return pass(9, `CHART disagrees: chart says ${chart.bias} (${chart.reasons.join(', ')})`);
+  // (calf mode fades a leg extension by construction, so the short-term chart bias always "disagrees" — the std-dev read IS the chart read)
+  if (!crit.calf && chart.bias !== 'neutral' && chart.bias !== want) return pass(9, `CHART disagrees: chart says ${chart.bias} (${chart.reasons.join(', ')})`);
   const plan = buildPlan({ board, hier, direction, entryNode: node, sizeMultiplier: tri.sizeMultiplier * tap.sizeMultiplier });
   if (!plan.ok) return pass(9, plan.why);
   if (plan.rr < 2) return pass(9, `R:R ${plan.rr} < 2 (stop ${plan.stop} / target ${plan.t2 ?? plan.t1})`);

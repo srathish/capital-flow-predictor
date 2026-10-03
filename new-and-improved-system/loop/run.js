@@ -7,10 +7,11 @@ import { reshuffle } from '../map/living.js';
 import { trinity } from '../map/trinity.js';
 import { chartStructure } from '../chart/structure.js';
 import { dayType } from './daytype.js';
+import { projections } from '../chart/legs.js';
 import { nineSteps } from './nine-steps.js';
 
 /** boards: current raw boards by symbol; prevBoards: earlier frame (or null); bars: 1-min session bars by PRICE symbol; daily: daily bars by PRICE symbol. */
-export function runPass({ symbols, boards, prevBoards, bars, daily, date, criteria = {} }) {
+export function runPass({ symbols, boards, prevBoards, bars, daily, date, criteria = {}, vix = null }) {
   const ctx = {};
   for (const sym of symbols) {
     const raw = boards[sym]; if (!raw) continue;
@@ -30,7 +31,7 @@ export function runPass({ symbols, boards, prevBoards, bars, daily, date, criter
     else if (hier.floor && Math.abs(hier.floor.strike - board.spot) <= 1.5 * board.zone) { bias = 'bullish'; strength = 0.4; }
     else if (liv.rollingCeiling === 'down' || liv.accumulationSide === 'below') { bias = 'bearish'; strength = 0.3; }
     else if (liv.rollingFloor === 'up' || liv.accumulationSide === 'above') { bias = 'bullish'; strength = 0.3; }
-    ctx[sym] = { symbol: sym, board, hier, regime: regime(board), patterns: pats, living: liv, chart, bars: b1, read: { symbol: sym, bias, strength, hasRange: !!(hier.floor && hier.ceiling) } };
+    ctx[sym] = { symbol: sym, board, hier, regime: regime(board), patterns: pats, living: liv, chart, bars: b1, legs: projections(b1), vix, read: { symbol: sym, bias, strength, hasRange: !!(hier.floor && hier.ceiling) } };
   }
   const reads = Object.values(ctx);
   const tri = trinity(reads.map((r) => r.read));
