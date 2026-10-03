@@ -1,0 +1,2673 @@
+{
+ "posted": {
+  "2026-03-04": {
+   "pivot": 21.79,
+   "time": "2026-03-04T14:15:12.132Z",
+   "hm": "10:15"
+  },
+  "2026-03-20": {
+   "pivot": 24.42,
+   "time": "2026-03-20T12:11:49.439Z",
+   "hm": "08:11"
+  },
+  "2026-03-24": {
+   "pivot": 25.93,
+   "time": "2026-03-24T13:27:31.060Z",
+   "hm": "09:27"
+  },
+  "2026-03-25": {
+   "pivot": 25.68,
+   "time": "2026-03-25T13:28:39.523Z",
+   "hm": "09:28"
+  },
+  "2026-03-26": {
+   "pivot": 26.35,
+   "time": "2026-03-26T12:56:57.669Z",
+   "hm": "08:56"
+  },
+  "2026-03-30": {
+   "pivot": 29.09,
+   "time": "2026-03-30T12:58:03.274Z",
+   "hm": "08:58"
+  },
+  "2026-04-09": {
+   "pivot": 22.99,
+   "time": "2026-04-09T13:13:12.718Z",
+   "hm": "09:13"
+  },
+  "2026-04-14": {
+   "pivot": 19.95,
+   "time": "2026-04-14T13:26:33.111Z",
+   "hm": "09:26"
+  },
+  "2026-04-20": {
+   "pivot": 18.58,
+   "time": "2026-04-20T12:57:46.141Z",
+   "hm": "08:57"
+  },
+  "2026-04-21": {
+   "pivot": 18.22,
+   "time": "2026-04-21T12:58:57.114Z",
+   "hm": "08:58"
+  },
+  "2026-04-23": {
+   "pivot": 18.9,
+   "time": "2026-04-23T12:59:59.347Z",
+   "hm": "08:59"
+  },
+  "2026-05-01": {
+   "pivot": 17.79,
+   "time": "2026-05-01T11:28:34.719Z",
+   "hm": "07:28"
+  },
+  "2026-05-07": {
+   "pivot": 17.56,
+   "time": "2026-05-07T13:19:51.571Z",
+   "hm": "09:19"
+  },
+  "2026-05-08": {
+   "pivot": 17.33,
+   "time": "2026-05-08T12:57:22.602Z",
+   "hm": "08:57"
+  },
+  "2026-05-11": {
+   "pivot": 17.35,
+   "time": "2026-05-11T13:06:21.004Z",
+   "hm": "09:06"
+  },
+  "2026-05-12": {
+   "pivot": 18.15,
+   "time": "2026-05-12T13:11:48.488Z",
+   "hm": "09:11"
+  },
+  "2026-05-13": {
+   "pivot": 17.91,
+   "time": "2026-05-13T12:58:06.360Z",
+   "hm": "08:58"
+  },
+  "2026-05-14": {
+   "pivot": 17.9,
+   "time": "2026-05-14T13:07:25.021Z",
+   "hm": "09:07"
+  },
+  "2026-05-15": {
+   "pivot": 18.13,
+   "time": "2026-05-15T12:35:26.338Z",
+   "hm": "08:35"
+  },
+  "2026-05-19": {
+   "pivot": 17.98,
+   "time": "2026-05-19T13:16:36.800Z",
+   "hm": "09:16"
+  },
+  "2026-06-24": {
+   "pivot": 18.34,
+   "time": "2026-06-24T12:21:34.856Z",
+   "hm": "08:21"
+  },
+  "2026-06-25": {
+   "pivot": 18.22,
+   "time": "2026-06-25T13:54:36.012Z",
+   "hm": "09:54"
+  },
+  "2026-06-26": {
+   "pivot": 19.18,
+   "time": "2026-06-26T13:42:06.564Z",
+   "hm": "09:42"
+  },
+  "2026-06-29": {
+   "pivot": 18.27,
+   "time": "2026-06-29T13:26:53.466Z",
+   "hm": "09:26"
+  },
+  "2026-06-30": {
+   "pivot": 18.08,
+   "time": "2026-06-30T13:10:17.190Z",
+   "hm": "09:10"
+  },
+  "2026-07-01": {
+   "pivot": 17.36,
+   "time": "2026-07-01T13:20:07.354Z",
+   "hm": "09:20"
+  },
+  "2026-07-06": {
+   "pivot": 16.82,
+   "time": "2026-07-06T13:11:23.473Z",
+   "hm": "09:11"
+  },
+  "2026-07-07": {
+   "pivot": 16.26,
+   "time": "2026-07-07T13:02:15.488Z",
+   "hm": "09:02"
+  },
+  "2026-07-09": {
+   "pivot": 16.43,
+   "time": "2026-07-09T13:05:36.575Z",
+   "hm": "09:05"
+  },
+  "2026-07-13": {
+   "pivot": 15.98,
+   "time": "2026-07-13T12:54:39.851Z",
+   "hm": "08:54"
+  },
+  "2026-07-15": {
+   "pivot": 16.13,
+   "time": "2026-07-15T13:09:24.988Z",
+   "hm": "09:09"
+  },
+  "2026-07-17": {
+   "pivot": 17.15,
+   "time": "2026-07-17T13:14:06.676Z",
+   "hm": "09:14"
+  },
+  "2026-07-21": {
+   "pivot": 17.74,
+   "time": "2026-07-21T13:28:45.299Z",
+   "hm": "09:28"
+  },
+  "2026-07-22": {
+   "pivot": 17.54,
+   "time": "2026-07-22T12:57:50.115Z",
+   "hm": "08:57"
+  },
+  "2026-08-13": {
+   "pivot": 14.88,
+   "time": "2026-08-13T13:24:53.832Z",
+   "hm": "09:24"
+  },
+  "2026-08-19": {
+   "pivot": 15.31,
+   "time": "2026-08-19T13:04:00.160Z",
+   "hm": "09:04"
+  }
+ },
+ "postedRows": [
+  {
+   "d": "2026-03-04",
+   "pivot": 21.79,
+   "vix": 21.56,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 29.74339206083581,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-20",
+   "pivot": 24.42,
+   "vix": 26.45,
+   "side": "above",
+   "side10": "above",
+   "spx": -56.78719240270793,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-24",
+   "pivot": 25.93,
+   "vix": 26.55,
+   "side": "above",
+   "side10": "above",
+   "spx": 11.572872454120626,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-25",
+   "pivot": 25.68,
+   "vix": 25.25,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -18.471862205965394,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-26",
+   "pivot": 26.35,
+   "vix": 26.18,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -145.10504406251505,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-30",
+   "pivot": 29.09,
+   "vix": 30.09,
+   "side": "above",
+   "side10": "above",
+   "spx": -60.85303928342592,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-09",
+   "pivot": 22.99,
+   "vix": 21.07,
+   "side": "below",
+   "side10": "below",
+   "spx": 80.80670799085247,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-14",
+   "pivot": 19.95,
+   "vix": 18.01,
+   "side": "below",
+   "side10": "below",
+   "spx": 49.0858605892319,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-20",
+   "pivot": 18.58,
+   "vix": 19.15,
+   "side": "above",
+   "side10": "above",
+   "spx": -4.442232699893238,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-21",
+   "pivot": 18.22,
+   "vix": 18.92,
+   "side": "above",
+   "side10": "above",
+   "spx": -99.78263641982117,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-23",
+   "pivot": 18.9,
+   "vix": 19.24,
+   "side": "above",
+   "side10": "above",
+   "spx": -29.23320353267294,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-01",
+   "pivot": 17.79,
+   "vix": 16.5,
+   "side": "below",
+   "side10": "below",
+   "spx": -50.13935244124872,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-07",
+   "pivot": 17.56,
+   "vix": 17.17,
+   "side": "below",
+   "side10": "below",
+   "spx": -47.7057301133436,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-08",
+   "pivot": 17.33,
+   "vix": 17.2,
+   "side": "below",
+   "side10": "below",
+   "spx": 9.200839441292802,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-11",
+   "pivot": 17.35,
+   "vix": 18.2,
+   "side": "above",
+   "side10": "above",
+   "spx": -0.47212442502038743,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-12",
+   "pivot": 18.15,
+   "vix": 18.72,
+   "side": "above",
+   "side10": "above",
+   "spx": 24.826297184185833,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-13",
+   "pivot": 17.91,
+   "vix": 18.12,
+   "side": "above",
+   "side10": "above",
+   "spx": 63.164439758588934,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-14",
+   "pivot": 17.9,
+   "vix": 17.92,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 32.41595121559788,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-15",
+   "pivot": 18.13,
+   "vix": 18.57,
+   "side": "above",
+   "side10": "above",
+   "spx": -33.68208097150738,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-19",
+   "pivot": 17.98,
+   "vix": 18.01,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 12.537862029064476,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-24",
+   "pivot": 18.34,
+   "vix": 19.06,
+   "side": "above",
+   "side10": "above",
+   "spx": -26.58709509561706,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-25",
+   "pivot": 18.22,
+   "vix": 19.3,
+   "side": "above",
+   "side10": "above",
+   "spx": -14.780009934772963,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-26",
+   "pivot": 19.18,
+   "vix": 19.18,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -27.602159247198323,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-29",
+   "pivot": 18.27,
+   "vix": 19.35,
+   "side": "above",
+   "side10": "above",
+   "spx": 109.20110342578454,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-30",
+   "pivot": 18.08,
+   "vix": 17.22,
+   "side": "below",
+   "side10": "below",
+   "spx": 43.12631629716632,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-01",
+   "pivot": 17.36,
+   "vix": 16.33,
+   "side": "below",
+   "side10": "below",
+   "spx": -9.903315875734958,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-06",
+   "pivot": 16.82,
+   "vix": 16.13,
+   "side": "below",
+   "side10": "below",
+   "spx": 24.401628193654997,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-07",
+   "pivot": 16.26,
+   "vix": 16.39,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 10.539713373161401,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-09",
+   "pivot": 16.43,
+   "vix": 16.84,
+   "side": "above",
+   "side10": "above",
+   "spx": 68.99313806637569,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-13",
+   "pivot": 15.98,
+   "vix": 16.11,
+   "side": "above",
+   "side10": "above",
+   "spx": -54.59722964711641,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-15",
+   "pivot": 16.13,
+   "vix": 15.97,
+   "side": "below",
+   "side10": "below",
+   "spx": -5.094996607736187,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-17",
+   "pivot": 17.15,
+   "vix": 17.9,
+   "side": "above",
+   "side10": "above",
+   "spx": -49.93856076080629,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-21",
+   "pivot": 17.74,
+   "vix": 17.75,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 43.842104206941585,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-22",
+   "pivot": 17.54,
+   "vix": 17,
+   "side": "below",
+   "side10": "below",
+   "spx": -8.087391796161244,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-13",
+   "pivot": 14.88,
+   "vix": 14.76,
+   "side": "below",
+   "side10": "below",
+   "spx": -12.268775837427102,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-19",
+   "pivot": 15.31,
+   "vix": 15.39,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -3.1256322596373938,
+   "vixVsOpen": "above"
+  }
+ ],
+ "allRows": [
+  {
+   "d": "2025-10-15",
+   "pivot": 20.495,
+   "vix": 19.15,
+   "side": "below",
+   "side10": "below",
+   "spx": -71.67029284219716,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-16",
+   "pivot": 20.5775,
+   "vix": 20.98,
+   "side": "above",
+   "side10": "above",
+   "spx": -85.32691200335053,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-10-17",
+   "pivot": 23.6675,
+   "vix": 23.28,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 7.299434519115465,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-20",
+   "pivot": 21.79,
+   "vix": 19.13,
+   "side": "below",
+   "side10": "below",
+   "spx": 27.63463322320237,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-21",
+   "pivot": 18.7725,
+   "vix": 18.56,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 3.817479898815421,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-22",
+   "pivot": 18.2325,
+   "vix": 18.55,
+   "side": "above",
+   "side10": "above",
+   "spx": -45.42111480086566,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-23",
+   "pivot": 19.215,
+   "vix": 18.45,
+   "side": "below",
+   "side10": "below",
+   "spx": 36.37311487618704,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-24",
+   "pivot": 17.4575,
+   "vix": 16.47,
+   "side": "below",
+   "side10": "below",
+   "spx": -8.827242045919313,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-10-27",
+   "pivot": 16.217499999999998,
+   "vix": 15.83,
+   "side": "below",
+   "side10": "below",
+   "spx": 31.007186371429615,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-10-28",
+   "pivot": 15.805,
+   "vix": 16.06,
+   "side": "above",
+   "side10": "above",
+   "spx": 14.562112058504864,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-10-29",
+   "pivot": 16.3,
+   "vix": 16.94,
+   "side": "above",
+   "side10": "above",
+   "spx": -27.231988470537086,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-10-30",
+   "pivot": 16.9975,
+   "vix": 16.87,
+   "side": "below",
+   "side10": "below",
+   "spx": -61.5469329961484,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-10-31",
+   "pivot": 16.799999999999997,
+   "vix": 16.91,
+   "side": "above",
+   "side10": "above",
+   "spx": -17.61452359062011,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-03",
+   "pivot": 17.3775,
+   "vix": 18.25,
+   "side": "above",
+   "side10": "above",
+   "spx": 14.4838149579368,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-04",
+   "pivot": 18.025,
+   "vix": 18.26,
+   "side": "above",
+   "side10": "above",
+   "spx": -56.964998825464214,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-05",
+   "pivot": 18.835,
+   "vix": 18.13,
+   "side": "below",
+   "side10": "below",
+   "spx": 8.792367576929909,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-06",
+   "pivot": 18.18,
+   "vix": 19.32,
+   "side": "above",
+   "side10": "above",
+   "spx": -46.585460479359405,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-07",
+   "pivot": 19.787499999999998,
+   "vix": 20.62,
+   "side": "above",
+   "side10": "above",
+   "spx": 59.61902426918873,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-10",
+   "pivot": 19.85,
+   "vix": 18.1,
+   "side": "below",
+   "side10": "below",
+   "spx": 35.87272673854933,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-11",
+   "pivot": 17.91,
+   "vix": 17.67,
+   "side": "below",
+   "side10": "below",
+   "spx": 54.5741250814869,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-12",
+   "pivot": 17.4425,
+   "vix": 17.49,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 4.292559854928413,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-13",
+   "pivot": 17.75,
+   "vix": 18.02,
+   "side": "above",
+   "side10": "above",
+   "spx": -127.49174424294566,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-14",
+   "pivot": 20.56,
+   "vix": 21.78,
+   "side": "above",
+   "side10": "above",
+   "spx": 55.38966855777898,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-17",
+   "pivot": 20.99,
+   "vix": 20.61,
+   "side": "below",
+   "side10": "below",
+   "spx": -93.45503024112708,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-18",
+   "pivot": 22.4425,
+   "vix": 25.2,
+   "side": "above",
+   "side10": "above",
+   "spx": 30.1042279311448,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-19",
+   "pivot": 24.235,
+   "vix": 21.97,
+   "side": "below",
+   "side10": "below",
+   "spx": -66.46848242510492,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-20",
+   "pivot": 22.4325,
+   "vix": 19.91,
+   "side": "below",
+   "side10": "below",
+   "spx": -306.39487567948925,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-21",
+   "pivot": 24.78,
+   "vix": 26.33,
+   "side": "above",
+   "side10": "above",
+   "spx": 79.93674663394081,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-24",
+   "pivot": 24.0675,
+   "vix": 21.55,
+   "side": "below",
+   "side10": "below",
+   "spx": 51.90365889311158,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-11-25",
+   "pivot": 20.9975,
+   "vix": 20.73,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 113.6913979587572,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-11-26",
+   "pivot": 19.1475,
+   "vix": 17.97,
+   "side": "below",
+   "side10": "below",
+   "spx": 32.37218289841567,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-01",
+   "pivot": 17.11,
+   "vix": 17.19,
+   "side": "above",
+   "side10": "above",
+   "spx": -8.474538995342895,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-02",
+   "pivot": 17.1475,
+   "vix": 16.49,
+   "side": "below",
+   "side10": "below",
+   "spx": -25.477446470337192,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-03",
+   "pivot": 16.7975,
+   "vix": 16.67,
+   "side": "below",
+   "side10": "below",
+   "spx": 35.65689105310906,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-04",
+   "pivot": 16.28,
+   "vix": 16.45,
+   "side": "above",
+   "side10": "above",
+   "spx": 21.656724836843477,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-05",
+   "pivot": 15.9675,
+   "vix": 15.64,
+   "side": "below",
+   "side10": "below",
+   "spx": -34.08022563459831,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-08",
+   "pivot": 15.765,
+   "vix": 16.57,
+   "side": "above",
+   "side10": "above",
+   "spx": -16.72179854825085,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-09",
+   "pivot": 16.795,
+   "vix": 16.89,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -19.50773962639088,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-10",
+   "pivot": 16.9975,
+   "vix": 17.12,
+   "side": "above",
+   "side10": "above",
+   "spx": 65.96198087643363,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-11",
+   "pivot": 16.295,
+   "vix": 16.02,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 59.566579170208264,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-12",
+   "pivot": 15.4375,
+   "vix": 15.41,
+   "side": "below",
+   "side10": "below",
+   "spx": -59.2263018357524,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-15",
+   "pivot": 16.17,
+   "vix": 16.88,
+   "side": "above",
+   "side10": "above",
+   "spx": -1.994807633072257,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-16",
+   "pivot": 16.6575,
+   "vix": 16.84,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 1.853690830851033,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-17",
+   "pivot": 16.6,
+   "vix": 16.33,
+   "side": "below",
+   "side10": "below",
+   "spx": -108.34553440702797,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-18",
+   "pivot": 17.0925,
+   "vix": 16.75,
+   "side": "below",
+   "side10": "below",
+   "spx": -2.9809470262095004,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-19",
+   "pivot": 16.5075,
+   "vix": 15.44,
+   "side": "below",
+   "side10": "below",
+   "spx": 14.63798461766109,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-22",
+   "pivot": 15.23,
+   "vix": 14.64,
+   "side": "below",
+   "side10": "below",
+   "spx": 23.46805356546706,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-23",
+   "pivot": 14.285,
+   "vix": 14.05,
+   "side": "below",
+   "side10": "below",
+   "spx": 44.98348376291132,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-26",
+   "pivot": 13.7425,
+   "vix": 14.19,
+   "side": "above",
+   "side10": "above",
+   "spx": 6.815097172890142,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2025-12-29",
+   "pivot": 14.072499999999998,
+   "vix": 14.76,
+   "side": "above",
+   "side10": "above",
+   "spx": 8.70894586977187,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-30",
+   "pivot": 14.365,
+   "vix": 14.34,
+   "side": "below",
+   "side10": "below",
+   "spx": -2.971660505907345,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2025-12-31",
+   "pivot": 14.3225,
+   "vix": 14.72,
+   "side": "above",
+   "side10": "above",
+   "spx": -52.34103336486514,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-02",
+   "pivot": 14.8175,
+   "vix": 14.98,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -11.534327732193987,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-05",
+   "pivot": 14.850000000000001,
+   "vix": 14.87,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 3.0576918339335286,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-06",
+   "pivot": 14.889999999999999,
+   "vix": 14.69,
+   "side": "below",
+   "side10": "below",
+   "spx": 18.523647946818297,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-07",
+   "pivot": 14.8475,
+   "vix": 15.22,
+   "side": "above",
+   "side10": "above",
+   "spx": -25.550274813165196,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-08",
+   "pivot": 15.33,
+   "vix": 15.41,
+   "side": "above",
+   "side10": "above",
+   "spx": -2.9177596228283305,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-09",
+   "pivot": 15.4625,
+   "vix": 15.15,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 37.290475223015356,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-12",
+   "pivot": 15.0975,
+   "vix": 15.41,
+   "side": "above",
+   "side10": "above",
+   "spx": 26.22702979246875,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-13",
+   "pivot": 15.2175,
+   "vix": 15.66,
+   "side": "above",
+   "side10": "above",
+   "spx": 7.55994779899063,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-14",
+   "pivot": 16.18,
+   "vix": 16.92,
+   "side": "above",
+   "side10": "above",
+   "spx": -0.33195547755471916,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-15",
+   "pivot": 16.76,
+   "vix": 15.68,
+   "side": "below",
+   "side10": "below",
+   "spx": -26.810690960474798,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-16",
+   "pivot": 15.6525,
+   "vix": 15.75,
+   "side": "above",
+   "side10": "above",
+   "spx": -12.506926304123544,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-20",
+   "pivot": 16.7775,
+   "vix": 19.97,
+   "side": "above",
+   "side10": "above",
+   "spx": -61.87966802552348,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-21",
+   "pivot": 19.7675,
+   "vix": 17.93,
+   "side": "below",
+   "side10": "below",
+   "spx": 40.21647385929194,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-22",
+   "pivot": 17.2925,
+   "vix": 16.11,
+   "side": "below",
+   "side10": "below",
+   "spx": 17.462528023372517,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-23",
+   "pivot": 15.799999999999999,
+   "vix": 15.79,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 3.544196125687058,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-26",
+   "pivot": 15.91,
+   "vix": 16.06,
+   "side": "above",
+   "side10": "above",
+   "spx": 1.0936211667488926,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-27",
+   "pivot": 16.099999999999998,
+   "vix": 15.9,
+   "side": "below",
+   "side10": "below",
+   "spx": 5.175649501000969,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-01-28",
+   "pivot": 16.150000000000002,
+   "vix": 16.63,
+   "side": "above",
+   "side10": "above",
+   "spx": -16.928754699053002,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-29",
+   "pivot": 16.6975,
+   "vix": 18.63,
+   "side": "above",
+   "side10": "above",
+   "spx": 67.64978770019684,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-01-30",
+   "pivot": 17.674999999999997,
+   "vix": 16.98,
+   "side": "below",
+   "side10": "below",
+   "spx": -26.896830314208508,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-02",
+   "pivot": 17.7,
+   "vix": 16.91,
+   "side": "below",
+   "side10": "below",
+   "spx": 4.7899794776616815,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-03",
+   "pivot": 16.7175,
+   "vix": 17.12,
+   "side": "above",
+   "side10": "above",
+   "spx": -35.63742592341942,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-04",
+   "pivot": 18.134999999999998,
+   "vix": 18.43,
+   "side": "above",
+   "side10": "above",
+   "spx": -43.06672086775686,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-05",
+   "pivot": 20.015,
+   "vix": 22.65,
+   "side": "above",
+   "side10": "above",
+   "spx": 12.38298010183176,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-06",
+   "pivot": 21.1725,
+   "vix": 19.5,
+   "side": "below",
+   "side10": "below",
+   "spx": 104.90907394230763,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-09",
+   "pivot": 18.470000000000002,
+   "vix": 17.68,
+   "side": "below",
+   "side10": "below",
+   "spx": 28.12645816891392,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-10",
+   "pivot": 17.61,
+   "vix": 17.48,
+   "side": "below",
+   "side10": "below",
+   "spx": -44.8983046228043,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-11",
+   "pivot": 17.42,
+   "vix": 18.29,
+   "side": "above",
+   "side10": "above",
+   "spx": 7.9461564974614385,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-12",
+   "pivot": 17.677500000000002,
+   "vix": 17.46,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -172.72942986776684,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-13",
+   "pivot": 19.9875,
+   "vix": 21.21,
+   "side": "above",
+   "side10": "above",
+   "spx": -5.17648297463518,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-17",
+   "pivot": 20.91,
+   "vix": 22.54,
+   "side": "above",
+   "side10": "above",
+   "spx": 84.30061277398003,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-18",
+   "pivot": 20.782500000000002,
+   "vix": 18.98,
+   "side": "below",
+   "side10": "below",
+   "spx": -26.095806403910892,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-19",
+   "pivot": 19.675,
+   "vix": 20.41,
+   "side": "above",
+   "side10": "above",
+   "spx": -5.855218791465999,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-20",
+   "pivot": 20.605,
+   "vix": 20.07,
+   "side": "below",
+   "side10": "below",
+   "spx": 58.32478184610325,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-23",
+   "pivot": 19.707500000000003,
+   "vix": 20.76,
+   "side": "above",
+   "side10": "above",
+   "spx": -34.2846985044699,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-24",
+   "pivot": 21.105,
+   "vix": 20.92,
+   "side": "below",
+   "side10": "below",
+   "spx": 60.999290434294714,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-25",
+   "pivot": 19.884999999999998,
+   "vix": 18.7,
+   "side": "below",
+   "side10": "below",
+   "spx": 34.044360220242055,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-02-26",
+   "pivot": 18.1625,
+   "vix": 19.45,
+   "side": "above",
+   "side10": "above",
+   "spx": 17.849116244001337,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-02-27",
+   "pivot": 19.5825,
+   "vix": 20.57,
+   "side": "above",
+   "side10": "above",
+   "spx": 24.485369991430385,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-02",
+   "pivot": 21.115,
+   "vix": 21.34,
+   "side": "above",
+   "side10": "above",
+   "spx": 24.81414887323619,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-03",
+   "pivot": 22.472500000000004,
+   "vix": 26.38,
+   "side": "above",
+   "side10": "above",
+   "spx": 113.93513160627906,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-04",
+   "pivot": 24.049999999999997,
+   "vix": 21.56,
+   "side": "below",
+   "side10": "below",
+   "spx": 29.74339206083581,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-05",
+   "pivot": 21.76,
+   "vix": 21.68,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -38.679021006559445,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-06",
+   "pivot": 24.4925,
+   "vix": 26.62,
+   "side": "above",
+   "side10": "above",
+   "spx": -11.532879825317865,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-09",
+   "pivot": 28.759999999999998,
+   "vix": 31.38,
+   "side": "above",
+   "side10": "above",
+   "spx": 231.64924567586553,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-10",
+   "pivot": 26.4825,
+   "vix": 24.85,
+   "side": "below",
+   "side10": "below",
+   "spx": 28.512147979232058,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-11",
+   "pivot": 24.49,
+   "vix": 24.53,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -19.357975220612293,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-12",
+   "pivot": 25.055,
+   "vix": 25.78,
+   "side": "above",
+   "side10": "above",
+   "spx": -72.2726988652423,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-13",
+   "pivot": 26.312499999999996,
+   "vix": 25.88,
+   "side": "below",
+   "side10": "below",
+   "spx": -95.64033023094656,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-16",
+   "pivot": 26.1825,
+   "vix": 23.81,
+   "side": "below",
+   "side10": "below",
+   "spx": -24.106467501681944,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-17",
+   "pivot": 23.585,
+   "vix": 22.52,
+   "side": "below",
+   "side10": "below",
+   "spx": -21.732607229545813,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-19",
+   "pivot": 24.7575,
+   "vix": 25.74,
+   "side": "above",
+   "side10": "above",
+   "spx": 30.762503150651572,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-20",
+   "pivot": 25.019999999999996,
+   "vix": 26.45,
+   "side": "above",
+   "side10": "above",
+   "spx": -56.78719240270793,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-23",
+   "pivot": 26.605000000000004,
+   "vix": 24.18,
+   "side": "below",
+   "side10": "below",
+   "spx": -76.21778837237731,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-24",
+   "pivot": 26.0425,
+   "vix": 26.55,
+   "side": "above",
+   "side10": "above",
+   "spx": 11.572872454120626,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-25",
+   "pivot": 26.425,
+   "vix": 25.25,
+   "side": "below",
+   "side10": "below",
+   "spx": -18.471862205965394,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-26",
+   "pivot": 25.96,
+   "vix": 26.18,
+   "side": "above",
+   "side10": "above",
+   "spx": -145.10504406251505,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-03-27",
+   "pivot": 28.122500000000002,
+   "vix": 29.81,
+   "side": "above",
+   "side10": "above",
+   "spx": -88.47229637285257,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-30",
+   "pivot": 30.1875,
+   "vix": 30.09,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -60.85303928342592,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-03-31",
+   "pivot": 29.7925,
+   "vix": 27.49,
+   "side": "below",
+   "side10": "below",
+   "spx": 137.8914105142189,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-01",
+   "pivot": 25.932499999999997,
+   "vix": 24.6,
+   "side": "below",
+   "side10": "below",
+   "spx": 3.438402390450702,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-02",
+   "pivot": 25.169999999999998,
+   "vix": 26.22,
+   "side": "above",
+   "side10": "above",
+   "spx": 88.691999938686,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-06",
+   "pivot": 25.167499999999997,
+   "vix": 24.12,
+   "side": "below",
+   "side10": "below",
+   "spx": 5.8570338890717135,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-07",
+   "pivot": 24.655,
+   "vix": 26.85,
+   "side": "above",
+   "side10": "above",
+   "spx": 99.88599718884605,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-08",
+   "pivot": 24.910000000000004,
+   "vix": 20.9,
+   "side": "below",
+   "side10": "below",
+   "spx": 13.713816707237271,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-09",
+   "pivot": 21.0575,
+   "vix": 21.07,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 80.80670799085247,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-10",
+   "pivot": 19.7825,
+   "vix": 18.95,
+   "side": "below",
+   "side10": "below",
+   "spx": -26.01057978138335,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-13",
+   "pivot": 19.7075,
+   "vix": 20.16,
+   "side": "above",
+   "side10": "above",
+   "spx": 110.38464305588431,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-14",
+   "pivot": 19.252499999999998,
+   "vix": 18.01,
+   "side": "below",
+   "side10": "below",
+   "spx": 49.0858605892319,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-15",
+   "pivot": 18.165,
+   "vix": 17.52,
+   "side": "below",
+   "side10": "below",
+   "spx": 52.23595362466656,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-16",
+   "pivot": 18.035,
+   "vix": 18.86,
+   "side": "above",
+   "side10": "above",
+   "spx": 25.407567866262973,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-17",
+   "pivot": 18.035,
+   "vix": 17.59,
+   "side": "below",
+   "side10": "below",
+   "spx": 12.168971651635582,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-20",
+   "pivot": 17.785000000000004,
+   "vix": 19.15,
+   "side": "above",
+   "side10": "above",
+   "spx": -4.442232699893238,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-21",
+   "pivot": 19.155,
+   "vix": 18.92,
+   "side": "below",
+   "side10": "below",
+   "spx": -99.78263641982117,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-22",
+   "pivot": 19.762500000000003,
+   "vix": 19,
+   "side": "below",
+   "side10": "below",
+   "spx": 13.707759545973646,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-04-23",
+   "pivot": 19.072499999999998,
+   "vix": 19.24,
+   "side": "above",
+   "side10": "above",
+   "spx": -29.23320353267294,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-24",
+   "pivot": 19.585,
+   "vix": 18.98,
+   "side": "below",
+   "side10": "below",
+   "spx": 53.464754658520704,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-27",
+   "pivot": 18.895000000000003,
+   "vix": 18.84,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 20.840637567065187,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-28",
+   "pivot": 18.62,
+   "vix": 18.63,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 2.5359267971797843,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-29",
+   "pivot": 18.220000000000002,
+   "vix": 18.07,
+   "side": "below",
+   "side10": "below",
+   "spx": 2.8168816699486627,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-04-30",
+   "pivot": 18.3025,
+   "vix": 17.95,
+   "side": "below",
+   "side10": "below",
+   "spx": 101.86452718465758,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-01",
+   "pivot": 17.2175,
+   "vix": 16.5,
+   "side": "below",
+   "side10": "below",
+   "spx": -50.13935244124872,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-04",
+   "pivot": 17.14,
+   "vix": 17.28,
+   "side": "above",
+   "side10": "above",
+   "spx": -44.12874755646748,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-05",
+   "pivot": 17.9525,
+   "vix": 17.61,
+   "side": "below",
+   "side10": "below",
+   "spx": 19.640481198691102,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-06",
+   "pivot": 17.295,
+   "vix": 16.93,
+   "side": "below",
+   "side10": "below",
+   "spx": 54.56243548360674,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-07",
+   "pivot": 17.205000000000002,
+   "vix": 17.17,
+   "side": "below",
+   "side10": "below",
+   "spx": -47.7057301133436,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-08",
+   "pivot": 17.195,
+   "vix": 17.2,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 9.200839441292802,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-11",
+   "pivot": 17.455,
+   "vix": 18.2,
+   "side": "above",
+   "side10": "above",
+   "spx": -0.47212442502038743,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-12",
+   "pivot": 18.35,
+   "vix": 18.72,
+   "side": "above",
+   "side10": "above",
+   "spx": 24.826297184185833,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-13",
+   "pivot": 18.2875,
+   "vix": 18.12,
+   "side": "below",
+   "side10": "below",
+   "spx": 63.164439758588934,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-14",
+   "pivot": 17.9825,
+   "vix": 17.92,
+   "side": "below",
+   "side10": "below",
+   "spx": 32.41595121559788,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-15",
+   "pivot": 17.8275,
+   "vix": 18.57,
+   "side": "above",
+   "side10": "above",
+   "spx": -33.68208097150738,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-18",
+   "pivot": 18.3625,
+   "vix": 18.34,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -27.70866700701905,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-19",
+   "pivot": 18.1125,
+   "vix": 18.01,
+   "side": "below",
+   "side10": "below",
+   "spx": 12.537862029064476,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-20",
+   "pivot": 18.05,
+   "vix": 17.86,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 70.90363176179312,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-21",
+   "pivot": 17.627499999999998,
+   "vix": 17.54,
+   "side": "below",
+   "side10": "below",
+   "spx": 57.79886158260005,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-22",
+   "pivot": 16.955,
+   "vix": 16.85,
+   "side": "below",
+   "side10": "below",
+   "spx": -3.4908542294181135,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-26",
+   "pivot": 16.7625,
+   "vix": 16.87,
+   "side": "above",
+   "side10": "above",
+   "spx": -14.63384188811024,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-05-27",
+   "pivot": 16.975,
+   "vix": 16.88,
+   "side": "below",
+   "side10": "below",
+   "spx": -3.482231977788,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-28",
+   "pivot": 16.572499999999998,
+   "vix": 16.01,
+   "side": "below",
+   "side10": "below",
+   "spx": 26.19414688076257,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-05-29",
+   "pivot": 15.865,
+   "vix": 15.62,
+   "side": "below",
+   "side10": "below",
+   "spx": -8.645445787388455,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-01",
+   "pivot": 15.665,
+   "vix": 16.07,
+   "side": "above",
+   "side10": "above",
+   "spx": 31.214528944380902,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-02",
+   "pivot": 16.0475,
+   "vix": 15.98,
+   "side": "below",
+   "side10": "mixed",
+   "spx": 13.367805430012899,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-03",
+   "pivot": 15.9825,
+   "vix": 16.11,
+   "side": "above",
+   "side10": "above",
+   "spx": -36.25901860680984,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-04",
+   "pivot": 16.265,
+   "vix": 15.78,
+   "side": "below",
+   "side10": "below",
+   "spx": 47.729503668799566,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-05",
+   "pivot": 15.7125,
+   "vix": 16.37,
+   "side": "above",
+   "side10": "above",
+   "spx": -177.96173955605354,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-08",
+   "pivot": 18.9425,
+   "vix": 18.9,
+   "side": "below",
+   "side10": "below",
+   "spx": -23.964114445821384,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-09",
+   "pivot": 18.419999999999998,
+   "vix": 18.23,
+   "side": "below",
+   "side10": "below",
+   "spx": -53.099085074348665,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-10",
+   "pivot": 20.424999999999997,
+   "vix": 20.5,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -141.65608620633566,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-11",
+   "pivot": 21.5525,
+   "vix": 21.33,
+   "side": "below",
+   "side10": "below",
+   "spx": 136.40782223246052,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-12",
+   "pivot": 20.195,
+   "vix": 18.95,
+   "side": "below",
+   "side10": "below",
+   "spx": 24.484972432483715,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-15",
+   "pivot": 17.8875,
+   "vix": 16.4,
+   "side": "below",
+   "side10": "below",
+   "spx": 19.81348271691455,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-16",
+   "pivot": 16.1675,
+   "vix": 15.79,
+   "side": "below",
+   "side10": "below",
+   "spx": -59.9999470783272,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-17",
+   "pivot": 16.1775,
+   "vix": 16.45,
+   "side": "above",
+   "side10": "above",
+   "spx": -136.9207645661869,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-18",
+   "pivot": 17.545,
+   "vix": 17.42,
+   "side": "below",
+   "side10": "below",
+   "spx": 31.293188680935796,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-22",
+   "pivot": 16.7275,
+   "vix": 16.62,
+   "side": "below",
+   "side10": "below",
+   "spx": -60.61653625491141,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-23",
+   "pivot": 18.060000000000002,
+   "vix": 19.18,
+   "side": "above",
+   "side10": "above",
+   "spx": -65.45327030325883,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-24",
+   "pivot": 19.5125,
+   "vix": 19.06,
+   "side": "below",
+   "side10": "below",
+   "spx": -26.58709509561706,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-25",
+   "pivot": 18.915,
+   "vix": 19.3,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -14.780009934772963,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-26",
+   "pivot": 19.28,
+   "vix": 19.18,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -27.602159247198323,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-06-29",
+   "pivot": 18.9775,
+   "vix": 19.35,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 109.20110342578454,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-06-30",
+   "pivot": 18.04,
+   "vix": 17.22,
+   "side": "below",
+   "side10": "below",
+   "spx": 43.12631629716632,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-01",
+   "pivot": 16.8825,
+   "vix": 16.33,
+   "side": "below",
+   "side10": "below",
+   "spx": -9.903315875734958,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-02",
+   "pivot": 16.4725,
+   "vix": 15.84,
+   "side": "below",
+   "side10": "below",
+   "spx": -77.94203310081615,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-06",
+   "pivot": 16.3275,
+   "vix": 16.13,
+   "side": "below",
+   "side10": "below",
+   "spx": 24.401628193654997,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-07",
+   "pivot": 15.895,
+   "vix": 16.39,
+   "side": "above",
+   "side10": "above",
+   "spx": 10.539713373161401,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-08",
+   "pivot": 16.46,
+   "vix": 17.48,
+   "side": "above",
+   "side10": "above",
+   "spx": 35.41218984152996,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-09",
+   "pivot": 17.1825,
+   "vix": 16.84,
+   "side": "below",
+   "side10": "below",
+   "spx": 68.99313806637569,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-10",
+   "pivot": 16.0875,
+   "vix": 15.55,
+   "side": "below",
+   "side10": "below",
+   "spx": 30.13523783799558,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-13",
+   "pivot": 15.594999999999999,
+   "vix": 16.11,
+   "side": "above",
+   "side10": "above",
+   "spx": -54.59722964711641,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-14",
+   "pivot": 16.8275,
+   "vix": 16.76,
+   "side": "below",
+   "side10": "below",
+   "spx": 30.48650775923542,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-15",
+   "pivot": 16.3925,
+   "vix": 15.97,
+   "side": "below",
+   "side10": "below",
+   "spx": -5.094996607736187,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-16",
+   "pivot": 15.985,
+   "vix": 15.97,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -34.56006348576545,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-17",
+   "pivot": 17.15,
+   "vix": 17.9,
+   "side": "above",
+   "side10": "above",
+   "spx": -49.93856076080629,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-20",
+   "pivot": 18.355,
+   "vix": 18.19,
+   "side": "below",
+   "side10": "below",
+   "spx": -44.996376220519075,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-21",
+   "pivot": 18.0675,
+   "vix": 17.75,
+   "side": "below",
+   "side10": "below",
+   "spx": 43.842104206941585,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-22",
+   "pivot": 17.265,
+   "vix": 17,
+   "side": "below",
+   "side10": "below",
+   "spx": -8.087391796161244,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-23",
+   "pivot": 17.5775,
+   "vix": 19.11,
+   "side": "above",
+   "side10": "above",
+   "spx": -17.719195885373153,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-24",
+   "pivot": 19.1525,
+   "vix": 18.38,
+   "side": "below",
+   "side10": "below",
+   "spx": -2.077033672222458,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-27",
+   "pivot": 18.19,
+   "vix": 18.68,
+   "side": "above",
+   "side10": "above",
+   "spx": -28.81026517011113,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-28",
+   "pivot": 18.7925,
+   "vix": 18.98,
+   "side": "above",
+   "side10": "above",
+   "spx": 45.34923509514231,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-29",
+   "pivot": 18.685,
+   "vix": 19.71,
+   "side": "above",
+   "side10": "above",
+   "spx": -80.84131335291008,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-07-30",
+   "pivot": 19.205,
+   "vix": 18.31,
+   "side": "below",
+   "side10": "below",
+   "spx": 43.116020308954546,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-07-31",
+   "pivot": 17.6525,
+   "vix": 18.49,
+   "side": "above",
+   "side10": "above",
+   "spx": 112.80073670196366,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-03",
+   "pivot": 16.7075,
+   "vix": 15.88,
+   "side": "below",
+   "side10": "below",
+   "spx": 46.61117214010877,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-04",
+   "pivot": 15.792499999999999,
+   "vix": 16.24,
+   "side": "above",
+   "side10": "above",
+   "spx": 79.91639595687919,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-05",
+   "pivot": 16.4625,
+   "vix": 16.93,
+   "side": "above",
+   "side10": "above",
+   "spx": -83.02543930281816,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-06",
+   "pivot": 16.1575,
+   "vix": 15.57,
+   "side": "below",
+   "side10": "below",
+   "spx": -34.78800253285615,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-07",
+   "pivot": 15.425,
+   "vix": 14.92,
+   "side": "below",
+   "side10": "below",
+   "spx": 37.37674281358364,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-10",
+   "pivot": 15.08,
+   "vix": 15.25,
+   "side": "above",
+   "side10": "above",
+   "spx": -15.235068216531051,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-11",
+   "pivot": 15.427500000000002,
+   "vix": 15.42,
+   "side": "below",
+   "side10": "mixed",
+   "spx": -43.703849726786615,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-12",
+   "pivot": 15.2725,
+   "vix": 14.78,
+   "side": "below",
+   "side10": "below",
+   "spx": 1.2777952739641878,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-13",
+   "pivot": 14.5575,
+   "vix": 14.76,
+   "side": "above",
+   "side10": "above",
+   "spx": -12.268775837427102,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-14",
+   "pivot": 14.57,
+   "vix": 14.59,
+   "side": "above",
+   "side10": "above",
+   "spx": -22.745445785108714,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-17",
+   "pivot": 14.544999999999998,
+   "vix": 14.94,
+   "side": "above",
+   "side10": "above",
+   "spx": -39.55303527112257,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-18",
+   "pivot": 15.342500000000001,
+   "vix": 15.83,
+   "side": "above",
+   "side10": "above",
+   "spx": -14.783280226875224,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-19",
+   "pivot": 15.66,
+   "vix": 15.39,
+   "side": "below",
+   "side10": "below",
+   "spx": -3.1256322596373938,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-20",
+   "pivot": 15.287500000000001,
+   "vix": 16.01,
+   "side": "above",
+   "side10": "above",
+   "spx": -43.03448491512936,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-21",
+   "pivot": 15.775000000000002,
+   "vix": 15.42,
+   "side": "below",
+   "side10": "below",
+   "spx": 8.177020095646926,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-24",
+   "pivot": 15.415000000000001,
+   "vix": 15.92,
+   "side": "above",
+   "side10": "above",
+   "spx": 7.8333113198538245,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-25",
+   "pivot": 15.6625,
+   "vix": 15.76,
+   "side": "above",
+   "side10": "above",
+   "spx": 4.783591369200923,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-26",
+   "pivot": 15.629999999999999,
+   "vix": 15.47,
+   "side": "below",
+   "side10": "below",
+   "spx": -3.4509971428343444,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-27",
+   "pivot": 15.3475,
+   "vix": 14.69,
+   "side": "below",
+   "side10": "below",
+   "spx": 27.77381400236078,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-08-28",
+   "pivot": 14.6225,
+   "vix": 14.64,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -16.031534728085628,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-08-31",
+   "pivot": 14.65,
+   "vix": 15.33,
+   "side": "above",
+   "side10": "above",
+   "spx": 11.738863063100908,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-01",
+   "pivot": 15.3225,
+   "vix": 15.55,
+   "side": "above",
+   "side10": "above",
+   "spx": -21.5972556320198,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-02",
+   "pivot": 16.105,
+   "vix": 15.57,
+   "side": "below",
+   "side10": "below",
+   "spx": 10.732149315270927,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-03",
+   "pivot": 15.3825,
+   "vix": 14.93,
+   "side": "below",
+   "side10": "below",
+   "spx": 59.504256703155065,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-04",
+   "pivot": 14.435,
+   "vix": 14.05,
+   "side": "below",
+   "side10": "below",
+   "spx": -15.550147933395078,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-08",
+   "pivot": 14.555000000000001,
+   "vix": 15.63,
+   "side": "above",
+   "side10": "above",
+   "spx": -9.906609700405992,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-09",
+   "pivot": 15.69,
+   "vix": 16,
+   "side": "above",
+   "side10": "above",
+   "spx": -16.378592539047514,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-10",
+   "pivot": 16.695,
+   "vix": 17.82,
+   "side": "above",
+   "side10": "above",
+   "spx": 5.337198958916986,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-11",
+   "pivot": 17.3575,
+   "vix": 15.96,
+   "side": "below",
+   "side10": "below",
+   "spx": -9.669955669582254,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-14",
+   "pivot": 16.352500000000003,
+   "vix": 17.21,
+   "side": "above",
+   "side10": "above",
+   "spx": 2.9272237055233474,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-15",
+   "pivot": 17.095,
+   "vix": 17.43,
+   "side": "above",
+   "side10": "mixed",
+   "spx": -7.916728138765647,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-16",
+   "pivot": 17.23,
+   "vix": 16.83,
+   "side": "below",
+   "side10": "below",
+   "spx": -71.85856992639336,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-17",
+   "pivot": 17.067500000000003,
+   "vix": 15.81,
+   "side": "below",
+   "side10": "below",
+   "spx": 19.968957586301784,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-18",
+   "pivot": 15.5225,
+   "vix": 15.5,
+   "side": "below",
+   "side10": "below",
+   "spx": 31.948294931964387,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-21",
+   "pivot": 15.0425,
+   "vix": 14.72,
+   "side": "below",
+   "side10": "below",
+   "spx": 69.26639354360937,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-22",
+   "pivot": 14.7925,
+   "vix": 14.41,
+   "side": "below",
+   "side10": "below",
+   "spx": -14.391431503730454,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-23",
+   "pivot": 14.352500000000001,
+   "vix": 14.64,
+   "side": "above",
+   "side10": "above",
+   "spx": -25.10368208903996,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-24",
+   "pivot": 15.185,
+   "vix": 15.64,
+   "side": "above",
+   "side10": "above",
+   "spx": 21.789808353757213,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-25",
+   "pivot": 15.6325,
+   "vix": 15.81,
+   "side": "above",
+   "side10": "mixed",
+   "spx": 53.498711875674985,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-28",
+   "pivot": 15.405000000000001,
+   "vix": 15.91,
+   "side": "above",
+   "side10": "above",
+   "spx": -22.786141351977957,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-09-29",
+   "pivot": 16.05,
+   "vix": 15.9,
+   "side": "below",
+   "side10": "below",
+   "spx": -8.55644781087738,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-09-30",
+   "pivot": 16.03,
+   "vix": 15.76,
+   "side": "below",
+   "side10": "below",
+   "spx": -75.40480645667385,
+   "vixVsOpen": "below"
+  },
+  {
+   "d": "2026-10-01",
+   "pivot": 16.294999999999998,
+   "vix": 17.33,
+   "side": "above",
+   "side10": "above",
+   "spx": 41.61298094549687,
+   "vixVsOpen": "above"
+  },
+  {
+   "d": "2026-10-02",
+   "pivot": 16.4775,
+   "vix": 15.52,
+   "side": "below",
+   "side10": "below",
+   "spx": -24.30799076761408,
+   "vixVsOpen": "below"
+  }
+ ],
+ "bestFormula": "(today open + prior H + prior L + prior C)/4"
+}
