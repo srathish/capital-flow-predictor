@@ -10,7 +10,7 @@ import { dayType } from './daytype.js';
 import { nineSteps } from './nine-steps.js';
 
 /** boards: current raw boards by symbol; prevBoards: earlier frame (or null); bars: 1-min session bars by PRICE symbol; daily: daily bars by PRICE symbol. */
-export function runPass({ symbols, boards, prevBoards, bars, daily, date }) {
+export function runPass({ symbols, boards, prevBoards, bars, daily, date, criteria = {} }) {
   const ctx = {};
   for (const sym of symbols) {
     const raw = boards[sym]; if (!raw) continue;
@@ -37,7 +37,7 @@ export function runPass({ symbols, boards, prevBoards, bars, daily, date }) {
   const day = dayType(reads, tri);
   const results = {};
   for (const r of reads) {
-    results[r.symbol] = day.mayEngage ? nineSteps({ ...r, tri, day }) : { decision: 'PASS', symbol: r.symbol, stepFailed: 0, why: 'day type = rainbow road (no trade)', steps: [] };
+    results[r.symbol] = day.mayEngage ? nineSteps({ ...r, tri, day, criteria }) : { decision: 'PASS', symbol: r.symbol, stepFailed: 0, why: 'day type = rainbow road (no trade)', steps: [] };
   }
   return { ctx, tri, day, results };
 }

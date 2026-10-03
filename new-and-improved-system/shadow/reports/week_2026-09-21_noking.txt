@@ -1,0 +1,60 @@
+shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=noking · credits 100159
+
+2026-09-21  cards   3  trades  3  @$1k/trade  mid +$1443  worst +$615   [boards fetched 0, cached 74]
+2026-09-22  cards   1  trades  1  @$1k/trade  mid +$670  worst +$602   [boards fetched 0, cached 148]
+2026-09-23  cards   3  trades  3  @$1k/trade  mid +$575  worst -$25   [boards fetched 0, cached 222]
+2026-09-24  cards   7  trades  3  @$1k/trade  mid -$765  worst -$1011   [boards fetched 0, cached 296]
+2026-09-25  cards   7  trades  4  @$1k/trade  mid -$558  worst -$1043   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-21 → 2026-09-25 · criteria=noking · $1k premium per card, real 0DTE prices ================
+ALL                    n= 14  win  64%  @$1k/trade: mid  +$1365  worst   -$862  avg  10%  SQN  0.77  uR 0.35  hold 75m
+  SPXW                 n=  4  win 100%  @$1k/trade: mid   +$727  worst    -$27  avg  18%  SQN  2.74  uR 1.26  hold 65m
+  SPY                  n=  3  win   0%  @$1k/trade: mid  -$1476  worst  -$1648  avg -49%  SQN -2.84  uR -1.73  hold 100m
+  QQQ                  n=  7  win  71%  @$1k/trade: mid  +$2114  worst   +$813  avg  30%  SQN  1.71  uR 0.73  hold 70m
+
+-- by setup --
+  reverse_rug          n=  6  win  67%  @$1k/trade: mid   +$579  worst   -$577  avg  10%  SQN  0.45  uR 0.33  hold 28m
+  beach_ball           n=  4  win  50%  @$1k/trade: mid   -$134  worst   -$452  avg  -3%  SQN -0.11  uR -0.27  hold 191m
+  rug                  n=  4  win  75%  @$1k/trade: mid   +$920  worst   +$167  avg  23%  SQN  1.56  uR 1.01  hold 29m
+
+-- by node type --
+  gatekeeper           n= 14  win  64%  @$1k/trade: mid  +$1365  worst   -$862  avg  10%  SQN  0.77  uR 0.35  hold 75m
+
+-- by day type at entry --
+  trend                n=  2  win 100%  @$1k/trade: mid  +$1090  worst   +$439  avg  55%  SQN  1.47  uR 1.50  hold 33m
+  range                n= 12  win  58%  @$1k/trade: mid   +$275  worst  -$1301  avg   2%  SQN  0.18  uR 0.16  hold 82m
+
+-- exits --
+  T1+T2 5 · T1+breakeven 4 · stop 3 · T1+flat_by 1 · flat_by 1
+
+-- why no trade (all PASS decisions) --
+   558  step 2: king # is context, not an entry (criteria: noKing)
+   146  step 2: WATCH — RUG forming at # (bearish); price #× zone away# Let the map br
+    82  step 7: no recognized setup at # (no rug/reverse rug/beach ball, not floor/cei
+    48  step 2: WATCH — REVERSE_RUG forming at # (bullish); price #× zone away# Let th
+    35  step 8: trinity whipsaw (SPXW:bear SPY:bull QQQ:bull)
+    26  step 2: WATCH — BEACH_BALL forming at # (bullish); price #× zone away# Let the
+    19  step 9: R:R # < # (stop # / target #)
+    19  step 8: trinity whipsaw (SPXW:bull SPY:bull QQQ:bear)
+    18  step 2: WATCH — BEACH_BALL forming at # (bearish); price #× zone away# Let the
+    15  step 4: node # is decaying (-#%) and not dominant
+    11  step 8: trinity whipsaw (SPXW:bear SPY:bull QQQ:bear)
+     8  step 8: trinity whipsaw (SPXW:neu SPY:bull QQQ:bear)
+
+-- every trade --
+  2026-09-21 11:45 SPXW CALL SPXW260921C07735000  reverse_rug  in $9.80 → T1+T2          22m  +$170 (17%)  uR 1.5
+  2026-09-21 13:05 SPXW CALL SPXW260921C07750000  reverse_rug  in $9.20 → T1+T2          76m  +$325 (35%)  uR 2
+  2026-09-21 14:55 QQQ  CALL QQQ260921C00741000   reverse_rug  in $0.90 → T1+T2          43m  +$83 (92%)  uR 1.5
+  2026-09-22 09:40 QQQ  CALL QQQ260922C00744000   beach_ball   in $1.79 → T1+flat_by     365m  +$120 (67%)  uR 1.39
+  2026-09-23 12:00 SPXW PUT  SPXW260923P07715000  beach_ball   in $8.70 → T1+breakeven   105m  +$150 (17%)  uR 0.98
+  2026-09-23 12:00 SPY  PUT  SPY260923P00768000   beach_ball   in $0.69 → flat_by        225m  $-13 (-19%)  uR 0.33
+  2026-09-23 12:20 QQQ  PUT  QQQ260923P00741000   rug          in $1.26 → T1+T2          21m  +$75 (59%)  uR 1.5
+  2026-09-24 11:10 SPY  PUT  SPY260924P00764000   beach_ball   in $1.13 → stop           67m  $-89 (-79%)  uR -3.78
+  2026-09-24 13:25 QQQ  CALL QQQ260924C00740000   reverse_rug  in $1.32 → T1+breakeven   12m  +$9 (7%)  uR 0.4
+  2026-09-24 13:50 QQQ  PUT  QQQ260924P00740000   rug          in $1.34 → T1+breakeven   27m  $-6 (-5%)  uR 0.48
+  2026-09-25 09:55 SPY  CALL SPY260925C00770000   reverse_rug  in $1.38 → stop           8m  $-69 (-50%)  uR -1.75
+  2026-09-25 09:55 QQQ  CALL QQQ260925C00745000   reverse_rug  in $1.83 → stop           8m  $-79 (-43%)  uR -1.65
+  2026-09-25 11:05 SPXW PUT  SPXW260925P07730000  rug          in $13.70 → T1+breakeven   55m  +$40 (3%)  uR 0.55
+  2026-09-25 12:10 QQQ  PUT  QQQ260925P00746000   rug          in $1.52 → T1+T2          11m  +$53 (35%)  uR 1.5
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 14

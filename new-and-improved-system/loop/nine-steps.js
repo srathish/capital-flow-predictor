@@ -7,6 +7,7 @@ const dirOf = (bias) => (bias === 'bearish' ? 'down' : bias === 'bullish' ? 'up'
 
 export function nineSteps(ctx) {
   const { symbol, board, hier, regime, patterns, living, chart, tri, bars, day } = ctx;
+  const crit = ctx.criteria || {}; // { locationOnly: true } = only floors/ceilings are entries (community-verified), kings are context
   const steps = []; const pass = (n, why) => ({ decision: 'PASS', symbol, stepFailed: n, why, steps: [...steps, `${n} ✗ ${why}`] });
   const ok = (n, what) => steps.push(`${n} ✓ ${what}`);
 
@@ -24,6 +25,14 @@ export function nineSteps(ctx) {
   if (setup?.reactionNode) { node = setup.reactionNode; dist = Math.abs(node.strike - board.spot); }
   else { const cand = [up, dn].filter(Boolean).map((n) => ({ n, d: Math.abs(n.strike - board.spot) })).sort((a, b) => a.d - b.d)[0]; node = cand?.n ?? null; dist = cand?.d ?? Infinity; }
   if (!node) return pass(2, 'no major node near spot');
+  if (crit.locationOnly && node.strike !== hier.floor?.strike && node.strike !== hier.ceiling?.strike) {
+    const alt = [hier.floor, hier.ceiling].filter(Boolean).map((n) => ({ n, d: Math.abs(n.strike - board.spot) })).sort((a, b) => a.d - b.d)[0];
+    if (!alt) return pass(2, 'criteria(location-only): no floor or ceiling');
+    node = alt.n; dist = alt.d;
+  }
+  // noKing: the king is context (pin/gravity), never the entry. Verified twice: Discord calls (king = worst bucket) and
+  // the 2-week shadow book (king entries −$531 overall, negative in week 2; non-king entries positive in both weeks).
+  if (crit.noKing && node.skylitType === 'king') return pass(2, `king ${node.strike} is context, not an entry (criteria: noKing)`);
   const atNode = dist <= 1.5 * board.zone;
   if (setup && !atNode) return pass(2, `WATCH — ${setup.pattern.toUpperCase()} forming at ${node.strike} (${setup.bias}); price ${(dist / board.zone).toFixed(1)}× zone away. Let the map bring price to you.`);
   if (hier.inMidpoint && !atNode) return pass(2, `spot in the MIDPOINT between floor ${hier.floor?.strike} and ceiling ${hier.ceiling?.strike}`);
@@ -49,11 +58,14 @@ export function nineSteps(ctx) {
   ok(6, regime.behavior);
 
   // 7 PATH + direction
-  let direction = setup ? dirOf(setup.bias) : null, setupName = setup?.pattern ?? null;
+  // location-only: the pattern only counts if its reaction node IS the floor/ceiling we're at
+  const setupHere = setup && (!crit.locationOnly || setup.reactionNode?.strike === node.strike) ? setup : null;
+  let direction = setupHere ? dirOf(setupHere.bias) : null, setupName = setupHere?.pattern ?? null;
   if (!direction) {
     // Range-day fade at an extreme: ceiling → down, floor → up (DOCTRINE §4 range)
-    if (node.above && (node === hier.ceiling || node.skylitType === 'king')) { direction = 'down'; setupName = 'fade_ceiling'; }
-    else if (!node.above && (node === hier.floor || node.skylitType === 'king')) { direction = 'up'; setupName = 'fade_floor'; }
+    const kingOk = !crit.locationOnly && node.skylitType === 'king';
+    if (node.above && (node.strike === hier.ceiling?.strike || kingOk)) { direction = 'down'; setupName = 'fade_ceiling'; }
+    else if (!node.above && (node.strike === hier.floor?.strike || kingOk)) { direction = 'up'; setupName = 'fade_floor'; }
   }
   if (!direction) return pass(7, `no recognized setup at ${node.strike} (no rug/reverse rug/beach ball, not floor/ceiling)`);
   if (day.type === 'trend' && regime.label === 'negative') {
