@@ -1,0 +1,54 @@
+[
+ {
+  "date": "2026-10-02",
+  "et": "13:30",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "up",
+  "setup": "reverse_rug+std2",
+  "nodeType": "gatekeeper",
+  "contract": "SPY261002C00768000",
+  "fillT": 1790962200,
+  "exitT": 1790969880,
+  "holdMin": 128,
+  "entryOpt": 1.17,
+  "entryOptWorst": 1.31,
+  "legs": [
+   {
+    "t": 1790962380,
+    "u": 769,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 1.51,
+    "optWorst": 1.42
+   },
+   {
+    "t": 1790969880,
+    "u": 770,
+    "frac": 0.5,
+    "reason": "T2",
+    "optMid": 1.93,
+    "optWorst": 1.84
+   }
+  ],
+  "pnlMid": 55,
+  "pnlWorst": 32,
+  "retMid": 0.47,
+  "retWorst": 0.244,
+  "uR": 1.5,
+  "outcome": "T1+T2",
+  "plan": {
+   "ok": true,
+   "entry": 768,
+   "stop": 767,
+   "stopRule": "break AND hold below 767 (king/barney)",
+   "t1": 769,
+   "t2": 770,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.085
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ }
+]

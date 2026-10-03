@@ -1,0 +1,230 @@
+[
+ {
+  "date": "2026-09-23",
+  "et": "11:50",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "up",
+  "setup": "std2_gatekeeper",
+  "nodeType": "gatekeeper",
+  "contract": "SPY260923C00768000",
+  "fillT": 1790178600,
+  "exitT": 1790183040,
+  "holdMin": 74,
+  "entryOpt": 1.23,
+  "entryOptWorst": 1.24,
+  "legs": [
+   {
+    "t": 1790183040,
+    "u": 766.75,
+    "frac": 1,
+    "reason": "stop",
+    "optMid": 0.43,
+    "optWorst": 0.37
+   }
+  ],
+  "pnlMid": -80,
+  "pnlWorst": -87,
+  "retMid": -0.65,
+  "retWorst": -0.702,
+  "uR": -1.25,
+  "outcome": "stop",
+  "plan": {
+   "ok": true,
+   "entry": 768,
+   "stop": 767,
+   "stopRule": "break AND hold below 767 (barney/barney)",
+   "t1": 769,
+   "t2": 770,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.085
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-09-24",
+  "et": "12:20",
+  "filled": true,
+  "symbol": "SPXW",
+  "direction": "down",
+  "setup": "std2.5_king",
+  "nodeType": "king",
+  "contract": "SPXW260924P07700000",
+  "fillT": 1790266800,
+  "exitT": 1790267880,
+  "holdMin": 18,
+  "entryOpt": 12,
+  "entryOptWorst": 13.4,
+  "legs": [
+   {
+    "t": 1790267880,
+    "u": 7705.25,
+    "frac": 1,
+    "reason": "stop",
+    "optMid": 8.8,
+    "optWorst": 8.17
+   }
+  ],
+  "pnlMid": -320,
+  "pnlWorst": -523,
+  "retMid": -0.267,
+  "retWorst": -0.39,
+  "uR": -1.05,
+  "outcome": "stop",
+  "plan": {
+   "ok": true,
+   "entry": 7700,
+   "stop": 7705,
+   "stopRule": "break AND hold above 7705 (gatekeeper/pika)",
+   "t1": 7690,
+   "t2": 7675,
+   "rr": 5,
+   "rr1": 2,
+   "sizeMultiplier": 0.33
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-09-24",
+  "et": "12:20",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "down",
+  "setup": "std2.5_gatekeeper",
+  "nodeType": "gatekeeper",
+  "contract": "SPY260924P00767000",
+  "fillT": 1790266800,
+  "exitT": 1790268120,
+  "holdMin": 22,
+  "entryOpt": 1.26,
+  "entryOptWorst": 1.4,
+  "legs": [
+   {
+    "t": 1790268120,
+    "u": 768.85,
+    "frac": 1,
+    "reason": "stop",
+    "optMid": 0.57,
+    "optWorst": 0.56
+   }
+  ],
+  "pnlMid": -69,
+  "pnlWorst": -84,
+  "retMid": -0.548,
+  "retWorst": -0.6,
+  "uR": -1.85,
+  "outcome": "stop",
+  "plan": {
+   "ok": true,
+   "entry": 767,
+   "stop": 768,
+   "stopRule": "break AND hold above 768 (gatekeeper/barney)",
+   "t1": 766,
+   "t2": 765,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.165
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-09-24",
+  "et": "12:20",
+  "filled": true,
+  "symbol": "QQQ",
+  "direction": "down",
+  "setup": "std2_gatekeeper",
+  "nodeType": "gatekeeper",
+  "contract": "QQQ260924P00739000",
+  "fillT": 1790266800,
+  "exitT": 1790267880,
+  "holdMin": 18,
+  "entryOpt": 1.27,
+  "entryOptWorst": 1.45,
+  "legs": [
+   {
+    "t": 1790267880,
+    "u": 740.46,
+    "frac": 1,
+    "reason": "stop",
+    "optMid": 0.78,
+    "optWorst": 0.74
+   }
+  ],
+  "pnlMid": -49,
+  "pnlWorst": -71,
+  "retMid": -0.386,
+  "retWorst": -0.49,
+  "uR": -1.46,
+  "outcome": "stop",
+  "plan": {
+   "ok": true,
+   "entry": 739,
+   "stop": 740,
+   "stopRule": "break AND hold above 740 (pika/pika)",
+   "t1": 738,
+   "t2": 737,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.165
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-09-24",
+  "et": "14:20",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "down",
+  "setup": "std2_barney",
+  "nodeType": "barney",
+  "contract": "SPY260924P00768000",
+  "fillT": 1790274300,
+  "exitT": 1790275920,
+  "holdMin": 27,
+  "entryOpt": 1.15,
+  "entryOptWorst": 1.35,
+  "legs": [
+   {
+    "t": 1790274900,
+    "u": 767,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 1.45,
+    "optWorst": 1.3
+   },
+   {
+    "t": 1790275920,
+    "u": 768.01,
+    "frac": 0.5,
+    "reason": "breakeven",
+    "optMid": 0.79,
+    "optWorst": 0.76
+   }
+  ],
+  "pnlMid": -3,
+  "pnlWorst": -32,
+  "retMid": -0.026,
+  "retWorst": -0.237,
+  "uR": 0.5,
+  "outcome": "T1+breakeven",
+  "plan": {
+   "ok": true,
+   "entry": 768,
+   "stop": 769,
+   "stopRule": "break AND hold above 769 (gatekeeper/pika)",
+   "t1": 767,
+   "t2": 764,
+   "rr": 4,
+   "rr1": 1,
+   "sizeMultiplier": 0.33
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ }
+]

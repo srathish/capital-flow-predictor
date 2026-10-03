@@ -1,0 +1,40 @@
+shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=confluence · credits 99783
+
+2026-09-21  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 74]
+2026-09-22  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 148]
+2026-09-23  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 222]
+2026-09-24  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 296]
+2026-09-25  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-21 → 2026-09-25 · criteria=confluence · $1k premium per card, real 0DTE prices ================
+ALL                    —
+  SPXW                 —
+  SPY                  —
+  QQQ                  —
+
+-- by setup --
+
+-- by node type --
+
+-- by day type at entry --
+
+-- exits --
+  
+
+-- why no trade (all PASS decisions) --
+   302  step 2: WATCH — RUG forming at # (bearish); price #× zone away# Let the map br
+   246  step 7: no std-dev projection on # agreeing with up (# other)
+   215  step 7: no std-dev projection on # agreeing with down (# other)
+    98  step 2: WATCH — REVERSE_RUG forming at # (bullish); price #× zone away# Let th
+    82  step 7: no recognized setup at # (no rug/reverse rug/beach ball, not floor/cei
+    52  step 2: WATCH — BEACH_BALL forming at # (bullish); price #× zone away# Let the
+    34  step 2: WATCH — BEACH_BALL forming at # (bearish); price #× zone away# Let the
+    18  step 7: VIX below vs pivot # — no puts
+    15  step 4: node # is decaying (-#%) and not dominant
+    11  step 2: no location: nearest major node # is #× zone away
+    10  step 4: node # is on its #th tap (decaying)
+     7  step 2: spot in the MIDPOINT between floor # and ceiling #
+
+-- every trade --
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 0

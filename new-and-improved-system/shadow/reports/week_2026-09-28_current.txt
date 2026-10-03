@@ -1,10 +1,10 @@
-shadow week 2026-09-28 → 2026-10-02 · 5 days · every 5m · criteria=current · credits 101662
+shadow week 2026-09-28 → 2026-10-02 · 5 days · every 5m · criteria=current · credits 99883
 
-2026-09-28  cards  16  trades  5  @$1k/trade  mid -$1249  worst -$1699   [boards fetched 74, cached 0]
-2026-09-29  cards  12  trades  3  @$1k/trade  mid -$1404  worst -$1842   [boards fetched 148, cached 0]
-2026-09-30  cards   5  trades  2  @$1k/trade  mid +$174  worst -$154   [boards fetched 222, cached 0]
-2026-10-01  cards  18  trades 10  @$1k/trade  mid +$1804  worst +$253   [boards fetched 222, cached 74]
-2026-10-02  cards   2  trades  2  @$1k/trade  mid +$152  worst -$190   [boards fetched 296, cached 74]
+2026-09-28  cards  16  trades  5  @$1k/trade  mid -$1249  worst -$1699   [boards fetched 0, cached 74]
+2026-09-29  cards  12  trades  3  @$1k/trade  mid -$1404  worst -$1842   [boards fetched 0, cached 148]
+2026-09-30  cards   5  trades  2  @$1k/trade  mid +$174  worst -$154   [boards fetched 0, cached 222]
+2026-10-01  cards  18  trades 10  @$1k/trade  mid +$1804  worst +$253   [boards fetched 0, cached 296]
+2026-10-02  cards   2  trades  2  @$1k/trade  mid +$152  worst -$190   [boards fetched 0, cached 370]
 
 ================ SHADOW BOOK · 2026-09-28 → 2026-10-02 · criteria=current · $1k premium per card, real 0DTE prices ================
 ALL                    n= 22  win  36%  @$1k/trade: mid   -$523  worst  -$3632  avg  -2%  SQN -0.21  uR 0.26  hold 49m
@@ -70,4 +70,4 @@ ALL                    n= 22  win  36%  @$1k/trade: mid   -$523  worst  -$3632  
   2026-10-02 10:50 SPY  CALL SPY261002C00772000   reverse_rug  in $1.07 → stop           10m  $-34 (-32%)  uR -1.09
   2026-10-02 13:30 SPY  CALL SPY261002C00768000   reverse_rug  in $1.17 → T1+T2          128m  +$55 (47%)  uR 1.5
 
-credits used 1503 · boards fetched 296 / cached 74 · option contracts fetched 10 / cached 12
+credits used 8 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 22

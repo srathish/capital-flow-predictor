@@ -1,0 +1,106 @@
+[
+ {
+  "date": "2026-10-01",
+  "et": "13:35",
+  "filled": true,
+  "symbol": "SPXW",
+  "direction": "down",
+  "setup": "std2_king",
+  "nodeType": "king",
+  "contract": "SPXW261001P07680000",
+  "fillT": 1790876100,
+  "exitT": 1790876760,
+  "holdMin": 11,
+  "entryOpt": 15.5,
+  "entryOptWorst": 15.5,
+  "legs": [
+   {
+    "t": 1790876160,
+    "u": 7670,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 13.6,
+    "optWorst": 13.6
+   },
+   {
+    "t": 1790876760,
+    "u": 7681.19,
+    "frac": 0.5,
+    "reason": "breakeven",
+    "optMid": 9.5,
+    "optWorst": 9.26
+   }
+  ],
+  "pnlMid": -395,
+  "pnlWorst": -407,
+  "retMid": -0.255,
+  "retWorst": -0.263,
+  "uR": 0.88,
+  "outcome": "T1+breakeven",
+  "plan": {
+   "ok": true,
+   "entry": 7680,
+   "stop": 7685,
+   "stopRule": "break AND hold above 7685 (barney/barney)",
+   "t1": 7670,
+   "t2": 7660,
+   "rr": 4,
+   "rr1": 2,
+   "sizeMultiplier": 0.17
+  },
+  "day": "trend",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-10-02",
+  "et": "13:30",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "up",
+  "setup": "std2_gatekeeper",
+  "nodeType": "gatekeeper",
+  "contract": "SPY261002C00768000",
+  "fillT": 1790962200,
+  "exitT": 1790969880,
+  "holdMin": 128,
+  "entryOpt": 1.17,
+  "entryOptWorst": 1.31,
+  "legs": [
+   {
+    "t": 1790962380,
+    "u": 769,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 1.51,
+    "optWorst": 1.42
+   },
+   {
+    "t": 1790969880,
+    "u": 770,
+    "frac": 0.5,
+    "reason": "T2",
+    "optMid": 1.93,
+    "optWorst": 1.84
+   }
+  ],
+  "pnlMid": 55,
+  "pnlWorst": 32,
+  "retMid": 0.47,
+  "retWorst": 0.244,
+  "uR": 1.5,
+  "outcome": "T1+T2",
+  "plan": {
+   "ok": true,
+   "entry": 768,
+   "stop": 767,
+   "stopRule": "break AND hold below 767 (king/barney)",
+   "t1": 769,
+   "t2": 770,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.085
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ }
+]

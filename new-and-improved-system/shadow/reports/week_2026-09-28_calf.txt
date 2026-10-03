@@ -1,0 +1,48 @@
+shadow week 2026-09-28 → 2026-10-02 · 5 days · every 5m · criteria=calf · credits 99783
+
+2026-09-28  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 74]
+2026-09-29  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 148]
+2026-09-30  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 222]
+2026-10-01  cards   1  trades  1  @$1k/trade  mid -$255  worst -$263   [boards fetched 0, cached 296]
+2026-10-02  cards   1  trades  1  @$1k/trade  mid +$470  worst +$244   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-28 → 2026-10-02 · criteria=calf · $1k premium per card, real 0DTE prices ================
+ALL                    n=  2  win  50%  @$1k/trade: mid   +$215  worst    -$19  avg  11%  SQN  0.30  uR 1.19  hold 70m
+  SPXW                 n=  1  win   0%  @$1k/trade: mid   -$255  worst   -$263  avg -26%  SQN  0.00  uR 0.88  hold 11m
+  SPY                  n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+  QQQ                  —
+
+-- by setup --
+  std2_king            n=  1  win   0%  @$1k/trade: mid   -$255  worst   -$263  avg -26%  SQN  0.00  uR 0.88  hold 11m
+  std2_gatekeeper      n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- by node type --
+  king                 n=  1  win   0%  @$1k/trade: mid   -$255  worst   -$263  avg -26%  SQN  0.00  uR 0.88  hold 11m
+  gatekeeper           n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- by day type at entry --
+  trend                n=  1  win   0%  @$1k/trade: mid   -$255  worst   -$263  avg -26%  SQN  0.00  uR 0.88  hold 11m
+  range                n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- exits --
+  T1+breakeven 1 · T1+T2 1
+
+-- why no trade (all PASS decisions) --
+  1050  step 2: no node + std-dev confluence at price (# projection levels live)
+    13  step 4: node # is on its #th tap (decaying)
+    12  step 7: VIX above vs pivot # — no calls
+     5  step 8: trinity partial_with_conflict (SPXW:bear SPY:bull QQQ:bear)
+     4  step 8: trinity divergence (SPXW:bull SPY:bear QQQ:neu)
+     4  step 7: TREND day in negative gamma: would be fading the up-move (never fade v
+     3  step 7: TREND day in negative gamma: would be fading the down-move (never fade
+     3  step 4: node # is decaying (-#%) and not dominant
+     2  step 8: trinity partial_with_conflict (SPXW:bear SPY:bear QQQ:bull)
+     2  step 8: trinity divergence (SPXW:bear SPY:neu QQQ:neu)
+     2  step 8: trinity partial_with_conflict (SPXW:bull SPY:bear QQQ:bear)
+     2  step 1: price not moving (#-min range < #%)
+
+-- every trade --
+  2026-10-01 13:35 SPXW PUT  SPXW261001P07680000  std2_king    in $15.50 → T1+breakeven   11m  $-395 (-26%)  uR 0.88
+  2026-10-02 13:30 SPY  CALL SPY261002C00768000   std2_gatekeeper in $1.17 → T1+T2          128m  +$55 (47%)  uR 1.5
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 1 / cached 1

@@ -1,0 +1,49 @@
+shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=std · credits 99783
+
+2026-09-21  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 74]
+2026-09-22  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 148]
+2026-09-23  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 222]
+2026-09-24  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 296]
+2026-09-25  cards   3  trades  3  @$1k/trade  mid +$874  worst +$271   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-21 → 2026-09-25 · criteria=std · $1k premium per card, real 0DTE prices ================
+ALL                    n=  3  win 100%  @$1k/trade: mid   +$874  worst   +$271  avg  29%  SQN  2.10  uR 1.18  hold 26m
+  SPXW                 n=  1  win 100%  @$1k/trade: mid    +$29  worst   -$144  avg   3%  SQN  0.00  uR 0.55  hold 55m
+  SPY                  n=  1  win 100%  @$1k/trade: mid   +$500  worst   +$227  avg  50%  SQN  0.00  uR 1.50  hold 13m
+  QQQ                  n=  1  win 100%  @$1k/trade: mid   +$345  worst   +$188  avg  35%  SQN  0.00  uR 1.50  hold 11m
+
+-- by setup --
+  rug+std2.5           n=  1  win 100%  @$1k/trade: mid    +$29  worst   -$144  avg   3%  SQN  0.00  uR 0.55  hold 55m
+  rug+std4.5           n=  1  win 100%  @$1k/trade: mid   +$500  worst   +$227  avg  50%  SQN  0.00  uR 1.50  hold 13m
+  rug+std3.5           n=  1  win 100%  @$1k/trade: mid   +$345  worst   +$188  avg  35%  SQN  0.00  uR 1.50  hold 11m
+
+-- by node type --
+  gatekeeper           n=  2  win 100%  @$1k/trade: mid   +$374  worst    +$44  avg  19%  SQN  1.18  uR 1.02  hold 33m
+  king                 n=  1  win 100%  @$1k/trade: mid   +$500  worst   +$227  avg  50%  SQN  0.00  uR 1.50  hold 13m
+
+-- by day type at entry --
+  range                n=  3  win 100%  @$1k/trade: mid   +$874  worst   +$271  avg  29%  SQN  2.10  uR 1.18  hold 26m
+
+-- exits --
+  T1+T2 2 · T1+breakeven 1
+
+-- why no trade (all PASS decisions) --
+   302  step 2: WATCH — RUG forming at # (bearish); price #× zone away# Let the map br
+   246  step 7: no std-dev projection on # agreeing with up (# other)
+   215  step 7: no std-dev projection on # agreeing with down (# other)
+    98  step 2: WATCH — REVERSE_RUG forming at # (bullish); price #× zone away# Let th
+    82  step 7: no recognized setup at # (no rug/reverse rug/beach ball, not floor/cei
+    52  step 2: WATCH — BEACH_BALL forming at # (bullish); price #× zone away# Let the
+    34  step 2: WATCH — BEACH_BALL forming at # (bearish); price #× zone away# Let the
+    15  step 4: node # is decaying (-#%) and not dominant
+    11  step 2: no location: nearest major node # is #× zone away
+    10  step 4: node # is on its #th tap (decaying)
+     7  step 2: spot in the MIDPOINT between floor # and ceiling #
+     6  step 7: TREND day in negative gamma: would be fading the up-move (never fade v
+
+-- every trade --
+  2026-09-25 11:05 SPXW PUT  SPXW260925P07730000  rug+std2.5   in $13.70 → T1+breakeven   55m  +$40 (3%)  uR 0.55
+  2026-09-25 12:10 SPY  PUT  SPY260925P00772000   rug+std4.5   in $1.31 → T1+T2          13m  +$66 (50%)  uR 1.5
+  2026-09-25 12:10 QQQ  PUT  QQQ260925P00746000   rug+std3.5   in $1.52 → T1+T2          11m  +$53 (35%)  uR 1.5
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 3

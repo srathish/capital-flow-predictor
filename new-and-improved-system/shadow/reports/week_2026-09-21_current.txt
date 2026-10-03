@@ -1,10 +1,10 @@
-shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=current · credits 103542
+shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=current · credits 99893
 
-2026-09-21  cards  16  trades  8  @$1k/trade  mid +$4170  worst +$2095   [boards fetched 74, cached 0]
-2026-09-22  cards   1  trades  1  @$1k/trade  mid +$670  worst +$602   [boards fetched 148, cached 0]
-2026-09-23  cards  16  trades  3  @$1k/trade  mid +$575  worst -$25   [boards fetched 222, cached 0]
-2026-09-24  cards  18  trades  8  @$1k/trade  mid -$2434  worst -$3343   [boards fetched 296, cached 0]
-2026-09-25  cards  12  trades  7  @$1k/trade  mid -$321  worst -$1401   [boards fetched 370, cached 0]
+2026-09-21  cards  16  trades  8  @$1k/trade  mid +$4170  worst +$2095   [boards fetched 0, cached 74]
+2026-09-22  cards   1  trades  1  @$1k/trade  mid +$670  worst +$602   [boards fetched 0, cached 148]
+2026-09-23  cards  16  trades  3  @$1k/trade  mid +$575  worst -$25   [boards fetched 0, cached 222]
+2026-09-24  cards  18  trades  8  @$1k/trade  mid -$2434  worst -$3343   [boards fetched 0, cached 296]
+2026-09-25  cards  12  trades  7  @$1k/trade  mid -$321  worst -$1401   [boards fetched 0, cached 370]
 
 ================ SHADOW BOOK · 2026-09-21 → 2026-09-25 · criteria=current · $1k premium per card, real 0DTE prices ================
 ALL                    n= 27  win  59%  @$1k/trade: mid  +$2660  worst  -$2072  avg  10%  SQN  0.84  uR 0.44  hold 62m
@@ -72,4 +72,4 @@ ALL                    n= 27  win  59%  @$1k/trade: mid  +$2660  worst  -$2072  
   2026-09-25 12:10 QQQ  PUT  QQQ260925P00746000   rug          in $1.52 → T1+T2          11m  +$53 (35%)  uR 1.5
   2026-09-25 15:00 SPY  PUT  SPY260925P00771000   fade_ceiling in $0.62 → flat_by        45m  $-42 (-68%)  uR -0.63
 
-credits used 1879 · boards fetched 370 / cached 0 · option contracts fetched 25 / cached 2
+credits used 10 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 27

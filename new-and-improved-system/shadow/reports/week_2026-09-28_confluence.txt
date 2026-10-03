@@ -1,0 +1,44 @@
+shadow week 2026-09-28 → 2026-10-02 · 5 days · every 5m · criteria=confluence · credits 99783
+
+2026-09-28  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 74]
+2026-09-29  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 148]
+2026-09-30  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 222]
+2026-10-01  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 296]
+2026-10-02  cards   1  trades  1  @$1k/trade  mid +$470  worst +$244   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-28 → 2026-10-02 · criteria=confluence · $1k premium per card, real 0DTE prices ================
+ALL                    n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+  SPXW                 —
+  SPY                  n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+  QQQ                  —
+
+-- by setup --
+  reverse_rug+std2     n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- by node type --
+  gatekeeper           n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- by day type at entry --
+  range                n=  1  win 100%  @$1k/trade: mid   +$470  worst   +$244  avg  47%  SQN  0.00  uR 1.50  hold 128m
+
+-- exits --
+  T1+T2 1
+
+-- why no trade (all PASS decisions) --
+   261  step 2: WATCH — REVERSE_RUG forming at # (bullish); price #× zone away# Let th
+   168  step 7: no std-dev projection on # agreeing with down (# other)
+   164  step 7: no recognized setup at # (no rug/reverse rug/beach ball, not floor/cei
+   154  step 4: node # is on its #th tap (decaying)
+   142  step 2: WATCH — RUG forming at # (bearish); price #× zone away# Let the map br
+    92  step 7: no std-dev projection on # agreeing with up (# other)
+    33  step 2: WATCH — BEACH_BALL forming at # (bearish); price #× zone away# Let the
+    26  step 4: node # is decaying (-#%) and not dominant
+    20  step 2: WATCH — BEACH_BALL forming at # (bullish); price #× zone away# Let the
+    17  step 2: spot in the MIDPOINT between floor # and ceiling #
+    10  step 7: TREND day in negative gamma: would be fading the up-move (never fade v
+     5  step 2: no location: nearest major node # is #× zone away
+
+-- every trade --
+  2026-10-02 13:30 SPY  CALL SPY261002C00768000   reverse_rug+std2 in $1.17 → T1+T2          128m  +$55 (47%)  uR 1.5
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 0 / cached 1

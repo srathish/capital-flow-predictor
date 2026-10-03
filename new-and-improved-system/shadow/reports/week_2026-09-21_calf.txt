@@ -1,0 +1,53 @@
+shadow week 2026-09-21 → 2026-09-25 · 5 days · every 5m · criteria=calf · credits 99783
+
+2026-09-21  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 74]
+2026-09-22  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 148]
+2026-09-23  cards   3  trades  1  @$1k/trade  mid -$650  worst -$702   [boards fetched 0, cached 222]
+2026-09-24  cards   4  trades  4  @$1k/trade  mid -$1227  worst -$1717   [boards fetched 0, cached 296]
+2026-09-25  cards   0  trades  0  @$1k/trade  mid +$0  worst +$0   [boards fetched 0, cached 370]
+
+================ SHADOW BOOK · 2026-09-21 → 2026-09-25 · criteria=calf · $1k premium per card, real 0DTE prices ================
+ALL                    n=  5  win   0%  @$1k/trade: mid  -$1877  worst  -$2419  avg -38%  SQN -3.43  uR -1.02  hold 32m
+  SPXW                 n=  1  win   0%  @$1k/trade: mid   -$267  worst   -$390  avg -27%  SQN  0.00  uR -1.05  hold 18m
+  SPY                  n=  3  win   0%  @$1k/trade: mid  -$1224  worst  -$1539  avg -41%  SQN -2.11  uR -0.87  hold 41m
+  QQQ                  n=  1  win   0%  @$1k/trade: mid   -$386  worst   -$490  avg -39%  SQN  0.00  uR -1.46  hold 18m
+
+-- by setup --
+  std2_gatekeeper      n=  2  win   0%  @$1k/trade: mid  -$1036  worst  -$1192  avg -52%  SQN -3.92  uR -1.35  hold 46m
+  std2.5_king          n=  1  win   0%  @$1k/trade: mid   -$267  worst   -$390  avg -27%  SQN  0.00  uR -1.05  hold 18m
+  std2.5_gatekeeper    n=  1  win   0%  @$1k/trade: mid   -$548  worst   -$600  avg -55%  SQN  0.00  uR -1.85  hold 22m
+  std2_barney          n=  1  win   0%  @$1k/trade: mid    -$26  worst   -$237  avg  -3%  SQN  0.00  uR 0.50  hold 27m
+
+-- by node type --
+  gatekeeper           n=  3  win   0%  @$1k/trade: mid  -$1584  worst  -$1792  avg -53%  SQN -6.87  uR -1.52  hold 38m
+  king                 n=  1  win   0%  @$1k/trade: mid   -$267  worst   -$390  avg -27%  SQN  0.00  uR -1.05  hold 18m
+  barney               n=  1  win   0%  @$1k/trade: mid    -$26  worst   -$237  avg  -3%  SQN  0.00  uR 0.50  hold 27m
+
+-- by day type at entry --
+  range                n=  5  win   0%  @$1k/trade: mid  -$1877  worst  -$2419  avg -38%  SQN -3.43  uR -1.02  hold 32m
+
+-- exits --
+  stop 4 · T1+breakeven 1
+
+-- why no trade (all PASS decisions) --
+   979  step 2: no node + std-dev confluence at price (# projection levels live)
+    69  step 7: VIX below vs pivot # — no puts
+    11  step 7: VIX above vs pivot # — no calls
+     7  step 7: TREND day in negative gamma: would be fading the up-move (never fade v
+     5  step 7: never fade a reverse rug
+     5  step 4: node # is decaying (-#%) and not dominant
+     5  step 8: trinity is bearish, setup is bullish
+     4  step 1: price not moving (#-min range < #%)
+     4  step 8: trinity divergence (SPXW:bear SPY:bull QQQ:neu)
+     3  step 7: VIX mixed vs pivot # — no calls
+     2  step 8: trinity partial_with_conflict (SPXW:bear SPY:bull QQQ:bear)
+     2  step 4: node # is on its #th tap (decaying)
+
+-- every trade --
+  2026-09-23 11:50 SPY  CALL SPY260923C00768000   std2_gatekeeper in $1.23 → stop           74m  $-80 (-65%)  uR -1.25
+  2026-09-24 12:20 SPXW PUT  SPXW260924P07700000  std2.5_king  in $12.00 → stop           18m  $-320 (-27%)  uR -1.05
+  2026-09-24 12:20 SPY  PUT  SPY260924P00767000   std2.5_gatekeeper in $1.26 → stop           22m  $-69 (-55%)  uR -1.85
+  2026-09-24 12:20 QQQ  PUT  QQQ260924P00739000   std2_gatekeeper in $1.27 → stop           18m  $-49 (-39%)  uR -1.46
+  2026-09-24 14:20 SPY  PUT  SPY260924P00768000   std2_barney  in $1.15 → T1+breakeven   27m  $-3 (-3%)  uR 0.5
+
+credits used 0 · boards fetched 0 / cached 370 · option contracts fetched 4 / cached 1

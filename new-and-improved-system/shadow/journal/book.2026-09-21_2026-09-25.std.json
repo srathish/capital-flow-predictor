@@ -1,0 +1,158 @@
+[
+ {
+  "date": "2026-09-25",
+  "et": "11:05",
+  "filled": true,
+  "symbol": "SPXW",
+  "direction": "down",
+  "setup": "rug+std2.5",
+  "nodeType": "gatekeeper",
+  "contract": "SPXW260925P07730000",
+  "fillT": 1790348700,
+  "exitT": 1790352000,
+  "holdMin": 55,
+  "entryOpt": 13.7,
+  "entryOptWorst": 14.9,
+  "legs": [
+   {
+    "t": 1790349000,
+    "u": 7720,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 18.8,
+    "optWorst": 16.3
+   },
+   {
+    "t": 1790352000,
+    "u": 7734.52,
+    "frac": 0.5,
+    "reason": "breakeven",
+    "optMid": 9.4,
+    "optWorst": 9.2
+   }
+  ],
+  "pnlMid": 40,
+  "pnlWorst": -215,
+  "retMid": 0.029,
+  "retWorst": -0.144,
+  "uR": 0.55,
+  "outcome": "T1+breakeven",
+  "plan": {
+   "ok": true,
+   "entry": 7730,
+   "stop": 7735,
+   "stopRule": "break AND hold above 7735 (gatekeeper/pika)",
+   "t1": 7720,
+   "t2": 7700,
+   "rr": 6,
+   "rr1": 2,
+   "sizeMultiplier": 0.17
+  },
+  "day": "range",
+  "trinity": "partial_alignment"
+ },
+ {
+  "date": "2026-09-25",
+  "et": "12:10",
+  "filled": true,
+  "symbol": "SPY",
+  "direction": "down",
+  "setup": "rug+std4.5",
+  "nodeType": "king",
+  "contract": "SPY260925P00772000",
+  "fillT": 1790352600,
+  "exitT": 1790353380,
+  "holdMin": 13,
+  "entryOpt": 1.31,
+  "entryOptWorst": 1.43,
+  "legs": [
+   {
+    "t": 1790353080,
+    "u": 771,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 1.79,
+    "optWorst": 1.56
+   },
+   {
+    "t": 1790353380,
+    "u": 770,
+    "frac": 0.5,
+    "reason": "T2",
+    "optMid": 2.14,
+    "optWorst": 1.95
+   }
+  ],
+  "pnlMid": 65.5,
+  "pnlWorst": 32.5,
+  "retMid": 0.5,
+  "retWorst": 0.227,
+  "uR": 1.5,
+  "outcome": "T1+T2",
+  "plan": {
+   "ok": true,
+   "entry": 772,
+   "stop": 773,
+   "stopRule": "break AND hold above 773 (pika/pika)",
+   "t1": 771,
+   "t2": 770,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.33
+  },
+  "day": "range",
+  "trinity": "full_alignment"
+ },
+ {
+  "date": "2026-09-25",
+  "et": "12:10",
+  "filled": true,
+  "symbol": "QQQ",
+  "direction": "down",
+  "setup": "rug+std3.5",
+  "nodeType": "gatekeeper",
+  "contract": "QQQ260925P00746000",
+  "fillT": 1790352600,
+  "exitT": 1790353260,
+  "holdMin": 11,
+  "entryOpt": 1.52,
+  "entryOptWorst": 1.68,
+  "legs": [
+   {
+    "t": 1790352840,
+    "u": 745,
+    "frac": 0.5,
+    "reason": "T1",
+    "optMid": 1.69,
+    "optWorst": 1.66
+   },
+   {
+    "t": 1790353260,
+    "u": 744,
+    "frac": 0.5,
+    "reason": "T2",
+    "optMid": 2.4,
+    "optWorst": 2.33
+   }
+  ],
+  "pnlMid": 52.5,
+  "pnlWorst": 31.5,
+  "retMid": 0.345,
+  "retWorst": 0.188,
+  "uR": 1.5,
+  "outcome": "T1+T2",
+  "plan": {
+   "ok": true,
+   "entry": 746,
+   "stop": 747,
+   "stopRule": "break AND hold above 747 (pika/pika)",
+   "t1": 745,
+   "t2": 744,
+   "rr": 2,
+   "rr1": 1,
+   "sizeMultiplier": 0.33
+  },
+  "day": "range",
+  "trinity": "full_alignment"
+ }
+]
