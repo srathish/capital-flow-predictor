@@ -1,0 +1,20 @@
+
+=========== AMD weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse_trend_vex ===========
+AMD itself: 538.78 → 633.71 (17.6%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid -$277  worst -$423  avg -14%  SQN -0.71
+  chart-aligned only       n= 0
+  against chart            n= 2  win  50%  @$1k/trade mid -$277  worst -$423  avg -14%  SQN -0.71
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid -$277  worst -$423  avg -14%  SQN -0.71
+  shorts                   n= 0
+
+day outcomes: no fill 39 · no setup in reach 12 · FILLED inverse_ceiling up 1 · no board 4 · FILLED inverse_rug up 1 · in position 1
+
+-- every trade --
+  2026-07-13 09:35 CALL inverse_ceiling @537.5 (gatekeeper) stop 535 T1 540 T2 545 rr 3 [vs chart]  AMD260717C00537500 in $19.75 → T1@07-13 $21.11 · breakeven@07-13 $20.6  =  6%
+  2026-09-22 10:00 CALL inverse_rug @620 (gatekeeper) stop 619 T1 627.5 T2 630 rr 10 [vs chart]  AMD260925C00620000 in $11.85 → stop(close)@09-23 $7.9  =  -33%
+
+credits used 0

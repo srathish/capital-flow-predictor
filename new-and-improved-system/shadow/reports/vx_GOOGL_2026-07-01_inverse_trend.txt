@@ -1,0 +1,21 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse_trend ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n= 3  win  67%  @$1k/trade mid +$180  worst -$52  avg 6%  SQN 0.69
+  chart-aligned only       n= 0
+  against chart            n= 3  win  67%  @$1k/trade mid +$180  worst -$52  avg 6%  SQN 0.69
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 3  win  67%  @$1k/trade mid +$180  worst -$52  avg 6%  SQN 0.69
+
+day outcomes: no fill 40 · no setup in reach 10 · FILLED inverse_floor down 3 · no board 4 · in position 1
+
+-- every trade --
+  2026-07-28 09:35 PUT  inverse_floor @327.5 (gatekeeper) stop 330 T1 325 T2 320 rr 3 [vs chart]  GOOGL260731P00327500 in $5.25 → T1@07-28 $6.05 · breakeven@07-28 $5.2  =  7%
+  2026-08-31 09:43 PUT  inverse_floor @340 (gatekeeper) stop 341 T1 337.5 T2 335 rr 5 [vs chart]  GOOGL260904P00340000 in $4 → T1@08-31 $5.61 · breakeven@08-31 $4.02  =  20%
+  2026-09-30 09:36 PUT  inverse_floor @345 (gatekeeper) stop 347.5 T1 342.5 T2 340 rr 2 [vs chart]  GOOGL261002P00345000 in $3.7 → T1@09-30 $5.45 · breakeven@10-01 $1.25  =  -10%
+
+credits used 0

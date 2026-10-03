@@ -1,0 +1,19 @@
+
+=========== ORCL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse_trend_vex ===========
+ORCL itself: 142.52 → 146.67 (2.9%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$392  worst -$408  avg -39%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$392  worst -$408  avg -39%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$392  worst -$408  avg -39%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 34 · no setup in reach 11 · FILLED inverse_rug up 1 · no board 9
+
+-- every trade --
+  2026-04-15 10:11 CALL inverse_rug @172.5 (pika) stop 171.5 T1 175 T2 null rr 2.5 [vs chart]  ORCL260417C00172500 in $3.55 → stop(close)@04-15 $2.16  =  -39%
+
+credits used 0

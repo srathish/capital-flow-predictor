@@ -1,0 +1,23 @@
+
+=========== AMZN weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse_trend ===========
+AMZN itself: 241.60 → 251.41 (4.1%)
+ALL trades                 n= 5  win  20%  @$1k/trade mid -$1070  worst -$1154  avg -21%  SQN -2.03
+  chart-aligned only       n= 0
+  against chart            n= 5  win  20%  @$1k/trade mid -$1070  worst -$1154  avg -21%  SQN -2.03
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  25%  @$1k/trade mid -$999  worst -$1083  avg -25%  SQN -1.95
+  shorts                   n= 1  win   0%  @$1k/trade mid -$71  worst -$71  avg -7%  SQN 0.00
+
+day outcomes: no fill 42 · no setup in reach 7 · FILLED inverse_rug up 1 · FILLED inverse_ceiling up 3 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-07-16 09:56 CALL inverse_rug @255 (gatekeeper) stop 252.5 T1 257.5 T2 260 rr 2 [vs chart]  AMZN260722C00255000 in $4.45 → stop(close)@07-16 $2.49  =  -44%
+  2026-07-20 09:35 CALL inverse_ceiling @250 (king) stop 249 T1 252.5 T2 255 rr 5 [vs chart]  AMZN260722C00250000 in $3.1 → T1@07-20 $4.3 · breakeven@07-20 $2.68  =  13%
+  2026-07-30 09:35 PUT  inverse_floor @232.5 (pika) stop 233.5 T1 230 T2 227.5 rr 5 [vs chart]  AMZN260807P00232500 in $9.1 → stop(close)@07-30 $8.45  =  -7%
+  2026-08-04 10:12 CALL inverse_ceiling @280 (gatekeeper) stop 277.5 T1 282.5 T2 285 rr 2 [vs chart]  AMZN260807C00280000 in $4.41 → stop(close)@08-04 $3.05  =  -31%
+  2026-08-11 09:35 CALL inverse_ceiling @275 (king) stop 272.5 T1 277.5 T2 280 rr 2 [vs chart]  AMZN260814C00275000 in $3.1 → stop(close)@08-11 $1.93  =  -38%
+
+credits used 0

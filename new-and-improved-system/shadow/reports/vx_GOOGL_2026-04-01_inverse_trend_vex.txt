@@ -1,0 +1,22 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse_trend_vex ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n= 4  win  50%  @$1k/trade mid -$3  worst -$136  avg -0%  SQN -0.00
+  chart-aligned only       n= 0
+  against chart            n= 4  win  50%  @$1k/trade mid -$3  worst -$136  avg -0%  SQN -0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  50%  @$1k/trade mid -$3  worst -$136  avg -0%  SQN -0.00
+  shorts                   n= 0
+
+day outcomes: no fill 36 · FILLED inverse_ceiling up 4 · in position 4 · no setup in reach 7 · no board 4
+
+-- every trade --
+  2026-04-09 11:14 CALL inverse_ceiling @315 (gatekeeper) stop 312.5 T1 317.5 T2 320 rr 2 [vs chart]  GOOGL260417C00315000 in $5.23 → T1@04-09 $7.08 · T2@04-10 $9  =  54%
+  2026-04-17 12:45 CALL inverse_ceiling @340 (king) stop 337.5 T1 342.5 T2 345 rr 2 [vs chart]  GOOGL260422C00340000 in $3.85 → stop(close)@04-20 $2.08  =  -46%
+  2026-04-28 09:50 CALL inverse_ceiling @350 (gatekeeper) stop 349 T1 352.5 T2 355 rr 5 [vs chart]  GOOGL260501C00350000 in $9.25 → T1@04-29 $10.97 · T2@04-29 $12.6  =  27%
+  2026-05-01 10:00 CALL inverse_ceiling @385 (king) stop 384 T1 390 T2 392.5 rr 7.5 [vs chart]  GOOGL260508C00385000 in $6.35 → stop(close)@05-04 $4.1  =  -35%
+
+credits used 0

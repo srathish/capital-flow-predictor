@@ -1,0 +1,18 @@
+
+=========== AMZN weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=inverse_trend_vex ===========
+AMZN itself: 228.79 → 208.33 (-8.9%)
+ALL trades                 n= 0
+  chart-aligned only       n= 0
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 0
+
+day outcomes: no fill 34 · no setup in reach 13 · no board 8
+
+-- every trade --
+
+credits used 170

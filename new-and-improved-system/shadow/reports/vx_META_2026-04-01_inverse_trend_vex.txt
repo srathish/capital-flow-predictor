@@ -1,0 +1,20 @@
+
+=========== META weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse_trend_vex ===========
+META itself: 566.03 → 563.03 (-0.5%)
+ALL trades                 n= 2  win   0%  @$1k/trade mid -$963  worst -$973  avg -48%  SQN -1.32
+  chart-aligned only       n= 0
+  against chart            n= 2  win   0%  @$1k/trade mid -$963  worst -$973  avg -48%  SQN -1.32
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$116  worst -$119  avg -12%  SQN 0.00
+  shorts                   n= 1  win   0%  @$1k/trade mid -$847  worst -$854  avg -85%  SQN 0.00
+
+day outcomes: no fill 41 · FILLED inverse_rug up 1 · in position 2 · no setup in reach 6 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-04-28 09:38 CALL inverse_rug @675 (normal) stop 670 T1 687.5 T2 690 rr 3 [vs chart]  META260501C00675000 in $25.8 → stop(close)@04-29 $22.8  =  -12%
+  2026-06-12 09:35 PUT  inverse_floor @570 (gatekeeper) stop 575 T1 560 T2 555 rr 3 [vs chart]  META260618P00570000 in $10.43 → stop(close)@06-15 $1.6  =  -85%
+
+credits used 5
