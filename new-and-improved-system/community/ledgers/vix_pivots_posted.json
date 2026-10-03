@@ -1,0 +1,193 @@
+{
+ "2026-01-29": {
+  "pivot": 16.12,
+  "author": "TheArchitect",
+  "time": "2026-01-29T00:40:55.938Z"
+ },
+ "2026-03-04": {
+  "pivot": 21.79,
+  "author": "TheArchitect",
+  "time": "2026-03-04T14:15:12.132Z"
+ },
+ "2026-03-20": {
+  "pivot": 24.42,
+  "author": "TheArchitect",
+  "time": "2026-03-20T12:11:49.439Z"
+ },
+ "2026-03-24": {
+  "pivot": 25.93,
+  "author": "TheArchitect",
+  "time": "2026-03-24T13:27:31.060Z"
+ },
+ "2026-03-25": {
+  "pivot": 25.68,
+  "author": "TheArchitect",
+  "time": "2026-03-25T13:28:39.523Z"
+ },
+ "2026-03-26": {
+  "pivot": 26.35,
+  "author": "TheArchitect",
+  "time": "2026-03-26T13:59:05.977Z"
+ },
+ "2026-03-30": {
+  "pivot": 29.09,
+  "author": "TheArchitect",
+  "time": "2026-03-30T12:58:03.274Z"
+ },
+ "2026-04-09": {
+  "pivot": 22.99,
+  "author": "TheArchitect",
+  "time": "2026-04-09T13:13:12.718Z"
+ },
+ "2026-04-14": {
+  "pivot": 19.95,
+  "author": "TheArchitect",
+  "time": "2026-04-14T13:26:33.111Z",
+  "T1": 17.75
+ },
+ "2026-04-20": {
+  "pivot": 18.58,
+  "author": "TheArchitect",
+  "time": "2026-04-20T12:57:46.141Z"
+ },
+ "2026-04-21": {
+  "pivot": 18.22,
+  "author": "TheArchitect",
+  "time": "2026-04-21T12:58:57.114Z"
+ },
+ "2026-04-23": {
+  "pivot": 18.9,
+  "author": "TheArchitect",
+  "time": "2026-04-23T12:59:59.347Z"
+ },
+ "2026-05-01": {
+  "pivot": 17.79,
+  "author": "TheArchitect",
+  "time": "2026-05-01T11:28:34.719Z"
+ },
+ "2026-05-07": {
+  "pivot": 17.56,
+  "author": "TheArchitect",
+  "time": "2026-05-07T13:19:51.571Z"
+ },
+ "2026-05-08": {
+  "pivot": 17.33,
+  "author": "TheArchitect",
+  "time": "2026-05-08T12:57:22.602Z"
+ },
+ "2026-05-11": {
+  "pivot": 17.35,
+  "author": "TheArchitect",
+  "time": "2026-05-11T13:06:21.004Z",
+  "T1": 18.35
+ },
+ "2026-05-12": {
+  "pivot": 18.15,
+  "author": "TheArchitect",
+  "time": "2026-05-12T13:11:48.488Z"
+ },
+ "2026-05-13": {
+  "pivot": 17.91,
+  "author": "TheArchitect",
+  "time": "2026-05-13T13:50:12.915Z"
+ },
+ "2026-05-14": {
+  "pivot": 17.9,
+  "author": "TheArchitect",
+  "time": "2026-05-14T13:07:25.021Z"
+ },
+ "2026-05-15": {
+  "pivot": 18.13,
+  "author": "TheArchitect",
+  "time": "2026-05-15T12:35:26.338Z",
+  "T2": 19.46
+ },
+ "2026-05-19": {
+  "pivot": 17.98,
+  "author": "TheArchitect",
+  "time": "2026-05-19T13:16:36.800Z"
+ },
+ "2026-06-24": {
+  "pivot": 18.34,
+  "author": "TheArchitect",
+  "time": "2026-06-24T12:21:34.856Z"
+ },
+ "2026-06-25": {
+  "pivot": 18.22,
+  "author": "TheArchitect",
+  "time": "2026-06-25T13:54:36.012Z",
+  "T1": 18.95
+ },
+ "2026-06-26": {
+  "pivot": 19.18,
+  "author": "TheArchitect",
+  "time": "2026-06-26T13:42:06.564Z",
+  "T1": 20.45
+ },
+ "2026-06-29": {
+  "pivot": 18.27,
+  "author": "TheArchitect",
+  "time": "2026-06-29T13:26:53.466Z"
+ },
+ "2026-06-30": {
+  "pivot": 18.08,
+  "author": "TheArchitect",
+  "time": "2026-06-30T13:10:17.190Z"
+ },
+ "2026-07-01": {
+  "pivot": 17.36,
+  "author": "TheArchitect",
+  "time": "2026-07-01T13:20:07.354Z"
+ },
+ "2026-07-06": {
+  "pivot": 16.82,
+  "author": "TheArchitect",
+  "time": "2026-07-06T13:11:23.473Z"
+ },
+ "2026-07-07": {
+  "pivot": 16.26,
+  "author": "TheArchitect",
+  "time": "2026-07-07T13:02:15.488Z"
+ },
+ "2026-07-09": {
+  "pivot": 16.43,
+  "author": "TheArchitect",
+  "time": "2026-07-09T13:05:36.575Z"
+ },
+ "2026-07-13": {
+  "pivot": 15.98,
+  "author": "TheArchitect",
+  "time": "2026-07-13T12:54:39.851Z"
+ },
+ "2026-07-15": {
+  "pivot": 16.13,
+  "author": "TheArchitect",
+  "time": "2026-07-15T13:09:24.988Z"
+ },
+ "2026-07-17": {
+  "pivot": 17.15,
+  "author": "TheArchitect",
+  "time": "2026-07-17T13:14:06.676Z",
+  "T2": 19.17
+ },
+ "2026-07-21": {
+  "pivot": 17.74,
+  "author": "TheArchitect",
+  "time": "2026-07-21T13:28:45.299Z"
+ },
+ "2026-07-22": {
+  "pivot": 17.54,
+  "author": "TheArchitect",
+  "time": "2026-07-22T12:57:50.115Z"
+ },
+ "2026-08-13": {
+  "pivot": 14.88,
+  "author": "TheArchitect",
+  "time": "2026-08-13T13:24:53.832Z"
+ },
+ "2026-08-19": {
+  "pivot": 15.31,
+  "author": "TheArchitect",
+  "time": "2026-08-19T13:04:00.160Z"
+ }
+}

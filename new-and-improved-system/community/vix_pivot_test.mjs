@@ -24,6 +24,8 @@ for (const f of fs.readdirSync(DUMPS).filter((x) => x.startsWith('dc_') && x.end
     const d = etDate(m.time); if (!posted[d] || m.time < posted[d].time) posted[d] = { pivot: v, time: m.time, hm };
   }
 }
+const wide = JSON.parse(fs.readFileSync(path.join(HERE, 'ledgers', 'vix_pivots_posted.json'), 'utf8'));
+for (const [d, v] of Object.entries(wide)) if (!posted[d]) posted[d] = { pivot: v.pivot, time: v.time, hm: '' };
 const pdays = Object.keys(posted).sort();
 console.log(`posted pivots found: ${pdays.length} days (${pdays[0]} → ${pdays[pdays.length - 1]})`);
 
@@ -41,6 +43,7 @@ const at = (M, d, hhmm) => { const t = etToUnix(d, hhmm); for (let k = 0; k <= 3
 
 // ---------- 2) formula fit ----------
 const F = {
+  'rolling 5-day (H+L+C)/3': (p, o, d) => { const i = days.indexOf(d); if (i < 5) return NaN; const w = days.slice(i - 5, i).map((x) => VD.get(x)); return (Math.max(...w.map((b) => b.h)) + Math.min(...w.map((b) => b.l)) + w[4].c) / 3; },
   'prior close': (p, o) => p.c,
   'prior (H+L+C)/3 (classic pivot)': (p, o) => (p.h + p.l + p.c) / 3,
   'prior (H+L)/2': (p, o) => (p.h + p.l) / 2,
@@ -52,7 +55,7 @@ const F = {
 console.log('=== which formula matches his posted pivot? (prior-day VIX bar) ===');
 const fit = [];
 for (const [name, fn] of Object.entries(F)) {
-  const err = []; for (const d of pdays) { const p = prevOf(d), today = VD.get(d); if (!p || !today) continue; err.push(Math.abs(fn(p, today.o) - posted[d].pivot)); }
+  const err = []; for (const d of pdays) { const p = prevOf(d), today = VD.get(d); if (!p || !today) continue; const v = fn(p, today.o, d); if (Number.isFinite(v)) err.push(Math.abs(v - posted[d].pivot)); }
   err.sort((a, b) => a - b);
   const mae = err.reduce((a, x) => a + x, 0) / err.length;
   fit.push({ name, fn, mae });
@@ -80,7 +83,7 @@ const score = (rows, sideKey, label) => {
   console.log(`  ${label.padEnd(52)} n=${String(R.length).padStart(3)}  right ${(right.length / R.length * 100).toFixed(0).padStart(3)}%  | VIX below → SPX ${m(bel).toFixed(0).padStart(4)}bps (up ${(bel.filter((r) => r.spx > 0).length / Math.max(1, bel.length) * 100).toFixed(0)}%, n=${bel.length})  above → ${m(abv).toFixed(0).padStart(4)}bps (up ${(abv.filter((r) => r.spx > 0).length / Math.max(1, abv.length) * 100).toFixed(0)}%, n=${abv.length})  | signed ${ms.toFixed(1)}bps t=${t.toFixed(1)}`);
 };
 const postedRows = pdays.map((d) => evalDay(d, posted[d].pivot)).filter(Boolean);
-const allRows = days.filter((d) => d >= '2025-10-15').map((d) => { const p = prevOf(d), t = VD.get(d); return p && t ? evalDay(d, best.fn(p, t.o)) : null; }).filter(Boolean);
+const allRows = days.filter((d) => d >= '2025-10-15').map((d) => { const p = prevOf(d), t = VD.get(d); return p && t && Number.isFinite(best.fn(p, t.o, d)) ? evalDay(d, best.fn(p, t.o, d)) : null; }).filter(Boolean);
 const baseUp = allRows.filter((r) => r.spx > 0).length / allRows.length * 100;
 console.log(`=== does it predict SPX from 10:15 to the close? (baseline: SPX up ${baseUp.toFixed(0)}% of all ${allRows.length} days) ===`);
 score(postedRows, 'side', 'HIS posted pivot · side at 10:15');
