@@ -1,0 +1,32 @@
+universe 294 stocks (ETFs removed, px≥$5, $20M+/day) · 193 weeks · top 20 per rebalance, held 5 sessions (open→close)
+
+weekly EXCESS return vs the equal-weight universe (avg per week)
+ranker                                    TRAIN 23-24   TEST 2025   HOLD 2026   all: t     hit   |move|
+  momentum 20d                                 +0.10%      -0.33%      +0.29%     0.1   47%   +7.49%
+  momentum 60d                                 +0.19%      -0.82%      +0.74%     0.1   51%   +7.77%
+  momentum 12-1 (classic)                      +0.27%      +0.85%      +1.00%     1.8   54%   +8.02%
+  near 52-week high                            -0.21%      -0.11%      +0.30%    -0.5   50%   +3.59%
+  trend quality (above EMAs, dist/ATR)         -0.07%      -0.42%      +0.51%    -0.2   52%   +4.71%
+  20d breakout on volume                       -0.31%      +1.41%      +1.21%     0.9   50%   +5.94%
+  volume surge (5d/50d) + up week              +0.07%      +0.01%      -0.11%     0.1   47%   +5.73%
+  pullback in uptrend (dip in leader)          -0.14%      -0.68%      +0.21%    -1.4   51%   +4.76%
+  short-term losers (5d reversal)              +0.12%      +0.18%      +0.49%     1.0   53%   +6.41%
+  calm stocks (low ATR%)                       -0.34%      -0.25%      -0.25%    -1.5   46%   +2.37%
+  wild stocks (high ATR%)                      +0.24%      -0.01%      +0.77%     0.7   48%  +10.10%
+  leader + pullback (60d top⅓, 5d down)        -0.08%      -0.55%      +0.34%    -0.5   49%   +6.19%
+
+(risk-adjusted: same, in ATR units of each pick — removes "it just picked volatile stocks")
+  momentum 20d                                 -0.031      -0.054       0.049   t -0.6
+  momentum 60d                                  0.013      -0.076       0.134   t 0.4
+  momentum 12-1 (classic)                       0.021       0.145       0.143   t 1.7
+  near 52-week high                             0.002       0.011       0.084   t 0.5
+  trend quality (above EMAs, dist/ATR)          0.023      -0.070       0.153   t 0.6
+  20d breakout on volume                       -0.018       0.265       0.415   t 1.2
+  volume surge (5d/50d) + up week              -0.008       0.015       0.011   t 0.1
+  pullback in uptrend (dip in leader)          -0.042      -0.148       0.072   t -1.3
+  short-term losers (5d reversal)              -0.059       0.053       0.064   t -0.1
+  calm stocks (low ATR%)                       -0.051      -0.038      -0.034   t -0.8
+  wild stocks (high ATR%)                      -0.065      -0.012       0.106   t -0.4
+  leader + pullback (60d top⅓, 5d down)        -0.048      -0.066       0.065   t -0.8
+
+latest picks (week of 2026-09-25 ):

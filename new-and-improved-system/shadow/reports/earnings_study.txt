@@ -1,0 +1,16 @@
+stocks with earnings history: 294 · walk-forward reports: 1429
+
+  S0 all reports                 before Jul-25 n=   7 beat  43%  straddle avg    5.6%  t=  0.2
+                                 after  Jul-25 n=1422 beat  20%  straddle avg  -38.1%  t=-27.5
+  S1 prior median beat (≥1)      before Jul-25 n=0
+                                 after  Jul-25 n= 153 beat  19%  straddle avg  -37.5%  t= -8.3
+  S2 beat ≥50% of prior          before Jul-25 n=0
+                                 after  Jul-25 n= 152 beat  19%  straddle avg  -37.4%  t= -8.2
+  S3 last report beat            before Jul-25 n=0
+                                 after  Jul-25 n= 281 beat  17%  straddle avg  -42.4%  t=-14.2
+  S1 inverse (prior med < 0.6)   before Jul-25 n=   5 beat  40%  straddle avg   23.3%  t=  0.6
+                                 after  Jul-25 n= 760 beat  21%  straddle avg  -36.9%  t=-18.6
+
+persistence: corr(prior median move/priced, next move/priced) = -0.009 over 1429 reports
+
+reporting Oct 5 – Nov 6 whose past moves BEAT the priced move (median ≥1): GM 10-20 (med 1.00, implied 6.58%) · LMT 10-20 (med 1.11, implied 4.7%) · TMO 10-21 (med 1.05, implied 6.5%) · TWLO 10-29 (med 1.08, implied 12.07%) · EL 11-02 (med 1.02, implied 11.49%) · LMND 11-04 (med 1.23, implied 8.86%) · DNUT 11-05 (med 1.29, implied 35.53%) · LASR 11-05 (med 1.10, implied 15.86%)

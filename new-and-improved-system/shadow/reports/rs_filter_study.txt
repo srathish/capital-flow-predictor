@@ -1,0 +1,62 @@
+rows 1826 (real option prices, mid fill, avg $ per $1k trade)
+
+== bounce (baseline) (1210 trades) ==
+    all         -$81/t n=400    -$31/t n=405    -$59/t n=405  | total -$68709 worst-fill -$137246
+  ✓ leader      -$68/t n=205     -$9/t n=178    -$45/t n=212  | total -$24970 worst-fill -$62117
+    laggard     -$95/t n=195    -$48/t n=227    -$74/t n=193  | total -$43739 worst-fill -$75129
+    indexWith   -$73/t n=161    -$65/t n=147    -$81/t n=125  | total -$31440 worst-fill -$57791
+    pick        -$16/t n=61     -$51/t n=64     -$94/t n=66   | total -$10416 worst-fill -$22866
+== Rule 1 break+trend+VEX (74 trades) ==
+    all        +$103/t n=22     +$56/t n=34    +$118/t n=18   | total  +$6297 worst-fill  +$1895
+    leader     +$131/t n=17      -$1/t n=29    +$136/t n=17   | total  +$4498 worst-fill   +$906
+    laggard      +$6/t n=5     +$391/t n=5     -$185/t n=1    | total  +$1799 worst-fill   +$989
+    indexWith  +$119/t n=14     +$78/t n=28    -$158/t n=9    | total  +$2423 worst-fill   -$612
+    pick       +$201/t n=10     +$10/t n=23    -$155/t n=8    | total  +$1002 worst-fill  -$1223
+== break+trend (145 trades) ==
+    all         +$72/t n=42     +$24/t n=50     -$25/t n=53   | total  +$2855 worst-fill  -$4897
+    leader      +$48/t n=34      -$9/t n=42     -$29/t n=45   | total    -$43 worst-fill  -$6337
+  ✓ laggard    +$170/t n=8     +$198/t n=8       -$5/t n=8    | total  +$2898 worst-fill  +$1440
+    indexWith   +$71/t n=23      +$9/t n=39    -$180/t n=15   | total   -$722 worst-fill  -$5136
+    pick        +$18/t n=15     -$40/t n=31    -$201/t n=13   | total  -$3580 worst-fill  -$6845
+== Rule 2 confluence (23 trades) ==
+    all         -$26/t n=5     -$218/t n=8      +$57/t n=10   | total  -$1311 worst-fill  -$2021
+    leader     -$176/t n=4     -$226/t n=6      +$57/t n=10   | total  -$1491 worst-fill  -$2083
+    laggard    +$573/t n=1     -$196/t n=2          -        | total   +$180 worst-fill    +$62
+    indexWith  +$226/t n=3     -$218/t n=8      -$32/t n=4    | total  -$1196 worst-fill  -$1713
+    pick        +$52/t n=2     -$226/t n=6      -$32/t n=4    | total  -$1376 worst-fill  -$1775
+== R3 break→hold→retest (142 trades) ==
+    all         -$28/t n=52     +$33/t n=43     -$91/t n=47   | total  -$4298 worst-fill -$11260
+    leader      -$23/t n=41     +$10/t n=36     -$77/t n=43   | total  -$3927 worst-fill  -$9762
+    laggard     -$45/t n=11    +$155/t n=7     -$240/t n=4    | total   -$371 worst-fill  -$1498
+    indexWith   +$77/t n=25     +$68/t n=30    -$139/t n=30   | total   -$190 worst-fill  -$5324
+    pick        +$75/t n=16     +$41/t n=23    -$109/t n=28   | total   -$908 worst-fill  -$4988
+== R3 + buy time (82 trades) ==
+    all         -$31/t n=28     +$15/t n=23      -$0/t n=31   | total   -$533 worst-fill  -$2248
+  ✓ leader       +$0/t n=22     +$17/t n=21     +$24/t n=27   | total   +$996 worst-fill   -$619
+    laggard    -$147/t n=6       -$1/t n=2     -$161/t n=4    | total  -$1529 worst-fill  -$1629
+    indexWith    -$4/t n=12     -$15/t n=18     -$12/t n=21   | total   -$573 worst-fill  -$1400
+    pick        +$30/t n=8      -$17/t n=16     +$25/t n=19   | total   +$437 worst-fill   -$355
+== Giul dip-buy (79 trades) ==
+    all         -$37/t n=17      +$1/t n=32     -$21/t n=30   | total  -$1223 worst-fill  -$2439
+  ✓ leader      +$17/t n=12     +$11/t n=27     -$11/t n=29   | total   +$196 worst-fill   -$902
+    laggard    -$168/t n=5      -$55/t n=5     -$304/t n=1    | total  -$1419 worst-fill  -$1537
+    indexWith   +$27/t n=14      -$7/t n=29    -$100/t n=18   | total  -$1614 worst-fill  -$2422
+    pick        +$84/t n=10      +$3/t n=24     -$88/t n=17   | total   -$580 worst-fill  -$1283
+== Rule 1 + Glitch filters (32 trades) ==
+    all         -$56/t n=9      +$18/t n=15    +$260/t n=8    | total  +$1849 worst-fill   -$467
+    leader      -$52/t n=7      -$90/t n=11    +$260/t n=8    | total   +$720 worst-fill  -$1011
+    laggard     -$69/t n=2     +$317/t n=4          -        | total  +$1129 worst-fill   +$544
+    indexWith   -$56/t n=9      +$69/t n=13    -$116/t n=4    | total    -$70 worst-fill  -$1972
+    pick        -$52/t n=7      -$41/t n=9     -$116/t n=4    | total  -$1199 worst-fill  -$2516
+== Rule 1 + buy time (39 trades) ==
+    all         -$99/t n=9       +$7/t n=19    +$167/t n=11   | total  +$1073 worst-fill   +$224
+    leader     -$151/t n=8      -$40/t n=15    +$167/t n=11   | total    +$21 worst-fill   -$603
+    laggard    +$311/t n=1     +$185/t n=4          -        | total  +$1052 worst-fill   +$827
+    indexWith  -$105/t n=4       -$0/t n=18     -$33/t n=4    | total   -$553 worst-fill  -$1134
+    pick       -$243/t n=3      -$53/t n=14     -$33/t n=4    | total  -$1605 worst-fill  -$1961
+
+== does each filter beat the unfiltered strategy in all 3 periods? ==
+  leader    beats all-3-periods in 3/9 strategies · better overall avg in 3/9
+  laggard   beats all-3-periods in 1/9 strategies · better overall avg in 6/9
+  indexWith beats all-3-periods in 0/9 strategies · better overall avg in 1/9
+  pick      beats all-3-periods in 0/9 strategies · better overall avg in 4/9

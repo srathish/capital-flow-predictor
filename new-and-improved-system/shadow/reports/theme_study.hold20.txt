@@ -1,0 +1,12 @@
+themes used: space(5) dcInfra(7) aiCompute(10) semis(9) crypto(9) ev(6) defense(4) banks(7) oil(6) saas(7) cyber(5) pharma(6)
+hold 20 sessions · 47 rebalances · excess vs equal-weight universe
+
+rule                          TRAIN 23-24   TEST 2025   HOLD 2026   all t   hit
+  T1 hot theme (20d)               +3.04%      +1.39%      -5.55%    0.5  53%
+  T2 theme breadth (5d)            -1.47%      -2.35%      -4.90%   -1.7  36%
+  T3 leader in hot theme           +1.59%      +0.34%      -9.17%   -0.3  43%
+  T4 laggard in hot theme          +2.20%      -0.45%      -4.35%    0.1  43%
+  T5 theme 12-1                    +0.94%      -0.92%      -1.45%   -0.0  49%
+  T0 cold theme (control)          +0.63%      -3.90%      -0.55%   -0.7  45%
+
+most recent hot themes: 2026-05-22: space+cyber · 2026-06-18: semis+dcInfra · 2026-07-17: pharma+saas · 2026-08-14: space+dcInfra

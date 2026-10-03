@@ -1,0 +1,40 @@
+directional stock calls: 3260 → 2019 after dedupe/price match · 359 tickers · fetched 0 new · halves split at 2026-05-11
+excess return in the CALLED direction, entered next open · ✓ judged on BETA-ADJUSTED 5d
+
+  ALL stock calls              n=1977  vsSPY 5d  +0.11% 20d  +0.48% | BETA-ADJ 5d  +0.05% (t  0.2, med -0.27%) 20d  -0.08% (t -0.2) | β-adj 5d halves -0.08% n=976 · +0.17% n=1001
+  action: entry                n= 222  vsSPY 5d  -0.25% 20d  -0.25% | BETA-ADJ 5d  +0.18% (t  0.3, med -0.27%) 20d  -0.65% (t -0.5) | β-adj 5d halves -0.36% n=113 · +0.75% n=109
+  action: add                  n=  13  vsSPY 5d  +2.40% 20d  +0.75% | BETA-ADJ 5d  +2.45% (t  0.9, med -1.05%) 20d  -0.25% (t -0.1) | β-adj 5d halves +2.37% n=5 · +2.50% n=8
+  action: call                 n= 454  vsSPY 5d  +0.19% 20d  +1.35% | BETA-ADJ 5d  -0.03% (t -0.1, med -0.33%) 20d  +0.35% (t  0.3) | β-adj 5d halves +0.17% n=246 · -0.25% n=208
+  action: watch                n=1288  vsSPY 5d  +0.12% 20d  +0.29% | BETA-ADJ 5d  +0.03% (t  0.1, med -0.24%) 20d  -0.14% (t -0.3) | β-adj 5d halves -0.14% n=612 · +0.18% n=676
+  bullish calls                n=1610  vsSPY 5d  +0.15% 20d  +0.89% | BETA-ADJ 5d  -0.11% (t -0.4, med -0.56%) 20d  -0.13% (t -0.3) | β-adj 5d halves -0.40% n=767 · +0.16% n=843
+  bearish calls                n= 367  vsSPY 5d  -0.07% 20d  -1.36% | BETA-ADJ 5d  +0.72% (t  1.5, med +1.04%) 20d  +0.11% (t  0.1) | β-adj 5d halves +1.11% n=209 · +0.19% n=158
+
+-- by caller (≥30 deduped calls) --
+  Giul                         n= 493  vsSPY 5d  -0.13% 20d  -0.48% | BETA-ADJ 5d  +0.05% (t  0.1, med -0.20%) 20d  -0.73% (t -0.9) | β-adj 5d halves -0.38% n=278 · +0.60% n=215
+  jack                         n= 210  vsSPY 5d  -0.51% 20d  -1.04% | BETA-ADJ 5d  -0.65% (t -0.9, med -1.39%) 20d  -2.07% (t -1.4) | β-adj 5d halves -0.60% n=48 · -0.66% n=162
+  nicog8                       n= 174  vsSPY 5d  -0.25% 20d  -1.66% | BETA-ADJ 5d  -0.57% (t -0.6, med -0.24%) 20d  -2.10% (t -1.9) | β-adj 5d halves -0.57% n=174 ·    -   n=0
+  KianTrades (Yes Its Me       n= 140  vsSPY 5d  -0.67% 20d  -0.07% | BETA-ADJ 5d  -0.72% (t -0.9, med +0.38%) 20d  -0.03% (t -0.0) | β-adj 5d halves    -   n=0 · -0.72% n=140
+  TheArchitect                 n= 108  vsSPY 5d  -0.38% 20d  +2.89% | BETA-ADJ 5d  -0.25% (t -0.3, med -0.27%) 20d  +1.41% (t  0.8) | β-adj 5d halves +0.43% n=55 · -0.96% n=53
+✓ TheArchitect Flowseeke       n=  67  vsSPY 5d  +3.76% 20d  +8.91% | BETA-ADJ 5d  +3.33% (t  2.2, med +1.32%) 20d  +7.85% (t  3.0) | β-adj 5d halves +3.41% n=26 · +3.28% n=41
+  Jack Flowseeker Bot          n=  53  vsSPY 5d  -0.79% 20d  +9.04% | BETA-ADJ 5d  -1.58% (t -0.8, med -0.68%) 20d  +6.55% (t  1.7) | β-adj 5d halves -2.39% n=45 · +2.92% n=8
+  Scarface                     n=  51  vsSPY 5d  +1.70% 20d  +5.94% | BETA-ADJ 5d  +1.82% (t  1.8, med +1.71%) 20d  +6.08% (t  2.6) | β-adj 5d halves    -   n=1 · +1.87% n=50
+  Tsumina                      n=  45  vsSPY 5d  +0.01% 20d  -1.48% | BETA-ADJ 5d  -0.50% (t -0.4, med -1.66%) 20d  -2.02% (t -1.1) | β-adj 5d halves -0.68% n=18 · -0.39% n=27
+  TT                           n=  45  vsSPY 5d  +0.50% 20d  +4.98% | BETA-ADJ 5d  +0.30% (t  0.2, med -1.21%) 20d  +2.34% (t  0.7) | β-adj 5d halves +4.53% n=20 · -3.10% n=25
+  CGG                          n=  43  vsSPY 5d  +0.47% 20d  +1.85% | BETA-ADJ 5d  +0.28% (t  0.3, med +0.75%) 20d  +1.23% (t  0.3) | β-adj 5d halves +0.28% n=43 ·    -   n=0
+  Real Blonde Broker           n=  40  vsSPY 5d  +0.14% 20d  +1.93% | BETA-ADJ 5d  +0.07% (t  0.0, med -0.24%) 20d  +1.05% (t  0.3) | β-adj 5d halves +2.41% n=11 · -0.82% n=29
+  KentClark Cap                n=  34  vsSPY 5d  +0.53% 20d  +3.18% | BETA-ADJ 5d  +0.52% (t  0.3, med +0.63%) 20d  +3.81% (t  1.2) | β-adj 5d halves    -   n=0 · +0.52% n=34
+  KC Trades                    n=  32  vsSPY 5d  +0.97% 20d  -1.60% | BETA-ADJ 5d  +1.03% (t  0.6, med -1.22%) 20d  -2.21% (t -0.9) | β-adj 5d halves -1.68% n=15 · +3.41% n=17
+  hazy                         n=  31  vsSPY 5d  +1.02% 20d  -5.48% | BETA-ADJ 5d  +0.40% (t  0.2, med -0.33%) 20d  -4.95% (t -1.2) | β-adj 5d halves +1.05% n=23 · -1.47% n=8
+  Gnotz                        n=  31  vsSPY 5d  +0.25% 20d  +0.41% | BETA-ADJ 5d  +1.30% (t  0.8, med +0.40%) 20d  +0.18% (t  0.1) | β-adj 5d halves +1.31% n=22 · +1.26% n=9
+  Wicksy                       n=  30  vsSPY 5d  -0.15% 20d  -6.01% | BETA-ADJ 5d  +0.09% (t  0.1, med -0.55%) 20d  -5.42% (t -0.9) | β-adj 5d halves +0.56% n=26 · -2.98% n=4
+  Glitch (I WILL NOT DM        n=  30  vsSPY 5d  +1.29% 20d  +1.75% | BETA-ADJ 5d  +1.12% (t  0.8, med +0.92%) 20d  +1.15% (t  0.3) | β-adj 5d halves +0.02% n=17 · +2.55% n=13
+  Jersace                      n=  30  vsSPY 5d  +0.79% 20d  -1.41% | BETA-ADJ 5d  +0.23% (t  0.1, med -0.67%) 20d  -1.36% (t -0.4) | β-adj 5d halves -0.06% n=11 · +0.40% n=19
+
+-- by channel --
+  trade-ideas                  n= 936  vsSPY 5d  +0.16% 20d  -0.56% | BETA-ADJ 5d  +0.02% (t  0.1, med -0.47%) 20d  -1.17% (t -1.9) | β-adj 5d halves -0.10% n=636 · +0.30% n=300
+  oracle-index                 n= 254  vsSPY 5d  -0.19% 20d  +2.64% | BETA-ADJ 5d  -0.18% (t -0.3, med -0.24%) 20d  +1.34% (t  1.0) | β-adj 5d halves -0.05% n=215 · -0.92% n=39
+  glitch                       n=  50  vsSPY 5d  +3.12% 20d  +1.03% | BETA-ADJ 5d  +2.30% (t  2.2, med +3.28%) 20d  -0.02% (t -0.0) | β-adj 5d halves +1.67% n=38 · +4.33% n=12
+  flow-ideas                   n= 337  vsSPY 5d  +0.18% 20d  +3.41% | BETA-ADJ 5d  -0.05% (t -0.1, med -0.56%) 20d  +2.83% (t  2.4) | β-adj 5d halves -0.71% n=87 · +0.18% n=250
+  oracle-non-index             n= 236  vsSPY 5d  -0.29% 20d  -2.49% | BETA-ADJ 5d  +0.09% (t  0.2, med -0.27%) 20d  -2.15% (t -1.8) | β-adj 5d halves    -   n=0 · +0.09% n=236
+  giul                         n= 146  vsSPY 5d  -0.24% 20d  +0.01% | BETA-ADJ 5d  -0.16% (t -0.2, med +0.30%) 20d  +0.35% (t  0.2) | β-adj 5d halves    -   n=0 · -0.16% n=146
+  spx-regards                  n=  18  vsSPY 5d  +0.01% 20d     -   | BETA-ADJ 5d  +1.01% (t  0.7, med +2.66%) 20d     -   (t  NaN) | β-adj 5d halves    -   n=0 · +1.01% n=18
