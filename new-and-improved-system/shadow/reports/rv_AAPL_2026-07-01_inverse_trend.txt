@@ -1,0 +1,24 @@
+
+=========== AAPL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend ===========
+AAPL itself: 293.45 → 333.77 (13.7%)
+ALL trades                 n= 6  win  33%  @$1k/trade mid -$1020  worst -$1318  avg -17%  SQN -0.68
+  chart-aligned only       n= 0
+  against chart            n= 6  win  33%  @$1k/trade mid -$1020  worst -$1318  avg -17%  SQN -0.68
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  40%  @$1k/trade mid -$364  worst -$645  avg -7%  SQN -0.26
+  shorts                   n= 1  win   0%  @$1k/trade mid -$656  worst -$673  avg -66%  SQN 0.00
+
+day outcomes: no fill 46 · no setup in reach 10 · FILLED inverse_rug up 2 · in position 4 · FILLED inverse_ceiling up 3 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-07-17 09:38 CALL inverse_rug @335 (gatekeeper) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  AAPL260724C00335000 in $5.5 → stop(close)@07-20 $1.55  =  -72%
+  2026-07-29 09:45 CALL inverse_ceiling @342.5 (gatekeeper) stop 340 T1 345 T2 350 rr 3 [vs chart]  AAPL260731C00342500 in $6.25 → stop(close)@07-29 $4.15  =  -34%
+  2026-08-24 09:35 PUT  inverse_floor @310 (gatekeeper) stop 312.5 T1 307.5 T2 305 rr 2 [vs chart]  AAPL260828P00310000 in $3.4 → stop(close)@08-26 $1.17  =  -66%
+  2026-09-21 09:35 CALL inverse_rug @335 (king) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  AAPL260925C00335000 in $3.8 → T1@09-21 $5.3 · T2@09-22 $8.1  =  76%
+  2026-09-25 09:35 CALL inverse_ceiling @335 (gatekeeper) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  AAPL261002C00335000 in $4.65 → T1@09-25 $5.8 · T2@09-25 $7.25  =  40%
+  2026-09-28 09:36 CALL inverse_ceiling @342.5 (king) stop 341.5 T1 345 T2 347.5 rr 5 [vs chart]  AAPL261002C00342500 in $3.57 → stop(close)@09-28 $1.87  =  -48%
+
+credits used 0

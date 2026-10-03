@@ -1,6 +1,22 @@
 {
  "plans": [
   {
+   "D": "2026-04-01",
+   "exp": "2026-04-02",
+   "spot": 376.14,
+   "king": 385,
+   "floor": 372.5,
+   "ceiling": 385,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@372.5 up rr12.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
    "D": "2026-04-02",
    "exp": "2026-04-10",
    "spot": 367.39,
@@ -8,7 +24,7 @@
    "floor": 360,
    "ceiling": 375,
    "regime": "mixed",
-   "chart": "mixed",
+   "chart": "down",
    "cands": []
   },
   {
@@ -19,9 +35,9 @@
    "floor": 362.5,
    "ceiling": 372.5,
    "regime": "mixed",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@362.5 up rr3",
+    "floor@362.5 up rr3 (vs chart)",
     "ceiling@372.5 down rr4"
    ],
    "vex": "up",
@@ -124,7 +140,7 @@
    "floor": 355,
    "ceiling": 370,
    "regime": "mixed",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
     "rug@370 down rr6"
    ],
@@ -134,28 +150,113 @@
   },
   {
    "D": "2026-04-16",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-04-17, 2026-04-20, )"
+   "exp": "2026-04-24",
+   "spot": 389.43,
+   "king": 395,
+   "floor": 380,
+   "ceiling": 395,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@395 down rr6"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-04-17",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-04-17, 2026-04-20, )"
+   "exp": "2026-04-24",
+   "spot": 392.63,
+   "king": 395,
+   "floor": 390,
+   "ceiling": 395,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@390 up rr10",
+    "ceiling@395 down rr5"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":33,\"rr\":0})"
   },
   {
    "D": "2026-04-20",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-04-20, 2026-04-24, )"
+   "exp": "2026-04-24",
+   "spot": 404.97,
+   "king": 395,
+   "floor": 395,
+   "ceiling": 415,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
   },
   {
    "D": "2026-04-21",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-04-24, 2026-04-27, )"
+   "exp": "2026-04-24",
+   "spot": 390.78,
+   "king": 395,
+   "floor": 385,
+   "ceiling": 395,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@385 up rr10",
+    "ceiling@395 down rr3"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":6,\"rr\":0})"
   },
   {
    "D": "2026-04-22",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-04-24, 2026-04-27, )"
+   "exp": "2026-04-24",
+   "spot": 387.985,
+   "king": 387.5,
+   "floor": 387.5,
+   "ceiling": 392.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@387.5 up rr2",
+    "ceiling@392.5 down rr3"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":34,\"rr\":0,\"trend\":13})"
+  },
+  {
+   "D": "2026-04-23",
+   "exp": "2026-05-01",
+   "spot": 378.895,
+   "king": 380,
+   "floor": 370,
+   "ceiling": 380,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@380 down rr10"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":39,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-24",
+   "exp": "2026-05-01",
+   "spot": 376.93,
+   "king": 380,
+   "floor": 370,
+   "ceiling": 380,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "ceiling@380 down rr4"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":15,\"rr\":0})"
   },
   {
    "D": "2026-04-27",
@@ -165,14 +266,14 @@
    "floor": 365,
    "ceiling": 370,
    "regime": "mixed",
-   "chart": "up",
+   "chart": "down",
    "cands": [
-    "floor@365 up rr3",
-    "ceiling@370 down rr2 (vs chart)"
+    "floor@365 up rr3 (vs chart)",
+    "ceiling@370 down rr2"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":47,\"rr\":0,\"trend\":8})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":47,\"rr\":0,\"vex\":8})"
   },
   {
    "D": "2026-04-28",
@@ -182,9 +283,9 @@
    "floor": 370,
    "ceiling": 380,
    "regime": "mixed",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
-    "ceiling@380 down rr4 (vs chart)"
+    "ceiling@380 down rr4"
    ],
    "vex": "flat",
    "roll": null,
@@ -198,10 +299,10 @@
    "floor": 375,
    "ceiling": 380,
    "regime": "positive",
-   "chart": "up",
+   "chart": "down",
    "cands": [
-    "floor@375 up rr2",
-    "ceiling@380 down rr4 (vs chart)"
+    "floor@375 up rr2 (vs chart)",
+    "ceiling@380 down rr4"
    ],
    "vex": "up",
    "roll": null,
@@ -215,7 +316,7 @@
    "floor": 365,
    "ceiling": 380,
    "regime": "positive",
-   "chart": "up",
+   "chart": "down",
    "cands": []
   },
   {
@@ -226,10 +327,10 @@
    "floor": 380,
    "ceiling": 385,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "reverse_rug@380 up rr3",
-    "rug@385 down rr2 (vs chart)"
+    "rug@385 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -243,10 +344,10 @@
    "floor": 385,
    "ceiling": 390,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@385 up rr4",
-    "ceiling@390 down rr7.5 (vs chart)"
+    "ceiling@390 down rr7.5"
    ],
    "vex": "up",
    "roll": null,
@@ -260,7 +361,7 @@
    "floor": 390,
    "ceiling": 410,
    "regime": "mixed",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "reverse_rug@395 up rr3"
    ],
@@ -276,7 +377,7 @@
    "floor": 385,
    "ceiling": 395,
    "regime": "mixed",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@385 up rr3"
    ],
@@ -292,7 +393,7 @@
    "floor": 405,
    "ceiling": 420,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -303,10 +404,10 @@
    "floor": 420,
    "ceiling": 425,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@420 up rr10",
-    "ceiling@425 down rr12.5 (vs chart)"
+    "ceiling@425 down rr12.5"
    ],
    "vex": "down",
    "roll": null,
@@ -387,6 +488,71 @@
    "vex": "up",
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-18",
+   "exp": "2026-05-22",
+   "spot": 419.01,
+   "king": 425,
+   "floor": 410,
+   "ceiling": 425,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "rug@425 down rr10 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-19",
+   "exp": "2026-05-22",
+   "spot": 402.025,
+   "king": 400,
+   "floor": 400,
+   "ceiling": 405,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@400 up rr2",
+    "ceiling@405 down rr5 (vs chart)"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":67,\"rr\":0,\"trend\":12})"
+  },
+  {
+   "D": "2026-05-20",
+   "exp": "2026-05-22",
+   "spot": 409.03,
+   "king": 402.5,
+   "floor": 402.5,
+   "ceiling": 410,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@410 down rr3"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":57,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-21",
+   "exp": "2026-05-29",
+   "spot": 426,
+   "king": 435,
+   "floor": 420,
+   "ceiling": 435,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "floor@420 up rr15"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED floor+std2.5 up"
   },
   {
    "D": "2026-05-22",
@@ -746,6 +912,26 @@
   }
  ],
  "trades": [
+  {
+   "D": "2026-05-21",
+   "et": "14:42",
+   "setup": "floor+std2.5",
+   "direction": "up",
+   "node": 420,
+   "nodeType": "gatekeeper",
+   "stop": 419,
+   "t1": 430,
+   "t2": 435,
+   "rr": 15,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "TSLA260529C00420000",
+   "entryOpt": 10.66,
+   "exits": "stop(close)@05-21 $9.1",
+   "exitDay": "2026-05-21",
+   "retMid": -0.146,
+   "retWorst": -0.156
+  },
   {
    "D": "2026-05-27",
    "et": "14:21",

@@ -1,6 +1,23 @@
 {
  "plans": [
   {
+   "D": "2026-04-01",
+   "exp": "2026-04-02",
+   "spot": 254.7,
+   "king": 255,
+   "floor": 252.5,
+   "ceiling": 255,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@252.5 up rr2 (vs chart)",
+    "ceiling@255 down rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":180,\"rr\":0,\"vex\":23})"
+  },
+  {
    "D": "2026-04-02",
    "exp": "2026-04-10",
    "spot": 252.3,
@@ -40,9 +57,9 @@
    "floor": 247.5,
    "ceiling": 255,
    "regime": "mixed",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
-    "ceiling@255 down rr3 (vs chart)"
+    "ceiling@255 down rr3"
    ],
    "vex": "flat",
    "roll": null,
@@ -56,9 +73,9 @@
    "floor": 255,
    "ceiling": 265,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "reverse_rug@255 up rr3"
+    "reverse_rug@255 up rr3 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -72,10 +89,10 @@
    "floor": 255,
    "ceiling": 260,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@255 up rr3",
-    "ceiling@260 down rr3 (vs chart)"
+    "ceiling@260 down rr3"
    ],
    "vex": "up",
    "roll": null,
@@ -89,9 +106,9 @@
    "floor": 255,
    "ceiling": 260,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
-    "ceiling@260 down rr2 (vs chart)"
+    "ceiling@260 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -105,10 +122,10 @@
    "floor": 255,
    "ceiling": 260,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@255 up rr3",
-    "ceiling@260 down rr2 (vs chart)"
+    "ceiling@260 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -122,7 +139,7 @@
    "floor": 260,
    "ceiling": 265,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@260 up rr2"
    ],
@@ -138,9 +155,9 @@
    "floor": 255,
    "ceiling": 260,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
-    "ceiling@260 down rr2 (vs chart)"
+    "ceiling@260 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -148,49 +165,48 @@
   },
   {
    "D": "2026-04-16",
-   "exp": "2026-04-22",
+   "exp": "2026-04-24",
    "spot": 264.05,
-   "king": 267.5,
-   "floor": 262.5,
-   "ceiling": 267.5,
-   "regime": "positive",
+   "king": 270,
+   "floor": 260,
+   "ceiling": 270,
+   "regime": "negative",
    "chart": "up",
    "cands": [
-    "floor@262.5 up rr2",
-    "rug@267.5 down rr3 (vs chart)"
+    "rug@265 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":101,\"rr\":0})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-04-17",
-   "exp": "2026-04-22",
+   "exp": "2026-04-24",
    "spot": 268.33,
-   "king": 267.5,
-   "floor": 267.5,
-   "ceiling": 275,
+   "king": 265,
+   "floor": 265,
+   "ceiling": 270,
    "regime": "positive",
    "chart": "up",
    "cands": [
-    "floor@267.5 up rr3"
+    "floor@265 up rr4",
+    "ceiling@270 down rr3 (vs chart)"
    ],
-   "vex": "up",
+   "vex": "down",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":7,\"rr\":0})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":119,\"rr\":0,\"trend\":3})"
   },
   {
    "D": "2026-04-20",
-   "exp": "2026-04-22",
+   "exp": "2026-04-24",
    "spot": 272.28,
-   "king": 275,
-   "floor": 270,
+   "king": 265,
+   "floor": 265,
    "ceiling": 275,
    "regime": "negative",
    "chart": "up",
    "cands": [
-    "floor@270 up rr2",
-    "ceiling@275 down rr3 (vs chart)"
+    "ceiling@275 down rr4 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -198,60 +214,12 @@
   },
   {
    "D": "2026-04-21",
-   "exp": "2026-04-22",
+   "exp": "2026-04-24",
    "spot": 270.885,
-   "king": 272.5,
+   "king": 265,
    "floor": 265,
    "ceiling": 272.5,
    "regime": "positive",
-   "chart": "up",
-   "cands": [
-    "rug@272.5 down rr2 (vs chart)"
-   ],
-   "vex": "up",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
-  },
-  {
-   "D": "2026-04-22",
-   "exp": "2026-04-22",
-   "spot": 267.27,
-   "king": 267.5,
-   "floor": 262.5,
-   "ceiling": 267.5,
-   "regime": "positive",
-   "chart": "up",
-   "cands": [
-    "ceiling@267.5 down rr3 (vs chart)"
-   ],
-   "vex": "up",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":7,\"rr\":0})"
-  },
-  {
-   "D": "2026-04-27",
-   "exp": "2026-05-01",
-   "spot": 266.1,
-   "king": 260,
-   "floor": 260,
-   "ceiling": 272.5,
-   "regime": "negative",
-   "chart": "up",
-   "cands": [
-    "reverse_rug@265 up rr2"
-   ],
-   "vex": "up",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
-  },
-  {
-   "D": "2026-04-28",
-   "exp": "2026-05-01",
-   "spot": 269.11,
-   "king": 275,
-   "floor": 265,
-   "ceiling": 275,
-   "regime": "negative",
    "chart": "up",
    "cands": [
     "rug@272.5 down rr3 (vs chart)"
@@ -259,6 +227,63 @@
    "vex": "up",
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-22",
+   "exp": "2026-04-24",
+   "spot": 267.27,
+   "king": 265,
+   "floor": 265,
+   "ceiling": 270,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@265 up rr2",
+    "rug@270 down rr4 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":8,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-23",
+   "exp": "2026-05-01",
+   "spot": 275.09,
+   "king": 275,
+   "floor": 275,
+   "ceiling": 280,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@275 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":7,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-24",
+   "exp": "2026-05-01",
+   "spot": 270.405,
+   "king": 275,
+   "floor": 270,
+   "ceiling": 275,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@270 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED floor+std2.5 up"
+  },
+  {
+   "D": "2026-04-27",
+   "status": "in position"
+  },
+  {
+   "D": "2026-04-28",
+   "status": "in position"
   },
   {
    "D": "2026-04-29",
@@ -452,6 +477,72 @@
    "status": "no fill (blocked: {\"vix\":0,\"std\":31,\"rr\":0})"
   },
   {
+   "D": "2026-05-18",
+   "exp": "2026-05-22",
+   "spot": 298.14,
+   "king": 292.5,
+   "floor": 292.5,
+   "ceiling": 300,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@300 down rr2 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-19",
+   "exp": "2026-05-22",
+   "spot": 299.27,
+   "king": 292.5,
+   "floor": 292.5,
+   "ceiling": 300,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@300 down rr5 (vs chart)"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":19,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-20",
+   "exp": "2026-05-22",
+   "spot": 300.65,
+   "king": 297.5,
+   "floor": 297.5,
+   "ceiling": 305,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@297.5 up rr3",
+    "rug@305 down rr7.5 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-05-21",
+   "exp": "2026-05-29",
+   "spot": 301.35,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 305,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@300 up rr10",
+    "ceiling@305 down rr12.5 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":49,\"rr\":0,\"trend\":57})"
+  },
+  {
    "D": "2026-05-22",
    "exp": "2026-05-29",
    "spot": 308.26,
@@ -627,9 +718,9 @@
    "floor": 290,
    "ceiling": 300,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
-    "ceiling@300 down rr2 (vs chart)"
+    "ceiling@300 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -752,10 +843,10 @@
    "floor": 297.5,
    "ceiling": 300,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@297.5 up rr3",
-    "ceiling@300 down rr5 (vs chart)"
+    "ceiling@300 down rr5"
    ],
    "vex": "up",
    "roll": null,
@@ -814,5 +905,26 @@
    "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AAPL. Available: 2026-07-01, 2026-07-02, )"
   }
  ],
- "trades": []
+ "trades": [
+  {
+   "D": "2026-04-24",
+   "et": "12:43",
+   "setup": "floor+std2.5",
+   "direction": "up",
+   "node": 270,
+   "nodeType": "pika",
+   "stop": 267.5,
+   "t1": 272.5,
+   "t2": 275,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AAPL260501C00270000",
+   "entryOpt": 5.9,
+   "exits": "T1@04-28 $5.89 · breakeven@04-28 $5.4",
+   "exitDay": "2026-04-28",
+   "retMid": -0.043,
+   "retWorst": -0.084
+  }
+ ]
 }

@@ -1,6 +1,22 @@
 {
  "plans": [
   {
+   "D": "2026-01-02",
+   "exp": "2026-01-09",
+   "spot": 320.08,
+   "king": 315,
+   "floor": 315,
+   "ceiling": 322.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@322.5 down rr3 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":4,\"rr\":0})"
+  },
+  {
    "D": "2026-01-05",
    "exp": "2026-01-09",
    "spot": 316.815,
@@ -8,14 +24,14 @@
    "floor": 315,
    "ceiling": 320,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@315 up rr5",
-    "ceiling@320 down rr4"
+    "ceiling@320 down rr4 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":46,\"rr\":0,\"trend\":8})"
+   "status": "no fill (blocked: {\"vix\":8,\"std\":46,\"rr\":0})"
   },
   {
    "D": "2026-01-06",
@@ -25,7 +41,7 @@
    "floor": 315,
    "ceiling": 325,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@315 up rr3"
    ],
@@ -41,10 +57,10 @@
    "floor": 315,
    "ceiling": 322.5,
    "regime": "negative",
-   "chart": "down",
+   "chart": "up",
    "cands": [
-    "floor@315 up rr3 (vs chart)",
-    "rug@317.5 down rr2"
+    "floor@315 up rr3",
+    "rug@317.5 down rr2 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -217,37 +233,45 @@
    "cands": []
   },
   {
-   "D": "2026-01-28",
+   "D": "2026-01-26",
    "exp": "2026-01-30",
-   "spot": 335.7,
-   "king": 335,
-   "floor": 335,
-   "ceiling": 345,
+   "spot": 329.9,
+   "king": 325,
+   "floor": 325,
+   "ceiling": 335,
    "regime": "negative",
    "chart": "up",
    "cands": [
-    "floor@335 up rr2"
-   ],
-   "vex": "down",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":59,\"rr\":0})"
-  },
-  {
-   "D": "2026-01-29",
-   "exp": "2026-02-06",
-   "spot": 338.67,
-   "king": 345,
-   "floor": 337.5,
-   "ceiling": 345,
-   "regime": "negative",
-   "chart": "up",
-   "cands": [
-    "floor@337.5 up rr3",
-    "rug@340 down rr2 (vs chart)"
+    "floor@325 up rr3"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":7,\"rr\":0})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-01-27",
+   "exp": "2026-01-30",
+   "spot": 336.385,
+   "king": 340,
+   "floor": 335,
+   "ceiling": 340,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@335 up rr2",
+    "ceiling@340 down rr4 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED floor+std2 up"
+  },
+  {
+   "D": "2026-01-28",
+   "status": "in position"
+  },
+  {
+   "D": "2026-01-29",
+   "status": "in position"
   },
   {
    "D": "2026-01-30",
@@ -339,10 +363,10 @@
    "floor": 322.5,
    "ceiling": 327.5,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@322.5 up rr7.5",
-    "ceiling@327.5 down rr2 (vs chart)"
+    "ceiling@327.5 down rr2"
    ],
    "vex": "up",
    "roll": null,
@@ -400,18 +424,92 @@
   },
   {
    "D": "2026-02-12",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for GOOGL. Available: 2026-02-13, 2026-02-18,)"
+   "exp": "2026-02-20",
+   "spot": 311.11,
+   "king": 320,
+   "floor": 310,
+   "ceiling": 320,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@310 up rr5",
+    "rug@315 down rr4"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":86,\"rr\":0,\"trend\":20})"
   },
   {
    "D": "2026-02-13",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for GOOGL. Available: 2026-02-13, 2026-02-18,)"
+   "exp": "2026-02-20",
+   "spot": 306.46,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 312.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
   },
   {
    "D": "2026-02-17",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for GOOGL. Available: 2026-02-18, 2026-02-20,)"
+   "exp": "2026-02-20",
+   "spot": 301.885,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 310,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@300 up rr10"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":35,\"rr\":0,\"trend\":3})"
+  },
+  {
+   "D": "2026-02-18",
+   "exp": "2026-02-20",
+   "spot": 303.58,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 305,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@300 up rr10",
+    "ceiling@305 down rr2"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":5,\"rr\":0,\"trend\":23})"
+  },
+  {
+   "D": "2026-02-19",
+   "exp": "2026-02-27",
+   "spot": 301.25,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 305,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@300 up rr5",
+    "rug@302.5 down rr3"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":94,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-20",
+   "exp": "2026-02-27",
+   "spot": 308.11,
+   "king": 300,
+   "floor": 300,
+   "ceiling": 315,
+   "regime": "negative",
+   "chart": "down",
+   "cands": []
   },
   {
    "D": "2026-02-23",
@@ -782,5 +880,26 @@
    "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for GOOGL. Available: 2026-04-01, 2026-04-02,)"
   }
  ],
- "trades": []
+ "trades": [
+  {
+   "D": "2026-01-27",
+   "et": "15:19",
+   "setup": "floor+std2",
+   "direction": "up",
+   "node": 335,
+   "nodeType": "gatekeeper",
+   "stop": 332.5,
+   "t1": 337.5,
+   "t2": 340,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "GOOGL260130C00335000",
+   "entryOpt": 4.9,
+   "exits": "T1@01-28 $5.3 · T2@01-29 $6.55",
+   "exitDay": "2026-01-29",
+   "retMid": 0.209,
+   "retWorst": 0.179
+  }
+ ]
 }

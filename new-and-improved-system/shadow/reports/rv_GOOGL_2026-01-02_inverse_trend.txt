@@ -1,0 +1,24 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend ===========
+GOOGL itself: 317.00 → 287.51 (-9.3%)
+ALL trades                 n= 6  win  83%  @$1k/trade mid +$2047  worst +$1338  avg 34%  SQN 1.86
+  chart-aligned only       n= 0
+  against chart            n= 6  win  83%  @$1k/trade mid +$2047  worst +$1338  avg 34%  SQN 1.86
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  67%  @$1k/trade mid +$688  worst +$181  avg 23%  SQN 0.76
+  shorts                   n= 3  win 100%  @$1k/trade mid +$1359  worst +$1157  avg 45%  SQN 1.79
+
+day outcomes: no fill 37 · FILLED inverse_rug up 1 · FILLED inverse_ceiling up 2 · in position 4 · no setup in reach 10 · FILLED inverse_floor down 2 · FILLED inverse_reverse_rug down 1 · no board 4
+
+-- every trade --
+  2026-01-07 10:35 CALL inverse_rug @317.5 (pika) stop 315 T1 320 T2 322.5 rr 2 [vs chart]  GOOGL260109C00317500 in $2.99 → T1@01-07 $4.44 · T2@01-07 $6.4  =  81%
+  2026-01-09 10:42 CALL inverse_ceiling @330 (king) stop 327.5 T1 332.5 T2 335 rr 2 [vs chart]  GOOGL260116C00330000 in $4.72 → T1@01-12 $5.85 · breakeven@01-12 $4.35  =  8%
+  2026-01-14 11:15 CALL inverse_ceiling @335 (gatekeeper) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  GOOGL260116C00335000 in $3.35 → T1@01-15 $3 · breakeven@01-15 $2.32  =  -21%
+  2026-03-02 10:35 PUT  inverse_floor @305 (gatekeeper) stop 307.5 T1 302.5 T2 300 rr 2 [vs chart]  GOOGL260306P00305000 in $5.2 → T1@03-03 $9.8 · T2@03-03 $9.8  =  89%
+  2026-03-20 09:50 PUT  inverse_reverse_rug @302.5 (pika) stop 305 T1 300 T2 297.5 rr 2 [vs chart]  GOOGL260327P00302500 in $4.9 → T1@03-20 $6.05 · breakeven@03-23 $3.85  =  1%
+  2026-03-24 09:43 PUT  inverse_floor @297.5 (pika) stop 300 T1 295 T2 292.5 rr 2 [vs chart]  GOOGL260327P00297500 in $4.03 → T1@03-24 $5.3 · T2@03-24 $6.5  =  46%
+
+credits used 10

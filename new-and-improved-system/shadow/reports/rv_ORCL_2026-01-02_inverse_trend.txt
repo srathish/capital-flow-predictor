@@ -1,0 +1,22 @@
+
+=========== ORCL weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend ===========
+ORCL itself: 197.01 → 147.23 (-25.3%)
+ALL trades                 n= 4  win  50%  @$1k/trade mid -$587  worst -$634  avg -15%  SQN -1.34
+  chart-aligned only       n= 0
+  against chart            n= 4  win  50%  @$1k/trade mid -$587  worst -$634  avg -15%  SQN -1.34
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 4  win  50%  @$1k/trade mid -$587  worst -$634  avg -15%  SQN -1.34
+
+day outcomes: no fill 43 · no setup in reach 10 · FILLED inverse_floor down 4 · no board 4
+
+-- every trade --
+  2026-02-05 10:36 PUT  inverse_floor @145 (barney) stop 146 T1 144 T2 143 rr 2 [vs chart]  ORCL260213P00145000 in $5.94 → T1@02-05 $5.61 · T2@02-05 $6.61  =  3%
+  2026-03-04 10:40 PUT  inverse_floor @150 (barney) stop 151 T1 149 T2 148 rr 2 [vs chart]  ORCL260306P00150000 in $3.29 → stop(close)@03-04 $1.97  =  -40%
+  2026-03-10 09:39 PUT  inverse_floor @150 (barney) stop 151 T1 149 T2 148 rr 2 [vs chart]  ORCL260313P00150000 in $7.7 → T1@03-10 $8.3 · breakeven@03-10 $7.75  =  4%
+  2026-03-23 09:35 PUT  inverse_floor @152.5 (gatekeeper) stop 153.5 T1 150 T2 149 rr 3.5 [vs chart]  ORCL260327P00152500 in $4 → stop(close)@03-23 $2.97  =  -26%
+
+credits used 0

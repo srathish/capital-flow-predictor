@@ -1,0 +1,20 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend ===========
+AMZN itself: 210.50 → 238.25 (13.2%)
+ALL trades                 n= 2  win   0%  @$1k/trade mid -$708  worst -$747  avg -35%  SQN -4.99
+  chart-aligned only       n= 0
+  against chart            n= 2  win   0%  @$1k/trade mid -$708  worst -$747  avg -35%  SQN -4.99
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$425  worst -$439  avg -43%  SQN 0.00
+  shorts                   n= 1  win   0%  @$1k/trade mid -$283  worst -$308  avg -28%  SQN 0.00
+
+day outcomes: FILLED inverse_floor down 1 · no fill 49 · no board 5 · no setup in reach 6 · FILLED inverse_ceiling up 1
+
+-- every trade --
+  2026-04-01 09:35 PUT  inverse_floor @210 (king) stop 211 T1 207.5 T2 205 rr 5 [vs chart]  AMZN260402P00210000 in $1.98 → time@04-01 $1.42  =  -28%
+  2026-05-22 09:38 CALL inverse_ceiling @270 (king) stop 267.5 T1 272.5 T2 275 rr 2 [vs chart]  AMZN260529C00270000 in $4 → stop(close)@05-22 $2.3  =  -43%
+
+credits used 15

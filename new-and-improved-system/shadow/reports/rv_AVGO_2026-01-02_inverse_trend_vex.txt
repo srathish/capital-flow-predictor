@@ -1,0 +1,19 @@
+
+=========== AVGO weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+AVGO itself: 352.83 → 309.45 (-12.3%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$429  worst +$429  avg 43%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win 100%  @$1k/trade mid +$429  worst +$429  avg 43%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win 100%  @$1k/trade mid +$429  worst +$429  avg 43%  SQN 0.00
+
+day outcomes: no fill 46 · no setup in reach 10 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-03-18 09:55 PUT  inverse_floor @322.5 (gatekeeper) stop 325 T1 320 T2 317.5 rr 2 [vs chart]  AVGO260320P00322500 in $4.55 → T1@03-18 $6 · T2@03-18 $7  =  43%
+
+credits used 35

@@ -1,0 +1,20 @@
+
+=========== META weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=confluence_trend ===========
+META itself: 663.04 → 572.21 (-13.7%)
+ALL trades                 n= 2  win   0%  @$1k/trade mid -$106  worst -$155  avg -5%  SQN -1.02
+  chart-aligned only       n= 2  win   0%  @$1k/trade mid -$106  worst -$155  avg -5%  SQN -1.02
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$105  worst -$153  avg -11%  SQN 0.00
+  shorts                   n= 1  win   0%  @$1k/trade mid -$1  worst -$2  avg -0%  SQN 0.00
+
+day outcomes: no setup in reach 9 · no fill 45 · FILLED floor+std3.5 up 1 · FILLED ceiling+std2 down 1 · no board 5
+
+-- every trade --
+  2026-02-10 14:16 CALL floor+std3.5 @672.5 (pika) stop 671.5 T1 680 T2 682.5 rr 10   META260213C00672500 in $9.44 → stop(close)@02-10 $8.45  =  -11%
+  2026-03-03 12:46 PUT  ceiling+std2 @655 (gatekeeper) stop 657.5 T1 650 T2 645 rr 4   META260306P00655000 in $10.5 → T1@03-03 $12.15 · breakeven@03-03 $8.82  =  -0%
+
+credits used 0

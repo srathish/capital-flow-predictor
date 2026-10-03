@@ -1,0 +1,52 @@
+
+=========== TSLA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=current ===========
+TSLA itself: 421.36 → 370.69 (-12.0%)
+ALL trades                 n=34  win  56%  @$1k/trade mid -$410  worst -$3679  avg -1%  SQN -0.16
+  chart-aligned only       n=26  win  62%  @$1k/trade mid +$355  worst -$2408  avg 1%  SQN 0.14
+  against chart            n= 8  win  38%  @$1k/trade mid -$765  worst -$1271  avg -10%  SQN -1.37
+  reverse_rug              n= 6  win  83%  @$1k/trade mid +$641  worst +$181  avg 11%  SQN 0.79
+  floor                    n=10  win  50%  @$1k/trade mid +$461  worst -$1102  avg 5%  SQN 0.23
+  rug                      n= 4  win  50%  @$1k/trade mid -$628  worst -$930  avg -16%  SQN -0.87
+  ceiling                  n=14  win  50%  @$1k/trade mid -$884  worst -$1828  avg -6%  SQN -0.63
+  longs                    n=16  win  63%  @$1k/trade mid +$1102  worst -$921  avg 7%  SQN 0.53
+  shorts                   n=18  win  50%  @$1k/trade mid -$1512  worst -$2758  avg -8%  SQN -0.97
+
+day outcomes: FILLED ceiling down 14 · FILLED floor up 10 · FILLED reverse_rug up 6 · no fill 11 · FILLED rug down 4 · in position 13 · no setup in reach 8
+
+-- every trade --
+  2026-07-01 09:35 PUT  ceiling     @425 (king) stop 427.5 T1 420 T2 412.5 rr 5 [vs chart]  TSLA260702P00425000 in $7.81 → T1@07-01 $9.12 · breakeven@07-01 $5.75  =  -5%
+  2026-07-02 09:35 CALL floor       @425 (gatekeeper) stop 422.5 T1 430 T2 432.5 rr 3   TSLA260710C00425000 in $10.1 → stop(close)@07-02 $1.82  =  -82%
+  2026-07-06 09:37 CALL reverse_rug @390 (pika) stop 389 T1 395 T2 400 rr 10   TSLA260710C00390000 in $9.4 → T1@07-06 $12.75 · T2@07-06 $15.1  =  48%
+  2026-07-09 09:40 PUT  rug         @395 (gatekeeper) stop 396 T1 390 T2 385 rr 10   TSLA260717P00395000 in $11.19 → stop(close)@07-09 $5.68  =  -49%
+  2026-07-13 09:35 CALL floor       @400 (king) stop 399 T1 405 T2 null rr 5   TSLA260717C00400000 in $7.73 → stop(close)@07-13 $5.65  =  -27%
+  2026-07-14 09:40 PUT  ceiling     @400 (king) stop 402.5 T1 395 T2 392.5 rr 3   TSLA260717P00400000 in $7.8 → T1@07-14 $9.7 · breakeven@07-15 $5.93  =  0%
+  2026-07-17 09:36 CALL reverse_rug @380 (gatekeeper) stop 377.5 T1 382.5 T2 385 rr 2 [vs chart]  TSLA260724C00380000 in $14 → T1@07-17 $15.2 · breakeven@07-17 $14  =  4%
+  2026-07-20 09:36 CALL floor       @380 (gatekeeper) stop 377.5 T1 382.5 T2 385 rr 2 [vs chart]  TSLA260724C00380000 in $13.72 → T1@07-20 $14.22 · breakeven@07-20 $12.61  =  -2%
+  2026-07-22 09:45 PUT  ceiling     @380 (king) stop 382.5 T1 377.5 T2 375 rr 2   TSLA260724P00380000 in $11.6 → T1@07-22 $12.25 · T2@07-22 $13.6  =  11%
+  2026-07-29 10:26 CALL reverse_rug @302.5 (gatekeeper) stop 300 T1 307.5 T2 310 rr 3 [vs chart]  TSLA260731C00302500 in $5.91 → T1@07-29 $7.8 · breakeven@07-29 $4.95  =  8%
+  2026-07-31 09:35 CALL floor       @315 (gatekeeper) stop 312.5 T1 317.5 T2 320 rr 2 [vs chart]  TSLA260807C00315000 in $8.08 → stop(close)@07-31 $6.2  =  -23%
+  2026-08-03 09:35 PUT  ceiling     @315 (king) stop 317.5 T1 312.5 T2 310 rr 2   TSLA260807P00315000 in $7.43 → stop(close)@08-03 $3.95  =  -47%
+  2026-08-05 14:53 CALL reverse_rug @320 (gatekeeper) stop 317.5 T1 325 T2 327.5 rr 3 [vs chart]  TSLA260807C00320000 in $4.78 → time@08-06 $2.79  =  -42%
+  2026-08-07 09:40 PUT  ceiling     @325 (king) stop 327.5 T1 320 T2 312.5 rr 5   TSLA260814P00325000 in $7.3 → stop(close)@08-07 $5.35  =  -27%
+  2026-08-11 10:00 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 327.5 rr 3   TSLA260814P00335000 in $5.66 → T1@08-11 $6.45 · T2@08-12 $9.47  =  41%
+  2026-08-13 09:54 PUT  rug         @332.5 (gatekeeper) stop 335 T1 325 T2 322.5 rr 4   TSLA260821P00332500 in $7.36 → stop(close)@08-13 $4.1  =  -44%
+  2026-08-14 09:51 PUT  ceiling     @350 (gatekeeper) stop 351 T1 345 T2 340 rr 10   TSLA260821P00350000 in $7.85 → T1@08-14 $10.48 · T2@08-14 $13.55  =  53%
+  2026-08-18 09:35 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 327.5 rr 3   TSLA260821P00335000 in $5.15 → stop(close)@08-19 $0.59  =  -89%
+  2026-08-20 10:27 CALL floor       @340 (barney) stop 337.5 T1 345 T2 347.5 rr 3   TSLA260828C00340000 in $8.88 → T1@08-20 $11.5 · T2@08-21 $14.4  =  46%
+  2026-08-24 14:52 CALL floor       @350 (gatekeeper) stop 347.5 T1 357.5 T2 360 rr 4   TSLA260828C00350000 in $7.04 → stop(close)@08-26 $3.1  =  -56%
+  2026-08-27 09:45 PUT  ceiling     @352.5 (gatekeeper) stop 353.5 T1 342.5 T2 340 rr 12.5   TSLA260904P00352500 in $10.65 → stop(close)@08-27 $7.15  =  -33%
+  2026-09-01 09:37 CALL floor       @355 (gatekeeper) stop 352.5 T1 357.5 T2 360 rr 2   TSLA260904C00355000 in $6.84 → T1@09-01 $7.96 · T2@09-01 $8.95  =  24%
+  2026-09-02 09:35 CALL floor       @355 (gatekeeper) stop 352.5 T1 360 T2 362.5 rr 3   TSLA260904C00355000 in $5.87 → T1@09-03 $14.55 · T2@09-03 $14.55  =  148%
+  2026-09-04 09:35 PUT  ceiling     @360 (gatekeeper) stop 362.5 T1 357.5 T2 355 rr 2   TSLA260911P00360000 in $7.5 → T1@09-04 $9 · T2@09-04 $10.46  =  30%
+  2026-09-08 09:41 CALL reverse_rug @357.5 (king) stop 355 T1 362.5 T2 365 rr 3   TSLA260911C00357500 in $6.95 → T1@09-08 $9.11 · T2@09-08 $11  =  45%
+  2026-09-10 09:35 CALL floor       @360 (king) stop 359 T1 365 T2 370 rr 10   TSLA260918C00360000 in $10.05 → T1@09-10 $12.22 · breakeven@09-14 $8.95  =  5%
+  2026-09-15 09:36 PUT  ceiling     @360 (king) stop 362.5 T1 355 T2 350 rr 4   TSLA260918P00360000 in $6.5 → T1@09-15 $8.92 · breakeven@09-16 $5.55  =  11%
+  2026-09-17 09:35 PUT  rug         @370 (gatekeeper) stop 371 T1 367.5 T2 365 rr 5   TSLA260925P00370000 in $9.85 → T1@09-17 $10.55 · T2@09-17 $12.55  =  17%
+  2026-09-18 09:35 PUT  ceiling     @367.5 (gatekeeper) stop 368.5 T1 365 T2 362.5 rr 5   TSLA260925P00367500 in $8.5 → T1@09-18 $9.2 · T2@09-18 $10.7  =  17%
+  2026-09-21 09:35 PUT  rug         @375 (gatekeeper) stop 377.5 T1 372.5 T2 370 rr 2 [vs chart]  TSLA260925P00375000 in $6.97 → T1@09-21 $8.51 · breakeven@09-21 $7.3  =  13%
+  2026-09-22 13:17 PUT  ceiling     @380 (king) stop 382.5 T1 370 T2 367.5 rr 5 [vs chart]  TSLA260925P00380000 in $6.45 → time@09-24 $4.5  =  -30%
+  2026-09-25 09:41 CALL floor       @370 (gatekeeper) stop 367.5 T1 375 T2 380 rr 4   TSLA261002C00370000 in $10 → T1@09-25 $13.08 · breakeven@09-25 $9.7  =  14%
+  2026-10-01 09:35 CALL reverse_rug @355 (gatekeeper) stop 354 T1 357.5 T2 360 rr 5   TSLA261009C00355000 in $9.51 → T1@10-01 $10.25 · breakeven@10-01 $8.9  =  1%
+  2026-10-02 09:39 PUT  ceiling     @370 (king) stop 372.5 T1 365 T2 360 rr 4   TSLA261009P00370000 in $8.45 → time@10-02 $6.6  =  -22%
+
+credits used 4

@@ -1,6 +1,23 @@
 {
  "plans": [
   {
+   "D": "2026-01-02",
+   "exp": "2026-01-09",
+   "spot": 191.23,
+   "king": 192.5,
+   "floor": 190,
+   "ceiling": 192.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@190 up rr5",
+    "ceiling@192.5 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":64})"
+  },
+  {
    "D": "2026-01-05",
    "exp": "2026-01-09",
    "spot": 192.875,
@@ -41,7 +58,7 @@
    "floor": 185,
    "ceiling": 192.5,
    "regime": "positive",
-   "chart": "down",
+   "chart": "up",
    "cands": []
   },
   {
@@ -68,7 +85,7 @@
    "floor": 180,
    "ceiling": 185,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
     "ceiling@185 down rr5"
    ],
@@ -84,7 +101,7 @@
    "floor": 180,
    "ceiling": 190,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -95,7 +112,7 @@
    "floor": 180,
    "ceiling": 190,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -106,9 +123,9 @@
    "floor": 180,
    "ceiling": 185,
    "regime": "positive",
-   "chart": "down",
+   "chart": "up",
    "cands": [
-    "rug@185 down rr5"
+    "rug@185 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -122,9 +139,9 @@
    "floor": 185,
    "ceiling": 192.5,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@185 up rr5 (vs chart)"
+    "floor@185 up rr5"
    ],
    "vex": "up",
    "roll": null,
@@ -138,7 +155,7 @@
    "floor": 185,
    "ceiling": 192.5,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": []
   },
   {
@@ -149,14 +166,14 @@
    "floor": 177.5,
    "ceiling": 182.5,
    "regime": "negative",
-   "chart": "down",
+   "chart": "up",
    "cands": [
-    "reverse_rug@180 up rr5 (vs chart)",
-    "ceiling@182.5 down rr5"
+    "reverse_rug@180 up rr5",
+    "ceiling@182.5 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"vex\":159})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":159})"
   },
   {
    "D": "2026-01-21",
@@ -194,14 +211,46 @@
    "floor": 185,
    "ceiling": 187.5,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@185 up rr7.5 (vs chart)",
+    "floor@185 up rr7.5",
     "ceiling@187.5 down rr5"
    ],
    "vex": "up",
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":244})"
+  },
+  {
+   "D": "2026-01-26",
+   "exp": "2026-01-30",
+   "spot": 188.03,
+   "king": 187.5,
+   "floor": 187.5,
+   "ceiling": 192.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@187.5 up rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":64})"
+  },
+  {
+   "D": "2026-01-27",
+   "exp": "2026-01-30",
+   "spot": 186.41,
+   "king": 187.5,
+   "floor": 182.5,
+   "ceiling": 187.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@187.5 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":10})"
   },
   {
    "D": "2026-01-28",
@@ -261,7 +310,7 @@
    "floor": 185,
    "ceiling": 190,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@185 up rr5"
    ],
@@ -277,14 +326,14 @@
    "floor": 180,
    "ceiling": 185,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "reverse_rug@182.5 up rr2.5 (vs chart)",
+    "reverse_rug@182.5 up rr2.5",
     "ceiling@185 down rr5"
    ],
    "vex": "up",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"vex\":4})"
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":4})"
   },
   {
    "D": "2026-02-04",
@@ -294,7 +343,7 @@
    "floor": 172.5,
    "ceiling": 180,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
     "ceiling@180 down rr7.5"
    ],
@@ -364,18 +413,91 @@
   },
   {
    "D": "2026-02-12",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 192.21,
+   "king": 195,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@190 up rr5",
+    "ceiling@195 down rr5"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":92})"
   },
   {
    "D": "2026-02-13",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 185.69,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 190,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@185 up rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":29})"
   },
   {
    "D": "2026-02-17",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-02-18, 2026-02-20, )"
+   "exp": "2026-02-20",
+   "spot": 182.425,
+   "king": 185,
+   "floor": 180,
+   "ceiling": 185,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@180 up rr5",
+    "ceiling@185 down rr7.5"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":74})"
+  },
+  {
+   "D": "2026-02-18",
+   "exp": "2026-02-20",
+   "spot": 187.95,
+   "king": 192.5,
+   "floor": 185,
+   "ceiling": 192.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-02-19",
+   "exp": "2026-02-27",
+   "spot": 186.74,
+   "king": 190,
+   "floor": 182.5,
+   "ceiling": 190,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-20",
+   "exp": "2026-02-27",
+   "spot": 187.61,
+   "king": 190,
+   "floor": 182.5,
+   "ceiling": 190,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@190 down rr7.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":96})"
   },
   {
    "D": "2026-02-23",
@@ -385,9 +507,9 @@
    "floor": 190,
    "ceiling": 195,
    "regime": "positive",
-   "chart": "down",
+   "chart": "up",
    "cands": [
-    "ceiling@195 down rr5"
+    "ceiling@195 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -401,9 +523,9 @@
    "floor": 185,
    "ceiling": 190,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
-    "ceiling@190 down rr5"
+    "ceiling@190 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -417,10 +539,10 @@
    "floor": 192.5,
    "ceiling": 195,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@192.5 up rr5",
-    "ceiling@195 down rr5"
+    "ceiling@195 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -456,9 +578,9 @@
    "floor": 177.5,
    "ceiling": 182.5,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@177.5 up rr5 (vs chart)"
+    "floor@177.5 up rr5"
    ],
    "vex": "up",
    "roll": null,
@@ -472,7 +594,7 @@
    "floor": 175,
    "ceiling": 182.5,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -483,7 +605,7 @@
    "floor": 177.5,
    "ceiling": 185,
    "regime": "mixed",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
     "rug@185 down rr7.5"
    ],
@@ -499,9 +621,9 @@
    "floor": 180,
    "ceiling": 185,
    "regime": "mixed",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "reverse_rug@180 up rr5 (vs chart)"
+    "reverse_rug@180 up rr5"
    ],
    "vex": "down",
    "roll": null,
@@ -576,9 +698,9 @@
    "floor": 180,
    "ceiling": 185,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
-    "ceiling@185 down rr5"
+    "ceiling@185 down rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -592,9 +714,9 @@
    "floor": 185,
    "ceiling": 190,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@185 up rr5 (vs chart)"
+    "floor@185 up rr5"
    ],
    "vex": "up",
    "roll": null,
@@ -624,9 +746,9 @@
    "floor": 182.5,
    "ceiling": 185,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@182.5 up rr5 (vs chart)",
+    "floor@182.5 up rr5",
     "ceiling@185 down rr5"
    ],
    "vex": "up",

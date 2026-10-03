@@ -1,0 +1,21 @@
+
+=========== TSLA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=confluence_trend ===========
+TSLA itself: 457.90 → 371.71 (-18.8%)
+ALL trades                 n= 3  win  67%  @$1k/trade mid +$736  worst +$540  avg 25%  SQN 1.27
+  chart-aligned only       n= 3  win  67%  @$1k/trade mid +$736  worst +$540  avg 25%  SQN 1.27
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 3  win  67%  @$1k/trade mid +$736  worst +$540  avg 25%  SQN 1.27
+
+day outcomes: no fill 46 · no setup in reach 6 · FILLED ceiling+std2.5 down 1 · FILLED ceiling+std3.5 down 1 · in position 2 · FILLED ceiling+std2.25 down 1 · no board 4
+
+-- every trade --
+  2026-02-03 12:33 PUT  ceiling+std2.5 @425 (king) stop 427.5 T1 422.5 T2 420 rr 2   TSLA260206P00425000 in $7.95 → T1@02-03 $8.8 · T2@02-03 $10.26  =  20%
+  2026-03-03 14:39 PUT  ceiling+std3.5 @395 (gatekeeper) stop 397.5 T1 392.5 T2 390 rr 2   TSLA260306P00395000 in $7 → T1@03-03 $8 · breakeven@03-04 $5.1  =  -6%
+  2026-03-06 15:15 PUT  ceiling+std2.25 @400 (king) stop 402.5 T1 395 T2 385 rr 6   TSLA260313P00400000 in $9.9 → T1@03-09 $13.45 · T2@03-09 $18.24  =  60%
+
+credits used 0

@@ -1,6 +1,23 @@
 {
  "plans": [
   {
+   "D": "2026-04-01",
+   "exp": "2026-04-02",
+   "spot": 209.14,
+   "king": 210,
+   "floor": 207.5,
+   "ceiling": 210,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@207.5 up rr5",
+    "ceiling@210 down rr2.5"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":69})"
+  },
+  {
    "D": "2026-04-02",
    "exp": "2026-04-10",
    "spot": 205.46,
@@ -41,7 +58,7 @@
    "floor": 215,
    "ceiling": 225,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -52,10 +69,10 @@
    "floor": 227.5,
    "ceiling": 232.5,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@227.5 up rr7.5",
-    "ceiling@232.5 down rr5 (vs chart)"
+    "ceiling@232.5 down rr5"
    ],
    "vex": "up",
    "roll": null,
@@ -129,28 +146,95 @@
   },
   {
    "D": "2026-04-16",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 268.485,
+   "king": 275,
+   "floor": 267.5,
+   "ceiling": 275,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@267.5 up rr2",
+    "rug@270 down rr2 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED inverse_rug up"
   },
   {
    "D": "2026-04-17",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 276.865,
+   "king": 280,
+   "floor": 272.5,
+   "ceiling": 280,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@280 down rr7.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":30})"
   },
   {
    "D": "2026-04-20",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 285.11,
+   "king": 280,
+   "floor": 280,
+   "ceiling": 290,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
   },
   {
    "D": "2026-04-21",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 279.34,
+   "king": 280,
+   "floor": 277.5,
+   "ceiling": 280,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@277.5 up rr3",
+    "ceiling@280 down rr5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED inverse_ceiling up"
   },
   {
    "D": "2026-04-22",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-04-24, 2026-05-01, 2)"
+   "status": "in position"
+  },
+  {
+   "D": "2026-04-23",
+   "exp": "2026-05-01",
+   "spot": 302.94,
+   "king": 295,
+   "floor": 295,
+   "ceiling": 307.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@300 up rr3"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5})"
+  },
+  {
+   "D": "2026-04-24",
+   "exp": "2026-05-01",
+   "spot": 342.5,
+   "king": 350,
+   "floor": 335,
+   "ceiling": 350,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
   },
   {
    "D": "2026-04-27",
@@ -378,6 +462,62 @@
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":54})"
   },
   {
+   "D": "2026-05-18",
+   "exp": "2026-05-22",
+   "spot": 435.46,
+   "king": 425,
+   "floor": 425,
+   "ceiling": 445,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-05-19",
+   "exp": "2026-05-22",
+   "spot": 419.63,
+   "king": 425,
+   "floor": 415,
+   "ceiling": 425,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@415 up rr10",
+    "rug@425 down rr15 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":30})"
+  },
+  {
+   "D": "2026-05-20",
+   "exp": "2026-05-22",
+   "spot": 431.79,
+   "king": 420,
+   "floor": 420,
+   "ceiling": 442.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-05-21",
+   "exp": "2026-05-29",
+   "spot": 445,
+   "king": 450,
+   "floor": 440,
+   "ceiling": 450,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@440 up rr10",
+    "ceiling@450 down rr6 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":41})"
+  },
+  {
    "D": "2026-05-22",
    "exp": "2026-05-29",
    "spot": 474.46,
@@ -531,7 +671,7 @@
    "floor": 470,
    "ceiling": 495,
    "regime": "positive",
-   "chart": "up",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -732,6 +872,46 @@
   }
  ],
  "trades": [
+  {
+   "D": "2026-04-16",
+   "et": "09:35",
+   "setup": "inverse_rug",
+   "direction": "up",
+   "node": 270,
+   "nodeType": "gatekeeper",
+   "stop": 267.5,
+   "t1": 272.5,
+   "t2": 275,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "AMD260424C00270000",
+   "entryOpt": 9.2,
+   "exits": "T1@04-16 $9.93 · T2@04-16 $12.21",
+   "exitDay": "2026-04-16",
+   "retMid": 0.203,
+   "retWorst": 0.13
+  },
+  {
+   "D": "2026-04-21",
+   "et": "09:35",
+   "setup": "inverse_ceiling",
+   "direction": "up",
+   "node": 280,
+   "nodeType": "gatekeeper",
+   "stop": 277.5,
+   "t1": 285,
+   "t2": 287.5,
+   "rr": 3,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "AMD260424C00280000",
+   "entryOpt": 6.47,
+   "exits": "T1@04-21 $9.79 · T2@04-22 $13.18",
+   "exitDay": "2026-04-22",
+   "retMid": 0.775,
+   "retWorst": 0.55
+  },
   {
    "D": "2026-05-13",
    "et": "09:35",

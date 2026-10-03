@@ -1,6 +1,8 @@
 # SYSTEM RULES — what the shadow book says to trade (v1, 2026-10-02)
 
-> ⚠️ **2026-10-03: RESULTS BELOW ARE PENDING RE-VALIDATION.** The live-runner regression found a backtest bug: the daily
+> ✅ **2026-10-03 RE-VALIDATED on the original 10 (continuous calendar):** Rule 1 (break with trend + VEX) **54 trades, +$5,871 mid / +$2,194 worst, positive in all 3 periods**. Rule 2 (confluence) **FAILED** (16 trades, −$836; without VEX −$5,325, 0/3) → **dropped**. Baseline −$41,148 / 891 trades. Out-of-universe test (10 new names) pending. The tables further down are the PRE-FIX numbers, kept for the record.
+>
+> ⚠️ **Original note:** The live-runner regression found a backtest bug: the daily
 > history was stitched from four 20-day windows, which dropped ~8 trading days per quarter from the calendar and computed the
 > trend filter's EMA50 from ~20 closes early in each period. Fixed in `shadow/stock*.mjs`; the full validation (original 10,
 > new 10, all 3 periods) is re-running via `shadow/run_revalidate.sh`. Rules are frozen — nothing will be re-selected.

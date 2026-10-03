@@ -10,7 +10,8 @@ import { vixSide } from '../chart/vixpivot.js';
 export const PARAMS = { REACH: 0.015, ZONE_PCT: 0.0015, MIN_RR: 2, MAX_DAYS: 5 };
 export const RULES = {
   R1_break_with_trend: { inverse: true, trendOnly: true, vex: true },
-  R2_confluence: { stdConfluence: true, vixFilter: true, trendOnly: true, vex: true },
+  // R2_confluence (std-dev + VIX + trend + VEX) was DROPPED 2026-10-03: after the daily-history fix it lost in 2 of 3 periods
+  // (16 trades, −$836); its earlier positive result was an artifact of the calendar bug.
 };
 
 const ema = (vals, n) => { const k = 2 / (n + 1); let e = vals[0]; for (let i = 1; i < vals.length; i++) e = vals[i] * k + e * (1 - k); return e; };

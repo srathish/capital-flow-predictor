@@ -1,0 +1,39 @@
+
+=========== CRM weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=current ===========
+CRM itself: 185.30 → 156.71 (-15.4%)
+ALL trades                 n=21  win  33%  @$1k/trade mid -$4112  worst -$4413  avg -20%  SQN -2.19
+  chart-aligned only       n=14  win  43%  @$1k/trade mid -$931  worst -$1174  avg -7%  SQN -0.62
+  against chart            n= 7  win  14%  @$1k/trade mid -$3181  worst -$3239  avg -45%  SQN -4.07
+  reverse_rug              n= 2  win  50%  @$1k/trade mid -$193  worst -$193  avg -10%  SQN -0.32
+  floor                    n=12  win  33%  @$1k/trade mid -$3445  worst -$3699  avg -29%  SQN -2.30
+  rug                      n= 1  win   0%  @$1k/trade mid -$479  worst -$479  avg -48%  SQN 0.00
+  ceiling                  n= 6  win  33%  @$1k/trade mid +$5  worst -$42  avg 0%  SQN 0.01
+  longs                    n=14  win  36%  @$1k/trade mid -$3638  worst -$3892  avg -26%  SQN -2.31
+  shorts                   n= 7  win  29%  @$1k/trade mid -$474  worst -$521  avg -7%  SQN -0.47
+
+day outcomes: no setup in reach 7 · no option print at fill 2 · FILLED floor up 12 · in position 9 · no fill 6 · no board 9 · FILLED ceiling down 6 · no contract data 1 · FILLED reverse_rug up 2 · FILLED rug down 1
+
+-- every trade --
+  2026-04-08 09:39 CALL floor       @185 (king) stop 184 T1 187.5 T2 190 rr 5 [vs chart]  CRM260410C00185000 in $2.6 → stop(close)@04-08 $0.29  =  -89%
+  2026-04-09 09:35 CALL floor       @170 (gatekeeper) stop 169 T1 172.5 T2 175 rr 5 [vs chart]  CRM260417C00170000 in $5.83 → stop(close)@04-10 $1.99  =  -66%
+  2026-04-29 09:46 PUT  ceiling     @180 (barney) stop 181 T1 177.5 T2 175 rr 5   CRM260501P00180000 in $3.9 → stop(close)@04-29 $2.86  =  -27%
+  2026-04-30 09:35 PUT  ceiling     @175 (normal) stop 176 T1 172.5 T2 170 rr 5   CRM260508P00175000 in $5.2 → stop(close)@04-30 $4  =  -23%
+  2026-05-04 09:41 CALL floor       @185 (gatekeeper) stop 184 T1 187.5 T2 190 rr 5   CRM260508C00185000 in $4.4 → T1@05-04 $5.8 · T2@05-04 $7.17  =  47%
+  2026-05-05 09:37 CALL floor       @182.5 (gatekeeper) stop 181.5 T1 185 T2 187.5 rr 5   CRM260508C00185000 in $3 → T1@05-05 $4 · breakeven@05-06 $2.5  =  8%
+  2026-05-07 13:26 CALL floor       @185 (pika) stop 184 T1 190 T2 null rr 5 [vs chart]  CRM260515C00185000 in $5.8 → stop(close)@05-08 $2.73  =  -53%
+  2026-05-11 09:42 CALL floor       @180 (king) stop 179 T1 185 T2 null rr 5 [vs chart]  CRM260515C00180000 in $4.25 → stop(close)@05-11 $2.6  =  -39%
+  2026-05-14 09:41 CALL floor       @165 (gatekeeper) stop 164 T1 167.5 T2 170 rr 5 [vs chart]  CRM260522C00165000 in $5.1 → T1@05-14 $6.2 · T2@05-15 $0  =  -39%
+  2026-05-26 09:39 CALL reverse_rug @177.5 (gatekeeper) stop 176.5 T1 180 T2 182.5 rr 5   CRM260529C00177500 in $7.9 → T1@05-26 $8.95 · T2@05-27 $10.05  =  20%
+  2026-05-28 09:39 PUT  ceiling     @175 (king) stop 176 T1 170 T2 null rr 5   CRM260605P00175000 in $5.4 → stop(close)@05-28 $4.15  =  -23%
+  2026-06-02 09:36 CALL floor       @200 (gatekeeper) stop 199 T1 202.5 T2 205 rr 5   CRM260605C00200000 in $5.5 → stop(close)@06-03 $0.68  =  -88%
+  2026-06-04 11:40 CALL floor       @190 (pika) stop 189 T1 195 T2 null rr 5   CRM260612C00190000 in $5.75 → stop(close)@06-04 $4.57  =  -21%
+  2026-06-05 09:42 CALL floor       @190 (normal) stop 189 T1 192.5 T2 195 rr 5   CRM260612C00190000 in $5.3 → stop(close)@06-05 $3.3  =  -38%
+  2026-06-09 09:35 PUT  ceiling     @180 (pika) stop 181 T1 177.5 T2 175 rr 5   CRM260612P00180000 in $4.05 → T1@06-09 $5.15 · T2@06-09 $7.16  =  52%
+  2026-06-10 09:35 CALL floor       @170 (gatekeeper) stop 169 T1 172.5 T2 175 rr 5   CRM260612C00170000 in $3.71 → T1@06-10 $3.71 · T2@06-10 $5.5  =  24%
+  2026-06-11 10:49 CALL reverse_rug @165 (pika) stop 164 T1 167.5 T2 170 rr 5 [vs chart]  CRM260618C00165000 in $4.8 → T1@06-11 $5.8 · breakeven@06-12 $0  =  -40%
+  2026-06-15 09:39 PUT  rug         @170 (king) stop 171 T1 167.5 T2 165 rr 5   CRM260618P00170000 in $4 → T1@06-15 $4.17 · T2@06-15 $0  =  -48%
+  2026-06-16 09:35 PUT  ceiling     @165 (gatekeeper) stop 166 T1 162.5 T2 160 rr 5   CRM260618P00165000 in $3.5 → T1@06-16 $4.3 · T2@06-17 $5.69  =  43%
+  2026-06-18 09:40 CALL floor       @150 (king) stop 149 T1 152.5 T2 null rr 2.5 [vs chart]  CRM260626C00150000 in $3.99 → T1@06-18 $5.05 · breakeven@06-22 $3.5  =  7%
+  2026-06-23 09:35 PUT  ceiling     @152.5 (gatekeeper) stop 153.5 T1 150 T2 149 rr 3.5   CRM260626P00152500 in $3 → stop(close)@06-23 $2.36  =  -21%
+
+credits used 67

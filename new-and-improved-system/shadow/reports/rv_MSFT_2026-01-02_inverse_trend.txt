@@ -1,0 +1,26 @@
+
+=========== MSFT weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend ===========
+MSFT itself: 484.38 → 370.18 (-23.6%)
+ALL trades                 n= 8  win  75%  @$1k/trade mid +$2316  worst +$2044  avg 29%  SQN 1.73
+  chart-aligned only       n= 0
+  against chart            n= 8  win  75%  @$1k/trade mid +$2316  worst +$2044  avg 29%  SQN 1.73
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 8  win  75%  @$1k/trade mid +$2316  worst +$2044  avg 29%  SQN 1.73
+
+day outcomes: no fill 41 · FILLED inverse_floor down 5 · FILLED inverse_reverse_rug down 3 · no setup in reach 2 · in position 6 · no board 4
+
+-- every trade --
+  2026-01-09 10:48 PUT  inverse_floor @472.5 (pika) stop 475 T1 467.5 T2 465 rr 3 [vs chart]  MSFT260116P00472500 in $5.4 → stop(close)@01-09 $2.37  =  -56%
+  2026-01-14 10:35 PUT  inverse_reverse_rug @467.5 (pika) stop 470 T1 465 T2 460 rr 3 [vs chart]  MSFT260116P00467500 in $4.16 → T1@01-14 $5.5 · T2@01-14 $8.35  =  67%
+  2026-01-30 10:36 PUT  inverse_reverse_rug @435 (gatekeeper) stop 437.5 T1 430 T2 425 rr 4 [vs chart]  MSFT260206P00435000 in $7.1 → T1@01-30 $9 · T2@02-02 $11.65  =  45%
+  2026-02-10 10:36 PUT  inverse_floor @415 (gatekeeper) stop 417.5 T1 410 T2 405 rr 4 [vs chart]  MSFT260213P00415000 in $5.05 → T1@02-11 $7.15 · T2@02-11 $10.85  =  78%
+  2026-02-12 10:35 PUT  inverse_reverse_rug @402.5 (gatekeeper) stop 405 T1 400 T2 395 rr 3 [vs chart]  MSFT260220P00402500 in $5.98 → T1@02-12 $8.1 · breakeven@02-12 $6.75  =  24%
+  2026-02-13 10:35 PUT  inverse_floor @400 (gatekeeper) stop 402.5 T1 397.5 T2 390 rr 4 [vs chart]  MSFT260220P00400000 in $6.35 → T1@02-17 $7.5 · breakeven@02-18 $4.13  =  -8%
+  2026-02-20 10:35 PUT  inverse_floor @395 (gatekeeper) stop 397.5 T1 390 T2 385 rr 4 [vs chart]  MSFT260227P00395000 in $5.67 → T1@02-23 $8.35 · T2@02-23 $11.78  =  78%
+  2026-03-13 09:36 PUT  inverse_floor @400 (gatekeeper) stop 401 T1 397.5 T2 392.5 rr 7.5 [vs chart]  MSFT260320P00400000 in $5.8 → T1@03-13 $7.5 · breakeven@03-16 $4.6  =  4%
+
+credits used 0

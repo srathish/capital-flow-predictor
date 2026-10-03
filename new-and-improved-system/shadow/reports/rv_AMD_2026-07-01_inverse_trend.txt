@@ -1,0 +1,27 @@
+
+=========== AMD weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend ===========
+AMD itself: 557.70 → 633.71 (13.6%)
+ALL trades                 n= 9  win  78%  @$1k/trade mid +$501  worst -$331  avg 6%  SQN 0.32
+  chart-aligned only       n= 0
+  against chart            n= 9  win  78%  @$1k/trade mid +$501  worst -$331  avg 6%  SQN 0.32
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  75%  @$1k/trade mid +$738  worst +$318  avg 18%  SQN 0.71
+  shorts                   n= 5  win  80%  @$1k/trade mid -$237  worst -$649  avg -5%  SQN -0.19
+
+day outcomes: no fill 40 · no setup in reach 14 · FILLED inverse_ceiling up 3 · FILLED inverse_floor down 4 · FILLED inverse_reverse_rug down 1 · in position 3 · FILLED inverse_rug up 1
+
+-- every trade --
+  2026-07-13 09:35 CALL inverse_ceiling @537.5 (gatekeeper) stop 535 T1 540 T2 545 rr 3 [vs chart]  AMD260717C00537500 in $19.75 → T1@07-13 $21.11 · breakeven@07-13 $20.6  =  6%
+  2026-08-05 09:35 CALL inverse_ceiling @495 (king) stop 492.5 T1 500 T2 505 rr 4 [vs chart]  AMD260807C00495000 in $15.92 → T1@08-05 $19.08 · breakeven@08-05 $16  =  10%
+  2026-08-07 09:35 PUT  inverse_floor @490 (gatekeeper) stop 492.5 T1 482.5 T2 480 rr 4 [vs chart]  AMD260814P00490000 in $18.78 → T1@08-07 $22.8 · breakeven@08-07 $18.1  =  9%
+  2026-08-19 09:36 PUT  inverse_floor @477.5 (normal) stop 478.5 T1 472.5 T2 470 rr 7.5 [vs chart]  AMD260821P00477500 in $9.85 → T1@08-19 $12.56 · T2@08-19 $14.7  =  38%
+  2026-08-20 09:45 PUT  inverse_reverse_rug @470 (gatekeeper) stop 471 T1 465 T2 460 rr 10 [vs chart]  AMD260828P00470000 in $13.7 → T1@08-20 $0 · breakeven@08-20 $0  =  -100%
+  2026-08-26 09:35 PUT  inverse_floor @482.5 (gatekeeper) stop 485 T1 480 T2 475 rr 3 [vs chart]  AMD260828P00482500 in $10.05 → T1@08-26 $10.4 · T2@08-27 $14.29  =  23%
+  2026-09-01 09:37 PUT  inverse_floor @455 (gatekeeper) stop 457.5 T1 452.5 T2 450 rr 2 [vs chart]  AMD260904P00455000 in $8.6 → T1@09-01 $9.91 · breakeven@09-01 $8.35  =  6%
+  2026-09-18 09:35 CALL inverse_ceiling @550 (king) stop 547.5 T1 555 T2 560 rr 4 [vs chart]  AMD260925C00550000 in $15 → T1@09-18 $18.61 · T2@09-21 $38.77  =  91%
+  2026-09-22 10:00 CALL inverse_rug @620 (gatekeeper) stop 619 T1 627.5 T2 630 rr 10 [vs chart]  AMD260925C00620000 in $11.85 → stop(close)@09-23 $7.9  =  -33%
+
+credits used 0

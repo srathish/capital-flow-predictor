@@ -1,0 +1,18 @@
+
+=========== NVDA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=confluence_trend_vex ===========
+NVDA itself: 189.82 → 174.36 (-8.1%)
+ALL trades                 n= 0
+  chart-aligned only       n= 0
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 0
+
+day outcomes: no fill 45 · no setup in reach 9 · no board 7
+
+-- every trade --
+
+credits used 0

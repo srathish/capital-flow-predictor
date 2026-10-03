@@ -1,0 +1,19 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+GOOGL itself: 317.00 → 287.51 (-9.3%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$813  worst +$598  avg 81%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win 100%  @$1k/trade mid +$813  worst +$598  avg 81%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$813  worst +$598  avg 81%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 46 · FILLED inverse_rug up 1 · no setup in reach 10 · no board 4
+
+-- every trade --
+  2026-01-07 10:35 CALL inverse_rug @317.5 (pika) stop 315 T1 320 T2 322.5 rr 2 [vs chart]  GOOGL260109C00317500 in $2.99 → T1@01-07 $4.44 · T2@01-07 $6.4  =  81%
+
+credits used 35

@@ -1,0 +1,19 @@
+
+=========== NVDA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend ===========
+NVDA itself: 189.82 → 174.36 (-8.1%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$623  worst -$651  avg -62%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$623  worst -$651  avg -62%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$623  worst -$651  avg -62%  SQN 0.00
+
+day outcomes: no fill 44 · no setup in reach 9 · FILLED inverse_floor down 1 · no board 7
+
+-- every trade --
+  2026-02-06 10:35 PUT  inverse_floor @177.5 (gatekeeper) stop 178.5 T1 175 T2 172.5 rr 5 [vs chart]  NVDA260213P00177500 in $4.75 → stop(close)@02-06 $1.79  =  -62%
+
+credits used 15

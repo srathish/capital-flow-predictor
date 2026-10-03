@@ -1,0 +1,1100 @@
+{
+ "plans": [
+  {
+   "D": "2026-01-05",
+   "exp": "2026-01-09",
+   "spot": 253.01,
+   "king": 255,
+   "floor": 252.5,
+   "ceiling": 255,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@252.5 up rr3",
+    "ceiling@255 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-06",
+   "status": "in position"
+  },
+  {
+   "D": "2026-01-07",
+   "exp": "2026-01-09",
+   "spot": 266.89,
+   "king": 270,
+   "floor": 262.5,
+   "ceiling": 270,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@270 down rr3 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-01-08",
+   "exp": "2026-01-16",
+   "spot": 262.54,
+   "king": 260,
+   "floor": 260,
+   "ceiling": 265,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@260 up rr10",
+    "ceiling@265 down rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-01-09",
+   "exp": "2026-01-16",
+   "spot": 258.925,
+   "king": 260,
+   "floor": 257.5,
+   "ceiling": 260,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@257.5 up rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-12",
+   "status": "in position"
+  },
+  {
+   "D": "2026-01-13",
+   "exp": "2026-01-16",
+   "spot": 260.48,
+   "king": 260,
+   "floor": 260,
+   "ceiling": 265,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@260 up rr2"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-14",
+   "exp": "2026-01-16",
+   "spot": 240.84,
+   "king": 240,
+   "floor": 240,
+   "ceiling": 242.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@240 up rr5",
+    "ceiling@242.5 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-15",
+   "status": "in position"
+  },
+  {
+   "D": "2026-01-16",
+   "exp": "2026-01-23",
+   "spot": 228.82,
+   "king": 235,
+   "floor": 227.5,
+   "ceiling": 235,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@227.5 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED reverse_rug up"
+  },
+  {
+   "D": "2026-01-20",
+   "exp": "2026-01-23",
+   "spot": 227.3,
+   "king": 230,
+   "floor": 225,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@225 up rr5 (vs chart)",
+    "ceiling@230 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-21",
+   "exp": "2026-01-23",
+   "spot": 221.12,
+   "king": 220,
+   "floor": 220,
+   "ceiling": 225,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@220 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-22",
+   "exp": "2026-01-30",
+   "spot": 223.725,
+   "king": 220,
+   "floor": 220,
+   "ceiling": 230,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-01-23",
+   "exp": "2026-01-30",
+   "spot": 230.07,
+   "king": 230,
+   "floor": 230,
+   "ceiling": 235,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@230 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-28",
+   "exp": "2026-01-30",
+   "spot": 230.26,
+   "king": 230,
+   "floor": 230,
+   "ceiling": 232.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@230 up rr5 (vs chart)",
+    "ceiling@232.5 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-01-29",
+   "exp": "2026-02-06",
+   "spot": 215.075,
+   "king": 212.5,
+   "floor": 212.5,
+   "ceiling": 217.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@212.5 up rr7.5 (vs chart)",
+    "ceiling@217.5 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED reverse_rug up"
+  },
+  {
+   "D": "2026-01-30",
+   "status": "in position"
+  },
+  {
+   "D": "2026-02-02",
+   "status": "in position"
+  },
+  {
+   "D": "2026-02-03",
+   "exp": "2026-02-06",
+   "spot": 203.89,
+   "king": 205,
+   "floor": 200,
+   "ceiling": 205,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "ceiling@205 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-02-04",
+   "exp": "2026-02-06",
+   "spot": 191.305,
+   "king": 195,
+   "floor": 187.5,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-02-05",
+   "exp": "2026-02-13",
+   "spot": 199.04,
+   "king": 200,
+   "floor": 197.5,
+   "ceiling": 200,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@197.5 up rr5 (vs chart)",
+    "ceiling@200 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-02-06",
+   "exp": "2026-02-13",
+   "spot": 192.725,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 197.5,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@190 up rr7.5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-02-09",
+   "status": "in position"
+  },
+  {
+   "D": "2026-02-10",
+   "status": "in position"
+  },
+  {
+   "D": "2026-02-11",
+   "exp": "2026-02-13",
+   "spot": 190.35,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 195,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-02-12",
+   "exp": "2026-02-17",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-02-13, 2026-02-20, 2)"
+  },
+  {
+   "D": "2026-02-13",
+   "exp": "2026-02-17",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-02-13, 2026-02-20, 2)"
+  },
+  {
+   "D": "2026-02-17",
+   "exp": "2026-02-17",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-02-20, 2026-02-27, 2)"
+  },
+  {
+   "D": "2026-02-23",
+   "exp": "2026-02-27",
+   "spot": 180.19,
+   "king": 180,
+   "floor": 180,
+   "ceiling": 182.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "floor@180 up rr2.5 (vs chart)",
+    "ceiling@182.5 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-02-24",
+   "exp": "2026-02-27",
+   "spot": 180.08,
+   "king": 185,
+   "floor": 175,
+   "ceiling": 185,
+   "regime": "positive",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-02-25",
+   "exp": "2026-02-27",
+   "spot": 185.19,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@185 up rr2.5 (vs chart)",
+    "ceiling@187.5 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-02-26",
+   "status": "in position"
+  },
+  {
+   "D": "2026-02-27",
+   "exp": "2026-03-06",
+   "spot": 191.045,
+   "king": 192.5,
+   "floor": 190,
+   "ceiling": 192.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@190 up rr5 (vs chart)",
+    "ceiling@192.5 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-02",
+   "exp": "2026-03-06",
+   "spot": 194.97,
+   "king": 200,
+   "floor": 190,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-03-03",
+   "exp": "2026-03-06",
+   "spot": 193.22,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "ceiling@195 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-03-04",
+   "exp": "2026-03-06",
+   "spot": 195.12,
+   "king": 200,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@195 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-05",
+   "exp": "2026-03-13",
+   "spot": 196.23,
+   "king": 200,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@195 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-03-06",
+   "exp": "2026-03-13",
+   "spot": 201.755,
+   "king": 205,
+   "floor": 200,
+   "ceiling": 205,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@200 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-09",
+   "exp": "2026-03-13",
+   "spot": 200.43,
+   "king": 202.5,
+   "floor": 200,
+   "ceiling": 202.5,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "floor@200 up rr5",
+    "rug@202.5 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-10",
+   "exp": "2026-03-13",
+   "spot": 194.68,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-03-11",
+   "exp": "2026-03-13",
+   "spot": 198.79,
+   "king": 200,
+   "floor": 197.5,
+   "ceiling": 200,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@197.5 up rr5 (vs chart)",
+    "ceiling@200 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-12",
+   "exp": "2026-03-20",
+   "spot": 196.695,
+   "king": 192.5,
+   "floor": 192.5,
+   "ceiling": 202.5,
+   "regime": "negative",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-03-13",
+   "exp": "2026-03-20",
+   "spot": 199.44,
+   "king": 202.5,
+   "floor": 195,
+   "ceiling": 202.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-03-16",
+   "exp": "2026-03-20",
+   "spot": 196.71,
+   "king": 202.5,
+   "floor": 195,
+   "ceiling": 202.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "floor@195 up rr7.5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-17",
+   "status": "in position"
+  },
+  {
+   "D": "2026-03-18",
+   "exp": "2026-03-20",
+   "spot": 195.37,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 197.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "ceiling@197.5 down rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-03-19",
+   "exp": "2026-03-27",
+   "spot": 196.99,
+   "king": 200,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@195 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-20",
+   "status": "in position"
+  },
+  {
+   "D": "2026-03-23",
+   "status": "in position"
+  },
+  {
+   "D": "2026-03-24",
+   "exp": "2026-03-27",
+   "spot": 189.29,
+   "king": 192.5,
+   "floor": 187.5,
+   "ceiling": 192.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@187.5 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-03-25",
+   "exp": "2026-03-27",
+   "spot": 186.07,
+   "king": 187.5,
+   "floor": 182.5,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "ceiling@187.5 down rr5"
+   ],
+   "roll": null,
+   "status": "no contract data"
+  },
+  {
+   "D": "2026-03-26",
+   "exp": "2026-04-03",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-03-27, 2026-04-02, 2)"
+  },
+  {
+   "D": "2026-03-27",
+   "exp": "2026-04-03",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-03-27, 2026-04-02, 2)"
+  },
+  {
+   "D": "2026-03-30",
+   "exp": "2026-04-03",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-02, 2026-04-10, 2)"
+  },
+  {
+   "D": "2026-03-31",
+   "exp": "2026-04-03",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-02, 2026-04-10, 2)"
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-01-05",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 252.5,
+   "nodeType": "gatekeeper",
+   "stop": 250,
+   "t1": 255,
+   "t2": 260,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260109C00255000",
+   "entryOpt": 2.8,
+   "exits": "T1@01-05 $3.67 · T2@01-06 $0",
+   "exitDay": "2026-01-06",
+   "retMid": -0.345,
+   "retWorst": -0.375
+  },
+  {
+   "D": "2026-01-09",
+   "et": "10:49",
+   "setup": "floor",
+   "direction": "up",
+   "node": 257.5,
+   "nodeType": "barney",
+   "stop": 256.5,
+   "t1": 260,
+   "t2": 265,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260116C00260000",
+   "entryOpt": 4.01,
+   "exits": "T1@01-09 $4.05 · breakeven@01-12 $2.25",
+   "exitDay": "2026-01-12",
+   "retMid": -0.214,
+   "retWorst": -0.214
+  },
+  {
+   "D": "2026-01-13",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 260,
+   "nodeType": "king",
+   "stop": 257.5,
+   "t1": 262.5,
+   "t2": 265,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260116C00260000",
+   "entryOpt": 3.45,
+   "exits": "stop(close)@01-13 $0.19",
+   "exitDay": "2026-01-13",
+   "retMid": -0.945,
+   "retWorst": -0.945
+  },
+  {
+   "D": "2026-01-14",
+   "et": "10:45",
+   "setup": "floor",
+   "direction": "up",
+   "node": 240,
+   "nodeType": "gatekeeper",
+   "stop": 239,
+   "t1": 242.5,
+   "t2": 245,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260116C00240000",
+   "entryOpt": 3.62,
+   "exits": "stop(close)@01-15 $0.22",
+   "exitDay": "2026-01-15",
+   "retMid": -0.939,
+   "retWorst": -0.948
+  },
+  {
+   "D": "2026-01-16",
+   "et": "10:40",
+   "setup": "reverse_rug",
+   "direction": "up",
+   "node": 227.5,
+   "nodeType": "gatekeeper",
+   "stop": 226.5,
+   "t1": 230,
+   "t2": 232.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260123C00227500",
+   "entryOpt": 4.48,
+   "exits": "T1@01-16 $5.08 · breakeven@01-16 $3.52",
+   "exitDay": "2026-01-16",
+   "retMid": -0.04,
+   "retWorst": -0.06
+  },
+  {
+   "D": "2026-01-20",
+   "et": "11:08",
+   "setup": "floor",
+   "direction": "up",
+   "node": 225,
+   "nodeType": "pika",
+   "stop": 224,
+   "t1": 227.5,
+   "t2": 230,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260123C00225000",
+   "entryOpt": 4.95,
+   "exits": "T1@01-20 $4.46 · breakeven@01-20 $0",
+   "exitDay": "2026-01-20",
+   "retMid": -0.549,
+   "retWorst": -0.549
+  },
+  {
+   "D": "2026-01-21",
+   "et": "10:41",
+   "setup": "floor",
+   "direction": "up",
+   "node": 220,
+   "nodeType": "king",
+   "stop": 219,
+   "t1": 222.5,
+   "t2": 225,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260123C00220000",
+   "entryOpt": 4.4,
+   "exits": "T1@01-21 $4.01 · breakeven@01-21 $0",
+   "exitDay": "2026-01-21",
+   "retMid": -0.544,
+   "retWorst": -0.544
+  },
+  {
+   "D": "2026-01-23",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 230,
+   "nodeType": "king",
+   "stop": 229,
+   "t1": 235,
+   "t2": null,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260130C00230000",
+   "entryOpt": 4.85,
+   "exits": "stop(close)@01-23 $3.5",
+   "exitDay": "2026-01-23",
+   "retMid": -0.278,
+   "retWorst": -0.314
+  },
+  {
+   "D": "2026-01-28",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 230,
+   "nodeType": "king",
+   "stop": 229,
+   "t1": 232.5,
+   "t2": 235,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260130C00230000",
+   "entryOpt": 3.9,
+   "exits": "stop(close)@01-28 $2.61",
+   "exitDay": "2026-01-28",
+   "retMid": -0.331,
+   "retWorst": -0.379
+  },
+  {
+   "D": "2026-01-29",
+   "et": "10:40",
+   "setup": "reverse_rug",
+   "direction": "up",
+   "node": 212.5,
+   "nodeType": "king",
+   "stop": 211.5,
+   "t1": 217.5,
+   "t2": 220,
+   "rr": 7.5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260206C00212500",
+   "entryOpt": 6.63,
+   "exits": "stop(close)@02-02 $3.1",
+   "exitDay": "2026-02-02",
+   "retMid": -0.532,
+   "retWorst": -0.532
+  },
+  {
+   "D": "2026-02-03",
+   "et": "10:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 205,
+   "nodeType": "gatekeeper",
+   "stop": 206,
+   "t1": 202.5,
+   "t2": 200,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "CRM260206P00205000",
+   "entryOpt": 4.4,
+   "exits": "T1@02-03 $5 · T2@02-03 $7",
+   "exitDay": "2026-02-03",
+   "retMid": 0.364,
+   "retWorst": 0.318
+  },
+  {
+   "D": "2026-02-05",
+   "et": "10:36",
+   "setup": "floor",
+   "direction": "up",
+   "node": 197.5,
+   "nodeType": "gatekeeper",
+   "stop": 196.5,
+   "t1": 200,
+   "t2": 202.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260213C00200000",
+   "entryOpt": 3.5,
+   "exits": "stop(close)@02-05 $2.47",
+   "exitDay": "2026-02-05",
+   "retMid": -0.294,
+   "retWorst": -0.294
+  },
+  {
+   "D": "2026-02-06",
+   "et": "10:53",
+   "setup": "floor",
+   "direction": "up",
+   "node": 190,
+   "nodeType": "gatekeeper",
+   "stop": 189,
+   "t1": 195,
+   "t2": 197.5,
+   "rr": 7.5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260213C00190000",
+   "entryOpt": 5.85,
+   "exits": "T1@02-09 $7.13 · T2@02-10 $8.98",
+   "exitDay": "2026-02-10",
+   "retMid": 0.377,
+   "retWorst": 0.377
+  },
+  {
+   "D": "2026-02-23",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 180,
+   "nodeType": "gatekeeper",
+   "stop": 179,
+   "t1": 182.5,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260227C00180000",
+   "entryOpt": 8.65,
+   "exits": "stop(close)@02-23 $7.7",
+   "exitDay": "2026-02-23",
+   "retMid": -0.11,
+   "retWorst": -0.144
+  },
+  {
+   "D": "2026-02-25",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 185,
+   "nodeType": "gatekeeper",
+   "stop": 184,
+   "t1": 187.5,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260227C00185000",
+   "entryOpt": 9,
+   "exits": "T1@02-25 $9.75 · time@02-26 $14.5",
+   "exitDay": "2026-02-26",
+   "retMid": 0.347,
+   "retWorst": 0.339
+  },
+  {
+   "D": "2026-02-27",
+   "et": "10:43",
+   "setup": "floor",
+   "direction": "up",
+   "node": 190,
+   "nodeType": "normal",
+   "stop": 189,
+   "t1": 192.5,
+   "t2": 195,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260306C00190000",
+   "entryOpt": 5.6,
+   "exits": "T1@02-27 $5.85 · T2@02-27 $8",
+   "exitDay": "2026-02-27",
+   "retMid": 0.237,
+   "retWorst": 0.204
+  },
+  {
+   "D": "2026-03-03",
+   "et": "12:23",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 195,
+   "nodeType": "gatekeeper",
+   "stop": 196,
+   "t1": 192.5,
+   "t2": 190,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "CRM260306P00195000",
+   "entryOpt": 4.29,
+   "exits": "stop(close)@03-03 $3.2",
+   "exitDay": "2026-03-03",
+   "retMid": -0.254,
+   "retWorst": -0.254
+  },
+  {
+   "D": "2026-03-04",
+   "et": "10:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 195,
+   "nodeType": "gatekeeper",
+   "stop": 194,
+   "t1": 197.5,
+   "t2": 200,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260306C00195000",
+   "entryOpt": 3.6,
+   "exits": "stop(close)@03-04 $2.05",
+   "exitDay": "2026-03-04",
+   "retMid": -0.431,
+   "retWorst": -0.431
+  },
+  {
+   "D": "2026-03-06",
+   "et": "10:36",
+   "setup": "floor",
+   "direction": "up",
+   "node": 200,
+   "nodeType": "gatekeeper",
+   "stop": 199,
+   "t1": 202.5,
+   "t2": 205,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260313C00200000",
+   "entryOpt": 5.57,
+   "exits": "T1@03-06 $6.6 · breakeven@03-06 $5.78",
+   "exitDay": "2026-03-06",
+   "retMid": 0.111,
+   "retWorst": 0.063
+  },
+  {
+   "D": "2026-03-09",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 200,
+   "nodeType": "gatekeeper",
+   "stop": 199,
+   "t1": 202.5,
+   "t2": 205,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260313C00200000",
+   "entryOpt": 5.08,
+   "exits": "stop(close)@03-09 $3.75",
+   "exitDay": "2026-03-09",
+   "retMid": -0.262,
+   "retWorst": -0.262
+  },
+  {
+   "D": "2026-03-11",
+   "et": "09:39",
+   "setup": "floor",
+   "direction": "up",
+   "node": 197.5,
+   "nodeType": "gatekeeper",
+   "stop": 196.5,
+   "t1": 200,
+   "t2": 202.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260313C00197500",
+   "entryOpt": 3.83,
+   "exits": "stop(close)@03-11 $1.72",
+   "exitDay": "2026-03-11",
+   "retMid": -0.551,
+   "retWorst": -0.559
+  },
+  {
+   "D": "2026-03-16",
+   "et": "09:55",
+   "setup": "floor",
+   "direction": "up",
+   "node": 195,
+   "nodeType": "gatekeeper",
+   "stop": 194,
+   "t1": 200,
+   "t2": 202.5,
+   "rr": 7.5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260320C00195000",
+   "entryOpt": 4.42,
+   "exits": "T1@03-17 $6.45 · breakeven@03-17 $3.22",
+   "exitDay": "2026-03-17",
+   "retMid": 0.094,
+   "retWorst": 0.094
+  },
+  {
+   "D": "2026-03-19",
+   "et": "10:14",
+   "setup": "floor",
+   "direction": "up",
+   "node": 195,
+   "nodeType": "pika",
+   "stop": 194,
+   "t1": 197.5,
+   "t2": 200,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260327C00195000",
+   "entryOpt": 6.21,
+   "exits": "T1@03-23 $5.15 · breakeven@03-23 $4.12",
+   "exitDay": "2026-03-23",
+   "retMid": -0.254,
+   "retWorst": -0.258
+  },
+  {
+   "D": "2026-03-24",
+   "et": "09:37",
+   "setup": "floor",
+   "direction": "up",
+   "node": 187.5,
+   "nodeType": "normal",
+   "stop": 186.5,
+   "t1": 190,
+   "t2": 192.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260327C00187500",
+   "entryOpt": 4.4,
+   "exits": "stop(close)@03-24 $1.64",
+   "exitDay": "2026-03-24",
+   "retMid": -0.627,
+   "retWorst": -0.639
+  }
+ ]
+}

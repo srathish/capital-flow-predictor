@@ -1,0 +1,24 @@
+
+=========== AMZN weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend ===========
+AMZN itself: 231.35 → 208.33 (-10.0%)
+ALL trades                 n= 6  win  50%  @$1k/trade mid +$82  worst -$165  avg 1%  SQN 0.07
+  chart-aligned only       n= 0
+  against chart            n= 6  win  50%  @$1k/trade mid +$82  worst -$165  avg 1%  SQN 0.07
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  33%  @$1k/trade mid +$498  worst +$318  avg 17%  SQN 0.47
+  shorts                   n= 3  win  67%  @$1k/trade mid -$416  worst -$483  avg -14%  SQN -0.52
+
+day outcomes: no fill 34 · no setup in reach 12 · FILLED inverse_ceiling up 3 · in position 4 · no board 5 · FILLED inverse_floor down 3
+
+-- every trade --
+  2026-01-15 12:03 CALL inverse_ceiling @240 (king) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  AMZN260123C00240000 in $3.74 → stop(close)@01-15 $2.86  =  -24%
+  2026-01-26 10:39 CALL inverse_ceiling @240 (king) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  AMZN260130C00240000 in $3.25 → stop(close)@01-26 $2.8  =  -14%
+  2026-01-27 10:45 CALL inverse_ceiling @240 (king) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  AMZN260130C00240000 in $3.45 → T1@01-27 $4.91 · T2@01-28 $8  =  87%
+  2026-02-25 10:35 PUT  inverse_floor @210 (gatekeeper) stop 211 T1 207.5 T2 205 rr 5 [vs chart]  AMZN260227P00210000 in $2.45 → T1@02-26 $3.3 · time@02-26 $2.7  =  22%
+  2026-03-03 11:25 PUT  inverse_floor @202.5 (gatekeeper) stop 203.5 T1 200 T2 197.5 rr 5 [vs chart]  AMZN260306P00202500 in $3.33 → stop(close)@03-03 $1.15  =  -66%
+  2026-03-12 09:35 PUT  inverse_floor @210 (gatekeeper) stop 211 T1 207.5 T2 205 rr 5 [vs chart]  AMZN260320P00210000 in $4.26 → T1@03-13 $5.5 · breakeven@03-16 $3.15  =  2%
+
+credits used 20

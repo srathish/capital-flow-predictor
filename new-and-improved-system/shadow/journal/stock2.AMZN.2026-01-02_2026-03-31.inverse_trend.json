@@ -1,6 +1,21 @@
 {
  "plans": [
   {
+   "D": "2026-01-02",
+   "exp": "2026-01-09",
+   "spot": 233.35,
+   "king": 237.5,
+   "floor": 230,
+   "ceiling": 237.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@230 up rr7.5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
+  },
+  {
    "D": "2026-01-05",
    "exp": "2026-01-09",
    "spot": 228.145,
@@ -24,7 +39,7 @@
    "floor": 232.5,
    "ceiling": 240,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@232.5 up rr5"
    ],
@@ -125,13 +140,13 @@
    "floor": 235,
    "ceiling": 240,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "up",
    "cands": [
     "floor@235 up rr7.5",
-    "ceiling@240 down rr7.5"
+    "ceiling@240 down rr7.5 (vs chart)"
    ],
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":41})"
+   "status": "FILLED inverse_ceiling up"
   },
   {
    "D": "2026-01-16",
@@ -205,20 +220,40 @@
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5})"
   },
   {
-   "D": "2026-01-28",
+   "D": "2026-01-26",
    "exp": "2026-01-30",
-   "spot": 245.955,
-   "king": 245,
-   "floor": 245,
-   "ceiling": 247.5,
+   "spot": 239.19,
+   "king": 240,
+   "floor": 235,
+   "ceiling": 240,
    "regime": "negative",
    "chart": "up",
    "cands": [
-    "floor@245 up rr5",
-    "ceiling@247.5 down rr5 (vs chart)"
+    "reverse_rug@237.5 up rr5",
+    "ceiling@240 down rr5 (vs chart)"
    ],
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":13,\"trend\":17})"
+   "status": "FILLED inverse_ceiling up"
+  },
+  {
+   "D": "2026-01-27",
+   "exp": "2026-01-30",
+   "spot": 239.3,
+   "king": 240,
+   "floor": 235,
+   "ceiling": 240,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@237.5 up rr5",
+    "ceiling@240 down rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED inverse_ceiling up"
+  },
+  {
+   "D": "2026-01-28",
+   "status": "in position"
   },
   {
    "D": "2026-01-29",
@@ -353,18 +388,95 @@
   },
   {
    "D": "2026-02-12",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMZN. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 202.65,
+   "king": 205,
+   "floor": 200,
+   "ceiling": 205,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@200 up rr5 (vs chart)",
+    "ceiling@205 down rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":45})"
   },
   {
    "D": "2026-02-13",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMZN. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 198.19,
+   "king": 202.5,
+   "floor": 197.5,
+   "ceiling": 202.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@197.5 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":12})"
   },
   {
    "D": "2026-02-17",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMZN. Available: 2026-02-18, 2026-02-20, )"
+   "exp": "2026-02-20",
+   "spot": 200.01,
+   "king": 202.5,
+   "floor": 197.5,
+   "ceiling": 202.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@197.5 up rr7.5 (vs chart)",
+    "ceiling@202.5 down rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":9})"
+  },
+  {
+   "D": "2026-02-18",
+   "exp": "2026-02-20",
+   "spot": 203.595,
+   "king": 207.5,
+   "floor": 202.5,
+   "ceiling": 207.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "floor@202.5 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-19",
+   "exp": "2026-02-27",
+   "spot": 204.52,
+   "king": 205,
+   "floor": 200,
+   "ceiling": 205,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "ceiling@205 down rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":126})"
+  },
+  {
+   "D": "2026-02-20",
+   "exp": "2026-02-27",
+   "spot": 206.28,
+   "king": 205,
+   "floor": 205,
+   "ceiling": 210,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@205 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-02-23",
@@ -532,7 +644,7 @@
    "floor": 210,
    "ceiling": 217.5,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
     "ceiling@217.5 down rr7.5"
    ],
@@ -684,6 +796,66 @@
   }
  ],
  "trades": [
+  {
+   "D": "2026-01-15",
+   "et": "12:03",
+   "setup": "inverse_ceiling",
+   "direction": "up",
+   "node": 240,
+   "nodeType": "king",
+   "stop": 239,
+   "t1": 242.5,
+   "t2": 245,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "AMZN260123C00240000",
+   "entryOpt": 3.74,
+   "exits": "stop(close)@01-15 $2.86",
+   "exitDay": "2026-01-15",
+   "retMid": -0.235,
+   "retWorst": -0.253
+  },
+  {
+   "D": "2026-01-26",
+   "et": "10:39",
+   "setup": "inverse_ceiling",
+   "direction": "up",
+   "node": 240,
+   "nodeType": "king",
+   "stop": 239,
+   "t1": 242.5,
+   "t2": 245,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "AMZN260130C00240000",
+   "entryOpt": 3.25,
+   "exits": "stop(close)@01-26 $2.8",
+   "exitDay": "2026-01-26",
+   "retMid": -0.138,
+   "retWorst": -0.2
+  },
+  {
+   "D": "2026-01-27",
+   "et": "10:45",
+   "setup": "inverse_ceiling",
+   "direction": "up",
+   "node": 240,
+   "nodeType": "king",
+   "stop": 239,
+   "t1": 242.5,
+   "t2": 245,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "AMZN260130C00240000",
+   "entryOpt": 3.45,
+   "exits": "T1@01-27 $4.91 · T2@01-28 $8",
+   "exitDay": "2026-01-28",
+   "retMid": 0.871,
+   "retWorst": 0.771
+  },
   {
    "D": "2026-02-25",
    "et": "10:35",

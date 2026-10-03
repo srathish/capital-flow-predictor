@@ -1,0 +1,23 @@
+
+=========== TSLA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend ===========
+TSLA itself: 378.60 → 420.38 (11.0%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid +$673  worst +$174  avg 13%  SQN 0.81
+  chart-aligned only       n= 0
+  against chart            n= 5  win  60%  @$1k/trade mid +$673  worst +$174  avg 13%  SQN 0.81
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  75%  @$1k/trade mid +$761  worst +$314  avg 19%  SQN 0.95
+  shorts                   n= 1  win   0%  @$1k/trade mid -$88  worst -$140  avg -9%  SQN 0.00
+
+day outcomes: no fill 44 · no setup in reach 9 · FILLED inverse_floor down 1 · FILLED inverse_ceiling up 3 · FILLED inverse_rug up 1 · no board 4
+
+-- every trade --
+  2026-04-29 09:35 PUT  inverse_floor @375 (gatekeeper) stop 377.5 T1 372.5 T2 370 rr 2 [vs chart]  TSLA260501P00375000 in $7.14 → T1@04-29 $7 · breakeven@04-29 $6.03  =  -9%
+  2026-05-11 11:04 CALL inverse_ceiling @425 (king) stop 422.5 T1 427.5 T2 435 rr 4 [vs chart]  TSLA260515C00425000 in $9.1 → T1@05-11 $10.75 · T2@05-11 $16.56  =  50%
+  2026-05-12 09:41 CALL inverse_ceiling @445 (gatekeeper) stop 444 T1 447.5 T2 452.5 rr 7.5 [vs chart]  TSLA260515C00445000 in $10.02 → T1@05-12 $11.84 · breakeven@05-12 $8.75  =  3%
+  2026-06-03 09:35 CALL inverse_rug @420 (gatekeeper) stop 417.5 T1 422.5 T2 427.5 rr 3 [vs chart]  TSLA260605C00420000 in $6.8 → T1@06-03 $9.05 · T2@06-03 $11.82  =  54%
+  2026-06-04 09:35 CALL inverse_ceiling @425 (king) stop 422.5 T1 427.5 T2 430 rr 2 [vs chart]  TSLA260612C00425000 in $13.13 → stop(close)@06-04 $9.17  =  -30%
+
+credits used 10

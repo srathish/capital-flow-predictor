@@ -1,0 +1,51 @@
+
+=========== AVGO weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=current ===========
+AVGO itself: 352.83 → 309.45 (-12.3%)
+ALL trades                 n=33  win  39%  @$1k/trade mid -$6622  worst -$7515  avg -20%  SQN -3.36
+  chart-aligned only       n=23  win  39%  @$1k/trade mid -$4701  worst -$5128  avg -20%  SQN -2.68
+  against chart            n=10  win  40%  @$1k/trade mid -$1921  worst -$2387  avg -19%  SQN -1.99
+  reverse_rug              n= 1  win 100%  @$1k/trade mid +$176  worst +$33  avg 18%  SQN 0.00
+  floor                    n=14  win  36%  @$1k/trade mid -$2859  worst -$3299  avg -20%  SQN -2.87
+  rug                      n= 3  win  33%  @$1k/trade mid -$395  worst -$497  avg -13%  SQN -0.72
+  ceiling                  n=15  win  40%  @$1k/trade mid -$3544  worst -$3752  avg -24%  SQN -2.18
+  longs                    n=15  win  40%  @$1k/trade mid -$2683  worst -$3266  avg -18%  SQN -2.52
+  shorts                   n=18  win  39%  @$1k/trade mid -$3939  worst -$4249  avg -22%  SQN -2.33
+
+day outcomes: FILLED floor up 14 · FILLED reverse_rug up 1 · FILLED ceiling down 15 · FILLED rug down 3 · no setup in reach 8 · in position 13 · no fill 3 · no option print at fill 1 · no board 3
+
+-- every trade --
+  2026-01-02 10:35 CALL floor       @355 (king) stop 352.5 T1 362.5 T2 365 rr 4 [vs chart]  AVGO260109C00355000 in $8.51 → stop(close)@01-02 $4.1  =  -52%
+  2026-01-05 10:39 CALL reverse_rug @340 (gatekeeper) stop 339 T1 345 T2 350 rr 10 [vs chart]  AVGO260109C00340000 in $6.96 → T1@01-05 $9.77 · breakeven@01-05 $6.6  =  18%
+  2026-01-06 10:35 PUT  ceiling     @340 (king) stop 341 T1 335 T2 330 rr 10   AVGO260109P00340000 in $6 → stop(close)@01-06 $3.86  =  -36%
+  2026-01-07 10:35 PUT  rug         @340 (gatekeeper) stop 342.5 T1 337.5 T2 335 rr 2   AVGO260109P00340000 in $5.45 → stop(close)@01-07 $2.77  =  -49%
+  2026-01-12 10:35 CALL floor       @350 (barney) stop 347.5 T1 355 T2 360 rr 4 [vs chart]  AVGO260116C00350000 in $7.66 → T1@01-13 $9.67 · breakeven@01-14 $6.09  =  3%
+  2026-01-15 10:35 CALL floor       @345 (gatekeeper) stop 342.5 T1 347.5 T2 350 rr 2 [vs chart]  AVGO260123C00345000 in $8.82 → T1@01-15 $9.3 · breakeven@01-15 $8.25  =  -1%
+  2026-01-16 10:37 PUT  rug         @352.5 (gatekeeper) stop 355 T1 347.5 T2 340 rr 5   AVGO260123P00352500 in $7.9 → T1@01-16 $10.45 · breakeven@01-16 $7  =  10%
+  2026-01-20 10:38 CALL floor       @340 (king) stop 337.5 T1 345 T2 350 rr 4   AVGO260123C00340000 in $7.65 → stop(close)@01-20 $3.5  =  -54%
+  2026-01-23 11:47 PUT  ceiling     @320 (gatekeeper) stop 321 T1 315 T2 310 rr 10   AVGO260130P00320000 in $8.5 → stop(close)@01-26 $5  =  -41%
+  2026-01-27 11:45 PUT  rug         @332.5 (pika) stop 335 T1 327.5 T2 320 rr 5   AVGO260130P00332500 in $7.13 → T1@01-28 $8.34 · breakeven@01-28 $5.82  =  -1%
+  2026-01-30 10:40 PUT  ceiling     @337.5 (pika) stop 340 T1 335 T2 327.5 rr 4   AVGO260206P00340000 in $11.96 → T1@01-30 $11.65 · T2@02-02 $14.8  =  11%
+  2026-02-04 11:37 CALL floor       @310 (gatekeeper) stop 309 T1 317.5 T2 320 rr 10 [vs chart]  AVGO260206C00310000 in $8 → stop(close)@02-04 $6.38  =  -20%
+  2026-02-06 10:35 CALL floor       @320 (pika) stop 317.5 T1 322.5 T2 325 rr 2 [vs chart]  AVGO260213C00320000 in $11.7 → T1@02-06 $12.25 · T2@02-06 $13.7  =  11%
+  2026-02-09 10:35 PUT  ceiling     @335 (pika) stop 337.5 T1 332.5 T2 327.5 rr 3   AVGO260213P00335000 in $9.2 → stop(close)@02-09 $4.42  =  -52%
+  2026-02-10 10:36 CALL floor       @345 (gatekeeper) stop 342.5 T1 347.5 T2 350 rr 2   AVGO260213C00345000 in $7.75 → T1@02-10 $8.8 · breakeven@02-10 $7.13  =  3%
+  2026-02-12 10:35 CALL floor       @342.5 (pika) stop 340 T1 345 T2 347.5 rr 2   AVGO260220C00342500 in $10.45 → T1@02-12 $10.93 · breakeven@02-12 $10.03  =  0%
+  2026-02-13 10:35 PUT  ceiling     @330 (gatekeeper) stop 332.5 T1 325 T2 322.5 rr 3   AVGO260220P00330000 in $9.96 → T1@02-13 $11.25 · T2@02-17 $14.62  =  30%
+  2026-02-18 10:35 PUT  ceiling     @330 (gatekeeper) stop 332.5 T1 327.5 T2 322.5 rr 3   AVGO260220P00330000 in $7 → stop(close)@02-18 $3.85  =  -45%
+  2026-02-20 10:35 PUT  ceiling     @335 (barney) stop 336 T1 332.5 T2 330 rr 5   AVGO260227P00335000 in $11.23 → T1@02-20 $9.93 · breakeven@02-20 $9.93  =  -12%
+  2026-02-24 10:35 PUT  ceiling     @317.5 (normal) stop 318.5 T1 315 T2 310 rr 7.5   AVGO260227P00317500 in $9.39 → stop(close)@02-24 $0  =  -100%
+  2026-02-25 10:51 PUT  ceiling     @335 (gatekeeper) stop 336 T1 332.5 T2 330 rr 5   AVGO260227P00335000 in $8.2 → T1@02-25 $8.5 · T2@02-25 $9.5  =  10%
+  2026-02-26 10:37 CALL floor       @320 (barney) stop 317.5 T1 322.5 T2 325 rr 2   AVGO260306C00320000 in $17.37 → T1@02-26 $16.8 · breakeven@02-27 $11.3  =  -19%
+  2026-03-02 10:35 CALL floor       @310 (king) stop 309 T1 317.5 T2 null rr 7.5 [vs chart]  AVGO260306C00310000 in $15.35 → T1@03-02 $17.5 · breakeven@03-03 $13.5  =  1%
+  2026-03-04 10:57 PUT  ceiling     @317.5 (pika) stop 320 T1 315 T2 310 rr 3   AVGO260306P00317500 in $13.72 → stop(close)@03-05 $0.69  =  -95%
+  2026-03-06 10:42 PUT  ceiling     @335 (pika) stop 337.5 T1 330 T2 325 rr 4   AVGO260313P00335000 in $13.02 → T1@03-06 $13.4 · T2@03-09 $14.7  =  8%
+  2026-03-10 09:35 PUT  ceiling     @350 (gatekeeper) stop 351 T1 347.5 T2 342.5 rr 7.5   AVGO260313P00350000 in $8.3 → T1@03-10 $8.36 · T2@03-10 $11  =  17%
+  2026-03-11 11:45 CALL floor       @340 (barney) stop 337.5 T1 342.5 T2 350 rr 4   AVGO260313C00340000 in $6.3 → T1@03-11 $6.85 · breakeven@03-11 $5  =  -6%
+  2026-03-12 13:05 PUT  ceiling     @340 (gatekeeper) stop 341 T1 332.5 T2 330 rr 10   AVGO260320P00340000 in $10.2 → T1@03-13 $12.5 · T2@03-13 $14.8  =  34%
+  2026-03-17 10:02 CALL floor       @322.5 (gatekeeper) stop 320 T1 335 T2 null rr 5 [vs chart]  AVGO260320C00322500 in $6.4 → stop(close)@03-18 $2.1  =  -67%
+  2026-03-19 09:37 PUT  ceiling     @310 (pika) stop 312.5 T1 305 T2 300 rr 4   AVGO260327P00310000 in $10.01 → stop(close)@03-19 $4.7  =  -53%
+  2026-03-20 09:35 CALL floor       @320 (gatekeeper) stop 317.5 T1 322.5 T2 330 rr 4 [vs chart]  AVGO260327C00320000 in $8.5 → stop(close)@03-20 $3.7  =  -56%
+  2026-03-24 09:35 CALL floor       @320 (gatekeeper) stop 319 T1 322.5 T2 325 rr 5 [vs chart]  AVGO260327C00320000 in $6.55 → stop(close)@03-24 $4.7  =  -28%
+  2026-03-25 09:41 PUT  ceiling     @322.5 (gatekeeper) stop 325 T1 315 T2 310 rr 5   AVGO260327P00322500 in $6.84 → T1@03-26 $9.65 · T2@03-26 $0  =  -30%
+
+credits used 43

@@ -1,0 +1,18 @@
+
+=========== AVGO weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=confluence_trend ===========
+AVGO itself: 313.50 → 377.14 (20.3%)
+ALL trades                 n= 0
+  chart-aligned only       n= 0
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 0
+
+day outcomes: no setup in reach 12 · no fill 46 · no board 4
+
+-- every trade --
+
+credits used 0

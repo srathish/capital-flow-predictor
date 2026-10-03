@@ -1,0 +1,23 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend ===========
+META itself: 607.09 → 727.80 (19.9%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid -$331  worst -$594  avg -7%  SQN -0.46
+  chart-aligned only       n= 0
+  against chart            n= 5  win  60%  @$1k/trade mid -$331  worst -$594  avg -7%  SQN -0.46
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  50%  @$1k/trade mid -$433  worst -$655  avg -11%  SQN -0.61
+  shorts                   n= 1  win 100%  @$1k/trade mid +$102  worst +$61  avg 10%  SQN 0.00
+
+day outcomes: no fill 48 · no setup in reach 10 · FILLED inverse_ceiling up 3 · in position 3 · FILLED inverse_rug up 1 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-07-16 09:38 CALL inverse_ceiling @675 (barney) stop 670 T1 680 T2 690 rr 3 [vs chart]  META260724C00675000 in $18.72 → T1@07-16 $21.85 · breakeven@07-16 $18.2  =  7%
+  2026-07-17 12:49 CALL inverse_ceiling @650 (normal) stop 645 T1 657.5 T2 660 rr 2 [vs chart]  META260724C00650000 in $17.16 → stop(close)@07-21 $9.1  =  -47%
+  2026-07-23 09:40 CALL inverse_rug @610 (normal) stop 605 T1 615 T2 620 rr 2 [vs chart]  META260731C00610000 in $27.95 → stop(close)@07-24 $18.8  =  -33%
+  2026-08-24 09:38 PUT  inverse_floor @550 (gatekeeper) stop 551 T1 547.5 T2 537.5 rr 12.5 [vs chart]  META260828P00550000 in $8.8 → T1@08-24 $10.35 · breakeven@08-24 $9.05  =  10%
+  2026-09-21 09:35 CALL inverse_ceiling @700 (gatekeeper) stop 699 T1 702.5 T2 705 rr 5 [vs chart]  META260925C00700000 in $14 → T1@09-21 $17 · T2@09-21 $19.24  =  29%
+
+credits used 0

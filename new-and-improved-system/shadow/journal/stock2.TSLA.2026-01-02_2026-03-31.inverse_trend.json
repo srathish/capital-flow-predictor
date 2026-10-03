@@ -1,6 +1,22 @@
 {
  "plans": [
   {
+   "D": "2026-01-02",
+   "exp": "2026-01-09",
+   "spot": 453.98,
+   "king": 450,
+   "floor": 450,
+   "ceiling": 460,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@450 up rr7.5",
+    "rug@460 down rr10"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":8})"
+  },
+  {
    "D": "2026-01-05",
    "exp": "2026-01-09",
    "spot": 450.72,
@@ -34,9 +50,9 @@
    "floor": 430,
    "ceiling": 445,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "reverse_rug@430 up rr5 (vs chart)"
+    "reverse_rug@430 up rr5"
    ],
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
@@ -49,7 +65,7 @@
    "floor": 420,
    "ceiling": 440,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -60,9 +76,9 @@
    "floor": 432.5,
    "ceiling": 440,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@432.5 up rr5 (vs chart)"
+    "floor@432.5 up rr5"
    ],
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
@@ -75,9 +91,9 @@
    "floor": 440,
    "ceiling": 445,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@440 up rr4 (vs chart)",
+    "floor@440 up rr4",
     "ceiling@445 down rr5"
    ],
    "roll": null,
@@ -122,7 +138,7 @@
    "floor": 430,
    "ceiling": 450,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -133,9 +149,9 @@
    "floor": 440,
    "ceiling": 450,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@440 up rr4 (vs chart)",
+    "floor@440 up rr4",
     "ceiling@450 down rr5"
    ],
    "roll": null,
@@ -149,9 +165,9 @@
    "floor": 425,
    "ceiling": 430,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@425 up rr10 (vs chart)",
+    "floor@425 up rr10",
     "ceiling@430 down rr2"
    ],
    "roll": null,
@@ -204,6 +220,38 @@
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":71})"
   },
   {
+   "D": "2026-01-26",
+   "exp": "2026-01-30",
+   "spot": 439.6,
+   "king": 447.5,
+   "floor": 435,
+   "ceiling": 447.5,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "floor@435 up rr12.5",
+    "rug@440 down rr2"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":26,\"trend\":86})"
+  },
+  {
+   "D": "2026-01-27",
+   "exp": "2026-01-30",
+   "spot": 433.66,
+   "king": 430,
+   "floor": 430,
+   "ceiling": 435,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@430 up rr3 (vs chart)",
+    "ceiling@435 down rr3"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":151})"
+  },
+  {
    "D": "2026-01-28",
    "exp": "2026-01-30",
    "spot": 433.435,
@@ -211,9 +259,9 @@
    "floor": 430,
    "ceiling": 440,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@430 up rr4"
+    "floor@430 up rr4 (vs chart)"
    ],
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
@@ -366,18 +414,92 @@
   },
   {
    "D": "2026-02-12",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 433.585,
+   "king": 440,
+   "floor": 430,
+   "ceiling": 440,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@430 up rr10",
+    "ceiling@440 down rr10"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":31})"
   },
   {
    "D": "2026-02-13",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-02-13, 2026-02-18, )"
+   "exp": "2026-02-20",
+   "spot": 414.51,
+   "king": 405,
+   "floor": 405,
+   "ceiling": 420,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@410 up rr10 (vs chart)",
+    "ceiling@420 down rr4"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":110})"
   },
   {
    "D": "2026-02-17",
-   "exp": "2026-02-17",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for TSLA. Available: 2026-02-18, 2026-02-20, )"
+   "exp": "2026-02-20",
+   "spot": 409.075,
+   "king": 400,
+   "floor": 400,
+   "ceiling": 420,
+   "regime": "positive",
+   "chart": "down",
+   "cands": []
+  },
+  {
+   "D": "2026-02-18",
+   "exp": "2026-02-20",
+   "spot": 410.95,
+   "king": 405,
+   "floor": 405,
+   "ceiling": 415,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@405 up rr4 (vs chart)",
+    "ceiling@415 down rr4"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":140})"
+  },
+  {
+   "D": "2026-02-19",
+   "exp": "2026-02-27",
+   "spot": 405.78,
+   "king": 415,
+   "floor": 400,
+   "ceiling": 415,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "floor@400 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-20",
+   "exp": "2026-02-27",
+   "spot": 407.99,
+   "king": 415,
+   "floor": 400,
+   "ceiling": 415,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "reverse_rug@405 up rr3 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-02-23",
@@ -432,9 +554,9 @@
    "floor": 410,
    "ceiling": 420,
    "regime": "negative",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@410 up rr10 (vs chart)"
+    "floor@410 up rr10"
    ],
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":45})"
@@ -575,9 +697,9 @@
    "floor": 400,
    "ceiling": 410,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@400 up rr5 (vs chart)",
+    "floor@400 up rr5",
     "ceiling@410 down rr4"
    ],
    "roll": null,
