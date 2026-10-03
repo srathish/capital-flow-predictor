@@ -1,0 +1,18 @@
+{"at":"2026-10-03T04:51:25.125Z","ev":"plan","sym":"AAPL","exp":"2026-07-24","spot":327.15,"chart":"up","vex":"down","vixPivot":16.03,"cands":["ceiling@330 down rr4"]}
+{"at":"2026-10-03T04:51:25.894Z","ev":"plan","sym":"NVDA","exp":"2026-07-24","spot":209.38,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:26.724Z","ev":"plan","sym":"AMZN","exp":"2026-07-24","spot":253.57999999999998,"chart":"mixed","vex":"up","vixPivot":16.03,"cands":["floor@250 up rr10"]}
+{"at":"2026-10-03T04:51:27.778Z","ev":"plan","sym":"META","exp":"2026-07-24","spot":672.3399999999999,"chart":"up","vex":"up","vixPivot":16.03,"cands":["floor@670 up rr4","ceiling@675 down rr3"]}
+{"at":"2026-10-03T04:51:28.645Z","ev":"plan","sym":"GOOGL","exp":"2026-07-24","spot":370.735,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:34.456Z","ev":"plan","sym":"AMD","exp":"2026-07-24","spot":515.94,"chart":"mixed","vex":"up","vixPivot":16.03,"cands":["floor@515 up rr3"]}
+{"at":"2026-10-03T04:51:35.406Z","ev":"plan","sym":"TSLA","exp":"2026-07-24","spot":388.82,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:35.974Z","ev":"plan","sym":"AVGO","exp":"2026-07-24","spot":381.82,"chart":"mixed","vex":"up","vixPivot":16.03,"cands":["floor@380 up rr10"]}
+{"at":"2026-10-03T04:51:37.255Z","ev":"plan","sym":"ORCL","exp":"2026-07-24","spot":129.08499999999998,"chart":"down","vex":"flat","vixPivot":16.03,"cands":["rug@131 down rr4"]}
+{"at":"2026-10-03T04:51:43.491Z","ev":"plan","sym":"MSFT","exp":"2026-07-24","spot":396.065,"chart":"mixed","vex":"up","vixPivot":16.03,"cands":["floor@395 up rr3","ceiling@400 down rr3"]}
+{"at":"2026-10-03T04:51:43.627Z","ev":"ENTRY","sym":"META","rule":"R1_break_with_trend","setup":"inverse_ceiling","direction":"up","contract":"META260724C00675000","price":18.72,"et":"09:38","node":675,"stop":670,"t1":680,"t2":690,"rr":3,"chart":"up","vex":"up"}
+{"at":"2026-10-03T04:51:43.630Z","ev":"EXIT","sym":"META","rule":"R1_break_with_trend","why":"T1","frac":0.5,"contract":"META260724C00675000","px":21.85,"et":"10:36"}
+{"at":"2026-10-03T04:51:43.640Z","ev":"EXIT","sym":"META","rule":"R1_break_with_trend","why":"breakeven","frac":0.5,"contract":"META260724C00675000","px":18.2,"et":"12:00"}
+{"at":"2026-10-03T04:51:43.640Z","ev":"CLOSED","sym":"META","rule":"R1_break_with_trend","ret":0.07,"legs":"T1@07-16 10:36 $21.85 · breakeven@07-16 12:00 $18.2"}
+{"at":"2026-10-03T04:51:43.640Z","ev":"ENTRY","sym":"META","rule":"R1_break_with_trend","setup":"inverse_ceiling","direction":"up","contract":"META260724C00675000","price":18.2,"et":"12:00","node":675,"stop":670,"t1":680,"t2":690,"rr":3,"chart":"up","vex":"up"}
+{"at":"2026-10-03T04:51:43.661Z","ev":"EXIT","sym":"META","rule":"R1_break_with_trend","why":"stop(close)","frac":1,"contract":"META260724C00675000","px":13.92,"et":"15:59"}
+{"at":"2026-10-03T04:51:43.661Z","ev":"CLOSED","sym":"META","rule":"R1_break_with_trend","ret":-0.235,"legs":"stop(close)@07-16 15:59 $13.92"}
+{"at":"2026-10-03T04:51:43.661Z","ev":"eod","open":[],"gates":{"META:R1_break_with_trend:rr":2,"META:R2_confluence:std":178,"AMD:R1_break_with_trend:rr":16,"AMD:R2_confluence:std":16,"AVGO:R1_break_with_trend:rr":83,"AVGO:R2_confluence:std":77,"MSFT:R1_break_with_trend:rr":73,"MSFT:R2_confluence:std":73,"AAPL:R1_break_with_trend:rr":93,"AAPL:R2_confluence:std":93,"AVGO:R2_confluence:trend":6,"META:R2_confluence:trend":1}}

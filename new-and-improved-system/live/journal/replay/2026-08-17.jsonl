@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:53:58.436Z","ev":"plan","sym":"AAPL","exp":"2026-08-21","spot":305.765,"chart":"mixed","vex":"up","vixPivot":14.72,"cands":["floor@305 up rr2","ceiling@310 down rr4"]}
+{"at":"2026-10-03T04:53:59.713Z","ev":"plan","sym":"NVDA","exp":"2026-08-21","spot":225.73000000000002,"chart":"up","vex":"down","vixPivot":14.72,"cands":["ceiling@227.5 down rr7.5"]}
+{"at":"2026-10-03T04:54:00.597Z","ev":"plan","sym":"AMZN","exp":"2026-08-21","spot":261.82500000000005,"chart":"up","vex":"down","vixPivot":14.72,"cands":["floor@260 up rr3"]}
+{"at":"2026-10-03T04:54:01.984Z","ev":"plan","sym":"META","exp":"2026-08-21","spot":579.62,"chart":"down","vex":"flat","vixPivot":14.72,"cands":["ceiling@580 down rr2"]}
+{"at":"2026-10-03T04:54:02.569Z","ev":"plan","sym":"GOOGL","exp":"2026-08-21","spot":344.795,"status":"no setup in reach"}
+{"at":"2026-10-03T04:54:03.105Z","ev":"plan","sym":"AMD","exp":"2026-08-21","spot":511.08000000000004,"status":"no setup in reach"}
+{"at":"2026-10-03T04:54:04.018Z","ev":"plan","sym":"TSLA","exp":"2026-08-21","spot":337.875,"chart":"mixed","vex":"down","vixPivot":14.72,"cands":["floor@335 up rr7.5"]}
+{"at":"2026-10-03T04:54:05.075Z","ev":"plan","sym":"AVGO","exp":"2026-08-21","spot":395.195,"chart":"mixed","vex":"down","vixPivot":14.72,"cands":["floor@390 up rr4","ceiling@400 down rr10"]}
+{"at":"2026-10-03T04:54:06.386Z","ev":"plan","sym":"ORCL","exp":"2026-08-21","spot":149.15,"chart":"mixed","vex":"up","vixPivot":14.72,"cands":["ceiling@150 down rr5"]}
+{"at":"2026-10-03T04:54:06.972Z","ev":"plan","sym":"MSFT","exp":"2026-08-21","spot":491.29499999999996,"status":"no setup in reach"}
+{"at":"2026-10-03T04:54:25.997Z","ev":"eod","open":[],"gates":{"AAPL:R1_break_with_trend:trend":122,"AAPL:R2_confluence:std":122,"META:R1_break_with_trend:trend":42,"META:R2_confluence:std":42,"NVDA:R1_break_with_trend:rr":66,"NVDA:R2_confluence:std":65,"AMZN:R1_break_with_trend:rr":92,"AMZN:R2_confluence:std":83,"AMZN:R2_confluence:vex":9,"NVDA:R2_confluence:trend":1}}

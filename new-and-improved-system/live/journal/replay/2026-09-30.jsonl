@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:58:05.327Z","ev":"plan","sym":"AAPL","exp":"2026-10-02","spot":331.865,"chart":"mixed","vex":"up","vixPivot":15.63,"cands":["floor@330 up rr2"]}
+{"at":"2026-10-03T04:58:05.327Z","ev":"plan","sym":"NVDA","exp":"2026-10-02","spot":231.04500000000002,"chart":"up","vex":"up","vixPivot":15.63,"cands":["floor@230 up rr5","ceiling@232.5 down rr5"]}
+{"at":"2026-10-03T04:58:05.328Z","ev":"plan","sym":"AMZN","exp":"2026-10-02","spot":246.78500000000003,"chart":"down","vex":"up","vixPivot":15.63,"cands":["ceiling@250 down rr7.5"]}
+{"at":"2026-10-03T04:58:05.328Z","ev":"plan","sym":"META","exp":"2026-10-02","spot":723.735,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.328Z","ev":"plan","sym":"GOOGL","exp":"2026-10-02","spot":347.20000000000005,"chart":"down","vex":"up","vixPivot":15.63,"cands":["floor@345 up rr4"]}
+{"at":"2026-10-03T04:58:05.328Z","ev":"plan","sym":"AMD","exp":"2026-10-02","spot":613.405,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.329Z","ev":"plan","sym":"TSLA","exp":"2026-10-02","spot":347.11,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.329Z","ev":"plan","sym":"AVGO","exp":"2026-10-02","spot":356.39,"chart":"down","vex":"down","vixPivot":15.63,"cands":["rug@360 down rr10"]}
+{"at":"2026-10-03T04:58:05.330Z","ev":"plan","sym":"ORCL","exp":"2026-10-02","spot":137.075,"chart":"mixed","vex":"up","vixPivot":15.63,"cands":["floor@136 up rr4"]}
+{"at":"2026-10-03T04:58:05.330Z","ev":"plan","sym":"MSFT","exp":"2026-10-02","spot":514.1700000000001,"chart":"up","vex":"down","vixPivot":15.63,"cands":["floor@510 up rr3","ceiling@515 down rr2"]}
+{"at":"2026-10-03T04:58:05.347Z","ev":"eod","open":[],"gates":{"NVDA:R1_break_with_trend:rr":110,"NVDA:R2_confluence:std":97,"GOOGL:R1_break_with_trend:vex":2,"GOOGL:R2_confluence:std":2,"MSFT:R1_break_with_trend:rr":18,"MSFT:R2_confluence:std":18,"ORCL:R1_break_with_trend:rr":13,"ORCL:R2_confluence:std":13,"AMZN:R1_break_with_trend:rr":92,"AMZN:R2_confluence:std":92,"NVDA:R2_confluence:trend":2,"NVDA:R2_confluence:vix":11}}

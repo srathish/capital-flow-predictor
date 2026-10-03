@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:51:19.273Z","ev":"plan","sym":"AAPL","exp":"2026-07-17","spot":313.235,"chart":"up","vex":"down","vixPivot":16.87,"cands":["floor@310 up rr4"]}
+{"at":"2026-10-03T04:51:19.274Z","ev":"plan","sym":"NVDA","exp":"2026-07-17","spot":204.9,"chart":"mixed","vex":"flat","vixPivot":16.87,"cands":["rug@207.5 down rr7.5"]}
+{"at":"2026-10-03T04:51:19.275Z","ev":"plan","sym":"AMZN","exp":"2026-07-17","spot":246.91000000000003,"chart":"mixed","vex":"down","vixPivot":16.87,"cands":["ceiling@250 down rr10"]}
+{"at":"2026-10-03T04:51:19.275Z","ev":"plan","sym":"META","exp":"2026-07-17","spot":652.8900000000001,"chart":"mixed","vex":"up","vixPivot":16.87,"cands":["floor@650 up rr15","ceiling@660 down rr4"]}
+{"at":"2026-10-03T04:51:19.276Z","ev":"plan","sym":"GOOGL","exp":"2026-07-17","spot":353.33500000000004,"chart":"down","vex":"down","vixPivot":16.87,"cands":["floor@350 up rr4","ceiling@355 down rr5"]}
+{"at":"2026-10-03T04:51:19.277Z","ev":"plan","sym":"AMD","exp":"2026-07-17","spot":562.4749999999999,"chart":"up","vex":"flat","vixPivot":16.87,"cands":["floor@560 up rr2","rug@565 down rr4"]}
+{"at":"2026-10-03T04:51:19.277Z","ev":"plan","sym":"TSLA","exp":"2026-07-17","spot":397.23,"chart":"mixed","vex":"flat","vixPivot":16.87,"cands":["floor@395 up rr3","ceiling@400 down rr3"]}
+{"at":"2026-10-03T04:51:19.277Z","ev":"plan","sym":"AVGO","exp":"2026-07-17","spot":388.6,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:19.278Z","ev":"plan","sym":"ORCL","exp":"2026-07-17","spot":130.685,"chart":"down","vex":"up","vixPivot":16.87,"cands":["floor@130 up rr3"]}
+{"at":"2026-10-03T04:51:19.278Z","ev":"plan","sym":"MSFT","exp":"2026-07-17","spot":380.89,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:19.304Z","ev":"eod","open":[],"gates":{"AMD:R1_break_with_trend:rr":47,"AMD:R2_confluence:std":47,"ORCL:R1_break_with_trend:rr":83,"ORCL:R2_confluence:std":83,"META:R1_break_with_trend:rr":125,"META:R2_confluence:std":125,"TSLA:R1_break_with_trend:rr":76,"TSLA:R2_confluence:std":61,"GOOGL:R1_break_with_trend:rr":35,"GOOGL:R2_confluence:std":35,"NVDA:R1_break_with_trend:rr":21,"NVDA:R2_confluence:std":21,"TSLA:R2_confluence:trend":15}}

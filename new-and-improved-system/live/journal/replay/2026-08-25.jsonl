@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:55:56.921Z","ev":"plan","sym":"AAPL","exp":"2026-08-28","spot":311.37,"chart":"down","vex":"up","vixPivot":15.62,"cands":["floor@310 up rr5","ceiling@312.5 down rr3"]}
+{"at":"2026-10-03T04:55:56.921Z","ev":"plan","sym":"NVDA","exp":"2026-08-28","status":"earnings blackout (2026-08-26)"}
+{"at":"2026-10-03T04:55:56.922Z","ev":"plan","sym":"AMZN","exp":"2026-08-28","spot":262.35,"chart":"up","vex":"up","vixPivot":15.62,"cands":["ceiling@262.5 down rr3"]}
+{"at":"2026-10-03T04:55:56.922Z","ev":"plan","sym":"META","exp":"2026-08-28","spot":564.7650000000001,"chart":"down","vex":"up","vixPivot":15.62,"cands":["reverse_rug@560 up rr3","ceiling@567.5 down rr4"]}
+{"at":"2026-10-03T04:55:56.922Z","ev":"plan","sym":"GOOGL","exp":"2026-08-28","spot":349.275,"status":"no setup in reach"}
+{"at":"2026-10-03T04:55:56.923Z","ev":"plan","sym":"AMD","exp":"2026-08-28","spot":477.405,"chart":"down","vex":"up","vixPivot":15.62,"cands":["ceiling@482.5 down rr5"]}
+{"at":"2026-10-03T04:55:56.923Z","ev":"plan","sym":"TSLA","exp":"2026-08-28","spot":349.3,"chart":"mixed","vex":"flat","vixPivot":15.62,"cands":["reverse_rug@347.5 up rr2","rug@352.5 down rr3"]}
+{"at":"2026-10-03T04:55:56.924Z","ev":"plan","sym":"AVGO","exp":"2026-08-28","spot":362.78999999999996,"chart":"down","vex":"flat","vixPivot":15.62,"cands":["floor@360 up rr4"]}
+{"at":"2026-10-03T04:55:56.924Z","ev":"plan","sym":"ORCL","exp":"2026-08-28","spot":144.805,"status":"no setup in reach"}
+{"at":"2026-10-03T04:55:56.925Z","ev":"plan","sym":"MSFT","exp":"2026-08-28","spot":484.94,"chart":"up","vex":"flat","vixPivot":15.62,"cands":["ceiling@485 down rr5"]}
+{"at":"2026-10-03T04:55:56.951Z","ev":"eod","open":[],"gates":{"AMZN:R1_break_with_trend:rr":24,"AMZN:R2_confluence:std":24,"META:R1_break_with_trend:rr":43,"META:R2_confluence:std":43,"MSFT:R1_break_with_trend:vex":4,"MSFT:R2_confluence:std":4,"AVGO:R1_break_with_trend:rr":99,"AVGO:R2_confluence:std":99,"TSLA:R1_break_with_trend:rr":158,"TSLA:R2_confluence:std":158,"AAPL:R1_break_with_trend:rr":204,"AAPL:R2_confluence:std":204}}

@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:58:05.283Z","ev":"plan","sym":"AAPL","exp":"2026-10-02","spot":341.745,"chart":"up","vex":"flat","vixPivot":15.11,"cands":["floor@337.5 up rr3","ceiling@342.5 down rr3"]}
+{"at":"2026-10-03T04:58:05.283Z","ev":"plan","sym":"NVDA","exp":"2026-10-02","spot":232.04500000000002,"chart":"up","vex":"up","vixPivot":15.11,"cands":["ceiling@235 down rr7.5"]}
+{"at":"2026-10-03T04:58:05.284Z","ev":"plan","sym":"AMZN","exp":"2026-10-02","spot":246.02,"chart":"mixed","vex":"up","vixPivot":15.11,"cands":["floor@242.5 up rr7.5"]}
+{"at":"2026-10-03T04:58:05.284Z","ev":"plan","sym":"META","exp":"2026-10-02","spot":726.7049999999999,"chart":"up","vex":"up","vixPivot":15.11,"cands":["floor@720 up rr2.5"]}
+{"at":"2026-10-03T04:58:05.285Z","ev":"plan","sym":"GOOGL","exp":"2026-10-02","spot":342.35,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.285Z","ev":"plan","sym":"AMD","exp":"2026-10-02","spot":622.715,"chart":"up","vex":"down","vixPivot":15.11,"cands":["floor@617.5 up rr4","rug@630 down rr4"]}
+{"at":"2026-10-03T04:58:05.286Z","ev":"plan","sym":"TSLA","exp":"2026-10-02","spot":366.345,"chart":"up","vex":"flat","vixPivot":15.11,"cands":["ceiling@370 down rr4"]}
+{"at":"2026-10-03T04:58:05.286Z","ev":"plan","sym":"AVGO","exp":"2026-10-02","spot":354.02,"chart":"down","vex":"up","vixPivot":15.11,"cands":["floor@350 up rr4","ceiling@355 down rr2"]}
+{"at":"2026-10-03T04:58:05.287Z","ev":"plan","sym":"ORCL","exp":"2026-10-02","spot":134.41500000000002,"chart":"mixed","vex":"up","vixPivot":15.11,"cands":["ceiling@136 down rr3"]}
+{"at":"2026-10-03T04:58:05.287Z","ev":"plan","sym":"MSFT","exp":"2026-10-02","spot":505.53499999999997,"chart":"up","vex":"up","vixPivot":15.11,"cands":["reverse_rug@500 up rr10"]}
+{"at":"2026-10-03T04:58:05.306Z","ev":"eod","open":[],"gates":{"AAPL:R1_break_with_trend:vex":41,"AAPL:R2_confluence:std":41,"AMD:R1_break_with_trend:rr":5,"AMD:R2_confluence:std":5,"META:R1_break_with_trend:rr":145,"META:R2_confluence:std":140,"AVGO:R1_break_with_trend:rr":114,"AVGO:R2_confluence:trend":19,"AVGO:R2_confluence:std":95,"META:R2_confluence:vix":5}}

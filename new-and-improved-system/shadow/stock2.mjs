@@ -5,7 +5,7 @@
 // exit by the close the day before expiry (max 5 days). Priced on the REAL weekly contract's 1-min bars (UW). Never routes orders.
 import fs from 'node:fs';
 import path from 'node:path';
-import { heatmapAt, account } from '../feeds/skylit.js';
+import { heatmapAt, account, atlasHistory } from '../feeds/skylit.js';
 import { normalizeBoard } from '../map/board.js';
 import { hierarchy } from '../map/hierarchy.js';
 import { regime as regimeOf } from '../map/regime.js';
@@ -43,7 +43,9 @@ const addDays = (d, n) => { const x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x
 const ema = (vals, n) => { const k = 2 / (n + 1); let e = vals[0]; for (let i = 1; i < vals.length; i++) e = vals[i] * k + e * (1 - k); return e; };
 
 // ---- trading calendar + daily bars (one long daily pull) ----
-const dailyAll = (await dailyBars(SYM, TO)).concat(await dailyBars(SYM, addDays(FROM, 20))).concat(await dailyBars(SYM, addDays(FROM, 45))).concat(await dailyBars(SYM, addDays(FROM, 70)));
+// ONE continuous daily history from FROM−200d to TO (fix 2026-10-03: the old four 20-day windows left ~10 trading days/quarter
+// out of the calendar and truncated the trend filter's EMA50 to ~20 closes early in each period)
+const dailyAll = await atlasHistory(SYM, 'D', etToUnix(FROM, '09:30') - 200 * 86400, etToUnix(TO, '16:00') + 86400);
 const dmap = new Map(); for (const b of dailyAll) dmap.set(ymd(b.t), b);
 const days = [...dmap.keys()].sort();
 const tradeDays = days.filter((d) => d >= FROM && d <= TO);

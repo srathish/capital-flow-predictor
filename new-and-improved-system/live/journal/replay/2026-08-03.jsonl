@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:53:57.279Z","ev":"plan","sym":"AAPL","exp":"2026-08-07","spot":308.5,"chart":"mixed","vex":"up","vixPivot":17.44,"cands":["ceiling@310 down rr4"]}
+{"at":"2026-10-03T04:53:57.279Z","ev":"plan","sym":"NVDA","exp":"2026-08-07","spot":199.45499999999998,"chart":"down","vex":"up","vixPivot":17.44,"cands":["floor@197.5 up rr7.5","ceiling@200 down rr2.5"]}
+{"at":"2026-10-03T04:53:57.280Z","ev":"plan","sym":"AMZN","exp":"2026-08-07","spot":284.845,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.280Z","ev":"plan","sym":"META","exp":"2026-08-07","spot":572.2850000000001,"chart":"down","vex":"up","vixPivot":17.44,"cands":["floor@565 up rr15","ceiling@580 down rr3"]}
+{"at":"2026-10-03T04:53:57.281Z","ev":"plan","sym":"GOOGL","exp":"2026-08-07","spot":367.755,"chart":"mixed","vex":"down","vixPivot":17.44,"cands":["floor@365 up rr10"]}
+{"at":"2026-10-03T04:53:57.281Z","ev":"plan","sym":"AMD","exp":"2026-08-07","status":"earnings blackout (2026-08-04)"}
+{"at":"2026-10-03T04:53:57.282Z","ev":"plan","sym":"TSLA","exp":"2026-08-07","spot":313.885,"chart":"down","vex":"up","vixPivot":17.44,"cands":["ceiling@315 down rr2"]}
+{"at":"2026-10-03T04:53:57.282Z","ev":"plan","sym":"AVGO","exp":"2026-08-07","spot":378.04499999999996,"chart":"mixed","vex":"down","vixPivot":17.44,"cands":["rug@380 down rr2"]}
+{"at":"2026-10-03T04:53:57.282Z","ev":"plan","sym":"ORCL","exp":"2026-08-07","spot":132.73000000000002,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.283Z","ev":"plan","sym":"MSFT","exp":"2026-08-07","spot":484.435,"chart":"up","vex":"down","vixPivot":17.44,"cands":["ceiling@490 down rr20"]}
+{"at":"2026-10-03T04:53:57.297Z","ev":"eod","open":[],"gates":{"NVDA:R1_break_with_trend:trend":11,"NVDA:R2_confluence:std":11,"TSLA:R1_break_with_trend:rr":5,"TSLA:R2_confluence:std":5,"AVGO:R1_break_with_trend:rr":14,"AVGO:R2_confluence:std":14,"MSFT:R1_break_with_trend:rr":109,"MSFT:R2_confluence:std":94,"META:R1_break_with_trend:rr":5,"META:R2_confluence:std":5,"MSFT:R2_confluence:trend":15}}

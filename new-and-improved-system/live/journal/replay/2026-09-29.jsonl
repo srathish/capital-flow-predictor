@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:58:05.307Z","ev":"plan","sym":"AAPL","exp":"2026-10-02","spot":333.70500000000004,"chart":"up","vex":"up","vixPivot":15.63,"cands":["floor@330 up rr5"]}
+{"at":"2026-10-03T04:58:05.307Z","ev":"plan","sym":"NVDA","exp":"2026-10-02","spot":231.555,"chart":"up","vex":"up","vixPivot":15.63,"cands":["ceiling@232.5 down rr5"]}
+{"at":"2026-10-03T04:58:05.308Z","ev":"plan","sym":"AMZN","exp":"2026-10-02","spot":246.635,"chart":"down","vex":"up","vixPivot":15.63,"cands":["ceiling@247.5 down rr7.5"]}
+{"at":"2026-10-03T04:58:05.309Z","ev":"plan","sym":"META","exp":"2026-10-02","spot":723.64,"chart":"up","vex":"up","vixPivot":15.63,"cands":["floor@720 up rr2.5"]}
+{"at":"2026-10-03T04:58:05.309Z","ev":"plan","sym":"GOOGL","exp":"2026-10-02","spot":342.62,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.309Z","ev":"plan","sym":"AMD","exp":"2026-10-02","spot":609.5250000000001,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.310Z","ev":"plan","sym":"TSLA","exp":"2026-10-02","spot":353.17999999999995,"chart":"mixed","vex":"up","vixPivot":15.63,"cands":["floor@350 up rr10"]}
+{"at":"2026-10-03T04:58:05.310Z","ev":"plan","sym":"AVGO","exp":"2026-10-02","spot":357.665,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.310Z","ev":"plan","sym":"ORCL","exp":"2026-10-02","spot":133.25,"status":"no setup in reach"}
+{"at":"2026-10-03T04:58:05.310Z","ev":"plan","sym":"MSFT","exp":"2026-10-02","spot":507.405,"chart":"up","vex":"up","vixPivot":15.63,"cands":["reverse_rug@500 up rr2","ceiling@515 down rr6"]}
+{"at":"2026-10-03T04:58:05.326Z","ev":"eod","open":[],"gates":{"AMZN:R1_break_with_trend:trend":81,"AMZN:R2_confluence:std":69,"META:R1_break_with_trend:rr":102,"META:R2_confluence:std":99,"META:R2_confluence:vix":3,"AMZN:R2_confluence:vex":12,"AAPL:R1_break_with_trend:trend":18,"AAPL:R2_confluence:vix":18}}

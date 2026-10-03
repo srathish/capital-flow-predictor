@@ -1,0 +1,13 @@
+{"at":"2026-10-03T04:52:51.052Z","ev":"plan","sym":"AAPL","exp":"2026-07-24","spot":326.76,"chart":"up","vex":"up","vixPivot":17.35,"cands":["floor@322.5 up rr3","ceiling@330 down rr3"]}
+{"at":"2026-10-03T04:52:52.099Z","ev":"plan","sym":"NVDA","exp":"2026-07-24","spot":206.64499999999998,"chart":"mixed","vex":"down","vixPivot":17.35,"cands":["floor@205 up rr5"]}
+{"at":"2026-10-03T04:52:52.842Z","ev":"plan","sym":"AMZN","exp":"2026-07-24","spot":245.45499999999998,"status":"no setup in reach"}
+{"at":"2026-10-03T04:52:53.377Z","ev":"plan","sym":"META","exp":"2026-07-24","spot":637.4100000000001,"status":"no setup in reach"}
+{"at":"2026-10-03T04:52:53.904Z","ev":"plan","sym":"GOOGL","exp":"2026-07-24","status":"earnings blackout (2026-07-22)"}
+{"at":"2026-10-03T04:52:54.827Z","ev":"plan","sym":"AMD","exp":"2026-07-24","spot":542.475,"chart":"up","vex":"flat","vixPivot":17.35,"cands":["reverse_rug@535 up rr6","rug@550 down rr15"]}
+{"at":"2026-10-03T04:52:55.650Z","ev":"plan","sym":"TSLA","exp":"2026-07-24","status":"earnings blackout (2026-07-22)"}
+{"at":"2026-10-03T04:52:56.448Z","ev":"plan","sym":"AVGO","exp":"2026-07-24","spot":383.28999999999996,"chart":"mixed","vex":"up","vixPivot":17.35,"cands":["floor@380 up rr10"]}
+{"at":"2026-10-03T04:52:57.501Z","ev":"plan","sym":"ORCL","exp":"2026-07-24","spot":128.235,"chart":"down","vex":"up","vixPivot":17.35,"cands":["floor@128 up rr2","rug@130 down rr5"]}
+{"at":"2026-10-03T04:53:03.715Z","ev":"plan","sym":"MSFT","exp":"2026-07-24","spot":394.615,"chart":"mixed","vex":"up","vixPivot":17.35,"cands":["floor@390 up rr7.5","rug@400 down rr4"]}
+{"at":"2026-10-03T04:53:04.323Z","ev":"EXIT","sym":"META","rule":"R2_confluence","why":"stop(close)","frac":1,"contract":"META260724C00645000","px":3.85,"et":"15:59"}
+{"at":"2026-10-03T04:53:04.323Z","ev":"CLOSED","sym":"META","rule":"R2_confluence","ret":-0.697,"legs":"stop(close)@07-22 15:59 $3.85"}
+{"at":"2026-10-03T04:53:04.323Z","ev":"eod","open":[],"gates":{"ORCL:R1_break_with_trend:vex":22,"ORCL:R2_confluence:std":22,"AMD:R1_break_with_trend:rr":53,"AMD:R2_confluence:std":53,"MSFT:R1_break_with_trend:rr":80,"MSFT:R2_confluence:std":80}}

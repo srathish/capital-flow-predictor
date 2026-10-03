@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:53:57.316Z","ev":"plan","sym":"AAPL","exp":"2026-08-07","spot":308.605,"chart":"mixed","vex":"flat","vixPivot":17.47,"cands":["floor@305 up rr3","rug@312.5 down rr3"]}
+{"at":"2026-10-03T04:53:57.316Z","ev":"plan","sym":"NVDA","exp":"2026-08-07","spot":218.42000000000002,"chart":"mixed","vex":"down","vixPivot":17.47,"cands":["floor@217.5 up rr5"]}
+{"at":"2026-10-03T04:53:57.316Z","ev":"plan","sym":"AMZN","exp":"2026-08-07","spot":282.35,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.317Z","ev":"plan","sym":"META","exp":"2026-08-07","spot":597.555,"chart":"down","vex":"flat","vixPivot":17.47,"cands":["reverse_rug@590 up rr8","rug@600 down rr2"]}
+{"at":"2026-10-03T04:53:57.317Z","ev":"plan","sym":"GOOGL","exp":"2026-08-07","spot":383.1,"chart":"mixed","vex":"down","vixPivot":17.47,"cands":["ceiling@385 down rr5"]}
+{"at":"2026-10-03T04:53:57.318Z","ev":"plan","sym":"AMD","exp":"2026-08-07","spot":493.825,"chart":"up","vex":"flat","vixPivot":17.47,"cands":["ceiling@495 down rr7.5"]}
+{"at":"2026-10-03T04:53:57.318Z","ev":"plan","sym":"TSLA","exp":"2026-08-07","spot":323.20500000000004,"chart":"down","vex":"flat","vixPivot":17.47,"cands":["reverse_rug@320 up rr3"]}
+{"at":"2026-10-03T04:53:57.319Z","ev":"plan","sym":"AVGO","exp":"2026-08-07","spot":425.105,"chart":"mixed","vex":"down","vixPivot":17.47,"cands":["floor@425 up rr5","rug@430 down rr10"]}
+{"at":"2026-10-03T04:53:57.319Z","ev":"plan","sym":"ORCL","exp":"2026-08-07","spot":143.255,"chart":"mixed","vex":"down","vixPivot":17.47,"cands":["ceiling@145 down rr3"]}
+{"at":"2026-10-03T04:53:57.320Z","ev":"plan","sym":"MSFT","exp":"2026-08-07","spot":493.62,"chart":"up","vex":"down","vixPivot":17.47,"cands":["floor@490 up rr4","ceiling@500 down rr12.5"]}
+{"at":"2026-10-03T04:53:57.342Z","ev":"eod","open":[],"gates":{"AMD:R1_break_with_trend:vex":14,"AMD:R2_confluence:std":14,"AVGO:R1_break_with_trend:trend":8,"AVGO:R2_confluence:std":8,"ORCL:R1_break_with_trend:rr":87,"ORCL:R2_confluence:std":69,"MSFT:R1_break_with_trend:rr":171,"MSFT:R2_confluence:std":171,"META:R1_break_with_trend:trend":1,"META:R2_confluence:std":17,"META:R1_break_with_trend:rr":25,"META:R2_confluence:trend":9,"ORCL:R2_confluence:trend":18,"TSLA:R1_break_with_trend:rr":6,"TSLA:R2_confluence:std":6}}

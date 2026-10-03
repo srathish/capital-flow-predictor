@@ -1,0 +1,12 @@
+{"at":"2026-10-03T04:53:57.378Z","ev":"plan","sym":"AAPL","exp":"2026-08-14","spot":313.22,"chart":"mixed","vex":"up","vixPivot":16.38,"cands":["ceiling@315 down rr3"]}
+{"at":"2026-10-03T04:53:57.379Z","ev":"plan","sym":"NVDA","exp":"2026-08-14","spot":222.96499999999997,"chart":"mixed","vex":"up","vixPivot":16.38,"cands":["floor@220 up rr7.5"]}
+{"at":"2026-10-03T04:53:57.379Z","ev":"plan","sym":"AMZN","exp":"2026-08-14","spot":276.64,"chart":"up","vex":"down","vixPivot":16.38,"cands":["floor@275 up rr3"]}
+{"at":"2026-10-03T04:53:57.380Z","ev":"plan","sym":"META","exp":"2026-08-14","spot":592.405,"chart":"down","vex":"up","vixPivot":16.38,"cands":["floor@590 up rr10","ceiling@600 down rr2"]}
+{"at":"2026-10-03T04:53:57.381Z","ev":"plan","sym":"GOOGL","exp":"2026-08-14","spot":357.725,"chart":"mixed","vex":"up","vixPivot":16.38,"cands":["floor@355 up rr4"]}
+{"at":"2026-10-03T04:53:57.381Z","ev":"plan","sym":"AMD","exp":"2026-08-14","spot":491.695,"chart":"down","vex":"up","vixPivot":16.38,"cands":["floor@490 up rr5"]}
+{"at":"2026-10-03T04:53:57.382Z","ev":"plan","sym":"TSLA","exp":"2026-08-14","spot":321.775,"chart":"down","vex":"up","vixPivot":16.38,"cands":["floor@320 up rr5","ceiling@325 down rr5"]}
+{"at":"2026-10-03T04:53:57.382Z","ev":"plan","sym":"AVGO","exp":"2026-08-14","spot":430.365,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.382Z","ev":"plan","sym":"ORCL","exp":"2026-08-14","spot":146.36,"chart":"mixed","vex":"up","vixPivot":16.38,"cands":["floor@145 up rr5"]}
+{"at":"2026-10-03T04:53:57.383Z","ev":"plan","sym":"MSFT","exp":"2026-08-14","spot":503.1,"chart":"up","vex":"down","vixPivot":16.38,"cands":["floor@500 up rr6","ceiling@510 down rr3"]}
+{"at":"2026-10-03T04:53:57.385Z","ev":"EXIT","sym":"AMZN","rule":"R2_confluence","why":"T1","frac":0.5,"contract":"AMZN260814C00272500","px":6.4,"et":"09:31"}
+{"at":"2026-10-03T04:53:57.417Z","ev":"eod","open":["AMZN/R2_confluence"],"gates":{"AMD:R1_break_with_trend:vex":12,"AMD:R2_confluence:std":12,"ORCL:R1_break_with_trend:rr":143,"ORCL:R2_confluence:std":143,"META:R1_break_with_trend:rr":52,"META:R2_confluence:std":43,"GOOGL:R1_break_with_trend:rr":207,"GOOGL:R2_confluence:std":207,"TSLA:R1_break_with_trend:rr":17,"TSLA:R2_confluence:std":17,"AMZN:R1_break_with_trend:rr":107,"AAPL:R1_break_with_trend:trend":3,"AAPL:R2_confluence:std":3,"MSFT:R1_break_with_trend:trend":128,"MSFT:R2_confluence:vex":13,"MSFT:R2_confluence:std":115,"META:R2_confluence:trend":9}}

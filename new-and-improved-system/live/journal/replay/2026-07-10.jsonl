@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:51:19.042Z","ev":"plan","sym":"AAPL","exp":"2026-07-17","spot":315.515,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:19.042Z","ev":"plan","sym":"NVDA","exp":"2026-07-17","spot":204.13,"status":"no setup in reach"}
+{"at":"2026-10-03T04:51:19.042Z","ev":"plan","sym":"AMZN","exp":"2026-07-17","spot":249.10000000000002,"chart":"mixed","vex":"up","vixPivot":16.63,"cands":["ceiling@250 down rr7.5"]}
+{"at":"2026-10-03T04:51:19.043Z","ev":"plan","sym":"META","exp":"2026-07-17","spot":671.24,"chart":"mixed","vex":"up","vixPivot":16.63,"cands":["ceiling@675 down rr3"]}
+{"at":"2026-10-03T04:51:19.043Z","ev":"plan","sym":"GOOGL","exp":"2026-07-17","spot":356.89,"chart":"down","vex":"down","vixPivot":16.63,"cands":["ceiling@360 down rr10"]}
+{"at":"2026-10-03T04:51:19.044Z","ev":"plan","sym":"AMD","exp":"2026-07-17","spot":552.5450000000001,"chart":"up","vex":"up","vixPivot":16.63,"cands":["floor@550 up rr2","ceiling@560 down rr4"]}
+{"at":"2026-10-03T04:51:19.044Z","ev":"plan","sym":"TSLA","exp":"2026-07-17","spot":410.76,"chart":"up","vex":"up","vixPivot":16.63,"cands":["rug@415 down rr6"]}
+{"at":"2026-10-03T04:51:19.045Z","ev":"plan","sym":"AVGO","exp":"2026-07-17","spot":399.08000000000004,"chart":"mixed","vex":"down","vixPivot":16.63,"cands":["ceiling@400 down rr10"]}
+{"at":"2026-10-03T04:51:19.046Z","ev":"plan","sym":"ORCL","exp":"2026-07-17","spot":143.25,"chart":"down","vex":"up","vixPivot":16.63,"cands":["ceiling@145 down rr5"]}
+{"at":"2026-10-03T04:51:19.046Z","ev":"plan","sym":"MSFT","exp":"2026-07-17","spot":389.555,"chart":"down","vex":"up","vixPivot":16.63,"cands":["ceiling@390 down rr10"]}
+{"at":"2026-10-03T04:51:19.066Z","ev":"eod","open":[],"gates":{"AMD:R1_break_with_trend:trend":73,"AMD:R2_confluence:std":92,"AVGO:R1_break_with_trend:rr":189,"AVGO:R2_confluence:std":189,"MSFT:R1_break_with_trend:trend":6,"MSFT:R2_confluence:std":6,"ORCL:R1_break_with_trend:rr":2,"ORCL:R2_confluence:std":2,"META:R1_break_with_trend:trend":22,"META:R2_confluence:std":22,"AMD:R1_break_with_trend:rr":19}}

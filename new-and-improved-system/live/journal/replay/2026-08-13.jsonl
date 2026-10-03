@@ -1,0 +1,11 @@
+{"at":"2026-10-03T04:53:57.489Z","ev":"plan","sym":"AAPL","exp":"2026-08-21","spot":303.88,"chart":"mixed","vex":"up","vixPivot":14.95,"cands":["floor@300 up rr3"]}
+{"at":"2026-10-03T04:53:57.489Z","ev":"plan","sym":"NVDA","exp":"2026-08-21","spot":225.995,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.489Z","ev":"plan","sym":"AMZN","exp":"2026-08-21","spot":267.885,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.490Z","ev":"plan","sym":"META","exp":"2026-08-21","spot":585.99,"chart":"down","vex":"flat","vixPivot":14.95,"cands":["ceiling@590 down rr2"]}
+{"at":"2026-10-03T04:53:57.490Z","ev":"plan","sym":"GOOGL","exp":"2026-08-21","spot":345.03,"chart":"down","vex":"up","vixPivot":14.95,"cands":["ceiling@350 down rr10"]}
+{"at":"2026-10-03T04:53:57.491Z","ev":"plan","sym":"AMD","exp":"2026-08-21","spot":487.21000000000004,"status":"no setup in reach"}
+{"at":"2026-10-03T04:53:57.491Z","ev":"plan","sym":"TSLA","exp":"2026-08-21","spot":328.63,"chart":"down","vex":"up","vixPivot":14.95,"cands":["floor@325 up rr3","rug@332.5 down rr4"]}
+{"at":"2026-10-03T04:53:57.492Z","ev":"plan","sym":"AVGO","exp":"2026-08-21","spot":415.69000000000005,"chart":"up","vex":"up","vixPivot":14.95,"cands":["floor@410 up rr15","ceiling@420 down rr10"]}
+{"at":"2026-10-03T04:53:57.492Z","ev":"plan","sym":"ORCL","exp":"2026-08-21","spot":154.6,"chart":"mixed","vex":"up","vixPivot":14.95,"cands":["ceiling@155 down rr5"]}
+{"at":"2026-10-03T04:53:57.493Z","ev":"plan","sym":"MSFT","exp":"2026-08-21","spot":496.95000000000005,"chart":"up","vex":"down","vixPivot":14.95,"cands":["floor@490 up rr20","ceiling@500 down rr10"]}
+{"at":"2026-10-03T04:53:57.511Z","ev":"eod","open":[],"gates":{"ORCL:R1_break_with_trend:rr":24,"ORCL:R2_confluence:std":24,"AVGO:R1_break_with_trend:rr":79,"AVGO:R2_confluence:std":79,"META:R1_break_with_trend:trend":113,"META:R2_confluence:std":107,"MSFT:R1_break_with_trend:rr":38,"MSFT:R2_confluence:std":38,"TSLA:R1_break_with_trend:rr":45,"TSLA:R2_confluence:std":45,"META:R2_confluence:vex":6}}
