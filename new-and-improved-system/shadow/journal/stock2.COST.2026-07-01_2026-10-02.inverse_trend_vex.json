@@ -1042,10 +1042,10 @@
    "chartOk": false,
    "contract": "COST260724P00935000",
    "entryOpt": 9.49,
-   "exits": "T1@07-21 $0 · T2@07-23 $0",
+   "exits": "T1@07-21 $14.12 · T2@07-23 $16.21",
    "exitDay": "2026-07-23",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": 0.598,
+   "retWorst": 0.576
   }
  ]
 }

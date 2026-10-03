@@ -1,0 +1,6 @@
+
+=== AAPL 2026-04-01→2026-06-30 · r3t · 62 days ===
+trades 2  win 50%  @$1k/trade mid -$181  worst -$213
+  2026-05-14 10:29 CALL flip_pika        @297.5 stop 295 T1 302.5 T2 305 AAPL260529C00297500 in $6.44 → T1@05-15 $8.55 · breakeven@05-18 $5.08 = 6%
+  2026-06-03 11:14 CALL flip_king        @310 stop 307.5 T1 317.5 T2 320 AAPL260618C00310000 in $7.1 → stop(close)@06-05 $5.4 = -24%
+credits used 0

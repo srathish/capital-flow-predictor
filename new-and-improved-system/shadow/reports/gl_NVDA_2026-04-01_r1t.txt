@@ -1,0 +1,7 @@
+
+=== NVDA 2026-04-01→2026-06-30 · r1t · 62 days ===
+trades 3  win 0%  @$1k/trade mid -$534  worst -$563
+  2026-04-21 09:35 CALL inverse_ceiling  @202.5 stop 201.5 T1 205 T2 207.5 NVDA260508C00202500 in $6.25 → stop(close)@04-21 $5 = -20%
+  2026-05-04 09:35 CALL inverse_ceiling  @200 stop 199 T1 202.5 T2 205 NVDA260522C00200000 in $9.49 → stop(close)@05-04 $7.93 = -16%
+  2026-05-05 09:38 CALL inverse_ceiling  @200 stop 199 T1 202.5 T2 205 NVDA260522C00200000 in $8.25 → stop(close)@05-05 $6.85 = -17%
+credits used 0

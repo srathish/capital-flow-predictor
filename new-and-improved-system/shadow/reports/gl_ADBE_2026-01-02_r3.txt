@@ -1,0 +1,9 @@
+
+=== ADBE 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 5  win 40%  @$1k/trade mid -$758  worst -$758
+  2026-01-21 10:35 PUT  flip_pika        @292.5 stop 295 T1 290 T2 287.5 ADBE260123P00295000 in $4.78 → T1@01-21 $6.06 · breakeven@01-21 $4.25 = 8%
+  2026-01-22 10:37 PUT  flip_gatekeeper  @300 stop 301 T1 297.5 T2 295 ADBE260130P00300000 in $7.5 → T1@01-22 $5.49 · breakeven@01-22 $5 = -30%
+  2026-02-13 10:30 PUT  flip_gatekeeper  @262.5 stop 265 T1 255 T2 null ADBE260220P00262500 in $7 → time@02-19 $4.92 = -30%
+  2026-02-20 10:52 PUT  flip_gatekeeper  @260 stop 262.5 T1 255 T2 252.5 ADBE260227P00260000 in $7.7 → T1@02-23 $8.56 · T2@02-23 $9.51 = 17%
+  2026-02-24 10:38 PUT  flip_gatekeeper  @252.5 stop 253.5 T1 245 T2 242.5 ADBE260227P00255000 in $9.09 → stop(close)@02-24 $5.35 = -41%
+credits used 0

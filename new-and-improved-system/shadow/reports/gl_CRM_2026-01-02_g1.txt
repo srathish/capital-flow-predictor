@@ -1,0 +1,6 @@
+
+=== CRM 2026-01-02→2026-03-31 · g1 · 61 days ===
+trades 2  win 0%  @$1k/trade mid -$858  worst -$858
+  2026-01-09 10:49 CALL dip_barney       @257.5 stop 256.5 T1 260 T2 265 CRM260123C00260000 in $5 → T1@01-09 $5.51 · breakeven@01-12 $3.96 = -5%
+  2026-01-13 10:33 CALL dip_king         @260 stop 257.5 T1 262.5 T2 265 CRM260130C00260000 in $6.14 → stop(close)@01-13 $1.2 = -81%
+credits used 0

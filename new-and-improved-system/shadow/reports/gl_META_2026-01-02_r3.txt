@@ -1,0 +1,6 @@
+
+=== META 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 2  win 0%  @$1k/trade mid -$990  worst -$1005
+  2026-01-21 10:30 PUT  flip_barney      @607.5 stop 610 T1 602.5 T2 600 META260123P00607500 in $8.5 → T1@01-21 $9.5 · breakeven@01-21 $5.4 = -12%
+  2026-02-11 10:46 CALL flip_gatekeeper  @665 stop 664 T1 677.5 T2 680 META260213C00665000 in $9.22 → stop(close)@02-12 $1.24 = -87%
+credits used 0

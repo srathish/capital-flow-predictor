@@ -1,0 +1,6 @@
+
+=== CRM 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 2  win 100%  @$1k/trade mid +$1575  worst +$1492
+  2026-08-13 11:22 CALL flip_normal      @192.5 stop 191.5 T1 200 T2 null CRM260821C00192500 in $4.65 → T1@08-13 $9 · breakeven@08-17 $3.5 = 34%
+  2026-09-02 10:28 CALL flip_gatekeeper  @255 stop 254 T1 265 T2 270 CRM260904C00255000 in $4.37 → T1@09-03 $10 · time@09-03 $9.5 = 123%
+credits used 0

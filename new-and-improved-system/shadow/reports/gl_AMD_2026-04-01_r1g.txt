@@ -1,0 +1,5 @@
+
+=== AMD 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 1  win 100%  @$1k/trade mid +$230  worst +$179
+  2026-04-16 10:46 CALL inverse_rug      @270 stop 267.5 T1 272.5 T2 275 AMD260424C00270000 in $9 → T1@04-16 $9.93 · T2@04-16 $12.21 = 23%
+credits used 14

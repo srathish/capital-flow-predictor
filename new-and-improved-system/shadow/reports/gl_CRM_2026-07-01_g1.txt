@@ -1,0 +1,6 @@
+
+=== CRM 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 2  win 50%  @$1k/trade mid -$24  worst -$28
+  2026-09-08 10:15 CALL dip_gatekeeper   @247.5 stop 246.5 T1 250 T2 255 CRM260925C00250000 in $7.25 → T1@09-08 $8.13 · breakeven@09-08 $7.31 = 7%
+  2026-09-18 10:52 CALL dip_gatekeeper   @240 stop 239 T1 242.5 T2 245 CRM261002C00240000 in $6.3 → stop(close)@09-18 $5.74 = -9%
+credits used 0

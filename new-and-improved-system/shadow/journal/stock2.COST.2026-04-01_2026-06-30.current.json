@@ -55,22 +55,11 @@
     "ceiling@1020 down rr2 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED reverse_rug up"
   },
   {
    "D": "2026-04-08",
-   "exp": "2026-04-10",
-   "spot": 1007.84,
-   "king": 1010,
-   "floor": 985,
-   "ceiling": 1010,
-   "regime": "positive",
-   "chart": "up",
-   "cands": [
-    "ceiling@1010 down rr2 (vs chart)"
-   ],
-   "roll": null,
-   "status": "FILLED ceiling down"
+   "status": "in position"
   },
   {
    "D": "2026-04-09",
@@ -86,22 +75,11 @@
     "ceiling@1035 down rr3 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-04-10",
-   "exp": "2026-04-17",
-   "spot": 1019.24,
-   "king": 1015,
-   "floor": 1015,
-   "ceiling": 1035,
-   "regime": "mixed",
-   "chart": "up",
-   "cands": [
-    "floor@1015 up rr3"
-   ],
-   "roll": null,
-   "status": "FILLED floor up"
+   "status": "in position"
   },
   {
    "D": "2026-04-13",
@@ -538,7 +516,7 @@
     "ceiling@1012.5 down rr5"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-05-27",
@@ -833,44 +811,44 @@
  ],
  "trades": [
   {
-   "D": "2026-04-08",
-   "et": "09:35",
-   "setup": "ceiling",
-   "direction": "down",
+   "D": "2026-04-07",
+   "et": "09:42",
+   "setup": "reverse_rug",
+   "direction": "up",
    "node": 1010,
    "nodeType": "king",
-   "stop": 1015,
-   "t1": 1005,
-   "t2": 1000,
-   "rr": 2,
-   "chart": "up",
-   "chartOk": false,
-   "contract": "COST260410P01010000",
-   "entryOpt": 14.46,
-   "exits": "stop(close)@04-08 $3",
-   "exitDay": "2026-04-08",
-   "retMid": -0.793,
-   "retWorst": -0.793
-  },
-  {
-   "D": "2026-04-10",
-   "et": "09:45",
-   "setup": "floor",
-   "direction": "up",
-   "node": 1015,
-   "nodeType": "king",
-   "stop": 1010,
+   "stop": 1005,
    "t1": 1020,
    "t2": 1030,
-   "rr": 3,
+   "rr": 4,
    "chart": "up",
    "chartOk": true,
-   "contract": "COST260417C01015000",
-   "entryOpt": 16.96,
-   "exits": "stop(close)@04-10 $4.81",
+   "contract": "COST260410C01010000",
+   "entryOpt": 13,
+   "exits": "T1@04-08 $15 · T2@04-08 $24",
+   "exitDay": "2026-04-08",
+   "retMid": 0.5,
+   "retWorst": 0.5
+  },
+  {
+   "D": "2026-04-09",
+   "et": "09:59",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 1035,
+   "nodeType": "gatekeeper",
+   "stop": 1040,
+   "t1": 1025,
+   "t2": 1020,
+   "rr": 3,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "COST260417P01035000",
+   "entryOpt": 16.69,
+   "exits": "T1@04-10 $14.63 · T2@04-10 $19.3",
    "exitDay": "2026-04-10",
-   "retMid": -0.716,
-   "retWorst": -0.716
+   "retMid": 0.016,
+   "retWorst": 0.016
   },
   {
    "D": "2026-04-13",
@@ -907,10 +885,10 @@
    "chartOk": true,
    "contract": "COST260417C00970000",
    "entryOpt": 8.3,
-   "exits": "T1@04-15 $8.3 · T2@04-16 $0",
+   "exits": "T1@04-15 $8.3 · T2@04-16 $17.78",
    "exitDay": "2026-04-16",
-   "retMid": -0.5,
-   "retWorst": -0.5
+   "retMid": 0.571,
+   "retWorst": 0.571
   },
   {
    "D": "2026-05-19",
@@ -953,6 +931,26 @@
    "retWorst": -0.975
   },
   {
+   "D": "2026-05-26",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 1007.5,
+   "nodeType": "gatekeeper",
+   "stop": 1005,
+   "t1": 1012.5,
+   "t2": 1015,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "COST260529C01010000",
+   "entryOpt": 18.6,
+   "exits": "T1@05-26 $19.5 · breakeven@05-26 $15.75",
+   "exitDay": "2026-05-26",
+   "retMid": -0.052,
+   "retWorst": -0.052
+  },
+  {
    "D": "2026-06-01",
    "et": "09:35",
    "setup": "rug",
@@ -987,10 +985,10 @@
    "chartOk": true,
    "contract": "COST260605P00950000",
    "entryOpt": 11,
-   "exits": "T1@06-02 $12.5 · breakeven@06-02 $0",
+   "exits": "T1@06-02 $12.5 · breakeven@06-02 $9.73",
    "exitDay": "2026-06-02",
-   "retMid": -0.432,
-   "retWorst": -0.432
+   "retMid": 0.01,
+   "retWorst": 0.01
   },
   {
    "D": "2026-06-17",

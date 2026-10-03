@@ -981,10 +981,10 @@
    "chartOk": false,
    "contract": "AAPL260605P00315000",
    "entryOpt": 3.9,
-   "exits": "T1@05-29 $0 · breakeven@06-03 $2.5",
+   "exits": "T1@05-29 $6.05 · breakeven@06-03 $2.5",
    "exitDay": "2026-06-03",
-   "retMid": -0.679,
-   "retWorst": -0.686
+   "retMid": 0.096,
+   "retWorst": 0.09
   },
   {
    "D": "2026-06-05",

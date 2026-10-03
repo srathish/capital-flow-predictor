@@ -1,0 +1,8 @@
+
+=== NVDA 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 4  win 50%  @$1k/trade mid +$365  worst +$225
+  2026-04-21 13:33 CALL dip_pika         @200 stop 199 T1 202.5 T2 207.5 NVDA260508C00200000 in $6.2 → T1@04-23 $7.81 · breakeven@04-23 $5.98 = 11%
+  2026-04-27 10:15 CALL dip_king         @210 stop 209 T1 212.5 T2 215 NVDA260515C00210000 in $7.45 → T1@04-27 $9.3 · T2@04-27 $10.95 = 36%
+  2026-04-28 10:38 CALL dip_king         @210 stop 209 T1 212.5 T2 215 NVDA260515C00210000 in $8.1 → T1@04-28 $8.9 · breakeven@04-29 $7 = -2%
+  2026-05-05 10:15 CALL dip_gatekeeper   @197.5 stop 196.5 T1 200 T2 202.5 NVDA260522C00197500 in $8.81 → stop(close)@05-05 $8.04 = -9%
+credits used 0

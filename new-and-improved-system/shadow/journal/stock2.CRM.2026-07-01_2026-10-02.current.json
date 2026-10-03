@@ -196,7 +196,7 @@
     "floor@160 up rr5 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-07-24",
@@ -814,10 +814,10 @@
    "chartOk": false,
    "contract": "CRM260717C00162500",
    "entryOpt": 4.1,
-   "exits": "T1@07-13 $0 · T2@07-13 $0",
+   "exits": "T1@07-13 $6.4 · T2@07-13 $6.4",
    "exitDay": "2026-07-13",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": 0.561,
+   "retWorst": 0.561
   },
   {
    "D": "2026-07-14",
@@ -880,6 +880,26 @@
    "retWorst": -0.704
   },
   {
+   "D": "2026-07-23",
+   "et": "09:37",
+   "setup": "floor",
+   "direction": "up",
+   "node": 160,
+   "nodeType": "gatekeeper",
+   "stop": 159,
+   "t1": 165,
+   "t2": null,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260731C00160000",
+   "entryOpt": 4.88,
+   "exits": "stop(close)@07-23 $3.5",
+   "exitDay": "2026-07-23",
+   "retMid": -0.283,
+   "retWorst": -0.283
+  },
+  {
    "D": "2026-07-24",
    "et": "09:45",
    "setup": "floor",
@@ -894,10 +914,10 @@
    "chartOk": false,
    "contract": "CRM260731C00160000",
    "entryOpt": 4.6,
-   "exits": "T1@07-27 $10 · time@07-30 $0",
+   "exits": "T1@07-27 $10 · time@07-30 $19.29",
    "exitDay": "2026-07-30",
-   "retMid": 0.087,
-   "retWorst": 0.087
+   "retMid": 2.184,
+   "retWorst": 2.184
   },
   {
    "D": "2026-08-03",
@@ -954,10 +974,10 @@
    "chartOk": false,
    "contract": "CRM260821P00200000",
    "entryOpt": 5,
-   "exits": "T1@08-17 $0 · breakeven@08-19 $2.9",
+   "exits": "T1@08-17 $8.77 · breakeven@08-19 $2.9",
    "exitDay": "2026-08-19",
-   "retMid": -0.71,
-   "retWorst": -0.71
+   "retMid": 0.167,
+   "retWorst": 0.167
   },
   {
    "D": "2026-08-21",
@@ -994,10 +1014,10 @@
    "chartOk": true,
    "contract": "CRM260828C00205000",
    "entryOpt": 8,
-   "exits": "T1@08-27 $0 · time@08-27 $47.15",
+   "exits": "T1@08-27 $28.35 · time@08-27 $47.15",
    "exitDay": "2026-08-27",
-   "retMid": 1.947,
-   "retWorst": 1.947
+   "retMid": 3.719,
+   "retWorst": 3.651
   },
   {
    "D": "2026-08-28",

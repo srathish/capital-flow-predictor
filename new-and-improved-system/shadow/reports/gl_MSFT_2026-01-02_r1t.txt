@@ -1,0 +1,7 @@
+
+=== MSFT 2026-01-02→2026-03-31 · r1t · 61 days ===
+trades 3  win 67%  @$1k/trade mid +$253  worst +$221
+  2026-01-30 10:31 PUT  inverse_reverse_rug @435 stop 437.5 T1 430 T2 425 MSFT260213P00435000 in $9.55 → T1@01-30 $11.44 · T2@02-02 $13.13 = 29%
+  2026-02-09 10:30 PUT  inverse_reverse_rug @402.5 stop 405 T1 400 T2 395 MSFT260227P00405000 in $11.48 → stop(close)@02-09 $6.4 = -44%
+  2026-02-10 10:36 PUT  inverse_floor    @415 stop 417.5 T1 410 T2 405 MSFT260227P00415000 in $9.7 → T1@02-11 $12 · T2@02-11 $15.35 = 41%
+credits used 0

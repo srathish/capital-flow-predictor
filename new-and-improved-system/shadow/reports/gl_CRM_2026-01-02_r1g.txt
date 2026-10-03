@@ -1,0 +1,5 @@
+
+=== CRM 2026-01-02→2026-03-31 · r1g · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$951  worst -$951
+  2026-01-12 13:55 CALL inverse_ceiling  @260 stop 257.5 T1 262.5 T2 265 CRM260116C00260000 in $3.85 → stop(close)@01-13 $0.19 = -95%
+credits used 12

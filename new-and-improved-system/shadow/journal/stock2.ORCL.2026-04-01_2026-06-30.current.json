@@ -811,10 +811,10 @@
    "chartOk": true,
    "contract": "ORCL260424C00175000",
    "entryOpt": 6.9,
-   "exits": "T1@04-17 $0 · breakeven@04-17 $4.9",
+   "exits": "T1@04-17 $8.7 · breakeven@04-17 $4.9",
    "exitDay": "2026-04-17",
-   "retMid": -0.645,
-   "retWorst": -0.645
+   "retMid": -0.014,
+   "retWorst": -0.036
   },
   {
    "D": "2026-04-20",
@@ -911,10 +911,10 @@
    "chartOk": false,
    "contract": "ORCL260501P00165000",
    "entryOpt": 5,
-   "exits": "T1@04-29 $0 · time@04-30 $4.1",
+   "exits": "T1@04-29 $6 · time@04-30 $4.1",
    "exitDay": "2026-04-30",
-   "retMid": -0.59,
-   "retWorst": -0.62
+   "retMid": 0.01,
+   "retWorst": -0.121
   },
   {
    "D": "2026-05-01",
@@ -1211,10 +1211,10 @@
    "chartOk": true,
    "contract": "ORCL260618P00190000",
    "entryOpt": 4.35,
-   "exits": "T1@06-17 $0 · T2@06-17 $0",
+   "exits": "T1@06-17 $5.35 · T2@06-17 $5.35",
    "exitDay": "2026-06-17",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": 0.23,
+   "retWorst": 0.076
   },
   {
    "D": "2026-06-23",

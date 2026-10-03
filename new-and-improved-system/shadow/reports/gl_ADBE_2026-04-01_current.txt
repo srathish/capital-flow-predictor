@@ -1,0 +1,50 @@
+
+=========== ADBE weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=current ===========
+ADBE itself: 241.96 → 205.00 (-15.3%)
+ALL trades                 n=32  win  53%  @$1k/trade mid -$1043  worst -$1697  avg -3%  SQN -0.40
+  chart-aligned only       n=20  win  55%  @$1k/trade mid -$2755  worst -$3207  avg -14%  SQN -1.85
+  against chart            n=12  win  50%  @$1k/trade mid +$1712  worst +$1510  avg 14%  SQN 0.84
+  reverse_rug              n= 2  win  50%  @$1k/trade mid -$98  worst -$98  avg -5%  SQN -0.39
+  floor                    n=17  win  59%  @$1k/trade mid +$1534  worst +$1110  avg 9%  SQN 0.73
+  rug                      n= 3  win  33%  @$1k/trade mid -$409  worst -$475  avg -14%  SQN -0.43
+  ceiling                  n=10  win  50%  @$1k/trade mid -$2070  worst -$2234  avg -21%  SQN -1.89
+  longs                    n=19  win  58%  @$1k/trade mid +$1436  worst +$1012  avg 8%  SQN 0.68
+  shorts                   n=13  win  46%  @$1k/trade mid -$2479  worst -$2709  avg -19%  SQN -1.84
+
+day outcomes: FILLED reverse_rug up 2 · FILLED floor up 17 · in position 11 · no setup in reach 4 · FILLED rug down 3 · no fill 6 · FILLED ceiling down 10 · no contract data 5 · no board 4
+
+-- every trade --
+  2026-04-01 09:37 CALL reverse_rug @240 (gatekeeper) stop 239 T1 242.5 T2 247.5 rr 7.5 [vs chart]  ADBE260402C00240000 in $4 → T1@04-01 $3.6 · time@04-01 $3  =  -18%
+  2026-04-02 09:35 CALL floor       @240 (barney) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  ADBE260410C00240000 in $5.8 → T1@04-02 $5.25 · T2@04-02 $8.4  =  18%
+  2026-04-06 09:37 CALL floor       @240 (king) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  ADBE260410C00240000 in $5.25 → T1@04-06 $5.7 · T2@04-06 $7  =  21%
+  2026-04-07 10:45 CALL floor       @240 (king) stop 239 T1 245 T2 247.5 rr 7.5 [vs chart]  ADBE260410C00240000 in $4.75 → T1@04-08 $6.1 · breakeven@04-08 $2.93  =  -5%
+  2026-04-10 09:42 CALL floor       @227.5 (gatekeeper) stop 226.5 T1 230 T2 235 rr 7.5 [vs chart]  ADBE260417C00227500 in $6.01 → stop(close)@04-10 $4.05  =  -33%
+  2026-04-13 09:35 CALL floor       @227.5 (king) stop 226.5 T1 230 T2 null rr 2.5 [vs chart]  ADBE260417C00227500 in $4.7 → T1@04-13 $5.69 · time@04-16 $21.1  =  185%
+  2026-04-17 09:35 CALL floor       @250 (gatekeeper) stop 247.5 T1 252.5 T2 255 rr 2   ADBE260424C00250000 in $6.32 → stop(close)@04-17 $3.33  =  -47%
+  2026-04-20 09:39 CALL reverse_rug @247.5 (gatekeeper) stop 246.5 T1 250 T2 252.5 rr 5   ADBE260424C00247500 in $5.83 → T1@04-20 $6.76 · breakeven@04-20 $5.8  =  8%
+  2026-04-21 09:50 PUT  rug         @250 (gatekeeper) stop 251 T1 245 T2 240 rr 10   ADBE260424P00250000 in $6.65 → stop(close)@04-22 $1.75  =  -74%
+  2026-04-24 09:38 CALL floor       @240 (barney) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  ADBE260501C00240000 in $7 → T1@04-24 $7.25 · T2@04-24 $8.75  =  14%
+  2026-04-27 09:35 CALL floor       @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5   ADBE260501C00240000 in $6.95 → T1@04-27 $7 · T2@04-27 $8.6  =  12%
+  2026-04-28 09:35 CALL floor       @242.5 (gatekeeper) stop 241.5 T1 245 T2 250 rr 7.5 [vs chart]  ADBE260501C00242500 in $5.4 → T1@04-28 $6.8 · breakeven@04-29 $3.48  =  -5%
+  2026-04-30 09:35 PUT  ceiling     @240 (gatekeeper) stop 241 T1 237.5 T2 232.5 rr 7.5   ADBE260508P00240000 in $7.2 → T1@04-30 $7.3 · breakeven@04-30 $7.47  =  3%
+  2026-05-01 09:35 PUT  ceiling     @250 (barney) stop 251 T1 247.5 T2 245 rr 5   ADBE260508P00250000 in $6.17 → T1@05-01 $6.35 · T2@05-01 $7  =  8%
+  2026-05-04 09:35 PUT  ceiling     @250 (barney) stop 251 T1 247.5 T2 245 rr 5   ADBE260508P00250000 in $5.75 → T1@05-04 $6.01 · breakeven@05-04 $6.01  =  5%
+  2026-05-08 09:35 CALL floor       @250 (gatekeeper) stop 247.5 T1 252.5 T2 255 rr 2   ADBE260515C00250000 in $6.62 → T1@05-08 $6.7 · T2@05-11 $6.9  =  3%
+  2026-05-13 09:46 CALL floor       @235 (king) stop 234 T1 237.5 T2 240 rr 5 [vs chart]  ADBE260515C00235000 in $4.36 → T1@05-14 $4 · breakeven@05-14 $3.81  =  -10%
+  2026-05-15 09:51 CALL floor       @240 (gatekeeper) stop 239 T1 245 T2 247.5 rr 7.5 [vs chart]  ADBE260522C00240000 in $7.09 → T1@05-15 $8.5 · T2@05-15 $10.5  =  34%
+  2026-05-18 09:35 PUT  ceiling     @247.5 (king) stop 248.5 T1 245 T2 242.5 rr 5   ADBE260522P00247500 in $5.41 → stop(close)@05-18 $2.22  =  -59%
+  2026-05-19 09:35 CALL floor       @260 (king) stop 257.5 T1 262.5 T2 267.5 rr 3   ADBE260522C00260000 in $5.45 → T1@05-19 $7 · breakeven@05-19 $5.57  =  15%
+  2026-05-20 09:36 PUT  ceiling     @247.5 (barney) stop 248.5 T1 245 T2 242.5 rr 5   ADBE260522P00250000 in $6 → stop(close)@05-20 $2.35  =  -61%
+  2026-05-21 09:39 CALL floor       @242.5 (king) stop 241.5 T1 245 T2 250 rr 7.5   ADBE260529C00245000 in $6.4 → T1@05-21 $6.22 · breakeven@05-26 $3.51  =  -24%
+  2026-05-27 09:35 CALL floor       @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5 [vs chart]  ADBE260529C00240000 in $4 → T1@05-27 $5.3 · breakeven@05-27 $3.84  =  14%
+  2026-05-29 09:42 PUT  rug         @247.5 (gatekeeper) stop 248.5 T1 245 T2 240 rr 7.5   ADBE260605P00247500 in $5.62 → T1@05-29 $5.62 · breakeven@05-29 $5.62  =  0%
+  2026-06-01 09:36 PUT  ceiling     @265 (king) stop 267.5 T1 262.5 T2 260 rr 2   ADBE260605P00265000 in $6.75 → stop(close)@06-01 $3  =  -56%
+  2026-06-04 09:35 CALL floor       @260 (gatekeeper) stop 257.5 T1 262.5 T2 267.5 rr 3   ADBE260612C00260000 in $13.18 → T1@06-04 $14.7 · breakeven@06-04 $13.2  =  6%
+  2026-06-09 09:35 PUT  ceiling     @242.5 (gatekeeper) stop 243.5 T1 240 T2 235 rr 7.5   ADBE260612P00245000 in $12.34 → T1@06-09 $13.51 · T2@06-09 $17  =  24%
+  2026-06-11 10:01 PUT  ceiling     @230 (barney) stop 231 T1 227.5 T2 225 rr 5   ADBE260618P00230000 in $11.75 → T1@06-11 $12.45 · T2@06-11 $13.1  =  9%
+  2026-06-12 09:35 PUT  ceiling     @200 (gatekeeper) stop 201 T1 195 T2 null rr 5   ADBE260618P00200000 in $6.42 → stop(close)@06-12 $2.5  =  -61%
+  2026-06-15 09:35 CALL floor       @210 (gatekeeper) stop 209 T1 212.5 T2 215 rr 5 [vs chart]  ADBE260618C00210000 in $4.2 → stop(close)@06-15 $2.32  =  -45%
+  2026-06-17 09:41 PUT  rug         @202.5 (pika) stop 203.5 T1 200 T2 197.5 rr 5   ADBE260618P00202500 in $3.2 → T1@06-17 $3 · T2@06-17 $5.5  =  33%
+  2026-06-22 09:43 PUT  ceiling     @195 (king) stop 196 T1 192.5 T2 187.5 rr 7.5   ADBE260626P00195000 in $5.27 → T1@06-22 $5.13 · breakeven@06-23 $3.5  =  -18%
+
+credits used 1

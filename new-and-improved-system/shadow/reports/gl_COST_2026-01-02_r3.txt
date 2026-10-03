@@ -1,0 +1,8 @@
+
+=== COST 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 4  win 25%  @$1k/trade mid -$574  worst -$604
+  2026-01-16 10:30 CALL flip_pika        @955 stop 954 T1 960 T2 965 COST260123C00955000 in $12.01 → T1@01-16 $12.01 · breakeven@01-16 $9.69 = -10%
+  2026-01-21 10:30 CALL flip_normal      @960 stop 955 T1 970 T2 975 COST260123C00960000 in $9.3 → T1@01-21 $13.43 · T2@01-21 $16.72 = 62%
+  2026-01-26 10:55 CALL flip_barney      @980 stop 979 T1 1000 T2 1015 COST260130C00980000 in $9.9 → stop(close)@01-26 $7.3 = -26%
+  2026-02-10 10:32 CALL flip_pika        @990 stop 989 T1 1000 T2 1015 COST260213C00990000 in $14.01 → stop(close)@02-10 $2.31 = -84%
+credits used 0

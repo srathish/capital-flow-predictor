@@ -1,0 +1,8 @@
+
+=== AVGO 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 4  win 75%  @$1k/trade mid +$568  worst +$546
+  2026-04-30 10:29 CALL dip_gatekeeper   @407.5 stop 405 T1 415 T2 420 AVGO260515C00410000 in $14.79 → T1@04-30 $17.85 · T2@05-01 $19.58 = 27%
+  2026-05-13 10:20 CALL dip_king         @410 stop 409 T1 415 T2 420 AVGO260529C00410000 in $16.87 → T1@05-13 $18.8 · T2@05-14 $23.55 = 26%
+  2026-06-04 10:29 CALL dip_gatekeeper   @405 stop 404 T1 412.5 T2 415 AVGO260618C00405000 in $16.78 → T1@06-04 $19.8 · T2@06-04 $21.15 = 22%
+  2026-06-22 10:15 CALL dip_gatekeeper   @400 stop 399 T1 405 T2 410 AVGO260710C00400000 in $17 → stop(close)@06-22 $14.08 = -17%
+credits used 0

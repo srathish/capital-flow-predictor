@@ -1,0 +1,7 @@
+
+=== GOOGL 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 3  win 67%  @$1k/trade mid +$200  worst +$187
+  2026-01-12 10:33 CALL flip_barney      @327.5 stop 325 T1 330 T2 332.5 GOOGL260130C00327500 in $8.15 → T1@01-12 $9 · T2@01-12 $11.5 = 26%
+  2026-01-14 11:00 CALL flip_gatekeeper  @330 stop 329 T1 335 T2 337.5 GOOGL260130C00330000 in $9.5 → T1@01-14 $11.6 · T2@01-15 $11.24 = 20%
+  2026-03-09 14:41 PUT  flip_normal      @302.5 stop 305 T1 295 T2 290 GOOGL260327P00305000 in $10.63 → stop(close)@03-09 $7.87 = -26%
+credits used 0

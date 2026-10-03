@@ -1,0 +1,7 @@
+
+=== GOOGL 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 3  win 0%  @$1k/trade mid -$248  worst -$325
+  2026-04-16 13:57 CALL flip_pika        @335 stop 334 T1 340 T2 342.5 GOOGL260424C00335000 in $6.65 → T1@04-17 $8.67 · breakeven@04-21 $4.45 = -1%
+  2026-05-04 13:51 CALL flip_king        @385 stop 384 T1 390 T2 392.5 GOOGL260508C00385000 in $5.2 → stop(close)@05-04 $4.1 = -21%
+  2026-05-07 11:06 CALL flip_gatekeeper  @395 stop 394 T1 400 T2 405 GOOGL260515C00395000 in $7.6 → T1@05-08 $9.61 · breakeven@05-11 $5.25 = -2%
+credits used 0

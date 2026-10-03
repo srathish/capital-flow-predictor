@@ -1,0 +1,7 @@
+
+=== AAPL 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 3  win 67%  @$1k/trade mid +$1786  worst +$1567
+  2026-05-05 10:15 CALL inverse_ceiling  @280 stop 277.5 T1 282.5 T2 287.5 AAPL260508C00280000 in $2.7 → T1@05-05 $4.65 · T2@05-06 $8 = 134%
+  2026-06-01 10:15 CALL inverse_ceiling  @310 stop 309 T1 312.5 T2 315 AAPL260605C00310000 in $3.15 → stop(close)@06-01 $1.85 = -41%
+  2026-06-02 10:20 CALL inverse_ceiling  @310 stop 307.5 T1 312.5 T2 315 AAPL260605C00310000 in $2.99 → T1@06-02 $4.7 · T2@06-02 $6.4 = 86%
+credits used 6

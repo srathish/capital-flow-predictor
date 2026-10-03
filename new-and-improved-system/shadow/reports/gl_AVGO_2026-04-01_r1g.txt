@@ -1,0 +1,7 @@
+
+=== AVGO 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 3  win 67%  @$1k/trade mid +$168  worst +$97
+  2026-04-17 10:15 CALL inverse_rug      @405 stop 404 T1 410 T2 412.5 AVGO260424C00405000 in $9.35 → stop(close)@04-20 $5.2 = -44%
+  2026-04-22 10:15 CALL inverse_ceiling  @410 stop 409 T1 412.5 T2 417.5 AVGO260424C00410000 in $5.98 → T1@04-22 $8.18 · T2@04-22 $10.8 = 59%
+  2026-05-01 10:15 CALL inverse_ceiling  @420 stop 417.5 T1 422.5 T2 427.5 AVGO260508C00420000 in $9.6 → T1@05-01 $11.15 · breakeven@05-04 $8.53 = 3%
+credits used 11

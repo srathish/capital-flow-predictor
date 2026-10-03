@@ -1,0 +1,8 @@
+
+=== NFLX 2026-07-01→2026-10-02 · r3t · 66 days ===
+trades 4  win 50%  @$1k/trade mid -$320  worst -$372
+  2026-07-24 10:15 PUT  flip_barney      @69 stop 70 T1 68 T2 67 NFLX260807P00070000 in $2.2 → stop(close)@07-24 $1.7 = -23%
+  2026-08-27 10:23 CALL flip_gatekeeper  @80 stop 79 T1 81 T2 82 NFLX260911C00080000 in $2 → T1@08-28 $2.27 · T2@08-28 $3.15 = 36%
+  2026-08-31 10:15 CALL flip_normal      @81 stop 80 T1 82 T2 83 NFLX260918C00080000 in $2.82 → T1@09-01 $3.33 · breakeven@09-01 $2.71 = 7%
+  2026-09-04 10:21 CALL flip_gatekeeper  @81 stop 80 T1 83 T2 84 NFLX260918C00080000 in $2.6 → stop(close)@09-04 $1.25 = -52%
+credits used 0

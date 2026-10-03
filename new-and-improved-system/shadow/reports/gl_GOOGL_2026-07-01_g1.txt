@@ -1,0 +1,5 @@
+
+=== GOOGL 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 1  win 100%  @$1k/trade mid +$392  worst +$392
+  2026-07-02 13:30 CALL dip_king         @355 stop 352.5 T1 360 T2 365 GOOGL260717C00355000 in $9.5 → T1@07-02 $12.2 · T2@07-06 $14.25 = 39%
+credits used 0

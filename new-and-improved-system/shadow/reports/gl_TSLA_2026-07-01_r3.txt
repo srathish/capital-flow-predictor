@@ -1,0 +1,5 @@
+
+=== TSLA 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 1  win 100%  @$1k/trade mid +$47  worst +$29
+  2026-07-13 10:15 CALL flip_gatekeeper  @395 stop 392.5 T1 405 T2 null TSLA260717C00395000 in $8.59 → T1@07-15 $12.1 · breakeven@07-15 $5.88 = 5%
+credits used 0

@@ -800,10 +800,10 @@
    "chartOk": false,
    "contract": "GOOGL260424P00340000",
    "entryOpt": 5.75,
-   "exits": "T1@04-20 $5.85 · T2@04-21 $0",
+   "exits": "T1@04-20 $5.85 · T2@04-21 $6.5",
    "exitDay": "2026-04-21",
-   "retMid": -0.491,
-   "retWorst": -0.5
+   "retMid": 0.074,
+   "retWorst": 0.058
   },
   {
    "D": "2026-04-24",

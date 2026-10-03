@@ -1,0 +1,11 @@
+
+=== TSLA 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 7  win 57%  @$1k/trade mid +$1227  worst -$19
+  2026-01-21 11:00 PUT  flip_pika        @425 stop 427.5 T1 420 T2 412.5 TSLA260123P00425000 in $6.05 → stop(close)@01-21 $2.6 = -57%
+  2026-02-04 10:35 PUT  flip_gatekeeper  @422.5 stop 425 T1 417.5 T2 410 TSLA260206P00422500 in $7.2 → T1@02-04 $9.7 · T2@02-04 $15.04 = 72%
+  2026-02-24 11:21 PUT  flip_gatekeeper  @405 stop 406 T1 400 T2 395 TSLA260227P00405000 in $7.21 → stop(close)@02-24 $4.5 = -38%
+  2026-03-09 15:21 PUT  flip_normal      @397.5 stop 400 T1 390 T2 385 TSLA260313P00397500 in $8.02 → stop(close)@03-11 $1.94 = -76%
+  2026-03-16 10:38 PUT  flip_gatekeeper  @400 stop 402.5 T1 397.5 T2 395 TSLA260320P00400000 in $7.6 → T1@03-16 $8.97 · T2@03-16 $10.27 = 27%
+  2026-03-17 10:15 PUT  flip_gatekeeper  @397.5 stop 400 T1 387.5 T2 385 TSLA260320P00397500 in $6.45 → T1@03-19 $15.15 · T2@03-19 $15.15 = 135%
+  2026-03-23 10:47 PUT  flip_barney      @385 stop 386 T1 375 T2 370 TSLA260327P00385000 in $7.5 → T1@03-26 $10.82 · time@03-26 $13.15 = 60%
+credits used 0

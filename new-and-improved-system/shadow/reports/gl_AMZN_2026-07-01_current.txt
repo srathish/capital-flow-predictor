@@ -1,0 +1,41 @@
+
+=========== AMZN weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=current ===========
+AMZN itself: 239.98 → 251.41 (4.8%)
+ALL trades                 n=23  win  57%  @$1k/trade mid +$359  worst -$1003  avg 2%  SQN 0.17
+  chart-aligned only       n=15  win  53%  @$1k/trade mid -$902  worst -$1795  avg -6%  SQN -0.53
+  against chart            n= 8  win  63%  @$1k/trade mid +$1261  worst +$792  avg 16%  SQN 1.03
+  reverse_rug              n= 1  win 100%  @$1k/trade mid +$975  worst +$750  avg 98%  SQN 0.00
+  floor                    n= 8  win  50%  @$1k/trade mid -$991  worst -$1313  avg -12%  SQN -0.91
+  rug                      n= 3  win 100%  @$1k/trade mid +$1556  worst +$1105  avg 52%  SQN 14.49
+  ceiling                  n=11  win  45%  @$1k/trade mid -$1181  worst -$1545  avg -11%  SQN -1.00
+  longs                    n= 9  win  56%  @$1k/trade mid -$16  worst -$563  avg -0%  SQN -0.01
+  shorts                   n=14  win  57%  @$1k/trade mid +$375  worst -$440  avg 3%  SQN 0.24
+
+day outcomes: FILLED rug down 3 · FILLED ceiling down 11 · in position 26 · no fill 11 · no setup in reach 6 · FILLED floor up 8 · FILLED reverse_rug up 1
+
+-- every trade --
+  2026-07-01 09:38 PUT  rug         @240 (king) stop 241 T1 237.5 T2 235 rr 5   AMZN260702P00240000 in $2.99 → T1@07-01 $4.1 · T2@07-01 $5.4  =  59%
+  2026-07-02 09:36 PUT  ceiling     @242.5 (gatekeeper) stop 243.5 T1 240 T2 237.5 rr 5   AMZN260710P00242500 in $4.9 → stop(close)@07-06 $3.1  =  -37%
+  2026-07-13 14:45 PUT  ceiling     @250 (gatekeeper) stop 251 T1 245 T2 240 rr 10   AMZN260717P00250000 in $4.28 → T1@07-14 $7 · breakeven@07-15 $2.13  =  7%
+  2026-07-20 09:35 PUT  ceiling     @250 (gatekeeper) stop 251 T1 247.5 T2 245 rr 5   AMZN260724P00250000 in $4.56 → T1@07-21 $4.55 · T2@07-22 $5.95  =  15%
+  2026-07-23 09:57 CALL floor       @235 (normal) stop 234 T1 240 T2 null rr 5 [vs chart]  AMZN260731C00235000 in $9.55 → stop(close)@07-23 $8.45  =  -12%
+  2026-07-28 09:41 CALL floor       @230 (gatekeeper) stop 229 T1 232.5 T2 235 rr 5 [vs chart]  AMZN260731C00230000 in $8.13 → T1@07-29 $9.4 · breakeven@07-29 $7.85  =  6%
+  2026-07-30 09:35 CALL floor       @232.5 (pika) stop 231.5 T1 235 T2 237.5 rr 5 [vs chart]  AMZN260807C00232500 in $9.58 → T1@07-30 $10.2 · T2@07-30 $12  =  16%
+  2026-07-31 09:45 CALL reverse_rug @265 (gatekeeper) stop 264 T1 270 T2 275 rr 10 [vs chart]  AMZN260807C00265000 in $6.3 → T1@07-31 $9 · T2@08-03 $15.89  =  98%
+  2026-08-04 10:12 PUT  ceiling     @280 (gatekeeper) stop 282.5 T1 277.5 T2 275 rr 2   AMZN260807P00280000 in $4.3 → T1@08-04 $5.3 · breakeven@08-05 $2.93  =  -4%
+  2026-08-06 09:35 PUT  ceiling     @275 (gatekeeper) stop 276 T1 272.5 T2 270 rr 5 [vs chart]  AMZN260814P00275000 in $6.1 → T1@08-06 $5.7 · breakeven@08-07 $4.52  =  -16%
+  2026-08-10 09:37 PUT  ceiling     @275 (king) stop 276 T1 272.5 T2 270 rr 5 [vs chart]  AMZN260814P00275000 in $4.25 → stop(close)@08-10 $2.39  =  -44%
+  2026-08-11 09:35 PUT  ceiling     @275 (king) stop 277.5 T1 272.5 T2 270 rr 2 [vs chart]  AMZN260814P00275000 in $3.97 → T1@08-11 $4.55 · T2@08-12 $6.58  =  40%
+  2026-08-17 10:45 CALL floor       @260 (king) stop 257.5 T1 267.5 T2 null rr 3   AMZN260821C00260000 in $3.55 → time@08-20 $1.96  =  -45%
+  2026-08-24 09:38 PUT  rug         @262.5 (king) stop 265 T1 257.5 T2 255 rr 3   AMZN260828P00262500 in $4.15 → T1@08-27 $6 · time@08-27 $6.22  =  47%
+  2026-09-01 09:35 CALL floor       @255 (king) stop 252.5 T1 257.5 T2 262.5 rr 3   AMZN260904C00255000 in $3.4 → T1@09-03 $3.53 · time@09-03 $4.42  =  17%
+  2026-09-04 09:39 PUT  rug         @260 (gatekeeper) stop 262.5 T1 257.5 T2 255 rr 2   AMZN260911P00260000 in $3.79 → T1@09-04 $5.18 · T2@09-08 $6.15  =  50%
+  2026-09-09 09:35 CALL floor       @252.5 (gatekeeper) stop 250 T1 255 T2 257.5 rr 2   AMZN260911C00252500 in $3.2 → time@09-10 $1.6  =  -50%
+  2026-09-15 10:07 CALL floor       @250 (king) stop 247.5 T1 252.5 T2 255 rr 2   AMZN260918C00250000 in $3.45 → stop(close)@09-16 $1.05  =  -70%
+  2026-09-17 10:24 PUT  ceiling     @252.5 (king) stop 255 T1 247.5 T2 245 rr 3   AMZN260925P00252500 in $4.55 → stop(close)@09-21 $1.28  =  -72%
+  2026-09-23 09:37 PUT  ceiling     @252.5 (king) stop 255 T1 250 T2 245 rr 3   AMZN260925P00252500 in $2.82 → T1@09-23 $4 · time@09-24 $3.4  =  31%
+  2026-09-25 09:35 PUT  ceiling     @250 (king) stop 251 T1 247.5 T2 242.5 rr 7.5   AMZN261002P00250000 in $3.93 → T1@09-25 $5.03 · breakeven@09-25 $3.59  =  10%
+  2026-09-29 09:36 PUT  ceiling     @247.5 (king) stop 248.5 T1 245 T2 240 rr 7.5   AMZN261002P00247500 in $3.2 → stop(close)@09-30 $1.66  =  -48%
+  2026-10-01 10:00 CALL floor       @247.5 (gatekeeper) stop 246.5 T1 252.5 T2 257.5 rr 10 [vs chart]  AMZN261009C00247500 in $4.75 → T1@10-02 $7.1 · time@10-02 $6  =  38%
+
+credits used 0

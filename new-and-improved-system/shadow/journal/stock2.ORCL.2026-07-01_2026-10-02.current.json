@@ -545,7 +545,7 @@
     "rug@149 down rr4"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED rug down"
   },
   {
    "D": "2026-09-04",
@@ -826,10 +826,10 @@
    "chartOk": true,
    "contract": "ORCL260710P00145000",
    "entryOpt": 4.35,
-   "exits": "T1@07-06 $0 · breakeven@07-07 $0",
+   "exits": "T1@07-06 $4.95 · breakeven@07-07 $4.65",
    "exitDay": "2026-07-07",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": 0.103,
+   "retWorst": 0.086
   },
   {
    "D": "2026-07-08",
@@ -1126,10 +1126,10 @@
    "chartOk": true,
    "contract": "ORCL260814C00145000",
    "entryOpt": 5.18,
-   "exits": "T1@08-10 $0 · T2@08-10 $7.4",
+   "exits": "T1@08-10 $7.4 · T2@08-10 $7.4",
    "exitDay": "2026-08-10",
-   "retMid": -0.286,
-   "retWorst": -0.319
+   "retMid": 0.429,
+   "retWorst": 0.361
   },
   {
    "D": "2026-08-12",
@@ -1230,6 +1230,26 @@
    "exitDay": "2026-09-02",
    "retMid": -0.468,
    "retWorst": -0.48
+  },
+  {
+   "D": "2026-09-03",
+   "et": "09:35",
+   "setup": "rug",
+   "direction": "down",
+   "node": 149,
+   "nodeType": "pika",
+   "stop": 150,
+   "t1": 148,
+   "t2": 145,
+   "rr": 4,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL260911P00150000",
+   "entryOpt": 8.8,
+   "exits": "T1@09-03 $8.8 · breakeven@09-03 $8.8",
+   "exitDay": "2026-09-03",
+   "retMid": 0,
+   "retWorst": 0
   },
   {
    "D": "2026-09-08",

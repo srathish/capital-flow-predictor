@@ -1,0 +1,6 @@
+
+=== AVGO 2026-04-01→2026-06-30 · r3t · 62 days ===
+trades 2  win 0%  @$1k/trade mid -$340  worst -$340
+  2026-05-12 10:33 CALL flip_gatekeeper  @420 stop 417.5 T1 422.5 T2 425 AVGO260529C00420000 in $19.65 → T1@05-12 $19.65 · breakeven@05-12 $17.2 = -6%
+  2026-05-15 10:46 CALL flip_gatekeeper  @425 stop 424 T1 432.5 T2 437.5 AVGO260529C00425000 in $17.4 → stop(close)@05-18 $12.57 = -28%
+credits used 0

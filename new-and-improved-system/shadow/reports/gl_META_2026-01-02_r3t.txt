@@ -1,0 +1,5 @@
+
+=== META 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$437  worst -$442
+  2026-02-11 10:46 CALL flip_gatekeeper  @665 stop 664 T1 677.5 T2 680 META260227C00665000 in $20.15 → stop(close)@02-12 $11.35 = -44%
+credits used 0

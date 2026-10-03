@@ -1,0 +1,5 @@
+
+=== AMZN 2026-04-01→2026-06-30 · r1t · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$277  worst -$277
+  2026-05-22 09:38 CALL inverse_ceiling  @270 stop 267.5 T1 272.5 T2 275 AMZN260605C00270000 in $5.74 → stop(close)@05-22 $4.15 = -28%
+credits used 0

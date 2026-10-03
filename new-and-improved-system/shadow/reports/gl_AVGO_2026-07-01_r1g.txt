@@ -1,0 +1,4 @@
+
+=== AVGO 2026-07-01→2026-10-02 · r1g · 66 days ===
+trades 0  win 0%  @$1k/trade mid +$0  worst +$0
+credits used 0

@@ -1,0 +1,37 @@
+
+=========== NFLX weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=current ===========
+NFLX itself: 96.47 → 71.39 (-26.0%)
+ALL trades                 n=19  win  32%  @$1k/trade mid -$2488  worst -$4186  avg -13%  SQN -1.09
+  chart-aligned only       n=10  win  40%  @$1k/trade mid -$61  worst -$947  avg -1%  SQN -0.04
+  against chart            n= 9  win  22%  @$1k/trade mid -$2427  worst -$3239  avg -27%  SQN -1.61
+  reverse_rug              n= 0
+  floor                    n=12  win  33%  @$1k/trade mid -$2335  worst -$3594  avg -19%  SQN -1.25
+  rug                      n= 0
+  ceiling                  n= 7  win  29%  @$1k/trade mid -$153  worst -$592  avg -2%  SQN -0.11
+  longs                    n=12  win  33%  @$1k/trade mid -$2335  worst -$3594  avg -19%  SQN -1.25
+  shorts                   n= 7  win  29%  @$1k/trade mid -$153  worst -$592  avg -2%  SQN -0.11
+
+day outcomes: no setup in reach 12 · FILLED ceiling down 7 · no fill 8 · FILLED floor up 12 · in position 19 · no board 4
+
+-- every trade --
+  2026-04-02 10:33 PUT  ceiling     @97 (king) stop 98 T1 96 T2 95 rr 2 [vs chart]  NFLX260410P00095000 in $1.08 → stop(close)@04-02 $0.54  =  -50%
+  2026-04-07 09:35 CALL floor       @99 (gatekeeper) stop 98 T1 100 T2 101 rr 2   NFLX260410C00100000 in $1.07 → T1@04-08 $0.84 · breakeven@04-08 $0.84  =  -22%
+  2026-04-09 09:35 PUT  ceiling     @100 (king) stop 101 T1 98 T2 null rr 2 [vs chart]  NFLX260417P00100000 in $3.55 → stop(close)@04-09 $2.52  =  -29%
+  2026-04-14 09:37 CALL floor       @104 (gatekeeper) stop 103 T1 106 T2 107 rr 3   NFLX260417C00105000 in $2.93 → T1@04-14 $4 · T2@04-15 $4.95  =  53%
+  2026-04-17 09:35 CALL floor       @95 (gatekeeper) stop 94 T1 96 T2 97 rr 2   NFLX260424C00095000 in $2.26 → T1@04-17 $2.44 · T2@04-17 $3.2  =  25%
+  2026-04-20 09:47 CALL floor       @96 (gatekeeper) stop 95 T1 98 T2 99 rr 3   NFLX260424C00095000 in $2.16 → stop(close)@04-20 $1.31  =  -39%
+  2026-04-21 11:36 CALL floor       @93 (gatekeeper) stop 92 T1 95 T2 96 rr 3   NFLX260424C00095000 in $0.59 → time@04-23 $0.08  =  -86%
+  2026-04-24 09:49 PUT  ceiling     @93 (king) stop 94 T1 90 T2 null rr 3   NFLX260501P00095000 in $2.84 → time@04-30 $1.52  =  -47%
+  2026-05-04 09:35 PUT  ceiling     @92 (king) stop 93 T1 91 T2 90 rr 2   NFLX260508P00090000 in $0.53 → T1@05-04 $0.82 · T2@05-05 $1.2  =  91%
+  2026-05-06 09:46 PUT  ceiling     @88 (king) stop 89 T1 86 T2 85 rr 3   NFLX260508P00090000 in $2.41 → time@05-07 $1.84  =  -24%
+  2026-05-14 09:36 CALL floor       @88 (pika) stop 87 T1 90 T2 null rr 2 [vs chart]  NFLX260522C00090000 in $0.97 → stop(close)@05-14 $0.54  =  -44%
+  2026-05-15 09:55 CALL floor       @88 (pika) stop 87 T1 89 T2 90 rr 2 [vs chart]  NFLX260522C00090000 in $0.86 → T1@05-18 $0.99 · T2@05-19 $2.15  =  83%
+  2026-05-22 09:35 CALL floor       @89 (king) stop 88 T1 90 T2 91 rr 2 [vs chart]  NFLX260529C00090000 in $0.97 → stop(close)@05-26 $0.34  =  -65%
+  2026-05-28 09:45 PUT  ceiling     @87 (gatekeeper) stop 88 T1 86 T2 85 rr 2   NFLX260605P00085000 in $0.81 → T1@05-28 $1.02 · breakeven@06-01 $0.51  =  -6%
+  2026-06-03 09:53 CALL floor       @82 (king) stop 81 T1 83 T2 84 rr 2 [vs chart]  NFLX260605C00080000 in $2.5 → T1@06-04 $3.37 · breakeven@06-04 $2.25  =  12%
+  2026-06-12 09:47 CALL floor       @80 (gatekeeper) stop 79 T1 81 T2 82 rr 2 [vs chart]  NFLX260618C00080000 in $1.49 → T1@06-12 $1.86 · breakeven@06-16 $0.9  =  -7%
+  2026-06-17 09:35 CALL floor       @78 (king) stop 77 T1 79 T2 80 rr 2 [vs chart]  NFLX260618C00080000 in $0.25 → stop(close)@06-17 $0.05  =  -80%
+  2026-06-22 10:20 CALL floor       @75 (king) stop 74 T1 76 T2 77 rr 2 [vs chart]  NFLX260626C00075000 in $1.32 → stop(close)@06-22 $0.5  =  -62%
+  2026-06-23 09:48 PUT  ceiling     @74 (gatekeeper) stop 75 T1 73 T2 72 rr 2   NFLX260626P00075000 in $1.79 → T1@06-23 $2.32 · T2@06-24 $3.01  =  49%
+
+credits used 0

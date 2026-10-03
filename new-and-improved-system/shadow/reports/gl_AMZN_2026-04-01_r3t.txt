@@ -1,0 +1,7 @@
+
+=== AMZN 2026-04-01→2026-06-30 · r3t · 62 days ===
+trades 3  win 67%  @$1k/trade mid +$478  worst +$410
+  2026-04-30 10:15 CALL flip_gatekeeper  @260 stop 259 T1 270 T2 null AMZN260515C00260000 in $7.1 → T1@05-01 $13 · time@05-13 $10.38 = 65%
+  2026-05-14 10:27 CALL flip_pika        @267.5 stop 265 T1 270 T2 272.5 AMZN260529C00267500 in $7.2 → stop(close)@05-15 $4.37 = -39%
+  2026-05-26 13:30 CALL flip_gatekeeper  @262.5 stop 261.5 T1 270 T2 275 AMZN260612C00262500 in $6.99 → T1@05-27 $11.13 · breakeven@06-01 $6 = 23%
+credits used 0

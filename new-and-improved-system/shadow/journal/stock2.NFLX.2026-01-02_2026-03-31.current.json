@@ -641,10 +641,10 @@
    "chartOk": true,
    "contract": "NFLX260109P00092500",
    "entryOpt": 1.29,
-   "exits": "T1@01-06 $0 · T2@01-06 $2.85",
+   "exits": "T1@01-06 $2.42 · T2@01-06 $2.85",
    "exitDay": "2026-01-06",
-   "retMid": 0.105,
-   "retWorst": 0.105
+   "retMid": 1.043,
+   "retWorst": 1.016
   },
   {
    "D": "2026-01-07",
@@ -661,10 +661,10 @@
    "chartOk": true,
    "contract": "NFLX260109P00092500",
    "entryOpt": 1.5,
-   "exits": "T1@01-07 $1.55 · T2@01-08 $0",
+   "exits": "T1@01-07 $1.55 · T2@01-08 $2.89",
    "exitDay": "2026-01-08",
-   "retMid": -0.483,
-   "retWorst": -0.483
+   "retMid": 0.48,
+   "retWorst": 0.48
   },
   {
    "D": "2026-01-14",

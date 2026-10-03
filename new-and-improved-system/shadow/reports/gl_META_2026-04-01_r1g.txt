@@ -1,0 +1,5 @@
+
+=== META 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$855  worst -$856
+  2026-06-12 10:55 PUT  inverse_floor    @570 stop 575 T1 560 T2 555 META260618P00570000 in $11 → stop(close)@06-15 $1.6 = -86%
+credits used 7

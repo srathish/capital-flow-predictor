@@ -1,0 +1,5 @@
+
+=== ADBE 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$629  worst -$629
+  2026-04-13 10:30 PUT  flip_barney      @232.5 stop 233.5 T1 227.5 T2 225 ADBE260417P00232500 in $4.96 → stop(close)@04-13 $1.84 = -63%
+credits used 0

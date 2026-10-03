@@ -1,0 +1,5 @@
+
+=== CRM 2026-07-01→2026-10-02 · r1t · 66 days ===
+trades 1  win 100%  @$1k/trade mid +$171  worst +$122
+  2026-09-01 10:25 CALL inverse_rug      @260 stop 257.5 T1 262.5 T2 265 CRM260918C00260000 in $8.22 → T1@09-02 $10.7 · breakeven@09-02 $8.55 = 17%
+credits used 0

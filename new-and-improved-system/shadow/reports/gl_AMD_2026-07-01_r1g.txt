@@ -1,0 +1,6 @@
+
+=== AMD 2026-07-01→2026-10-02 · r1g · 66 days ===
+trades 2  win 50%  @$1k/trade mid +$679  worst +$487
+  2026-09-18 10:15 CALL inverse_ceiling  @550 stop 547.5 T1 555 T2 560 AMD260925C00550000 in $13.95 → T1@09-18 $18.61 · T2@09-21 $38.77 = 106%
+  2026-09-22 10:28 CALL inverse_rug      @620 stop 619 T1 627.5 T2 630 AMD260925C00620000 in $12.7 → stop(close)@09-23 $7.9 = -38%
+credits used 3

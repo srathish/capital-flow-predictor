@@ -1,0 +1,8 @@
+
+=== MSFT 2026-04-01→2026-06-30 · r3t · 62 days ===
+trades 4  win 25%  @$1k/trade mid -$633  worst -$635
+  2026-04-13 10:58 PUT  flip_king        @380 stop 381 T1 370 T2 365 MSFT260501P00380000 in $15 → stop(close)@04-13 $12.26 = -18%
+  2026-05-05 15:10 CALL flip_gatekeeper  @412.5 stop 410 T1 415 T2 417.5 MSFT260522C00412500 in $9.2 → T1@05-06 $10.65 · T2@05-06 $12.42 = 25%
+  2026-05-26 10:49 CALL flip_gatekeeper  @415 stop 414 T1 417.5 T2 420 MSFT260612C00415000 in $11.25 → stop(close)@05-27 $8.7 = -23%
+  2026-06-02 14:56 CALL flip_king        @440 stop 439 T1 450 T2 452.5 MSFT260618C00440000 in $13 → stop(close)@06-03 $6.8 = -48%
+credits used 0

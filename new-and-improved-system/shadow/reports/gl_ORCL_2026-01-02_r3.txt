@@ -1,0 +1,7 @@
+
+=== ORCL 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 3  win 33%  @$1k/trade mid -$37  worst -$97
+  2026-02-13 10:31 PUT  flip_king        @160 stop 161 T1 155 T2 null ORCL260220P00160000 in $6.15 → T1@02-17 $7.13 · time@02-19 $4.11 = -9%
+  2026-02-24 10:37 PUT  flip_gatekeeper  @142 stop 143 T1 140 T2 139 ORCL260227P00140000 in $3.82 → stop(close)@02-24 $2.2 = -42%
+  2026-03-19 10:35 PUT  flip_gatekeeper  @155 stop 156 T1 150 T2 149 ORCL260327P00155000 in $5.1 → T1@03-20 $7.2 · T2@03-20 $7.82 = 47%
+credits used 0

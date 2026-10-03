@@ -1,0 +1,6 @@
+
+=== MSFT 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 2  win 50%  @$1k/trade mid +$4  worst -$203
+  2026-05-18 10:32 CALL inverse_rug      @420 stop 419 T1 425 T2 427.5 MSFT260522C00420000 in $6.52 → T1@05-18 $8.45 · T2@05-19 $13.55 = 69%
+  2026-06-04 10:18 CALL inverse_ceiling  @430 stop 427.5 T1 435 T2 440 MSFT260612C00430000 in $8.73 → stop(close)@06-05 $2.77 = -68%
+credits used 7

@@ -1,0 +1,5 @@
+
+=== GOOGL 2026-04-01→2026-06-30 · r1t · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$219  worst -$227
+  2026-05-01 10:00 CALL inverse_ceiling  @385 stop 384 T1 390 T2 392.5 GOOGL260515C00385000 in $9.15 → stop(close)@05-04 $7.15 = -22%
+credits used 0

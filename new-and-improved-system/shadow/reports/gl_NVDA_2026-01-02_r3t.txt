@@ -1,0 +1,6 @@
+
+=== NVDA 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 2  win 0%  @$1k/trade mid -$705  worst -$760
+  2026-01-21 10:32 PUT  flip_pika        @180 stop 181 T1 177.5 T2 null NVDA260206P00180000 in $6.3 → stop(close)@01-21 $4.53 = -28%
+  2026-02-06 13:30 PUT  flip_gatekeeper  @185 stop 186 T1 177.5 T2 175 NVDA260220P00185000 in $5.9 → stop(close)@02-09 $3.4 = -42%
+credits used 0

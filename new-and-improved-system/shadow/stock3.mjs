@@ -29,13 +29,14 @@ import { earningsDates, earningsIn, board as cachedBoard } from './features.js';
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
 const SYM = arg('symbol', 'MSFT'), FROM = arg('from'), TO = arg('to'), VAR = arg('criteria', 'r3');
-if (!['r3', 'r1g', 'r3t', 'g1'].includes(VAR)) { console.error('criteria: r3 | r1g | r3t | g1'); process.exit(1); }
+if (!['r3', 'r1g', 'r3t', 'g1', 'r1t'].includes(VAR)) { console.error('criteria: r3 | r1g | r3t | g1 | r1t'); process.exit(1); }
+// r1t (pre-registered 2026-10-03 after 'buy time' cut losses in every variant): Rule 1 exactly as validated (no Glitch clock/tap/index filters) but with ≥14-DTE contracts, hold ≤10 days.
 // "BUY TIME" (Glitch: 54% same-day vs 320% two weeks out; Giul's MSFT swing was 7 weeks out): r3t/g1 buy the first Friday
 // ≥14 calendar days out and hold up to 10 trading days. The MAP still comes from the nearest weekly (cached; Giul: "play the
 // current week GEX map"). PRE-REGISTERED 2026-10-03 before running.
-const BUY_TIME = VAR === 'r3t' || VAR === 'g1';
+const BUY_TIME = VAR === 'r3t' || VAR === 'g1' || VAR === 'r1t';
 const { REACH, ZONE_PCT, MIN_RR } = PARAMS;
-const MAX_DAYS = (['r3t', 'g1'].includes(arg('criteria', 'r3'))) ? 10 : PARAMS.MAX_DAYS;
+const MAX_DAYS = (['r3t', 'g1', 'r1t'].includes(arg('criteria', 'r3'))) ? 10 : PARAMS.MAX_DAYS;
 const RETEST_DAYS = 3;
 const HERE = decodeURIComponent(new URL('.', import.meta.url).pathname);
 const ymd = (t) => new Date((t + 12 * 3600) * 1000).toISOString().slice(0, 10);
@@ -117,12 +118,14 @@ for (const D of tradeDays) {
       // R1g: Rule 1 (validated logic via the shared module) + Glitch clock, tap and index filters
       const vex = day.cands.length ? vexLean(await cachedBoard(SYM, D, exp, 'vanna')) : null; // only fetch VEX when a setup exists (as the validated engine did → cached)
       for (let bi = 0; bi < bars.length && !fill; bi++) {
-        const b = bars[bi]; if (!glitchClock(b.t)) continue;
+        const b = bars[bi];
+        const G = VAR === 'r1g';  // Glitch filters only for r1g; r1t = Rule 1 as validated (09:35–15:30 window)
+        if (G ? !glitchClock(b.t) : (hmOf(b.t) < '09:35' || hmOf(b.t) > '15:30')) continue;
         for (const c of day.cands) {
           const r = evaluateTouch({ crit: RULES.R1_break_with_trend, c, board, hier, bars, bi, chart, vex });
           if (!r.ok) { if (r.gate !== 'no_touch') bump(r.gate); continue; }
-          if (!indexOk(r.direction)) { bump('index'); continue; }
-          if (tapCount(bars.slice(0, bi), c.node.strike, board.zone).taps >= 2) { bump('tap3+'); continue; }
+          if (G && !indexOk(r.direction)) { bump('index'); continue; }
+          if (G && tapCount(bars.slice(0, bi), c.node.strike, board.zone).taps >= 2) { bump('tap3+'); continue; }
           fill = { direction: r.direction, plan: r.plan, setup: r.setup, node: c.node, t: b.t }; break;
         }
       }

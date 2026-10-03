@@ -1,0 +1,5 @@
+
+=== CRM 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$64  worst -$64
+  2026-04-06 10:40 PUT  inverse_floor    @185 stop 186 T1 182.5 T2 180 CRM260410P00185000 in $3.5 → T1@04-07 $3.95 · breakeven@04-08 $2.6 = -6%
+credits used 12

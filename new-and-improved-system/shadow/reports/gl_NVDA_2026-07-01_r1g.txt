@@ -1,0 +1,5 @@
+
+=== NVDA 2026-07-01→2026-10-02 · r1g · 66 days ===
+trades 1  win 100%  @$1k/trade mid +$512  worst +$373
+  2026-09-18 10:16 CALL inverse_ceiling  @220 stop 219 T1 222.5 T2 225 NVDA260925C00220000 in $3.75 → T1@09-18 $5.04 · T2@09-21 $6.3 = 51%
+credits used 1

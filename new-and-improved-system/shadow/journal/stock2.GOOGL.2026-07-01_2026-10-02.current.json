@@ -802,10 +802,10 @@
    "chartOk": false,
    "contract": "GOOGL260710P00370000",
    "entryOpt": 6.74,
-   "exits": "T1@07-08 $0 · T2@07-08 $8.79",
+   "exits": "T1@07-08 $8 · T2@07-08 $8.79",
    "exitDay": "2026-07-08",
-   "retMid": -0.348,
-   "retWorst": -0.348
+   "retMid": 0.246,
+   "retWorst": 0.246
   },
   {
    "D": "2026-07-09",

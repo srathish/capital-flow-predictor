@@ -258,22 +258,11 @@
     "ceiling@955 down rr4 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED reverse_rug up"
   },
   {
    "D": "2026-02-02",
-   "exp": "2026-02-06",
-   "spot": 941.365,
-   "king": 915,
-   "floor": 915,
-   "ceiling": 950,
-   "regime": "positive",
-   "chart": "mixed",
-   "cands": [
-    "ceiling@950 down rr10"
-   ],
-   "roll": null,
-   "status": "FILLED ceiling down"
+   "status": "in position"
   },
   {
    "D": "2026-02-03",
@@ -410,7 +399,7 @@
     "ceiling@1010 down rr7 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-02-17",
@@ -426,27 +415,27 @@
     "ceiling@1030 down rr4 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-02-18",
-   "exp": "2026-02-20",
-   "spot": 1006.97,
-   "king": 1010,
-   "floor": 1000,
-   "ceiling": 1010,
-   "regime": "negative",
-   "chart": "up",
-   "cands": [
-    "floor@1000 up rr15",
-    "ceiling@1010 down rr6 (vs chart)"
-   ],
-   "roll": null,
-   "status": "FILLED ceiling down"
+   "status": "in position"
   },
   {
    "D": "2026-02-19",
-   "status": "in position"
+   "exp": "2026-02-27",
+   "spot": 995.62,
+   "king": 1000,
+   "floor": 990,
+   "ceiling": 1000,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@990 up rr15",
+    "ceiling@1000 down rr2 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-02-20",
@@ -522,7 +511,7 @@
     "rug@1000 down rr10 (vs chart)"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED rug down"
   },
   {
    "D": "2026-03-02",
@@ -900,10 +889,10 @@
    "chartOk": true,
    "contract": "COST260116P00950000",
    "entryOpt": 8.35,
-   "exits": "T1@01-14 $11.4 · breakeven@01-14 $0",
+   "exits": "T1@01-14 $11.4 · breakeven@01-14 $6.25",
    "exitDay": "2026-01-14",
-   "retMid": -0.317,
-   "retWorst": -0.317
+   "retMid": 0.057,
+   "retWorst": 0.057
   },
   {
    "D": "2026-01-20",
@@ -920,10 +909,10 @@
    "chartOk": false,
    "contract": "COST260123P00970000",
    "entryOpt": 9.2,
-   "exits": "T1@01-21 $0 · breakeven@01-21 $7",
+   "exits": "T1@01-21 $8.35 · breakeven@01-21 $7",
    "exitDay": "2026-01-21",
-   "retMid": -0.62,
-   "retWorst": -0.62
+   "retMid": -0.166,
+   "retWorst": -0.166
   },
   {
    "D": "2026-01-27",
@@ -940,30 +929,30 @@
    "chartOk": false,
    "contract": "COST260130P00970000",
    "entryOpt": 8.65,
-   "exits": "T1@01-28 $13.5 · T2@01-29 $0",
+   "exits": "T1@01-28 $13.5 · T2@01-29 $14.85",
    "exitDay": "2026-01-29",
-   "retMid": -0.22,
-   "retWorst": -0.22
+   "retMid": 0.639,
+   "retWorst": 0.639
   },
   {
-   "D": "2026-02-02",
-   "et": "10:41",
-   "setup": "ceiling",
-   "direction": "down",
-   "node": 950,
+   "D": "2026-01-30",
+   "et": "10:37",
+   "setup": "reverse_rug",
+   "direction": "up",
+   "node": 945,
    "nodeType": "gatekeeper",
-   "stop": 952.5,
-   "t1": 935,
-   "t2": 925,
-   "rr": 10,
-   "chart": "mixed",
+   "stop": 940,
+   "t1": 955,
+   "t2": 970,
+   "rr": 5,
+   "chart": "up",
    "chartOk": true,
-   "contract": "COST260206P00950000",
-   "entryOpt": 12.46,
-   "exits": "stop(close)@02-02 $3.9",
+   "contract": "COST260206C00945000",
+   "entryOpt": 12.2,
+   "exits": "T1@02-02 $14.95 · T2@02-02 $23.54",
    "exitDay": "2026-02-02",
-   "retMid": -0.687,
-   "retWorst": -0.687
+   "retMid": 0.577,
+   "retWorst": 0.577
   },
   {
    "D": "2026-02-03",
@@ -1046,24 +1035,64 @@
    "retWorst": -0.772
   },
   {
-   "D": "2026-02-18",
-   "et": "10:35",
+   "D": "2026-02-13",
+   "et": "10:39",
    "setup": "ceiling",
    "direction": "down",
    "node": 1010,
    "nodeType": "king",
    "stop": 1015,
-   "t1": 1000,
-   "t2": 980,
-   "rr": 6,
+   "t1": 980,
+   "t2": 975,
+   "rr": 7,
    "chart": "up",
    "chartOk": false,
    "contract": "COST260220P01010000",
-   "entryOpt": 12,
-   "exits": "T1@02-18 $14.95 · time@02-19 $0",
+   "entryOpt": 14.25,
+   "exits": "stop(close)@02-13 $8.65",
+   "exitDay": "2026-02-13",
+   "retMid": -0.393,
+   "retWorst": -0.393
+  },
+  {
+   "D": "2026-02-17",
+   "et": "16:06",
+   "setup": "floor",
+   "direction": "up",
+   "node": 1010,
+   "nodeType": "king",
+   "stop": 1000,
+   "t1": 1025,
+   "t2": 1030,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "COST260220C01010000",
+   "entryOpt": 13.06,
+   "exits": "stop(close)@02-18 $3.95",
+   "exitDay": "2026-02-18",
+   "retMid": -0.698,
+   "retWorst": -0.704
+  },
+  {
+   "D": "2026-02-19",
+   "et": "10:41",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 1000,
+   "nodeType": "king",
+   "stop": 1005,
+   "t1": 992.5,
+   "t2": 990,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "COST260227P01000000",
+   "entryOpt": 15.5,
+   "exits": "T1@02-19 $14.95 · T2@02-19 $19",
    "exitDay": "2026-02-19",
-   "retMid": -0.377,
-   "retWorst": -0.377
+   "retMid": 0.095,
+   "retWorst": 0.095
   },
   {
    "D": "2026-02-23",
@@ -1100,10 +1129,30 @@
    "chartOk": true,
    "contract": "COST260227C00990000",
    "entryOpt": 10,
-   "exits": "T1@02-24 $12.5 · T2@02-25 $0",
+   "exits": "T1@02-24 $12.5 · T2@02-25 $13.49",
    "exitDay": "2026-02-25",
-   "retMid": -0.375,
-   "retWorst": -0.375
+   "retMid": 0.299,
+   "retWorst": 0.299
+  },
+  {
+   "D": "2026-02-27",
+   "et": "12:34",
+   "setup": "rug",
+   "direction": "down",
+   "node": 1000,
+   "nodeType": "king",
+   "stop": 1001,
+   "t1": 992.5,
+   "t2": 990,
+   "rr": 10,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "COST260306P01000000",
+   "entryOpt": 21.95,
+   "exits": "stop(close)@02-27 $14",
+   "exitDay": "2026-02-27",
+   "retMid": -0.362,
+   "retWorst": -0.362
   },
   {
    "D": "2026-03-04",

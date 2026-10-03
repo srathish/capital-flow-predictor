@@ -948,10 +948,10 @@
    "chartOk": false,
    "contract": "COST260313C01005000",
    "entryOpt": 11.32,
-   "exits": "T1@03-10 $0 · breakeven@03-10 $0",
+   "exits": "T1@03-10 $10.65 · breakeven@03-10 $10.7",
    "exitDay": "2026-03-10",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": -0.057,
+   "retWorst": -0.074
   }
  ]
 }

@@ -585,7 +585,7 @@
    ],
    "vex": "down",
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED inverse_floor down"
   },
   {
    "D": "2026-03-02",
@@ -927,6 +927,26 @@
    "exitDay": "2026-02-11",
    "retMid": 0.281,
    "retWorst": 0.226
+  },
+  {
+   "D": "2026-02-27",
+   "et": "10:35",
+   "setup": "inverse_floor",
+   "direction": "down",
+   "node": 255,
+   "nodeType": "king",
+   "stop": 257.5,
+   "t1": 252.5,
+   "t2": 247.5,
+   "rr": 3,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "ADBE260306P00255000",
+   "entryOpt": 7.05,
+   "exits": "stop(close)@02-27 $3.33",
+   "exitDay": "2026-02-27",
+   "retMid": -0.528,
+   "retWorst": -0.528
   },
   {
    "D": "2026-03-25",

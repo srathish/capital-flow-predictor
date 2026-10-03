@@ -1,0 +1,5 @@
+
+=== META 2026-01-02→2026-03-31 · r1t · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$257  worst -$257
+  2026-02-10 10:32 CALL inverse_ceiling  @680 stop 679 T1 682.5 T2 685 META260227C00680000 in $19.32 → stop(close)@02-10 $14.35 = -26%
+credits used 0

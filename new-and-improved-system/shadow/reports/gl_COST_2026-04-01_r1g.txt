@@ -1,0 +1,5 @@
+
+=== COST 2026-04-01→2026-06-30 · r1g · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$80  worst -$80
+  2026-05-01 10:15 CALL inverse_ceiling  @1025 stop 1020 T1 1030 T2 1045 COST260508C01025000 in $14 → T1@05-01 $14.25 · breakeven@05-01 $11.5 = -8%
+credits used 9

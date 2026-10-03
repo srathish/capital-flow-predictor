@@ -1,0 +1,5 @@
+
+=== COST 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$70  worst -$70
+  2026-01-16 10:30 CALL flip_pika        @955 stop 954 T1 960 T2 965 COST260130C00955000 in $16.34 → T1@01-16 $16.34 · breakeven@01-16 $14.06 = -7%
+credits used 0

@@ -1,0 +1,8 @@
+
+=== META 2026-01-02→2026-03-31 · g1 · 61 days ===
+trades 4  win 0%  @$1k/trade mid -$306  worst -$330
+  2026-01-30 10:37 CALL dip_king         @720 stop 719 T1 725 T2 730 META260213C00720000 in $20.1 → T1@01-30 $20.62 · breakeven@01-30 $17.09 = -6%
+  2026-02-03 11:08 CALL dip_king         @700 stop 695 T1 712.5 T2 720 META260220C00700000 in $18.85 → stop(close)@02-03 $14.6 = -23%
+  2026-02-10 10:30 CALL dip_pika         @672.5 stop 671.5 T1 680 T2 682.5 META260227C00672500 in $20.05 → T1@02-10 $20.05 · breakeven@02-10 $20.05 = 0%
+  2026-02-11 10:30 CALL dip_pika         @675 stop 672.5 T1 677.5 T2 680 META260227C00675000 in $20.05 → T1@02-11 $20.05 · breakeven@02-11 $19.27 = -2%
+credits used 0

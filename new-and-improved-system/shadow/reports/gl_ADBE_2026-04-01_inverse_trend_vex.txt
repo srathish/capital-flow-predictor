@@ -1,0 +1,21 @@
+
+=========== ADBE weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+ADBE itself: 241.96 → 205.00 (-15.3%)
+ALL trades                 n= 3  win  33%  @$1k/trade mid +$343  worst +$135  avg 11%  SQN 0.32
+  chart-aligned only       n= 0
+  against chart            n= 3  win  33%  @$1k/trade mid +$343  worst +$135  avg 11%  SQN 0.32
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$298  worst -$298  avg -30%  SQN 0.00
+  shorts                   n= 2  win  50%  @$1k/trade mid +$641  worst +$433  avg 32%  SQN 0.65
+
+day outcomes: no fill 48 · no setup in reach 7 · FILLED inverse_floor down 2 · FILLED inverse_ceiling up 1 · no board 4
+
+-- every trade --
+  2026-04-14 09:51 PUT  inverse_floor @240 (gatekeeper) stop 241 T1 237.5 T2 235 rr 5 [vs chart]  ADBE260417P00240000 in $3.72 → T1@04-14 $6.2 · T2@04-14 $7.3  =  82%
+  2026-05-13 09:46 PUT  inverse_floor @235 (king) stop 236 T1 232.5 T2 230 rr 5 [vs chart]  ADBE260515P00235000 in $3.28 → stop(close)@05-13 $2.71  =  -17%
+  2026-06-05 09:36 CALL inverse_ceiling @260 (gatekeeper) stop 257.5 T1 262.5 T2 265 rr 2 [vs chart]  ADBE260612C00260000 in $12.54 → stop(close)@06-05 $8.8  =  -30%
+
+credits used 0

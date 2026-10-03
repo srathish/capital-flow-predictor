@@ -670,7 +670,7 @@
     "ceiling@322.5 down rr3"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-03-24",
@@ -1120,10 +1120,10 @@
    "chartOk": true,
    "contract": "AVGO260227P00317500",
    "entryOpt": 9.39,
-   "exits": "stop(close)@02-24 $0",
+   "exits": "stop(close)@02-24 $5.3",
    "exitDay": "2026-02-24",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": -0.436,
+   "retWorst": -0.436
   },
   {
    "D": "2026-02-25",
@@ -1346,6 +1346,26 @@
    "retWorst": -0.576
   },
   {
+   "D": "2026-03-23",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 322.5,
+   "nodeType": "king",
+   "stop": 325,
+   "t1": 320,
+   "t2": 315,
+   "rr": 3,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AVGO260327P00322500",
+   "entryOpt": 7.01,
+   "exits": "T1@03-23 $6.9 · breakeven@03-23 $6.62",
+   "exitDay": "2026-03-23",
+   "retMid": -0.036,
+   "retWorst": -0.036
+  },
+  {
    "D": "2026-03-24",
    "et": "09:35",
    "setup": "floor",
@@ -1380,10 +1400,10 @@
    "chartOk": true,
    "contract": "AVGO260327P00322500",
    "entryOpt": 6.84,
-   "exits": "T1@03-26 $9.65 · T2@03-26 $0",
+   "exits": "T1@03-26 $9.65 · T2@03-26 $11.99",
    "exitDay": "2026-03-26",
-   "retMid": -0.295,
-   "retWorst": -0.295
+   "retMid": 0.582,
+   "retWorst": 0.582
   }
  ]
 }

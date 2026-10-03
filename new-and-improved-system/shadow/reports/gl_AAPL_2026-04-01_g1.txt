@@ -1,0 +1,6 @@
+
+=== AAPL 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 2  win 50%  @$1k/trade mid -$176  worst -$176
+  2026-05-29 11:05 CALL dip_gatekeeper   @310 stop 309 T1 315 T2 320 AAPL260612C00310000 in $6.05 → stop(close)@06-01 $4 = -34%
+  2026-06-08 10:15 CALL dip_gatekeeper   @310 stop 307.5 T1 315 T2 320 AAPL260626C00310000 in $8.17 → T1@06-08 $10.21 · breakeven@06-08 $8.8 = 16%
+credits used 0

@@ -1,0 +1,7 @@
+
+=== AAPL 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 3  win 33%  @$1k/trade mid +$472  worst -$3
+  2026-02-17 10:37 PUT  flip_barney      @260 stop 262.5 T1 255 T2 252.5 AAPL260220P00260000 in $3.7 → stop(close)@02-17 $1.59 = -57%
+  2026-03-17 10:33 PUT  flip_barney      @255 stop 257.5 T1 250 T2 247.5 AAPL260320P00255000 in $2.57 → T1@03-18 $5.35 · T2@03-19 $7.3 = 146%
+  2026-03-24 10:15 PUT  flip_pika        @252.5 stop 255 T1 250 T2 247.5 AAPL260327P00252500 in $2.65 → time@03-26 $1.54 = -42%
+credits used 0

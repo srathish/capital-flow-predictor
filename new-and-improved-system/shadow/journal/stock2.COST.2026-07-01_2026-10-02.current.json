@@ -279,7 +279,7 @@
     "floor@970 up rr20"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-07-29",
@@ -915,10 +915,10 @@
    "chartOk": true,
    "contract": "COST260717P00915000",
    "entryOpt": 11.95,
-   "exits": "T1@07-10 $0 · breakeven@07-10 $9.64",
+   "exits": "T1@07-10 $11.6 · breakeven@07-10 $9.64",
    "exitDay": "2026-07-10",
-   "retMid": -0.597,
-   "retWorst": -0.598
+   "retMid": -0.111,
+   "retWorst": -0.115
   },
   {
    "D": "2026-07-17",
@@ -959,6 +959,26 @@
    "exitDay": "2026-07-21",
    "retMid": -0.512,
    "retWorst": -0.512
+  },
+  {
+   "D": "2026-07-28",
+   "et": "12:41",
+   "setup": "floor",
+   "direction": "up",
+   "node": 970,
+   "nodeType": "king",
+   "stop": 969,
+   "t1": 985,
+   "t2": 990,
+   "rr": 20,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "COST260731C00970000",
+   "entryOpt": 11.8,
+   "exits": "stop(close)@07-28 $8.5",
+   "exitDay": "2026-07-28",
+   "retMid": -0.28,
+   "retWorst": -0.28
   },
   {
    "D": "2026-08-03",

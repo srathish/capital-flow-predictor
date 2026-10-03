@@ -848,10 +848,10 @@
    "chartOk": true,
    "contract": "META260501P00677500",
    "entryOpt": 24.95,
-   "exits": "T1@04-28 $0 · T2@04-29 $0",
+   "exits": "T1@04-28 $27.23 · T2@04-29 $31.7",
    "exitDay": "2026-04-29",
-   "retMid": -1,
-   "retWorst": -1
+   "retMid": 0.181,
+   "retWorst": 0.171
   },
   {
    "D": "2026-04-30",
@@ -988,10 +988,10 @@
    "chartOk": true,
    "contract": "META260522P00615000",
    "entryOpt": 9.7,
-   "exits": "T1@05-19 $13.51 · T2@05-20 $0",
+   "exits": "T1@05-19 $13.51 · T2@05-20 $16.06",
    "exitDay": "2026-05-20",
-   "retMid": -0.304,
-   "retWorst": -0.304
+   "retMid": 0.524,
+   "retWorst": 0.524
   },
   {
    "D": "2026-05-22",

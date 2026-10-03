@@ -1,0 +1,10 @@
+
+=== AAPL 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 6  win 67%  @$1k/trade mid +$1046  worst +$793
+  2026-07-13 10:16 CALL dip_barney       @320 stop 317.5 T1 322.5 T2 325 AAPL260731C00320000 in $9.43 → stop(close)@07-13 $7.7 = -18%
+  2026-08-20 14:07 CALL dip_gatekeeper   @315 stop 314 T1 320 T2 325 AAPL260904C00315000 in $6.9 → stop(close)@08-20 $4.8 = -30%
+  2026-08-31 10:25 CALL dip_pika         @315 stop 312.5 T1 322.5 T2 325 AAPL260918C00315000 in $7.6 → T1@09-01 $12.1 · T2@09-01 $13.85 = 71%
+  2026-09-02 10:26 CALL dip_king         @325 stop 322.5 T1 330 T2 332.5 AAPL260918C00325000 in $7 → T1@09-03 $10.25 · breakeven@09-04 $6.45 = 19%
+  2026-09-15 10:15 CALL dip_gatekeeper   @330 stop 327.5 T1 332.5 T2 337.5 AAPL261002C00330000 in $7.15 → T1@09-16 $9.55 · T2@09-17 $11.5 = 47%
+  2026-09-29 15:05 CALL dip_king         @330 stop 327.5 T1 335 T2 342.5 AAPL261016C00330000 in $7.18 → T1@09-30 $9.8 · breakeven@10-01 $6.87 = 16%
+credits used 0

@@ -1,0 +1,5 @@
+
+=== COST 2026-01-02→2026-03-31 · g1 · 61 days ===
+trades 1  win 100%  @$1k/trade mid +$41  worst -$11
+  2026-02-04 10:30 CALL dip_king         @985 stop 982.5 T1 987.5 T2 992.5 COST260220C00985000 in $21.92 → T1@02-04 $21.92 · T2@02-04 $23.7 = 4%
+credits used 0

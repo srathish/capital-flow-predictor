@@ -1,0 +1,5 @@
+
+=== ORCL 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 1  win 0%  @$1k/trade mid -$981  worst -$981
+  2026-09-02 10:16 PUT  flip_king        @145 stop 146 T1 141 T2 140 ORCL260904P00145000 in $2.58 → stop(close)@09-03 $0.05 = -98%
+credits used 0

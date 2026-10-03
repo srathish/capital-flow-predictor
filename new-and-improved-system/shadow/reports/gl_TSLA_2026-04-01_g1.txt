@@ -1,0 +1,6 @@
+
+=== TSLA 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 2  win 50%  @$1k/trade mid -$5  worst -$35
+  2026-05-12 10:28 CALL dip_gatekeeper   @435 stop 434 T1 445 T2 447.5 TSLA260529C00435000 in $19 → stop(close)@05-12 $17.54 = -8%
+  2026-05-27 10:16 CALL dip_gatekeeper   @440 stop 439 T1 442.5 T2 447.5 TSLA260612C00440000 in $17.61 → T1@05-27 $19.75 · breakeven@05-27 $18 = 7%
+credits used 0

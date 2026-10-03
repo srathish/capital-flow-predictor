@@ -1,0 +1,6 @@
+
+=== AVGO 2026-01-02→2026-03-31 · r3 · 61 days ===
+trades 2  win 0%  @$1k/trade mid -$725  worst -$737
+  2026-02-06 13:35 PUT  flip_normal      @335 stop 336 T1 320 T2 315 AVGO260213P00335000 in $10.3 → stop(close)@02-09 $4.42 = -57%
+  2026-03-19 15:05 PUT  flip_gatekeeper  @322.5 stop 323.5 T1 305 T2 300 AVGO260327P00325000 in $10.4 → time@03-25 $8.8 = -15%
+credits used 0

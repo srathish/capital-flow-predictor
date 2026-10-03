@@ -1,0 +1,5 @@
+
+=== ORCL 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 1  win 0%  @$1k/trade mid -$451  worst -$451
+  2026-09-22 10:25 CALL dip_gatekeeper   @150 stop 149 T1 152.5 T2 null ORCL261009C00150000 in $6.74 → stop(close)@09-23 $3.7 = -45%
+credits used 0

@@ -36,7 +36,7 @@
     "rug@187.5 down rr7.5"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-04-07",
@@ -52,7 +52,7 @@
     "rug@187.5 down rr5"
    ],
    "roll": null,
-   "status": "no option print at fill"
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-04-08",
@@ -755,6 +755,46 @@
  ],
  "trades": [
   {
+   "D": "2026-04-06",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 185,
+   "nodeType": "king",
+   "stop": 184,
+   "t1": 187.5,
+   "t2": 190,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260410C00185000",
+   "entryOpt": 3.4,
+   "exits": "T1@04-06 $4.8 · breakeven@04-06 $3.3",
+   "exitDay": "2026-04-06",
+   "retMid": 0.191,
+   "retWorst": 0.191
+  },
+  {
+   "D": "2026-04-07",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 185,
+   "nodeType": "king",
+   "stop": 184,
+   "t1": 187.5,
+   "t2": 190,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260410C00185000",
+   "entryOpt": 3.18,
+   "exits": "stop(close)@04-07 $2.25",
+   "exitDay": "2026-04-07",
+   "retMid": -0.292,
+   "retWorst": -0.292
+  },
+  {
    "D": "2026-04-08",
    "et": "09:39",
    "setup": "floor",
@@ -1009,10 +1049,10 @@
    "chartOk": false,
    "contract": "CRM260522C00165000",
    "entryOpt": 5.1,
-   "exits": "T1@05-14 $6.2 · T2@05-15 $0",
+   "exits": "T1@05-14 $6.2 · T2@05-15 $8.25",
    "exitDay": "2026-05-15",
-   "retMid": -0.392,
-   "retWorst": -0.422
+   "retMid": 0.417,
+   "retWorst": 0.387
   },
   {
    "D": "2026-05-18",
@@ -1229,10 +1269,10 @@
    "chartOk": false,
    "contract": "CRM260618C00165000",
    "entryOpt": 4.8,
-   "exits": "T1@06-11 $5.8 · breakeven@06-12 $0",
+   "exits": "T1@06-11 $5.8 · breakeven@06-12 $4.15",
    "exitDay": "2026-06-12",
-   "retMid": -0.396,
-   "retWorst": -0.396
+   "retMid": 0.036,
+   "retWorst": 0.036
   },
   {
    "D": "2026-06-15",
@@ -1249,10 +1289,10 @@
    "chartOk": true,
    "contract": "CRM260618P00170000",
    "entryOpt": 4,
-   "exits": "T1@06-15 $4.17 · T2@06-15 $0",
+   "exits": "T1@06-15 $4.17 · T2@06-15 $6",
    "exitDay": "2026-06-15",
-   "retMid": -0.479,
-   "retWorst": -0.479
+   "retMid": 0.271,
+   "retWorst": 0.271
   },
   {
    "D": "2026-06-16",

@@ -1,0 +1,430 @@
+{
+ "trades": [
+  {
+   "D": "2026-04-30",
+   "et": "10:15",
+   "setup": "flip_gatekeeper",
+   "direction": "up",
+   "level": 260,
+   "stop": 259,
+   "t1": 270,
+   "t2": null,
+   "rr": 10,
+   "chart": "up",
+   "spy": "up",
+   "contract": "AMZN260515C00260000",
+   "entryOpt": 7.1,
+   "exits": "T1@05-01 $13 · time@05-13 $10.38",
+   "retMid": 0.646,
+   "retWorst": 0.578
+  },
+  {
+   "D": "2026-05-14",
+   "et": "10:27",
+   "setup": "flip_pika",
+   "direction": "up",
+   "level": 267.5,
+   "stop": 265,
+   "t1": 270,
+   "t2": 272.5,
+   "rr": 2,
+   "chart": "up",
+   "spy": "up",
+   "contract": "AMZN260529C00267500",
+   "entryOpt": 7.2,
+   "exits": "stop(close)@05-15 $4.37",
+   "retMid": -0.393,
+   "retWorst": -0.393
+  },
+  {
+   "D": "2026-05-26",
+   "et": "13:30",
+   "setup": "flip_gatekeeper",
+   "direction": "up",
+   "level": 262.5,
+   "stop": 261.5,
+   "t1": 270,
+   "t2": 275,
+   "rr": 12.5,
+   "chart": "up",
+   "spy": "up",
+   "contract": "AMZN260612C00262500",
+   "entryOpt": 6.99,
+   "exits": "T1@05-27 $11.13 · breakeven@06-01 $6",
+   "retMid": 0.225,
+   "retWorst": 0.225
+  }
+ ],
+ "log": [
+  {
+   "D": "2026-04-01",
+   "chart": "down",
+   "spy": "down",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-04-02",
+   "chart": "mixed",
+   "spy": "down",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-04-06",
+   "chart": "mixed",
+   "spy": "down",
+   "flips": [
+    "up@207.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-04-07",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "up@207.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-04-08",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "up@207.5",
+    "up@212.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-04-10",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "up@212.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-04-13",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-04-14",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "up@237.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-04-30",
+   "chart": "up",
+   "spy": "up",
+   "flips": [
+    "up@260"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-05-14",
+   "chart": "up",
+   "spy": "up",
+   "flips": [
+    "down@270",
+    "up@267.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": true
+  },
+  {
+   "D": "2026-05-18",
+   "chart": "up",
+   "spy": "up",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-05-19",
+   "chart": "up",
+   "spy": "up",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-05-20",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@260"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-05-21",
+   "chart": "up",
+   "spy": "up",
+   "flips": [
+    "up@262.5"
+   ],
+   "gate": {
+    "rr": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-05-22",
+   "chart": "up",
+   "spy": "up",
+   "flips": [
+    "up@262.5",
+    "up@265"
+   ],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-05-26",
+   "chart": "up",
+   "spy": "up",
+   "flips": [
+    "up@262.5",
+    "up@265",
+    "down@267.5"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-06-02",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@265"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-03",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@265"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-04",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@265",
+    "down@252.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-05",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-06-08",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@252.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-09",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@252.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-10",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@252.5",
+    "down@247.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-11",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@247.5",
+    "down@242.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-12",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@247.5",
+    "down@242.5",
+    "up@240"
+   ],
+   "gate": {
+    "trend": 3
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-15",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@242.5",
+    "down@240"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-16",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "up@245"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-17",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "up@245",
+    "down@247.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-18",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@247.5",
+    "down@245"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-22",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@247.5",
+    "down@245",
+    "up@240"
+   ],
+   "gate": {
+    "trend": 3
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-23",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@245",
+    "down@237.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-06-24",
+   "chart": "mixed",
+   "spy": "mixed",
+   "flips": [
+    "down@237.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  }
+ ]
+}

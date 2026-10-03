@@ -1,0 +1,7 @@
+
+=== AMD 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 3  win 33%  @$1k/trade mid -$518  worst -$555
+  2026-07-01 10:35 CALL dip_pika         @550 stop 547.5 T1 557.5 T2 560 AMD260717C00550000 in $34 → stop(close)@07-01 $27.77 = -18%
+  2026-09-23 10:15 CALL dip_gatekeeper   @612.5 stop 610 T1 620 T2 622.5 AMD261009C00615000 in $25.1 → T1@09-24 $28.5 · T2@09-24 $30 = 17%
+  2026-09-25 10:15 CALL dip_gatekeeper   @630 stop 627.5 T1 640 T2 642.5 AMD261009C00630000 in $26 → stop(close)@09-28 $13 = -50%
+credits used 0

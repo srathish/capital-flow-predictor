@@ -1,0 +1,5 @@
+
+=== CRM 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$53  worst -$53
+  2026-01-09 10:49 CALL flip_barney      @257.5 stop 256.5 T1 260 T2 265 CRM260123C00260000 in $5 → T1@01-09 $5.51 · breakeven@01-12 $3.96 = -5%
+credits used 0

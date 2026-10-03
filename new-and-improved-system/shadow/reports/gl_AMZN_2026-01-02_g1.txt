@@ -1,0 +1,9 @@
+
+=== AMZN 2026-01-02→2026-03-31 · g1 · 61 days ===
+trades 5  win 80%  @$1k/trade mid +$554  worst +$519
+  2026-01-02 11:11 CALL dip_gatekeeper   @230 stop 229 T1 235 T2 237.5 AMZN260116C00230000 in $5.12 → stop(close)@01-02 $3.15 = -39%
+  2026-01-06 10:30 CALL dip_king         @232.5 stop 231.5 T1 235 T2 237.5 AMZN260123C00232500 in $6.05 → T1@01-06 $7 · T2@01-06 $8 = 24%
+  2026-01-07 10:30 CALL dip_king         @240 stop 239 T1 242.5 T2 245 AMZN260123C00240000 in $5.7 → T1@01-07 $7 · T2@01-07 $8.55 = 36%
+  2026-01-14 11:01 CALL dip_gatekeeper   @237.5 stop 236.5 T1 240 T2 242.5 AMZN260130C00237500 in $6.65 → T1@01-14 $7.5 · breakeven@01-14 $6.15 = 3%
+  2026-01-20 15:21 CALL dip_king         @230 stop 229 T1 235 T2 240 AMZN260206C00230000 in $10.3 → T1@01-22 $12 · T2@01-23 $14.97 = 31%
+credits used 0

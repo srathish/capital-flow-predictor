@@ -1021,10 +1021,10 @@
    "chartOk": true,
    "contract": "NFLX260626P00075000",
    "entryOpt": 1.79,
-   "exits": "T1@06-23 $2.32 · T2@06-24 $0",
+   "exits": "T1@06-23 $2.32 · T2@06-24 $3.01",
    "exitDay": "2026-06-24",
-   "retMid": -0.352,
-   "retWorst": -0.366
+   "retMid": 0.489,
+   "retWorst": 0.456
   }
  ]
 }

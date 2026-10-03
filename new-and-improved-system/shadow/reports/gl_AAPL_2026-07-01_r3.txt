@@ -1,0 +1,13 @@
+
+=== AAPL 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 9  win 44%  @$1k/trade mid +$2408  worst +$1163
+  2026-07-10 10:25 CALL flip_gatekeeper  @312.5 stop 310 T1 317.5 T2 322.5 AAPL260717C00312500 in $4.4 → T1@07-13 $8.42 · T2@07-13 $11.12 = 122%
+  2026-07-14 10:25 CALL flip_pika        @315 stop 312.5 T1 320 T2 322.5 AAPL260717C00315000 in $3.03 → T1@07-15 $6.22 · T2@07-15 $8.66 = 146%
+  2026-07-17 10:15 CALL flip_gatekeeper  @330 stop 327.5 T1 335 T2 340 AAPL260724C00330000 in $5.61 → stop(close)@07-20 $3.1 = -45%
+  2026-07-22 10:15 CALL flip_gatekeeper  @325 stop 322.5 T1 327.5 T2 330 AAPL260724C00325000 in $3.44 → stop(close)@07-23 $0.72 = -79%
+  2026-08-20 14:07 CALL flip_king        @315 stop 314 T1 320 T2 325 AAPL260828C00315000 in $5.1 → stop(close)@08-20 $3.15 = -38%
+  2026-09-04 11:02 CALL flip_gatekeeper  @317.5 stop 316.5 T1 327.5 T2 335 AAPL260911C00317500 in $5.2 → stop(close)@09-08 $4 = -23%
+  2026-09-15 10:15 CALL flip_pika        @330 stop 327.5 T1 332.5 T2 337.5 AAPL260918C00330000 in $3.4 → T1@09-16 $5.25 · T2@09-17 $8.6 = 104%
+  2026-09-18 11:05 CALL flip_gatekeeper  @335 stop 332.5 T1 340 T2 342.5 AAPL260925C00335000 in $4.15 → T1@09-22 $8.1 · T2@09-22 $9.9 = 117%
+  2026-09-23 10:15 CALL flip_gatekeeper  @337.5 stop 335 T1 342.5 T2 345 AAPL260925C00337500 in $2.86 → time@09-24 $1.08 = -62%
+credits used 0

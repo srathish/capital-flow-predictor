@@ -1,0 +1,9 @@
+
+=== COST 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 5  win 20%  @$1k/trade mid -$1707  worst -$1707
+  2026-04-10 10:19 CALL flip_king        @1010 stop 1005 T1 1020 T2 1030 COST260417C01010000 in $11.5 → stop(close)@04-10 $6.31 = -45%
+  2026-04-22 14:52 CALL flip_gatekeeper  @1000 stop 995 T1 1005 T2 1015 COST260424C01000000 in $9.2 → T1@04-22 $9.68 · T2@04-23 $16.05 = 40%
+  2026-05-20 10:23 CALL flip_king        @1080 stop 1070 T1 1090 T2 1100 COST260522C01080000 in $8.9 → stop(close)@05-21 $0.3 = -97%
+  2026-06-08 10:16 PUT  flip_gatekeeper  @975 stop 980 T1 970 T2 945 COST260612P00975000 in $10.9 → T1@06-09 $12.33 · breakeven@06-09 $9.28 = -1%
+  2026-06-10 10:25 PUT  flip_gatekeeper  @970 stop 975 T1 965 T2 955 COST260612P00970000 in $9.6 → stop(close)@06-10 $3.08 = -68%
+credits used 0

@@ -1,0 +1,5 @@
+
+=== AVGO 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 1  win 0%  @$1k/trade mid -$750  worst -$750
+  2026-08-12 14:03 CALL dip_gatekeeper   @417.5 stop 415 T1 425 T2 430 AVGO260828C00420000 in $14 → stop(close)@08-14 $3.5 = -75%
+credits used 0

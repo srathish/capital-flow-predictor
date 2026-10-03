@@ -1,0 +1,6 @@
+
+=== NVDA 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 2  win 50%  @$1k/trade mid -$33  worst -$92
+  2026-08-28 10:23 CALL dip_gatekeeper   @225 stop 224 T1 227.5 T2 230 NVDA260911C00225000 in $5.7 → stop(close)@08-28 $2.54 = -55%
+  2026-10-01 10:15 CALL dip_gatekeeper   @230 stop 229 T1 232.5 T2 235 NVDA261016C00230000 in $5.95 → T1@10-02 $9.05 · T2@10-02 $9.05 = 52%
+credits used 0

@@ -1,0 +1,7 @@
+
+=== AMZN 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 3  win 67%  @$1k/trade mid +$26  worst -$31
+  2026-04-30 15:13 CALL dip_pika         @265 stop 262.5 T1 270 T2 null AMZN260515C00265000 in $6.6 → T1@05-01 $9.5 · breakeven@05-12 $3.41 = -2%
+  2026-05-18 14:58 CALL dip_gatekeeper   @262.5 stop 260 T1 265 T2 270 AMZN260605C00265000 in $6.2 → T1@05-18 $7.25 · breakeven@05-19 $5.45 = 2%
+  2026-05-26 10:30 CALL dip_gatekeeper   @265 stop 264 T1 270 T2 275 AMZN260612C00265000 in $7.6 → T1@05-27 $10.21 · breakeven@06-01 $5.35 = 2%
+credits used 0

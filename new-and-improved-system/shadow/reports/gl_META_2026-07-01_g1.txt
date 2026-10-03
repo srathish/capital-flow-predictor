@@ -1,0 +1,11 @@
+
+=== META 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 7  win 57%  @$1k/trade mid +$146  worst -$13
+  2026-09-09 10:22 CALL dip_pika         @642.5 stop 640 T1 645 T2 650 META260925C00645000 in $21 → T1@09-09 $22.48 · T2@09-09 $24.1 = 11%
+  2026-09-11 10:53 CALL dip_king         @650 stop 649 T1 660 T2 670 META260925C00650000 in $19.8 → stop(close)@09-11 $17.6 = -11%
+  2026-09-14 10:40 CALL dip_king         @650 stop 645 T1 655 T2 660 META261002C00650000 in $24.39 → T1@09-14 $25.2 · T2@09-14 $28 = 9%
+  2026-09-16 10:15 CALL dip_gatekeeper   @680 stop 675 T1 685 T2 690 META261002C00680000 in $23 → stop(close)@09-16 $19.4 = -16%
+  2026-09-18 10:22 CALL dip_pika         @675 stop 670 T1 685 T2 687.5 META261002C00675000 in $19.45 → stop(close)@09-18 $15.75 = -19%
+  2026-09-28 10:15 CALL dip_gatekeeper   @720 stop 715 T1 730 T2 732.5 META261016C00720000 in $27.54 → T1@09-29 $33.09 · T2@09-29 $33.09 = 20%
+  2026-10-01 10:17 CALL dip_gatekeeper   @725 stop 720 T1 730 T2 735 META261016C00725000 in $22.71 → T1@10-01 $25.6 · T2@10-02 $29 = 20%
+credits used 0

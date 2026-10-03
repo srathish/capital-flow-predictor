@@ -716,10 +716,10 @@
    "chartOk": true,
    "contract": "CRM260109C00255000",
    "entryOpt": 2.8,
-   "exits": "T1@01-05 $3.67 · T2@01-06 $0",
+   "exits": "T1@01-05 $3.67 · T2@01-06 $5.7",
    "exitDay": "2026-01-06",
-   "retMid": -0.345,
-   "retWorst": -0.375
+   "retMid": 0.673,
+   "retWorst": 0.641
   },
   {
    "D": "2026-01-09",
@@ -816,10 +816,10 @@
    "chartOk": false,
    "contract": "CRM260123C00225000",
    "entryOpt": 4.95,
-   "exits": "T1@01-20 $4.46 · breakeven@01-20 $0",
+   "exits": "T1@01-20 $4.46 · breakeven@01-20 $4.35",
    "exitDay": "2026-01-20",
-   "retMid": -0.549,
-   "retWorst": -0.549
+   "retMid": -0.11,
+   "retWorst": -0.11
   },
   {
    "D": "2026-01-21",
@@ -836,10 +836,10 @@
    "chartOk": false,
    "contract": "CRM260123C00220000",
    "entryOpt": 4.4,
-   "exits": "T1@01-21 $4.01 · breakeven@01-21 $0",
+   "exits": "T1@01-21 $4.01 · breakeven@01-21 $2.95",
    "exitDay": "2026-01-21",
-   "retMid": -0.544,
-   "retWorst": -0.544
+   "retMid": -0.209,
+   "retWorst": -0.209
   },
   {
    "D": "2026-01-23",
@@ -876,10 +876,10 @@
    "chartOk": true,
    "contract": "CRM260130P00230000",
    "entryOpt": 4.46,
-   "exits": "T1@01-27 $5.2 · breakeven@01-28 $0",
+   "exits": "T1@01-27 $5.2 · breakeven@01-28 $3.94",
    "exitDay": "2026-01-28",
-   "retMid": -0.417,
-   "retWorst": -0.417
+   "retMid": 0.025,
+   "retWorst": 0.025
   },
   {
    "D": "2026-01-29",

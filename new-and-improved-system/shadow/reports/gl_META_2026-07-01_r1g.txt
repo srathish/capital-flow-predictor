@@ -1,0 +1,5 @@
+
+=== META 2026-07-01→2026-10-02 · r1g · 66 days ===
+trades 1  win 100%  @$1k/trade mid +$109  worst +$104
+  2026-07-16 10:20 CALL inverse_ceiling  @675 stop 670 T1 680 T2 690 META260724C00675000 in $18.05 → T1@07-16 $21.85 · breakeven@07-16 $18.2 = 11%
+credits used 2

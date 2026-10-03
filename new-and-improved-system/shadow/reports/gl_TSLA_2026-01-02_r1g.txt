@@ -1,0 +1,5 @@
+
+=== TSLA 2026-01-02→2026-03-31 · r1g · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$258  worst -$282
+  2026-03-05 10:30 PUT  inverse_floor    @400 stop 401 T1 397.5 T2 395 TSLA260313P00400000 in $9.85 → stop(close)@03-05 $7.31 = -26%
+credits used 9

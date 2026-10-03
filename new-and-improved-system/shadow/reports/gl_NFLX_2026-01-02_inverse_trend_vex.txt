@@ -1,0 +1,19 @@
+
+=========== NFLX weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+NFLX itself: 94.13 → 96.13 (2.1%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$710  worst -$750  avg -71%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$710  worst -$750  avg -71%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$710  worst -$750  avg -71%  SQN 0.00
+
+day outcomes: no fill 42 · no setup in reach 14 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-02-25 10:35 PUT  inverse_floor @80 (king) stop 81 T1 79 T2 78 rr 2 [vs chart]  NFLX260227P00080000 in $1.07 → stop(close)@02-25 $0.31  =  -71%
+
+credits used 0

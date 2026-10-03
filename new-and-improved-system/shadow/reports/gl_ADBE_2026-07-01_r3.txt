@@ -1,0 +1,7 @@
+
+=== ADBE 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 3  win 33%  @$1k/trade mid -$1440  worst -$1462
+  2026-08-11 13:30 CALL flip_gatekeeper  @265 stop 262.5 T1 272.5 T2 275 ADBE260814C00265000 in $4.55 → stop(close)@08-12 $1.22 = -73%
+  2026-08-14 10:15 CALL flip_normal      @262.5 stop 260 T1 270 T2 272.5 ADBE260821C00265000 in $5.26 → stop(close)@08-17 $1.42 = -73%
+  2026-08-31 10:15 CALL flip_pika        @290 stop 289 T1 292.5 T2 295 ADBE260904C00290000 in $5.75 → T1@08-31 $6.1 · breakeven@09-01 $5.65 = 2%
+credits used 0

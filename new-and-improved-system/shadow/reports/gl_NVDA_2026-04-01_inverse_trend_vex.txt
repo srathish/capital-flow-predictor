@@ -1,0 +1,21 @@
+
+=========== NVDA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+NVDA itself: 176.00 → 199.69 (13.5%)
+ALL trades                 n= 3  win   0%  @$1k/trade mid -$1232  worst -$1342  avg -41%  SQN -24.36
+  chart-aligned only       n= 0
+  against chart            n= 3  win   0%  @$1k/trade mid -$1232  worst -$1342  avg -41%  SQN -24.36
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win   0%  @$1k/trade mid -$1232  worst -$1342  avg -41%  SQN -24.36
+  shorts                   n= 0
+
+day outcomes: no fill 42 · no setup in reach 13 · FILLED inverse_ceiling up 3 · no board 4
+
+-- every trade --
+  2026-04-21 09:35 CALL inverse_ceiling @202.5 (king) stop 201.5 T1 205 T2 207.5 rr 5 [vs chart]  NVDA260424C00202500 in $2.7 → stop(close)@04-21 $1.55  =  -43%
+  2026-05-04 09:35 CALL inverse_ceiling @200 (king) stop 199 T1 202.5 T2 205 rr 5 [vs chart]  NVDA260508C00200000 in $4.16 → stop(close)@05-04 $2.59  =  -38%
+  2026-05-05 09:38 CALL inverse_ceiling @200 (king) stop 199 T1 202.5 T2 205 rr 5 [vs chart]  NVDA260508C00200000 in $2.73 → stop(close)@05-05 $1.56  =  -43%
+
+credits used 0

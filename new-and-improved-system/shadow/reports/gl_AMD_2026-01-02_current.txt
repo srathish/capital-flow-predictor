@@ -1,0 +1,48 @@
+
+=========== AMD weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=current ===========
+AMD itself: 218.98 → 203.23 (-7.2%)
+ALL trades                 n=30  win  57%  @$1k/trade mid +$186  worst -$2308  avg 1%  SQN 0.12
+  chart-aligned only       n=23  win  61%  @$1k/trade mid +$613  worst -$1448  avg 3%  SQN 0.43
+  against chart            n= 7  win  43%  @$1k/trade mid -$427  worst -$860  avg -6%  SQN -0.57
+  reverse_rug              n= 2  win  50%  @$1k/trade mid +$12  worst -$116  avg 1%  SQN 0.08
+  floor                    n=11  win  55%  @$1k/trade mid +$328  worst -$519  avg 3%  SQN 0.34
+  rug                      n= 2  win  50%  @$1k/trade mid +$97  worst -$11  avg 5%  SQN 0.63
+  ceiling                  n=15  win  60%  @$1k/trade mid -$251  worst -$1662  avg -2%  SQN -0.20
+  longs                    n=13  win  54%  @$1k/trade mid +$340  worst -$635  avg 3%  SQN 0.35
+  shorts                   n=17  win  59%  @$1k/trade mid -$154  worst -$1673  avg -1%  SQN -0.12
+
+day outcomes: FILLED ceiling down 15 · no fill 4 · no setup in reach 9 · FILLED floor up 11 · in position 14 · FILLED reverse_rug up 2 · FILLED rug down 2 · no board 4
+
+-- every trade --
+  2026-01-02 10:42 PUT  ceiling     @225 (gatekeeper) stop 226 T1 222.5 T2 220 rr 5   AMD260109P00225000 in $6.36 → T1@01-02 $7.4 · T2@01-02 $8.5  =  25%
+  2026-01-07 10:36 CALL floor       @207.5 (gatekeeper) stop 206.5 T1 210 T2 212.5 rr 5 [vs chart]  AMD260109C00207500 in $4.05 → T1@01-07 $5.05 · breakeven@01-08 $2.51  =  -7%
+  2026-01-12 10:37 PUT  ceiling     @205 (gatekeeper) stop 206 T1 202.5 T2 200 rr 5   AMD260116P00205000 in $4.6 → stop(close)@01-12 $3  =  -35%
+  2026-01-13 10:35 CALL floor       @220 (gatekeeper) stop 219 T1 222.5 T2 null rr 2.5 [vs chart]  AMD260116C00220000 in $5.25 → T1@01-13 $5.7 · breakeven@01-13 $4.3  =  -5%
+  2026-01-14 11:14 PUT  ceiling     @220 (gatekeeper) stop 221 T1 215 T2 212.5 rr 7.5   AMD260116P00220000 in $3.99 → stop(close)@01-14 $2.1  =  -47%
+  2026-01-16 10:35 PUT  ceiling     @230 (king) stop 231 T1 227.5 T2 225 rr 5   AMD260123P00230000 in $5.67 → stop(close)@01-16 $4.95  =  -13%
+  2026-01-20 10:36 CALL floor       @230 (king) stop 229 T1 235 T2 237.5 rr 7.5   AMD260123C00230000 in $6.58 → T1@01-20 $8.91 · T2@01-20 $10.42  =  47%
+  2026-01-21 10:35 CALL floor       @237.5 (gatekeeper) stop 236.5 T1 240 T2 242.5 rr 5   AMD260123C00237500 in $5.5 → T1@01-21 $6.75 · T2@01-21 $7.9  =  33%
+  2026-01-23 10:36 CALL floor       @260 (king) stop 259 T1 262.5 T2 265 rr 5   AMD260130C00260000 in $9.5 → T1@01-23 $10 · T2@01-23 $11.73  =  14%
+  2026-01-26 10:43 CALL reverse_rug @252.5 (gatekeeper) stop 250 T1 255 T2 257.5 rr 2   AMD260130C00252500 in $7.3 → T1@01-27 $7.66 · breakeven@01-27 $5.89  =  -7%
+  2026-01-30 10:35 PUT  rug         @242.5 (pika) stop 243.5 T1 240 T2 237.5 rr 5 [vs chart]  AMD260206P00242500 in $11.15 → T1@01-30 $12 · T2@01-30 $13.12  =  13%
+  2026-02-02 10:35 CALL floor       @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5   AMD260206C00240000 in $11.12 → T1@02-02 $11.75 · T2@02-02 $12.68  =  10%
+  2026-02-05 10:38 PUT  ceiling     @202.5 (normal) stop 203.5 T1 200 T2 197.5 rr 5   AMD260213P00202500 in $8.5 → T1@02-05 $9.39 · T2@02-05 $10.86  =  19%
+  2026-02-09 10:36 PUT  ceiling     @210 (gatekeeper) stop 211 T1 207.5 T2 205 rr 5   AMD260213P00210000 in $6.34 → stop(close)@02-09 $3.1  =  -51%
+  2026-02-10 10:35 PUT  ceiling     @217.5 (gatekeeper) stop 218.5 T1 215 T2 212.5 rr 5   AMD260213P00217500 in $4.55 → T1@02-10 $6.7 · breakeven@02-11 $4.8  =  26%
+  2026-02-12 10:41 CALL floor       @215 (barney) stop 214 T1 220 T2 222.5 rr 7.5 [vs chart]  AMD260220C00215000 in $7.15 → stop(close)@02-12 $3.15  =  -56%
+  2026-02-13 10:35 PUT  ceiling     @210 (normal) stop 211 T1 207.5 T2 205 rr 5   AMD260220P00210000 in $7 → T1@02-13 $7.46 · T2@02-13 $9.14  =  19%
+  2026-02-17 10:35 PUT  ceiling     @205 (pika) stop 206 T1 202.5 T2 null rr 2.5   AMD260220P00205000 in $5.65 → T1@02-17 $6.93 · time@02-19 $3.39  =  -9%
+  2026-02-20 10:40 PUT  ceiling     @202.5 (normal) stop 203.5 T1 200 T2 197.5 rr 5   AMD260227P00202500 in $6.49 → T1@02-20 $7.5 · breakeven@02-20 $6.5  =  8%
+  2026-02-24 10:35 PUT  ceiling     @210 (gatekeeper) stop 211 T1 207.5 T2 205 rr 5   AMD260227P00210000 in $6.05 → T1@02-24 $7.45 · breakeven@02-24 $5.95  =  11%
+  2026-02-26 10:35 PUT  ceiling     @205 (gatekeeper) stop 206 T1 200 T2 null rr 5   AMD260306P00205000 in $6.95 → T1@02-27 $10 · time@03-04 $5.33  =  10%
+  2026-03-05 10:39 CALL reverse_rug @200 (normal) stop 199 T1 202.5 T2 205 rr 5 [vs chart]  AMD260313C00200000 in $7.24 → T1@03-05 $8.65 · breakeven@03-05 $7.05  =  8%
+  2026-03-06 12:42 PUT  ceiling     @200 (pika) stop 201 T1 195 T2 192.5 rr 7.5   AMD260313P00200000 in $6.23 → T1@03-06 $9 · T2@03-06 $10.6  =  57%
+  2026-03-09 09:42 CALL floor       @190 (gatekeeper) stop 189 T1 195 T2 null rr 5 [vs chart]  AMD260313C00190000 in $6.45 → T1@03-09 $8.6 · time@03-12 $8.28  =  31%
+  2026-03-16 11:22 PUT  rug         @200 (king) stop 201 T1 197.5 T2 195 rr 5   AMD260320P00200000 in $5.1 → T1@03-16 $6.4 · breakeven@03-18 $3.5  =  -3%
+  2026-03-19 09:44 PUT  ceiling     @195 (gatekeeper) stop 196 T1 192.5 T2 190 rr 5   AMD260327P00195000 in $6.6 → stop(close)@03-19 $2.74  =  -59%
+  2026-03-20 09:57 CALL floor       @202.5 (gatekeeper) stop 201.5 T1 205 T2 207.5 rr 5   AMD260327C00202500 in $6.24 → stop(close)@03-20 $5.3  =  -15%
+  2026-03-23 11:38 CALL floor       @205 (pika) stop 204 T1 207.5 T2 210 rr 5 [vs chart]  AMD260327C00205000 in $5.26 → stop(close)@03-23 $3.83  =  -27%
+  2026-03-24 09:41 CALL floor       @202.5 (normal) stop 201.5 T1 205 T2 210 rr 7.5   AMD260327C00202500 in $4.8 → T1@03-24 $6 · breakeven@03-24 $4.3  =  7%
+  2026-03-25 09:36 PUT  ceiling     @217.5 (gatekeeper) stop 218.5 T1 215 T2 212.5 rr 5   AMD260327P00217500 in $4.3 → T1@03-25 $5.55 · breakeven@03-25 $4.15  =  13%
+
+credits used 0

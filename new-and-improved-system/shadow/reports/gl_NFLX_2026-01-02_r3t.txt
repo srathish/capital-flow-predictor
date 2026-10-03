@@ -1,0 +1,6 @@
+
+=== NFLX 2026-01-02→2026-03-31 · r3t · 61 days ===
+trades 2  win 50%  @$1k/trade mid -$486  worst -$562
+  2026-02-05 10:35 PUT  flip_gatekeeper  @83 stop 84 T1 82 T2 81 NFLX260220P00085000 in $3.61 → T1@02-05 $4.2 · T2@02-05 $4.58 = 22%
+  2026-02-18 13:30 PUT  flip_gatekeeper  @78 stop 79 T1 75 T2 null NFLX260306P00078000 in $2.38 → stop(close)@02-25 $0.71 = -70%
+credits used 0

@@ -1,0 +1,9 @@
+
+=== AMZN 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 5  win 60%  @$1k/trade mid +$3021  worst +$2690
+  2026-04-16 10:32 CALL flip_gatekeeper  @245 stop 244 T1 247.5 T2 250 AMZN260424C00245000 in $4.86 → T1@04-16 $6.15 · T2@04-17 $9.63 = 62%
+  2026-04-30 10:15 CALL flip_gatekeeper  @260 stop 259 T1 270 T2 null AMZN260508C00260000 in $5.58 → T1@05-01 $11.35 · time@05-06 $15.98 = 145%
+  2026-05-14 10:27 CALL flip_pika        @267.5 stop 265 T1 270 T2 272.5 AMZN260522C00267500 in $5.85 → stop(close)@05-15 $2.84 = -52%
+  2026-05-26 13:30 CALL flip_gatekeeper  @262.5 stop 261.5 T1 270 T2 275 AMZN260529C00262500 in $3.15 → T1@05-27 $8.23 · time@05-28 $11.9 = 219%
+  2026-05-29 14:16 CALL flip_king        @270 stop 269 T1 275 T2 280 AMZN260605C00270000 in $4.65 → stop(close)@06-01 $1.25 = -73%
+credits used 0

@@ -1,0 +1,5 @@
+
+=== ADBE 2026-01-02→2026-03-31 · g1 · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$671  worst -$671
+  2026-01-02 10:34 CALL dip_barney       @345 stop 342.5 T1 350 T2 352.5 ADBE260116C00345000 in $8.35 → stop(close)@01-02 $2.75 = -67%
+credits used 0

@@ -903,10 +903,10 @@
    "chartOk": false,
    "contract": "CRM260410P00185000",
    "entryOpt": 3.56,
-   "exits": "T1@04-07 $0 · breakeven@04-08 $2.6",
+   "exits": "T1@04-07 $3.95 · breakeven@04-08 $2.6",
    "exitDay": "2026-04-08",
-   "retMid": -0.635,
-   "retWorst": -0.635
+   "retMid": -0.08,
+   "retWorst": -0.08
   }
  ]
 }

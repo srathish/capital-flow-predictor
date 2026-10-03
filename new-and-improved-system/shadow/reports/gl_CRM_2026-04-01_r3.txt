@@ -1,0 +1,5 @@
+
+=== CRM 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 1  win 0%  @$1k/trade mid -$751  worst -$751
+  2026-04-13 13:30 PUT  flip_normal      @172.5 stop 173.5 T1 165 T2 null CRM260417P00172500 in $3.38 → stop(close)@04-15 $0.84 = -75%
+credits used 0

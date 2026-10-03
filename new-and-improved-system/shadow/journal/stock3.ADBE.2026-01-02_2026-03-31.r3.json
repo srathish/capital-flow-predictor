@@ -1,0 +1,649 @@
+{
+ "trades": [
+  {
+   "D": "2026-01-21",
+   "et": "10:35",
+   "setup": "flip_pika",
+   "direction": "down",
+   "level": 292.5,
+   "stop": 295,
+   "t1": 290,
+   "t2": 287.5,
+   "rr": 2,
+   "chart": "down",
+   "spy": "mixed",
+   "contract": "ADBE260123P00295000",
+   "entryOpt": 4.78,
+   "exits": "T1@01-21 $6.06 · breakeven@01-21 $4.25",
+   "retMid": 0.078,
+   "retWorst": 0.078
+  },
+  {
+   "D": "2026-01-22",
+   "et": "10:37",
+   "setup": "flip_gatekeeper",
+   "direction": "down",
+   "level": 300,
+   "stop": 301,
+   "t1": 297.5,
+   "t2": 295,
+   "rr": 5,
+   "chart": "down",
+   "spy": "mixed",
+   "contract": "ADBE260130P00300000",
+   "entryOpt": 7.5,
+   "exits": "T1@01-22 $5.49 · breakeven@01-22 $5",
+   "retMid": -0.301,
+   "retWorst": -0.301
+  },
+  {
+   "D": "2026-02-13",
+   "et": "10:30",
+   "setup": "flip_gatekeeper",
+   "direction": "down",
+   "level": 262.5,
+   "stop": 265,
+   "t1": 255,
+   "t2": null,
+   "rr": 3,
+   "chart": "down",
+   "spy": "mixed",
+   "contract": "ADBE260220P00262500",
+   "entryOpt": 7,
+   "exits": "time@02-19 $4.92",
+   "retMid": -0.297,
+   "retWorst": -0.297
+  },
+  {
+   "D": "2026-02-20",
+   "et": "10:52",
+   "setup": "flip_gatekeeper",
+   "direction": "down",
+   "level": 260,
+   "stop": 262.5,
+   "t1": 255,
+   "t2": 252.5,
+   "rr": 3,
+   "chart": "down",
+   "spy": "mixed",
+   "contract": "ADBE260227P00260000",
+   "entryOpt": 7.7,
+   "exits": "T1@02-23 $8.56 · T2@02-23 $9.51",
+   "retMid": 0.173,
+   "retWorst": 0.173
+  },
+  {
+   "D": "2026-02-24",
+   "et": "10:38",
+   "setup": "flip_gatekeeper",
+   "direction": "down",
+   "level": 252.5,
+   "stop": 253.5,
+   "t1": 245,
+   "t2": 242.5,
+   "rr": 10,
+   "chart": "down",
+   "spy": "mixed",
+   "contract": "ADBE260227P00255000",
+   "entryOpt": 9.09,
+   "exits": "stop(close)@02-24 $5.35",
+   "retMid": -0.411,
+   "retWorst": -0.411
+  }
+ ],
+ "log": [
+  {
+   "D": "2026-01-02",
+   "chart": "up",
+   "spy": "mixed",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-01-05",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@350"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-06",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@350",
+    "up@330"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-07",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@350",
+    "up@330"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-08",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "up@330",
+    "up@337.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-09",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "up@337.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-12",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@335"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-13",
+   "chart": "mixed",
+   "spy": "up",
+   "flips": [
+    "down@335"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-14",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@335",
+    "down@320"
+   ],
+   "gate": {
+    "index": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-15",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@320"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-16",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@320"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-20",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@300"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-21",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@300",
+    "down@292.5"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-01-22",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@300",
+    "up@292.5"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-01-23",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@292.5",
+    "up@297.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-26",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@292.5",
+    "up@297.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-27",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@297.5",
+    "up@302.5"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-28",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@300"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-29",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@300"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-01-30",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@300"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-02",
+   "chart": "down",
+   "spy": "up",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-02-03",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@295"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-04",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@295",
+    "down@282.5"
+   ],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-02-05",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@295",
+    "down@282.5",
+    "up@267.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-06",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@282.5",
+    "up@267.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-09",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@267.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-10",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@267.5"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-11",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@267.5"
+   ],
+   "gate": {
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-12",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "down@267.5",
+    "down@262.5"
+   ],
+   "gate": {
+    "index": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-13",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@262.5",
+    "up@260"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-02-20",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@265",
+    "down@260"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-02-24",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "down@252.5"
+   ],
+   "gate": {},
+   "filled": true
+  },
+  {
+   "D": "2026-02-25",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@247.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-26",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@247.5"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-02-27",
+   "chart": "down",
+   "spy": "up",
+   "flips": [
+    "up@247.5",
+    "down@260"
+   ],
+   "gate": {
+    "trend": 1,
+    "index": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-02",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "up@255"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-03",
+   "chart": "down",
+   "spy": "mixed",
+   "flips": [
+    "up@255"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-04",
+   "chart": "mixed",
+   "spy": "down",
+   "flips": [
+    "up@255",
+    "up@270"
+   ],
+   "gate": {
+    "trend": 2
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-13",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "down@280",
+    "down@275",
+    "down@272.5"
+   ],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-03-16",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "down@275",
+    "down@272.5"
+   ],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-03-17",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "down@272.5",
+    "up@250"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-18",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "up@250"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-19",
+   "chart": "down",
+   "spy": "down",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-03-20",
+   "chart": "down",
+   "spy": "down",
+   "flips": [],
+   "gate": {},
+   "filled": false
+  },
+  {
+   "D": "2026-03-23",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "up@245"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-24",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "up@245"
+   ],
+   "gate": {
+    "trend": 1
+   },
+   "filled": false
+  },
+  {
+   "D": "2026-03-25",
+   "chart": "down",
+   "spy": "down",
+   "flips": [
+    "down@242.5"
+   ],
+   "gate": {},
+   "filled": false
+  }
+ ]
+}

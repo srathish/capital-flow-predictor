@@ -1,0 +1,6 @@
+
+=== AMZN 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 2  win 50%  @$1k/trade mid -$421  worst -$421
+  2026-08-06 10:25 CALL dip_gatekeeper   @272.5 stop 270 T1 275 T2 280 AMZN260821C00272500 in $7.6 → T1@08-07 $8.03 · T2@08-10 $10.2 = 20%
+  2026-08-17 10:45 CALL dip_king         @260 stop 257.5 T1 267.5 T2 null AMZN260904C00260000 in $7.1 → stop(close)@08-27 $2.7 = -62%
+credits used 0

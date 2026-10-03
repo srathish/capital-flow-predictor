@@ -1,0 +1,10 @@
+
+=== MSFT 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 6  win 33%  @$1k/trade mid -$350  worst -$487
+  2026-04-30 10:45 CALL dip_gatekeeper   @405 stop 402.5 T1 412.5 T2 415 MSFT260515C00405000 in $10.35 → T1@05-01 $14.71 · T2@05-01 $16 = 48%
+  2026-05-05 15:10 CALL dip_king         @412.5 stop 410 T1 415 T2 417.5 MSFT260522C00412500 in $9.2 → T1@05-06 $10.65 · T2@05-06 $12.42 = 25%
+  2026-05-08 10:27 CALL dip_gatekeeper   @415 stop 412.5 T1 420 T2 425 MSFT260522C00415000 in $9.4 → stop(close)@05-12 $4.75 = -50%
+  2026-05-21 13:53 CALL dip_gatekeeper   @420 stop 419 T1 425 T2 430 MSFT260605C00420000 in $9.7 → stop(close)@05-22 $8.2 = -16%
+  2026-05-26 10:49 CALL dip_gatekeeper   @415 stop 414 T1 417.5 T2 420 MSFT260612C00415000 in $11.25 → stop(close)@05-27 $8.7 = -23%
+  2026-06-02 10:24 CALL dip_barney       @445 stop 442.5 T1 450 T2 452.5 MSFT260618C00445000 in $13.75 → stop(close)@06-02 $10.85 = -21%
+credits used 0

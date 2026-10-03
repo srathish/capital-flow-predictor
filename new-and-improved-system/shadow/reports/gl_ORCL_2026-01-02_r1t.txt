@@ -1,0 +1,5 @@
+
+=== ORCL 2026-01-02→2026-03-31 · r1t · 61 days ===
+trades 1  win 0%  @$1k/trade mid -$364  worst -$364
+  2026-02-09 10:31 PUT  inverse_floor    @150 stop 151 T1 149 T2 148 ORCL260227P00150000 in $8.18 → stop(close)@02-09 $5.2 = -36%
+credits used 0

@@ -1,0 +1,23 @@
+
+=========== MSFT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+MSFT itself: 380.82 → 517.48 (35.9%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid +$808  worst +$423  avg 16%  SQN 0.76
+  chart-aligned only       n= 0
+  against chart            n= 5  win  60%  @$1k/trade mid +$808  worst +$423  avg 16%  SQN 0.76
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  60%  @$1k/trade mid +$808  worst +$423  avg 16%  SQN 0.76
+  shorts                   n= 0
+
+day outcomes: no fill 49 · no setup in reach 7 · FILLED inverse_ceiling up 4 · in position 5 · FILLED inverse_rug up 1
+
+-- every trade --
+  2026-08-18 09:35 CALL inverse_ceiling @480 (king) stop 479 T1 485 T2 490 rr 10 [vs chart]  MSFT260821C00480000 in $5.69 → T1@08-19 $6.62 · time@08-20 $3.52  =  -11%
+  2026-09-02 09:50 CALL inverse_rug @500 (king) stop 499 T1 505 T2 510 rr 10 [vs chart]  MSFT260904C00500000 in $4.2 → stop(close)@09-02 $2.75  =  -35%
+  2026-09-03 09:35 CALL inverse_ceiling @510 (king) stop 505 T1 515 T2 522.5 rr 2.5 [vs chart]  MSFT260911C00510000 in $7.52 → T1@09-03 $10.25 · breakeven@09-04 $6.95  =  14%
+  2026-09-14 09:48 CALL inverse_ceiling @500 (king) stop 499 T1 505 T2 510 rr 10 [vs chart]  MSFT260918C00500000 in $6.43 → T1@09-14 $8.8 · breakeven@09-15 $6.7  =  21%
+  2026-09-21 09:35 CALL inverse_ceiling @495 (king) stop 494 T1 497.5 T2 502.5 rr 7.5 [vs chart]  MSFT260925C00495000 in $5.3 → T1@09-21 $7.12 · T2@09-22 $13.16  =  91%
+
+credits used 0

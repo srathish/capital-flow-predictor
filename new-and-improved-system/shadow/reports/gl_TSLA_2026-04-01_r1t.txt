@@ -1,0 +1,6 @@
+
+=== TSLA 2026-04-01→2026-06-30 · r1t · 62 days ===
+trades 2  win 50%  @$1k/trade mid -$36  worst -$103
+  2026-06-03 09:35 CALL inverse_rug      @420 stop 417.5 T1 422.5 T2 427.5 TSLA260618C00420000 in $16.4 → T1@06-03 $18.15 · T2@06-03 $21 = 19%
+  2026-06-04 09:35 CALL inverse_ceiling  @425 stop 422.5 T1 427.5 T2 430 TSLA260618C00425000 in $16.5 → stop(close)@06-04 $12.7 = -23%
+credits used 0

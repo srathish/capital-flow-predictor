@@ -1,0 +1,5 @@
+
+=== ORCL 2026-04-01→2026-06-30 · g1 · 62 days ===
+trades 1  win 100%  @$1k/trade mid +$257  worst +$246
+  2026-05-21 10:15 CALL dip_barney       @187.5 stop 186.5 T1 192.5 T2 195 ORCL260605C00190000 in $8.4 → T1@05-21 $10 · T2@05-22 $11.11 = 26%
+credits used 0

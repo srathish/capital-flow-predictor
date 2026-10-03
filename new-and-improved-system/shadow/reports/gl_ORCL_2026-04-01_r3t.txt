@@ -1,0 +1,6 @@
+
+=== ORCL 2026-04-01→2026-06-30 · r3t · 62 days ===
+trades 2  win 50%  @$1k/trade mid -$273  worst -$295
+  2026-04-13 10:46 PUT  flip_gatekeeper  @150 stop 151 T1 140 T2 139 ORCL260501P00150000 in $7.49 → stop(close)@04-13 $5.05 = -33%
+  2026-04-29 10:15 CALL flip_barney      @162.5 stop 161.5 T1 165 T2 null ORCL260515C00165000 in $6.75 → T1@04-30 $7.72 · breakeven@04-30 $6.5 = 5%
+credits used 0

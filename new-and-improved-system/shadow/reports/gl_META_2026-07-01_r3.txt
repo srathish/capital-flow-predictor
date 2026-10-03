@@ -1,0 +1,6 @@
+
+=== META 2026-07-01→2026-10-02 · r3 · 66 days ===
+trades 2  win 0%  @$1k/trade mid -$1300  worst -$1320
+  2026-07-16 15:07 CALL flip_pika        @665 stop 660 T1 675 T2 680 META260724C00665000 in $19.7 → stop(close)@07-17 $9.9 = -50%
+  2026-09-25 10:19 CALL flip_gatekeeper  @750 stop 745 T1 757.5 T2 760 META261002C00750000 in $18.7 → stop(close)@09-28 $3.68 = -80%
+credits used 0

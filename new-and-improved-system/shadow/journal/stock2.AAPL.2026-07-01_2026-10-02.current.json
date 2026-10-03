@@ -998,10 +998,10 @@
    "chartOk": true,
    "contract": "AAPL260814P00315000",
    "entryOpt": 5.5,
-   "exits": "T1@08-06 $7.4 · time@08-12 $0",
+   "exits": "T1@08-06 $7.4 · time@08-12 $14",
    "exitDay": "2026-08-12",
-   "retMid": -0.327,
-   "retWorst": -0.327
+   "retMid": 0.945,
+   "retWorst": 0.945
   },
   {
    "D": "2026-08-17",

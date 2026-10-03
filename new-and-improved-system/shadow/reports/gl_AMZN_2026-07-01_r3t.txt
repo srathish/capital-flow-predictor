@@ -1,0 +1,8 @@
+
+=== AMZN 2026-07-01→2026-10-02 · r3t · 66 days ===
+trades 4  win 0%  @$1k/trade mid -$1185  worst -$1216
+  2026-08-11 10:15 CALL flip_king        @275 stop 272.5 T1 277.5 T2 280 AMZN260828C00275000 in $7.5 → stop(close)@08-11 $5.75 = -23%
+  2026-08-25 10:21 CALL flip_barney      @260 stop 259 T1 262.5 T2 265 AMZN260911C00260000 in $7 → stop(close)@08-27 $4.13 = -41%
+  2026-08-31 10:15 CALL flip_pika        @260 stop 257.5 T1 265 T2 267.5 AMZN260918C00260000 in $6.9 → stop(close)@09-01 $4.06 = -41%
+  2026-10-02 11:24 PUT  flip_gatekeeper  @250 stop 251 T1 247.5 T2 null AMZN261016P00250000 in $5 → stop(close)@10-02 $4.35 = -13%
+credits used 0

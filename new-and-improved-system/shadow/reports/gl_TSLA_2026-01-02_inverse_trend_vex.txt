@@ -1,0 +1,19 @@
+
+=========== TSLA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+TSLA itself: 457.90 → 371.71 (-18.8%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$280  worst -$286  avg -28%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$280  worst -$286  avg -28%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$280  worst -$286  avg -28%  SQN 0.00
+
+day outcomes: no fill 50 · no setup in reach 6 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-03-05 14:19 PUT  inverse_floor @400 (king) stop 401 T1 397.5 T2 395 rr 5 [vs chart]  TSLA260313P00400000 in $10.15 → stop(close)@03-05 $7.31  =  -28%
+
+credits used 0

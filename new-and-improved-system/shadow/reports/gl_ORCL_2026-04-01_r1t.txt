@@ -1,0 +1,4 @@
+
+=== ORCL 2026-04-01→2026-06-30 · r1t · 62 days ===
+trades 0  win 0%  @$1k/trade mid +$0  worst +$0
+credits used 0

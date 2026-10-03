@@ -1,0 +1,5 @@
+
+=== META 2026-04-01→2026-06-30 · r3 · 62 days ===
+trades 1  win 100%  @$1k/trade mid +$1019  worst +$1019
+  2026-06-24 11:03 PUT  flip_pika        @567.5 stop 568.5 T1 560 T2 550 META260626P00567500 in $8 → T1@06-24 $10.67 · T2@06-25 $21.63 = 102%
+credits used 0

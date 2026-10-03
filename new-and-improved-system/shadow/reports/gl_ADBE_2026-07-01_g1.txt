@@ -1,0 +1,5 @@
+
+=== ADBE 2026-07-01→2026-10-02 · g1 · 66 days ===
+trades 1  win 0%  @$1k/trade mid -$29  worst -$29
+  2026-08-21 10:21 CALL dip_gatekeeper   @272.5 stop 270 T1 275 T2 280 ADBE260904C00275000 in $9.2 → T1@08-21 $9.05 · breakeven@08-21 $8.81 = -3%
+credits used 0
