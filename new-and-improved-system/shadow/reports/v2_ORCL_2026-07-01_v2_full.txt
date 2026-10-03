@@ -1,0 +1,18 @@
+
+=========== ORCL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=v2_full ===========
+ORCL itself: 143.40 → 142.52 (-0.6%)
+ALL trades                 n= 0
+  chart-aligned only       n= 0
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 0
+
+day outcomes: no fill 38 · no board 9 · no setup in reach 10 · earnings blackout 1
+
+-- every trade --
+
+credits used 225

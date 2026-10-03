@@ -1,0 +1,19 @@
+
+=========== NVDA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=confluence_trend ===========
+NVDA itself: 191.77 → 174.36 (-9.1%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$392  worst -$409  avg -39%  SQN 0.00
+  chart-aligned only       n= 1  win   0%  @$1k/trade mid -$392  worst -$409  avg -39%  SQN 0.00
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$392  worst -$409  avg -39%  SQN 0.00
+
+day outcomes: no fill 37 · no setup in reach 7 · no board 10 · FILLED ceiling+std2.25 down 1
+
+-- every trade --
+  2026-03-09 11:52 PUT  ceiling+std2.25 @180 (barney) stop 181 T1 177.5 T2 175 rr 5   NVDA260313P00180000 in $3.8 → stop(close)@03-09 $2.31  =  -39%
+
+credits used 0

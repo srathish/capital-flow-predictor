@@ -1,0 +1,23 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=v2 ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n= 5  win  40%  @$1k/trade mid +$36  worst -$307  avg 1%  SQN 0.03
+  chart-aligned only       n= 5  win  40%  @$1k/trade mid +$36  worst -$307  avg 1%  SQN 0.03
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 5  win  40%  @$1k/trade mid +$36  worst -$307  avg 1%  SQN 0.03
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  40%  @$1k/trade mid +$36  worst -$307  avg 1%  SQN 0.03
+  shorts                   n= 0
+
+day outcomes: no fill 35 · no setup in reach 8 · earnings blackout 3 · FILLED floor up 5 · no board 4
+
+-- every trade --
+  2026-04-30 09:38 CALL floor       @370 (pika) stop 369 T1 375 T2 377.5 rr 7.5   GOOGL260508C00370000 in $7.65 → T1@04-30 $10.5 · T2@04-30 $11.8  =  46%
+  2026-05-11 15:21 CALL floor       @390 (gatekeeper) stop 389 T1 395 T2 400 rr 10   GOOGL260515C00390000 in $5.9 → stop(close)@05-11 $4.95  =  -16%
+  2026-05-29 09:35 CALL floor       @380 (gatekeeper) stop 379 T1 385 T2 387.5 rr 7.5   GOOGL260605C00380000 in $7.7 → T1@05-29 $8.96 · breakeven@05-29 $5.97  =  -3%
+  2026-06-16 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $4.25 → T1@06-16 $5.7 · T2@06-16 $7.4  =  54%
+  2026-06-17 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $3.5 → stop(close)@06-17 $0.8  =  -77%
+
+credits used 11

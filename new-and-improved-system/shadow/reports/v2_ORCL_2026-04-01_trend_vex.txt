@@ -1,0 +1,24 @@
+
+=========== ORCL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_vex ===========
+ORCL itself: 142.52 → 146.67 (2.9%)
+ALL trades                 n= 6  win 100%  @$1k/trade mid +$1275  worst +$621  avg 21%  SQN 5.80
+  chart-aligned only       n= 6  win 100%  @$1k/trade mid +$1275  worst +$621  avg 21%  SQN 5.80
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 5  win 100%  @$1k/trade mid +$1036  worst +$430  avg 21%  SQN 4.66
+  rug                      n= 0
+  ceiling                  n= 1  win 100%  @$1k/trade mid +$239  worst +$191  avg 24%  SQN 0.00
+  longs                    n= 5  win 100%  @$1k/trade mid +$1036  worst +$430  avg 21%  SQN 4.66
+  shorts                   n= 1  win 100%  @$1k/trade mid +$239  worst +$191  avg 24%  SQN 0.00
+
+day outcomes: no fill 28 · no setup in reach 11 · FILLED ceiling down 1 · in position 1 · FILLED floor up 5 · no board 9
+
+-- every trade --
+  2026-04-09 09:35 PUT  ceiling     @140 (barney) stop 141 T1 139 T2 136 rr 4   ORCL260417P00140000 in $4.35 → T1@04-09 $4.63 · T2@04-10 $6.15  =  24%
+  2026-04-15 09:35 CALL floor       @170 (gatekeeper) stop 169 T1 172.5 T2 175 rr 5   ORCL260417C00170000 in $3.7 → T1@04-15 $5.06 · breakeven@04-15 $3.45  =  15%
+  2026-05-06 09:37 CALL floor       @185 (pika) stop 184 T1 187.5 T2 190 rr 5   ORCL260508C00185000 in $4.7 → T1@05-06 $5.78 · T2@05-06 $7.05  =  37%
+  2026-05-15 09:36 CALL floor       @190 (gatekeeper) stop 189 T1 192.5 T2 195 rr 5   ORCL260522C00190000 in $6.93 → T1@05-15 $8.08 · T2@05-15 $8.7  =  21%
+  2026-06-02 10:27 CALL floor       @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5   ORCL260605C00240000 in $7.39 → T1@06-02 $8.07 · T2@06-02 $9.8  =  21%
+  2026-06-04 09:45 CALL floor       @225 (gatekeeper) stop 224 T1 227.5 T2 230 rr 5   ORCL260612C00225000 in $15.53 → T1@06-04 $16.2 · T2@06-04 $18  =  10%
+
+credits used 244

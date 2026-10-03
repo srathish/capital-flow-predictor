@@ -1,0 +1,24 @@
+
+=========== AVGO weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=inverse_trend ===========
+AVGO itself: 354.74 → 309.45 (-12.8%)
+ALL trades                 n= 6  win  67%  @$1k/trade mid +$462  worst +$303  avg 8%  SQN 0.45
+  chart-aligned only       n= 0
+  against chart            n= 6  win  67%  @$1k/trade mid +$462  worst +$303  avg 8%  SQN 0.45
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$423  worst +$366  avg 42%  SQN 0.00
+  shorts                   n= 5  win  60%  @$1k/trade mid +$39  worst -$63  avg 1%  SQN 0.04
+
+day outcomes: no fill 33 · FILLED inverse_rug up 1 · no setup in reach 8 · FILLED inverse_floor down 5 · no board 7 · in position 1
+
+-- every trade --
+  2026-01-07 10:35 CALL inverse_rug @340 (gatekeeper) stop 337.5 T1 342.5 T2 345 rr 2 [vs chart]  AVGO260109C00340000 in $4.99 → T1@01-07 $6.5 · T2@01-07 $7.7  =  42%
+  2026-02-06 10:35 PUT  inverse_floor @320 (pika) stop 322.5 T1 317.5 T2 315 rr 2 [vs chart]  AVGO260213P00320000 in $10.5 → stop(close)@02-06 $4.55  =  -57%
+  2026-03-05 10:35 PUT  inverse_floor @325 (barney) stop 326 T1 322.5 T2 320 rr 5 [vs chart]  AVGO260313P00325000 in $10.59 → stop(close)@03-05 $7.1  =  -33%
+  2026-03-18 09:55 PUT  inverse_floor @322.5 (gatekeeper) stop 325 T1 320 T2 317.5 rr 2 [vs chart]  AVGO260320P00322500 in $4.55 → T1@03-18 $6 · T2@03-18 $7  =  43%
+  2026-03-20 09:35 PUT  inverse_floor @320 (gatekeeper) stop 322.5 T1 317.5 T2 312.5 rr 3 [vs chart]  AVGO260327P00320000 in $8.5 → T1@03-20 $9.13 · T2@03-20 $12.3  =  26%
+  2026-03-23 09:40 PUT  inverse_floor @320 (gatekeeper) stop 322.5 T1 317.5 T2 315 rr 2 [vs chart]  AVGO260327P00320000 in $6.54 → T1@03-24 $8 · T2@03-24 $8.3  =  25%
+
+credits used 609

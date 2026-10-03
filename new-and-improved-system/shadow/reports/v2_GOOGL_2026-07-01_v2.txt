@@ -1,0 +1,21 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=v2 ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n= 3  win   0%  @$1k/trade mid -$1335  worst -$1369  avg -45%  SQN -6.24
+  chart-aligned only       n= 3  win   0%  @$1k/trade mid -$1335  worst -$1369  avg -45%  SQN -6.24
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 1  win   0%  @$1k/trade mid -$527  worst -$556  avg -53%  SQN 0.00
+  rug                      n= 0
+  ceiling                  n= 2  win   0%  @$1k/trade mid -$808  worst -$813  avg -40%  SQN -4.00
+  longs                    n= 1  win   0%  @$1k/trade mid -$527  worst -$556  avg -53%  SQN 0.00
+  shorts                   n= 2  win   0%  @$1k/trade mid -$808  worst -$813  avg -40%  SQN -4.00
+
+day outcomes: no fill 36 · FILLED floor up 1 · in position 1 · FILLED ceiling down 2 · earnings blackout 4 · no setup in reach 10 · no board 4
+
+-- every trade --
+  2026-07-08 11:28 CALL floor       @360 (barney) stop 359 T1 365 T2 367.5 rr 7.5   GOOGL260710C00360000 in $4.5 → stop(close)@07-09 $2.13  =  -53%
+  2026-07-14 09:45 PUT  ceiling     @355 (gatekeeper) stop 356 T1 352.5 T2 350 rr 5   GOOGL260717P00355000 in $4.95 → stop(close)@07-14 $2.45  =  -51%
+  2026-09-10 09:35 PUT  ceiling     @330 (king) stop 331 T1 325 T2 322.5 rr 7.5   GOOGL260918P00330000 in $6.21 → stop(close)@09-10 $4.33  =  -30%
+
+credits used 5

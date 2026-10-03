@@ -1,0 +1,26 @@
+
+=========== AMD weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_vex ===========
+AMD itself: 538.78 → 633.71 (17.6%)
+ALL trades                 n= 8  win  13%  @$1k/trade mid -$2738  worst -$2844  avg -34%  SQN -2.42
+  chart-aligned only       n= 8  win  13%  @$1k/trade mid -$2738  worst -$2844  avg -34%  SQN -2.42
+  against chart            n= 0
+  reverse_rug              n= 1  win   0%  @$1k/trade mid -$693  worst -$718  avg -69%  SQN 0.00
+  floor                    n= 4  win  25%  @$1k/trade mid -$1432  worst -$1511  avg -36%  SQN -1.32
+  rug                      n= 0
+  ceiling                  n= 3  win   0%  @$1k/trade mid -$613  worst -$615  avg -20%  SQN -1.94
+  longs                    n= 5  win  20%  @$1k/trade mid -$2125  worst -$2229  avg -43%  SQN -1.93
+  shorts                   n= 3  win   0%  @$1k/trade mid -$613  worst -$615  avg -20%  SQN -1.94
+
+day outcomes: no fill 33 · no setup in reach 12 · FILLED floor up 4 · FILLED reverse_rug up 1 · no contract data 1 · FILLED ceiling down 3 · no board 4
+
+-- every trade --
+  2026-07-10 09:36 CALL floor       @550 (gatekeeper) stop 545 T1 555 T2 560 rr 2   AMD260717C00550000 in $26.58 → T1@07-10 $24.65 · breakeven@07-10 $22.05  =  -12%
+  2026-07-13 09:40 CALL floor       @530 (gatekeeper) stop 527.5 T1 537.5 T2 540 rr 4   AMD260717C00530000 in $20.01 → T1@07-13 $24.5 · T2@07-13 $25.5  =  25%
+  2026-07-15 09:35 CALL reverse_rug @555 (gatekeeper) stop 552.5 T1 560 T2 565 rr 4   AMD260717C00555000 in $16.1 → stop(close)@07-15 $4.95  =  -69%
+  2026-07-16 09:35 CALL floor       @515 (pika) stop 510 T1 520 T2 527.5 rr 2.5   AMD260722C00515000 in $20.71 → stop(close)@07-16 $0  =  -100%
+  2026-07-27 09:38 CALL floor       @517.5 (gatekeeper) stop 515 T1 527.5 T2 530 rr 5   AMD260731C00517500 in $23.7 → stop(close)@07-27 $10.45  =  -56%
+  2026-08-03 09:35 PUT  ceiling     @462.5 (normal) stop 463.5 T1 452.5 T2 450 rr 12.5   AMD260807P00465000 in $26.05 → stop(close)@08-03 $16.09  =  -38%
+  2026-08-04 09:35 PUT  ceiling     @510 (pika) stop 511 T1 505 T2 500 rr 10   AMD260807P00510000 in $25.49 → stop(close)@08-04 $20.07  =  -21%
+  2026-08-27 09:35 PUT  ceiling     @475 (gatekeeper) stop 477.5 T1 472.5 T2 470 rr 2   AMD260904P00475000 in $16 → T1@08-27 $15.71 · breakeven@08-27 $15.71  =  -2%
+
+credits used 251

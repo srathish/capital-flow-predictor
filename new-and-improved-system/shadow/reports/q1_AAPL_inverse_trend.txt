@@ -1,0 +1,20 @@
+
+=========== AAPL weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=inverse_trend ===========
+AAPL itself: 270.62 → 253.80 (-6.2%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid +$49  worst -$192  avg 2%  SQN 0.03
+  chart-aligned only       n= 0
+  against chart            n= 2  win  50%  @$1k/trade mid +$49  worst -$192  avg 2%  SQN 0.03
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid +$49  worst -$192  avg 2%  SQN 0.03
+  shorts                   n= 0
+
+day outcomes: no fill 39 · no setup in reach 5 · FILLED inverse_ceiling up 2 · in position 2 · no board 7
+
+-- every trade --
+  2026-02-10 10:39 CALL inverse_ceiling @275 (king) stop 272.5 T1 277.5 T2 280 rr 2 [vs chart]  AAPL260213C00275000 in $2.6 → T1@02-11 $4.11 · T2@02-11 $5.7  =  89%
+  2026-02-26 10:35 CALL inverse_ceiling @275 (king) stop 272.5 T1 277.5 T2 280 rr 2 [vs chart]  AAPL260306C00275000 in $3.65 → stop(close)@02-27 $0.59  =  -84%
+
+credits used 755

@@ -1,0 +1,46 @@
+
+=========== MSFT weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=current ===========
+MSFT itself: 474.12 → 370.18 (-21.9%)
+ALL trades                 n=28  win  36%  @$1k/trade mid -$4650  worst -$6037  avg -17%  SQN -1.86
+  chart-aligned only       n=19  win  47%  @$1k/trade mid -$817  worst -$1784  avg -4%  SQN -0.39
+  against chart            n= 9  win  11%  @$1k/trade mid -$3833  worst -$4253  avg -43%  SQN -3.63
+  reverse_rug              n= 3  win   0%  @$1k/trade mid -$1818  worst -$1917  avg -61%  SQN -4.34
+  floor                    n=13  win  31%  @$1k/trade mid -$2431  worst -$3179  avg -19%  SQN -1.58
+  rug                      n= 4  win  50%  @$1k/trade mid +$380  worst +$129  avg 10%  SQN 0.33
+  ceiling                  n= 8  win  50%  @$1k/trade mid -$781  worst -$1070  avg -10%  SQN -0.54
+  longs                    n=16  win  25%  @$1k/trade mid -$4249  worst -$5096  avg -27%  SQN -2.48
+  shorts                   n=12  win  50%  @$1k/trade mid -$401  worst -$941  avg -3%  SQN -0.22
+
+day outcomes: FILLED floor up 13 · in position 12 · no fill 6 · FILLED reverse_rug up 3 · FILLED ceiling down 8 · no setup in reach 3 · FILLED rug down 4 · no board 6
+
+-- every trade --
+  2026-01-05 10:35 CALL floor       @470 (gatekeeper) stop 467.5 T1 475 T2 480 rr 4   MSFT260109C00470000 in $5.45 → T1@01-05 $7.5 · T2@01-07 $10.6  =  66%
+  2026-01-09 10:48 CALL floor       @472.5 (pika) stop 471.5 T1 475 T2 480 rr 7.5   MSFT260116C00472500 in $6.24 → T1@01-09 $6.95 · T2@01-12 $9  =  28%
+  2026-01-13 10:47 CALL reverse_rug @472.5 (gatekeeper) stop 471.5 T1 475 T2 485 rr 12.5   MSFT260116C00472500 in $4.9 → stop(close)@01-13 $3.3  =  -33%
+  2026-01-14 10:35 CALL reverse_rug @467.5 (pika) stop 465 T1 470 T2 472.5 rr 2   MSFT260116C00467500 in $3.98 → stop(close)@01-14 $1.01  =  -75%
+  2026-01-15 10:51 CALL floor       @457.5 (pika) stop 455 T1 462.5 T2 465 rr 3   MSFT260123C00457500 in $6.64 → T1@01-16 $7.75 · breakeven@01-20 $2.4  =  -24%
+  2026-01-21 10:58 PUT  ceiling     @452.5 (king) stop 453.5 T1 450 T2 442.5 rr 10   MSFT260123P00452500 in $4.05 → T1@01-21 $5 · T2@01-21 $10.45  =  91%
+  2026-01-23 11:04 PUT  ceiling     @460 (king) stop 461 T1 452.5 T2 450 rr 10   MSFT260130P00460000 in $11.9 → stop(close)@01-23 $9.41  =  -21%
+  2026-01-29 10:52 CALL floor       @430 (king) stop 429 T1 432.5 T2 440 rr 10   MSFT260206C00430000 in $8.85 → T1@01-29 $9.37 · breakeven@01-30 $6.58  =  -10%
+  2026-02-02 10:35 PUT  ceiling     @427.5 (gatekeeper) stop 430 T1 425 T2 420 rr 3   MSFT260206P00427500 in $6.15 → T1@02-02 $7.06 · breakeven@02-02 $5.4  =  1%
+  2026-02-03 10:44 CALL floor       @415 (king) stop 414 T1 420 T2 425 rr 10 [vs chart]  MSFT260206C00415000 in $5.75 → stop(close)@02-03 $3.54  =  -38%
+  2026-02-04 10:36 PUT  rug         @415 (king) stop 417.5 T1 412.5 T2 410 rr 2   MSFT260206P00415000 in $4.95 → T1@02-04 $6 · T2@02-04 $7.6  =  37%
+  2026-02-05 10:57 CALL floor       @400 (king) stop 399 T1 407.5 T2 410 rr 10 [vs chart]  MSFT260213C00400000 in $9 → stop(close)@02-05 $5.9  =  -34%
+  2026-02-06 10:37 PUT  ceiling     @400 (king) stop 402.5 T1 395 T2 385 rr 6   MSFT260213P00400000 in $7.6 → T1@02-06 $9.9 · breakeven@02-06 $6.11  =  5%
+  2026-02-09 10:40 PUT  rug         @410 (gatekeeper) stop 411 T1 402.5 T2 400 rr 10   MSFT260213P00410000 in $6.2 → stop(close)@02-09 $3.75  =  -40%
+  2026-02-10 10:36 CALL floor       @415 (gatekeeper) stop 414 T1 417.5 T2 420 rr 5 [vs chart]  MSFT260213C00415000 in $5.62 → T1@02-10 $6.9 · T2@02-10 $8.05  =  33%
+  2026-02-23 10:39 CALL floor       @390 (barney) stop 389 T1 395 T2 397.5 rr 7.5 [vs chart]  MSFT260227C00390000 in $6.24 → stop(close)@02-23 $3.35  =  -46%
+  2026-02-25 10:55 PUT  rug         @397.5 (gatekeeper) stop 400 T1 390 T2 387.5 rr 4   MSFT260227P00397500 in $4.1 → stop(close)@02-25 $2.6  =  -37%
+  2026-02-26 10:41 PUT  ceiling     @405 (gatekeeper) stop 407.5 T1 402.5 T2 400 rr 2   MSFT260306P00405000 in $7.03 → T1@02-26 $7.55 · T2@02-26 $9.08  =  18%
+  2026-02-27 10:51 PUT  ceiling     @395 (gatekeeper) stop 396 T1 390 T2 387.5 rr 7.5   MSFT260306P00395000 in $6.65 → stop(close)@03-02 $3.85  =  -42%
+  2026-03-03 10:35 PUT  ceiling     @395 (king) stop 396 T1 390 T2 385 rr 10   MSFT260306P00395000 in $5.99 → stop(close)@03-03 $2.08  =  -65%
+  2026-03-04 12:41 PUT  ceiling     @407.5 (gatekeeper) stop 410 T1 402.5 T2 400 rr 3   MSFT260306P00407500 in $4.91 → stop(close)@03-05 $1.7  =  -65%
+  2026-03-06 10:36 CALL floor       @410 (gatekeeper) stop 409 T1 412.5 T2 415 rr 5   MSFT260313C00410000 in $8.31 → T1@03-06 $9.45 · breakeven@03-06 $8.05  =  5%
+  2026-03-10 09:40 CALL reverse_rug @405 (gatekeeper) stop 402.5 T1 410 T2 412.5 rr 3 [vs chart]  MSFT260313C00405000 in $5.85 → stop(close)@03-12 $1.49  =  -75%
+  2026-03-13 09:36 CALL floor       @400 (gatekeeper) stop 397.5 T1 405 T2 410 rr 4 [vs chart]  MSFT260320C00400000 in $7.15 → stop(close)@03-13 $4.15  =  -42%
+  2026-03-17 09:51 PUT  rug         @405 (gatekeeper) stop 407.5 T1 400 T2 397.5 rr 3   MSFT260320P00405000 in $4.35 → T1@03-17 $6.87 · T2@03-18 $8.5  =  77%
+  2026-03-23 09:40 CALL floor       @385 (barney) stop 384 T1 387.5 T2 390 rr 5 [vs chart]  MSFT260327C00385000 in $5.16 → stop(close)@03-23 $3.85  =  -25%
+  2026-03-24 09:35 CALL floor       @380 (king) stop 379 T1 382.5 T2 385 rr 5 [vs chart]  MSFT260327C00380000 in $4.1 → stop(close)@03-24 $1.45  =  -65%
+  2026-03-25 10:02 CALL floor       @372.5 (king) stop 370 T1 377.5 T2 385 rr 5 [vs chart]  MSFT260327C00372500 in $4 → stop(close)@03-26 $0.37  =  -91%
+
+credits used 1

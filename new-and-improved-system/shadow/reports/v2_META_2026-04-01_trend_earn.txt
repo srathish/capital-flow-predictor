@@ -1,0 +1,26 @@
+
+=========== META weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_earn ===========
+META itself: 566.03 → 563.03 (-0.5%)
+ALL trades                 n= 8  win  50%  @$1k/trade mid +$258  worst -$437  avg 3%  SQN 0.25
+  chart-aligned only       n= 8  win  50%  @$1k/trade mid +$258  worst -$437  avg 3%  SQN 0.25
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 4  win  75%  @$1k/trade mid -$132  worst -$529  avg -3%  SQN -0.17
+  rug                      n= 1  win   0%  @$1k/trade mid -$28  worst -$68  avg -3%  SQN 0.00
+  ceiling                  n= 3  win  33%  @$1k/trade mid +$418  worst +$160  avg 14%  SQN 0.52
+  longs                    n= 4  win  75%  @$1k/trade mid -$132  worst -$529  avg -3%  SQN -0.17
+  shorts                   n= 4  win  25%  @$1k/trade mid +$390  worst +$92  avg 10%  SQN 0.50
+
+day outcomes: no fill 29 · FILLED floor up 4 · in position 5 · earnings blackout 3 · no setup in reach 6 · FILLED ceiling down 3 · FILLED rug down 1 · no board 4
+
+-- every trade --
+  2026-04-10 09:50 CALL floor       @630 (gatekeeper) stop 625 T1 640 T2 645 rr 3   META260417C00630000 in $12.35 → T1@04-14 $16.85 · T2@04-14 $16.85  =  36%
+  2026-05-28 09:35 CALL floor       @630 (king) stop 625 T1 640 T2 642.5 rr 2.5   META260605C00630000 in $14.65 → T1@05-28 $19.44 · breakeven@05-29 $11.09  =  4%
+  2026-06-01 09:36 CALL floor       @620 (gatekeeper) stop 615 T1 625 T2 630 rr 2   META260605C00620000 in $11.34 → stop(close)@06-01 $5.05  =  -56%
+  2026-06-04 09:44 CALL floor       @630 (gatekeeper) stop 627.5 T1 635 T2 650 rr 8   META260612C00630000 in $14.86 → T1@06-04 $17.2 · breakeven@06-04 $13.04  =  2%
+  2026-06-12 11:21 PUT  ceiling     @575 (gatekeeper) stop 580 T1 570 T2 560 rr 3   META260618P00575000 in $11.65 → T1@06-12 $12.7 · breakeven@06-15 $5.21  =  -23%
+  2026-06-16 09:41 PUT  ceiling     @600 (gatekeeper) stop 602.5 T1 595 T2 590 rr 4   META260618P00600000 in $8.57 → T1@06-16 $10.21 · breakeven@06-16 $6.7  =  -1%
+  2026-06-17 09:35 PUT  ceiling     @590 (king) stop 592.5 T1 587.5 T2 580 rr 4   META260618P00590000 in $5.9 → T1@06-17 $7.6 · T2@06-17 $12.01  =  66%
+  2026-06-18 11:31 PUT  rug         @575 (pika) stop 577.5 T1 570 T2 567.5 rr 3   META260626P00575000 in $12.35 → T1@06-22 $11.5 · T2@06-22 $12.5  =  -3%
+
+credits used 6

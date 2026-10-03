@@ -1,0 +1,21 @@
+
+=========== TSLA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_rolling ===========
+TSLA itself: 428.16 → 370.69 (-13.4%)
+ALL trades                 n= 3  win  33%  @$1k/trade mid -$505  worst -$600  avg -17%  SQN -0.59
+  chart-aligned only       n= 3  win  33%  @$1k/trade mid -$505  worst -$600  avg -17%  SQN -0.59
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 1  win   0%  @$1k/trade mid -$443  worst -$443  avg -44%  SQN 0.00
+  ceiling                  n= 2  win  50%  @$1k/trade mid -$62  worst -$157  avg -3%  SQN -0.07
+  longs                    n= 0
+  shorts                   n= 3  win  33%  @$1k/trade mid -$505  worst -$600  avg -17%  SQN -0.59
+
+day outcomes: no fill 37 · no board 9 · no setup in reach 8 · FILLED ceiling down 2 · in position 1 · FILLED rug down 1
+
+-- every trade --
+  2026-08-03 09:35 PUT  ceiling     @315 (king) stop 317.5 T1 312.5 T2 310 rr 2   TSLA260807P00315000 in $7.43 → stop(close)@08-03 $3.95  =  -47%
+  2026-08-11 10:00 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 327.5 rr 3   TSLA260814P00335000 in $5.66 → T1@08-11 $6.45 · T2@08-12 $9.47  =  41%
+  2026-08-13 09:54 PUT  rug         @332.5 (gatekeeper) stop 335 T1 325 T2 322.5 rr 4   TSLA260821P00332500 in $7.36 → stop(close)@08-13 $4.1  =  -44%
+
+credits used 59

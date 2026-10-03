@@ -1,0 +1,23 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=v2 ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid +$459  worst +$33  avg 9%  SQN 1.05
+  chart-aligned only       n= 5  win  60%  @$1k/trade mid +$459  worst +$33  avg 9%  SQN 1.05
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 4  win  75%  @$1k/trade mid +$521  worst +$95  avg 13%  SQN 1.28
+  rug                      n= 0
+  ceiling                  n= 1  win   0%  @$1k/trade mid -$62  worst -$62  avg -6%  SQN 0.00
+  longs                    n= 4  win  75%  @$1k/trade mid +$521  worst +$95  avg 13%  SQN 1.28
+  shorts                   n= 1  win   0%  @$1k/trade mid -$62  worst -$62  avg -6%  SQN 0.00
+
+day outcomes: no fill 38 · FILLED floor up 4 · in position 1 · no setup in reach 7 · earnings blackout 3 · FILLED ceiling down 1 · no board 4
+
+-- every trade --
+  2026-07-08 09:47 CALL floor       @600 (pika) stop 597.5 T1 610 T2 612.5 rr 5   META260710C00600000 in $10 → T1@07-09 $13.06 · T2@07-09 $14.85  =  40%
+  2026-07-20 09:35 CALL floor       @640 (gatekeeper) stop 639 T1 642.5 T2 647.5 rr 7.5   META260722C00640000 in $10.76 → T1@07-20 $12.9 · breakeven@07-20 $9.28  =  3%
+  2026-08-31 09:36 PUT  ceiling     @575 (gatekeeper) stop 577.5 T1 570 T2 567.5 rr 3   META260904P00575000 in $10.9 → T1@08-31 $11.29 · breakeven@08-31 $9.15  =  -6%
+  2026-09-23 09:35 CALL floor       @745 (gatekeeper) stop 742.5 T1 747.5 T2 750 rr 2   META260925C00745000 in $15.65 → T1@09-23 $17.15 · T2@09-23 $19.47  =  17%
+  2026-09-29 09:44 CALL floor       @720 (gatekeeper) stop 715 T1 725 T2 732.5 rr 2.5   META261002C00720000 in $14.35 → T1@09-29 $15.22 · breakeven@09-29 $11.3  =  -8%
+
+credits used 15

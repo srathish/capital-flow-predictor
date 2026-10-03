@@ -1,0 +1,27 @@
+
+=========== AMD weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_rolling ===========
+AMD itself: 204.07 → 580.44 (184.4%)
+ALL trades                 n= 9  win  67%  @$1k/trade mid +$2557  worst +$1572  avg 28%  SQN 2.47
+  chart-aligned only       n= 9  win  67%  @$1k/trade mid +$2557  worst +$1572  avg 28%  SQN 2.47
+  against chart            n= 0
+  reverse_rug              n= 2  win  50%  @$1k/trade mid +$870  worst +$625  avg 44%  SQN 0.93
+  floor                    n= 7  win  71%  @$1k/trade mid +$1687  worst +$947  avg 24%  SQN 2.31
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 9  win  67%  @$1k/trade mid +$2557  worst +$1572  avg 28%  SQN 2.47
+  shorts                   n= 0
+
+day outcomes: no fill 22 · no setup in reach 13 · FILLED floor up 7 · in position 3 · no board 8 · FILLED reverse_rug up 2
+
+-- every trade --
+  2026-04-08 10:03 CALL floor       @227.5 (gatekeeper) stop 226.5 T1 232.5 T2 235 rr 7.5   AMD260410C00227500 in $4.48 → T1@04-08 $7.3 · T2@04-09 $8.7  =  79%
+  2026-04-29 09:35 CALL floor       @320 (gatekeeper) stop 319 T1 322.5 T2 325 rr 5   AMD260501C00320000 in $8.69 → T1@04-29 $10.2 · T2@04-29 $11.57  =  25%
+  2026-05-01 10:36 CALL floor       @350 (gatekeeper) stop 347.5 T1 355 T2 360 rr 4   AMD260508C00350000 in $17 → T1@05-01 $19.51 · T2@05-01 $22.45  =  23%
+  2026-05-11 09:35 CALL floor       @462.5 (gatekeeper) stop 460 T1 465 T2 472.5 rr 4   AMD260515C00462500 in $19.1 → T1@05-11 $17.8 · breakeven@05-11 $17.8  =  -7%
+  2026-05-28 09:35 CALL floor       @500 (gatekeeper) stop 495 T1 505 T2 515 rr 3   AMD260605C00500000 in $25.85 → T1@05-28 $27.45 · breakeven@05-28 $23.5  =  -2%
+  2026-06-09 09:35 CALL reverse_rug @492.5 (gatekeeper) stop 490 T1 495 T2 500 rr 3   AMD260612C00492500 in $17.13 → T1@06-09 $17.25 · breakeven@06-09 $15.9  =  -3%
+  2026-06-12 09:45 CALL floor       @500 (king) stop 495 T1 505 T2 512.5 rr 2.5   AMD260618C00500000 in $21.1 → T1@06-12 $24.74 · T2@06-12 $28.5  =  26%
+  2026-06-18 09:37 CALL floor       @530 (king) stop 525 T1 540 T2 545 rr 3   AMD260626C00530000 in $25.5 → T1@06-22 $31.5 · T2@06-22 $31.5  =  24%
+  2026-06-24 09:35 CALL reverse_rug @520 (gatekeeper) stop 515 T1 525 T2 530 rr 2   AMD260626C00520000 in $14.75 → T1@06-25 $28.05 · T2@06-25 $28.05  =  90%
+
+credits used 59

@@ -1,0 +1,20 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=v2_full ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n= 2  win 100%  @$1k/trade mid +$1226  worst +$1136  avg 61%  SQN 1.25
+  chart-aligned only       n= 2  win 100%  @$1k/trade mid +$1226  worst +$1136  avg 61%  SQN 1.25
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$122  worst +$84  avg 12%  SQN 0.00
+  shorts                   n= 1  win 100%  @$1k/trade mid +$1104  worst +$1052  avg 110%  SQN 0.00
+
+day outcomes: no fill 41 · no setup in reach 7 · earnings blackout 3 · FILLED ceiling+std4.5 down 1 · in position 1 · no board 4 · FILLED floor+std2.5 up 1
+
+-- every trade --
+  2026-08-31 15:00 PUT  ceiling+std4.5 @575 (gatekeeper) stop 577.5 T1 570 T2 567.5 rr 3   META260904P00575000 in $9.15 → T1@09-01 $19.25 · T2@09-01 $19.25  =  110%
+  2026-09-23 13:28 CALL floor+std2.5 @745 (gatekeeper) stop 742.5 T1 747.5 T2 750 rr 2   META260925C00745000 in $16.7 → T1@09-23 $18.19 · T2@09-23 $19.3  =  12%
+
+credits used ?

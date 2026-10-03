@@ -28,7 +28,10 @@ const CRIT = { current: {}, vix: { vixFilter: true }, std: { stdConfluence: true
   trend: { trendOnly: true },
   trend_vex: { trendOnly: true, vex: true }, trend_rolling: { trendOnly: true, rolling: true }, trend_earn: { trendOnly: true, earnings: true }, trend_flow: { trendOnly: true, flow: true },
   v2: { trendOnly: true, vex: true, rolling: true, earnings: true },                                   // doctrine layers, no std/vix
-  v2_full: { stdConfluence: true, vixFilter: true, trendOnly: true, vex: true, rolling: true, earnings: true, flow: true } }[VAR];
+  v2_full: { stdConfluence: true, vixFilter: true, trendOnly: true, vex: true, rolling: true, earnings: true, flow: true },
+  // the two holdout survivors, with and without the VEX lean (VEX chosen on Apr–Sep; judged on the Jan–Mar holdout)
+  inverse_trend: { inverse: true, trendOnly: true }, inverse_trend_vex: { inverse: true, trendOnly: true, vex: true },
+  confluence_trend_vex: { stdConfluence: true, vixFilter: true, trendOnly: true, vex: true } }[VAR];
 if (!CRIT) { console.error(`unknown --criteria ${VAR}`); process.exit(1); }
 const REACH = 0.015, ZONE_PCT = 0.0015, MIN_RR = 2, MAX_DAYS = 5;
 const HERE = decodeURIComponent(new URL('.', import.meta.url).pathname);
@@ -146,6 +149,11 @@ for (let di = 0; di < tradeDays.length; di++) {
       } else if (CRIT.stdConfluence) {
         const al = pr.filter((l) => l.fade === direction); if (!al.length) { gate.std++; continue; }
         setup = `${setup}+std${al[0].k}`;
+      }
+      if (CRIT.inverse) {
+        direction = direction === 'up' ? 'down' : 'up'; setup = `inverse_${setup}`;
+        plan = buildPlan({ board, hier, direction, entryNode: c.node });
+        if (!plan.ok || plan.rr < MIN_RR) { gate.rr++; continue; }
       }
       if (CRIT.trendOnly && !((direction === 'up' && chart === 'up') || (direction === 'down' && chart === 'down'))) { gate.trend = (gate.trend || 0) + 1; continue; }
       if (CRIT.vex && ctxX.vex.bias !== direction) { gate.vex = (gate.vex || 0) + 1; continue; }

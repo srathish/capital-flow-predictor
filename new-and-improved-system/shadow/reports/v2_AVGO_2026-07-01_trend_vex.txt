@@ -1,0 +1,23 @@
+
+=========== AVGO weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_vex ===========
+AVGO itself: 365.87 → 355.14 (-2.9%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid -$68  worst -$166  avg -1%  SQN -0.07
+  chart-aligned only       n= 5  win  60%  @$1k/trade mid -$68  worst -$166  avg -1%  SQN -0.07
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 3  win  33%  @$1k/trade mid -$750  worst -$783  avg -25%  SQN -0.97
+  rug                      n= 1  win 100%  @$1k/trade mid +$325  worst +$281  avg 33%  SQN 0.00
+  ceiling                  n= 1  win 100%  @$1k/trade mid +$357  worst +$336  avg 36%  SQN 0.00
+  longs                    n= 3  win  33%  @$1k/trade mid -$750  worst -$783  avg -25%  SQN -0.97
+  shorts                   n= 2  win 100%  @$1k/trade mid +$682  worst +$617  avg 34%  SQN 21.31
+
+day outcomes: no setup in reach 8 · no fill 34 · FILLED floor up 3 · in position 7 · no board 4 · FILLED ceiling down 1 · FILLED rug down 1
+
+-- every trade --
+  2026-07-09 09:40 CALL floor       @400 (king) stop 397.5 T1 410 T2 null rr 4   AVGO260717C00400000 in $13.5 → stop(close)@07-13 $3.28  =  -76%
+  2026-07-21 09:37 CALL floor       @385 (gatekeeper) stop 382.5 T1 387.5 T2 390 rr 2   AVGO260722C00385000 in $6.25 → T1@07-21 $6.06 · time@07-21 $5.55  =  -7%
+  2026-07-29 09:35 CALL floor       @380 (gatekeeper) stop 379 T1 385 T2 390 rr 10   AVGO260731C00380000 in $8.65 → T1@07-29 $10.75 · breakeven@07-29 $7.9  =  8%
+  2026-09-10 09:35 PUT  ceiling     @360 (gatekeeper) stop 361 T1 350 T2 null rr 10   AVGO260918P00360000 in $8.75 → T1@09-14 $12.3 · time@09-17 $11.45  =  36%
+  2026-09-22 13:28 PUT  rug         @365 (gatekeeper) stop 366 T1 362.5 T2 360 rr 5   AVGO260925P00365000 in $5.25 → T1@09-23 $6.3 · T2@09-23 $7.61  =  33%
+
+credits used 327

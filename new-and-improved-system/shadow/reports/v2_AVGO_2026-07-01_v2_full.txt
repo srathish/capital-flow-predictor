@@ -1,0 +1,20 @@
+
+=========== AVGO weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=v2_full ===========
+AVGO itself: 365.87 → 355.14 (-2.9%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid -$650  worst -$669  avg -33%  SQN -0.77
+  chart-aligned only       n= 2  win  50%  @$1k/trade mid -$650  worst -$669  avg -33%  SQN -0.77
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid -$650  worst -$669  avg -33%  SQN -0.77
+  shorts                   n= 0
+
+day outcomes: no setup in reach 8 · no fill 38 · FILLED floor+std2 up 1 · in position 2 · FILLED floor+std3.5 up 1 · earnings blackout 4 · no board 4
+
+-- every trade --
+  2026-07-09 12:23 CALL floor+std2  @400 (king) stop 397.5 T1 410 T2 null rr 4   AVGO260717C00400000 in $12.85 → stop(close)@07-13 $3.28  =  -75%
+  2026-07-21 15:08 CALL floor+std3.5 @385 (gatekeeper) stop 382.5 T1 387.5 T2 390 rr 2   AVGO260722C00385000 in $5.3 → T1@07-21 $6.06 · time@07-21 $5.55  =  10%
+
+credits used 104

@@ -1,0 +1,32 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_rolling ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n=14  win  43%  @$1k/trade mid -$1779  worst -$2651  avg -13%  SQN -1.40
+  chart-aligned only       n=14  win  43%  @$1k/trade mid -$1779  worst -$2651  avg -13%  SQN -1.40
+  against chart            n= 0
+  reverse_rug              n= 2  win   0%  @$1k/trade mid -$1059  worst -$1140  avg -53%  SQN -1.82
+  floor                    n= 8  win  63%  @$1k/trade mid +$266  worst -$495  avg 3%  SQN 0.35
+  rug                      n= 1  win   0%  @$1k/trade mid -$428  worst -$432  avg -43%  SQN 0.00
+  ceiling                  n= 3  win  33%  @$1k/trade mid -$558  worst -$584  avg -19%  SQN -1.01
+  longs                    n=10  win  50%  @$1k/trade mid -$793  worst -$1635  avg -8%  SQN -0.70
+  shorts                   n= 4  win  25%  @$1k/trade mid -$986  worst -$1016  avg -25%  SQN -1.72
+
+day outcomes: no fill 29 · FILLED floor up 8 · in position 3 · no setup in reach 7 · no contract data 1 · FILLED reverse_rug up 2 · FILLED ceiling down 3 · FILLED rug down 1 · no board 4
+
+-- every trade --
+  2026-07-08 09:47 CALL floor       @600 (pika) stop 597.5 T1 610 T2 612.5 rr 5   META260710C00600000 in $10 → T1@07-09 $13.06 · T2@07-09 $14.85  =  40%
+  2026-07-20 09:35 CALL floor       @640 (gatekeeper) stop 639 T1 642.5 T2 647.5 rr 7.5   META260722C00640000 in $10.76 → T1@07-20 $12.9 · breakeven@07-20 $9.28  =  3%
+  2026-08-12 09:35 CALL reverse_rug @600 (gatekeeper) stop 595 T1 605 T2 610 rr 2   META260814C00600000 in $6.55 → stop(close)@08-12 $1.17  =  -82%
+  2026-08-13 09:40 PUT  ceiling     @590 (king) stop 595 T1 585 T2 580 rr 2   META260821P00590000 in $12.27 → T1@08-13 $14.3 · breakeven@08-13 $11.5  =  5%
+  2026-08-21 09:38 PUT  ceiling     @550 (gatekeeper) stop 555 T1 545 T2 535 rr 3   META260828P00550000 in $11.25 → stop(close)@08-24 $5.1  =  -55%
+  2026-08-31 09:36 PUT  ceiling     @575 (gatekeeper) stop 577.5 T1 570 T2 567.5 rr 3   META260904P00575000 in $10.9 → T1@08-31 $11.29 · breakeven@08-31 $9.15  =  -6%
+  2026-09-01 10:23 PUT  rug         @570 (gatekeeper) stop 572.5 T1 560 T2 555 rr 6   META260904P00570000 in $8.37 → stop(close)@09-01 $4.79  =  -43%
+  2026-09-10 09:42 CALL reverse_rug @650 (king) stop 649 T1 660 T2 670 rr 20   META260918C00650000 in $17.2 → stop(close)@09-10 $13.1  =  -24%
+  2026-09-14 10:40 CALL floor       @650 (king) stop 645 T1 655 T2 660 rr 2   META260918C00650000 in $13.05 → T1@09-14 $14.65 · T2@09-14 $17.55  =  23%
+  2026-09-16 09:35 CALL floor       @680 (gatekeeper) stop 675 T1 685 T2 690 rr 2   META260918C00680000 in $9.34 → stop(close)@09-16 $6.11  =  -35%
+  2026-09-18 09:41 CALL floor       @675 (pika) stop 670 T1 685 T2 687.5 rr 2.5   META260925C00675000 in $15.5 → stop(close)@09-18 $10.51  =  -32%
+  2026-09-23 09:35 CALL floor       @745 (gatekeeper) stop 742.5 T1 747.5 T2 750 rr 2   META260925C00745000 in $15.65 → T1@09-23 $17.15 · T2@09-23 $19.47  =  17%
+  2026-09-29 09:44 CALL floor       @720 (gatekeeper) stop 715 T1 725 T2 732.5 rr 2.5   META261002C00720000 in $14.35 → T1@09-29 $15.22 · breakeven@09-29 $11.3  =  -8%
+  2026-10-01 10:02 CALL floor       @725 (gatekeeper) stop 720 T1 730 T2 735 rr 2   META261009C00725000 in $18.15 → T1@10-01 $19.95 · T2@10-02 $22.86  =  18%
+
+credits used 62

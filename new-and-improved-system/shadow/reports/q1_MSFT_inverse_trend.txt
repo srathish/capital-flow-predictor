@@ -1,0 +1,21 @@
+
+=========== MSFT weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=inverse_trend ===========
+MSFT itself: 474.12 → 370.18 (-21.9%)
+ALL trades                 n= 3  win 100%  @$1k/trade mid +$1279  worst +$1229  avg 43%  SQN 1.99
+  chart-aligned only       n= 0
+  against chart            n= 3  win 100%  @$1k/trade mid +$1279  worst +$1229  avg 43%  SQN 1.99
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 3  win 100%  @$1k/trade mid +$1279  worst +$1229  avg 43%  SQN 1.99
+
+day outcomes: no fill 40 · no setup in reach 2 · FILLED inverse_reverse_rug down 1 · in position 3 · FILLED inverse_floor down 2 · no board 7
+
+-- every trade --
+  2026-01-30 10:36 PUT  inverse_reverse_rug @435 (gatekeeper) stop 437.5 T1 430 T2 425 rr 4 [vs chart]  MSFT260206P00435000 in $7.1 → T1@01-30 $9 · T2@02-02 $11.65  =  45%
+  2026-02-10 10:36 PUT  inverse_floor @415 (gatekeeper) stop 417.5 T1 410 T2 405 rr 4 [vs chart]  MSFT260213P00415000 in $5.05 → T1@02-11 $7.15 · T2@02-11 $10.85  =  78%
+  2026-03-13 09:36 PUT  inverse_floor @400 (gatekeeper) stop 401 T1 397.5 T2 392.5 rr 7.5 [vs chart]  MSFT260320P00400000 in $5.8 → T1@03-13 $7.5 · breakeven@03-16 $4.6  =  4%
+
+credits used 271

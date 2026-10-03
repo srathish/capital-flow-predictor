@@ -1,0 +1,7 @@
+retry q1 AAPL confluence_trend
+retry q1 NVDA confluence_trend
+retry q1 AMZN inverse_trend
+retry q1 META inverse_trend
+retry q1 GOOGL inverse_trend
+retry q1 GOOGL confluence_trend
+RETRY ALL DONE

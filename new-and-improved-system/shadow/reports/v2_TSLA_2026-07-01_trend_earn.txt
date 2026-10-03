@@ -1,0 +1,26 @@
+
+=========== TSLA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_earn ===========
+TSLA itself: 428.16 → 370.69 (-13.4%)
+ALL trades                 n= 8  win  38%  @$1k/trade mid -$423  worst -$1013  avg -5%  SQN -0.39
+  chart-aligned only       n= 8  win  38%  @$1k/trade mid -$423  worst -$1013  avg -5%  SQN -0.39
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 2  win  50%  @$1k/trade mid -$130  worst -$412  avg -7%  SQN -0.32
+  rug                      n= 2  win   0%  @$1k/trade mid -$495  worst -$516  avg -25%  SQN -1.27
+  ceiling                  n= 4  win  50%  @$1k/trade mid +$202  worst -$85  avg 5%  SQN 0.21
+  longs                    n= 2  win  50%  @$1k/trade mid -$130  worst -$412  avg -7%  SQN -0.32
+  shorts                   n= 6  win  33%  @$1k/trade mid -$293  worst -$601  avg -5%  SQN -0.28
+
+day outcomes: no fill 31 · FILLED floor up 2 · no board 9 · no setup in reach 8 · FILLED ceiling down 4 · in position 2 · FILLED rug down 2
+
+-- every trade --
+  2026-07-13 09:35 CALL floor       @400 (king) stop 399 T1 405 T2 null rr 5   TSLA260717C00400000 in $7.73 → stop(close)@07-13 $5.65  =  -27%
+  2026-08-03 09:35 PUT  ceiling     @315 (king) stop 317.5 T1 312.5 T2 310 rr 2   TSLA260807P00315000 in $7.43 → stop(close)@08-03 $3.95  =  -47%
+  2026-08-07 09:40 PUT  ceiling     @325 (king) stop 327.5 T1 320 T2 312.5 rr 5   TSLA260814P00325000 in $7.3 → stop(close)@08-07 $5.35  =  -27%
+  2026-08-11 10:00 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 327.5 rr 3   TSLA260814P00335000 in $5.66 → T1@08-11 $6.45 · T2@08-12 $9.47  =  41%
+  2026-08-13 09:54 PUT  rug         @332.5 (gatekeeper) stop 335 T1 325 T2 322.5 rr 4   TSLA260821P00332500 in $7.36 → stop(close)@08-13 $4.1  =  -44%
+  2026-08-14 09:51 PUT  ceiling     @350 (gatekeeper) stop 351 T1 345 T2 340 rr 10   TSLA260821P00350000 in $7.85 → T1@08-14 $10.48 · T2@08-14 $13.55  =  53%
+  2026-09-25 09:41 CALL floor       @370 (gatekeeper) stop 367.5 T1 375 T2 380 rr 4   TSLA261002C00370000 in $10 → T1@09-25 $13.08 · breakeven@09-25 $9.7  =  14%
+  2026-10-01 10:58 PUT  rug         @360 (king) stop 362.5 T1 355 T2 350 rr 4   TSLA261009P00360000 in $9.35 → T1@10-01 $11.02 · breakeven@10-02 $6.7  =  -5%
+
+credits used 5

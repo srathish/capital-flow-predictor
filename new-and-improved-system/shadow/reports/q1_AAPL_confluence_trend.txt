@@ -1,0 +1,22 @@
+
+=========== AAPL weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 55 trading days · criteria=confluence_trend ===========
+AAPL itself: 270.62 → 253.80 (-6.2%)
+ALL trades                 n= 4  win  25%  @$1k/trade mid +$657  worst +$334  avg 16%  SQN 0.57
+  chart-aligned only       n= 4  win  25%  @$1k/trade mid +$657  worst +$334  avg 16%  SQN 0.57
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 4  win  25%  @$1k/trade mid +$657  worst +$334  avg 16%  SQN 0.57
+
+day outcomes: no fill 32 · FILLED ceiling+std2 down 2 · in position 7 · no setup in reach 6 · no board 6 · FILLED rug+std2.5 down 1 · FILLED rug+std4.5 down 1
+
+-- every trade --
+  2026-01-07 11:13 PUT  ceiling+std2 @262.5 (gatekeeper) stop 265 T1 260 T2 257.5 rr 2   AAPL260109P00262500 in $2.29 → T1@01-07 $3.45 · T2@01-08 $5.85  =  103%
+  2026-01-12 11:09 PUT  ceiling+std2 @260 (gatekeeper) stop 262.5 T1 257.5 T2 255 rr 2   AAPL260116P00260000 in $3.15 → T1@01-14 $3.44 · breakeven@01-14 $1.84  =  -16%
+  2026-03-19 11:56 PUT  rug+std2.5  @250 (gatekeeper) stop 251 T1 247.5 T2 245 rr 5   AAPL260327P00250000 in $4.35 → T1@03-20 $5.34 · breakeven@03-23 $2.07  =  -15%
+  2026-03-24 12:23 PUT  rug+std4.5  @255 (king) stop 257.5 T1 250 T2 247.5 rr 3   AAPL260327P00255000 in $2.98 → time@03-26 $2.79  =  -6%
+
+credits used 0

@@ -1,0 +1,25 @@
+
+=========== MSFT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_vex ===========
+MSFT itself: 384.48 → 517.48 (34.6%)
+ALL trades                 n= 7  win  57%  @$1k/trade mid +$2062  worst +$1110  avg 29%  SQN 1.22
+  chart-aligned only       n= 7  win  57%  @$1k/trade mid +$2062  worst +$1110  avg 29%  SQN 1.22
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 7  win  57%  @$1k/trade mid +$2062  worst +$1110  avg 29%  SQN 1.22
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  57%  @$1k/trade mid +$2062  worst +$1110  avg 29%  SQN 1.22
+  shorts                   n= 0
+
+day outcomes: no fill 38 · no setup in reach 5 · FILLED floor up 7 · in position 5 · no board 3
+
+-- every trade --
+  2026-07-17 09:48 CALL floor       @392.5 (barney) stop 390 T1 400 T2 402.5 rr 4   MSFT260722C00392500 in $7.25 → T1@07-20 $9.45 · T2@07-20 $11.55  =  45%
+  2026-07-22 10:19 CALL floor       @390 (pika) stop 387.5 T1 395 T2 397.5 rr 3   MSFT260722C00390000 in $2.3 → time@07-22 $1.94  =  -16%
+  2026-07-31 10:15 CALL floor       @455 (pika) stop 454 T1 460 T2 470 rr 15   MSFT260807C00455000 in $9.8 → T1@07-31 $11.92 · T2@08-03 $26  =  94%
+  2026-08-31 09:35 CALL floor       @510 (gatekeeper) stop 505 T1 515 T2 525 rr 3   MSFT260904C00510000 in $5.7 → stop(close)@09-01 $1.69  =  -70%
+  2026-09-02 09:37 CALL floor       @495 (gatekeeper) stop 492.5 T1 500 T2 510 rr 6   MSFT260904C00495000 in $6 → T1@09-03 $10.5 · T2@09-03 $15  =  113%
+  2026-09-15 09:35 CALL floor       @500 (king) stop 499 T1 505 T2 510 rr 10   MSFT260918C00500000 in $7.1 → T1@09-15 $8.4 · breakeven@09-15 $5.25  =  -4%
+  2026-09-24 09:35 CALL floor       @495 (barney) stop 492.5 T1 497.5 T2 500 rr 2   MSFT261002C00495000 in $7.6 → T1@09-24 $9.1 · T2@09-25 $13  =  45%
+
+credits used 1

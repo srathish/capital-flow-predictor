@@ -1,0 +1,25 @@
+
+=========== TSLA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_vex ===========
+TSLA itself: 364.06 → 420.38 (15.5%)
+ALL trades                 n= 7  win  86%  @$1k/trade mid +$1024  worst +$192  avg 15%  SQN 1.50
+  chart-aligned only       n= 7  win  86%  @$1k/trade mid +$1024  worst +$192  avg 15%  SQN 1.50
+  against chart            n= 0
+  reverse_rug              n= 2  win 100%  @$1k/trade mid +$244  worst +$80  avg 12%  SQN 1.02
+  floor                    n= 4  win 100%  @$1k/trade mid +$1083  worst +$446  avg 27%  SQN 2.91
+  rug                      n= 0
+  ceiling                  n= 1  win   0%  @$1k/trade mid -$303  worst -$334  avg -30%  SQN 0.00
+  longs                    n= 6  win 100%  @$1k/trade mid +$1327  worst +$526  avg 22%  SQN 3.01
+  shorts                   n= 1  win   0%  @$1k/trade mid -$303  worst -$334  avg -30%  SQN 0.00
+
+day outcomes: no setup in reach 7 · no fill 30 · FILLED ceiling down 1 · no board 9 · FILLED floor up 4 · in position 2 · FILLED reverse_rug up 2
+
+-- every trade --
+  2026-04-13 09:35 PUT  ceiling     @350 (gatekeeper) stop 351 T1 347.5 T2 345 rr 5   TSLA260417P00350000 in $7.3 → stop(close)@04-13 $5.09  =  -30%
+  2026-04-27 09:52 CALL floor       @365 (gatekeeper) stop 362.5 T1 370 T2 372.5 rr 3   TSLA260501C00365000 in $8.41 → T1@04-27 $10.3 · T2@04-27 $12.11  =  33%
+  2026-04-29 09:35 CALL floor       @375 (gatekeeper) stop 372.5 T1 377.5 T2 380 rr 2   TSLA260501C00375000 in $5.35 → T1@04-30 $5.89 · T2@04-30 $7.11  =  22%
+  2026-05-01 09:38 CALL reverse_rug @380 (king) stop 377.5 T1 385 T2 387.5 rr 3   TSLA260508C00380000 in $10.02 → T1@05-01 $11.51 · T2@05-01 $13.37  =  24%
+  2026-05-04 11:40 CALL floor       @385 (gatekeeper) stop 382.5 T1 390 T2 395 rr 4   TSLA260508C00385000 in $8.21 → T1@05-04 $10.6 · T2@05-05 $13.83  =  49%
+  2026-05-26 09:35 CALL reverse_rug @432.5 (gatekeeper) stop 430 T1 435 T2 440 rr 3   TSLA260529C00432500 in $8.18 → T1@05-26 $8.95 · breakeven@05-26 $7.45  =  0%
+  2026-05-27 09:40 CALL floor       @440 (gatekeeper) stop 439 T1 442.5 T2 447.5 rr 7.5   TSLA260529C00440000 in $7.76 → T1@05-27 $8.8 · breakeven@05-27 $7.46  =  5%
+
+credits used 299

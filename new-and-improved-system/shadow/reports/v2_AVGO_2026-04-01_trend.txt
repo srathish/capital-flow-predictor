@@ -1,0 +1,29 @@
+
+=========== AVGO weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend ===========
+AVGO itself: 304.67 → 377.14 (23.8%)
+ALL trades                 n=11  win  45%  @$1k/trade mid -$282  worst -$849  avg -3%  SQN -0.25
+  chart-aligned only       n=11  win  45%  @$1k/trade mid -$282  worst -$849  avg -3%  SQN -0.25
+  against chart            n= 0
+  reverse_rug              n= 1  win   0%  @$1k/trade mid -$152  worst -$152  avg -15%  SQN 0.00
+  floor                    n=10  win  50%  @$1k/trade mid -$130  worst -$697  avg -1%  SQN -0.12
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  45%  @$1k/trade mid -$282  worst -$849  avg -3%  SQN -0.25
+  shorts                   n= 0
+
+day outcomes: no fill 25 · no setup in reach 9 · FILLED floor up 10 · in position 6 · FILLED reverse_rug up 1 · no board 4
+
+-- every trade --
+  2026-04-13 09:44 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 380 rr 4   AVGO260417C00370000 in $9 → T1@04-13 $9.5 · T2@04-13 $13.3  =  27%
+  2026-04-15 09:36 CALL floor       @390 (king) stop 387.5 T1 397.5 T2 400 rr 4   AVGO260417C00390000 in $6.93 → T1@04-16 $8 · time@04-16 $9.49  =  26%
+  2026-04-17 09:35 CALL floor       @400 (barney) stop 399 T1 410 T2 null rr 10   AVGO260422C00400000 in $8.5 → time@04-21 $5.57  =  -35%
+  2026-04-27 09:35 CALL floor       @420 (gatekeeper) stop 419 T1 422.5 T2 425 rr 5   AVGO260501C00420000 in $9.96 → stop(close)@04-27 $9.33  =  -6%
+  2026-04-30 10:29 CALL floor       @407.5 (gatekeeper) stop 405 T1 415 T2 420 rr 5   AVGO260508C00410000 in $11.9 → T1@04-30 $0 · T2@05-01 $15  =  -37%
+  2026-05-05 09:35 CALL floor       @420 (gatekeeper) stop 417.5 T1 422.5 T2 425 rr 2   AVGO260508C00420000 in $8.25 → T1@05-05 $9.5 · T2@05-05 $12  =  30%
+  2026-05-06 09:44 CALL floor       @430 (gatekeeper) stop 427.5 T1 440 T2 445 rr 6   AVGO260508C00430000 in $8 → stop(close)@05-06 $4.37  =  -45%
+  2026-05-11 10:31 CALL reverse_rug @425 (pika) stop 422.5 T1 427.5 T2 435 rr 4   AVGO260515C00425000 in $10.5 → T1@05-11 $10.3 · breakeven@05-12 $7.5  =  -15%
+  2026-05-13 09:35 CALL floor       @410 (king) stop 409 T1 415 T2 420 rr 10   AVGO260515C00410000 in $7.8 → T1@05-13 $10 · T2@05-14 $12.51  =  44%
+  2026-06-04 09:41 CALL floor       @405 (gatekeeper) stop 404 T1 412.5 T2 415 rr 10   AVGO260612C00405000 in $14.5 → T1@06-04 $17.02 · T2@06-04 $18.6  =  23%
+  2026-06-22 09:45 CALL floor       @400 (gatekeeper) stop 399 T1 405 T2 410 rr 10   AVGO260626C00400000 in $9.95 → stop(close)@06-22 $5.96  =  -40%
+
+credits used 5

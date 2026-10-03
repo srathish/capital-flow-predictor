@@ -1,0 +1,28 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n=10  win  20%  @$1k/trade mid -$4415  worst -$4489  avg -44%  SQN -3.76
+  chart-aligned only       n=10  win  20%  @$1k/trade mid -$4415  worst -$4489  avg -44%  SQN -3.76
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 1  win   0%  @$1k/trade mid -$527  worst -$556  avg -53%  SQN 0.00
+  rug                      n= 1  win   0%  @$1k/trade mid -$454  worst -$454  avg -45%  SQN 0.00
+  ceiling                  n= 8  win  25%  @$1k/trade mid -$3434  worst -$3479  avg -43%  SQN -2.90
+  longs                    n= 1  win   0%  @$1k/trade mid -$527  worst -$556  avg -53%  SQN 0.00
+  shorts                   n= 9  win  22%  @$1k/trade mid -$3888  worst -$3933  avg -43%  SQN -3.30
+
+day outcomes: no fill 28 · FILLED floor up 1 · in position 6 · FILLED ceiling down 8 · no setup in reach 9 · no contract data 2 · FILLED rug down 1 · no board 3
+
+-- every trade --
+  2026-07-08 11:28 CALL floor       @360 (barney) stop 359 T1 365 T2 367.5 rr 7.5   GOOGL260710C00360000 in $4.5 → stop(close)@07-09 $2.13  =  -53%
+  2026-07-14 09:45 PUT  ceiling     @355 (gatekeeper) stop 356 T1 352.5 T2 350 rr 5   GOOGL260717P00355000 in $4.95 → stop(close)@07-14 $2.45  =  -51%
+  2026-07-15 09:44 PUT  ceiling     @365 (gatekeeper) stop 367.5 T1 360 T2 355 rr 4   GOOGL260717P00365000 in $4.45 → stop(close)@07-15 $1.67  =  -63%
+  2026-07-29 09:35 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 325 rr 4   GOOGL260731P00335000 in $4.9 → T1@07-29 $5.9 · breakeven@07-29 $4.18  =  3%
+  2026-07-30 10:06 PUT  ceiling     @335 (gatekeeper) stop 337.5 T1 330 T2 327.5 rr 3   GOOGL260807P00335000 in $6.95 → stop(close)@07-31 $0.78  =  -89%
+  2026-08-14 09:35 PUT  ceiling     @350 (king) stop 352.5 T1 347.5 T2 345 rr 2   GOOGL260821P00350000 in $5.48 → T1@08-14 $6.05 · T2@08-14 $7.9  =  27%
+  2026-08-21 10:53 PUT  rug         @345 (king) stop 347.5 T1 340 T2 335 rr 4   GOOGL260828P00345000 in $5.49 → stop(close)@08-24 $3  =  -45%
+  2026-09-01 09:35 PUT  ceiling     @335 (gatekeeper) stop 337.5 T1 332.5 T2 327.5 rr 3   GOOGL260904P00335000 in $3.8 → stop(close)@09-03 $0.25  =  -93%
+  2026-09-10 09:35 PUT  ceiling     @330 (king) stop 331 T1 325 T2 322.5 rr 7.5   GOOGL260918P00330000 in $6.21 → stop(close)@09-10 $4.33  =  -30%
+  2026-09-24 09:38 PUT  ceiling     @340 (gatekeeper) stop 342.5 T1 335 T2 330 rr 4   GOOGL261002P00340000 in $6.74 → stop(close)@09-25 $3.5  =  -48%
+
+credits used 5

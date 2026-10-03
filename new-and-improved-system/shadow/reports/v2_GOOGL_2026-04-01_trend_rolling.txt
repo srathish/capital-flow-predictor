@@ -1,0 +1,28 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_rolling ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n=10  win  40%  @$1k/trade mid +$917  worst +$206  avg 9%  SQN 0.57
+  chart-aligned only       n=10  win  40%  @$1k/trade mid +$917  worst +$206  avg 9%  SQN 0.57
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n=10  win  40%  @$1k/trade mid +$917  worst +$206  avg 9%  SQN 0.57
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=10  win  40%  @$1k/trade mid +$917  worst +$206  avg 9%  SQN 0.57
+  shorts                   n= 0
+
+day outcomes: no fill 31 · FILLED floor up 10 · in position 3 · no setup in reach 7 · no board 4
+
+-- every trade --
+  2026-04-07 09:50 CALL floor       @300 (king) stop 297.5 T1 302.5 T2 305 rr 2   GOOGL260410C00300000 in $4.81 → T1@04-07 $5.65 · T2@04-07 $7.5  =  37%
+  2026-04-08 09:35 CALL floor       @317.5 (king) stop 315 T1 320 T2 322.5 rr 2   GOOGL260410C00317500 in $3.35 → time@04-09 $2.65  =  -21%
+  2026-04-21 13:14 CALL floor       @332.5 (king) stop 330 T1 337.5 T2 340 rr 3   GOOGL260422C00332500 in $3.2 → time@04-21 $2.76  =  -14%
+  2026-04-30 09:38 CALL floor       @370 (pika) stop 369 T1 375 T2 377.5 rr 7.5   GOOGL260508C00370000 in $7.65 → T1@04-30 $10.5 · T2@04-30 $11.8  =  46%
+  2026-05-05 13:18 CALL floor       @385 (king) stop 384 T1 390 T2 392.5 rr 7.5   GOOGL260508C00385000 in $4.8 → T1@05-06 $9.7 · T2@05-06 $9.7  =  102%
+  2026-05-11 15:21 CALL floor       @390 (gatekeeper) stop 389 T1 395 T2 400 rr 10   GOOGL260515C00390000 in $5.9 → stop(close)@05-11 $4.95  =  -16%
+  2026-05-14 09:53 CALL floor       @397.5 (normal) stop 395 T1 400 T2 405 rr 3   GOOGL260522C00397500 in $10.78 → T1@05-14 $10.25 · breakeven@05-15 $7.85  =  -16%
+  2026-05-29 09:35 CALL floor       @380 (gatekeeper) stop 379 T1 385 T2 387.5 rr 7.5   GOOGL260605C00380000 in $7.7 → T1@05-29 $8.96 · breakeven@05-29 $5.97  =  -3%
+  2026-06-16 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $4.25 → T1@06-16 $5.7 · T2@06-16 $7.4  =  54%
+  2026-06-17 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $3.5 → stop(close)@06-17 $0.8  =  -77%
+
+credits used 81
