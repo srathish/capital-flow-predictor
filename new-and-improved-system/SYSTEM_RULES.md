@@ -1,5 +1,10 @@
 # SYSTEM RULES — what the shadow book says to trade (v1, 2026-10-02)
 
+> ⚠️ **2026-10-03: RESULTS BELOW ARE PENDING RE-VALIDATION.** The live-runner regression found a backtest bug: the daily
+> history was stitched from four 20-day windows, which dropped ~8 trading days per quarter from the calendar and computed the
+> trend filter's EMA50 from ~20 closes early in each period. Fixed in `shadow/stock*.mjs`; the full validation (original 10,
+> new 10, all 3 periods) is re-running via `shadow/run_revalidate.sh`. Rules are frozen — nothing will be re-selected.
+
 Evidence base: 10 large caps (AAPL NVDA AMZN META GOOGL AMD TSLA AVGO ORCL MSFT), weekly options priced on REAL 1-min contract bars,
 $1k premium per trade, three periods: Jan–Mar 2026 (holdout), Apr–Jun, Jul–Sep. Code: `shadow/stock.mjs`, `shadow/stock2.mjs`.
 
