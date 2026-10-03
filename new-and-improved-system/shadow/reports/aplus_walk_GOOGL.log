@@ -1,0 +1,32 @@
+
+=== A+ walk-forward (map only) · GOOGL · 2026-01-02 → 2026-10-02 (189 trading days) · GOOGL 317 → 344 ===
+A+ setups found: 8 on 8 days · filled: 6
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-06-04 BEAR entry 365 stop 367.5 target 357.5 / 355 (R:R 3) — FILLED 09:35 · chart: structure (1/4)
+      why: gatekeeper ceiling 365 (29%) · untouched target 357.5 (pika) · air pocket (0 small node(s) between) · R:R 3.0 · trend mixed
+  2026-06-17 BULL entry 370 stop 367.5 target 380 (R:R 4) — FILLED 09:35 · chart: level (1/4, STRUCTURE AGAINST)
+      why: gatekeeper floor 370 (25%) · untouched target 380 (king) · air pocket (2 small node(s) between) · R:R 4.0 · trend up
+  2026-06-24 BULL entry 347.5 stop 345 target 360 (R:R 5) — FILLED 09:47 · chart: none (0/4)
+      why: king floor 347.5 (28%) · untouched target 360 (gatekeeper) · air pocket (4 small node(s) between) · R:R 5.0 · trend mixed
+  2026-07-02 BULL entry 355 stop 352.5 target 365 / 370 (R:R 4) — FILLED 11:53 · chart: none (0/4)
+      why: king floor 355 (24%) · untouched target 365 (gatekeeper) · air pocket (3 small node(s) between) · R:R 4.0 · trend up
+  2026-07-22 BEAR entry 352.5 stop 355 target 345 / 340 (R:R 3) — earnings blackout (2026-07-22)
+      why: gatekeeper ceiling 352.5 (16%) · untouched target 345 (king) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-08-10 BEAR entry 360 stop 362.5 target 352.5 / 350 (R:R 3) — no retest that held
+      why: king ceiling 360 (23%) · untouched target 352.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend mixed
+  2026-08-21 BEAR entry 345 stop 347.5 target 335 / 332.5 (R:R 4) — FILLED 10:53 · chart: none (0/4)
+      why: king ceiling 345 (37%) · untouched target 335 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend down
+  2026-10-01 BULL entry 345 stop 342.5 target 355 / 357.5 (R:R 4) — FILLED 09:39 · chart: fib+level (2/4)
+      why: gatekeeper floor 345 (22%) · untouched target 355 (gatekeeper) · air pocket (3 small node(s) between) · R:R 4.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+  2026-06-04 09:35 PUT  @365 → tgt 357.5  [chart structure 1/4]  null in $null → stop(close)@06-04 $undefined  =  unpriced  R -2.94
+  2026-06-17 09:35 CALL @370 → tgt 380  [chart level 1/4]  null in $null → stop(close)@06-17 $undefined  =  unpriced  R -2.46
+  2026-06-24 09:47 CALL @347.5 → tgt 360  [chart none 0/4]  null in $null → stop(close)@06-25 $undefined  =  unpriced  R -1.54
+  2026-07-02 11:53 CALL @355 → tgt 365  [chart none 0/4]  GOOGL260717C00355000 in $9.9 → TARGET@07-06 $14.25 · T2@07-07 $null  =  unpriced  R 4.99
+  2026-08-21 10:53 PUT  @345 → tgt 335  [chart none 0/4]  null in $null → stop(close)@08-24 $undefined  =  unpriced  R -1.24
+  2026-10-01 09:39 CALL @345 → tgt 355  [chart fib+level 2/4 ✓A+chart]  null in $null → stop(close)@10-01 $undefined  =  unpriced  R -2.67
+
+TOTAL: 6 trades · win 17% · +$0 on $1k/trade
+credits used 0

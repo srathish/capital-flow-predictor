@@ -1,0 +1,20 @@
+
+=== A+ walk-forward (map only) · NVDA · 2026-01-02 → 2026-10-02 (189 trading days) · NVDA 190 → 234 ===
+A+ setups found: 4 on 4 days · filled: 2
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-01-09 BEAR entry 185 stop 186 target 180 (R:R 5) — FILLED 10:30 · chart: level (1/4, STRUCTURE AGAINST)
+      why: gatekeeper ceiling 185 (42%) · untouched target 180 (pika) · air pocket (0 small node(s) between) · R:R 5.0 · trend mixed
+  2026-01-29 BULL entry 190 stop 189 target 195 / 197.5 (R:R 5) — FILLED 10:43 · chart: level (1/4, STRUCTURE AGAINST)
+      why: king floor 190 (63%) · untouched target 195 (pika) · air pocket (1 small node(s) between) · R:R 5.0 · trend mixed
+  2026-02-04 BEAR entry 180 stop 181 target 172.5 (R:R 7.5) — no retest that held
+      why: gatekeeper ceiling 180 (17%) · untouched target 172.5 (king) · air pocket (1 small node(s) between) · R:R 7.5 · trend mixed
+  2026-02-12 BULL entry 190 stop 189 target 195 (R:R 5) — earnings blackout (2026-02-25)
+      why: gatekeeper floor 190 (16%) · untouched target 195 (king) · air pocket (1 small node(s) between) · R:R 5.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+  2026-01-09 10:30 PUT  @185 → tgt 180  [chart level 1/4]  null in $null → stop(close)@01-15 $undefined  =  unpriced  R -2.14
+  2026-01-29 10:43 CALL @190 → tgt 195  [chart level 1/4]  null in $null → stop(close)@02-02 $undefined  =  unpriced  R -4.33
+
+TOTAL: 2 trades · win 0% · +$0 on $1k/trade
+credits used 0

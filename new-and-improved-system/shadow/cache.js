@@ -8,6 +8,8 @@ import { etToUnix, iso } from '../lib/time.js';
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..', '.cache');
 const read = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null);
 const write = (f, v) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, JSON.stringify(v)); return v; };
+// OFFLINE=1: cache misses return null/[] WITHOUT fetching or writing (no credits, never caches an empty rate-limited reply).
+const OFFLINE = process.env.OFFLINE === '1';
 export const stats = { boardFetch: 0, boardHit: 0, barFetch: 0, optFetch: 0, optHit: 0 };
 
 /** 0DTE boards for all symbols at ET hh:mm on date (one multi-symbol call), keyed by symbol. */
@@ -24,6 +26,7 @@ export async function boardsAt(symbols, date, hhmm) {
 export async function minuteBars(px, date) {
   const f = path.join(ROOT, 'bars', date, `${px}.json`);
   const hit = read(f); if (hit) return hit;
+  if (OFFLINE) return [];
   stats.barFetch++;
   return write(f, await atlasHistory(px, '1', etToUnix(date, '09:30'), etToUnix(date, '16:00')));
 }
@@ -39,6 +42,7 @@ export async function dailyBars(px, date) {
 export async function optionBars(id, date) {
   const f = path.join(ROOT, 'options', date, `${id}.json`);
   const hit = read(f); if (hit) { stats.optHit++; return hit; }
+  if (OFFLINE) return [];
   stats.optFetch++;
   return write(f, await contractMinuteBars(id, date));
 }

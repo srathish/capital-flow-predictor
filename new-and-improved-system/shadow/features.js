@@ -18,6 +18,7 @@ const wr = (f, v) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.wr
 export async function board(sym, date, exp, metric = 'gamma') {
   const f = path.join(CACHE, sym, metric === 'gamma' ? `${date}_${exp}.json` : `${date}_${exp}_${metric}.json`);
   const hit = rd(f); if (hit !== undefined) return hit;
+  if (process.env.OFFLINE === '1') return null;
   let out = null;
   try { out = (await heatmapAt([sym], iso(etToUnix(date, '09:35')), { metric, expirations: exp }))[0] ?? null; } catch (e) { out = { error: String(e.message).slice(0, 160) }; }
   return wr(f, out);

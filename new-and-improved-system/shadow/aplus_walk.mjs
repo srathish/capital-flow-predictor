@@ -42,6 +42,19 @@ const buyTime = (d) => { let f = addDays(d, DTE); while (dow(f) !== 5) f = addDa
 const px = (bars, t, k = 'c') => { let best = null; for (const b of bars) { if (b.t > t) break; best = b; } if (!best) best = bars.find((b) => b.t > t) ?? null; return best ? best[k] : null; };
 async function contract(exp, type, strike, date) { for (const s of [2.5, 5, 1]) { const k = Math.round(strike / s) * s, id = occ(SYM, exp, type, k); if ((await optionBars(id, date)).length > 30) return id; } return null; }
 const earn = await earningsDates(SYM);
+const spyD = await atlasHistory('SPY', 'D', etToUnix(FROM, '09:30') - 200 * 86400, etToUnix(TO, '16:00') + 86400);
+const spyMap = new Map(spyD.map((b) => [ymd(b.t), b])), spyDays = [...spyMap.keys()].sort();
+import { vexLean } from '../system/stockrules.js';
+// Stock-selection features, all known BEFORE the entry bar (signed so + = in the trade's favor).
+async function selectFeatures(D, a, bars, bi, exp) {
+  const sg = a.dir === 'up' ? 1 : -1, pr = days.filter((d) => d < D).map((d) => dmap.get(d)), sp = spyDays.filter((d) => d < D).map((d) => spyMap.get(d));
+  const ret = (xs, n) => xs.at(-1).c / xs.at(-1 - n).c - 1;
+  const tr = pr.slice(-15).map((b, i, xs) => i ? Math.max(b.h - b.l, Math.abs(b.h - xs[i - 1].c), Math.abs(b.l - xs[i - 1].c)) : null).filter((x) => x != null);
+  const raw = await cachedBoard(SYM, D, exp, 'vanna'), lean = raw?.strikes?.length ? vexLean(raw) : null;
+  return { rs20: +(sg * (ret(pr, 20) - ret(sp, 20))).toFixed(4), mom5: +(sg * ret(pr, 5)).toFixed(4), atrPct: +(tr.reduce((x, y) => x + y, 0) / tr.length / pr.at(-1).c).toFixed(4),
+    gap: +(sg * (bars[0].o / pr.at(-1).c - 1)).toFixed(4), spyTrend: dailyTrend(sp.map((b) => b.c)), spyWith: dailyTrend(sp.map((b) => b.c)) === (a.dir === 'up' ? 'up' : 'down'),
+    share: a.share, rr: a.rr, chartN: a.tech?.n ?? 0, structure: !!a.tech?.structure, fib: !!a.tech?.fib, level: !!a.tech?.level, sweep: !!a.tech?.sweep, vex: lean == null ? null : lean === a.dir, entryMin: Math.round((bars[bi].t - bars[0].t) / 60) };
+}
 
 import { findAplus as findAplusShared, retestHolds, APLUS } from '../system/aplus.js';
 import { technicals } from '../system/technicals.js';
@@ -78,9 +91,9 @@ for (const D of tdays) {
   }
   for (const a of aps) found.push({ D, spot: +board.spot.toFixed(2), ...a, status: blackout ? `earnings blackout (${blackout})` : fill && fill.entry === a.entry && fill.dir === a.dir ? `FILLED ${hm(fill.t)} · chart: ${fill.tech.tag} (${fill.tech.n}/4${fill.tech.against ? ', STRUCTURE AGAINST' : ''})` : a.tech ? `retest held but chart ${a.tech.tag} (${a.tech.n}/4${a.tech.against ? ', against' : ''}) — not A+ chart` : 'no retest that held' });
   if (!fill) continue;
+  const fbi = bars.findIndex((x) => x.t === fill.t), feat = await selectFeatures(D, fill, bars, fbi, weekly(D));
   const type = fill.dir === 'up' ? 'call' : 'put', id = await contract(cexp, type, fill.entry, D);
-  if (!id) continue;
-  const e0 = px(await optionBars(id, D), fill.t); if (!e0) continue;
+  const e0 = id ? px(await optionBars(id, D), fill.t) : null;
   const dir = fill.dir === 'up' ? 1 : -1, legs = []; let half = false, stopLvl = fill.stop;
   const holdDays = days.filter((d) => d >= D && d <= holdEnd);
   outer: for (const d of holdDays) {
@@ -94,9 +107,11 @@ for (const D of tdays) {
     if (c && !half && (dir > 0 ? c.c < stopLvl : c.c > stopLvl)) { legs.push({ d, t: c.t, f: 1, why: 'stop(close)' }); break; }
     if (d === holdDays[holdDays.length - 1] && c) { legs.push({ d, t: c.t, f: half ? 0.5 : 1, why: 'time' }); break; }
   }
-  let r = 0; for (const l of legs) { l.px = px(await optionBars(id, l.d), l.t) ?? 0; r += (l.px - e0) / e0 * l.f; }
+  // underlying R (always) + option return (only if every leg is priced from the cache)
+  let R = 0; for (const l of legs) { const ub = px(await minuteBars(SYM, l.d), l.t); l.u = ub; R += dir * (ub - fill.entry) / Math.abs(fill.entry - fill.stop) * l.f; }
+  let r = e0 ? 0 : null; if (e0) for (const l of legs) { const ob = await optionBars(id, l.d); l.px = ob.length ? px(ob, l.t) : null; if (l.px == null) { r = null; break; } r += (l.px - e0) / e0 * l.f; }
   busyUntil = legs[legs.length - 1]?.d ?? D;
-  trades.push({ D, et: hm(fill.t), chart: fill.tech.tag, chartN: fill.tech.n, aplusChart: fill.tech.aplusChart, dir: fill.dir, entry: fill.entry, stop: fill.stop, target: fill.target, rr: fill.rr, sweep: fill.sweep, contract: id, in: e0, exits: legs.map((l) => `${l.why}@${l.d.slice(5)} $${l.px}`).join(' · '), ret: +r.toFixed(3) });
+  trades.push({ D, et: hm(fill.t), chart: fill.tech.tag, chartN: fill.tech.n, aplusChart: fill.tech.aplusChart, dir: fill.dir, entry: fill.entry, stop: fill.stop, target: fill.target, rr: fill.rr, sweep: fill.sweep, contract: id, in: e0, exits: legs.map((l) => `${l.why}@${l.d.slice(5)} $${l.px}`).join(' · '), ret: r == null ? null : +r.toFixed(3), R: +R.toFixed(2), ...feat });
 }
 
 const $ = (v) => (v >= 0 ? '+' : '-') + '$' + Math.abs(v).toFixed(0);
@@ -106,8 +121,8 @@ console.log(`A+ setups found: ${found.length} on ${new Set(found.map((f) => f.D)
 console.log('-- every A+ setup the system saw (as of 09:35 that day) --');
 for (const f of found) console.log(`  ${f.D} ${f.dir === 'up' ? 'BULL' : 'BEAR'} entry ${f.entry} stop ${f.stop} target ${f.target}${f.t2 ? ' / ' + f.t2 : ''} (R:R ${f.rr}) — ${f.status}\n      why: ${f.why}`);
 console.log('\n-- trades (real option prices, $1k premium each) --');
-for (const t of trades) console.log(`  ${t.D} ${t.et} ${t.dir === 'up' ? 'CALL' : 'PUT '} @${t.entry} → tgt ${t.target}  [chart ${t.chart} ${t.chartN}/4${t.aplusChart ? ' ✓A+chart' : ''}]  ${t.contract} in $${t.in} → ${t.exits}  =  ${(t.ret * 100).toFixed(0)}%  (${$(t.ret * 1000)})`);
-const tot = trades.reduce((a, t) => a + t.ret, 0) * 1000;
-console.log(`\nTOTAL: ${trades.length} trades · win ${trades.length ? Math.round(trades.filter((t) => t.ret > 0).length / trades.length * 100) : 0}% · ${$(tot)} on $1k/trade${trades.filter((t) => t.sweep).length ? ` · with sweep: ${trades.filter((t) => t.sweep).length} trades ${$(trades.filter((t) => t.sweep).reduce((a, t) => a + t.ret, 0) * 1000)}` : ''}`);
+for (const t of trades) console.log(`  ${t.D} ${t.et} ${t.dir === 'up' ? 'CALL' : 'PUT '} @${t.entry} → tgt ${t.target}  [chart ${t.chart} ${t.chartN}/4${t.aplusChart ? ' ✓A+chart' : ''}]  ${t.contract} in $${t.in} → ${t.exits}  =  ${t.ret == null ? 'unpriced' : (t.ret * 100).toFixed(0) + '%  (' + $(t.ret * 1000) + ')'}  R ${t.R}`);
+const tot = trades.reduce((a, t) => a + (t.ret ?? 0), 0) * 1000;
+console.log(`\nTOTAL: ${trades.length} trades · win ${trades.length ? Math.round(trades.filter((t) => t.R > 0).length / trades.length * 100) : 0}% · ${$(tot)} on $1k/trade${trades.filter((t) => t.sweep).length ? ` · with sweep: ${trades.filter((t) => t.sweep).length} trades ${$(trades.filter((t) => t.sweep).reduce((a, t) => a + t.ret, 0) * 1000)}` : ''}`);
 fs.writeFileSync(path.join(HERE, 'journal', `aplus_walk.${SYM}.${FROM}_${TO}${CHART ? '.chart' : ''}.json`), JSON.stringify({ found, trades }, null, 1));
 const acct1 = await account().catch(() => null); console.log(`credits used ${acct0 && acct1 ? acct0.creditsBalance - acct1.creditsBalance : '?'}`);

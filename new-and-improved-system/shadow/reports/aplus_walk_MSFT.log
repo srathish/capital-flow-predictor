@@ -1,0 +1,50 @@
+
+=== A+ walk-forward (map only) · MSFT · 2026-01-02 → 2026-10-02 (189 trading days) · MSFT 484 → 517 ===
+A+ setups found: 16 on 16 days · filled: 8
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-01-21 BEAR entry 452.5 stop 455 target 442.5 / 440 (R:R 4) — earnings blackout (2026-01-28)
+      why: king ceiling 452.5 (29%) · untouched target 442.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 4.0 · trend down
+  2026-01-28 BULL entry 475 stop 472.5 target 485 / 487.5 (R:R 4) — earnings blackout (2026-01-28)
+      why: gatekeeper floor 475 (24%) · untouched target 485 (gatekeeper) · air pocket (1 small node(s) between) · R:R 4.0 · trend mixed
+  2026-02-09 BEAR entry 410 stop 412.5 target 402.5 / 400 (R:R 3) — FILLED 10:40 · chart: structure (1/4)
+      why: gatekeeper ceiling 410 (23%) · untouched target 402.5 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-02-18 BEAR entry 400 stop 402.5 target 390 / 387.5 (R:R 4) — FILLED 10:44 · chart: structure+level (2/4)
+      why: gatekeeper ceiling 400 (16%) · untouched target 390 (king) · air pocket (2 small node(s) between) · R:R 4.0 · trend down
+  2026-03-09 BULL entry 402.5 stop 400 target 410 / 412.5 (R:R 3) — no retest that held
+      why: gatekeeper floor 402.5 (19%) · untouched target 410 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend mixed
+  2026-03-11 BEAR entry 412.5 stop 415 target 402.5 / 400 (R:R 4) — no retest that held
+      why: gatekeeper ceiling 412.5 (20%) · untouched target 402.5 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend down
+  2026-03-18 BEAR entry 400 stop 402.5 target 392.5 / 390 (R:R 3) — no retest that held
+      why: gatekeeper ceiling 400 (26%) · untouched target 392.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-04-14 BULL entry 390 stop 387.5 target 397.5 / 400 (R:R 3) — FILLED 09:56 · chart: none (0/4, STRUCTURE AGAINST)
+      why: gatekeeper floor 390 (23%) · untouched target 397.5 (normal) · air pocket (0 small node(s) between) · R:R 3.0 · trend mixed
+  2026-05-04 BULL entry 412.5 stop 410 target 420 / 425 (R:R 3) — FILLED 12:08 · chart: level (1/4)
+      why: gatekeeper floor 412.5 (46%) · untouched target 420 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up
+  2026-05-27 BULL entry 410 stop 407.5 target 420 / 422.5 (R:R 4) — no retest that held
+      why: gatekeeper floor 410 (10%) · untouched target 420 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend up
+  2026-07-27 BEAR entry 395 stop 397.5 target 387.5 / 385 (R:R 3) — earnings blackout (2026-07-29)
+      why: gatekeeper ceiling 395 (21%) · untouched target 387.5 (barney) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-08-05 BULL entry 490 stop 487.5 target 500 / 505 (R:R 4) — FILLED 09:45 · chart: none (0/4)
+      why: gatekeeper floor 490 (16%) · untouched target 500 (king) · air pocket (2 small node(s) between) · R:R 4.0 · trend up
+  2026-08-06 BULL entry 487.5 stop 485 target 500 (R:R 5) — no retest that held
+      why: king floor 487.5 (28%) · untouched target 500 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend up
+  2026-08-07 BULL entry 500 stop 497.5 target 510 / 515 (R:R 4) — FILLED 13:00 · chart: none (0/4)
+      why: gatekeeper floor 500 (37%) · untouched target 510 (gatekeeper) · air pocket (0 small node(s) between) · R:R 4.0 · trend up
+  2026-09-09 BULL entry 490 stop 487.5 target 500 / 502.5 (R:R 4) — FILLED 10:09 · chart: fib+level (2/4)
+      why: gatekeeper floor 490 (13%) · untouched target 500 (king) · air pocket (2 small node(s) between) · R:R 4.0 · trend up
+  2026-09-15 BULL entry 500 stop 497.5 target 510 / 512.5 (R:R 4) — FILLED 09:35 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king floor 500 (52%) · untouched target 510 (gatekeeper) · air pocket (1 small node(s) between) · R:R 4.0 · trend up
+
+-- trades (real option prices, $1k premium each) --
+  2026-02-09 10:40 PUT  @410 → tgt 402.5  [chart structure 1/4]  null in $null → stop(close)@02-09 $undefined  =  unpriced  R -1.36
+  2026-02-18 10:44 PUT  @400 → tgt 390  [chart structure+level 2/4 ✓A+chart]  MSFT260306P00400000 in $10.85 → TARGET@02-23 $13.85 · T2@02-23 $15  =  33%  (+$329)  R 4.58
+  2026-04-14 09:56 CALL @390 → tgt 397.5  [chart none 0/4]  MSFT260501C00390000 in $16.09 → TARGET@04-15 $19.5 · T2@04-15 $21.41  =  27%  (+$271)  R 3.53
+  2026-05-04 12:08 CALL @412.5 → tgt 420  [chart level 1/4]  MSFT260522C00415000 in $10.45 → TARGET@05-07 $13.5 · T2@05-07 $15.85  =  40%  (+$404)  R 4.32
+  2026-08-05 09:45 CALL @490 → tgt 500  [chart none 0/4]  MSFT260821C00490000 in $13.8 → stop(close)@08-05 $11  =  -20%  (-$203)  R -1.02
+  2026-08-07 13:00 CALL @500 → tgt 510  [chart none 0/4]  MSFT260821C00500000 in $11.14 → TARGET@08-10 $15.45 · breakeven@08-12 $8.1  =  6%  (+$57)  R 1.89
+  2026-09-09 10:09 CALL @490 → tgt 500  [chart fib+level 2/4 ✓A+chart]  MSFT260925C00490000 in $12 → TARGET@09-14 $15 · T2@09-14 $15.3  =  26%  (+$263)  R 4.57
+  2026-09-15 09:35 CALL @500 → tgt 510  [chart none 0/4]  MSFT261002C00500000 in $12.87 → stop(close)@09-15 $9.87  =  -23%  (-$233)  R -1.3
+
+TOTAL: 8 trades · win 63% · +$888 on $1k/trade
+credits used 0

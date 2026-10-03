@@ -1,0 +1,52 @@
+
+=== A+ walk-forward (map only) · COST · 2026-01-02 → 2026-10-02 (189 trading days) · COST 861 → 921 ===
+A+ setups found: 17 on 17 days · filled: 8
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-01-12 BEAR entry 940 stop 945 target 925 (R:R 3) — FILLED 12:00 · chart: none (0/4)
+      why: king ceiling 940 (49%) · untouched target 925 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+  2026-02-12 BULL entry 980 stop 975 target 1010 / 1015 (R:R 6) — FILLED 10:30 · chart: structure (1/4)
+      why: gatekeeper floor 980 (24%) · untouched target 1010 (king) · air pocket (1 small node(s) between) · R:R 6.0 · trend up
+  2026-03-04 BULL entry 1000 stop 995 target 1025 / 1030 (R:R 5) — earnings blackout (2026-03-05)
+      why: king floor 1000 (24%) · untouched target 1025 (gatekeeper) · air pocket (3 small node(s) between) · R:R 5.0 · trend up
+  2026-03-09 BULL entry 990 stop 987.5 target 1005 / 1010 (R:R 6) — FILLED 10:07 · chart: level (1/4)
+      why: gatekeeper floor 990 (11%) · untouched target 1005 (gatekeeper) · air pocket (2 small node(s) between) · R:R 6.0 · trend up
+  2026-04-09 BULL entry 1015 stop 1010 target 1035 / 1040 (R:R 4) — no retest that held
+      why: king floor 1015 (23%) · untouched target 1035 (gatekeeper) · air pocket (3 small node(s) between) · R:R 4.0 · trend up
+  2026-05-04 BULL entry 990 stop 987.5 target 1005 / 1010 (R:R 6) — no retest that held
+      why: gatekeeper floor 990 (10%) · untouched target 1005 (gatekeeper) · air pocket (0 small node(s) between) · R:R 6.0 · trend up
+  2026-05-07 BEAR entry 1005 stop 1007.5 target 990 / 985 (R:R 6) — FILLED 13:09 · chart: fib+level (2/4, STRUCTURE AGAINST)
+      why: king ceiling 1005 (14%) · untouched target 990 (gatekeeper) · air pocket (2 small node(s) between) · R:R 6.0 · trend mixed
+  2026-05-13 BULL entry 1020 stop 1017.5 target 1030 / 1035 (R:R 4) — earnings blackout (2026-05-28)
+      why: gatekeeper floor 1020 (16%) · untouched target 1030 (gatekeeper) · air pocket (0 small node(s) between) · R:R 4.0 · trend up
+  2026-06-02 BEAR entry 950 stop 952.5 target 930 / 920 (R:R 8) — FILLED 09:41 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king ceiling 950 (40%) · untouched target 930 (gatekeeper) · air pocket (2 small node(s) between) · R:R 8.0 · trend mixed
+  2026-06-09 BEAR entry 985 stop 987.5 target 945 (R:R 16) — no retest that held
+      why: gatekeeper ceiling 985 (18%) · untouched target 945 (king) · air pocket (4 small node(s) between) · R:R 16.0 · trend down
+  2026-06-18 BEAR entry 967.5 stop 970 target 950 / 935 (R:R 7) — no retest that held
+      why: gatekeeper ceiling 967.5 (13%) · untouched target 950 (king) · air pocket (2 small node(s) between) · R:R 7.0 · trend down
+  2026-07-13 BEAR entry 930 stop 935 target 915 / 910 (R:R 3) — FILLED 14:53 · chart: structure (1/4)
+      why: gatekeeper ceiling 930 (16%) · untouched target 915 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-07-31 BEAR entry 950 stop 957.5 target 925 / 920 (R:R 3.3) — FILLED 09:55 · chart: level (1/4, STRUCTURE AGAINST)
+      why: gatekeeper ceiling 950 (19%) · untouched target 925 (king) · air pocket (0 small node(s) between) · R:R 3.3 · trend mixed
+  2026-09-08 BEAR entry 920 stop 925 target 905 / 895 (R:R 3) — no retest that held
+      why: gatekeeper ceiling 920 (21%) · untouched target 905 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-09-11 BEAR entry 910 stop 915 target 885 / 880 (R:R 5) — earnings blackout (2026-09-24)
+      why: king ceiling 910 (23%) · untouched target 885 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend down
+  2026-09-18 BEAR entry 905 stop 907.5 target 885 / 880 (R:R 8) — earnings blackout (2026-09-24)
+      why: gatekeeper ceiling 905 (12%) · untouched target 885 (gatekeeper) · air pocket (2 small node(s) between) · R:R 8.0 · trend down
+  2026-10-01 BEAR entry 915 stop 917.5 target 905 / 900 (R:R 4) — FILLED 10:32 · chart: fib+level (2/4)
+      why: king ceiling 915 (21%) · untouched target 905 (gatekeeper) · air pocket (1 small node(s) between) · R:R 4.0 · trend down
+
+-- trades (real option prices, $1k premium each) --
+  2026-01-12 12:00 PUT  @940 → tgt 925  [chart none 0/4]  null in $null → stop(close)@01-14 $undefined  =  unpriced  R -2.25
+  2026-02-12 10:30 CALL @980 → tgt 1010  [chart structure 1/4]  null in $null → TARGET@02-13 $undefined · T2@02-13 $undefined  =  unpriced  R 6.46
+  2026-03-09 10:07 CALL @990 → tgt 1005  [chart level 1/4]  null in $null → TARGET@03-09 $undefined · T2@03-10 $undefined  =  unpriced  R 6.91
+  2026-05-07 13:09 PUT  @1005 → tgt 990  [chart fib+level 2/4]  null in $null → stop(close)@05-07 $undefined  =  unpriced  R -2.82
+  2026-06-02 09:41 PUT  @950 → tgt 930  [chart none 0/4]  null in $null → stop(close)@06-02 $undefined  =  unpriced  R -1.74
+  2026-07-13 14:53 PUT  @930 → tgt 915  [chart structure 1/4]  null in $null → TARGET@07-15 $undefined · breakeven@07-16 $undefined  =  unpriced  R 1.23
+  2026-07-31 09:55 PUT  @950 → tgt 925  [chart level 1/4]  null in $null → stop(close)@08-13 $undefined  =  unpriced  R -1.59
+  2026-10-01 10:32 PUT  @915 → tgt 905  [chart fib+level 2/4 ✓A+chart]  null in $null → stop(close)@10-02 $undefined  =  unpriced  R -2.32
+
+TOTAL: 8 trades · win 38% · +$0 on $1k/trade
+credits used 0

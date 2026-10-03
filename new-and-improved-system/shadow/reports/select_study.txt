@@ -1,0 +1,55 @@
+A+ trades: 63 across 14 stocks · usable 63
+direction: 31 bull / 32 bear
+
+=== selectors (TRAIN Jan–Jun | TEST Jul–Oct) ===
+  all A+                          TRAIN n= 36 win  44%  avg  0.41R  tot   14.7R  t= 0.6  [opt priced 3: $1004]
+                                  TEST  n= 27 win  33%  avg -0.58R  tot  -15.6R  t=-0.8  [opt priced 7: $-597]
+✓ leader vs SPY (rs20>0)          TRAIN n= 28 win  50%  avg  0.92R  tot   25.8R  t= 1.3  [opt priced 2: $733]
+                                  TEST  n= 18 win  39%  avg -0.27R  tot   -4.8R  t=-0.3  [opt priced 6: $-860]
+  laggard vs SPY (rs20<0)         TRAIN n=  8 win  25%  avg -1.39R  tot  -11.1R  t=-0.9  [opt priced 1: $271]
+                                  TEST  n=  9 win  22%  avg -1.20R  tot  -10.8R  t=-0.9  [opt priced 1: $263]
+✓ index trend with you            TRAIN n= 11 win  55%  avg  0.92R  tot   10.1R  t= 0.8  [opt priced 1: $404]
+                                  TEST  n= 11 win  36%  avg -0.31R  tot   -3.4R  t=-0.3  [opt priced 5: $-627]
+  5d momentum with you            TRAIN n= 28 win  43%  avg  0.22R  tot    6.2R  t= 0.3  [opt priced 2: $600]
+                                  TEST  n= 18 win  39%  avg -0.14R  tot   -2.6R  t=-0.2  [opt priced 5: $-240]
+  5d momentum against (pullback)  TRAIN n=  8 win  50%  avg  1.06R  tot    8.5R  t= 0.5  [opt priced 1: $404]
+                                  TEST  n=  9 win  22%  avg -1.45R  tot  -13.0R  t=-1.2  [opt priced 2: $-357]
+  calm stock (ATR<2%)             TRAIN n=  3 win   0%  avg -2.81R  tot   -8.4R  t=-8.8  [opt priced 0: -]
+                                  TEST  n=  3 win  33%  avg -0.28R  tot   -0.8R  t=-0.2  [opt priced 1: $539]
+  volatile stock (ATR≥2%)         TRAIN n= 33 win  48%  avg  0.70R  tot   23.2R  t= 1.0  [opt priced 3: $1004]
+                                  TEST  n= 24 win  33%  avg -0.62R  tot  -14.8R  t=-0.8  [opt priced 6: $-1136]
+  big node (share≥15%)            TRAIN n= 34 win  44%  avg  0.31R  tot   10.6R  t= 0.5  [opt priced 3: $1004]
+                                  TEST  n= 26 win  31%  avg -0.78R  tot  -20.2R  t=-1.1  [opt priced 6: $-860]
+  chart ≥2/4                      TRAIN n=  5 win  20%  avg -1.12R  tot   -5.6R  t=-0.8  [opt priced 1: $329]
+                                  TEST  n=  6 win  17%  avg -1.99R  tot  -12.0R  t=-1.4  [opt priced 2: $-137]
+  liquidity sweep                 TRAIN n=  1 win   0%  avg -1.16R  tot   -1.2R  t=-Infinity  [opt priced 0: -]
+                                  TEST  n=  1 win   0%  avg -6.08R  tot   -6.1R  t=-Infinity  [opt priced 0: -]
+✓ VEX agrees                      TRAIN n= 11 win  55%  avg  1.76R  tot   19.4R  t= 1.6  [opt priced 2: $675]
+                                  TEST  n= 11 win  36%  avg -0.19R  tot   -2.1R  t=-0.2  [opt priced 3: $569]
+  no gap against                  TRAIN n= 22 win  45%  avg  0.18R  tot    4.0R  t= 0.2  [opt priced 1: $271]
+                                  TEST  n= 14 win  14%  avg -1.30R  tot  -18.2R  t=-1.6  [opt priced 3: $-1223]
+  first hour entry                TRAIN n= 30 win  50%  avg  0.73R  tot   22.0R  t= 1.0  [opt priced 2: $600]
+                                  TEST  n= 20 win  30%  avg -0.88R  tot  -17.6R  t=-1.0  [opt priced 5: $-34]
+  after first hour                TRAIN n=  6 win  17%  avg -1.21R  tot   -7.3R  t=-1.1  [opt priced 1: $404]
+                                  TEST  n=  7 win  43%  avg  0.29R  tot    2.0R  t= 0.3  [opt priced 2: $-563]
+✓ leader + index with you         TRAIN n= 10 win  60%  avg  1.26R  tot   12.6R  t= 1.0  [opt priced 1: $404]
+                                  TEST  n=  8 win  50%  avg  0.91R  tot    7.3R  t= 0.9  [opt priced 5: $-627]
+
+=== does a stock that worked in TRAIN keep working in TEST? (per-stock persistence) ===
+  MSFT   TRAIN  4t   11.1R   →   TEST  4t    4.1R
+  JPM    TRAIN  4t    9.6R   →   TEST  0t    0.0R
+  COST   TRAIN  5t    6.6R   →   TEST  3t   -2.7R
+  NFLX   TRAIN  2t    6.0R   →   TEST  0t    0.0R
+  META   TRAIN  1t    4.5R   →   TEST  4t   -8.9R
+  ORCL   TRAIN  7t    3.3R   →   TEST  1t    5.6R
+  AMD    TRAIN  1t    3.2R   →   TEST  1t    3.6R
+  AAPL   TRAIN  0t    0.0R   →   TEST  2t    1.0R
+  ADBE   TRAIN  0t    0.0R   →   TEST  0t    0.0R
+  AMZN   TRAIN  0t    0.0R   →   TEST  2t   -2.5R
+  CRM    TRAIN  2t   -2.3R   →   TEST  2t   -4.7R
+  TSLA   TRAIN  1t   -4.6R   →   TEST  3t  -10.1R
+  NVDA   TRAIN  2t   -6.5R   →   TEST  0t    0.0R
+  GOOGL  TRAIN  3t   -6.9R   →   TEST  3t    1.1R
+  AVGO   TRAIN  4t   -9.1R   →   TEST  2t   -2.1R
+  stocks positive in TRAIN (MSFT JPM COST NFLX META ORCL AMD) → TEST n= 13 win  38%  avg  0.13R  tot    1.7R  t= 0.2  [opt priced 4: $-116]
+  all other stocks                  → TEST n= 14 win  29%  avg -1.24R  tot  -17.3R  t=-1.1  [opt priced 3: $-481]
