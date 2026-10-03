@@ -65,7 +65,7 @@ async function boardAt(date, exp) {
 
 // ---- option pricing on real minute bars ----
 const SIDE = { close: 'c', high: 'h', low: 'l' };
-function px(bars, t, side = 'close') { let best = null; for (const b of bars) { if (b.t > t) break; if (t - b.t <= 600) best = b; } return best ? best[SIDE[side]] : null; }
+function px(bars, t, side = 'close') { let best = null; for (const b of bars) { if (b.t > t) break; best = b; } if (!best) best = bars.find((b) => b.t > t) ?? null; return best ? best[SIDE[side]] : null; } // last print ≤t that day, else next print (fix: 10-min lookback booked fake $0 legs)
 async function contractFor(exp, type, spot, date) {
   for (const step of [2.5, 5, 1]) {
     const k = Math.round(spot / step) * step, id = occ(SYM, exp, type, k);

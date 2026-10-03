@@ -58,7 +58,7 @@ function provider(D) {
     vixBars: async (upTo) => (await day('VIX')).filter((b) => b.t <= upTo),
     optPrice: async (sym, exp, type, strike, t, day) => {
       for (const step of [2.5, 5, 1]) { const k = Math.round(strike / step) * step, id = occ(sym, exp, type, k); const ob = await optionBars(id, day ?? D);
-        if (ob.length > 30) { let best = null; for (const b of ob) { if (b.t > t) break; if (t - b.t <= 600) best = b; } if (best) return { id, k, price: best.c, worst: best.h }; } }
+        if (ob.length > 30) { let best = null; for (const b of ob) { if (b.t > t) break; best = b; } if (!best) best = ob.find((b) => b.t > t) ?? null; if (best) return { id, k, price: best.c, worst: best.h }; } }
       return null;
     },
   }; }
