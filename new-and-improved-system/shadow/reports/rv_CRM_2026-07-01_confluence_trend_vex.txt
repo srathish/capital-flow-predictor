@@ -1,0 +1,20 @@
+
+=========== CRM weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=confluence_trend_vex ===========
+CRM itself: 162.04 → 234.60 (44.8%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid +$1628  worst +$1628  avg 81%  SQN 0.72
+  chart-aligned only       n= 2  win  50%  @$1k/trade mid +$1628  worst +$1628  avg 81%  SQN 0.72
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid +$1628  worst +$1628  avg 81%  SQN 0.72
+  shorts                   n= 0
+
+day outcomes: no fill 44 · no setup in reach 18 · FILLED floor+std2.5 up 1 · in position 2 · FILLED floor+std3.5 up 1
+
+-- every trade --
+  2026-08-25 13:56 CALL floor+std2.5 @205 (barney) stop 204 T1 210 T2 null rr 5   CRM260828C00205000 in $8 → T1@08-27 $0 · time@08-27 $47.15  =  195%
+  2026-09-18 11:32 CALL floor+std3.5 @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5   CRM260925C00240000 in $5.05 → stop(close)@09-18 $3.44  =  -32%
+
+credits used 0

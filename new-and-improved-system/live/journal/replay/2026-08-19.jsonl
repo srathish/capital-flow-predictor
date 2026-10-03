@@ -1,12 +1,3 @@
-{"at":"2026-10-03T04:54:55.751Z","ev":"plan","sym":"AAPL","exp":"2026-08-21","spot":310.775,"chart":"mixed","vex":"up","vixPivot":15.32,"cands":["floor@307.5 up rr7.5","ceiling@315 down rr3"]}
-{"at":"2026-10-03T04:54:56.963Z","ev":"plan","sym":"NVDA","exp":"2026-08-21","spot":221.575,"chart":"up","vex":"up","vixPivot":15.32,"cands":["floor@220 up rr7.5"]}
-{"at":"2026-10-03T04:54:58.062Z","ev":"plan","sym":"AMZN","exp":"2026-08-21","spot":259.54999999999995,"chart":"mixed","vex":"down","vixPivot":15.32,"cands":["ceiling@260 down rr5"]}
-{"at":"2026-10-03T04:54:58.999Z","ev":"plan","sym":"META","exp":"2026-08-21","spot":539.665,"chart":"down","vex":"flat","vixPivot":15.32,"cands":["ceiling@540 down rr2"]}
-{"at":"2026-10-03T04:55:00.263Z","ev":"plan","sym":"GOOGL","exp":"2026-08-21","spot":341.70500000000004,"chart":"down","vex":"up","vixPivot":15.32,"cands":["floor@337.5 up rr4"]}
-{"at":"2026-10-03T04:55:01.349Z","ev":"plan","sym":"AMD","exp":"2026-08-21","spot":481.32,"chart":"down","vex":"up","vixPivot":15.32,"cands":["floor@477.5 up rr12.5"]}
-{"at":"2026-10-03T04:55:02.444Z","ev":"plan","sym":"TSLA","exp":"2026-08-21","spot":340.72,"chart":"down","vex":"flat","vixPivot":15.32,"cands":["floor@340 up rr10","ceiling@342.5 down rr7.5"]}
-{"at":"2026-10-03T04:55:03.367Z","ev":"plan","sym":"AVGO","exp":"2026-08-21","spot":369.695,"status":"no setup in reach"}
-{"at":"2026-10-03T04:55:04.321Z","ev":"plan","sym":"ORCL","exp":"2026-08-21","spot":142.88,"chart":"mixed","vex":"up","vixPivot":15.32,"cands":["rug@145 down rr6"]}
-{"at":"2026-10-03T04:55:05.418Z","ev":"plan","sym":"MSFT","exp":"2026-08-21","spot":481.19,"chart":"up","vex":"up","vixPivot":15.32,"cands":["floor@480 up rr10"]}
-{"at":"2026-10-03T04:55:26.026Z","ev":"EXIT","sym":"MSFT","rule":"R1_break_with_trend","why":"T1","frac":0.5,"contract":"MSFT260821C00480000","px":6.62,"et":"11:33"}
-{"at":"2026-10-03T04:55:26.049Z","ev":"eod","open":["MSFT/R1_break_with_trend"],"gates":{"AMZN:R1_break_with_trend:rr":26,"AMZN:R2_confluence:std":26,"META:R1_break_with_trend:trend":4,"META:R2_confluence:std":4,"AMD:R1_break_with_trend:vex":8,"AMD:R2_confluence:std":8,"TSLA:R1_break_with_trend:vex":26,"TSLA:R2_confluence:std":33,"NVDA:R1_break_with_trend:trend":80,"NVDA:R2_confluence:std":80,"MSFT:R2_confluence:std":3,"AAPL:R1_break_with_trend:rr":147,"AAPL:R2_confluence:std":147,"TSLA:R1_break_with_trend:rr":7,"ORCL:R1_break_with_trend:rr":43,"ORCL:R2_confluence:trend":18,"ORCL:R2_confluence:std":25}}
+{"at":"2026-10-03T05:24:54.311Z","ev":"plan","sym":"MSFT","status":"in position (all rules)"}
+{"at":"2026-10-03T05:24:54.313Z","ev":"EXIT","sym":"MSFT","rule":"R1_break_with_trend","why":"T1","frac":0.5,"contract":"MSFT260821C00480000","px":6.62,"et":"11:33"}
+{"at":"2026-10-03T05:24:54.314Z","ev":"eod","open":["MSFT/R1_break_with_trend"],"gates":{}}

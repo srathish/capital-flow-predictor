@@ -1,0 +1,4 @@
+{"at":"2026-10-03T05:24:46.981Z","ev":"plan","sym":"MSFT","exp":"2026-05-22","spot":417,"chart":"up","vex":"up","vixPivot":18.19,"cands":["floor@415 up rr4","rug@420 down rr7.5"]}
+{"at":"2026-10-03T05:24:46.983Z","ev":"ENTRY","sym":"MSFT","rule":"R1_break_with_trend","setup":"inverse_rug","direction":"up","contract":"MSFT260522C00420000","price":6.05,"et":"09:39","node":420,"stop":419,"t1":425,"t2":427.5,"rr":7.5,"chart":"up","vex":"up"}
+{"at":"2026-10-03T05:24:46.985Z","ev":"EXIT","sym":"MSFT","rule":"R1_break_with_trend","why":"T1","frac":0.5,"contract":"MSFT260522C00420000","px":8.45,"et":"13:52"}
+{"at":"2026-10-03T05:24:46.986Z","ev":"eod","open":["MSFT/R1_break_with_trend"],"gates":{}}

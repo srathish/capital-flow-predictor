@@ -1,0 +1,20 @@
+
+=========== JPM weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=confluence_trend_vex ===========
+JPM itself: 296.14 → 327.22 (10.5%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid -$393  worst -$481  avg -20%  SQN -0.29
+  chart-aligned only       n= 2  win  50%  @$1k/trade mid -$393  worst -$481  avg -20%  SQN -0.29
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid -$393  worst -$481  avg -20%  SQN -0.29
+  shorts                   n= 0
+
+day outcomes: no fill 38 · no setup in reach 16 · FILLED floor+std4.5 up 1 · in position 2 · FILLED floor+std2.5 up 1 · no board 4
+
+-- every trade --
+  2026-04-27 11:03 CALL floor+std4.5 @310 (pika) stop 307.5 T1 312.5 T2 315 rr 2   JPM260501C00310000 in $3.96 → T1@04-27 $5 · T2@04-28 $6.65  =  47%
+  2026-05-27 11:12 CALL floor+std2.5 @300 (king) stop 297.5 T1 305 T2 307.5 rr 3   JPM260529C00300000 in $3.16 → stop(close)@05-28 $0.43  =  -86%
+
+credits used 5

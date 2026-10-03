@@ -1,11 +1,2 @@
-{"at":"2026-10-03T04:53:57.190Z","ev":"plan","sym":"AAPL","exp":"2026-07-31","status":"earnings blackout (2026-07-30)"}
-{"at":"2026-10-03T04:53:57.190Z","ev":"plan","sym":"NVDA","exp":"2026-07-31","spot":196.845,"chart":"down","vex":"up","vixPivot":18.43,"cands":["reverse_rug@195 up rr5"]}
-{"at":"2026-10-03T04:53:57.191Z","ev":"plan","sym":"AMZN","exp":"2026-07-31","status":"earnings blackout (2026-07-30)"}
-{"at":"2026-10-03T04:53:57.191Z","ev":"plan","sym":"META","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:57.192Z","ev":"plan","sym":"GOOGL","exp":"2026-07-31","spot":334.28,"chart":"down","vex":"up","vixPivot":18.43,"cands":["ceiling@335 down rr4"]}
-{"at":"2026-10-03T04:53:57.193Z","ev":"plan","sym":"AMD","exp":"2026-07-31","spot":454.33500000000004,"chart":"mixed","vex":"up","vixPivot":18.43,"cands":["reverse_rug@450 up rr4","rug@455 down rr5"]}
-{"at":"2026-10-03T04:53:57.193Z","ev":"plan","sym":"TSLA","exp":"2026-07-31","spot":305.83000000000004,"chart":"down","vex":"flat","vixPivot":18.43,"cands":["reverse_rug@302.5 up rr3","ceiling@310 down rr3"]}
-{"at":"2026-10-03T04:53:57.194Z","ev":"plan","sym":"AVGO","exp":"2026-07-31","spot":380.025,"chart":"down","vex":"up","vixPivot":18.43,"cands":["floor@380 up rr10"]}
-{"at":"2026-10-03T04:53:57.195Z","ev":"plan","sym":"ORCL","exp":"2026-07-31","spot":119.305,"chart":"down","vex":"up","vixPivot":18.43,"cands":["ceiling@120 down rr3"]}
-{"at":"2026-10-03T04:53:57.195Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:57.219Z","ev":"eod","open":[],"gates":{"GOOGL:R1_break_with_trend:trend":65,"GOOGL:R2_confluence:std":58,"AMD:R1_break_with_trend:trend":2,"AMD:R2_confluence:std":33,"AMD:R1_break_with_trend:rr":31,"AVGO:R1_break_with_trend:rr":52,"AVGO:R2_confluence:std":52,"NVDA:R1_break_with_trend:rr":25,"NVDA:R2_confluence:std":25,"ORCL:R1_break_with_trend:rr":32,"ORCL:R2_confluence:std":27,"TSLA:R1_break_with_trend:rr":145,"TSLA:R2_confluence:std":145,"GOOGL:R2_confluence:vex":7,"ORCL:R2_confluence:vex":5}}
+{"at":"2026-10-03T05:24:54.274Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
+{"at":"2026-10-03T05:24:54.275Z","ev":"eod","open":[],"gates":{}}

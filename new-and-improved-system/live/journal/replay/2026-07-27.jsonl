@@ -1,11 +1,2 @@
-{"at":"2026-10-03T04:53:57.156Z","ev":"plan","sym":"AAPL","exp":"2026-07-31","status":"earnings blackout (2026-07-30)"}
-{"at":"2026-10-03T04:53:57.157Z","ev":"plan","sym":"NVDA","exp":"2026-07-31","spot":205.695,"chart":"mixed","vex":"up","vixPivot":18.51,"cands":["ceiling@207.5 down rr7.5"]}
-{"at":"2026-10-03T04:53:57.158Z","ev":"plan","sym":"AMZN","exp":"2026-07-31","spot":234.88,"status":"no setup in reach"}
-{"at":"2026-10-03T04:53:57.159Z","ev":"plan","sym":"META","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:57.159Z","ev":"plan","sym":"GOOGL","exp":"2026-07-31","spot":327.87,"status":"no setup in reach"}
-{"at":"2026-10-03T04:53:57.160Z","ev":"plan","sym":"AMD","exp":"2026-07-31","spot":521.7149999999999,"chart":"mixed","vex":"up","vixPivot":18.51,"cands":["floor@517.5 up rr5"]}
-{"at":"2026-10-03T04:53:57.160Z","ev":"plan","sym":"TSLA","exp":"2026-07-31","spot":315.06,"status":"no setup in reach"}
-{"at":"2026-10-03T04:53:57.160Z","ev":"plan","sym":"AVGO","exp":"2026-07-31","spot":386.375,"status":"no setup in reach"}
-{"at":"2026-10-03T04:53:57.161Z","ev":"plan","sym":"ORCL","exp":"2026-07-31","spot":118.065,"status":"no setup in reach"}
-{"at":"2026-10-03T04:53:57.161Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:57.167Z","ev":"eod","open":[],"gates":{"AMD:R1_break_with_trend:rr":3,"AMD:R2_confluence:std":3}}
+{"at":"2026-10-03T05:24:54.271Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
+{"at":"2026-10-03T05:24:54.272Z","ev":"eod","open":[],"gates":{}}

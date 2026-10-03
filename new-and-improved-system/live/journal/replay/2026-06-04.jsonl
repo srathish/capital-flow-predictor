@@ -1,0 +1,3 @@
+{"at":"2026-10-03T05:24:47.014Z","ev":"plan","sym":"MSFT","exp":"2026-06-12","spot":429.86,"chart":"up","vex":"up","vixPivot":15.97,"cands":["ceiling@430 down rr5"]}
+{"at":"2026-10-03T05:24:47.015Z","ev":"ENTRY","sym":"MSFT","rule":"R1_break_with_trend","setup":"inverse_ceiling","direction":"up","contract":"MSFT260612C00430000","price":8.9,"et":"09:35","node":430,"stop":427.5,"t1":435,"t2":440,"rr":4,"chart":"up","vex":"up"}
+{"at":"2026-10-03T05:24:47.017Z","ev":"eod","open":["MSFT/R1_break_with_trend"],"gates":{}}

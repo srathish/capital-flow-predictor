@@ -1,11 +1,2 @@
-{"at":"2026-10-03T04:53:04.917Z","ev":"plan","sym":"AAPL","exp":"2026-07-31","status":"earnings blackout (2026-07-30)"}
-{"at":"2026-10-03T04:53:20.957Z","ev":"plan","sym":"NVDA","exp":"2026-07-31","spot":209.125,"chart":"mixed","vex":"down","vixPivot":17.37,"cands":["ceiling@210 down rr5"]}
-{"at":"2026-10-03T04:53:21.458Z","ev":"plan","sym":"AMZN","exp":"2026-07-31","status":"earnings blackout (2026-07-30)"}
-{"at":"2026-10-03T04:53:22.316Z","ev":"plan","sym":"META","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:23.054Z","ev":"plan","sym":"GOOGL","exp":"2026-07-31","spot":321.265,"chart":"down","vex":"down","vixPivot":17.37,"cands":["floor@320 up rr5","ceiling@325 down rr2"]}
-{"at":"2026-10-03T04:53:24.041Z","ev":"plan","sym":"AMD","exp":"2026-07-31","spot":547.45,"chart":"up","vex":"up","vixPivot":17.37,"cands":["rug@550 down rr4"]}
-{"at":"2026-10-03T04:53:25.330Z","ev":"plan","sym":"TSLA","exp":"2026-07-31","spot":337.615,"chart":"down","vex":"up","vixPivot":17.37,"cands":["rug@342.5 down rr5"]}
-{"at":"2026-10-03T04:53:26.793Z","ev":"plan","sym":"AVGO","exp":"2026-07-31","spot":393.5,"chart":"mixed","vex":"up","vixPivot":17.37,"cands":["floor@392.5 up rr7.5"]}
-{"at":"2026-10-03T04:53:27.571Z","ev":"plan","sym":"ORCL","exp":"2026-07-31","spot":122.975,"chart":"down","vex":"up","vixPivot":17.37,"cands":["ceiling@124 down rr4"]}
-{"at":"2026-10-03T04:53:33.293Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
-{"at":"2026-10-03T04:53:41.886Z","ev":"eod","open":[],"gates":{"NVDA:R1_break_with_trend:rr":84,"NVDA:R2_confluence:std":79,"AMD:R1_break_with_trend:rr":44,"AMD:R2_confluence:std":42,"AVGO:R1_break_with_trend:rr":45,"AVGO:R2_confluence:std":45,"ORCL:R1_break_with_trend:rr":30,"ORCL:R2_confluence:std":30,"GOOGL:R1_break_with_trend:rr":131,"GOOGL:R2_confluence:std":131,"NVDA:R2_confluence:trend":5,"AMD:R2_confluence:trend":2}}
+{"at":"2026-10-03T05:24:54.268Z","ev":"plan","sym":"MSFT","exp":"2026-07-31","status":"earnings blackout (2026-07-29)"}
+{"at":"2026-10-03T05:24:54.269Z","ev":"eod","open":[],"gates":{}}

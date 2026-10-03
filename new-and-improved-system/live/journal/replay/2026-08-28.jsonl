@@ -1,11 +1,2 @@
-{"at":"2026-10-03T04:55:56.997Z","ev":"plan","sym":"AAPL","exp":"2026-09-04","spot":317.57,"chart":"up","vex":"up","vixPivot":15.07,"cands":["floor@315 up rr3"]}
-{"at":"2026-10-03T04:55:56.997Z","ev":"plan","sym":"NVDA","exp":"2026-09-04","spot":226.70499999999998,"chart":"up","vex":"up","vixPivot":15.07,"cands":["floor@225 up rr5","ceiling@230 down rr7.5"]}
-{"at":"2026-10-03T04:55:56.999Z","ev":"plan","sym":"AMZN","exp":"2026-09-04","spot":258.645,"chart":"mixed","vex":"up","vixPivot":15.07,"cands":["floor@255 up rr4"]}
-{"at":"2026-10-03T04:55:57.000Z","ev":"plan","sym":"META","exp":"2026-09-04","spot":577.755,"chart":"down","vex":"up","vixPivot":15.07,"cands":["ceiling@580 down rr2.5"]}
-{"at":"2026-10-03T04:55:57.000Z","ev":"plan","sym":"GOOGL","exp":"2026-09-04","spot":343.08500000000004,"status":"no setup in reach"}
-{"at":"2026-10-03T04:55:57.000Z","ev":"plan","sym":"AMD","exp":"2026-09-04","spot":472.18,"status":"no setup in reach"}
-{"at":"2026-10-03T04:55:57.001Z","ev":"plan","sym":"TSLA","exp":"2026-09-04","spot":357.56,"status":"no setup in reach"}
-{"at":"2026-10-03T04:55:57.001Z","ev":"plan","sym":"AVGO","exp":"2026-09-04","status":"earnings blackout (2026-09-02)"}
-{"at":"2026-10-03T04:55:57.001Z","ev":"plan","sym":"ORCL","exp":"2026-09-04","spot":152.9,"chart":"mixed","vex":"down","vixPivot":15.07,"cands":["ceiling@155 down rr5"]}
-{"at":"2026-10-03T04:55:57.002Z","ev":"plan","sym":"MSFT","exp":"2026-09-04","spot":508.725,"chart":"up","vex":"down","vixPivot":15.07,"cands":["ceiling@510 down rr2"]}
-{"at":"2026-10-03T04:55:57.010Z","ev":"eod","open":[],"gates":{"META:R1_break_with_trend:trend":49,"META:R2_confluence:std":49,"MSFT:R1_break_with_trend:rr":47,"MSFT:R2_confluence:std":47,"AAPL:R1_break_with_trend:trend":1,"AAPL:R2_confluence:std":1,"NVDA:R1_break_with_trend:rr":45,"NVDA:R2_confluence:std":45}}
+{"at":"2026-10-03T05:24:54.330Z","ev":"plan","sym":"MSFT","exp":"2026-09-04","spot":508.725,"chart":"up","vex":"down","vixPivot":15.07,"cands":["ceiling@510 down rr2"]}
+{"at":"2026-10-03T05:24:54.331Z","ev":"eod","open":[],"gates":{"MSFT:R1_break_with_trend:rr":47}}

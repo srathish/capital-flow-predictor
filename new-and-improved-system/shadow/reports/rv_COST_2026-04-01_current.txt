@@ -1,0 +1,28 @@
+
+=========== COST weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=current ===========
+COST itself: 995.03 → 935.36 (-6.0%)
+ALL trades                 n=10  win  10%  @$1k/trade mid -$5014  worst -$5077  avg -50%  SQN -4.91
+  chart-aligned only       n= 6  win   0%  @$1k/trade mid -$3294  worst -$3296  avg -55%  SQN -4.89
+  against chart            n= 4  win  25%  @$1k/trade mid -$1720  worst -$1781  avg -43%  SQN -2.06
+  reverse_rug              n= 1  win   0%  @$1k/trade mid -$450  worst -$450  avg -45%  SQN 0.00
+  floor                    n= 5  win  20%  @$1k/trade mid -$2544  worst -$2607  avg -51%  SQN -2.71
+  rug                      n= 2  win   0%  @$1k/trade mid -$589  worst -$589  avg -29%  SQN -2.14
+  ceiling                  n= 2  win   0%  @$1k/trade mid -$1431  worst -$1431  avg -72%  SQN -9.23
+  longs                    n= 6  win  17%  @$1k/trade mid -$2994  worst -$3057  avg -50%  SQN -3.24
+  shorts                   n= 4  win   0%  @$1k/trade mid -$2020  worst -$2020  avg -51%  SQN -3.67
+
+day outcomes: no setup in reach 5 · no fill 20 · no option print at fill 3 · FILLED ceiling down 2 · FILLED floor up 5 · in position 5 · no contract data 15 · FILLED rug down 2 · FILLED reverse_rug up 1 · no board 4
+
+-- every trade --
+  2026-04-08 09:35 PUT  ceiling     @1010 (king) stop 1015 T1 1005 T2 1000 rr 2 [vs chart]  COST260410P01010000 in $14.46 → stop(close)@04-08 $3  =  -79%
+  2026-04-10 09:45 CALL floor       @1015 (king) stop 1010 T1 1020 T2 1030 rr 3   COST260417C01015000 in $16.96 → stop(close)@04-10 $4.81  =  -72%
+  2026-04-13 10:05 CALL floor       @990 (gatekeeper) stop 985 T1 995 T2 1000 rr 2   COST260417C00990000 in $12.2 → stop(close)@04-13 $5.9  =  -52%
+  2026-04-15 09:35 CALL floor       @970 (king) stop 969 T1 975 T2 990 rr 20   COST260417C00970000 in $8.3 → T1@04-15 $8.3 · T2@04-16 $0  =  -50%
+  2026-05-19 09:35 PUT  ceiling     @1080 (king) stop 1090 T1 1065 T2 1055 rr 2.5 [vs chart]  COST260522P01080000 in $14.5 → stop(close)@05-19 $5.25  =  -64%
+  2026-05-20 09:39 CALL floor       @1080 (king) stop 1070 T1 1090 T2 1100 rr 2   COST260522C01080000 in $11.15 → stop(close)@05-21 $0.3  =  -97%
+  2026-06-01 09:35 PUT  rug         @950 (king) stop 955 T1 945 T2 930 rr 4   COST260605P00950000 in $13.95 → T1@06-01 $12.5 · breakeven@06-01 $11.03  =  -16%
+  2026-06-02 09:41 PUT  rug         @950 (king) stop 951 T1 945 T2 930 rr 20   COST260605P00950000 in $11 → T1@06-02 $12.5 · breakeven@06-02 $0  =  -43%
+  2026-06-17 12:46 CALL reverse_rug @970 (king) stop 969 T1 990 T2 1000 rr 30 [vs chart]  COST260618C00970000 in $7.4 → stop(close)@06-17 $4.07  =  -45%
+  2026-06-18 09:46 CALL floor       @950 (king) stop 949 T1 960 T2 967.5 rr 17.5 [vs chart]  COST260626C00950000 in $15.36 → T1@06-23 $17 · T2@06-24 $18.68  =  16%
+
+credits used 318

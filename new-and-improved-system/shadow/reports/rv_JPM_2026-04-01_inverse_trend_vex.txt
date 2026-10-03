@@ -1,0 +1,19 @@
+
+=========== JPM weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+JPM itself: 296.14 → 327.22 (10.5%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$642  worst +$614  avg 64%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win 100%  @$1k/trade mid +$642  worst +$614  avg 64%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$642  worst +$614  avg 64%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 40 · no setup in reach 16 · FILLED inverse_ceiling up 1 · in position 1 · no board 4
+
+-- every trade --
+  2026-04-20 09:37 CALL inverse_ceiling @315 (king) stop 312.5 T1 317.5 T2 320 rr 2 [vs chart]  JPM260424C00315000 in $3.6 → T1@04-21 $5.09 · T2@04-21 $6.73  =  64%
+
+credits used 290

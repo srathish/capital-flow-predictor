@@ -1,0 +1,4 @@
+{"at":"2026-10-03T05:24:39.428Z","ev":"plan","sym":"MSFT","exp":"2026-02-06","spot":436.12,"chart":"down","vex":"down","vixPivot":17.28,"cands":["reverse_rug@435 up rr5","ceiling@440 down rr4"]}
+{"at":"2026-10-03T05:24:39.429Z","ev":"ENTRY","sym":"MSFT","rule":"R1_break_with_trend","setup":"inverse_reverse_rug","direction":"down","contract":"MSFT260206P00435000","price":7.1,"et":"10:36","node":435,"stop":437.5,"t1":430,"t2":425,"rr":4,"chart":"down","vex":"down"}
+{"at":"2026-10-03T05:24:39.430Z","ev":"EXIT","sym":"MSFT","rule":"R1_break_with_trend","why":"T1","frac":0.5,"contract":"MSFT260206P00435000","px":9,"et":"12:01"}
+{"at":"2026-10-03T05:24:39.432Z","ev":"eod","open":["MSFT/R1_break_with_trend"],"gates":{}}

@@ -1,6 +1,22 @@
 {
  "plans": [
   {
+   "D": "2026-07-01",
+   "exp": "2026-07-02",
+   "spot": 73.125,
+   "king": 75,
+   "floor": 73,
+   "ceiling": 75,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@73 up rr2 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"vex\":54})"
+  },
+  {
    "D": "2026-07-02",
    "exp": "2026-07-10",
    "spot": 75.97,
@@ -8,9 +24,9 @@
    "floor": 75,
    "ceiling": 78,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "reverse_rug@75 up rr2"
+    "reverse_rug@75 up rr2 (vs chart)"
    ],
    "vex": "flat",
    "roll": null,
@@ -132,28 +148,117 @@
   },
   {
    "D": "2026-07-16",
-   "exp": "2026-07-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-07-17, 2026-07-24, )"
+   "exp": "2026-07-24",
+   "spot": 73.63499999999999,
+   "king": 75,
+   "floor": 73,
+   "ceiling": 75,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@73 up rr2 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":27})"
   },
   {
    "D": "2026-07-17",
-   "exp": "2026-07-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-07-17, 2026-07-24, )"
+   "exp": "2026-07-24",
+   "spot": 66.63499999999999,
+   "king": 67,
+   "floor": 65,
+   "ceiling": 67,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "ceiling@67 down rr2"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5})"
   },
   {
    "D": "2026-07-20",
-   "exp": "2026-07-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-07-24, 2026-07-31, )"
+   "exp": "2026-07-24",
+   "spot": 67.32,
+   "king": 67,
+   "floor": 67,
+   "ceiling": 68,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@67 up rr2 (vs chart)",
+    "ceiling@68 down rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":77})"
   },
   {
    "D": "2026-07-21",
-   "exp": "2026-07-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-07-24, 2026-07-31, )"
+   "exp": "2026-07-24",
+   "spot": 67.69,
+   "king": 67,
+   "floor": 67,
+   "ceiling": 68,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@67 up rr2 (vs chart)",
+    "ceiling@68 down rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":89})"
   },
   {
    "D": "2026-07-22",
-   "exp": "2026-07-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-07-24, 2026-07-31, )"
+   "exp": "2026-07-24",
+   "spot": 69.285,
+   "king": 70,
+   "floor": 68,
+   "ceiling": 70,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "ceiling@70 down rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":86})"
+  },
+  {
+   "D": "2026-07-23",
+   "exp": "2026-07-31",
+   "spot": 68.48,
+   "king": 68,
+   "floor": 68,
+   "ceiling": 70,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@68 up rr2 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-07-24",
+   "exp": "2026-07-31",
+   "spot": 68.34,
+   "king": 68,
+   "floor": 68,
+   "ceiling": 70,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@68 up rr2 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-07-27",
@@ -190,7 +295,7 @@
    "floor": 71,
    "ceiling": 74,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": []
   },
   {
@@ -371,6 +476,65 @@
    "cands": []
   },
   {
+   "D": "2026-08-17",
+   "exp": "2026-08-21",
+   "spot": 78.05,
+   "king": 80,
+   "floor": 78,
+   "ceiling": 80,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@78 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":5})"
+  },
+  {
+   "D": "2026-08-18",
+   "exp": "2026-08-21",
+   "spot": 76.72,
+   "king": 75,
+   "floor": 75,
+   "ceiling": 78,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-08-19",
+   "exp": "2026-08-21",
+   "spot": 78.75999999999999,
+   "king": 80,
+   "floor": 78,
+   "ceiling": 80,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@78 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-08-20",
+   "exp": "2026-08-28",
+   "spot": 80.63,
+   "king": 83,
+   "floor": 80,
+   "ceiling": 83,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@80 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":66})"
+  },
+  {
    "D": "2026-08-21",
    "exp": "2026-08-28",
    "spot": 79.715,
@@ -507,23 +671,62 @@
   },
   {
    "D": "2026-09-03",
-   "exp": "2026-09-10",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-09-04, 2026-09-11, )"
+   "exp": "2026-09-11",
+   "spot": 83.47999999999999,
+   "king": 85,
+   "floor": 81,
+   "ceiling": 85,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
   },
   {
    "D": "2026-09-04",
-   "exp": "2026-09-10",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-09-04, 2026-09-11, )"
+   "exp": "2026-09-11",
+   "spot": 82.49000000000001,
+   "king": 81,
+   "floor": 81,
+   "ceiling": 83,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "rug@83 down rr2 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-09-08",
-   "exp": "2026-09-10",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-09-11, 2026-09-18, )"
+   "exp": "2026-09-11",
+   "spot": 76.41,
+   "king": 76,
+   "floor": 76,
+   "ceiling": 78,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "floor@76 up rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":11})"
   },
   {
    "D": "2026-09-09",
-   "exp": "2026-09-10",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NFLX. Available: 2026-09-11, 2026-09-18, )"
+   "exp": "2026-09-11",
+   "spot": 76.565,
+   "king": 76,
+   "floor": 76,
+   "ceiling": 78,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@76 up rr2"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":45})"
   },
   {
    "D": "2026-09-10",
@@ -540,6 +743,22 @@
    "vex": "flat",
    "roll": null,
    "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":231})"
+  },
+  {
+   "D": "2026-09-11",
+   "exp": "2026-09-18",
+   "spot": 76.87,
+   "king": 75,
+   "floor": 75,
+   "ceiling": 78,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@78 down rr3"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
   },
   {
    "D": "2026-09-14",
@@ -652,9 +871,9 @@
    "floor": 71,
    "ceiling": 72,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@71 up rr2 (vs chart)",
+    "floor@71 up rr2",
     "ceiling@72 down rr2"
    ],
    "vex": "down",
@@ -669,9 +888,9 @@
    "floor": 71,
    "ceiling": 73,
    "regime": "positive",
-   "chart": "down",
+   "chart": "mixed",
    "cands": [
-    "floor@71 up rr2 (vs chart)"
+    "floor@71 up rr2"
    ],
    "vex": "up",
    "roll": null,

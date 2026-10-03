@@ -1,0 +1,19 @@
+
+=========== COST weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+COST itself: 939.00 → 920.81 (-1.9%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$1000  worst -$1000  avg -100%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$1000  worst -$1000  avg -100%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$1000  worst -$1000  avg -100%  SQN 0.00
+
+day outcomes: no fill 57 · FILLED inverse_reverse_rug down 1 · in position 3 · no contract data 1 · no setup in reach 4
+
+-- every trade --
+  2026-07-20 12:38 PUT  inverse_reverse_rug @935 (gatekeeper) stop 940 T1 930 T2 920 rr 3 [vs chart]  COST260724P00935000 in $9.49 → T1@07-21 $0 · T2@07-23 $0  =  -100%
+
+credits used 335

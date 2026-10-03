@@ -1,0 +1,4 @@
+{"at":"2026-10-03T05:24:47.017Z","ev":"plan","sym":"MSFT","status":"in position (all rules)"}
+{"at":"2026-10-03T05:24:47.020Z","ev":"EXIT","sym":"MSFT","rule":"R1_break_with_trend","why":"stop(close)","frac":1,"contract":"MSFT260612C00430000","px":2.77,"et":"15:59"}
+{"at":"2026-10-03T05:24:47.021Z","ev":"CLOSED","sym":"MSFT","rule":"R1_break_with_trend","ret":-0.689,"legs":"stop(close)@06-05 15:59 $2.77"}
+{"at":"2026-10-03T05:24:47.021Z","ev":"eod","open":[],"gates":{}}

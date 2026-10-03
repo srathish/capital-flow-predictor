@@ -1,6 +1,17 @@
 {
  "plans": [
   {
+   "D": "2026-04-01",
+   "exp": "2026-04-02",
+   "spot": 188.5,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 192.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": []
+  },
+  {
    "D": "2026-04-02",
    "exp": "2026-04-10",
    "spot": 182.99,
@@ -8,7 +19,7 @@
    "floor": 180,
    "ceiling": 187.5,
    "regime": "mixed",
-   "chart": "mixed",
+   "chart": "down",
    "cands": []
   },
   {
@@ -19,48 +30,22 @@
    "floor": 185,
    "ceiling": 187.5,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@185 up rr5",
+    "floor@185 up rr5 (vs chart)",
     "rug@187.5 down rr7.5"
    ],
    "vex": "down",
    "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":8,\"trend\":119})"
+   "status": "FILLED inverse_floor down"
   },
   {
    "D": "2026-04-07",
-   "exp": "2026-04-10",
-   "spot": 185.63,
-   "king": 185,
-   "floor": 185,
-   "ceiling": 187.5,
-   "regime": "negative",
-   "chart": "down",
-   "cands": [
-    "floor@185 up rr5 (vs chart)",
-    "rug@187.5 down rr5"
-   ],
-   "vex": "down",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":22})"
+   "status": "in position"
   },
   {
    "D": "2026-04-08",
-   "exp": "2026-04-10",
-   "spot": 185.91,
-   "king": 185,
-   "floor": 185,
-   "ceiling": 187.5,
-   "regime": "negative",
-   "chart": "down",
-   "cands": [
-    "floor@185 up rr5 (vs chart)",
-    "rug@187.5 down rr5"
-   ],
-   "vex": "flat",
-   "roll": null,
-   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
+   "status": "in position"
   },
   {
    "D": "2026-04-09",
@@ -140,28 +125,120 @@
   },
   {
    "D": "2026-04-16",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 183.04,
+   "king": 185,
+   "floor": 182.5,
+   "ceiling": 185,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@182.5 up rr5 (vs chart)",
+    "ceiling@185 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
   },
   {
    "D": "2026-04-17",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 186.18,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@185 up rr2.5",
+    "ceiling@187.5 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":45})"
   },
   {
    "D": "2026-04-20",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 184.87,
+   "king": 185,
+   "floor": 182.5,
+   "ceiling": 185,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@182.5 up rr5",
+    "ceiling@185 down rr2.5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":85})"
   },
   {
    "D": "2026-04-21",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 186.63,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@185 up rr5",
+    "ceiling@187.5 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":13})"
   },
   {
    "D": "2026-04-22",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 188.265,
+   "king": 187.5,
+   "floor": 187.5,
+   "ceiling": 190,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@187.5 up rr5",
+    "rug@190 down rr5"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":159})"
+  },
+  {
+   "D": "2026-04-23",
+   "exp": "2026-05-01",
+   "spot": 176.64,
+   "king": 172.5,
+   "floor": 172.5,
+   "ceiling": 177.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@177.5 down rr5"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-24",
+   "exp": "2026-05-01",
+   "spot": 176.94,
+   "king": 175,
+   "floor": 175,
+   "ceiling": 180,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@175 up rr5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":77})"
   },
   {
    "D": "2026-04-27",
@@ -171,7 +248,7 @@
    "floor": 175,
    "ceiling": 182.5,
    "regime": "positive",
-   "chart": "mixed",
+   "chart": "down",
    "cands": []
   },
   {
@@ -382,6 +459,68 @@
    "cands": []
   },
   {
+   "D": "2026-05-18",
+   "exp": "2026-05-22",
+   "spot": 173.84,
+   "king": 175,
+   "floor": 172.5,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@172.5 up rr5 (vs chart)",
+    "ceiling@175 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
+  },
+  {
+   "D": "2026-05-19",
+   "exp": "2026-05-22",
+   "spot": 184.63,
+   "king": 190,
+   "floor": 180,
+   "ceiling": 190,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-05-20",
+   "exp": "2026-05-22",
+   "spot": 174,
+   "king": 175,
+   "floor": 172.5,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@172.5 up rr5",
+    "ceiling@175 down rr5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":9})"
+  },
+  {
+   "D": "2026-05-21",
+   "exp": "2026-05-29",
+   "spot": 172.5,
+   "king": 170,
+   "floor": 170,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@170 up rr7.5",
+    "rug@175 down rr7.5"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":78})"
+  },
+  {
    "D": "2026-05-22",
    "exp": "2026-05-29",
    "spot": 180.8,
@@ -498,7 +637,7 @@
    "floor": 195,
    "ceiling": 200,
    "regime": "negative",
-   "chart": "up",
+   "chart": "mixed",
    "cands": [
     "floor@195 up rr5"
    ],
@@ -578,9 +717,9 @@
    "floor": 170,
    "ceiling": 175,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@170 up rr5"
+    "floor@170 up rr5 (vs chart)"
    ],
    "vex": "up",
    "roll": null,
@@ -748,5 +887,26 @@
    "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-07-02, 2026-07-10, 2)"
   }
  ],
- "trades": []
+ "trades": [
+  {
+   "D": "2026-04-06",
+   "et": "09:35",
+   "setup": "inverse_floor",
+   "direction": "down",
+   "node": 185,
+   "nodeType": "king",
+   "stop": 186,
+   "t1": 182.5,
+   "t2": 180,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260410P00185000",
+   "entryOpt": 3.56,
+   "exits": "T1@04-07 $0 · breakeven@04-08 $2.6",
+   "exitDay": "2026-04-08",
+   "retMid": -0.635,
+   "retWorst": -0.635
+  }
+ ]
 }

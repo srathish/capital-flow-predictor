@@ -1,0 +1,33 @@
+
+=========== JPM weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=current ===========
+JPM itself: 296.14 → 327.22 (10.5%)
+ALL trades                 n=15  win  20%  @$1k/trade mid -$3808  worst -$4228  avg -25%  SQN -2.44
+  chart-aligned only       n=13  win  15%  @$1k/trade mid -$3050  worst -$3362  avg -23%  SQN -2.29
+  against chart            n= 2  win  50%  @$1k/trade mid -$758  worst -$866  avg -38%  SQN -0.69
+  reverse_rug              n= 0
+  floor                    n= 9  win  11%  @$1k/trade mid -$1596  worst -$1790  avg -18%  SQN -1.50
+  rug                      n= 1  win   0%  @$1k/trade mid -$502  worst -$502  avg -50%  SQN 0.00
+  ceiling                  n= 5  win  40%  @$1k/trade mid -$1710  worst -$1936  avg -34%  SQN -1.45
+  longs                    n= 9  win  11%  @$1k/trade mid -$1596  worst -$1790  avg -18%  SQN -1.50
+  shorts                   n= 6  win  33%  @$1k/trade mid -$2212  worst -$2438  avg -37%  SQN -1.90
+
+day outcomes: FILLED floor up 9 · FILLED ceiling down 5 · in position 18 · no fill 10 · no setup in reach 11 · no contract data 3 · no option print at fill 2 · FILLED rug down 1 · no board 3
+
+-- every trade --
+  2026-04-01 09:35 CALL floor       @297.5 (king) stop 295 T1 302.5 T2 305 rr 3   JPM260402C00297500 in $3.21 → time@04-01 $1.27  =  -60%
+  2026-04-02 10:36 PUT  ceiling     @295 (barney) stop 296 T1 290 T2 287.5 rr 7.5   JPM260410P00295000 in $6.9 → stop(close)@04-07 $3.1  =  -55%
+  2026-04-21 09:57 CALL floor       @317.5 (pika) stop 315 T1 320 T2 322.5 rr 2   JPM260424C00317500 in $3.69 → stop(close)@04-21 $1.78  =  -52%
+  2026-04-27 09:35 CALL floor       @310 (pika) stop 307.5 T1 312.5 T2 315 rr 2   JPM260501C00310000 in $3.65 → T1@04-27 $5 · T2@04-28 $6.65  =  60%
+  2026-05-07 10:16 CALL floor       @310 (gatekeeper) stop 309 T1 315 T2 320 rr 10   JPM260515C00310000 in $5.42 → stop(close)@05-07 $3.05  =  -44%
+  2026-05-11 09:35 CALL floor       @300 (gatekeeper) stop 297.5 T1 302.5 T2 305 rr 2   JPM260515C00300000 in $5.5 → T1@05-11 $5.55 · breakeven@05-11 $3.81  =  -15%
+  2026-05-12 11:23 PUT  ceiling     @300 (gatekeeper) stop 302.5 T1 297.5 T2 295 rr 2   JPM260515P00300000 in $4.05 → stop(close)@05-12 $1.39  =  -66%
+  2026-05-13 14:27 CALL floor       @300 (gatekeeper) stop 297.5 T1 302.5 T2 310 rr 4   JPM260515C00300000 in $3.25 → T1@05-14 $4.15 · breakeven@05-14 $1.97  =  -6%
+  2026-05-18 09:44 PUT  ceiling     @300 (king) stop 302.5 T1 297.5 T2 295 rr 2   JPM260522P00300000 in $3.83 → T1@05-19 $3.97 · T2@05-20 $5.65  =  26%
+  2026-05-22 09:36 CALL floor       @305 (gatekeeper) stop 302.5 T1 307.5 T2 310 rr 2   JPM260529C00305000 in $4.5 → T1@05-26 $5.5 · breakeven@05-27 $3.31  =  -2%
+  2026-05-29 10:09 CALL floor       @295 (gatekeeper) stop 292.5 T1 297.5 T2 300 rr 2   JPM260605C00295000 in $4.75 → T1@05-29 $0 · T2@06-02 $7  =  -26%
+  2026-06-04 11:12 PUT  rug         @310 (gatekeeper) stop 312.5 T1 305 T2 300 rr 4   JPM260612P00310000 in $5.12 → stop(close)@06-09 $2.55  =  -50%
+  2026-06-12 10:45 PUT  ceiling     @320 (king) stop 321 T1 315 T2 310 rr 10 [vs chart]  JPM260618P00320000 in $4.6 → stop(close)@06-16 $0.32  =  -93%
+  2026-06-17 09:37 PUT  ceiling     @335 (king) stop 337.5 T1 332.5 T2 330 rr 2 [vs chart]  JPM260618P00335000 in $2.71 → T1@06-17 $3.35 · time@06-17 $3  =  17%
+  2026-06-22 09:35 CALL floor       @327.5 (king) stop 325 T1 335 T2 337.5 rr 4   JPM260626C00327500 in $5.05 → T1@06-23 $8.67 · T2@06-25 $0  =  -14%
+
+credits used 253

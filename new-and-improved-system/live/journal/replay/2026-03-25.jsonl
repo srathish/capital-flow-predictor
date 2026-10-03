@@ -1,0 +1,2 @@
+{"at":"2026-10-03T05:24:39.529Z","ev":"plan","sym":"MSFT","exp":"2026-03-27","spot":376.19,"chart":"down","vex":"flat","vixPivot":26.27,"cands":["floor@372.5 up rr5","ceiling@377.5 down rr2"]}
+{"at":"2026-10-03T05:24:39.531Z","ev":"eod","open":[],"gates":{"MSFT:R1_break_with_trend:rr":19}}

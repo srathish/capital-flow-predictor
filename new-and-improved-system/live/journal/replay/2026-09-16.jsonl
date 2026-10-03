@@ -1,11 +1,2 @@
-{"at":"2026-10-03T04:58:04.975Z","ev":"plan","sym":"AAPL","exp":"2026-09-18","spot":334.19,"chart":"up","vex":"flat","vixPivot":17.05,"cands":["reverse_rug@330 up rr4"]}
-{"at":"2026-10-03T04:58:04.976Z","ev":"plan","sym":"NVDA","exp":"2026-09-18","spot":213.82,"chart":"mixed","vex":"up","vixPivot":17.05,"cands":["ceiling@215 down rr5"]}
-{"at":"2026-10-03T04:58:04.976Z","ev":"plan","sym":"AMZN","exp":"2026-09-18","spot":246.925,"chart":"mixed","vex":"up","vixPivot":17.05,"cands":["floor@245 up rr5","rug@250 down rr7.5"]}
-{"at":"2026-10-03T04:58:04.977Z","ev":"plan","sym":"META","exp":"2026-09-18","spot":680.15,"chart":"up","vex":"down","vixPivot":17.05,"cands":["floor@680 up rr2"]}
-{"at":"2026-10-03T04:58:04.977Z","ev":"plan","sym":"GOOGL","exp":"2026-09-18","spot":345.95,"chart":"mixed","vex":"flat","vixPivot":17.05,"cands":["reverse_rug@345 up rr2","rug@350 down rr4"]}
-{"at":"2026-10-03T04:58:04.978Z","ev":"plan","sym":"AMD","exp":"2026-09-18","spot":518.9449999999999,"chart":"mixed","vex":"flat","vixPivot":17.05,"cands":["ceiling@520 down rr2"]}
-{"at":"2026-10-03T04:58:04.978Z","ev":"plan","sym":"TSLA","exp":"2026-09-18","spot":357.615,"chart":"mixed","vex":"flat","vixPivot":17.05,"cands":["ceiling@360 down rr5"]}
-{"at":"2026-10-03T04:58:04.979Z","ev":"plan","sym":"AVGO","exp":"2026-09-18","spot":340.635,"chart":"down","vex":"up","vixPivot":17.05,"cands":["floor@340 up rr7.5","ceiling@345 down rr2"]}
-{"at":"2026-10-03T04:58:04.979Z","ev":"plan","sym":"ORCL","exp":"2026-09-18","spot":140.94,"chart":"mixed","vex":"up","vixPivot":17.05,"cands":["floor@140 up rr5"]}
-{"at":"2026-10-03T04:58:04.980Z","ev":"plan","sym":"MSFT","exp":"2026-09-18","spot":494.515,"chart":"up","vex":"up","vixPivot":17.05,"cands":["ceiling@500 down rr20"]}
-{"at":"2026-10-03T04:58:05.013Z","ev":"eod","open":[],"gates":{"META:R1_break_with_trend:trend":130,"META:R2_confluence:std":130,"GOOGL:R1_break_with_trend:trend":159,"GOOGL:R2_confluence:std":149,"AMD:R1_break_with_trend:trend":33,"AMD:R2_confluence:std":33,"AVGO:R1_break_with_trend:rr":66,"AVGO:R2_confluence:std":41,"TSLA:R1_break_with_trend:rr":70,"TSLA:R2_confluence:std":70,"NVDA:R1_break_with_trend:trend":129,"NVDA:R2_confluence:std":129,"GOOGL:R2_confluence:trend":10,"AVGO:R2_confluence:trend":25,"AMZN:R1_break_with_trend:rr":17,"AMZN:R2_confluence:std":17}}
+{"at":"2026-10-03T05:24:54.370Z","ev":"plan","sym":"MSFT","exp":"2026-09-18","spot":494.515,"chart":"up","vex":"up","vixPivot":17.05,"cands":["ceiling@500 down rr20"]}
+{"at":"2026-10-03T05:24:54.371Z","ev":"eod","open":[],"gates":{}}

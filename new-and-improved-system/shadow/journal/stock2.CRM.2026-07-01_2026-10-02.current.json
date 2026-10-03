@@ -1,0 +1,1223 @@
+{
+ "plans": [
+  {
+   "D": "2026-07-01",
+   "exp": "2026-07-02",
+   "spot": 162.69,
+   "king": 162.5,
+   "floor": 162.5,
+   "ceiling": 165,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@162.5 up rr5 (vs chart)",
+    "ceiling@165 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-07-02",
+   "exp": "2026-07-10",
+   "spot": 164.91,
+   "king": 160,
+   "floor": 160,
+   "ceiling": 165,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "ceiling@165 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-07-06",
+   "exp": "2026-07-10",
+   "spot": 163.945,
+   "king": 160,
+   "floor": 160,
+   "ceiling": 165,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@165 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-07-07",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-08",
+   "exp": "2026-07-10",
+   "spot": 165.88,
+   "king": 162.5,
+   "floor": 162.5,
+   "ceiling": 170,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-07-09",
+   "exp": "2026-07-17",
+   "spot": 159.5,
+   "king": 157.5,
+   "floor": 157.5,
+   "ceiling": 160,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@157.5 up rr5",
+    "ceiling@160 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-07-10",
+   "exp": "2026-07-17",
+   "spot": 164.79500000000002,
+   "king": 167.5,
+   "floor": 162.5,
+   "ceiling": 167.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@162.5 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-07-13",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-14",
+   "exp": "2026-07-17",
+   "spot": 164.17000000000002,
+   "king": 160,
+   "floor": 160,
+   "ceiling": 165,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@165 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-07-15",
+   "exp": "2026-07-17",
+   "spot": 171.425,
+   "king": 175,
+   "floor": 170,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@170 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-07-16",
+   "exp": "2026-07-24",
+   "spot": 168.66500000000002,
+   "king": 165,
+   "floor": 165,
+   "ceiling": 172.5,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-07-17",
+   "exp": "2026-07-24",
+   "spot": 174.185,
+   "king": 175,
+   "floor": 172.5,
+   "ceiling": 175,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@172.5 up rr5",
+    "ceiling@175 down rr5"
+   ],
+   "roll": null,
+   "status": "no contract data"
+  },
+  {
+   "D": "2026-07-20",
+   "exp": "2026-07-24",
+   "spot": 169.575,
+   "king": 172.5,
+   "floor": 165,
+   "ceiling": 172.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-07-21",
+   "exp": "2026-07-24",
+   "spot": 172.125,
+   "king": 175,
+   "floor": 170,
+   "ceiling": 175,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "floor@170 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-07-22",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-23",
+   "exp": "2026-07-31",
+   "spot": 162.21499999999997,
+   "king": 165,
+   "floor": 160,
+   "ceiling": 165,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "floor@160 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no option print at fill"
+  },
+  {
+   "D": "2026-07-24",
+   "exp": "2026-07-31",
+   "spot": 160.885,
+   "king": 165,
+   "floor": 160,
+   "ceiling": 165,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@160 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-07-27",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-28",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-29",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-30",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-31",
+   "exp": "2026-08-07",
+   "spot": 177.97500000000002,
+   "king": 182.5,
+   "floor": 175,
+   "ceiling": 182.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-08-03",
+   "exp": "2026-08-07",
+   "spot": 190.595,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@190 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-08-04",
+   "exp": "2026-08-07",
+   "spot": 185.85000000000002,
+   "king": 190,
+   "floor": 182.5,
+   "ceiling": 190,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-08-05",
+   "exp": "2026-08-07",
+   "spot": 192.53,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@190 up rr7.5",
+    "rug@195 down rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no contract data"
+  },
+  {
+   "D": "2026-08-06",
+   "exp": "2026-08-14",
+   "spot": 183.865,
+   "king": 180,
+   "floor": 180,
+   "ceiling": 185,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@185 down rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "no contract data"
+  },
+  {
+   "D": "2026-08-07",
+   "exp": "2026-08-14",
+   "spot": 192.11,
+   "king": 195,
+   "floor": 187.5,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-08-10",
+   "exp": "2026-08-14",
+   "spot": 192.08499999999998,
+   "king": 195,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@190 up rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-08-11",
+   "exp": "2026-08-14",
+   "spot": 197.195,
+   "king": 195,
+   "floor": 195,
+   "ceiling": 202.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@195 up rr7.5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-08-12",
+   "exp": "2026-08-14",
+   "spot": 195.75,
+   "king": 195,
+   "floor": 195,
+   "ceiling": 197.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@195 up rr2.5",
+    "ceiling@197.5 down rr7.5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-08-13",
+   "exp": "2026-08-21",
+   "spot": 195.42000000000002,
+   "king": 200,
+   "floor": 190,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-08-14",
+   "exp": "2026-08-21",
+   "spot": 199.81,
+   "king": 200,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@200 down rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-08-17",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-18",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-19",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-20",
+   "exp": "2026-08-28",
+   "spot": 204.59,
+   "king": 210,
+   "floor": 200,
+   "ceiling": 210,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-08-21",
+   "exp": "2026-08-28",
+   "spot": 206.515,
+   "king": 210,
+   "floor": 205,
+   "ceiling": 210,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@205 up rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-08-24",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-25",
+   "exp": "2026-08-28",
+   "spot": 206.245,
+   "king": 210,
+   "floor": 205,
+   "ceiling": 210,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@205 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-08-26",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-27",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-28",
+   "exp": "2026-09-04",
+   "spot": 257.225,
+   "king": 260,
+   "floor": 250,
+   "ceiling": 260,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@260 down rr7.5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-08-31",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-01",
+   "exp": "2026-09-04",
+   "spot": 258.1,
+   "king": 260,
+   "floor": 257.5,
+   "ceiling": 260,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@257.5 up rr2",
+    "rug@260 down rr2 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-09-02",
+   "exp": "2026-09-04",
+   "spot": 264,
+   "king": 260,
+   "floor": 260,
+   "ceiling": 270,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-09-03",
+   "exp": "2026-09-11",
+   "spot": 265.66999999999996,
+   "king": 270,
+   "floor": 260,
+   "ceiling": 270,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-09-04",
+   "exp": "2026-09-11",
+   "spot": 260.29499999999996,
+   "king": 265,
+   "floor": 255,
+   "ceiling": 265,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@257.5 up rr3"
+   ],
+   "roll": null,
+   "status": "FILLED reverse_rug up"
+  },
+  {
+   "D": "2026-09-08",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-09",
+   "exp": "2026-09-11",
+   "spot": 250.605,
+   "king": 247.5,
+   "floor": 247.5,
+   "ceiling": 252.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@247.5 up rr7.5",
+    "ceiling@252.5 down rr2 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-09-10",
+   "exp": "2026-09-18",
+   "spot": 243.70999999999998,
+   "king": 250,
+   "floor": 240,
+   "ceiling": 250,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-09-11",
+   "exp": "2026-09-18",
+   "spot": 246.28,
+   "king": 250,
+   "floor": 245,
+   "ceiling": 250,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@245 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-09-14",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-15",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-16",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-17",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-18",
+   "exp": "2026-09-25",
+   "spot": 241.2,
+   "king": 245,
+   "floor": 240,
+   "ceiling": 245,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@240 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-09-21",
+   "exp": "2026-09-25",
+   "spot": 238.92,
+   "king": 240,
+   "floor": 237.5,
+   "ceiling": 240,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@237.5 up rr5",
+    "ceiling@240 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-09-22",
+   "exp": "2026-09-25",
+   "spot": 238.43,
+   "king": 245,
+   "floor": 237.5,
+   "ceiling": 245,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@237.5 up rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-09-23",
+   "exp": "2026-09-25",
+   "spot": 234.95,
+   "king": 232.5,
+   "floor": 232.5,
+   "ceiling": 240,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@232.5 up rr5",
+    "rug@237.5 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED rug down"
+  },
+  {
+   "D": "2026-09-24",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-25",
+   "exp": "2026-10-02",
+   "spot": 237.94,
+   "king": 245,
+   "floor": 232.5,
+   "ceiling": 245,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-09-28",
+   "exp": "2026-10-02",
+   "spot": 224.06,
+   "king": 220,
+   "floor": 220,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-09-29",
+   "exp": "2026-10-02",
+   "spot": 225.305,
+   "king": 230,
+   "floor": 225,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@225 up rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-09-30",
+   "exp": "2026-10-02",
+   "spot": 226.41500000000002,
+   "king": 225,
+   "floor": 225,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@225 up rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-10-01",
+   "exp": "2026-10-09",
+   "spot": 237.735,
+   "king": 240,
+   "floor": 235,
+   "ceiling": 240,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@235 up rr5",
+    "ceiling@240 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
+  },
+  {
+   "D": "2026-10-02",
+   "status": "in position"
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-07-01",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 162.5,
+   "nodeType": "king",
+   "stop": 161.5,
+   "t1": 165,
+   "t2": 167.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260702C00162500",
+   "entryOpt": 3,
+   "exits": "T1@07-01 $3.7 · breakeven@07-01 $2.31",
+   "exitDay": "2026-07-01",
+   "retMid": 0.002,
+   "retWorst": -0.068
+  },
+  {
+   "D": "2026-07-02",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 165,
+   "nodeType": "gatekeeper",
+   "stop": 166,
+   "t1": 160,
+   "t2": null,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "CRM260710P00165000",
+   "entryOpt": 5,
+   "exits": "stop(close)@07-02 $3.4",
+   "exitDay": "2026-07-02",
+   "retMid": -0.32,
+   "retWorst": -0.32
+  },
+  {
+   "D": "2026-07-06",
+   "et": "09:48",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 165,
+   "nodeType": "gatekeeper",
+   "stop": 166,
+   "t1": 162.5,
+   "t2": 160,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260710P00165000",
+   "entryOpt": 4.25,
+   "exits": "stop(close)@07-07 $1.3",
+   "exitDay": "2026-07-07",
+   "retMid": -0.694,
+   "retWorst": -0.698
+  },
+  {
+   "D": "2026-07-09",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 160,
+   "nodeType": "barney",
+   "stop": 161,
+   "t1": 157.5,
+   "t2": 155,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260717P00160000",
+   "entryOpt": 6,
+   "exits": "stop(close)@07-09 $2.56",
+   "exitDay": "2026-07-09",
+   "retMid": -0.573,
+   "retWorst": -0.573
+  },
+  {
+   "D": "2026-07-10",
+   "et": "10:33",
+   "setup": "floor",
+   "direction": "up",
+   "node": 162.5,
+   "nodeType": "pika",
+   "stop": 161.5,
+   "t1": 165,
+   "t2": 167.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260717C00162500",
+   "entryOpt": 4.1,
+   "exits": "T1@07-13 $0 · T2@07-13 $0",
+   "exitDay": "2026-07-13",
+   "retMid": -1,
+   "retWorst": -1
+  },
+  {
+   "D": "2026-07-14",
+   "et": "09:36",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 165,
+   "nodeType": "gatekeeper",
+   "stop": 166,
+   "t1": 162.5,
+   "t2": 160,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260717P00165000",
+   "entryOpt": 3.65,
+   "exits": "stop(close)@07-14 $1.8",
+   "exitDay": "2026-07-14",
+   "retMid": -0.507,
+   "retWorst": -0.532
+  },
+  {
+   "D": "2026-07-15",
+   "et": "09:44",
+   "setup": "floor",
+   "direction": "up",
+   "node": 170,
+   "nodeType": "gatekeeper",
+   "stop": 169,
+   "t1": 172.5,
+   "t2": 175,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260717C00170000",
+   "entryOpt": 3.18,
+   "exits": "T1@07-15 $4.22 · breakeven@07-15 $2.9",
+   "exitDay": "2026-07-15",
+   "retMid": 0.119,
+   "retWorst": 0.108
+  },
+  {
+   "D": "2026-07-21",
+   "et": "09:40",
+   "setup": "floor",
+   "direction": "up",
+   "node": 170,
+   "nodeType": "gatekeeper",
+   "stop": 169,
+   "t1": 172.5,
+   "t2": 175,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260724C00170000",
+   "entryOpt": 5.07,
+   "exits": "stop(close)@07-22 $1.5",
+   "exitDay": "2026-07-22",
+   "retMid": -0.704,
+   "retWorst": -0.704
+  },
+  {
+   "D": "2026-07-24",
+   "et": "09:45",
+   "setup": "floor",
+   "direction": "up",
+   "node": 160,
+   "nodeType": "gatekeeper",
+   "stop": 159,
+   "t1": 165,
+   "t2": null,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260731C00160000",
+   "entryOpt": 4.6,
+   "exits": "T1@07-27 $10 · time@07-30 $0",
+   "exitDay": "2026-07-30",
+   "retMid": 0.087,
+   "retWorst": 0.087
+  },
+  {
+   "D": "2026-08-03",
+   "et": "09:36",
+   "setup": "floor",
+   "direction": "up",
+   "node": 190,
+   "nodeType": "king",
+   "stop": 189,
+   "t1": 192.5,
+   "t2": 195,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260807C00190000",
+   "entryOpt": 4.7,
+   "exits": "T1@08-03 $6.01 · breakeven@08-03 $4.32",
+   "exitDay": "2026-08-03",
+   "retMid": 0.099,
+   "retWorst": 0.013
+  },
+  {
+   "D": "2026-08-12",
+   "et": "09:42",
+   "setup": "floor",
+   "direction": "up",
+   "node": 195,
+   "nodeType": "king",
+   "stop": 194,
+   "t1": 197.5,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260814C00195000",
+   "entryOpt": 3.01,
+   "exits": "stop(close)@08-12 $1.7",
+   "exitDay": "2026-08-12",
+   "retMid": -0.435,
+   "retWorst": -0.435
+  },
+  {
+   "D": "2026-08-14",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 200,
+   "nodeType": "king",
+   "stop": 201,
+   "t1": 195,
+   "t2": null,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "CRM260821P00200000",
+   "entryOpt": 5,
+   "exits": "T1@08-17 $0 · breakeven@08-19 $2.9",
+   "exitDay": "2026-08-19",
+   "retMid": -0.71,
+   "retWorst": -0.71
+  },
+  {
+   "D": "2026-08-21",
+   "et": "09:48",
+   "setup": "floor",
+   "direction": "up",
+   "node": 205,
+   "nodeType": "barney",
+   "stop": 204,
+   "t1": 210,
+   "t2": 212.5,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260828C00205000",
+   "entryOpt": 8.81,
+   "exits": "T1@08-21 $10.7 · T2@08-24 $11.4",
+   "exitDay": "2026-08-24",
+   "retMid": 0.254,
+   "retWorst": 0.254
+  },
+  {
+   "D": "2026-08-25",
+   "et": "13:56",
+   "setup": "floor",
+   "direction": "up",
+   "node": 205,
+   "nodeType": "barney",
+   "stop": 204,
+   "t1": 210,
+   "t2": null,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260828C00205000",
+   "entryOpt": 8,
+   "exits": "T1@08-27 $0 · time@08-27 $47.15",
+   "exitDay": "2026-08-27",
+   "retMid": 1.947,
+   "retWorst": 1.947
+  },
+  {
+   "D": "2026-08-28",
+   "et": "09:46",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 260,
+   "nodeType": "king",
+   "stop": 261,
+   "t1": 255,
+   "t2": 252.5,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "CRM260904P00260000",
+   "entryOpt": 6.75,
+   "exits": "T1@08-31 $7.4 · breakeven@08-31 $5.15",
+   "exitDay": "2026-08-31",
+   "retMid": -0.07,
+   "retWorst": -0.163
+  },
+  {
+   "D": "2026-09-01",
+   "et": "09:36",
+   "setup": "floor",
+   "direction": "up",
+   "node": 257.5,
+   "nodeType": "barney",
+   "stop": 255,
+   "t1": 260,
+   "t2": 262.5,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260904C00257500",
+   "entryOpt": 4.85,
+   "exits": "T1@09-01 $5.95 · breakeven@09-01 $4.84",
+   "exitDay": "2026-09-01",
+   "retMid": 0.112,
+   "retWorst": 0.076
+  },
+  {
+   "D": "2026-09-04",
+   "et": "11:03",
+   "setup": "reverse_rug",
+   "direction": "up",
+   "node": 257.5,
+   "nodeType": "pika",
+   "stop": 255,
+   "t1": 262.5,
+   "t2": 265,
+   "rr": 3,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260911C00260000",
+   "entryOpt": 4.13,
+   "exits": "stop(close)@09-08 $1",
+   "exitDay": "2026-09-08",
+   "retMid": -0.758,
+   "retWorst": -0.76
+  },
+  {
+   "D": "2026-09-09",
+   "et": "09:36",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 252.5,
+   "nodeType": "gatekeeper",
+   "stop": 255,
+   "t1": 250,
+   "t2": 247.5,
+   "rr": 2,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "CRM260911P00255000",
+   "entryOpt": 6.9,
+   "exits": "T1@09-09 $6.3 · T2@09-09 $8.2",
+   "exitDay": "2026-09-09",
+   "retMid": 0.051,
+   "retWorst": 0.051
+  },
+  {
+   "D": "2026-09-11",
+   "et": "09:40",
+   "setup": "floor",
+   "direction": "up",
+   "node": 245,
+   "nodeType": "barney",
+   "stop": 244,
+   "t1": 250,
+   "t2": null,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260918C00245000",
+   "entryOpt": 5.75,
+   "exits": "T1@09-11 $8 · breakeven@09-17 $3.5",
+   "exitDay": "2026-09-17",
+   "retMid": 0,
+   "retWorst": 0
+  },
+  {
+   "D": "2026-09-18",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 240,
+   "nodeType": "gatekeeper",
+   "stop": 239,
+   "t1": 242.5,
+   "t2": 245,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "CRM260925C00240000",
+   "entryOpt": 5.4,
+   "exits": "stop(close)@09-18 $3.44",
+   "exitDay": "2026-09-18",
+   "retMid": -0.363,
+   "retWorst": -0.391
+  },
+  {
+   "D": "2026-09-21",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 240,
+   "nodeType": "king",
+   "stop": 241,
+   "t1": 237.5,
+   "t2": 235,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260925P00240000",
+   "entryOpt": 4.9,
+   "exits": "T1@09-21 $4.45 · breakeven@09-21 $4.15",
+   "exitDay": "2026-09-21",
+   "retMid": -0.122,
+   "retWorst": -0.122
+  },
+  {
+   "D": "2026-09-22",
+   "et": "09:41",
+   "setup": "floor",
+   "direction": "up",
+   "node": 237.5,
+   "nodeType": "gatekeeper",
+   "stop": 236.5,
+   "t1": 240,
+   "t2": 245,
+   "rr": 7.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260925C00237500",
+   "entryOpt": 4,
+   "exits": "stop(close)@09-22 $1.95",
+   "exitDay": "2026-09-22",
+   "retMid": -0.512,
+   "retWorst": -0.512
+  },
+  {
+   "D": "2026-09-23",
+   "et": "09:38",
+   "setup": "rug",
+   "direction": "down",
+   "node": 237.5,
+   "nodeType": "gatekeeper",
+   "stop": 238.5,
+   "t1": 232.5,
+   "t2": 230,
+   "rr": 7.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260925P00237500",
+   "entryOpt": 3.6,
+   "exits": "time@09-24 $1.6",
+   "exitDay": "2026-09-24",
+   "retMid": -0.556,
+   "retWorst": -0.556
+  },
+  {
+   "D": "2026-09-29",
+   "et": "09:35",
+   "setup": "floor",
+   "direction": "up",
+   "node": 225,
+   "nodeType": "gatekeeper",
+   "stop": 224,
+   "t1": 227.5,
+   "t2": 230,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM261002C00225000",
+   "entryOpt": 4.3,
+   "exits": "T1@09-29 $5.42 · breakeven@09-29 $3.84",
+   "exitDay": "2026-09-29",
+   "retMid": 0.077,
+   "retWorst": 0.072
+  },
+  {
+   "D": "2026-10-01",
+   "et": "09:46",
+   "setup": "floor",
+   "direction": "up",
+   "node": 235,
+   "nodeType": "gatekeeper",
+   "stop": 234,
+   "t1": 240,
+   "t2": null,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM261009C00235000",
+   "entryOpt": 8.43,
+   "exits": "time@10-02 $4.5",
+   "exitDay": "2026-10-02",
+   "retMid": -0.466,
+   "retWorst": -0.472
+  }
+ ]
+}

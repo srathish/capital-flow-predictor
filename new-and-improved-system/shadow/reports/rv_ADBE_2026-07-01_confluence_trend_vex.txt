@@ -1,0 +1,19 @@
+
+=========== ADBE weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=confluence_trend_vex ===========
+ADBE itself: 209.78 → 237.64 (13.3%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$119  worst -$119  avg -12%  SQN 0.00
+  chart-aligned only       n= 1  win   0%  @$1k/trade mid -$119  worst -$119  avg -12%  SQN 0.00
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$119  worst -$119  avg -12%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 47 · no setup in reach 17 · FILLED floor+std2.5 up 1 · in position 1
+
+-- every trade --
+  2026-08-05 10:48 CALL floor+std2.5 @257.5 (gatekeeper) stop 255 T1 260 T2 265 rr 3   ADBE260807C00257500 in $5.5 → T1@08-06 $4.5 · time@08-06 $5.19  =  -12%
+
+credits used 0

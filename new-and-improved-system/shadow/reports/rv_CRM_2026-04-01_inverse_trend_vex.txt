@@ -1,0 +1,19 @@
+
+=========== CRM weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+CRM itself: 186.97 → 156.71 (-16.2%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$635  worst -$635  avg -64%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$635  worst -$635  avg -64%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win   0%  @$1k/trade mid -$635  worst -$635  avg -64%  SQN 0.00
+
+day outcomes: no setup in reach 11 · FILLED inverse_floor down 1 · in position 2 · no fill 44 · no board 4
+
+-- every trade --
+  2026-04-06 09:35 PUT  inverse_floor @185 (king) stop 186 T1 182.5 T2 180 rr 5 [vs chart]  CRM260410P00185000 in $3.56 → T1@04-07 $0 · breakeven@04-08 $2.6  =  -64%
+
+credits used 55

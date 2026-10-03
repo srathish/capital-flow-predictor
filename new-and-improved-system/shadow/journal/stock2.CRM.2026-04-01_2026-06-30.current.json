@@ -1,6 +1,17 @@
 {
  "plans": [
   {
+   "D": "2026-04-01",
+   "exp": "2026-04-02",
+   "spot": 188.5,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 192.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": []
+  },
+  {
    "D": "2026-04-02",
    "exp": "2026-04-10",
    "spot": 182.99,
@@ -8,7 +19,7 @@
    "floor": 180,
    "ceiling": 187.5,
    "regime": "mixed",
-   "chart": "mixed",
+   "chart": "down",
    "cands": []
   },
   {
@@ -19,9 +30,9 @@
    "floor": 185,
    "ceiling": 187.5,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@185 up rr5",
+    "floor@185 up rr5 (vs chart)",
     "rug@187.5 down rr7.5"
    ],
    "roll": null,
@@ -122,39 +133,105 @@
   },
   {
    "D": "2026-04-16",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 183.04,
+   "king": 185,
+   "floor": 182.5,
+   "ceiling": 185,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@182.5 up rr5 (vs chart)",
+    "ceiling@185 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-04-17",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-17, 2026-04-24, 2)"
+   "exp": "2026-04-24",
+   "spot": 186.18,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@185 up rr2.5",
+    "ceiling@187.5 down rr5"
+   ],
+   "roll": null,
+   "status": "no contract data"
   },
   {
    "D": "2026-04-20",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 184.87,
+   "king": 185,
+   "floor": 182.5,
+   "ceiling": 185,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@182.5 up rr5",
+    "ceiling@185 down rr2.5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-04-21",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "exp": "2026-04-24",
+   "spot": 186.63,
+   "king": 185,
+   "floor": 185,
+   "ceiling": 187.5,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@185 up rr5",
+    "ceiling@187.5 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
   },
   {
    "D": "2026-04-22",
-   "exp": "2026-04-22",
-   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for CRM. Available: 2026-04-24, 2026-05-01, 2)"
+   "status": "in position"
+  },
+  {
+   "D": "2026-04-23",
+   "exp": "2026-05-01",
+   "spot": 176.64,
+   "king": 172.5,
+   "floor": 172.5,
+   "ceiling": 177.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "ceiling@177.5 down rr5"
+   ],
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-04-24",
+   "exp": "2026-05-01",
+   "spot": 176.94,
+   "king": 175,
+   "floor": 175,
+   "ceiling": 180,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "floor@175 up rr5 (vs chart)"
+   ],
+   "roll": null,
+   "status": "FILLED floor up"
   },
   {
    "D": "2026-04-27",
-   "exp": "2026-05-01",
-   "spot": 178,
-   "king": 175,
-   "floor": 175,
-   "ceiling": 182.5,
-   "regime": "positive",
-   "chart": "mixed",
-   "cands": []
+   "status": "in position"
   },
   {
    "D": "2026-04-28",
@@ -328,6 +405,65 @@
    "status": "in position"
   },
   {
+   "D": "2026-05-18",
+   "exp": "2026-05-22",
+   "spot": 173.84,
+   "king": 175,
+   "floor": 172.5,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "floor@172.5 up rr5 (vs chart)",
+    "ceiling@175 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-05-19",
+   "exp": "2026-05-22",
+   "spot": 184.63,
+   "king": 190,
+   "floor": 180,
+   "ceiling": 190,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-05-20",
+   "exp": "2026-05-22",
+   "spot": 174,
+   "king": 175,
+   "floor": 172.5,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@172.5 up rr5",
+    "ceiling@175 down rr5"
+   ],
+   "roll": null,
+   "status": "FILLED ceiling down"
+  },
+  {
+   "D": "2026-05-21",
+   "exp": "2026-05-29",
+   "spot": 172.5,
+   "king": 170,
+   "floor": 170,
+   "ceiling": 175,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@170 up rr7.5",
+    "rug@175 down rr7.5"
+   ],
+   "roll": null,
+   "status": "FILLED rug down"
+  },
+  {
    "D": "2026-05-22",
    "exp": "2026-05-29",
    "spot": 180.8,
@@ -490,9 +626,9 @@
    "floor": 170,
    "ceiling": 175,
    "regime": "negative",
-   "chart": "mixed",
+   "chart": "down",
    "cands": [
-    "floor@170 up rr5"
+    "floor@170 up rr5 (vs chart)"
    ],
    "roll": null,
    "status": "FILLED floor up"
@@ -659,6 +795,86 @@
    "retWorst": -0.659
   },
   {
+   "D": "2026-04-16",
+   "et": "09:36",
+   "setup": "floor",
+   "direction": "up",
+   "node": 182.5,
+   "nodeType": "gatekeeper",
+   "stop": 181.5,
+   "t1": 185,
+   "t2": 187.5,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260424C00182500",
+   "entryOpt": 5.42,
+   "exits": "stop(close)@04-16 $4.35",
+   "exitDay": "2026-04-16",
+   "retMid": -0.197,
+   "retWorst": -0.197
+  },
+  {
+   "D": "2026-04-20",
+   "et": "09:35",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 185,
+   "nodeType": "king",
+   "stop": 186,
+   "t1": 182.5,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260424P00185000",
+   "entryOpt": 3.8,
+   "exits": "stop(close)@04-20 $3.4",
+   "exitDay": "2026-04-20",
+   "retMid": -0.105,
+   "retWorst": -0.105
+  },
+  {
+   "D": "2026-04-21",
+   "et": "09:42",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 187.5,
+   "nodeType": "gatekeeper",
+   "stop": 188.5,
+   "t1": 185,
+   "t2": 182.5,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260424P00187500",
+   "entryOpt": 3.85,
+   "exits": "stop(close)@04-22 $2.47",
+   "exitDay": "2026-04-22",
+   "retMid": -0.358,
+   "retWorst": -0.358
+  },
+  {
+   "D": "2026-04-24",
+   "et": "10:01",
+   "setup": "floor",
+   "direction": "up",
+   "node": 175,
+   "nodeType": "gatekeeper",
+   "stop": 174,
+   "t1": 177.5,
+   "t2": 180,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": false,
+   "contract": "CRM260501C00175000",
+   "entryOpt": 4.92,
+   "exits": "T1@04-24 $5.68 · T2@04-27 $7.4",
+   "exitDay": "2026-04-27",
+   "retMid": 0.329,
+   "retWorst": 0.329
+  },
+  {
    "D": "2026-04-29",
    "et": "09:46",
    "setup": "ceiling",
@@ -799,6 +1015,66 @@
    "retWorst": -0.422
   },
   {
+   "D": "2026-05-18",
+   "et": "09:38",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 175,
+   "nodeType": "king",
+   "stop": 176,
+   "t1": 172.5,
+   "t2": 170,
+   "rr": 5,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "CRM260522P00175000",
+   "entryOpt": 4.75,
+   "exits": "stop(close)@05-18 $2.22",
+   "exitDay": "2026-05-18",
+   "retMid": -0.533,
+   "retWorst": -0.533
+  },
+  {
+   "D": "2026-05-20",
+   "et": "09:37",
+   "setup": "ceiling",
+   "direction": "down",
+   "node": 175,
+   "nodeType": "king",
+   "stop": 176,
+   "t1": 172.5,
+   "t2": 170,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260522P00175000",
+   "entryOpt": 3.81,
+   "exits": "stop(close)@05-20 $1.22",
+   "exitDay": "2026-05-20",
+   "retMid": -0.68,
+   "retWorst": -0.68
+  },
+  {
+   "D": "2026-05-21",
+   "et": "09:52",
+   "setup": "rug",
+   "direction": "down",
+   "node": 175,
+   "nodeType": "gatekeeper",
+   "stop": 176,
+   "t1": 170,
+   "t2": 167.5,
+   "rr": 7.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "CRM260529P00175000",
+   "entryOpt": 9.4,
+   "exits": "stop(close)@05-21 $7.32",
+   "exitDay": "2026-05-21",
+   "retMid": -0.221,
+   "retWorst": -0.221
+  },
+  {
    "D": "2026-05-26",
    "et": "09:39",
    "setup": "reverse_rug",
@@ -929,8 +1205,8 @@
    "t1": 172.5,
    "t2": 175,
    "rr": 5,
-   "chart": "mixed",
-   "chartOk": true,
+   "chart": "down",
+   "chartOk": false,
    "contract": "CRM260612C00170000",
    "entryOpt": 3.71,
    "exits": "T1@06-10 $3.71 · T2@06-10 $5.5",

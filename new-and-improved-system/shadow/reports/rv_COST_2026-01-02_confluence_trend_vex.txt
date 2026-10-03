@@ -1,0 +1,19 @@
+
+=========== COST weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=confluence_trend_vex ===========
+COST itself: 861.03 → 996.44 (15.7%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$896  worst -$898  avg -90%  SQN 0.00
+  chart-aligned only       n= 1  win   0%  @$1k/trade mid -$896  worst -$898  avg -90%  SQN 0.00
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$896  worst -$898  avg -90%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 51 · no setup in reach 3 · FILLED reverse_rug+std2.25 up 1 · in position 2 · no board 4
+
+-- every trade --
+  2026-03-16 10:30 CALL reverse_rug+std2.25 @1000 (pika) stop 992.5 T1 1012.5 T2 1015 rr 2   COST260320C01000000 in $12.63 → stop(close)@03-18 $1.31  =  -90%
+
+credits used 5
