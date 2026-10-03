@@ -1,0 +1,43 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=current ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n=25  win  40%  @$1k/trade mid -$2639  worst -$3627  avg -11%  SQN -1.02
+  chart-aligned only       n=15  win  47%  @$1k/trade mid +$188  worst -$616  avg 1%  SQN 0.09
+  against chart            n=10  win  30%  @$1k/trade mid -$2827  worst -$3011  avg -28%  SQN -1.87
+  reverse_rug              n= 0
+  floor                    n=10  win  50%  @$1k/trade mid +$950  worst +$172  avg 10%  SQN 0.54
+  rug                      n= 3  win  33%  @$1k/trade mid -$850  worst -$902  avg -28%  SQN -1.18
+  ceiling                  n=12  win  33%  @$1k/trade mid -$2739  worst -$2897  avg -23%  SQN -1.62
+  longs                    n=10  win  50%  @$1k/trade mid +$950  worst +$172  avg 10%  SQN 0.54
+  shorts                   n=15  win  33%  @$1k/trade mid -$3589  worst -$3799  avg -24%  SQN -2.01
+
+day outcomes: FILLED ceiling down 12 · in position 17 · FILLED floor up 10 · no setup in reach 5 · no fill 5 · FILLED rug down 3 · no board 3
+
+-- every trade --
+  2026-04-02 09:47 PUT  ceiling     @292.5 (normal) stop 295 T1 290 T2 287.5 rr 2   GOOGL260410P00292500 in $5.8 → stop(close)@04-02 $3.49  =  -40%
+  2026-04-06 12:50 PUT  ceiling     @300 (king) stop 302.5 T1 295 T2 null rr 2   GOOGL260410P00300000 in $4.35 → stop(close)@04-07 $2.22  =  -49%
+  2026-04-08 09:35 CALL floor       @317.5 (king) stop 315 T1 320 T2 322.5 rr 2   GOOGL260410C00317500 in $3.35 → time@04-09 $2.65  =  -21%
+  2026-04-13 10:05 PUT  ceiling     @320 (gatekeeper) stop 322.5 T1 315 T2 312.5 rr 3 [vs chart]  GOOGL260417P00320000 in $4.16 → stop(close)@04-14 $0.48  =  -89%
+  2026-04-15 10:26 PUT  ceiling     @335 (pika) stop 337.5 T1 330 T2 327.5 rr 3 [vs chart]  GOOGL260417P00335000 in $3.25 → time@04-16 $1.5  =  -54%
+  2026-04-17 12:45 PUT  ceiling     @340 (king) stop 342.5 T1 337.5 T2 335 rr 2 [vs chart]  GOOGL260422P00340000 in $4.35 → T1@04-20 $5.3 · T2@04-21 $5.9  =  29%
+  2026-04-22 09:41 CALL floor       @335 (king) stop 332.5 T1 337.5 T2 340 rr 2   GOOGL260422C00335000 in $2.13 → T1@04-22 $3.2 · time@04-22 $4.5  =  81%
+  2026-04-28 09:50 PUT  ceiling     @350 (gatekeeper) stop 352.5 T1 345 T2 340 rr 4 [vs chart]  GOOGL260501P00350000 in $10.4 → T1@04-29 $12.22 · breakeven@04-29 $9.83  =  6%
+  2026-04-30 09:38 CALL floor       @370 (pika) stop 369 T1 375 T2 377.5 rr 7.5   GOOGL260508C00370000 in $7.65 → T1@04-30 $10.5 · T2@04-30 $11.8  =  46%
+  2026-05-01 10:00 PUT  ceiling     @385 (king) stop 386 T1 380 T2 375 rr 10 [vs chart]  GOOGL260508P00385000 in $9.06 → T1@05-04 $8 · breakeven@05-05 $3.61  =  -36%
+  2026-05-06 09:35 PUT  rug         @395 (gatekeeper) stop 397.5 T1 392.5 T2 385 rr 4 [vs chart]  GOOGL260508P00395000 in $4.3 → stop(close)@05-06 $2.3  =  -47%
+  2026-05-08 09:45 PUT  ceiling     @400 (king) stop 401 T1 395 T2 390 rr 10 [vs chart]  GOOGL260515P00400000 in $7 → T1@05-11 $9.9 · T2@05-11 $11.46  =  53%
+  2026-05-13 09:51 PUT  ceiling     @390 (king) stop 391 T1 385 T2 380 rr 10 [vs chart]  GOOGL260515P00390000 in $4.75 → stop(close)@05-13 $0.66  =  -86%
+  2026-05-14 09:35 PUT  ceiling     @400 (gatekeeper) stop 401 T1 397.5 T2 395 rr 5 [vs chart]  GOOGL260522P00400000 in $9.4 → T1@05-14 $9.8 · breakeven@05-14 $8.7  =  -2%
+  2026-05-27 09:38 PUT  rug         @390 (gatekeeper) stop 392.5 T1 385 T2 380 rr 4 [vs chart]  GOOGL260529P00390000 in $5.35 → time@05-28 $2.27  =  -58%
+  2026-05-29 09:35 CALL floor       @380 (gatekeeper) stop 379 T1 385 T2 387.5 rr 7.5   GOOGL260605C00380000 in $7.7 → T1@05-29 $8.96 · breakeven@05-29 $5.97  =  -3%
+  2026-06-02 09:37 CALL floor       @360 (king) stop 357.5 T1 362.5 T2 367.5 rr 3   GOOGL260605C00360000 in $5.83 → T1@06-02 $6.6 · T2@06-02 $10.25  =  45%
+  2026-06-04 09:35 PUT  ceiling     @365 (gatekeeper) stop 367.5 T1 357.5 T2 355 rr 4   GOOGL260612P00365000 in $8.52 → stop(close)@06-04 $3.8  =  -55%
+  2026-06-05 15:11 CALL floor       @365 (gatekeeper) stop 362.5 T1 370 T2 375 rr 4   GOOGL260612C00365000 in $7.81 → T1@06-09 $8.87 · breakeven@06-09 $5.2  =  -10%
+  2026-06-10 09:38 PUT  rug         @365 (gatekeeper) stop 366 T1 362.5 T2 360 rr 5   GOOGL260612P00365000 in $5.16 → T1@06-10 $5.99 · T2@06-10 $6.3  =  19%
+  2026-06-11 09:36 CALL floor       @350 (king) stop 349 T1 355 T2 360 rr 10   GOOGL260618C00350000 in $8.35 → T1@06-11 $10 · T2@06-12 $15.94  =  55%
+  2026-06-16 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $4.25 → T1@06-16 $5.7 · T2@06-16 $7.4  =  54%
+  2026-06-17 09:35 CALL floor       @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $3.5 → stop(close)@06-17 $0.8  =  -77%
+  2026-06-18 09:38 CALL floor       @360 (king) stop 357.5 T1 370 T2 372.5 rr 5   GOOGL260626C00360000 in $7.25 → stop(close)@06-22 $1.85  =  -75%
+  2026-06-23 09:42 PUT  ceiling     @347.5 (king) stop 348.5 T1 342.5 T2 340 rr 7.5   GOOGL260626P00347500 in $5.86 → T1@06-24 $6.9 · T2@06-25 $10.55  =  49%
+
+credits used 8

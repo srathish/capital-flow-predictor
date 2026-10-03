@@ -1,0 +1,36 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n=18  win  67%  @$1k/trade mid +$1342  worst +$421  avg 7%  SQN 0.78
+  chart-aligned only       n=14  win  64%  @$1k/trade mid +$250  worst -$299  avg 2%  SQN 0.17
+  against chart            n= 4  win  75%  @$1k/trade mid +$1092  worst +$720  avg 27%  SQN 1.21
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  64%  @$1k/trade mid +$2003  worst +$1259  avg 18%  SQN 1.50
+  shorts                   n= 7  win  71%  @$1k/trade mid -$661  worst -$838  avg -9%  SQN -0.66
+
+day outcomes: no fill 27 · FILLED inverse_ceiling up 7 · FILLED inverse_floor down 6 · no setup in reach 7 · FILLED inverse_rug up 4 · FILLED inverse_reverse_rug down 1 · in position 2 · no board 4
+
+-- every trade --
+  2026-07-07 09:35 CALL inverse_ceiling @610 (king) stop 605 T1 620 T2 625 rr 3 [vs chart]  META260710C00610000 in $9.84 → T1@07-07 $17.25 · T2@07-07 $19.82  =  88%
+  2026-07-09 09:35 PUT  inverse_floor @580 (gatekeeper) stop 585 T1 575 T2 570 rr 2   META260717P00580000 in $13.27 → stop(close)@07-09 $2.06  =  -85%
+  2026-07-10 09:39 CALL inverse_ceiling @675 (gatekeeper) stop 670 T1 680 T2 685 rr 2 [vs chart]  META260717C00675000 in $19.5 → stop(close)@07-10 $15.83  =  -19%
+  2026-07-27 09:38 CALL inverse_ceiling @607.5 (barney) stop 602.5 T1 612.5 T2 617.5 rr 2   META260731C00607500 in $23.64 → stop(close)@07-27 $18.9  =  -20%
+  2026-07-28 09:47 PUT  inverse_floor @592.5 (barney) stop 593.5 T1 590 T2 587.5 rr 5   META260731P00592500 in $23.8 → T1@07-28 $25.65 · breakeven@07-28 $24.3  =  5%
+  2026-07-29 09:35 CALL inverse_ceiling @592.5 (gatekeeper) stop 590 T1 600 T2 607.5 rr 6   META260731C00592500 in $23.95 → stop(close)@07-29 $22.18  =  -7%
+  2026-08-05 09:53 CALL inverse_rug @600 (king) stop 595 T1 605 T2 610 rr 2   META260807C00600000 in $8.55 → stop(close)@08-05 $4.3  =  -50%
+  2026-08-10 09:40 CALL inverse_rug @600 (king) stop 597.5 T1 602.5 T2 605 rr 2   META260814C00600000 in $10.84 → T1@08-10 $11.5 · T2@08-10 $13.97  =  18%
+  2026-08-11 09:55 CALL inverse_rug @600 (gatekeeper) stop 595 T1 605 T2 610 rr 2   META260814C00600000 in $8.7 → T1@08-11 $12.09 · T2@08-11 $14.98  =  56%
+  2026-08-12 09:35 PUT  inverse_reverse_rug @600 (gatekeeper) stop 602.5 T1 595 T2 590 rr 4   META260814P00600000 in $8.8 → T1@08-12 $9.79 · T2@08-12 $13.32  =  31%
+  2026-08-13 09:40 CALL inverse_ceiling @590 (king) stop 585 T1 595 T2 600 rr 2   META260821C00590000 in $11.9 → T1@08-13 $14.88 · T2@08-14 $18  =  38%
+  2026-08-24 09:38 PUT  inverse_floor @550 (gatekeeper) stop 551 T1 547.5 T2 537.5 rr 12.5 [vs chart]  META260828P00550000 in $8.8 → T1@08-24 $10.35 · breakeven@08-24 $9.05  =  10%
+  2026-08-28 09:38 CALL inverse_ceiling @580 (gatekeeper) stop 577.5 T1 585 T2 590 rr 4   META260904C00580000 in $11.38 → T1@08-28 $14.53 · breakeven@08-28 $11.56  =  15%
+  2026-09-02 09:35 CALL inverse_rug @590 (gatekeeper) stop 587.5 T1 592.5 T2 600 rr 4   META260904C00590000 in $7.7 → T1@09-02 $9.65 · T2@09-02 $13.85  =  53%
+  2026-09-16 09:35 PUT  inverse_floor @680 (gatekeeper) stop 682.5 T1 675 T2 670 rr 4   META260918P00680000 in $10.95 → T1@09-16 $12.5 · breakeven@09-16 $9.85  =  2%
+  2026-09-21 09:35 CALL inverse_ceiling @700 (gatekeeper) stop 699 T1 702.5 T2 705 rr 5 [vs chart]  META260925C00700000 in $14 → T1@09-21 $17 · T2@09-21 $19.24  =  29%
+  2026-09-23 09:35 PUT  inverse_floor @745 (gatekeeper) stop 747.5 T1 742.5 T2 740 rr 2   META260925P00745000 in $15.7 → T1@09-23 $16.76 · breakeven@09-23 $15.5  =  3%
+  2026-10-01 10:02 PUT  inverse_floor @725 (gatekeeper) stop 730 T1 720 T2 710 rr 3   META261009P00725000 in $16.7 → time@10-02 $11.23  =  -33%
+
+credits used 25

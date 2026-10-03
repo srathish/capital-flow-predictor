@@ -23,7 +23,9 @@ const SYM = arg('symbol', 'MSFT'), FROM = arg('from'), TO = arg('to');
 const VAR = arg('criteria', 'current');
 const CRIT = { current: {}, vix: { vixFilter: true }, std: { stdConfluence: true }, confluence: { stdConfluence: true, vixFilter: true }, calf: { calf: true, vixFilter: true }, calfnovix: { calf: true },
   // PRE-REGISTERED 2026-10-02 from the Jul–Sep 10-stock run, to be judged OUT-OF-SAMPLE on Apr–Jun: node setup + std-dev projection on the node + VIX side + WITH the daily trend
-  confluence_trend: { stdConfluence: true, vixFilter: true, trendOnly: true } }[VAR];
+  confluence_trend: { stdConfluence: true, vixFilter: true, trendOnly: true },
+  // INVERSE of the baseline: same node, same moment, OPPOSITE side ("trade the break"); plan mirrored around the node
+  inverse: { inverse: true }, inverse_trend: { inverse: true, trendOnly: true } }[VAR];
 if (!CRIT) { console.error(`unknown --criteria ${VAR}`); process.exit(1); }
 const REACH = 0.015, ZONE_PCT = 0.0015, MIN_RR = 2, MAX_DAYS = 5;
 const HERE = decodeURIComponent(new URL('.', import.meta.url).pathname);
@@ -132,6 +134,11 @@ for (let di = 0; di < tradeDays.length; di++) {
       } else if (CRIT.stdConfluence) {
         const al = pr.filter((l) => l.fade === direction); if (!al.length) { gate.std++; continue; }
         setup = `${setup}+std${al[0].k}`;
+      }
+      if (CRIT.inverse) {
+        direction = direction === 'up' ? 'down' : 'up'; setup = `inverse_${setup}`;
+        plan = buildPlan({ board, hier, direction, entryNode: c.node });
+        if (!plan.ok || plan.rr < MIN_RR) { gate.rr++; continue; }
       }
       if (CRIT.trendOnly && !((direction === 'up' && chart === 'up') || (direction === 'down' && chart === 'down'))) { gate.trend = (gate.trend || 0) + 1; continue; }
       if (CRIT.vixFilter) { const s = vixSide(vixMin, vp, b.t); if (direction === 'up' ? s !== 'below' : s !== 'above') { gate.vix++; continue; } }

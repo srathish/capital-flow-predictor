@@ -1,0 +1,20 @@
+
+=========== MSFT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence_trend ===========
+MSFT itself: 384.48 → 517.48 (34.6%)
+ALL trades                 n= 2  win 100%  @$1k/trade mid +$1469  worst +$1052  avg 73%  SQN 1.12
+  chart-aligned only       n= 2  win 100%  @$1k/trade mid +$1469  worst +$1052  avg 73%  SQN 1.12
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$81  worst +$26  avg 8%  SQN 0.00
+  shorts                   n= 1  win 100%  @$1k/trade mid +$1388  worst +$1026  avg 139%  SQN 0.00
+
+day outcomes: no fill 42 · FILLED ceiling+std2.5 down 1 · in position 4 · no setup in reach 6 · FILLED floor+std2.5 up 1 · no board 4
+
+-- every trade --
+  2026-07-08 14:39 PUT  ceiling+std2.5 @385 (gatekeeper) stop 387.5 T1 382.5 T2 375 rr 4   MSFT260710P00385000 in $4.69 → T1@07-09 $11.2 · T2@07-09 $11.2  =  139%
+  2026-08-07 13:00 CALL floor+std2.5 @500 (gatekeeper) stop 497.5 T1 510 T2 515 rr 6   MSFT260814C00500000 in $8.15 → T1@08-10 $12.7 · breakeven@08-12 $4.92  =  8%
+
+credits used 0

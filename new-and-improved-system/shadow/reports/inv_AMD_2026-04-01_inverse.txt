@@ -1,0 +1,29 @@
+
+=========== AMD weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse ===========
+AMD itself: 204.07 → 580.44 (184.4%)
+ALL trades                 n=11  win  73%  @$1k/trade mid +$1762  worst +$1118  avg 16%  SQN 0.94
+  chart-aligned only       n= 8  win  75%  @$1k/trade mid +$47  worst -$390  avg 1%  SQN 0.10
+  against chart            n= 3  win  67%  @$1k/trade mid +$1715  worst +$1508  avg 57%  SQN 0.92
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  67%  @$1k/trade mid +$1715  worst +$1508  avg 57%  SQN 0.92
+  shorts                   n= 8  win  75%  @$1k/trade mid +$47  worst -$390  avg 1%  SQN 0.10
+
+day outcomes: no fill 21 · no setup in reach 10 · FILLED inverse_rug up 2 · in position 4 · no board 9 · FILLED inverse_floor down 6 · FILLED inverse_ceiling up 1 · FILLED inverse_reverse_rug down 2
+
+-- every trade --
+  2026-04-09 09:36 CALL inverse_rug @232.5 (gatekeeper) stop 231.5 T1 237.5 T2 null rr 5 [vs chart]  AMD260417C00232500 in $6.85 → T1@04-10 $12.3 · time@04-15 $26.05  =  180%
+  2026-05-11 09:35 PUT  inverse_floor @462.5 (gatekeeper) stop 465 T1 460 T2 457.5 rr 2   AMD260515P00462500 in $17.91 → T1@05-11 $20 · T2@05-11 $19.67  =  11%
+  2026-05-12 09:57 PUT  inverse_floor @450 (gatekeeper) stop 451 T1 447.5 T2 445 rr 5   AMD260515P00450000 in $13.71 → T1@05-12 $14.51 · breakeven@05-12 $13  =  0%
+  2026-05-13 09:35 CALL inverse_ceiling @450 (king) stop 447.5 T1 452.5 T2 457.5 rr 3 [vs chart]  AMD260515C00450000 in $11 → stop(close)@05-13 $8.95  =  -19%
+  2026-05-28 09:35 PUT  inverse_floor @500 (gatekeeper) stop 505 T1 495 T2 490 rr 2   AMD260605P00500000 in $22.15 → T1@05-28 $24.21 · breakeven@05-28 $21.83  =  4%
+  2026-06-09 09:35 PUT  inverse_reverse_rug @492.5 (gatekeeper) stop 495 T1 490 T2 480 rr 5   AMD260612P00492500 in $15.94 → T1@06-09 $17 · breakeven@06-09 $16.05  =  4%
+  2026-06-10 09:35 PUT  inverse_floor @465 (pika) stop 467.5 T1 462.5 T2 460 rr 2   AMD260612P00465000 in $12 → T1@06-10 $15.05 · breakeven@06-10 $13  =  17%
+  2026-06-12 09:45 PUT  inverse_floor @500 (king) stop 505 T1 495 T2 490 rr 2   AMD260618P00500000 in $19.8 → stop(close)@06-12 $13.99  =  -29%
+  2026-06-15 09:36 CALL inverse_rug @550 (gatekeeper) stop 545 T1 555 T2 560 rr 2 [vs chart]  AMD260618C00550000 in $18.55 → T1@06-15 $22.73 · breakeven@06-15 $18.14  =  10%
+  2026-06-18 09:37 PUT  inverse_floor @530 (king) stop 531 T1 525 T2 520 rr 10   AMD260626P00530000 in $22.93 → stop(close)@06-18 $18.2  =  -21%
+  2026-06-24 09:35 PUT  inverse_reverse_rug @520 (gatekeeper) stop 522.5 T1 515 T2 510 rr 4   AMD260626P00520000 in $15.68 → T1@06-24 $17.11 · T2@06-24 $20.25  =  19%
+
+credits used 18

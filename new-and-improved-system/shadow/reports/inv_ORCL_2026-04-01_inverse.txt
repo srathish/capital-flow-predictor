@@ -1,0 +1,23 @@
+
+=========== ORCL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse ===========
+ORCL itself: 142.52 → 146.67 (2.9%)
+ALL trades                 n= 5  win   0%  @$1k/trade mid -$1127  worst -$1437  avg -23%  SQN -2.82
+  chart-aligned only       n= 2  win   0%  @$1k/trade mid -$645  worst -$702  avg -32%  SQN -4.01
+  against chart            n= 3  win   0%  @$1k/trade mid -$482  worst -$735  avg -16%  SQN -1.36
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win   0%  @$1k/trade mid -$724  worst -$1007  avg -18%  SQN -2.10
+  shorts                   n= 1  win   0%  @$1k/trade mid -$403  worst -$430  avg -40%  SQN 0.00
+
+day outcomes: no fill 30 · no setup in reach 10 · FILLED inverse_ceiling up 2 · FILLED inverse_rug up 2 · no board 9 · in position 1 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-04-09 09:35 CALL inverse_ceiling @140 (barney) stop 139 T1 142 T2 143 rr 3   ORCL260417C00140000 in $4.14 → stop(close)@04-09 $3.14  =  -24%
+  2026-04-15 10:11 CALL inverse_rug @172.5 (pika) stop 171.5 T1 175 T2 null rr 2.5 [vs chart]  ORCL260417C00172500 in $3.55 → stop(close)@04-15 $2.16  =  -39%
+  2026-05-27 09:35 CALL inverse_ceiling @190 (gatekeeper) stop 189 T1 192.5 T2 195 rr 5 [vs chart]  ORCL260529C00190000 in $3.8 → T1@05-28 $0 · T2@05-28 $7.58  =  -0%
+  2026-06-02 10:27 PUT  inverse_floor @240 (gatekeeper) stop 241 T1 237.5 T2 235 rr 5   ORCL260605P00240000 in $7.2 → stop(close)@06-02 $4.3  =  -40%
+  2026-06-08 09:36 CALL inverse_rug @215 (normal) stop 214 T1 217.5 T2 null rr 2.5 [vs chart]  ORCL260612C00215000 in $13.15 → stop(close)@06-08 $12  =  -9%
+
+credits used 0

@@ -1,0 +1,26 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse ===========
+AMZN itself: 206.66 → 238.25 (15.3%)
+ALL trades                 n= 8  win  50%  @$1k/trade mid -$845  worst -$1061  avg -11%  SQN -0.74
+  chart-aligned only       n= 6  win  50%  @$1k/trade mid -$941  worst -$1091  avg -16%  SQN -1.09
+  against chart            n= 2  win  50%  @$1k/trade mid +$96  worst +$30  avg 5%  SQN 0.10
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  40%  @$1k/trade mid -$747  worst -$873  avg -15%  SQN -0.70
+  shorts                   n= 3  win  67%  @$1k/trade mid -$98  worst -$188  avg -3%  SQN -0.18
+
+day outcomes: no fill 34 · no board 5 · FILLED inverse_ceiling up 5 · no setup in reach 7 · FILLED inverse_floor down 3 · in position 1
+
+-- every trade --
+  2026-04-14 09:35 CALL inverse_ceiling @245 (gatekeeper) stop 244 T1 247.5 T2 250 rr 5 [vs chart]  AMZN260417C00245000 in $3.65 → T1@04-14 $4.68 · T2@04-14 $6.42  =  52%
+  2026-05-01 09:35 PUT  inverse_floor @265 (gatekeeper) stop 267.5 T1 262.5 T2 260 rr 2   AMZN260508P00265000 in $4 → stop(close)@05-01 $2.48  =  -38%
+  2026-05-04 09:35 PUT  inverse_floor @272.5 (gatekeeper) stop 275 T1 270 T2 265 rr 3   AMZN260508P00272500 in $4.13 → T1@05-04 $5.15 · breakeven@05-04 $3.6  =  6%
+  2026-05-22 09:38 CALL inverse_ceiling @270 (king) stop 267.5 T1 272.5 T2 275 rr 2 [vs chart]  AMZN260529C00270000 in $4 → stop(close)@05-22 $2.3  =  -43%
+  2026-06-01 09:37 PUT  inverse_floor @265 (gatekeeper) stop 267.5 T1 262.5 T2 260 rr 2   AMZN260605P00265000 in $3.86 → T1@06-01 $5.54 · breakeven@06-01 $3.9  =  22%
+  2026-06-04 09:59 CALL inverse_ceiling @255 (king) stop 252.5 T1 257.5 T2 260 rr 2   AMZN260612C00255000 in $4.93 → stop(close)@06-05 $1.71  =  -65%
+  2026-06-08 09:36 CALL inverse_ceiling @247.5 (king) stop 246.5 T1 250 T2 252.5 rr 5   AMZN260612C00247500 in $4.29 → stop(close)@06-08 $2.81  =  -35%
+  2026-06-24 09:36 CALL inverse_ceiling @237.5 (gatekeeper) stop 236.5 T1 240 T2 242.5 rr 5   AMZN260626C00237500 in $3.12 → T1@06-24 $4.41 · breakeven@06-24 $2.8  =  16%
+
+credits used 14

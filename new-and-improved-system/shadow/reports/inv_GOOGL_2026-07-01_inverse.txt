@@ -1,0 +1,28 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n=10  win  60%  @$1k/trade mid +$544  worst +$19  avg 5%  SQN 0.65
+  chart-aligned only       n= 7  win  57%  @$1k/trade mid +$364  worst +$71  avg 5%  SQN 0.44
+  against chart            n= 3  win  67%  @$1k/trade mid +$180  worst -$52  avg 6%  SQN 0.69
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  50%  @$1k/trade mid +$155  worst -$97  avg 4%  SQN 0.20
+  shorts                   n= 6  win  67%  @$1k/trade mid +$389  worst +$116  avg 6%  SQN 0.89
+
+day outcomes: no fill 27 · FILLED inverse_reverse_rug down 2 · no setup in reach 10 · no contract data 2 · FILLED inverse_floor down 4 · FILLED inverse_ceiling up 4 · in position 5 · no board 4
+
+-- every trade --
+  2026-07-09 10:02 PUT  inverse_reverse_rug @355 (gatekeeper) stop 357.5 T1 352.5 T2 350 rr 2   GOOGL260717P00355000 in $6.05 → T1@07-09 $8 · breakeven@07-09 $6.7  =  22%
+  2026-07-28 09:35 PUT  inverse_floor @327.5 (gatekeeper) stop 330 T1 325 T2 320 rr 3 [vs chart]  GOOGL260731P00327500 in $5.25 → T1@07-28 $6.05 · breakeven@07-28 $5.2  =  7%
+  2026-07-29 09:35 CALL inverse_ceiling @335 (king) stop 332.5 T1 337.5 T2 340 rr 2   GOOGL260731C00335000 in $4.81 → T1@07-29 $6.09 · T2@07-29 $7.8  =  44%
+  2026-07-30 10:06 CALL inverse_ceiling @335 (gatekeeper) stop 334 T1 337.5 T2 340 rr 5   GOOGL260807C00335000 in $6.8 → stop(close)@07-30 $5.9  =  -13%
+  2026-08-14 09:35 CALL inverse_ceiling @350 (king) stop 347.5 T1 352.5 T2 360 rr 4   GOOGL260821C00350000 in $5.59 → stop(close)@08-14 $3.2  =  -43%
+  2026-08-31 09:43 PUT  inverse_floor @340 (gatekeeper) stop 341 T1 337.5 T2 335 rr 5 [vs chart]  GOOGL260904P00340000 in $4 → T1@08-31 $5.61 · breakeven@08-31 $4.02  =  20%
+  2026-09-01 09:35 CALL inverse_ceiling @335 (gatekeeper) stop 332.5 T1 337.5 T2 340 rr 2   GOOGL260904C00335000 in $4 → T1@09-02 $4.62 · T2@09-02 $5.55  =  27%
+  2026-09-15 09:55 PUT  inverse_floor @345 (gatekeeper) stop 346 T1 342.5 T2 337.5 rr 7.5   GOOGL260918P00345000 in $3.85 → T1@09-16 $4.75 · breakeven@09-17 $1.35  =  -21%
+  2026-09-18 09:44 PUT  inverse_reverse_rug @355 (king) stop 357.5 T1 350 T2 347.5 rr 3   GOOGL260925P00355000 in $5.5 → T1@09-18 $8.45 · breakeven@09-21 $4.77  =  20%
+  2026-09-30 09:36 PUT  inverse_floor @345 (gatekeeper) stop 347.5 T1 342.5 T2 340 rr 2 [vs chart]  GOOGL261002P00345000 in $3.7 → T1@09-30 $5.45 · breakeven@10-01 $1.25  =  -10%
+
+credits used 20

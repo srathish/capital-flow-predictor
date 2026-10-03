@@ -1,0 +1,26 @@
+
+=========== NVDA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=inverse ===========
+NVDA itself: 172.17 → 199.69 (16.0%)
+ALL trades                 n= 8  win  50%  @$1k/trade mid +$1040  worst +$403  avg 13%  SQN 0.67
+  chart-aligned only       n= 4  win  75%  @$1k/trade mid +$2047  worst +$1521  avg 51%  SQN 2.50
+  against chart            n= 4  win  25%  @$1k/trade mid -$1007  worst -$1118  avg -25%  SQN -1.36
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  25%  @$1k/trade mid -$1007  worst -$1118  avg -25%  SQN -1.36
+  shorts                   n= 4  win  75%  @$1k/trade mid +$2047  worst +$1521  avg 51%  SQN 2.50
+
+day outcomes: no setup in reach 11 · no fill 30 · FILLED inverse_ceiling up 4 · FILLED inverse_reverse_rug down 3 · in position 2 · FILLED inverse_floor down 1 · no board 4
+
+-- every trade --
+  2026-05-04 09:35 CALL inverse_ceiling @200 (king) stop 199 T1 202.5 T2 205 rr 5 [vs chart]  NVDA260508C00200000 in $4.16 → stop(close)@05-04 $2.59  =  -38%
+  2026-05-05 09:38 CALL inverse_ceiling @200 (king) stop 199 T1 202.5 T2 205 rr 5 [vs chart]  NVDA260508C00200000 in $2.73 → stop(close)@05-05 $1.56  =  -43%
+  2026-05-15 09:42 PUT  inverse_reverse_rug @225 (normal) stop 226 T1 222.5 T2 null rr 2.5   NVDA260522P00225000 in $8.7 → time@05-15 $8.3  =  -5%
+  2026-05-26 09:40 PUT  inverse_reverse_rug @215 (pika) stop 216 T1 212.5 T2 210 rr 5   NVDA260529P00215000 in $3.32 → T1@05-26 $4.79 · T2@05-27 $6.04  =  63%
+  2026-06-02 09:35 PUT  inverse_reverse_rug @225 (gatekeeper) stop 226 T1 222.5 T2 220 rr 5   NVDA260605P00225000 in $4.15 → T1@06-02 $5.4 · T2@06-03 $7.3  =  53%
+  2026-06-04 09:36 CALL inverse_ceiling @215 (gatekeeper) stop 214 T1 217.5 T2 220 rr 5 [vs chart]  NVDA260612C00215000 in $5.6 → T1@06-04 $6.65 · T2@06-04 $7.9  =  30%
+  2026-06-10 09:35 PUT  inverse_floor @205 (pika) stop 206 T1 202.5 T2 200 rr 5   NVDA260612P00205000 in $2.8 → T1@06-10 $4.61 · T2@06-10 $6.21  =  93%
+  2026-06-16 09:37 CALL inverse_ceiling @210 (king) stop 209 T1 214 T2 215 rr 5 [vs chart]  NVDA260618C00210000 in $2.56 → stop(close)@06-16 $1.28  =  -50%
+
+credits used 25

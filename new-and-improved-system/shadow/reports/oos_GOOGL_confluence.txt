@@ -1,0 +1,22 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n= 4  win  50%  @$1k/trade mid +$114  worst -$57  avg 3%  SQN 0.11
+  chart-aligned only       n= 3  win  67%  @$1k/trade mid +$601  worst +$430  avg 20%  SQN 0.70
+  against chart            n= 1  win   0%  @$1k/trade mid -$487  worst -$487  avg -49%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid -$137  worst -$308  avg -7%  SQN -0.39
+  shorts                   n= 2  win  50%  @$1k/trade mid +$251  worst +$251  avg 13%  SQN 0.20
+
+day outcomes: no fill 34 · FILLED floor+std2.5 up 2 · in position 5 · no setup in reach 8 · no option print at fill 1 · FILLED ceiling+std2.5 down 2 · no board 3
+
+-- every trade --
+  2026-04-08 13:33 CALL floor+std2.5 @317.5 (king) stop 315 T1 320 T2 322.5 rr 2   GOOGL260410C00317500 in $3.5 → time@04-09 $2.65  =  -24%
+  2026-05-04 13:51 PUT  ceiling+std2.5 @385 (king) stop 386 T1 380 T2 375 rr 10 [vs chart]  GOOGL260508P00385000 in $5.5 → stop(close)@05-05 $2.82  =  -49%
+  2026-06-16 12:52 CALL floor+std2.5 @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $4.25 → T1@06-16 $5.45 · breakeven@06-17 $3.95  =  11%
+  2026-06-23 12:24 PUT  ceiling+std2.5 @347.5 (king) stop 348.5 T1 342.5 T2 340 rr 7.5   GOOGL260626P00347500 in $5.02 → T1@06-24 $6.9 · T2@06-25 $10.55  =  74%
+
+credits used 6

@@ -1,0 +1,25 @@
+
+=========== AAPL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_earn ===========
+AAPL itself: 254.14 → 289.25 (13.8%)
+ALL trades                 n= 7  win  57%  @$1k/trade mid +$262  worst -$86  avg 4%  SQN 0.18
+  chart-aligned only       n= 7  win  57%  @$1k/trade mid +$262  worst -$86  avg 4%  SQN 0.18
+  against chart            n= 0
+  reverse_rug              n= 3  win  33%  @$1k/trade mid -$492  worst -$616  avg -16%  SQN -0.71
+  floor                    n= 4  win  75%  @$1k/trade mid +$754  worst +$530  avg 19%  SQN 0.58
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  57%  @$1k/trade mid +$262  worst -$86  avg 4%  SQN 0.18
+  shorts                   n= 0
+
+day outcomes: no fill 29 · FILLED floor up 4 · in position 4 · earnings blackout 4 · no setup in reach 7 · FILLED reverse_rug up 3 · no board 4
+
+-- every trade --
+  2026-04-14 09:35 CALL floor       @260 (king) stop 257.5 T1 262.5 T2 265 rr 2   AAPL260417C00260000 in $3 → T1@04-15 $4.1 · T2@04-15 $5.65  =  63%
+  2026-04-16 09:40 CALL floor       @262.5 (gatekeeper) stop 260 T1 265 T2 267.5 rr 2   AAPL260422C00262500 in $4.14 → T1@04-17 $5.98 · T2@04-17 $5.98  =  44%
+  2026-05-04 10:00 CALL floor       @275 (gatekeeper) stop 272.5 T1 277.5 T2 280 rr 2   AAPL260508C00275000 in $3.76 → T1@05-04 $4.87 · T2@05-05 $6.15  =  47%
+  2026-05-29 11:05 CALL reverse_rug @310 (gatekeeper) stop 309 T1 315 T2 320 rr 10   AAPL260605C00310000 in $3.99 → stop(close)@06-01 $1.85  =  -54%
+  2026-06-05 13:02 CALL reverse_rug @310 (gatekeeper) stop 309 T1 315 T2 320 rr 10   AAPL260612C00310000 in $5.5 → stop(close)@06-05 $4.31  =  -22%
+  2026-06-08 10:15 CALL reverse_rug @310 (gatekeeper) stop 307.5 T1 315 T2 320 rr 4   AAPL260612C00310000 in $5 → T1@06-08 $7.75 · breakeven@06-08 $4.85  =  26%
+  2026-06-17 09:35 CALL floor       @300 (king) stop 299 T1 302.5 T2 307.5 rr 7.5   AAPL260618C00300000 in $2.36 → stop(close)@06-17 $0.52  =  -78%
+
+credits used 1

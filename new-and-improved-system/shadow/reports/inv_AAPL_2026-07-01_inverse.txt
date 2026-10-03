@@ -1,0 +1,37 @@
+
+=========== AAPL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse ===========
+AAPL itself: 294.08 → 333.77 (13.5%)
+ALL trades                 n=19  win  37%  @$1k/trade mid -$682  worst -$2026  avg -4%  SQN -0.28
+  chart-aligned only       n=16  win  31%  @$1k/trade mid -$1372  worst -$2483  avg -9%  SQN -0.62
+  against chart            n= 3  win  67%  @$1k/trade mid +$690  worst +$457  avg 23%  SQN 0.63
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 9  win  44%  @$1k/trade mid +$350  worst -$235  avg 4%  SQN 0.22
+  shorts                   n=10  win  30%  @$1k/trade mid -$1032  worst -$1791  avg -10%  SQN -0.54
+
+day outcomes: no fill 20 · no setup in reach 7 · FILLED inverse_floor down 10 · in position 8 · FILLED inverse_ceiling up 7 · FILLED inverse_rug up 2 · no board 4
+
+-- every trade --
+  2026-07-09 09:40 PUT  inverse_floor @310 (king) stop 312.5 T1 307.5 T2 305 rr 2   AAPL260717P00310000 in $4.33 → stop(close)@07-09 $2.14  =  -51%
+  2026-07-13 09:35 PUT  inverse_floor @320 (barney) stop 322.5 T1 317.5 T2 315 rr 2   AAPL260717P00320000 in $3.6 → T1@07-13 $4.9 · T2@07-14 $8.5  =  86%
+  2026-07-20 09:40 PUT  inverse_floor @330 (king) stop 332.5 T1 327.5 T2 325 rr 2   AAPL260722P00330000 in $3.29 → T1@07-20 $4.86 · T2@07-20 $6.37  =  71%
+  2026-07-22 10:03 PUT  inverse_floor @325 (gatekeeper) stop 327.5 T1 322.5 T2 320 rr 2   AAPL260722P00325000 in $1.03 → time@07-22 $0.06  =  -94%
+  2026-07-27 09:35 PUT  inverse_floor @335 (gatekeeper) stop 336 T1 332.5 T2 330 rr 5   AAPL260731P00335000 in $6.68 → stop(close)@07-27 $5.65  =  -15%
+  2026-07-28 09:47 PUT  inverse_floor @337.5 (gatekeeper) stop 340 T1 335 T2 330 rr 3   AAPL260731P00337500 in $6.05 → stop(close)@07-28 $5.27  =  -13%
+  2026-07-29 09:35 PUT  inverse_floor @340 (king) stop 342.5 T1 337.5 T2 330 rr 4   AAPL260731P00340000 in $6.17 → T1@07-29 $7.21 · T2@07-30 $11.87  =  55%
+  2026-08-06 09:35 CALL inverse_ceiling @315 (king) stop 314 T1 317.5 T2 320 rr 5   AAPL260814C00315000 in $5.1 → stop(close)@08-06 $3.55  =  -30%
+  2026-08-07 10:31 CALL inverse_ceiling @315 (king) stop 312.5 T1 317.5 T2 320 rr 2   AAPL260814C00315000 in $3.95 → stop(close)@08-10 $1.05  =  -73%
+  2026-08-21 11:00 CALL inverse_rug @310 (gatekeeper) stop 307.5 T1 312.5 T2 315 rr 2   AAPL260828C00310000 in $4.1 → T1@08-24 $5.19 · breakeven@08-25 $2.9  =  -1%
+  2026-08-26 09:36 CALL inverse_ceiling @310 (king) stop 307.5 T1 312.5 T2 315 rr 2   AAPL260828C00310000 in $2.85 → T1@08-26 $4.3 · T2@08-26 $6  =  81%
+  2026-08-28 09:51 PUT  inverse_floor @315 (gatekeeper) stop 316 T1 312.5 T2 310 rr 5   AAPL260904P00315000 in $3.65 → stop(close)@08-28 $1.93  =  -47%
+  2026-09-10 09:35 CALL inverse_ceiling @320 (king) stop 317.5 T1 322.5 T2 325 rr 2   AAPL260918C00320000 in $5.85 → T1@09-10 $7.45 · breakeven@09-10 $5  =  6%
+  2026-09-15 09:35 PUT  inverse_floor @330 (gatekeeper) stop 332.5 T1 327.5 T2 325 rr 2   AAPL260918P00330000 in $3.36 → stop(close)@09-16 $1.79  =  -47%
+  2026-09-21 09:35 CALL inverse_rug @335 (king) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  AAPL260925C00335000 in $3.8 → T1@09-21 $5.3 · T2@09-22 $8.1  =  76%
+  2026-09-25 09:35 CALL inverse_ceiling @335 (gatekeeper) stop 332.5 T1 337.5 T2 340 rr 2 [vs chart]  AAPL261002C00335000 in $4.65 → T1@09-25 $5.8 · T2@09-25 $7.25  =  40%
+  2026-09-28 09:36 CALL inverse_ceiling @342.5 (king) stop 341.5 T1 345 T2 347.5 rr 5 [vs chart]  AAPL261002C00342500 in $3.57 → stop(close)@09-28 $1.87  =  -48%
+  2026-09-29 15:05 PUT  inverse_floor @330 (king) stop 331 T1 327.5 T2 325 rr 5   AAPL261002P00330000 in $2.87 → stop(close)@09-30 $1.5  =  -48%
+  2026-10-02 10:21 CALL inverse_ceiling @335 (gatekeeper) stop 334 T1 337.5 T2 340 rr 5   AAPL261009C00335000 in $3.99 → stop(close)@10-02 $3.35  =  -16%
+
+credits used 45

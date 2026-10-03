@@ -1,0 +1,45 @@
+
+=========== NVDA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=current ===========
+NVDA itself: 172.17 → 199.69 (16.0%)
+ALL trades                 n=27  win  67%  @$1k/trade mid +$2666  worst +$367  avg 10%  SQN 1.01
+  chart-aligned only       n=16  win  69%  @$1k/trade mid +$1954  worst +$404  avg 12%  SQN 0.85
+  against chart            n=11  win  64%  @$1k/trade mid +$712  worst -$37  avg 6%  SQN 0.51
+  reverse_rug              n= 4  win 100%  @$1k/trade mid +$964  worst +$490  avg 24%  SQN 2.49
+  floor                    n=11  win  55%  @$1k/trade mid +$985  worst -$81  avg 9%  SQN 0.43
+  rug                      n= 1  win   0%  @$1k/trade mid -$257  worst -$269  avg -26%  SQN 0.00
+  ceiling                  n=11  win  73%  @$1k/trade mid +$974  worst +$227  avg 9%  SQN 0.72
+  longs                    n=15  win  67%  @$1k/trade mid +$1949  worst +$409  avg 13%  SQN 0.85
+  shorts                   n=12  win  67%  @$1k/trade mid +$717  worst -$42  avg 6%  SQN 0.51
+
+day outcomes: no setup in reach 8 · FILLED ceiling down 11 · in position 11 · FILLED rug down 1 · FILLED floor up 11 · no fill 5 · FILLED reverse_rug up 4 · no board 4
+
+-- every trade --
+  2026-04-06 09:35 PUT  ceiling     @177.5 (gatekeeper) stop 178.5 T1 175 T2 172.5 rr 5   NVDA260410P00177500 in $3.2 → T1@04-07 $3.95 · breakeven@04-07 $2.48  =  1%
+  2026-04-09 10:05 PUT  rug         @182.5 (gatekeeper) stop 183.5 T1 180 T2 null rr 2.5 [vs chart]  NVDA260417P00182500 in $3.5 → stop(close)@04-09 $2.6  =  -26%
+  2026-04-10 09:36 CALL floor       @185 (gatekeeper) stop 184 T1 187.5 T2 190 rr 5   NVDA260417C00185000 in $3.42 → T1@04-10 $4.86 · T2@04-10 $6.6  =  68%
+  2026-04-13 09:52 PUT  ceiling     @187.5 (king) stop 188.5 T1 185 T2 182.5 rr 5 [vs chart]  NVDA260417P00187500 in $2.95 → stop(close)@04-13 $1.8  =  -39%
+  2026-04-14 09:35 PUT  ceiling     @192.5 (king) stop 193.5 T1 190 T2 187.5 rr 5 [vs chart]  NVDA260417P00192500 in $2.62 → stop(close)@04-14 $1.09  =  -58%
+  2026-04-15 10:33 PUT  ceiling     @200 (king) stop 201 T1 197.5 T2 195 rr 5 [vs chart]  NVDA260417P00200000 in $2.39 → T1@04-15 $3.75 · time@04-16 $2.38  =  28%
+  2026-04-21 09:35 PUT  ceiling     @202.5 (king) stop 203.5 T1 200 T2 197.5 rr 5 [vs chart]  NVDA260422P00202500 in $2.09 → T1@04-21 $3.1 · time@04-21 $3.05  =  47%
+  2026-04-22 09:38 CALL floor       @200 (gatekeeper) stop 199 T1 202.5 T2 205 rr 5   NVDA260422C00200000 in $1.19 → time@04-22 $2.49  =  109%
+  2026-04-27 09:41 CALL floor       @210 (king) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $4.72 → T1@04-27 $6.04 · T2@04-27 $7.75  =  46%
+  2026-04-28 09:35 CALL floor       @210 (king) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $4.65 → T1@04-28 $5.9 · breakeven@04-28 $4.05  =  7%
+  2026-04-29 09:46 CALL floor       @210 (gatekeeper) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $3.91 → stop(close)@04-30 $0.14  =  -96%
+  2026-05-01 09:47 CALL floor       @200 (gatekeeper) stop 199 T1 202.5 T2 205 rr 5   NVDA260508C00200000 in $4.5 → stop(close)@05-01 $3.15  =  -30%
+  2026-05-04 09:35 PUT  ceiling     @200 (king) stop 201 T1 197.5 T2 195 rr 5 [vs chart]  NVDA260508P00200000 in $3.4 → T1@05-04 $4.95 · T2@05-04 $6.6  =  70%
+  2026-05-05 09:38 PUT  ceiling     @200 (king) stop 201 T1 197.5 T2 195 rr 5 [vs chart]  NVDA260508P00200000 in $3.23 → T1@05-05 $4.3 · breakeven@05-06 $2.28  =  2%
+  2026-05-07 09:54 PUT  ceiling     @210 (gatekeeper) stop 211 T1 205 T2 202.5 rr 7.5 [vs chart]  NVDA260515P00210000 in $5.08 → stop(close)@05-07 $4.01  =  -21%
+  2026-05-12 09:37 CALL floor       @220 (gatekeeper) stop 219 T1 225 T2 227.5 rr 7.5   NVDA260515C00220000 in $4.57 → T1@05-13 $7.04 · T2@05-13 $8.7  =  72%
+  2026-05-15 09:42 CALL reverse_rug @225 (normal) stop 224 T1 227.5 T2 230 rr 5   NVDA260522C00225000 in $9.06 → T1@05-15 $10.18 · T2@05-15 $11.4  =  19%
+  2026-05-26 09:40 CALL reverse_rug @215 (pika) stop 214 T1 217.5 T2 220 rr 5   NVDA260529C00215000 in $4.08 → T1@05-26 $4.9 · breakeven@05-26 $3.27  =  0%
+  2026-05-27 09:56 CALL reverse_rug @210 (pika) stop 209 T1 212.5 T2 215 rr 5   NVDA260529C00210000 in $3.7 → T1@05-27 $4.13 · T2@05-28 $5.6  =  32%
+  2026-05-29 09:41 PUT  ceiling     @215 (king) stop 216 T1 212.5 T2 null rr 2.5 [vs chart]  NVDA260605P00215000 in $4.9 → T1@05-29 $6 · breakeven@06-01 $3.85  =  1%
+  2026-06-02 09:35 CALL reverse_rug @225 (gatekeeper) stop 224 T1 227.5 T2 230 rr 5   NVDA260605C00225000 in $4.6 → T1@06-02 $5.85 · T2@06-02 $7.55  =  46%
+  2026-06-03 09:45 CALL floor       @217.5 (king) stop 216.5 T1 222.5 T2 225 rr 7.5   NVDA260605C00217500 in $3.4 → stop(close)@06-03 $1.65  =  -52%
+  2026-06-04 09:36 PUT  ceiling     @215 (gatekeeper) stop 216 T1 212.5 T2 210 rr 5 [vs chart]  NVDA260612P00215000 in $5.4 → T1@06-04 $6.45 · breakeven@06-04 $4.58  =  2%
+  2026-06-10 09:35 CALL floor       @205 (pika) stop 204 T1 207.5 T2 210 rr 5   NVDA260612C00205000 in $3.94 → stop(close)@06-10 $1.34  =  -66%
+  2026-06-11 10:57 CALL floor       @200 (king) stop 199 T1 205 T2 207.5 rr 7.5   NVDA260618C00200000 in $5.24 → T1@06-11 $7.88 · T2@06-15 $10.73  =  78%
+  2026-06-16 09:37 PUT  ceiling     @210 (king) stop 211 T1 207.5 T2 205 rr 5 [vs chart]  NVDA260618P00210000 in $2.77 → T1@06-16 $3.78 · T2@06-17 $5.4  =  66%
+  2026-06-23 14:54 CALL floor       @200 (normal) stop 199 T1 202.5 T2 205 rr 5   NVDA260626C00200000 in $3.6 → stop(close)@06-24 $2.26  =  -37%
+
+credits used 68

@@ -1,0 +1,30 @@
+
+=========== NVDA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_vex ===========
+NVDA itself: 197.12 → 233.97 (18.7%)
+ALL trades                 n=12  win  50%  @$1k/trade mid +$1946  worst +$490  avg 16%  SQN 0.90
+  chart-aligned only       n=12  win  50%  @$1k/trade mid +$1946  worst +$490  avg 16%  SQN 0.90
+  against chart            n= 0
+  reverse_rug              n= 1  win   0%  @$1k/trade mid -$143  worst -$176  avg -14%  SQN 0.00
+  floor                    n=11  win  55%  @$1k/trade mid +$2089  worst +$666  avg 19%  SQN 0.97
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=12  win  50%  @$1k/trade mid +$1946  worst +$490  avg 16%  SQN 0.90
+  shorts                   n= 0
+
+day outcomes: no fill 32 · no setup in reach 8 · FILLED floor up 11 · FILLED reverse_rug up 1 · in position 2 · no board 4
+
+-- every trade --
+  2026-07-13 09:44 CALL floor       @207.5 (pika) stop 206.5 T1 210 T2 215 rr 7.5   NVDA260717C00207500 in $4.24 → stop(close)@07-13 $2.04  =  -52%
+  2026-07-17 09:35 CALL floor       @200 (gatekeeper) stop 199 T1 202.5 T2 205 rr 5   NVDA260722C00200000 in $4.37 → T1@07-17 $5.2 · T2@07-17 $7.15  =  41%
+  2026-07-21 09:57 CALL floor       @205 (gatekeeper) stop 204 T1 207.5 T2 210 rr 5   NVDA260722C00205000 in $2.25 → T1@07-21 $3.2 · time@07-21 $2.94  =  36%
+  2026-08-06 10:24 CALL floor       @220 (pika) stop 219 T1 222.5 T2 225 rr 5   NVDA260814C00220000 in $5.35 → stop(close)@08-06 $4.15  =  -22%
+  2026-08-10 10:28 CALL floor       @220 (pika) stop 219 T1 225 T2 227.5 rr 7.5   NVDA260814C00220000 in $3.7 → stop(close)@08-10 $2.44  =  -34%
+  2026-08-12 09:43 CALL floor       @220 (gatekeeper) stop 219 T1 222.5 T2 225 rr 5   NVDA260814C00220000 in $3.04 → T1@08-12 $4.5 · T2@08-12 $5.81  =  70%
+  2026-08-24 09:43 CALL reverse_rug @210 (pika) stop 209 T1 215 T2 217.5 rr 7.5   NVDA260828C00210000 in $6.59 → stop(close)@08-24 $5.65  =  -14%
+  2026-08-26 10:26 CALL floor       @210 (normal) stop 209 T1 212.5 T2 215 rr 5   NVDA260828C00210000 in $6.33 → T1@08-27 $14.03 · T2@08-27 $14.03  =  122%
+  2026-08-28 09:51 CALL floor       @225 (gatekeeper) stop 224 T1 227.5 T2 230 rr 5   NVDA260904C00225000 in $4.77 → stop(close)@08-28 $1.46  =  -69%
+  2026-09-21 10:05 CALL floor       @222.5 (king) stop 221.5 T1 225 T2 227.5 rr 5   NVDA260925C00222500 in $3.28 → T1@09-21 $4.55 · T2@09-21 $6.55  =  69%
+  2026-09-25 09:38 CALL floor       @225 (gatekeeper) stop 224 T1 227.5 T2 230 rr 5   NVDA261002C00225000 in $4 → T1@09-28 $7.5 · T2@09-28 $7.5  =  88%
+  2026-09-30 09:35 CALL floor       @230 (gatekeeper) stop 229 T1 232.5 T2 235 rr 5   NVDA261002C00230000 in $2.8 → stop(close)@09-30 $1.71  =  -39%
+
+credits used 225

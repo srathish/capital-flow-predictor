@@ -1,0 +1,25 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_rolling ===========
+AMZN itself: 206.66 → 238.25 (15.3%)
+ALL trades                 n= 7  win  71%  @$1k/trade mid +$2580  worst +$1706  avg 37%  SQN 1.81
+  chart-aligned only       n= 7  win  71%  @$1k/trade mid +$2580  worst +$1706  avg 37%  SQN 1.81
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 7  win  71%  @$1k/trade mid +$2580  worst +$1706  avg 37%  SQN 1.81
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  71%  @$1k/trade mid +$2580  worst +$1706  avg 37%  SQN 1.81
+  shorts                   n= 0
+
+day outcomes: no fill 32 · FILLED floor up 7 · in position 6 · no setup in reach 6 · no board 4
+
+-- every trade --
+  2026-04-08 09:51 CALL floor       @220 (king) stop 219 T1 222.5 T2 225 rr 5   AMZN260410C00220000 in $2.53 → T1@04-08 $3.89 · T2@04-09 $5.11  =  78%
+  2026-04-21 14:51 CALL floor       @250 (king) stop 247.5 T1 257.5 T2 260 rr 4   AMZN260422C00250000 in $2.2 → time@04-21 $1.96  =  -11%
+  2026-04-27 09:52 CALL floor       @260 (barney) stop 257.5 T1 265 T2 267.5 rr 3   AMZN260501C00260000 in $9.76 → T1@04-29 $12.75 · T2@04-30 $11.72  =  25%
+  2026-05-01 09:35 CALL floor       @265 (gatekeeper) stop 262.5 T1 267.5 T2 270 rr 2   AMZN260508C00265000 in $4.84 → T1@05-01 $6 · T2@05-01 $7.73  =  42%
+  2026-05-04 09:35 CALL floor       @272.5 (gatekeeper) stop 270 T1 275 T2 280 rr 3   AMZN260508C00272500 in $4.2 → T1@05-04 $5.55 · breakeven@05-04 $3.92  =  13%
+  2026-05-11 14:19 CALL floor       @270 (barney) stop 269 T1 272.5 T2 275 rr 5   AMZN260515C00270000 in $3.9 → stop(close)@05-11 $3.05  =  -22%
+  2026-05-26 10:30 CALL floor       @265 (gatekeeper) stop 264 T1 270 T2 275 rr 10   AMZN260529C00265000 in $3.31 → T1@05-27 $6.27 · time@05-28 $9.15  =  133%
+
+credits used 35

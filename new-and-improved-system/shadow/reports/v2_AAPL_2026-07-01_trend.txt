@@ -1,0 +1,28 @@
+
+=========== AAPL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend ===========
+AAPL itself: 294.08 → 333.77 (13.5%)
+ALL trades                 n=10  win  70%  @$1k/trade mid +$684  worst -$522  avg 7%  SQN 0.41
+  chart-aligned only       n=10  win  70%  @$1k/trade mid +$684  worst -$522  avg 7%  SQN 0.41
+  against chart            n= 0
+  reverse_rug              n= 1  win   0%  @$1k/trade mid -$713  worst -$713  avg -71%  SQN 0.00
+  floor                    n= 8  win  88%  @$1k/trade mid +$2118  worst +$926  avg 26%  SQN 2.07
+  rug                      n= 1  win   0%  @$1k/trade mid -$721  worst -$735  avg -72%  SQN 0.00
+  ceiling                  n= 0
+  longs                    n= 9  win  78%  @$1k/trade mid +$1405  worst +$213  avg 16%  SQN 1.00
+  shorts                   n= 1  win   0%  @$1k/trade mid -$721  worst -$735  avg -72%  SQN 0.00
+
+day outcomes: no fill 28 · no setup in reach 7 · FILLED floor up 8 · FILLED reverse_rug up 1 · in position 10 · FILLED rug down 1 · no board 3
+
+-- every trade --
+  2026-07-09 09:40 CALL floor       @310 (king) stop 307.5 T1 312.5 T2 315 rr 2   AAPL260717C00310000 in $5.28 → T1@07-09 $6.26 · T2@07-09 $7.85  =  34%
+  2026-07-13 09:35 CALL floor       @320 (barney) stop 317.5 T1 322.5 T2 325 rr 2   AAPL260717C00320000 in $4.65 → T1@07-13 $5.48 · breakeven@07-13 $4  =  2%
+  2026-07-17 10:00 CALL reverse_rug @330 (king) stop 329 T1 335 T2 337.5 rr 7.5   AAPL260722C00330000 in $5.85 → stop(close)@07-20 $1.68  =  -71%
+  2026-07-22 10:03 CALL floor       @325 (gatekeeper) stop 322.5 T1 327.5 T2 330 rr 2   AAPL260722C00325000 in $1.6 → time@07-22 $1.01  =  -37%
+  2026-07-27 09:35 CALL floor       @335 (gatekeeper) stop 332.5 T1 340 T2 342.5 rr 3   AAPL260731C00335000 in $7.25 → T1@07-28 $11.6 · T2@07-28 $11.6  =  60%
+  2026-07-29 09:35 CALL floor       @340 (king) stop 337.5 T1 342.5 T2 350 rr 4   AAPL260731C00340000 in $6.55 → T1@07-29 $8 · breakeven@07-29 $5.94  =  6%
+  2026-08-21 11:00 PUT  rug         @310 (gatekeeper) stop 312.5 T1 307.5 T2 305 rr 2   AAPL260828P00310000 in $4.2 → stop(close)@08-26 $1.17  =  -72%
+  2026-09-02 09:35 CALL floor       @325 (king) stop 322.5 T1 330 T2 332.5 rr 3   AAPL260904C00325000 in $3.25 → T1@09-03 $5.85 · time@09-03 $3.9  =  50%
+  2026-09-15 09:35 CALL floor       @330 (gatekeeper) stop 327.5 T1 332.5 T2 337.5 rr 3   AAPL260918C00330000 in $3.95 → T1@09-16 $5.25 · T2@09-17 $8.6  =  75%
+  2026-09-29 15:05 CALL floor       @330 (king) stop 327.5 T1 335 T2 342.5 rr 5   AAPL261002C00330000 in $3.65 → T1@09-30 $6.4 · breakeven@10-01 $2.47  =  22%
+
+credits used 0

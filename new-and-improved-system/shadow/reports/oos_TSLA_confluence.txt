@@ -1,0 +1,22 @@
+
+=========== TSLA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence ===========
+TSLA itself: 364.06 → 420.38 (15.5%)
+ALL trades                 n= 4  win  25%  @$1k/trade mid -$593  worst -$865  avg -15%  SQN -0.79
+  chart-aligned only       n= 3  win   0%  @$1k/trade mid -$982  worst -$1173  avg -33%  SQN -4.29
+  against chart            n= 1  win 100%  @$1k/trade mid +$389  worst +$308  avg 39%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  25%  @$1k/trade mid -$593  worst -$865  avg -15%  SQN -0.79
+  shorts                   n= 0
+
+day outcomes: no setup in reach 8 · no fill 32 · FILLED floor+std2 up 1 · in position 2 · no board 9 · FILLED floor+std3.5 up 1 · FILLED floor+std4.5 up 1 · FILLED floor+std2.5 up 1
+
+-- every trade --
+  2026-04-10 10:09 CALL floor+std2  @345 (gatekeeper) stop 344 T1 350 T2 355 rr 10 [vs chart]  TSLA260417C00345000 in $8.5 → T1@04-13 $10 · T2@04-13 $13.62  =  39%
+  2026-05-27 14:21 CALL floor+std3.5 @440 (gatekeeper) stop 439 T1 442.5 T2 447.5 rr 7.5   TSLA260529C00440000 in $7.17 → T1@05-28 $6.46 · time@05-28 $5.37  =  -18%
+  2026-06-17 14:04 CALL floor+std4.5 @400 (king) stop 397.5 T1 405 T2 410 rr 4   TSLA260618C00400000 in $4.88 → stop(close)@06-17 $2.87  =  -41%
+  2026-06-24 12:31 CALL floor+std2.5 @380 (gatekeeper) stop 379 T1 385 T2 390 rr 10   TSLA260626C00380000 in $6.2 → stop(close)@06-24 $3.75  =  -40%
+
+credits used 0

@@ -1,0 +1,22 @@
+
+=========== META weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence_trend ===========
+META itself: 566.03 → 563.03 (-0.5%)
+ALL trades                 n= 4  win  25%  @$1k/trade mid -$1550  worst -$1743  avg -39%  SQN -1.24
+  chart-aligned only       n= 4  win  25%  @$1k/trade mid -$1550  worst -$1743  avg -39%  SQN -1.24
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  25%  @$1k/trade mid -$1550  worst -$1743  avg -39%  SQN -1.24
+  shorts                   n= 0
+
+day outcomes: no fill 35 · FILLED floor+std2.25 up 1 · in position 6 · FILLED reverse_rug+std2.5 up 1 · no setup in reach 6 · FILLED floor+std3.5 up 1 · FILLED floor+std2.5 up 1 · no board 4
+
+-- every trade --
+  2026-04-10 11:08 CALL floor+std2.25 @630 (gatekeeper) stop 625 T1 640 T2 645 rr 3   META260417C00630000 in $11.95 → T1@04-14 $16.85 · T2@04-14 $16.85  =  41%
+  2026-04-28 11:07 CALL reverse_rug+std2.5 @665 (pika) stop 660 T1 675 T2 690 rr 5   META260501C00665000 in $25.8 → stop(close)@04-30 $0.15  =  -99%
+  2026-05-28 12:04 CALL floor+std3.5 @630 (king) stop 625 T1 640 T2 642.5 rr 2.5   META260605C00630000 in $13.8 → stop(close)@06-01 $3.44  =  -75%
+  2026-06-04 12:40 CALL floor+std2.5 @630 (gatekeeper) stop 627.5 T1 635 T2 650 rr 8   META260612C00630000 in $14.78 → stop(close)@06-04 $11.6  =  -22%
+
+credits used 270

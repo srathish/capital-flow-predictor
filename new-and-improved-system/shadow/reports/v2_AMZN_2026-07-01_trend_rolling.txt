@@ -1,0 +1,22 @@
+
+=========== AMZN weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_rolling ===========
+AMZN itself: 241.60 → 251.41 (4.1%)
+ALL trades                 n= 4  win  25%  @$1k/trade mid -$989  worst -$1138  avg -25%  SQN -1.14
+  chart-aligned only       n= 4  win  25%  @$1k/trade mid -$989  worst -$1138  avg -25%  SQN -1.14
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 3  win  33%  @$1k/trade mid -$508  worst -$594  avg -17%  SQN -0.59
+  rug                      n= 0
+  ceiling                  n= 1  win   0%  @$1k/trade mid -$481  worst -$544  avg -48%  SQN 0.00
+  longs                    n= 3  win  33%  @$1k/trade mid -$508  worst -$594  avg -17%  SQN -0.59
+  shorts                   n= 1  win   0%  @$1k/trade mid -$481  worst -$544  avg -48%  SQN 0.00
+
+day outcomes: no fill 40 · no setup in reach 7 · FILLED floor up 3 · in position 3 · no board 4 · FILLED ceiling down 1
+
+-- every trade --
+  2026-07-15 09:45 CALL floor       @250 (king) stop 247.5 T1 252.5 T2 255 rr 2   AMZN260717C00250000 in $3.95 → T1@07-15 $4.55 · T2@07-15 $6.31  =  38%
+  2026-07-21 09:38 CALL floor       @247.5 (barney) stop 246.5 T1 252.5 T2 255 rr 7.5   AMZN260722C00247500 in $2.7 → time@07-21 $1.92  =  -29%
+  2026-08-07 10:08 CALL floor       @275 (king) stop 272.5 T1 282.5 T2 null rr 3   AMZN260814C00275000 in $4.75 → stop(close)@08-11 $1.93  =  -59%
+  2026-09-29 09:36 PUT  ceiling     @247.5 (king) stop 248.5 T1 245 T2 240 rr 7.5   AMZN261002P00247500 in $3.2 → stop(close)@09-30 $1.66  =  -48%
+
+credits used 45

@@ -1,0 +1,22 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=v2 ===========
+AMZN itself: 206.66 → 238.25 (15.3%)
+ALL trades                 n= 4  win  50%  @$1k/trade mid +$1525  worst +$1139  avg 38%  SQN 1.07
+  chart-aligned only       n= 4  win  50%  @$1k/trade mid +$1525  worst +$1139  avg 38%  SQN 1.07
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 4  win  50%  @$1k/trade mid +$1525  worst +$1139  avg 38%  SQN 1.07
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  50%  @$1k/trade mid +$1525  worst +$1139  avg 38%  SQN 1.07
+  shorts                   n= 0
+
+day outcomes: no fill 32 · no board 5 · no setup in reach 5 · FILLED floor up 4 · earnings blackout 3 · in position 6
+
+-- every trade --
+  2026-04-21 14:51 CALL floor       @250 (king) stop 247.5 T1 257.5 T2 260 rr 4   AMZN260422C00250000 in $2.2 → time@04-21 $1.96  =  -11%
+  2026-04-30 09:35 CALL floor       @265 (pika) stop 262.5 T1 270 T2 null rr 2   AMZN260508C00265000 in $6 → T1@05-01 $7.73 · time@05-06 $10.55  =  52%
+  2026-05-11 14:19 CALL floor       @270 (barney) stop 269 T1 272.5 T2 275 rr 5   AMZN260515C00270000 in $3.9 → stop(close)@05-11 $3.05  =  -22%
+  2026-05-26 10:30 CALL floor       @265 (gatekeeper) stop 264 T1 270 T2 275 rr 10   AMZN260529C00265000 in $3.31 → T1@05-27 $6.27 · time@05-28 $9.15  =  133%
+
+credits used 15

@@ -1,0 +1,19 @@
+
+=========== AAPL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=trend_vex ===========
+AAPL itself: 294.08 → 333.77 (13.5%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$215  worst +$126  avg 22%  SQN 0.00
+  chart-aligned only       n= 1  win 100%  @$1k/trade mid +$215  worst +$126  avg 22%  SQN 0.00
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 1  win 100%  @$1k/trade mid +$215  worst +$126  avg 22%  SQN 0.00
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$215  worst +$126  avg 22%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 43 · no setup in reach 8 · no board 4 · FILLED floor up 1 · in position 2
+
+-- every trade --
+  2026-09-29 15:05 CALL floor       @330 (king) stop 327.5 T1 335 T2 342.5 rr 5   AAPL261002C00330000 in $3.65 → T1@09-30 $6.4 · breakeven@10-01 $2.47  =  22%
+
+credits used 220

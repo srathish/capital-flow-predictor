@@ -1,0 +1,19 @@
+
+=========== AVGO weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence ===========
+AVGO itself: 304.67 → 377.14 (23.8%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$263  worst -$300  avg -26%  SQN 0.00
+  chart-aligned only       n= 1  win   0%  @$1k/trade mid -$263  worst -$300  avg -26%  SQN 0.00
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$263  worst -$300  avg -26%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 37 · no setup in reach 11 · no option print at fill 2 · FILLED reverse_rug+std2.25 up 1 · no board 4
+
+-- every trade --
+  2026-06-09 10:10 CALL reverse_rug+std2.25 @395 (gatekeeper) stop 394 T1 400 T2 402.5 rr 7.5   AVGO260612C00395000 in $9.7 → stop(close)@06-09 $7.15  =  -26%
+
+credits used 0

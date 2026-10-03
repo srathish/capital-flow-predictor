@@ -1,0 +1,25 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=trend_vex ===========
+AMZN itself: 206.66 → 238.25 (15.3%)
+ALL trades                 n= 7  win  57%  @$1k/trade mid +$2955  worst +$2090  avg 42%  SQN 1.55
+  chart-aligned only       n= 7  win  57%  @$1k/trade mid +$2955  worst +$2090  avg 42%  SQN 1.55
+  against chart            n= 0
+  reverse_rug              n= 1  win 100%  @$1k/trade mid +$1060  worst +$952  avg 106%  SQN 0.00
+  floor                    n= 6  win  50%  @$1k/trade mid +$1895  worst +$1138  avg 32%  SQN 1.06
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  57%  @$1k/trade mid +$2955  worst +$2090  avg 42%  SQN 1.55
+  shorts                   n= 0
+
+day outcomes: no fill 30 · no board 5 · no setup in reach 5 · FILLED floor up 6 · in position 8 · FILLED reverse_rug up 1
+
+-- every trade --
+  2026-04-20 09:38 CALL floor       @247.5 (gatekeeper) stop 246.5 T1 250 T2 252.5 rr 5   AMZN260422C00247500 in $3.47 → T1@04-21 $6.79 · T2@04-21 $6.79  =  96%
+  2026-04-30 09:35 CALL floor       @265 (pika) stop 262.5 T1 270 T2 null rr 2   AMZN260508C00265000 in $6 → T1@05-01 $7.73 · time@05-06 $10.55  =  52%
+  2026-05-07 10:15 CALL floor       @272.5 (gatekeeper) stop 271.5 T1 275 T2 280 rr 7.5   AMZN260515C00272500 in $5.4 → stop(close)@05-07 $3.85  =  -29%
+  2026-05-11 14:19 CALL floor       @270 (barney) stop 269 T1 272.5 T2 275 rr 5   AMZN260515C00270000 in $3.9 → stop(close)@05-11 $3.05  =  -22%
+  2026-05-12 12:31 CALL reverse_rug @262.5 (pika) stop 260 T1 267.5 T2 270 rr 3   AMZN260515C00262500 in $3.5 → T1@05-13 $6.22 · T2@05-13 $8.2  =  106%
+  2026-05-26 10:30 CALL floor       @265 (gatekeeper) stop 264 T1 270 T2 275 rr 10   AMZN260529C00265000 in $3.31 → T1@05-27 $6.27 · time@05-28 $9.15  =  133%
+  2026-06-01 09:37 CALL floor       @265 (gatekeeper) stop 262.5 T1 267.5 T2 270 rr 2   AMZN260605C00265000 in $4.33 → stop(close)@06-01 $2.56  =  -41%
+
+credits used 216

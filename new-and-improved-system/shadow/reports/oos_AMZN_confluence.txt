@@ -1,0 +1,24 @@
+
+=========== AMZN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence ===========
+AMZN itself: 206.66 → 238.25 (15.3%)
+ALL trades                 n= 6  win  67%  @$1k/trade mid +$2985  worst +$2254  avg 50%  SQN 1.88
+  chart-aligned only       n= 5  win  80%  @$1k/trade mid +$3209  worst +$2478  avg 64%  SQN 2.35
+  against chart            n= 1  win   0%  @$1k/trade mid -$224  worst -$224  avg -22%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  75%  @$1k/trade mid +$1896  worst +$1374  avg 47%  SQN 1.71
+  shorts                   n= 2  win  50%  @$1k/trade mid +$1089  worst +$880  avg 54%  SQN 0.71
+
+day outcomes: no fill 36 · FILLED rug+std2.25 down 1 · FILLED floor+std2.25 up 1 · in position 4 · no setup in reach 6 · FILLED reverse_rug+std2.5 up 1 · FILLED floor+std2 up 1 · FILLED floor+std2.5 up 1 · FILLED ceiling+std2 down 1 · no board 3
+
+-- every trade --
+  2026-04-07 13:32 PUT  rug+std2.25 @212.5 (gatekeeper) stop 213.5 T1 210 T2 207.5 rr 5 [vs chart]  AMZN260410P00212500 in $3.3 → stop(close)@04-07 $2.56  =  -22%
+  2026-04-08 15:22 CALL floor+std2.25 @220 (king) stop 219 T1 222.5 T2 225 rr 5   AMZN260410C00220000 in $2.47 → T1@04-09 $5.11 · T2@04-09 $5.11  =  107%
+  2026-05-06 11:34 CALL reverse_rug+std2.5 @272.5 (king) stop 270 T1 275 T2 277.5 rr 2   AMZN260508C00272500 in $3 → T1@05-06 $4.22 · T2@05-06 $6.05  =  71%
+  2026-05-07 10:30 CALL floor+std2  @272.5 (gatekeeper) stop 271.5 T1 275 T2 280 rr 7.5   AMZN260515C00272500 in $5 → stop(close)@05-07 $3.85  =  -23%
+  2026-06-08 13:01 CALL floor+std2.5 @245 (gatekeeper) stop 244 T1 247.5 T2 250 rr 5   AMZN260612C00245000 in $4.19 → T1@06-09 $4.5 · T2@06-09 $6.77  =  35%
+  2026-06-23 13:49 PUT  ceiling+std2 @235 (king) stop 236 T1 230 T2 null rr 5   AMZN260626P00235000 in $3.35 → T1@06-25 $6.75 · time@06-25 $8.75  =  131%
+
+credits used 2

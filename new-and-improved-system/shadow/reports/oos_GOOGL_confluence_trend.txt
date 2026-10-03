@@ -1,0 +1,21 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence_trend ===========
+GOOGL itself: 290.81 → 357.22 (22.8%)
+ALL trades                 n= 3  win  67%  @$1k/trade mid +$884  worst +$501  avg 29%  SQN 0.78
+  chart-aligned only       n= 3  win  67%  @$1k/trade mid +$884  worst +$501  avg 29%  SQN 0.78
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  67%  @$1k/trade mid +$884  worst +$501  avg 29%  SQN 0.78
+  shorts                   n= 0
+
+day outcomes: no fill 37 · FILLED floor+std2.5 up 2 · in position 3 · no setup in reach 8 · FILLED floor+std2.25 up 1 · no board 4
+
+-- every trade --
+  2026-04-08 13:33 CALL floor+std2.5 @317.5 (king) stop 315 T1 320 T2 322.5 rr 2   GOOGL260410C00317500 in $3.5 → time@04-09 $2.65  =  -24%
+  2026-05-05 13:18 CALL floor+std2.25 @385 (king) stop 384 T1 390 T2 392.5 rr 7.5   GOOGL260508C00385000 in $4.8 → T1@05-06 $9.7 · T2@05-06 $9.7  =  102%
+  2026-06-16 12:52 CALL floor+std2.5 @370 (gatekeeper) stop 367.5 T1 372.5 T2 375 rr 2   GOOGL260618C00370000 in $4.25 → T1@06-16 $5.45 · breakeven@06-17 $3.95  =  11%
+
+credits used 283

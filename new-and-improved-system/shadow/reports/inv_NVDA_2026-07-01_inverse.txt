@@ -1,0 +1,25 @@
+
+=========== NVDA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=inverse ===========
+NVDA itself: 197.12 → 233.97 (18.7%)
+ALL trades                 n= 7  win  29%  @$1k/trade mid -$759  worst -$1136  avg -11%  SQN -0.58
+  chart-aligned only       n= 3  win  33%  @$1k/trade mid -$447  worst -$571  avg -15%  SQN -0.53
+  against chart            n= 4  win  25%  @$1k/trade mid -$312  worst -$565  avg -8%  SQN -0.27
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 6  win  33%  @$1k/trade mid -$187  worst -$541  avg -3%  SQN -0.15
+  shorts                   n= 1  win   0%  @$1k/trade mid -$572  worst -$595  avg -57%  SQN 0.00
+
+day outcomes: no fill 37 · no setup in reach 7 · FILLED inverse_ceiling up 6 · in position 3 · no board 4 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-07-13 09:35 CALL inverse_ceiling @210 (gatekeeper) stop 209 T1 212.5 T2 215 rr 5 [vs chart]  NVDA260717C00210000 in $4.31 → stop(close)@07-13 $1.31  =  -70%
+  2026-07-21 09:36 CALL inverse_ceiling @207.5 (king) stop 206.5 T1 210 T2 212.5 rr 5 [vs chart]  NVDA260722C00207500 in $1.74 → time@07-21 $1.48  =  -15%
+  2026-07-31 09:35 CALL inverse_ceiling @200 (king) stop 199 T1 202.5 T2 205 rr 5   NVDA260807C00200000 in $4.57 → T1@08-03 $5.39 · T2@08-03 $7.22  =  38%
+  2026-09-16 09:48 CALL inverse_ceiling @215 (king) stop 214 T1 217.5 T2 220 rr 5   NVDA260918C00215000 in $2.55 → stop(close)@09-16 $1.9  =  -26%
+  2026-09-18 09:41 CALL inverse_ceiling @220 (king) stop 219 T1 222.5 T2 225 rr 5 [vs chart]  NVDA260925C00220000 in $3.35 → T1@09-18 $5.04 · T2@09-21 $6.3  =  69%
+  2026-09-22 13:02 CALL inverse_ceiling @230 (king) stop 229 T1 232.5 T2 235 rr 5 [vs chart]  NVDA260925C00230000 in $2.56 → stop(close)@09-22 $2.15  =  -16%
+  2026-10-01 09:35 PUT  inverse_floor @230 (gatekeeper) stop 231 T1 227.5 T2 225 rr 5   NVDA261009P00230000 in $4.14 → stop(close)@10-02 $1.77  =  -57%
+
+credits used 15

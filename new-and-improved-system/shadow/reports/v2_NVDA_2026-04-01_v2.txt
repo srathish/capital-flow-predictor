@@ -1,0 +1,25 @@
+
+=========== NVDA weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=v2 ===========
+NVDA itself: 172.17 → 199.69 (16.0%)
+ALL trades                 n= 7  win  71%  @$1k/trade mid +$1797  worst +$1031  avg 26%  SQN 0.97
+  chart-aligned only       n= 7  win  71%  @$1k/trade mid +$1797  worst +$1031  avg 26%  SQN 0.97
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 7  win  71%  @$1k/trade mid +$1797  worst +$1031  avg 26%  SQN 0.97
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  71%  @$1k/trade mid +$1797  worst +$1031  avg 26%  SQN 0.97
+  shorts                   n= 0
+
+day outcomes: no setup in reach 10 · no fill 32 · FILLED floor up 7 · in position 2 · no board 4
+
+-- every trade --
+  2026-04-10 09:36 CALL floor       @185 (gatekeeper) stop 184 T1 187.5 T2 190 rr 5   NVDA260417C00185000 in $3.42 → T1@04-10 $4.86 · T2@04-10 $6.6  =  68%
+  2026-04-22 09:38 CALL floor       @200 (gatekeeper) stop 199 T1 202.5 T2 205 rr 5   NVDA260422C00200000 in $1.19 → time@04-22 $2.49  =  109%
+  2026-04-27 09:41 CALL floor       @210 (king) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $4.72 → T1@04-27 $6.04 · T2@04-27 $7.75  =  46%
+  2026-04-28 09:35 CALL floor       @210 (king) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $4.65 → T1@04-28 $5.9 · breakeven@04-28 $4.05  =  7%
+  2026-04-29 09:46 CALL floor       @210 (gatekeeper) stop 209 T1 212.5 T2 215 rr 5   NVDA260501C00210000 in $3.91 → stop(close)@04-30 $0.14  =  -96%
+  2026-05-05 10:13 CALL floor       @197.5 (gatekeeper) stop 196.5 T1 200 T2 202.5 rr 5   NVDA260508C00197500 in $3.43 → stop(close)@05-05 $2.54  =  -26%
+  2026-05-12 09:37 CALL floor       @220 (gatekeeper) stop 219 T1 225 T2 227.5 rr 7.5   NVDA260515C00220000 in $4.57 → T1@05-13 $7.04 · T2@05-13 $8.7  =  72%
+
+credits used 5

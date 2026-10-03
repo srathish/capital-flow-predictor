@@ -1,0 +1,21 @@
+
+=========== AMD weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 55 trading days · criteria=confluence ===========
+AMD itself: 204.07 → 580.44 (184.4%)
+ALL trades                 n= 3  win  67%  @$1k/trade mid +$34  worst -$11  avg 1%  SQN 0.05
+  chart-aligned only       n= 2  win  50%  @$1k/trade mid -$199  worst -$233  avg -10%  SQN -0.30
+  against chart            n= 1  win 100%  @$1k/trade mid +$233  worst +$222  avg 23%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win 100%  @$1k/trade mid +$234  worst +$200  avg 23%  SQN 0.00
+  shorts                   n= 2  win  50%  @$1k/trade mid -$200  worst -$211  avg -10%  SQN -0.30
+
+day outcomes: no fill 29 · no setup in reach 13 · no board 9 · FILLED floor+std2 up 1 · FILLED ceiling+std3.5 down 2 · in position 1
+
+-- every trade --
+  2026-05-01 10:36 CALL floor+std2  @350 (gatekeeper) stop 347.5 T1 355 T2 360 rr 4   AMD260508C00350000 in $17 → T1@05-01 $19.51 · T2@05-01 $22.45  =  23%
+  2026-06-11 13:29 PUT  ceiling+std3.5 @470 (king) stop 471 T1 460 T2 455 rr 15   AMD260618P00470000 in $22 → stop(close)@06-11 $12.47  =  -43%
+  2026-06-23 12:01 PUT  ceiling+std3.5 @525 (gatekeeper) stop 527.5 T1 517.5 T2 510 rr 6 [vs chart]  AMD260626P00525000 in $17.8 → T1@06-23 $20.55 · T2@06-24 $23.34  =  23%
+
+credits used 0
