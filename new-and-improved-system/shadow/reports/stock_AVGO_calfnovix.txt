@@ -1,0 +1,32 @@
+
+=========== AVGO weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+AVGO itself: 365.87 → 355.14 (-2.9%)
+ALL trades                 n=14  win  21%  @$1k/trade mid -$3178  worst -$3730  avg -23%  SQN -1.37
+  chart-aligned only       n=14  win  21%  @$1k/trade mid -$3178  worst -$3730  avg -23%  SQN -1.37
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  27%  @$1k/trade mid -$2400  worst -$2934  avg -22%  SQN -1.06
+  shorts                   n= 3  win   0%  @$1k/trade mid -$778  worst -$796  avg -26%  SQN -1.26
+
+day outcomes: no fill 26 · no option print at fill 1 · FILLED std2_king up 1 · in position 13 · FILLED std2_pika down 1 · no contract data 1 · FILLED std3.5_gatekeeper up 1 · FILLED std3.5_pika up 1 · FILLED std2.25_king up 1 · FILLED std2.5_normal down 1 · FILLED std4_gatekeeper down 1 · FILLED std2.25_pika up 2 · no board 3 · FILLED std2_gatekeeper up 2 · FILLED std2.5_king up 1 · FILLED std3.5_barney up 1 · FILLED std2.5_pika up 1
+
+-- every trade --
+  2026-07-09 12:23 CALL std2_king   @400 (king) stop 397.5 T1 410 T2 null rr 4   AVGO260717C00400000 in $12.85 → stop(close)@07-13 $3.28  =  -75%
+  2026-07-20 15:01 PUT  std2_pika   @380 (pika) stop 381 T1 372.5 T2 null rr 7.5   AVGO260722P00380000 in $7.05 → stop(close)@07-21 $2.31  =  -67%
+  2026-08-11 13:11 CALL std3.5_gatekeeper @417.5 (gatekeeper) stop 416.5 T1 425 T2 430 rr 12.5   AVGO260814C00420000 in $6.1 → stop(close)@08-11 $5.03  =  -18%
+  2026-08-12 10:31 CALL std3.5_pika @420 (pika) stop 417.5 T1 425 T2 430 rr 4   AVGO260814C00420000 in $6.6 → stop(close)@08-12 $3.75  =  -43%
+  2026-08-24 12:55 CALL std2.25_king @360 (king) stop 359 T1 365 T2 370 rr 10   AVGO260828C00360000 in $7.5 → stop(close)@08-24 $6.42  =  -14%
+  2026-08-26 14:40 PUT  std2.5_normal @355 (normal) stop 357.5 T1 357.5 T2 350 rr 2   AVGO260828P00355000 in $5.6 → T1@08-26 $5.6 · breakeven@08-26 $5.1  =  -5%
+  2026-08-27 12:03 PUT  std4_gatekeeper @370 (gatekeeper) stop 371 T1 365 T2 360 rr 10   AVGO260904P00370000 in $16.2 → stop(close)@08-27 $15.21  =  -6%
+  2026-08-31 10:26 CALL std2.25_pika @367.5 (pika) stop 366.5 T1 375 T2 380 rr 12.5   AVGO260904C00367500 in $15 → stop(close)@09-03 $1  =  -93%
+  2026-09-14 15:18 CALL std2_gatekeeper @345 (gatekeeper) stop 344 T1 350 T2 352.5 rr 7.5   AVGO260918C00345000 in $6.15 → stop(close)@09-15 $2.7  =  -56%
+  2026-09-16 13:21 CALL std2.5_king @340 (king) stop 339 T1 345 T2 347.5 rr 7.5   AVGO260918C00340000 in $4.65 → T1@09-17 $7.57 · T2@09-17 $8.36  =  71%
+  2026-09-18 11:40 CALL std3.5_barney @355 (barney) stop 354 T1 360 T2 365 rr 10   AVGO260925C00355000 in $6.44 → T1@09-21 $8.45 · T2@09-22 $11.7  =  56%
+  2026-09-23 12:29 CALL std2_gatekeeper @355 (gatekeeper) stop 354 T1 360 T2 362.5 rr 7.5   AVGO260925C00355000 in $4.2 → stop(close)@09-24 $0.9  =  -79%
+  2026-09-28 10:12 CALL std2.25_pika @350 (pika) stop 347.5 T1 355 T2 360 rr 4   AVGO261002C00350000 in $6.05 → T1@09-29 $11.13 · T2@09-29 $13.05  =  100%
+  2026-09-30 11:14 CALL std2.5_pika @352.5 (pika) stop 350 T1 357.5 T2 360 rr 3   AVGO261002C00352500 in $4.75 → stop(close)@10-01 $0.48  =  -90%
+
+credits used 0

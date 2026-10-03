@@ -21,7 +21,9 @@ import { majorNodes } from '../map/board.js';
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : d; };
 const SYM = arg('symbol', 'MSFT'), FROM = arg('from'), TO = arg('to');
 const VAR = arg('criteria', 'current');
-const CRIT = { current: {}, vix: { vixFilter: true }, std: { stdConfluence: true }, confluence: { stdConfluence: true, vixFilter: true }, calf: { calf: true, vixFilter: true }, calfnovix: { calf: true } }[VAR];
+const CRIT = { current: {}, vix: { vixFilter: true }, std: { stdConfluence: true }, confluence: { stdConfluence: true, vixFilter: true }, calf: { calf: true, vixFilter: true }, calfnovix: { calf: true },
+  // PRE-REGISTERED 2026-10-02 from the Jul–Sep 10-stock run, to be judged OUT-OF-SAMPLE on Apr–Jun: node setup + std-dev projection on the node + VIX side + WITH the daily trend
+  confluence_trend: { stdConfluence: true, vixFilter: true, trendOnly: true } }[VAR];
 if (!CRIT) { console.error(`unknown --criteria ${VAR}`); process.exit(1); }
 const REACH = 0.015, ZONE_PCT = 0.0015, MIN_RR = 2, MAX_DAYS = 5;
 const HERE = decodeURIComponent(new URL('.', import.meta.url).pathname);
@@ -131,6 +133,7 @@ for (let di = 0; di < tradeDays.length; di++) {
         const al = pr.filter((l) => l.fade === direction); if (!al.length) { gate.std++; continue; }
         setup = `${setup}+std${al[0].k}`;
       }
+      if (CRIT.trendOnly && !((direction === 'up' && chart === 'up') || (direction === 'down' && chart === 'down'))) { gate.trend = (gate.trend || 0) + 1; continue; }
       if (CRIT.vixFilter) { const s = vixSide(vixMin, vp, b.t); if (direction === 'up' ? s !== 'below' : s !== 'above') { gate.vix++; continue; } }
       fill = { ...c, direction, plan, setup, t: b.t }; break;
     }

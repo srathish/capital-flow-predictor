@@ -1,0 +1,26 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n= 8  win  50%  @$1k/trade mid +$471  worst +$285  avg 6%  SQN 0.34
+  chart-aligned only       n= 7  win  57%  @$1k/trade mid +$832  worst +$672  avg 12%  SQN 0.64
+  against chart            n= 1  win   0%  @$1k/trade mid -$361  worst -$387  avg -36%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  50%  @$1k/trade mid -$343  worst -$442  avg -9%  SQN -0.56
+  shorts                   n= 4  win  50%  @$1k/trade mid +$814  worst +$727  avg 20%  SQN 0.65
+
+day outcomes: no fill 33 · no setup in reach 7 · no contract data 1 · FILLED ceiling+std2 down 1 · in position 5 · FILLED ceiling+std4.5 down 2 · FILLED reverse_rug+std2.5 up 1 · FILLED floor+std4 up 1 · no board 4 · FILLED ceiling+std2.5 down 1 · FILLED floor+std2.5 up 2
+
+-- every trade --
+  2026-07-27 11:06 PUT  ceiling+std2 @607.5 (barney) stop 610 T1 602.5 T2 592.5 rr 6   META260731P00607500 in $25.5 → T1@07-27 $27.14 · T2@07-28 $28.54  =  9%
+  2026-07-29 12:30 PUT  ceiling+std4.5 @592.5 (gatekeeper) stop 593.5 T1 590 T2 587.5 rr 5   META260731P00592500 in $24 → T1@07-29 $24 · breakeven@07-29 $23  =  -2%
+  2026-08-05 10:52 CALL reverse_rug+std2.5 @590 (gatekeeper) stop 587.5 T1 600 T2 610 rr 8   META260807C00590000 in $8.88 → time@08-06 $5.3  =  -40%
+  2026-08-07 14:44 CALL floor+std4  @590 (king) stop 589 T1 595 T2 600 rr 10   META260814C00590000 in $11.97 → T1@08-07 $13.43 · T2@08-10 $15.8  =  22%
+  2026-08-31 15:00 PUT  ceiling+std4.5 @575 (gatekeeper) stop 577.5 T1 570 T2 567.5 rr 3   META260904P00575000 in $9.15 → T1@09-01 $19.25 · T2@09-01 $19.25  =  110%
+  2026-09-15 11:04 PUT  ceiling+std2.5 @670 (gatekeeper) stop 672.5 T1 660 T2 650 rr 8 [vs chart]  META260918P00670000 in $11.5 → stop(close)@09-16 $7.35  =  -36%
+  2026-09-18 11:13 CALL floor+std2.5 @675 (pika) stop 670 T1 685 T2 687.5 rr 2.5   META260925C00675000 in $14.65 → stop(close)@09-18 $10.51  =  -28%
+  2026-09-23 13:28 CALL floor+std2.5 @745 (gatekeeper) stop 742.5 T1 747.5 T2 750 rr 2   META260925C00745000 in $16.7 → T1@09-23 $18.19 · T2@09-23 $19.3  =  12%
+
+credits used 15

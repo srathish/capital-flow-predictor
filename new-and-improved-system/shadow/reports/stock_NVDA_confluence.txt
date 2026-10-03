@@ -1,0 +1,24 @@
+
+=========== NVDA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+NVDA itself: 197.12 → 233.97 (18.7%)
+ALL trades                 n= 6  win  50%  @$1k/trade mid +$437  worst -$171  avg 7%  SQN 0.22
+  chart-aligned only       n= 4  win  75%  @$1k/trade mid +$1765  worst +$1201  avg 44%  SQN 1.19
+  against chart            n= 2  win   0%  @$1k/trade mid -$1328  worst -$1372  avg -66%  SQN -10.71
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 4  win  75%  @$1k/trade mid +$1765  worst +$1201  avg 44%  SQN 1.19
+  shorts                   n= 2  win   0%  @$1k/trade mid -$1328  worst -$1372  avg -66%  SQN -10.71
+
+day outcomes: no fill 37 · no setup in reach 7 · FILLED rug+std2 down 1 · FILLED floor+std2 up 2 · FILLED floor+std2.5 up 1 · in position 4 · FILLED rug+std2.5 down 1 · no board 4 · FILLED floor+std3.5 up 1
+
+-- every trade --
+  2026-07-08 12:20 PUT  rug+std2    @200 (king) stop 201 T1 192.5 T2 null rr 7.5 [vs chart]  NVDA260710P00200000 in $2.89 → stop(close)@07-08 $1.15  =  -60%
+  2026-07-21 13:07 CALL floor+std2  @205 (gatekeeper) stop 204 T1 207.5 T2 210 rr 5   NVDA260722C00205000 in $2.16 → T1@07-21 $3.2 · time@07-21 $2.94  =  42%
+  2026-08-26 13:52 CALL floor+std2.5 @210 (normal) stop 209 T1 212.5 T2 215 rr 5   NVDA260828C00210000 in $6.35 → T1@08-27 $14.03 · T2@08-27 $14.03  =  121%
+  2026-08-31 13:44 PUT  rug+std2.5  @220 (gatekeeper) stop 221 T1 215 T2 212.5 rr 7.5 [vs chart]  NVDA260904P00220000 in $3.25 → stop(close)@09-02 $0.89  =  -73%
+  2026-09-21 10:05 CALL floor+std2  @222.5 (king) stop 221.5 T1 225 T2 227.5 rr 5   NVDA260925C00222500 in $3.28 → T1@09-21 $4.55 · T2@09-21 $6.55  =  69%
+  2026-09-22 10:41 CALL floor+std3.5 @227.5 (gatekeeper) stop 226.5 T1 230 T2 232.5 rr 5   NVDA260925C00227500 in $3 → stop(close)@09-23 $1.33  =  -56%
+
+credits used 10

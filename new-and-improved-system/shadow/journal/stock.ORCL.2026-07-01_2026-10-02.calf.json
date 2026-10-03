@@ -1,0 +1,940 @@
+{
+ "plans": [
+  {
+   "D": "2026-07-02",
+   "exp": "2026-07-10",
+   "spot": 145.745,
+   "king": 145,
+   "floor": 145,
+   "ceiling": 146,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?",
+    "calf@146 ?",
+    "calf@147 ?"
+   ],
+   "status": "no fill (blocked: std 57, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-06",
+   "exp": "2026-07-10",
+   "spot": 143.33499999999998,
+   "king": 145,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?",
+    "calf@143 ?"
+   ],
+   "status": "FILLED std4_barney up"
+  },
+  {
+   "D": "2026-07-07",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-08",
+   "exp": "2026-07-10",
+   "spot": 140.27499999999998,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 143,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@140 ?",
+    "calf@141 ?",
+    "calf@142 ?",
+    "calf@139 ?"
+   ],
+   "status": "no fill (blocked: std 98, vix 8, rr 17)"
+  },
+  {
+   "D": "2026-07-09",
+   "exp": "2026-07-17",
+   "spot": 144.175,
+   "king": 145,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 59, vix 0, rr 8)"
+  },
+  {
+   "D": "2026-07-10",
+   "exp": "2026-07-17",
+   "spot": 143.25,
+   "king": 145,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@145 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 25, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-13",
+   "exp": "2026-07-17",
+   "spot": 138.3,
+   "king": 140,
+   "floor": 135,
+   "ceiling": 140,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@140 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-14",
+   "exp": "2026-07-17",
+   "spot": 130.685,
+   "king": 130,
+   "floor": 130,
+   "ceiling": 133,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@130 ?"
+   ],
+   "status": "no fill (blocked: std 75, vix 0, rr 8)"
+  },
+  {
+   "D": "2026-07-15",
+   "exp": "2026-07-17",
+   "spot": 131.59,
+   "king": 130,
+   "floor": 130,
+   "ceiling": 135,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@130 ?",
+    "calf@131 ?",
+    "calf@133 ?",
+    "calf@132 ?"
+   ],
+   "status": "FILLED std2_barney up"
+  },
+  {
+   "D": "2026-07-16",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-17",
+   "exp": "2026-07-22",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-07-17, 2026-07-24, )"
+  },
+  {
+   "D": "2026-07-20",
+   "exp": "2026-07-22",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-07-24, 2026-07-31, )"
+  },
+  {
+   "D": "2026-07-21",
+   "exp": "2026-07-22",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-07-24, 2026-07-31, )"
+  },
+  {
+   "D": "2026-07-22",
+   "exp": "2026-07-22",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-07-24, 2026-07-31, )"
+  },
+  {
+   "D": "2026-07-27",
+   "exp": "2026-07-31",
+   "spot": 118.065,
+   "king": 120,
+   "floor": 115,
+   "ceiling": 120,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@118 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-28",
+   "exp": "2026-07-31",
+   "spot": 116.37,
+   "king": 115,
+   "floor": 115,
+   "ceiling": 118,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@115 ?",
+    "calf@118 ?"
+   ],
+   "status": "no fill (blocked: std 29, vix 5, rr 0)"
+  },
+  {
+   "D": "2026-07-29",
+   "exp": "2026-07-31",
+   "spot": 119.305,
+   "king": 120,
+   "floor": 117,
+   "ceiling": 120,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "calf@120 ?",
+    "calf@119 ?",
+    "calf@118 ?"
+   ],
+   "status": "FILLED std3.5_king down"
+  },
+  {
+   "D": "2026-07-30",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-31",
+   "exp": "2026-08-07",
+   "spot": 131.675,
+   "king": 130,
+   "floor": 130,
+   "ceiling": 135,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@130 ?"
+   ],
+   "status": "no fill (blocked: std 13, vix 0, rr 7)"
+  },
+  {
+   "D": "2026-08-03",
+   "exp": "2026-08-07",
+   "spot": 132.73000000000002,
+   "king": 130,
+   "floor": 130,
+   "ceiling": 135,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@132 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-04",
+   "exp": "2026-08-07",
+   "spot": 142.76,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@142 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 17, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-05",
+   "exp": "2026-08-07",
+   "spot": 143.255,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?",
+    "calf@142 ?",
+    "calf@143 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  },
+  {
+   "D": "2026-08-06",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-07",
+   "exp": "2026-08-14",
+   "spot": 146.36,
+   "king": 150,
+   "floor": 145,
+   "ceiling": 150,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?"
+   ],
+   "status": "no fill (blocked: std 143, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-10",
+   "exp": "2026-08-14",
+   "spot": 147.41,
+   "king": 150,
+   "floor": 145,
+   "ceiling": 150,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@149 ?"
+   ],
+   "status": "no fill (blocked: std 31, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-11",
+   "exp": "2026-08-14",
+   "spot": 148.57999999999998,
+   "king": 150,
+   "floor": 145,
+   "ceiling": 150,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@150 ?",
+    "calf@149 ?"
+   ],
+   "status": "no fill (blocked: std 1, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-12",
+   "exp": "2026-08-14",
+   "spot": 151.9,
+   "king": 150,
+   "floor": 150,
+   "ceiling": 155,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@150 ?",
+    "calf@152.5 ?"
+   ],
+   "status": "FILLED std3.5_barney up"
+  },
+  {
+   "D": "2026-08-13",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-14",
+   "exp": "2026-08-21",
+   "spot": 154.57999999999998,
+   "king": 150,
+   "floor": 150,
+   "ceiling": 155,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@155 ?"
+   ],
+   "status": "no fill (blocked: std 6, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-21",
+   "exp": "2026-08-28",
+   "spot": 146.67000000000002,
+   "king": 145,
+   "floor": 145,
+   "ceiling": 150,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@145 ?",
+    "calf@146 ?"
+   ],
+   "status": "FILLED std2.5_barney up"
+  },
+  {
+   "D": "2026-08-24",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-25",
+   "exp": "2026-08-28",
+   "spot": 144.805,
+   "king": 148,
+   "floor": 142,
+   "ceiling": 148,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@145 ?",
+    "calf@146 ?",
+    "calf@143 ?"
+   ],
+   "status": "FILLED std2.25_barney up"
+  },
+  {
+   "D": "2026-08-26",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-27",
+   "exp": "2026-09-04",
+   "spot": 151.545,
+   "king": 155,
+   "floor": 148,
+   "ceiling": 155,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@150 ?",
+    "calf@152.5 ?"
+   ],
+   "status": "no fill (blocked: std 60, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-28",
+   "exp": "2026-09-04",
+   "spot": 152.9,
+   "king": 150,
+   "floor": 150,
+   "ceiling": 155,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@152.5 ?",
+    "calf@155 ?"
+   ],
+   "status": "no fill (blocked: std 57, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-31",
+   "exp": "2026-09-04",
+   "spot": 149.5,
+   "king": 150,
+   "floor": 148,
+   "ceiling": 150,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@150 ?",
+    "calf@148 ?"
+   ],
+   "status": "FILLED std2.25_gatekeeper down"
+  },
+  {
+   "D": "2026-09-01",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-02",
+   "exp": "2026-09-04",
+   "spot": 142.76,
+   "king": 145,
+   "floor": 139,
+   "ceiling": 145,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@144 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 55, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-03",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-09-04, 2026-09-11, )"
+  },
+  {
+   "D": "2026-09-04",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-09-04, 2026-09-11, )"
+  },
+  {
+   "D": "2026-09-08",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-09-11, 2026-09-18, )"
+  },
+  {
+   "D": "2026-09-09",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for ORCL. Available: 2026-09-11, 2026-09-18, )"
+  },
+  {
+   "D": "2026-09-10",
+   "exp": "2026-09-18",
+   "spot": 156.51,
+   "king": 160,
+   "floor": 155,
+   "ceiling": 160,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@155 ?"
+   ],
+   "status": "no fill (blocked: std 46, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-14",
+   "exp": "2026-09-18",
+   "spot": 143.04000000000002,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@145 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 36, vix 5, rr 0)"
+  },
+  {
+   "D": "2026-09-15",
+   "exp": "2026-09-18",
+   "spot": 143.47,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@145 ?",
+    "calf@143 ?"
+   ],
+   "status": "no fill (blocked: std 121, vix 6, rr 0)"
+  },
+  {
+   "D": "2026-09-16",
+   "exp": "2026-09-18",
+   "spot": 140.94,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@140 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-17",
+   "exp": "2026-09-25",
+   "spot": 148.75,
+   "king": 150,
+   "floor": 146,
+   "ceiling": 150,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@150 ?",
+    "calf@149 ?",
+    "calf@147 ?"
+   ],
+   "status": "FILLED std2_normal up"
+  },
+  {
+   "D": "2026-09-18",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-21",
+   "exp": "2026-09-25",
+   "spot": 146.5,
+   "king": 144,
+   "floor": 144,
+   "ceiling": 150,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@146 ?",
+    "calf@147 ?",
+    "calf@148 ?",
+    "calf@145 ?"
+   ],
+   "status": "no fill (blocked: std 71, vix 0, rr 6)"
+  },
+  {
+   "D": "2026-09-22",
+   "exp": "2026-09-25",
+   "spot": 150.42000000000002,
+   "king": 150,
+   "floor": 150,
+   "ceiling": 152.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@150 ?",
+    "calf@152.5 ?"
+   ],
+   "status": "no fill (blocked: std 115, vix 2, rr 0)"
+  },
+  {
+   "D": "2026-09-23",
+   "exp": "2026-09-25",
+   "spot": 147.375,
+   "king": 150,
+   "floor": 144,
+   "ceiling": 150,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@146 ?",
+    "calf@148 ?",
+    "calf@149 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper up"
+  },
+  {
+   "D": "2026-09-24",
+   "exp": "2026-10-02",
+   "spot": 137.505,
+   "king": 135,
+   "floor": 135,
+   "ceiling": 138,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "calf@138 ?",
+    "calf@136 ?",
+    "calf@137 ?"
+   ],
+   "status": "no fill (blocked: std 90, vix 0, rr 7)"
+  },
+  {
+   "D": "2026-09-25",
+   "exp": "2026-10-02",
+   "spot": 140.41,
+   "king": 140,
+   "floor": 140,
+   "ceiling": 141,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@140 ?",
+    "calf@141 ?",
+    "calf@139 ?"
+   ],
+   "status": "no fill (blocked: std 46, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-28",
+   "exp": "2026-10-02",
+   "spot": 134.41500000000002,
+   "king": 136,
+   "floor": 131,
+   "ceiling": 136,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@136 ?",
+    "calf@133 ?",
+    "calf@134 ?"
+   ],
+   "status": "FILLED std3.5_normal down"
+  },
+  {
+   "D": "2026-09-29",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-30",
+   "exp": "2026-10-02",
+   "spot": 137.075,
+   "king": 140,
+   "floor": 136,
+   "ceiling": 140,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@138 ?",
+    "calf@136 ?"
+   ],
+   "status": "FILLED std4_gatekeeper down"
+  },
+  {
+   "D": "2026-10-01",
+   "status": "in position"
+  },
+  {
+   "D": "2026-10-02",
+   "exp": "2026-10-09",
+   "spot": 143.015,
+   "king": 145,
+   "floor": 140,
+   "ceiling": 145,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@145 ?",
+    "calf@141 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper up"
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-07-06",
+   "et": "12:56",
+   "setup": "std4_barney",
+   "direction": "up",
+   "node": 143,
+   "nodeType": "barney",
+   "stop": 142,
+   "t1": 145,
+   "t2": 146,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL260710C00145000",
+   "entryOpt": 3.09,
+   "exits": "T1@07-07 $3.16 · breakeven@07-07 $2.45",
+   "exitDay": "2026-07-07",
+   "retMid": -0.092,
+   "retWorst": -0.092
+  },
+  {
+   "D": "2026-07-15",
+   "et": "13:57",
+   "setup": "std2_barney",
+   "direction": "up",
+   "node": 132,
+   "nodeType": "barney",
+   "stop": 131,
+   "t1": 133,
+   "t2": 135,
+   "rr": 3,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "ORCL260717C00130000",
+   "entryOpt": 4,
+   "exits": "T1@07-15 $4.3 · breakeven@07-16 $0",
+   "exitDay": "2026-07-16",
+   "retMid": -0.463,
+   "retWorst": -0.463
+  },
+  {
+   "D": "2026-07-29",
+   "et": "14:00",
+   "setup": "std3.5_king",
+   "direction": "down",
+   "node": 120,
+   "nodeType": "king",
+   "stop": 121,
+   "t1": 119,
+   "t2": 117,
+   "rr": 3,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "ORCL260731P00120000",
+   "entryOpt": 3.45,
+   "exits": "T1@07-29 $3.57 · breakeven@07-30 $0",
+   "exitDay": "2026-07-30",
+   "retMid": -0.483,
+   "retWorst": -0.49
+  },
+  {
+   "D": "2026-08-05",
+   "et": "11:49",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 143,
+   "nodeType": "pika",
+   "stop": 142,
+   "t1": 145,
+   "t2": 147,
+   "rr": 4,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL260807C00145000",
+   "entryOpt": 2.35,
+   "exits": "T1@08-05 $3.05 · breakeven@08-06 $0",
+   "exitDay": "2026-08-06",
+   "retMid": -0.351,
+   "retWorst": -0.367
+  },
+  {
+   "D": "2026-08-12",
+   "et": "14:47",
+   "setup": "std3.5_barney",
+   "direction": "up",
+   "node": 152.5,
+   "nodeType": "barney",
+   "stop": 151.5,
+   "t1": 155,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "ORCL260814C00152500",
+   "entryOpt": 3.1,
+   "exits": "T1@08-13 $4.15 · time@08-13 $4.65",
+   "exitDay": "2026-08-13",
+   "retMid": 0.419,
+   "retWorst": 0.341
+  },
+  {
+   "D": "2026-08-21",
+   "et": "14:07",
+   "setup": "std2.5_barney",
+   "direction": "up",
+   "node": 146,
+   "nodeType": "barney",
+   "stop": 145,
+   "t1": 149,
+   "t2": 150,
+   "rr": 4,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "ORCL260828C00145000",
+   "entryOpt": 5,
+   "exits": "stop(close)@08-24 $2.55",
+   "exitDay": "2026-08-24",
+   "retMid": -0.49,
+   "retWorst": -0.49
+  },
+  {
+   "D": "2026-08-25",
+   "et": "15:16",
+   "setup": "std2.25_barney",
+   "direction": "up",
+   "node": 143,
+   "nodeType": "barney",
+   "stop": 142,
+   "t1": 145,
+   "t2": 146,
+   "rr": 3,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "ORCL260828C00145000",
+   "entryOpt": 2.57,
+   "exits": "T1@08-25 $3.19 · T2@08-26 $5.15",
+   "exitDay": "2026-08-26",
+   "retMid": 0.623,
+   "retWorst": 0.205
+  },
+  {
+   "D": "2026-08-31",
+   "et": "11:42",
+   "setup": "std2.25_gatekeeper",
+   "direction": "down",
+   "node": 150,
+   "nodeType": "gatekeeper",
+   "stop": 151,
+   "t1": 148,
+   "t2": 146,
+   "rr": 4,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "ORCL260904P00150000",
+   "entryOpt": 3.65,
+   "exits": "T1@09-01 $6.2 · T2@09-01 $6.2",
+   "exitDay": "2026-09-01",
+   "retMid": 0.699,
+   "retWorst": 0.425
+  },
+  {
+   "D": "2026-09-17",
+   "et": "13:59",
+   "setup": "std2_normal",
+   "direction": "up",
+   "node": 149,
+   "nodeType": "normal",
+   "stop": 148,
+   "t1": 150,
+   "t2": 152.5,
+   "rr": 3.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL260925C00150000",
+   "entryOpt": 3.93,
+   "exits": "T1@09-17 $4.44 · breakeven@09-18 $3.37",
+   "exitDay": "2026-09-18",
+   "retMid": -0.006,
+   "retWorst": -0.041
+  },
+  {
+   "D": "2026-09-23",
+   "et": "13:14",
+   "setup": "std2.5_gatekeeper",
+   "direction": "up",
+   "node": 146,
+   "nodeType": "gatekeeper",
+   "stop": 145,
+   "t1": 148,
+   "t2": 150,
+   "rr": 4,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "ORCL260925C00145000",
+   "entryOpt": 3.26,
+   "exits": "stop(close)@09-23 $2.1",
+   "exitDay": "2026-09-23",
+   "retMid": -0.356,
+   "retWorst": -0.374
+  },
+  {
+   "D": "2026-09-28",
+   "et": "13:11",
+   "setup": "std3.5_normal",
+   "direction": "down",
+   "node": 134,
+   "nodeType": "normal",
+   "stop": 135,
+   "t1": 133,
+   "t2": 131,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL261002P00135000",
+   "entryOpt": 3.95,
+   "exits": "T1@09-28 $4 · breakeven@09-29 $3.52",
+   "exitDay": "2026-09-29",
+   "retMid": -0.048,
+   "retWorst": -0.048
+  },
+  {
+   "D": "2026-09-30",
+   "et": "11:16",
+   "setup": "std4_gatekeeper",
+   "direction": "down",
+   "node": 138,
+   "nodeType": "gatekeeper",
+   "stop": 139,
+   "t1": 137,
+   "t2": 136,
+   "rr": 2,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "ORCL261002P00140000",
+   "entryOpt": 4.05,
+   "exits": "T1@10-01 $3.84 · T2@10-01 $4.15",
+   "exitDay": "2026-10-01",
+   "retMid": -0.014,
+   "retWorst": -0.019
+  },
+  {
+   "D": "2026-10-02",
+   "et": "11:48",
+   "setup": "std2.5_gatekeeper",
+   "direction": "up",
+   "node": 141,
+   "nodeType": "gatekeeper",
+   "stop": 140,
+   "t1": 144,
+   "t2": 145,
+   "rr": 4,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "ORCL261009C00140000",
+   "entryOpt": 4.23,
+   "exits": "time@10-02 $4.8",
+   "exitDay": "2026-10-02",
+   "retMid": 0.135,
+   "retWorst": 0.135
+  }
+ ]
+}

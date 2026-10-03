@@ -1,0 +1,35 @@
+
+=========== META weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calf ===========
+META itself: 607.51 → 727.80 (19.8%)
+ALL trades                 n=17  win  35%  @$1k/trade mid -$449  worst -$1117  avg -3%  SQN -0.20
+  chart-aligned only       n=17  win  35%  @$1k/trade mid -$449  worst -$1117  avg -3%  SQN -0.20
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  36%  @$1k/trade mid -$1055  worst -$1565  avg -10%  SQN -0.55
+  shorts                   n= 6  win  33%  @$1k/trade mid +$606  worst +$448  avg 10%  SQN 0.48
+
+day outcomes: no fill 22 · FILLED std3.5_pika up 1 · in position 13 · no contract data 1 · FILLED std2_pika down 1 · FILLED std2_barney down 1 · FILLED std4.5_gatekeeper down 2 · FILLED std2.5_gatekeeper up 2 · FILLED std4_king up 1 · FILLED std2.25_gatekeeper up 2 · no option print at fill 1 · FILLED std2.5_normal up 1 · FILLED std4.5_pika up 1 · FILLED std2_pika up 1 · no board 4 · FILLED std2.5_gatekeeper down 2 · FILLED std2.5_pika up 1 · FILLED std2.5_barney up 1
+
+-- every trade --
+  2026-07-10 13:04 CALL std3.5_pika @665 (pika) stop 660 T1 675 T2 680 rr 3   META260717C00665000 in $18.88 → T1@07-13 $21.5 · breakeven@07-13 $15.6  =  -2%
+  2026-07-20 15:01 PUT  std2_pika   @650 (pika) stop 655 T1 640 T2 625 rr 5   META260722P00650000 in $10.55 → time@07-21 $10.5  =  -1%
+  2026-07-27 11:06 PUT  std2_barney @607.5 (barney) stop 610 T1 602.5 T2 592.5 rr 6   META260731P00607500 in $25.5 → T1@07-27 $27.14 · T2@07-28 $28.54  =  9%
+  2026-07-29 12:30 PUT  std4.5_gatekeeper @592.5 (gatekeeper) stop 593.5 T1 590 T2 587.5 rr 5   META260731P00592500 in $24 → T1@07-29 $24 · breakeven@07-29 $23  =  -2%
+  2026-08-05 10:52 CALL std2.5_gatekeeper @590 (gatekeeper) stop 587.5 T1 600 T2 610 rr 8   META260807C00590000 in $8.88 → time@08-06 $5.3  =  -40%
+  2026-08-07 14:44 CALL std4_king   @590 (king) stop 589 T1 595 T2 600 rr 10   META260814C00590000 in $11.97 → T1@08-07 $13.43 · T2@08-10 $15.8  =  22%
+  2026-08-11 15:19 CALL std2.25_gatekeeper @600 (gatekeeper) stop 595 T1 605 T2 610 rr 2   META260814C00600000 in $9.17 → stop(close)@08-12 $1.17  =  -87%
+  2026-08-25 13:11 CALL std2.5_normal @565 (normal) stop 560 T1 570 T2 575 rr 2   META260828C00565000 in $8.3 → T1@08-25 $11 · T2@08-26 $25.82  =  122%
+  2026-08-27 12:35 CALL std4.5_pika @570 (pika) stop 567.5 T1 575 T2 580 rr 4   META260904C00570000 in $13 → T1@08-28 $15 · T2@08-28 $17.25  =  24%
+  2026-08-31 15:00 PUT  std4.5_gatekeeper @575 (gatekeeper) stop 577.5 T1 570 T2 567.5 rr 3   META260904P00575000 in $9.15 → T1@09-01 $19.25 · T2@09-01 $19.25  =  110%
+  2026-09-02 13:08 CALL std2_pika   @592.5 (pika) stop 590 T1 590 T2 600 rr 3   META260904C00592500 in $7.65 → T1@09-02 $7.66 · breakeven@09-02 $7.18  =  -3%
+  2026-09-15 11:04 PUT  std2.5_gatekeeper @670 (gatekeeper) stop 672.5 T1 660 T2 650 rr 8   META260918P00670000 in $11.5 → stop(close)@09-16 $7.35  =  -36%
+  2026-09-17 15:00 CALL std2.5_pika @675 (pika) stop 670 T1 680 T2 687.5 rr 2.5   META260925C00675000 in $16.32 → T1@09-17 $17.97 · T2@09-18 $0  =  -45%
+  2026-09-22 12:37 CALL std2.5_barney @745 (barney) stop 740 T1 760 T2 765 rr 4   META260925C00745000 in $17.6 → stop(close)@09-22 $12.4  =  -30%
+  2026-09-23 13:28 CALL std2.5_gatekeeper @745 (gatekeeper) stop 742.5 T1 747.5 T2 750 rr 2   META260925C00745000 in $16.7 → T1@09-23 $18.19 · T2@09-23 $19.3  =  12%
+  2026-09-25 14:22 CALL std2.25_gatekeeper @750 (gatekeeper) stop 745 T1 757.5 T2 760 rr 2   META261002C00750000 in $17.5 → stop(close)@09-28 $3.68  =  -79%
+  2026-09-30 10:47 PUT  std2.5_gatekeeper @730 (gatekeeper) stop 732.5 T1 705 T2 null rr 10   META261002P00730000 in $10.66 → time@10-01 $8.5  =  -20%
+
+credits used 50

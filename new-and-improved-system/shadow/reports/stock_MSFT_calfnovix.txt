@@ -1,0 +1,38 @@
+
+=========== MSFT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+MSFT itself: 384.48 → 517.48 (34.6%)
+ALL trades                 n=20  win  55%  @$1k/trade mid +$3487  worst +$1593  avg 17%  SQN 1.37
+  chart-aligned only       n=20  win  55%  @$1k/trade mid +$3487  worst +$1593  avg 17%  SQN 1.37
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  86%  @$1k/trade mid +$2670  worst +$2034  avg 38%  SQN 2.33
+  shorts                   n=13  win  38%  @$1k/trade mid +$817  worst -$441  avg 6%  SQN 0.37
+
+day outcomes: FILLED std2.25_king down 1 · in position 16 · FILLED std2.5_gatekeeper down 3 · no fill 14 · no option print at fill 1 · FILLED std2_normal down 1 · FILLED std2.25_pika up 1 · FILLED std2.5_barney down 1 · FILLED std2.5_normal up 1 · no setup in reach 2 · FILLED std3.5_gatekeeper up 1 · FILLED std2.25_pika down 2 · FILLED std2.5_gatekeeper up 1 · FILLED std2.25_barney down 1 · FILLED std2.5_pika down 1 · FILLED std2.25_gatekeeper down 2 · no board 4 · no contract data 1 · FILLED std4.5_gatekeeper up 1 · FILLED std2.5_barney up 1 · FILLED std3.5_pika down 1 · FILLED std2_gatekeeper up 1
+
+-- every trade --
+  2026-07-02 10:21 PUT  std2.25_king @390 (king) stop 391 T1 385 T2 380 rr 10   MSFT260710P00390000 in $7.9 → T1@07-06 $10.5 · breakeven@07-07 $5.1  =  -1%
+  2026-07-08 14:39 PUT  std2.5_gatekeeper @385 (gatekeeper) stop 387.5 T1 382.5 T2 375 rr 4   MSFT260710P00385000 in $4.69 → T1@07-09 $11.2 · T2@07-09 $11.2  =  139%
+  2026-07-17 13:19 PUT  std2_normal @395 (normal) stop 396 T1 392.5 T2 385 rr 10   MSFT260722P00395000 in $6.93 → T1@07-20 $0 · breakeven@07-20 $4.96  =  -64%
+  2026-07-21 12:08 CALL std2.25_pika @397.5 (pika) stop 395 T1 400 T2 405 rr 3   MSFT260722C00397500 in $3.93 → time@07-21 $3.46  =  -12%
+  2026-07-28 10:19 PUT  std2.5_barney @397.5 (barney) stop 400 T1 395 T2 387.5 rr 4   MSFT260731P00397500 in $15.65 → T1@07-28 $14.86 · breakeven@07-28 $14.25  =  -7%
+  2026-07-29 12:12 CALL std2.5_normal @392.5 (normal) stop 390 T1 395 T2 400 rr 3   MSFT260731C00392500 in $13.42 → T1@07-29 $14.79 · T2@07-29 $16.99  =  18%
+  2026-07-31 13:47 CALL std3.5_gatekeeper @460 (gatekeeper) stop 459 T1 465 T2 470 rr 10   MSFT260807C00460000 in $8.9 → T1@07-31 $11.8 · T2@08-03 $20.6  =  82%
+  2026-08-06 12:47 PUT  std2.25_pika @495 (pika) stop 496 T1 487.5 T2 485 rr 10   MSFT260814P00495000 in $9.22 → stop(close)@08-06 $6.4  =  -31%
+  2026-08-07 13:00 CALL std2.5_gatekeeper @500 (gatekeeper) stop 497.5 T1 510 T2 515 rr 6   MSFT260814C00500000 in $8.15 → T1@08-10 $12.7 · breakeven@08-12 $4.92  =  8%
+  2026-08-13 14:33 PUT  std2.25_barney @495 (barney) stop 496 T1 490 T2 null rr 5   MSFT260821P00495000 in $8.15 → stop(close)@08-13 $6.8  =  -17%
+  2026-08-14 10:45 PUT  std2.5_gatekeeper @500 (gatekeeper) stop 501 T1 495 T2 490 rr 10   MSFT260821P00500000 in $7.37 → T1@08-14 $9.1 · time@08-14 $9.14  =  24%
+  2026-08-21 10:15 PUT  std2.5_pika @485 (pika) stop 486 T1 475 T2 470 rr 15   MSFT260828P00485000 in $7.44 → stop(close)@08-24 $4.69  =  -37%
+  2026-08-25 12:06 PUT  std2.25_pika @490 (pika) stop 491 T1 482.5 T2 480 rr 10   MSFT260828P00490000 in $5.5 → stop(close)@08-25 $4  =  -27%
+  2026-08-26 10:44 PUT  std2.25_gatekeeper @495 (gatekeeper) stop 497.5 T1 492.5 T2 490 rr 2   MSFT260828P00495000 in $4.85 → T1@08-27 $7 · breakeven@08-27 $2.76  =  1%
+  2026-08-31 10:24 PUT  std2.25_gatekeeper @510 (gatekeeper) stop 515 T1 505 T2 500 rr 2   MSFT260904P00510000 in $6.15 → T1@09-01 $14 · T2@09-01 $14  =  128%
+  2026-09-18 12:09 PUT  std2.5_gatekeeper @495 (gatekeeper) stop 497.5 T1 492.5 T2 485 rr 4   MSFT260925P00495000 in $6.55 → T1@09-18 $7.37 · breakeven@09-21 $0  =  -44%
+  2026-09-22 11:09 CALL std4.5_gatekeeper @495 (gatekeeper) stop 490 T1 502.5 T2 507.5 rr 2.5   MSFT260925C00495000 in $5.7 → T1@09-23 $10.28 · T2@09-23 $13.75  =  111%
+  2026-09-24 11:14 CALL std2.5_barney @492.5 (barney) stop 491.5 T1 497.5 T2 500 rr 7.5   MSFT261002C00492500 in $8.53 → T1@09-24 $10.27 · T2@09-25 $13  =  36%
+  2026-09-28 11:13 PUT  std3.5_pika @510 (pika) stop 512.5 T1 502.5 T2 500 rr 4   MSFT261002P00510000 in $6.7 → T1@09-29 $10 · breakeven@09-29 $5.91  =  19%
+  2026-10-01 12:13 CALL std2_gatekeeper @512.5 (gatekeeper) stop 510 T1 520 T2 525 rr 5   MSFT261009C00512500 in $9 → T1@10-02 $12.5 · time@10-02 $9.7  =  23%
+
+credits used 0

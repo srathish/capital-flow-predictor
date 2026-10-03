@@ -1,0 +1,35 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n=17  win  18%  @$1k/trade mid -$3564  worst -$3999  avg -21%  SQN -2.17
+  chart-aligned only       n=17  win  18%  @$1k/trade mid -$3564  worst -$3999  avg -21%  SQN -2.17
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 7  win  14%  @$1k/trade mid -$1697  worst -$1832  avg -24%  SQN -2.28
+  shorts                   n=10  win  20%  @$1k/trade mid -$1867  worst -$2167  avg -19%  SQN -1.24
+
+day outcomes: FILLED std2.5_barney up 1 · in position 20 · FILLED std2.25_king down 2 · FILLED std2.5_gatekeeper down 1 · FILLED std2_gatekeeper up 1 · no contract data 2 · no fill 15 · FILLED std2_gatekeeper down 1 · FILLED std2_king down 1 · FILLED std2.5_normal down 1 · FILLED std2.25_king up 1 · FILLED std2.5_king up 1 · FILLED std2.5_normal up 1 · FILLED std4.5_king down 1 · FILLED std2_pika down 1 · FILLED std4_gatekeeper down 1 · no board 4 · FILLED std2.5_gatekeeper up 1 · FILLED std4_barney up 1 · FILLED std3.5_pika down 1
+
+-- every trade --
+  2026-07-02 10:56 CALL std2.5_barney @360 (barney) stop 357.5 T1 362.5 T2 365 rr 2   GOOGL260710C00360000 in $7 → T1@07-06 $6.9 · breakeven@07-06 $5.62  =  -11%
+  2026-07-07 12:38 PUT  std2.25_king @370 (king) stop 371 T1 365 T2 362.5 rr 7.5   GOOGL260710P00370000 in $5.3 → T1@07-08 $0 · T2@07-08 $8.79  =  -17%
+  2026-07-09 12:24 PUT  std2.5_gatekeeper @355 (gatekeeper) stop 357.5 T1 352.5 T2 350 rr 2   GOOGL260717P00355000 in $7.27 → stop(close)@07-09 $4.93  =  -32%
+  2026-07-10 12:55 CALL std2_gatekeeper @355 (gatekeeper) stop 352.5 T1 360 T2 null rr 2   GOOGL260717C00355000 in $6.5 → T1@07-14 $7.45 · breakeven@07-16 $3.55  =  -15%
+  2026-07-27 10:49 PUT  std2_gatekeeper @327.5 (gatekeeper) stop 330 T1 325 T2 320 rr 3   GOOGL260731P00327500 in $6.05 → T1@07-28 $6.05 · breakeven@07-28 $5.2  =  -7%
+  2026-07-29 12:10 PUT  std2_king   @335 (king) stop 337.5 T1 332.5 T2 325 rr 4   GOOGL260731P00335000 in $4.95 → T1@07-30 $4.9 · time@07-30 $3.35  =  -17%
+  2026-08-05 10:35 PUT  std2.5_normal @382.5 (normal) stop 385 T1 380 T2 375 rr 3   GOOGL260807P00382500 in $5 → T1@08-05 $5.6 · T2@08-05 $11.44  =  70%
+  2026-08-06 10:28 CALL std2.25_king @360 (king) stop 359 T1 365 T2 372.5 rr 12.5   GOOGL260814C00360000 in $7.7 → stop(close)@08-06 $5.85  =  -24%
+  2026-08-11 11:34 CALL std2.5_king @350 (king) stop 347.5 T1 357.5 T2 360 rr 4   GOOGL260814C00350000 in $4.6 → stop(close)@08-11 $1.89  =  -59%
+  2026-08-13 10:49 CALL std2.5_normal @345 (normal) stop 344 T1 347.5 T2 350 rr 5   GOOGL260821C00345000 in $6.31 → T1@08-14 $6.95 · T2@08-14 $8.65  =  24%
+  2026-08-21 10:53 PUT  std4.5_king @345 (king) stop 347.5 T1 340 T2 335 rr 4   GOOGL260828P00345000 in $5.49 → stop(close)@08-24 $3  =  -45%
+  2026-08-25 11:40 PUT  std2_pika   @347.5 (pika) stop 348.5 T1 345 T2 342.5 rr 5   GOOGL260828P00347500 in $3.95 → T1@08-26 $4.72 · T2@08-26 $6.4  =  41%
+  2026-08-28 10:49 PUT  std4_gatekeeper @347.5 (gatekeeper) stop 350 T1 340 T2 335 rr 5   GOOGL260904P00347500 in $5.95 → T1@08-31 $0 · T2@09-01 $0  =  -100%
+  2026-09-10 10:19 PUT  std2.25_king @330 (king) stop 331 T1 325 T2 322.5 rr 7.5   GOOGL260918P00330000 in $5.65 → stop(close)@09-10 $4.33  =  -23%
+  2026-09-14 11:55 CALL std2.5_gatekeeper @345 (gatekeeper) stop 342.5 T1 350 T2 352.5 rr 3   GOOGL260918C00345000 in $5.25 → time@09-17 $3.75  =  -29%
+  2026-09-22 11:13 CALL std4_barney @357.5 (barney) stop 355 T1 360 T2 365 rr 3   GOOGL260925C00357500 in $5.09 → stop(close)@09-22 $2.25  =  -56%
+  2026-09-24 12:16 PUT  std3.5_pika @342.5 (pika) stop 345 T1 335 T2 330 rr 5   GOOGL261002P00342500 in $6.99 → time@09-30 $3.07  =  -56%
+
+credits used 10

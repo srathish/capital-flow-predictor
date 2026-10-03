@@ -1,0 +1,24 @@
+
+=========== AVGO weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+AVGO itself: 365.87 → 355.14 (-2.9%)
+ALL trades                 n= 6  win  33%  @$1k/trade mid -$1241  worst -$1398  avg -21%  SQN -0.90
+  chart-aligned only       n= 5  win  20%  @$1k/trade mid -$1954  worst -$1979  avg -39%  SQN -2.32
+  against chart            n= 1  win 100%  @$1k/trade mid +$713  worst +$581  avg 71%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 6  win  33%  @$1k/trade mid -$1241  worst -$1398  avg -21%  SQN -0.90
+  shorts                   n= 0
+
+day outcomes: no setup in reach 8 · no fill 35 · FILLED floor+std2 up 1 · in position 5 · FILLED floor+std3.5 up 3 · no board 4 · FILLED floor+std2.5 up 1 · FILLED reverse_rug+std2 up 1
+
+-- every trade --
+  2026-07-09 12:23 CALL floor+std2  @400 (king) stop 397.5 T1 410 T2 null rr 4   AVGO260717C00400000 in $12.85 → stop(close)@07-13 $3.28  =  -75%
+  2026-07-21 15:08 CALL floor+std3.5 @385 (gatekeeper) stop 382.5 T1 387.5 T2 390 rr 2   AVGO260722C00385000 in $5.3 → T1@07-21 $6.06 · time@07-21 $5.55  =  10%
+  2026-08-11 13:11 CALL floor+std3.5 @417.5 (gatekeeper) stop 416.5 T1 425 T2 430 rr 12.5   AVGO260814C00420000 in $6.1 → stop(close)@08-11 $5.03  =  -18%
+  2026-08-12 14:03 CALL floor+std3.5 @417.5 (gatekeeper) stop 415 T1 425 T2 430 rr 5   AVGO260814C00417500 in $5.94 → time@08-13 $3.9  =  -34%
+  2026-09-16 13:21 CALL floor+std2.5 @340 (king) stop 339 T1 345 T2 347.5 rr 7.5 [vs chart]  AVGO260918C00340000 in $4.65 → T1@09-17 $7.57 · T2@09-17 $8.36  =  71%
+  2026-09-23 12:29 CALL reverse_rug+std2 @355 (gatekeeper) stop 354 T1 360 T2 362.5 rr 7.5   AVGO260925C00355000 in $4.2 → stop(close)@09-24 $0.9  =  -79%
+
+credits used 15

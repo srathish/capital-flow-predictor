@@ -1,0 +1,22 @@
+
+=========== MSFT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+MSFT itself: 384.48 → 517.48 (34.6%)
+ALL trades                 n= 4  win  75%  @$1k/trade mid +$1777  worst +$1296  avg 44%  SQN 1.16
+  chart-aligned only       n= 3  win 100%  @$1k/trade mid +$2162  worst +$1681  avg 72%  SQN 1.91
+  against chart            n= 1  win   0%  @$1k/trade mid -$385  worst -$385  avg -39%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win 100%  @$1k/trade mid +$774  worst +$655  avg 39%  SQN 1.26
+  shorts                   n= 2  win  50%  @$1k/trade mid +$1003  worst +$641  avg 50%  SQN 0.57
+
+day outcomes: no fill 38 · FILLED floor+std2.5 up 2 · in position 6 · FILLED ceiling+std2.5 down 2 · no setup in reach 6 · no board 4
+
+-- every trade --
+  2026-07-06 12:01 CALL floor+std2.5 @385 (gatekeeper) stop 384 T1 390 T2 395 rr 10   MSFT260710C00385000 in $6.6 → T1@07-07 $9.85 · T2@07-07 $12.5  =  69%
+  2026-07-08 14:39 PUT  ceiling+std2.5 @385 (gatekeeper) stop 387.5 T1 382.5 T2 375 rr 4   MSFT260710P00385000 in $4.69 → T1@07-09 $11.2 · T2@07-09 $11.2  =  139%
+  2026-08-07 13:00 CALL floor+std2.5 @500 (gatekeeper) stop 497.5 T1 510 T2 515 rr 6   MSFT260814C00500000 in $8.15 → T1@08-10 $12.7 · breakeven@08-12 $4.92  =  8%
+  2026-08-24 12:32 PUT  ceiling+std2.5 @490 (gatekeeper) stop 491 T1 482.5 T2 475 rr 15 [vs chart]  MSFT260828P00490000 in $6.5 → stop(close)@08-25 $4  =  -39%
+
+credits used 0

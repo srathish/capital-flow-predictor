@@ -1,0 +1,39 @@
+
+=========== AAPL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+AAPL itself: 294.08 → 333.77 (13.5%)
+ALL trades                 n=21  win  48%  @$1k/trade mid +$479  worst -$1185  avg 2%  SQN 0.15
+  chart-aligned only       n=21  win  48%  @$1k/trade mid +$479  worst -$1185  avg 2%  SQN 0.15
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  73%  @$1k/trade mid +$3590  worst +$2266  avg 33%  SQN 1.40
+  shorts                   n=10  win  20%  @$1k/trade mid -$3111  worst -$3451  avg -31%  SQN -2.12
+
+day outcomes: no fill 9 · FILLED std2.5_barney up 1 · in position 25 · FILLED std2.5_gatekeeper down 3 · FILLED std2.25_normal up 1 · FILLED std2.5_king up 1 · FILLED std3.5_gatekeeper down 1 · FILLED std2.25_king up 1 · FILLED std2.25_pika up 1 · FILLED std3.5_pika up 1 · FILLED std2.5_pika down 1 · FILLED std2_gatekeeper up 1 · FILLED std2_gatekeeper down 2 · FILLED std2_pika up 1 · FILLED std2_king up 1 · no board 3 · FILLED std4_king up 1 · FILLED std3.5_barney down 2 · FILLED std2.25_gatekeeper down 1 · FILLED std4.5_king up 1
+
+-- every trade --
+  2026-07-06 12:09 CALL std2.5_barney @312.5 (barney) stop 311.5 T1 315 T2 317.5 rr 5   AAPL260710C00312500 in $3.9 → T1@07-07 $4.95 · breakeven@07-07 $3.2  =  5%
+  2026-07-08 12:39 PUT  std2.5_gatekeeper @312.5 (gatekeeper) stop 315 T1 307.5 T2 305 rr 3   AAPL260710P00312500 in $2.8 → stop(close)@07-09 $0.43  =  -85%
+  2026-07-10 11:41 CALL std2.25_normal @312.5 (normal) stop 310 T1 317.5 T2 322.5 rr 4   AAPL260717C00312500 in $4.38 → T1@07-13 $8.42 · T2@07-13 $11.12  =  123%
+  2026-07-17 12:06 CALL std2.5_king @330 (king) stop 329 T1 335 T2 337.5 rr 7.5   AAPL260722C00330000 in $4.45 → stop(close)@07-20 $1.68  =  -62%
+  2026-07-22 14:48 PUT  std3.5_gatekeeper @325 (gatekeeper) stop 327.5 T1 322.5 T2 320 rr 2   AAPL260722P00325000 in $0.75 → time@07-22 $0.06  =  -92%
+  2026-07-27 11:34 PUT  std2.5_gatekeeper @340 (gatekeeper) stop 342.5 T1 335 T2 332.5 rr 3   AAPL260731P00340000 in $7.12 → T1@07-27 $0 · breakeven@07-28 $6.1  =  -57%
+  2026-07-29 10:52 CALL std2.25_king @340 (king) stop 337.5 T1 342.5 T2 350 rr 4   AAPL260731C00340000 in $6.5 → T1@07-29 $7.6 · breakeven@07-29 $5.94  =  4%
+  2026-07-30 10:33 CALL std2.25_pika @330 (pika) stop 327.5 T1 337.5 T2 342.5 rr 5   AAPL260807C00330000 in $7.83 → stop(close)@07-31 $0.6  =  -92%
+  2026-08-03 14:30 CALL std3.5_pika @305 (pika) stop 302.5 T1 310 T2 312.5 rr 3   AAPL260807C00305000 in $4.65 → T1@08-04 $6.75 · T2@08-06 $10.64  =  87%
+  2026-08-10 10:59 PUT  std2.5_pika @307.5 (pika) stop 310 T1 305 T2 300 rr 3   AAPL260814P00307500 in $3.65 → T1@08-11 $4.2 · time@08-13 $2.96  =  -2%
+  2026-08-14 10:15 CALL std2_gatekeeper @305 (gatekeeper) stop 304 T1 307.5 T2 310 rr 5   AAPL260821C00305000 in $4.16 → time@08-14 $3.99  =  -4%
+  2026-08-21 11:00 PUT  std2_gatekeeper @310 (gatekeeper) stop 312.5 T1 307.5 T2 305 rr 2   AAPL260828P00310000 in $4.2 → stop(close)@08-26 $1.17  =  -72%
+  2026-08-31 14:38 CALL std2_pika   @315 (pika) stop 312.5 T1 322.5 T2 325 rr 4   AAPL260904C00315000 in $3.6 → T1@09-01 $8.8 · T2@09-01 $10.8  =  172%
+  2026-09-02 13:26 CALL std2_king   @325 (king) stop 322.5 T1 330 T2 332.5 rr 3   AAPL260904C00325000 in $2.94 → T1@09-03 $5.85 · time@09-03 $3.9  =  66%
+  2026-09-10 11:48 CALL std4_king   @320 (king) stop 317.5 T1 322.5 T2 325 rr 2   AAPL260918C00320000 in $5.58 → T1@09-10 $6.9 · T2@09-10 $8.65  =  39%
+  2026-09-14 11:37 PUT  std3.5_barney @335 (barney) stop 337.5 T1 330 T2 327.5 rr 3   AAPL260918P00335000 in $4.15 → T1@09-15 $6.26 · breakeven@09-17 $3.09  =  13%
+  2026-09-18 11:05 PUT  std2.25_gatekeeper @335 (gatekeeper) stop 336 T1 332.5 T2 330 rr 5   AAPL260925P00335000 in $4.35 → stop(close)@09-21 $1.95  =  -55%
+  2026-09-22 13:14 PUT  std2_gatekeeper @342.5 (gatekeeper) stop 345 T1 340 T2 337.5 rr 2   AAPL260925P00342500 in $3.5 → T1@09-22 $4.31 · T2@09-23 $5.6  =  42%
+  2026-09-24 12:04 PUT  std3.5_barney @337.5 (barney) stop 340 T1 335 T2 330 rr 3   AAPL261002P00337500 in $4.82 → T1@09-25 $5.7 · breakeven@09-25 $3.73  =  -2%
+  2026-09-29 15:05 CALL std4.5_king @330 (king) stop 327.5 T1 335 T2 342.5 rr 5   AAPL261002C00330000 in $3.65 → T1@09-30 $6.4 · breakeven@10-01 $2.47  =  22%
+  2026-10-02 10:21 PUT  std2.5_gatekeeper @335 (gatekeeper) stop 337.5 T1 330 T2 327.5 rr 3   AAPL261009P00335000 in $4.31 → time@10-02 $4.3  =  -0%
+
+credits used 0

@@ -1,0 +1,43 @@
+
+=========== ORCL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=current ===========
+ORCL itself: 143.40 → 142.52 (-0.6%)
+ALL trades                 n=25  win  68%  @$1k/trade mid +$1218  worst -$508  avg 5%  SQN 0.66
+  chart-aligned only       n=19  win  63%  @$1k/trade mid -$384  worst -$1489  avg -2%  SQN -0.24
+  against chart            n= 6  win  83%  @$1k/trade mid +$1602  worst +$981  avg 27%  SQN 1.98
+  reverse_rug              n= 1  win 100%  @$1k/trade mid +$421  worst +$246  avg 42%  SQN 0.00
+  floor                    n=11  win  55%  @$1k/trade mid +$400  worst -$454  avg 4%  SQN 0.34
+  rug                      n= 3  win  33%  @$1k/trade mid -$1108  worst -$1226  avg -37%  SQN -0.93
+  ceiling                  n=10  win  90%  @$1k/trade mid +$1505  worst +$926  avg 15%  SQN 2.52
+  longs                    n=12  win  58%  @$1k/trade mid +$821  worst -$208  avg 7%  SQN 0.67
+  shorts                   n=13  win  77%  @$1k/trade mid +$397  worst -$300  avg 3%  SQN 0.28
+
+day outcomes: FILLED ceiling down 10 · FILLED rug down 3 · in position 11 · FILLED floor up 11 · no fill 5 · FILLED reverse_rug up 1 · no board 9 · no setup in reach 8
+
+-- every trade --
+  2026-07-02 09:35 PUT  ceiling     @146 (barney) stop 147 T1 145 T2 143 rr 3   ORCL260710P00145000 in $4.35 → T1@07-02 $4.95 · breakeven@07-02 $4.25  =  6%
+  2026-07-06 13:08 PUT  rug         @145 (king) stop 146 T1 143 T2 140 rr 5   ORCL260710P00145000 in $4.35 → T1@07-06 $0 · breakeven@07-07 $0  =  -100%
+  2026-07-08 09:38 CALL floor       @140 (gatekeeper) stop 139 T1 141 T2 142 rr 2   ORCL260710C00140000 in $2.97 → T1@07-08 $3.6 · breakeven@07-08 $2.99  =  11%
+  2026-07-09 09:36 PUT  ceiling     @145 (king) stop 146 T1 143 T2 140 rr 5   ORCL260717P00145000 in $5.31 → T1@07-10 $6.16 · breakeven@07-10 $6.16  =  16%
+  2026-07-14 09:35 CALL floor       @130 (gatekeeper) stop 129 T1 132 T2 133 rr 3 [vs chart]  ORCL260717C00130000 in $3.8 → stop(close)@07-14 $2.28  =  -40%
+  2026-07-15 09:41 CALL reverse_rug @130 (king) stop 129 T1 132 T2 133 rr 3 [vs chart]  ORCL260717C00130000 in $2.99 → T1@07-15 $4 · T2@07-15 $4.5  =  42%
+  2026-07-28 09:53 CALL floor       @115 (gatekeeper) stop 114 T1 118 T2 119 rr 4 [vs chart]  ORCL260731C00115000 in $3.7 → T1@07-28 $5.35 · T2@07-28 $5.4  =  45%
+  2026-07-29 10:04 PUT  ceiling     @120 (king) stop 121 T1 119 T2 117 rr 3   ORCL260731P00120000 in $3.32 → T1@07-29 $3.7 · T2@07-29 $4.74  =  27%
+  2026-07-30 09:44 PUT  ceiling     @125 (gatekeeper) stop 126 T1 123 T2 122 rr 3   ORCL260807P00125000 in $5.3 → stop(close)@07-30 $3.78  =  -29%
+  2026-07-31 09:40 CALL floor       @130 (king) stop 129 T1 133 T2 135 rr 5 [vs chart]  ORCL260807C00130000 in $4.8 → T1@08-03 $5.95 · T2@08-03 $7.75  =  43%
+  2026-08-05 09:40 PUT  ceiling     @145 (gatekeeper) stop 146 T1 143 T2 142 rr 3   ORCL260807P00145000 in $3.7 → T1@08-05 $4.6 · breakeven@08-05 $3.91  =  15%
+  2026-08-07 09:36 CALL floor       @145 (pika) stop 144 T1 149 T2 150 rr 5   ORCL260814C00145000 in $5.18 → T1@08-10 $0 · T2@08-10 $7.4  =  -29%
+  2026-08-12 09:40 CALL floor       @150 (gatekeeper) stop 149 T1 152.5 T2 155 rr 5   ORCL260814C00150000 in $3.5 → T1@08-12 $4.41 · T2@08-13 $6.2  =  52%
+  2026-08-14 09:40 PUT  ceiling     @155 (gatekeeper) stop 156 T1 150 T2 null rr 5 [vs chart]  ORCL260821P00155000 in $5 → T1@08-14 $6.2 · time@08-14 $7.21  =  34%
+  2026-08-21 10:21 CALL floor       @145 (king) stop 144 T1 149 T2 150 rr 5   ORCL260828C00145000 in $4.9 → stop(close)@08-24 $2.55  =  -48%
+  2026-08-31 09:38 CALL floor       @148 (barney) stop 147 T1 150 T2 152.5 rr 4.5   ORCL260904C00150000 in $3.1 → T1@08-31 $3.65 · breakeven@09-01 $1.3  =  -20%
+  2026-09-02 09:45 PUT  rug         @144 (gatekeeper) stop 145 T1 141 T2 140 rr 4   ORCL260904P00145000 in $4 → stop(close)@09-02 $2.13  =  -47%
+  2026-09-10 14:26 CALL floor       @155 (pika) stop 154 T1 160 T2 null rr 5   ORCL260918C00155000 in $10.85 → stop(close)@09-10 $9.91  =  -9%
+  2026-09-14 09:49 PUT  rug         @145 (gatekeeper) stop 146 T1 143 T2 140 rr 5 [vs chart]  ORCL260918P00145000 in $3.96 → T1@09-14 $4.83 · T2@09-16 $5.94  =  36%
+  2026-09-17 10:14 PUT  ceiling     @150 (gatekeeper) stop 151 T1 148 T2 146 rr 4   ORCL260925P00150000 in $4.6 → T1@09-18 $4.94 · T2@09-18 $6.2  =  21%
+  2026-09-22 09:35 CALL floor       @150 (gatekeeper) stop 149 T1 152.5 T2 null rr 2.5   ORCL260925C00150000 in $3.48 → T1@09-22 $5.15 · breakeven@09-22 $3  =  17%
+  2026-09-24 09:35 PUT  ceiling     @138 (gatekeeper) stop 139 T1 137 T2 136 rr 2   ORCL261002P00140000 in $5.5 → T1@09-24 $5.83 · T2@09-24 $6.75  =  14%
+  2026-09-25 09:35 PUT  ceiling     @141 (gatekeeper) stop 142 T1 140 T2 139 rr 2   ORCL261002P00140000 in $3.55 → T1@09-25 $3.4 · T2@09-25 $4.17  =  7%
+  2026-09-30 09:38 CALL floor       @136 (gatekeeper) stop 135 T1 138 T2 140 rr 4   ORCL261002C00135000 in $3.69 → T1@09-30 $4 · T2@10-01 $4.7  =  18%
+  2026-10-02 10:44 PUT  ceiling     @145 (gatekeeper) stop 146 T1 141 T2 140 rr 5   ORCL261009P00145000 in $4.15 → T1@10-02 $6.25 · time@10-02 $5.3  =  39%
+
+credits used 231

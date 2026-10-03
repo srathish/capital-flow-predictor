@@ -1,0 +1,30 @@
+
+=========== NVDA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calf ===========
+NVDA itself: 197.12 → 233.97 (18.7%)
+ALL trades                 n=12  win  33%  @$1k/trade mid -$1899  worst -$2476  avg -16%  SQN -1.13
+  chart-aligned only       n=12  win  33%  @$1k/trade mid -$1899  worst -$2476  avg -16%  SQN -1.13
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 8  win  50%  @$1k/trade mid +$34  worst -$351  avg 0%  SQN 0.02
+  shorts                   n= 4  win   0%  @$1k/trade mid -$1933  worst -$2125  avg -48%  SQN -3.17
+
+day outcomes: no fill 32 · FILLED std2_king down 1 · FILLED std2_gatekeeper up 1 · FILLED std2.5_normal up 1 · in position 10 · FILLED std2_pika up 1 · FILLED std2.5_gatekeeper up 1 · FILLED std4_normal up 1 · FILLED std2.5_gatekeeper down 1 · no board 4 · FILLED std2.5_king up 1 · FILLED std2_king up 1 · FILLED std3.5_gatekeeper up 1 · FILLED std2_barney down 1 · FILLED std2_gatekeeper down 1
+
+-- every trade --
+  2026-07-08 12:20 PUT  std2_king   @200 (king) stop 201 T1 192.5 T2 null rr 7.5   NVDA260710P00200000 in $2.89 → stop(close)@07-08 $1.15  =  -60%
+  2026-07-21 13:07 CALL std2_gatekeeper @205 (gatekeeper) stop 204 T1 207.5 T2 210 rr 5   NVDA260722C00205000 in $2.16 → T1@07-21 $3.2 · time@07-21 $2.94  =  42%
+  2026-07-30 12:43 CALL std2.5_normal @192.5 (normal) stop 191.5 T1 195 T2 197.5 rr 5   NVDA260807C00192500 in $5.25 → T1@07-30 $6.05 · T2@07-31 $7.75  =  31%
+  2026-08-07 15:24 CALL std2_pika   @222.5 (pika) stop 221.5 T1 225 T2 227.5 rr 5   NVDA260814C00222500 in $4.35 → stop(close)@08-10 $1.6  =  -63%
+  2026-08-12 15:28 CALL std2.5_gatekeeper @222.5 (gatekeeper) stop 221.5 T1 225 T2 227.5 rr 5   NVDA260814C00222500 in $2.69 → T1@08-13 $3.5 · time@08-13 $3.47  =  30%
+  2026-08-25 15:05 CALL std4_normal @212.5 (normal) stop 211.5 T1 215 T2 217.5 rr 5   NVDA260828C00212500 in $6.52 → stop(close)@08-26 $5.16  =  -21%
+  2026-08-31 13:44 PUT  std2.5_gatekeeper @220 (gatekeeper) stop 221 T1 215 T2 212.5 rr 7.5   NVDA260904P00220000 in $3.25 → stop(close)@09-02 $0.89  =  -73%
+  2026-09-16 13:22 CALL std2.5_king @215 (king) stop 214 T1 217.5 T2 220 rr 5   NVDA260918C00215000 in $2.68 → stop(close)@09-16 $1.9  =  -29%
+  2026-09-21 10:05 CALL std2_king   @222.5 (king) stop 221.5 T1 225 T2 227.5 rr 5   NVDA260925C00222500 in $3.28 → T1@09-21 $4.55 · T2@09-21 $6.55  =  69%
+  2026-09-22 10:41 CALL std3.5_gatekeeper @227.5 (gatekeeper) stop 226.5 T1 230 T2 232.5 rr 5   NVDA260925C00227500 in $3 → stop(close)@09-23 $1.33  =  -56%
+  2026-09-28 11:06 PUT  std2_barney @230 (barney) stop 231 T1 227.5 T2 null rr 2.5   NVDA261002P00230000 in $3.51 → T1@09-29 $4.2 · breakeven@09-30 $2.55  =  -4%
+  2026-10-01 12:03 PUT  std2_gatekeeper @230 (gatekeeper) stop 231 T1 227.5 T2 225 rr 5   NVDA261009P00230000 in $4.09 → stop(close)@10-02 $1.77  =  -57%
+
+credits used 26

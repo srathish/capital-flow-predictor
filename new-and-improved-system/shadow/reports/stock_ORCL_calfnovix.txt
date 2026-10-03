@@ -1,0 +1,35 @@
+
+=========== ORCL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+ORCL itself: 143.40 → 142.52 (-0.6%)
+ALL trades                 n=17  win  35%  @$1k/trade mid -$513  worst -$2009  avg -3%  SQN -0.26
+  chart-aligned only       n=17  win  35%  @$1k/trade mid -$513  worst -$2009  avg -3%  SQN -0.26
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=11  win  45%  @$1k/trade mid +$281  worst -$932  avg 3%  SQN 0.18
+  shorts                   n= 6  win  17%  @$1k/trade mid -$794  worst -$1077  avg -13%  SQN -0.66
+
+day outcomes: no fill 21 · FILLED std4_barney up 1 · in position 12 · FILLED std2.5_normal up 3 · FILLED std2_barney up 1 · no board 8 · FILLED std2.5_normal down 1 · FILLED std2.5_pika up 1 · FILLED std2.5_barney down 1 · FILLED std2.5_barney up 2 · FILLED std2.25_barney up 1 · FILLED std2.25_gatekeeper down 1 · FILLED std2_normal up 1 · FILLED std2.5_gatekeeper down 2 · FILLED std4_gatekeeper down 1 · FILLED std2.5_gatekeeper up 1
+
+-- every trade --
+  2026-07-06 12:56 CALL std4_barney @143 (barney) stop 142 T1 145 T2 146 rr 3   ORCL260710C00145000 in $3.09 → T1@07-07 $3.16 · breakeven@07-07 $2.45  =  -9%
+  2026-07-08 10:40 CALL std2.5_normal @139 (normal) stop 138 T1 141 T2 142 rr 3   ORCL260710C00140000 in $2.37 → T1@07-08 $3.1 · T2@07-09 $4.1  =  52%
+  2026-07-15 13:57 CALL std2_barney @132 (barney) stop 131 T1 133 T2 135 rr 3   ORCL260717C00130000 in $4 → T1@07-15 $4.3 · breakeven@07-16 $0  =  -46%
+  2026-07-28 10:52 PUT  std2.5_normal @118 (normal) stop 119 T1 115 T2 113 rr 5   ORCL260731P00120000 in $4.75 → stop(close)@07-28 $3.35  =  -30%
+  2026-07-29 13:31 CALL std2.5_normal @118 (normal) stop 117 T1 120 T2 122 rr 4   ORCL260731C00120000 in $2.4 → T1@07-29 $3.05 · breakeven@07-29 $2.22  =  10%
+  2026-08-05 11:49 CALL std2.5_pika @143 (pika) stop 142 T1 145 T2 147 rr 4   ORCL260807C00145000 in $2.35 → T1@08-05 $3.05 · breakeven@08-06 $0  =  -35%
+  2026-08-12 12:55 PUT  std2.5_barney @152.5 (barney) stop 153.5 T1 150 T2 149 rr 3.5   ORCL260814P00152500 in $2.97 → stop(close)@08-13 $0.73  =  -75%
+  2026-08-21 14:07 CALL std2.5_barney @146 (barney) stop 145 T1 149 T2 150 rr 4   ORCL260828C00145000 in $5 → stop(close)@08-24 $2.55  =  -49%
+  2026-08-25 15:16 CALL std2.25_barney @143 (barney) stop 142 T1 145 T2 146 rr 3   ORCL260828C00145000 in $2.57 → T1@08-25 $3.19 · T2@08-26 $5.15  =  62%
+  2026-08-31 11:42 PUT  std2.25_gatekeeper @150 (gatekeeper) stop 151 T1 148 T2 146 rr 4   ORCL260904P00150000 in $3.65 → T1@09-01 $6.2 · T2@09-01 $6.2  =  70%
+  2026-09-14 14:28 CALL std2.5_barney @143 (barney) stop 142 T1 145 T2 null rr 2   ORCL260918C00145000 in $2.87 → stop(close)@09-15 $1.31  =  -54%
+  2026-09-17 13:59 CALL std2_normal @149 (normal) stop 148 T1 150 T2 152.5 rr 3.5   ORCL260925C00150000 in $3.93 → T1@09-17 $4.44 · breakeven@09-18 $3.37  =  -1%
+  2026-09-22 12:08 PUT  std2.5_gatekeeper @150 (gatekeeper) stop 151 T1 149 T2 148 rr 2   ORCL260925P00150000 in $3.28 → T1@09-22 $3.5 · breakeven@09-22 $2.89  =  -3%
+  2026-09-23 11:29 PUT  std2.5_gatekeeper @148 (gatekeeper) stop 149 T1 147 T2 146 rr 2   ORCL260925P00150000 in $4.03 → T1@09-23 $0 · T2@09-23 $4.8  =  -40%
+  2026-09-28 10:37 CALL std2.5_normal @133 (normal) stop 132 T1 136 T2 137 rr 4   ORCL261002C00135000 in $2.3 → T1@09-29 $3.9 · T2@09-29 $4.62  =  85%
+  2026-09-30 11:16 PUT  std4_gatekeeper @138 (gatekeeper) stop 139 T1 137 T2 136 rr 2   ORCL261002P00140000 in $4.05 → T1@10-01 $3.84 · T2@10-01 $4.15  =  -1%
+  2026-10-02 11:48 CALL std2.5_gatekeeper @141 (gatekeeper) stop 140 T1 144 T2 145 rr 4   ORCL261009C00140000 in $4.23 → time@10-02 $4.8  =  14%
+
+credits used 0

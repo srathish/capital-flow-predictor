@@ -1,0 +1,1003 @@
+{
+ "plans": [
+  {
+   "D": "2026-07-02",
+   "exp": "2026-07-10",
+   "spot": 198.405,
+   "king": 195,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@197.5 ?",
+    "calf@200 ?"
+   ],
+   "status": "no fill (blocked: std 26, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-06",
+   "exp": "2026-07-10",
+   "spot": 194.77499999999998,
+   "king": 200,
+   "floor": 190,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@195 ?"
+   ],
+   "status": "no fill (blocked: std 17, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-07",
+   "exp": "2026-07-10",
+   "spot": 192.72500000000002,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@190 ?",
+    "calf@195 ?",
+    "calf@192.5 ?"
+   ],
+   "status": "no fill (blocked: std 69, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-08",
+   "exp": "2026-07-10",
+   "spot": 197.255,
+   "king": 200,
+   "floor": 192.5,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@200 ?",
+    "calf@197.5 ?"
+   ],
+   "status": "FILLED std2_king down"
+  },
+  {
+   "D": "2026-07-09",
+   "exp": "2026-07-17",
+   "spot": 203.36,
+   "king": 200,
+   "floor": 200,
+   "ceiling": 207.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@202.5 ?"
+   ],
+   "status": "FILLED std2.25_normal down"
+  },
+  {
+   "D": "2026-07-10",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-13",
+   "exp": "2026-07-17",
+   "spot": 209.915,
+   "king": 210,
+   "floor": 207.5,
+   "ceiling": 210,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@210 ?",
+    "calf@207.5 ?",
+    "calf@212.5 ?"
+   ],
+   "status": "no fill (blocked: std 78, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-14",
+   "exp": "2026-07-17",
+   "spot": 204.9,
+   "king": 210,
+   "floor": 200,
+   "ceiling": 210,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@207.5 ?",
+    "calf@205 ?",
+    "calf@202.5 ?"
+   ],
+   "status": "no fill (blocked: std 62, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-15",
+   "exp": "2026-07-17",
+   "spot": 213.375,
+   "king": 210,
+   "floor": 210,
+   "ceiling": 217.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@215 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-16",
+   "exp": "2026-07-22",
+   "spot": 209.38,
+   "king": 205,
+   "floor": 205,
+   "ceiling": 210,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@210 ?",
+    "calf@212.5 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-17",
+   "exp": "2026-07-22",
+   "spot": 200.18,
+   "king": 205,
+   "floor": 200,
+   "ceiling": 205,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@202.5 ?",
+    "calf@200 ?"
+   ],
+   "status": "FILLED std2_gatekeeper up"
+  },
+  {
+   "D": "2026-07-20",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-21",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-22",
+   "exp": "2026-07-22",
+   "spot": 206.64499999999998,
+   "king": 205,
+   "floor": 205,
+   "ceiling": 207.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@205 ?",
+    "calf@207.5 ?"
+   ],
+   "status": "no fill (blocked: std 49, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-27",
+   "exp": "2026-07-31",
+   "spot": 205.695,
+   "king": 200,
+   "floor": 200,
+   "ceiling": 207.5,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@207.5 ?",
+    "calf@205 ?"
+   ],
+   "status": "no fill (blocked: std 3, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-28",
+   "exp": "2026-07-31",
+   "spot": 194.21,
+   "king": 200,
+   "floor": 192.5,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@195 ?",
+    "calf@192.5 ?"
+   ],
+   "status": "no fill (blocked: std 18, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-29",
+   "exp": "2026-07-31",
+   "spot": 196.845,
+   "king": 200,
+   "floor": 195,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@197.5 ?",
+    "calf@195 ?"
+   ],
+   "status": "no fill (blocked: std 18, vix 0, rr 7)"
+  },
+  {
+   "D": "2026-07-30",
+   "exp": "2026-08-07",
+   "spot": 192.06,
+   "king": 190,
+   "floor": 190,
+   "ceiling": 195,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@190 ?",
+    "calf@192.5 ?"
+   ],
+   "status": "FILLED std2.5_normal up"
+  },
+  {
+   "D": "2026-07-31",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-03",
+   "exp": "2026-08-07",
+   "spot": 199.45499999999998,
+   "king": 200,
+   "floor": 197.5,
+   "ceiling": 200,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@200 ?",
+    "calf@197.5 ?"
+   ],
+   "status": "no fill (blocked: std 11, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-04",
+   "exp": "2026-08-07",
+   "spot": 210.89499999999998,
+   "king": 207.5,
+   "floor": 207.5,
+   "ceiling": 212.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@210 ?",
+    "calf@212.5 ?"
+   ],
+   "status": "FILLED std2_gatekeeper down"
+  },
+  {
+   "D": "2026-08-05",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-06",
+   "exp": "2026-08-14",
+   "spot": 222.175,
+   "king": 225,
+   "floor": 220,
+   "ceiling": 225,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@225 ?",
+    "calf@220 ?",
+    "calf@222.5 ?"
+   ],
+   "status": "no fill (blocked: std 102, vix 0, rr 12)"
+  },
+  {
+   "D": "2026-08-07",
+   "exp": "2026-08-14",
+   "spot": 222.96499999999997,
+   "king": 227.5,
+   "floor": 220,
+   "ceiling": 227.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@225 ?",
+    "calf@220 ?",
+    "calf@222.5 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper down"
+  },
+  {
+   "D": "2026-08-10",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-11",
+   "exp": "2026-08-14",
+   "spot": 220.875,
+   "king": 225,
+   "floor": 215,
+   "ceiling": 225,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@222.5 ?",
+    "calf@220 ?"
+   ],
+   "status": "FILLED std2.5_normal down"
+  },
+  {
+   "D": "2026-08-12",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-13",
+   "exp": "2026-08-21",
+   "spot": 225.995,
+   "king": 220,
+   "floor": 220,
+   "ceiling": 230,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@227.5 ?",
+    "calf@225 ?"
+   ],
+   "status": "FILLED std2.5_normal up"
+  },
+  {
+   "D": "2026-08-14",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-21",
+   "exp": "2026-08-28",
+   "spot": 218.07,
+   "king": 222.5,
+   "floor": 212.5,
+   "ceiling": 222.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@220 ?",
+    "calf@217.5 ?"
+   ],
+   "status": "no fill (blocked: std 12, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-24",
+   "exp": "2026-08-28",
+   "spot": 213.16,
+   "king": 210,
+   "floor": 210,
+   "ceiling": 217.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@210 ?",
+    "calf@215 ?",
+    "calf@212.5 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  },
+  {
+   "D": "2026-08-25",
+   "exp": "2026-08-28",
+   "spot": 211.755,
+   "king": 215,
+   "floor": 210,
+   "ceiling": 215,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@210 ?",
+    "calf@212.5 ?"
+   ],
+   "status": "FILLED std2_normal down"
+  },
+  {
+   "D": "2026-08-26",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-27",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-28",
+   "exp": "2026-09-04",
+   "spot": 226.70499999999998,
+   "king": 230,
+   "floor": 225,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@230 ?",
+    "calf@225 ?",
+    "calf@227.5 ?"
+   ],
+   "status": "no fill (blocked: std 53, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-31",
+   "exp": "2026-09-04",
+   "spot": 217.15499999999997,
+   "king": 222.5,
+   "floor": 215,
+   "ceiling": 222.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@215 ?",
+    "calf@220 ?",
+    "calf@217.5 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper down"
+  },
+  {
+   "D": "2026-09-01",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-02",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-03",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-09-04, 2026-09-09, )"
+  },
+  {
+   "D": "2026-09-04",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-09-04, 2026-09-09, )"
+  },
+  {
+   "D": "2026-09-08",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-09-09, 2026-09-11, )"
+  },
+  {
+   "D": "2026-09-09",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for NVDA. Available: 2026-09-09, 2026-09-11, )"
+  },
+  {
+   "D": "2026-09-10",
+   "exp": "2026-09-18",
+   "spot": 218.77499999999998,
+   "king": 220,
+   "floor": 215,
+   "ceiling": 220,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@220 ?",
+    "calf@217.5 ?"
+   ],
+   "status": "FILLED std2.5_barney up"
+  },
+  {
+   "D": "2026-09-14",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-15",
+   "exp": "2026-09-18",
+   "spot": 213.39,
+   "king": 215,
+   "floor": 210,
+   "ceiling": 215,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@215 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-16",
+   "exp": "2026-09-18",
+   "spot": 213.82,
+   "king": 215,
+   "floor": 210,
+   "ceiling": 215,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@215 ?"
+   ],
+   "status": "FILLED std2.5_king up"
+  },
+  {
+   "D": "2026-09-17",
+   "exp": "2026-09-25",
+   "spot": 217.29500000000002,
+   "king": 220,
+   "floor": 215,
+   "ceiling": 220,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@220 ?",
+    "calf@215 ?"
+   ],
+   "status": "FILLED std3.5_king down"
+  },
+  {
+   "D": "2026-09-18",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-21",
+   "exp": "2026-09-25",
+   "spot": 223,
+   "king": 222.5,
+   "floor": 222.5,
+   "ceiling": 227.5,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@222.5 ?",
+    "calf@220 ?",
+    "calf@225 ?"
+   ],
+   "status": "FILLED std2_king up"
+  },
+  {
+   "D": "2026-09-22",
+   "exp": "2026-09-25",
+   "spot": 229.44,
+   "king": 230,
+   "floor": 227.5,
+   "ceiling": 230,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@230 ?",
+    "calf@227.5 ?",
+    "calf@232.5 ?"
+   ],
+   "status": "FILLED std3.5_gatekeeper up"
+  },
+  {
+   "D": "2026-09-23",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-24",
+   "exp": "2026-10-02",
+   "spot": 221.905,
+   "king": 220,
+   "floor": 220,
+   "ceiling": 227.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@220 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-25",
+   "exp": "2026-10-02",
+   "spot": 226.555,
+   "king": 230,
+   "floor": 225,
+   "ceiling": 230,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@225 ?",
+    "calf@227.5 ?"
+   ],
+   "status": "no fill (blocked: std 167, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-28",
+   "exp": "2026-10-02",
+   "spot": 232.04500000000002,
+   "king": 235,
+   "floor": 227.5,
+   "ceiling": 235,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@235 ?",
+    "calf@232.5 ?",
+    "calf@230 ?"
+   ],
+   "status": "FILLED std2_barney down"
+  },
+  {
+   "D": "2026-09-29",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-30",
+   "status": "in position"
+  },
+  {
+   "D": "2026-10-01",
+   "exp": "2026-10-09",
+   "spot": 230.065,
+   "king": 235,
+   "floor": 230,
+   "ceiling": 235,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@230 ?",
+    "calf@232.5 ?"
+   ],
+   "status": "FILLED std2_gatekeeper down"
+  },
+  {
+   "D": "2026-10-02",
+   "status": "in position"
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-07-08",
+   "et": "12:20",
+   "setup": "std2_king",
+   "direction": "down",
+   "node": 200,
+   "nodeType": "king",
+   "stop": 201,
+   "t1": 192.5,
+   "t2": null,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260710P00200000",
+   "entryOpt": 2.89,
+   "exits": "stop(close)@07-08 $1.15",
+   "exitDay": "2026-07-08",
+   "retMid": -0.602,
+   "retWorst": -0.63
+  },
+  {
+   "D": "2026-07-09",
+   "et": "13:02",
+   "setup": "std2.25_normal",
+   "direction": "down",
+   "node": 202.5,
+   "nodeType": "normal",
+   "stop": 203.5,
+   "t1": 200,
+   "t2": 197.5,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260717P00202500",
+   "entryOpt": 4.75,
+   "exits": "stop(close)@07-10 $1.35",
+   "exitDay": "2026-07-10",
+   "retMid": -0.716,
+   "retWorst": -0.716
+  },
+  {
+   "D": "2026-07-17",
+   "et": "15:07",
+   "setup": "std2_gatekeeper",
+   "direction": "up",
+   "node": 202.5,
+   "nodeType": "gatekeeper",
+   "stop": 201.5,
+   "t1": 205,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260722C00202500",
+   "entryOpt": 4.2,
+   "exits": "T1@07-20 $5.25 · time@07-21 $5.05",
+   "exitDay": "2026-07-21",
+   "retMid": 0.226,
+   "retWorst": 0.19
+  },
+  {
+   "D": "2026-07-30",
+   "et": "12:43",
+   "setup": "std2.5_normal",
+   "direction": "up",
+   "node": 192.5,
+   "nodeType": "normal",
+   "stop": 191.5,
+   "t1": 195,
+   "t2": 197.5,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "NVDA260807C00192500",
+   "entryOpt": 5.25,
+   "exits": "T1@07-30 $6.05 · T2@07-31 $7.75",
+   "exitDay": "2026-07-31",
+   "retMid": 0.314,
+   "retWorst": 0.257
+  },
+  {
+   "D": "2026-08-04",
+   "et": "14:21",
+   "setup": "std2_gatekeeper",
+   "direction": "down",
+   "node": 212.5,
+   "nodeType": "gatekeeper",
+   "stop": 213.5,
+   "t1": 210,
+   "t2": 207.5,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260807P00212500",
+   "entryOpt": 3.65,
+   "exits": "stop(close)@08-05 $0.67",
+   "exitDay": "2026-08-05",
+   "retMid": -0.816,
+   "retWorst": -0.847
+  },
+  {
+   "D": "2026-08-07",
+   "et": "11:51",
+   "setup": "std2.5_gatekeeper",
+   "direction": "down",
+   "node": 225,
+   "nodeType": "gatekeeper",
+   "stop": 226,
+   "t1": 222.5,
+   "t2": 220,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260814P00225000",
+   "entryOpt": 4.4,
+   "exits": "T1@08-07 $5.41 · T2@08-10 $6.27",
+   "exitDay": "2026-08-10",
+   "retMid": 0.327,
+   "retWorst": 0.312
+  },
+  {
+   "D": "2026-08-11",
+   "et": "10:53",
+   "setup": "std2.5_normal",
+   "direction": "down",
+   "node": 220,
+   "nodeType": "normal",
+   "stop": 221,
+   "t1": 215,
+   "t2": null,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260814P00220000",
+   "entryOpt": 3.15,
+   "exits": "stop(close)@08-12 $0.91",
+   "exitDay": "2026-08-12",
+   "retMid": -0.711,
+   "retWorst": -0.727
+  },
+  {
+   "D": "2026-08-13",
+   "et": "13:29",
+   "setup": "std2.5_normal",
+   "direction": "up",
+   "node": 225,
+   "nodeType": "normal",
+   "stop": 224,
+   "t1": 227.5,
+   "t2": 230,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260821C00225000",
+   "entryOpt": 4.55,
+   "exits": "time@08-14 $3.8",
+   "exitDay": "2026-08-14",
+   "retMid": -0.165,
+   "retWorst": -0.18
+  },
+  {
+   "D": "2026-08-24",
+   "et": "12:31",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 210,
+   "nodeType": "pika",
+   "stop": 209,
+   "t1": 215,
+   "t2": 217.5,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260828C00210000",
+   "entryOpt": 6.4,
+   "exits": "stop(close)@08-24 $5.65",
+   "exitDay": "2026-08-24",
+   "retMid": -0.117,
+   "retWorst": -0.152
+  },
+  {
+   "D": "2026-08-25",
+   "et": "12:25",
+   "setup": "std2_normal",
+   "direction": "down",
+   "node": 212.5,
+   "nodeType": "normal",
+   "stop": 213.5,
+   "t1": 210,
+   "t2": 207.5,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "NVDA260828P00212500",
+   "entryOpt": 6.25,
+   "exits": "T1@08-26 $7.5 · breakeven@08-27 $0.35",
+   "exitDay": "2026-08-27",
+   "retMid": -0.372,
+   "retWorst": -0.39
+  },
+  {
+   "D": "2026-08-31",
+   "et": "13:44",
+   "setup": "std2.5_gatekeeper",
+   "direction": "down",
+   "node": 220,
+   "nodeType": "gatekeeper",
+   "stop": 221,
+   "t1": 215,
+   "t2": 212.5,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260904P00220000",
+   "entryOpt": 3.25,
+   "exits": "stop(close)@09-02 $0.89",
+   "exitDay": "2026-09-02",
+   "retMid": -0.726,
+   "retWorst": -0.742
+  },
+  {
+   "D": "2026-09-10",
+   "et": "10:50",
+   "setup": "std2.5_barney",
+   "direction": "up",
+   "node": 217.5,
+   "nodeType": "barney",
+   "stop": 216.5,
+   "t1": 220,
+   "t2": 225,
+   "rr": 7.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260918C00217500",
+   "entryOpt": 4.84,
+   "exits": "stop(close)@09-14 $1.07",
+   "exitDay": "2026-09-14",
+   "retMid": -0.779,
+   "retWorst": -0.791
+  },
+  {
+   "D": "2026-09-16",
+   "et": "13:22",
+   "setup": "std2.5_king",
+   "direction": "up",
+   "node": 215,
+   "nodeType": "king",
+   "stop": 214,
+   "t1": 217.5,
+   "t2": 220,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "NVDA260918C00215000",
+   "entryOpt": 2.68,
+   "exits": "stop(close)@09-16 $1.9",
+   "exitDay": "2026-09-16",
+   "retMid": -0.291,
+   "retWorst": -0.321
+  },
+  {
+   "D": "2026-09-17",
+   "et": "15:13",
+   "setup": "std3.5_king",
+   "direction": "down",
+   "node": 220,
+   "nodeType": "king",
+   "stop": 221,
+   "t1": 215,
+   "t2": 212.5,
+   "rr": 7.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "NVDA260925P00220000",
+   "entryOpt": 3.75,
+   "exits": "stop(close)@09-18 $2.48",
+   "exitDay": "2026-09-18",
+   "retMid": -0.339,
+   "retWorst": -0.355
+  },
+  {
+   "D": "2026-09-21",
+   "et": "10:05",
+   "setup": "std2_king",
+   "direction": "up",
+   "node": 222.5,
+   "nodeType": "king",
+   "stop": 221.5,
+   "t1": 225,
+   "t2": 227.5,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260925C00222500",
+   "entryOpt": 3.28,
+   "exits": "T1@09-21 $4.55 · T2@09-21 $6.55",
+   "exitDay": "2026-09-21",
+   "retMid": 0.692,
+   "retWorst": 0.627
+  },
+  {
+   "D": "2026-09-22",
+   "et": "10:41",
+   "setup": "std3.5_gatekeeper",
+   "direction": "up",
+   "node": 227.5,
+   "nodeType": "gatekeeper",
+   "stop": 226.5,
+   "t1": 230,
+   "t2": 232.5,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA260925C00227500",
+   "entryOpt": 3,
+   "exits": "stop(close)@09-23 $1.33",
+   "exitDay": "2026-09-23",
+   "retMid": -0.557,
+   "retWorst": -0.61
+  },
+  {
+   "D": "2026-09-28",
+   "et": "11:06",
+   "setup": "std2_barney",
+   "direction": "down",
+   "node": 230,
+   "nodeType": "barney",
+   "stop": 231,
+   "t1": 227.5,
+   "t2": null,
+   "rr": 2.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA261002P00230000",
+   "entryOpt": 3.51,
+   "exits": "T1@09-29 $4.2 · breakeven@09-30 $2.55",
+   "exitDay": "2026-09-30",
+   "retMid": -0.038,
+   "retWorst": -0.16
+  },
+  {
+   "D": "2026-10-01",
+   "et": "12:03",
+   "setup": "std2_gatekeeper",
+   "direction": "down",
+   "node": 230,
+   "nodeType": "gatekeeper",
+   "stop": 231,
+   "t1": 227.5,
+   "t2": 225,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "NVDA261009P00230000",
+   "entryOpt": 4.09,
+   "exits": "stop(close)@10-02 $1.77",
+   "exitDay": "2026-10-02",
+   "retMid": -0.567,
+   "retWorst": -0.593
+  }
+ ]
+}

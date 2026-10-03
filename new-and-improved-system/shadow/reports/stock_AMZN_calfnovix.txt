@@ -1,0 +1,36 @@
+
+=========== AMZN weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+AMZN itself: 241.60 → 251.41 (4.1%)
+ALL trades                 n=18  win  56%  @$1k/trade mid +$1376  worst +$174  avg 8%  SQN 0.57
+  chart-aligned only       n=18  win  56%  @$1k/trade mid +$1376  worst +$174  avg 8%  SQN 0.57
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=12  win  58%  @$1k/trade mid +$1309  worst +$347  avg 11%  SQN 0.55
+  shorts                   n= 6  win  50%  @$1k/trade mid +$67  worst -$173  avg 1%  SQN 0.13
+
+day outcomes: no fill 10 · FILLED std2_pika up 1 · in position 24 · FILLED std2.25_gatekeeper up 2 · FILLED std2.25_pika down 1 · no option print at fill 1 · FILLED std2.5_barney up 2 · FILLED std2.5_pika up 3 · FILLED std4_king down 1 · FILLED std2.5_gatekeeper up 1 · FILLED std2.5_normal up 1 · no setup in reach 1 · FILLED std2.5_gatekeeper down 2 · FILLED std3.5_pika up 1 · no board 4 · FILLED std2.5_barney down 1 · FILLED std2.5_king up 1 · FILLED std4.5_king down 1
+
+-- every trade --
+  2026-07-07 13:51 CALL std2_pika   @245 (pika) stop 244 T1 247.5 T2 250 rr 5   AMZN260710C00245000 in $3.75 → stop(close)@07-08 $2.13  =  -43%
+  2026-07-09 10:16 CALL std2.25_gatekeeper @240 (gatekeeper) stop 239 T1 242.5 T2 245 rr 5   AMZN260717C00240000 in $5.45 → T1@07-09 $6.5 · T2@07-09 $8  =  33%
+  2026-07-13 10:47 PUT  std2.25_pika @247.5 (pika) stop 248.5 T1 245 T2 240 rr 7.5   AMZN260717P00247500 in $4.27 → T1@07-14 $5.45 · breakeven@07-14 $3.4  =  4%
+  2026-07-17 12:01 CALL std2.5_barney @247.5 (barney) stop 246.5 T1 250 T2 null rr 2.5   AMZN260722C00247500 in $4.44 → T1@07-20 $4.5 · breakeven@07-21 $2.05  =  -26%
+  2026-07-22 13:31 CALL std2.5_barney @242.5 (barney) stop 241.5 T1 247.5 T2 250 rr 7.5   AMZN260722C00242500 in $0.84 → time@07-22 $2.4  =  186%
+  2026-07-27 11:32 CALL std2.5_pika @232.5 (pika) stop 231.5 T1 235 T2 237.5 rr 5   AMZN260731C00232500 in $8.35 → stop(close)@07-27 $7.55  =  -10%
+  2026-07-29 12:56 PUT  std4_king   @230 (king) stop 231 T1 225 T2 null rr 5   AMZN260731P00230000 in $8.33 → stop(close)@07-30 $6.9  =  -17%
+  2026-07-31 13:12 CALL std2.5_pika @270 (pika) stop 267.5 T1 272.5 T2 275 rr 2   AMZN260807C00270000 in $5.74 → T1@07-31 $6.7 · T2@08-03 $12  =  63%
+  2026-08-04 14:00 CALL std2.5_gatekeeper @277.5 (gatekeeper) stop 275 T1 280 T2 285 rr 3   AMZN260807C00277500 in $4.54 → T1@08-05 $6.8 · breakeven@08-05 $3.76  =  16%
+  2026-08-06 10:25 CALL std2.25_gatekeeper @272.5 (gatekeeper) stop 270 T1 275 T2 280 rr 3   AMZN260814C00272500 in $5.6 → T1@08-07 $6.4 · T2@08-10 $8.5  =  33%
+  2026-08-11 11:10 CALL std2.5_normal @272.5 (normal) stop 270 T1 275 T2 280 rr 3   AMZN260814C00272500 in $3.49 → stop(close)@08-12 $0.82  =  -77%
+  2026-08-21 11:40 PUT  std2.5_gatekeeper @260 (gatekeeper) stop 262.5 T1 255 T2 252.5 rr 3   AMZN260828P00260000 in $4.1 → time@08-27 $4.05  =  -1%
+  2026-08-31 14:00 CALL std3.5_pika @260 (pika) stop 257.5 T1 265 T2 267.5 rr 3   AMZN260904C00260000 in $2.79 → stop(close)@09-01 $0.99  =  -65%
+  2026-09-14 11:44 PUT  std2.5_barney @255 (barney) stop 257.5 T1 250 T2 null rr 2   AMZN260918P00255000 in $3.9 → T1@09-15 $6.2 · time@09-17 $4.18  =  33%
+  2026-09-18 13:31 CALL std2.5_king @252.5 (king) stop 251.5 T1 255 T2 260 rr 7.5   AMZN260925C00252500 in $4.15 → T1@09-21 $6.06 · breakeven@09-23 $2.65  =  5%
+  2026-09-24 12:15 PUT  std2.5_gatekeeper @247.5 (gatekeeper) stop 248.5 T1 245 T2 242.5 rr 5   AMZN261002P00247500 in $4.29 → stop(close)@09-24 $3.22  =  -25%
+  2026-09-25 11:59 PUT  std4.5_king @250 (king) stop 251 T1 247.5 T2 242.5 rr 7.5   AMZN261002P00250000 in $3.95 → T1@09-28 $6.4 · breakeven@09-30 $2.55  =  13%
+  2026-10-02 14:27 CALL std2.5_pika @250 (pika) stop 247.5 T1 255 T2 257.5 rr 3   AMZN261009C00250000 in $3.85 → time@10-02 $4.43  =  15%
+
+credits used 5

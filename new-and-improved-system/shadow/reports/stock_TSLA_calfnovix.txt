@@ -1,0 +1,32 @@
+
+=========== TSLA weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+TSLA itself: 428.16 → 370.69 (-13.4%)
+ALL trades                 n=14  win  57%  @$1k/trade mid +$1247  worst +$19  avg 9%  SQN 1.15
+  chart-aligned only       n=14  win  57%  @$1k/trade mid +$1247  worst +$19  avg 9%  SQN 1.15
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 6  win  50%  @$1k/trade mid +$281  worst -$250  avg 5%  SQN 0.43
+  shorts                   n= 8  win  63%  @$1k/trade mid +$966  worst +$269  avg 12%  SQN 1.06
+
+day outcomes: no fill 21 · FILLED std2.25_gatekeeper up 1 · in position 14 · no board 9 · FILLED std4.5_gatekeeper down 1 · FILLED std2_pika down 2 · FILLED std2_gatekeeper down 1 · FILLED std2.5_barney down 1 · FILLED std2.5_normal up 1 · FILLED std2_king down 1 · FILLED std2.5_pika up 1 · FILLED std2.5_gatekeeper up 1 · FILLED std3.5_barney up 1 · FILLED std4_gatekeeper down 1 · FILLED std4.5_gatekeeper up 1 · FILLED std2.25_gatekeeper down 1
+
+-- every trade --
+  2026-07-14 12:59 CALL std2.25_gatekeeper @395 (gatekeeper) stop 392.5 T1 400 T2 402.5 rr 3   TSLA260717C00395000 in $7.32 → T1@07-15 $10.3 · T2@07-15 $10.3  =  41%
+  2026-07-29 14:55 PUT  std4.5_gatekeeper @307.5 (gatekeeper) stop 310 T1 305 T2 302.5 rr 2   TSLA260731P00307500 in $5.26 → T1@07-29 $6.51 · T2@07-29 $7.88  =  37%
+  2026-08-04 11:00 PUT  std2_pika   @325 (pika) stop 327.5 T1 320 T2 317.5 rr 3   TSLA260807P00325000 in $6.79 → T1@08-06 $9.9 · T2@08-06 $9.9  =  46%
+  2026-08-10 10:30 PUT  std2_gatekeeper @332.5 (gatekeeper) stop 335 T1 325 T2 null rr 3   TSLA260814P00332500 in $6.69 → T1@08-12 $8.65 · breakeven@08-13 $3.04  =  -13%
+  2026-08-24 12:21 PUT  std2.5_barney @357.5 (barney) stop 360 T1 352.5 T2 350 rr 3   TSLA260828P00357500 in $7.03 → T1@08-24 $9.4 · T2@08-24 $11.22  =  47%
+  2026-08-26 14:08 CALL std2.5_normal @345 (normal) stop 344 T1 347.5 T2 350 rr 5   TSLA260828C00345000 in $5.21 → T1@08-27 $5.55 · T2@08-27 $7.8  =  28%
+  2026-09-01 10:30 PUT  std2_king   @360 (king) stop 362.5 T1 355 T2 352.5 rr 3   TSLA260904P00360000 in $6.36 → T1@09-01 $8.95 · breakeven@09-02 $7.05  =  26%
+  2026-09-10 12:35 CALL std2.5_pika @365 (pika) stop 364 T1 367.5 T2 370 rr 5   TSLA260918C00365000 in $9.5 → T1@09-10 $10.49 · breakeven@09-10 $9.01  =  3%
+  2026-09-14 15:07 CALL std2.5_gatekeeper @360 (gatekeeper) stop 359 T1 367.5 T2 370 rr 10   TSLA260918C00360000 in $7.15 → stop(close)@09-15 $4.75  =  -34%
+  2026-09-17 11:00 CALL std3.5_barney @367.5 (barney) stop 365 T1 370 T2 375 rr 3   TSLA260925C00367500 in $9.51 → T1@09-18 $9.3 · breakeven@09-18 $8.07  =  -9%
+  2026-09-21 14:08 PUT  std4_gatekeeper @375 (gatekeeper) stop 377.5 T1 372.5 T2 370 rr 2   TSLA260925P00375000 in $7.02 → stop(close)@09-22 $3.96  =  -44%
+  2026-09-23 13:02 CALL std4.5_gatekeeper @377.5 (gatekeeper) stop 375 T1 382.5 T2 385 rr 3   TSLA260925C00377500 in $5.25 → T1@09-24 $6.74 · time@09-24 $3.65  =  -1%
+  2026-09-29 14:39 PUT  std2.25_gatekeeper @355 (gatekeeper) stop 357.5 T1 350 T2 null rr 2   TSLA261002P00355000 in $6.25 → T1@09-30 $8.4 · breakeven@10-01 $4.22  =  1%
+  2026-10-02 11:19 PUT  std2_pika   @372.5 (pika) stop 373.5 T1 365 T2 360 rr 12.5   TSLA261009P00372500 in $8.07 → time@10-02 $7.8  =  -3%
+
+credits used 0

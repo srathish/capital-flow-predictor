@@ -1,0 +1,1200 @@
+{
+ "plans": [
+  {
+   "D": "2026-07-02",
+   "exp": "2026-07-10",
+   "spot": 534.65,
+   "king": 545,
+   "floor": 530,
+   "ceiling": 545,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@530 ?",
+    "calf@540 ?",
+    "calf@532.5 ?"
+   ],
+   "status": "no fill (blocked: std 37, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-06",
+   "exp": "2026-07-10",
+   "spot": 544.53,
+   "king": 545,
+   "floor": 540,
+   "ceiling": 545,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@545 ?",
+    "calf@540 ?",
+    "calf@550 ?",
+    "calf@547.5 ?"
+   ],
+   "status": "no fill (blocked: std 15, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-07",
+   "exp": "2026-07-10",
+   "spot": 511.045,
+   "king": 500,
+   "floor": 500,
+   "ceiling": 520,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@507.5 ?",
+    "calf@510 ?",
+    "calf@515 ?",
+    "calf@505 ?"
+   ],
+   "status": "no fill (blocked: std 162, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-08",
+   "exp": "2026-07-10",
+   "spot": 515.475,
+   "king": 525,
+   "floor": 515,
+   "ceiling": 525,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@515 ?",
+    "calf@512.5 ?",
+    "calf@510 ?",
+    "calf@520 ?",
+    "calf@517.5 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper up"
+  },
+  {
+   "D": "2026-07-09",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-10",
+   "exp": "2026-07-17",
+   "spot": 552.5450000000001,
+   "king": 560,
+   "floor": 550,
+   "ceiling": 560,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@560 ?",
+    "calf@550 ?",
+    "calf@555 ?",
+    "calf@545 ?"
+   ],
+   "status": "FILLED std2_pika down"
+  },
+  {
+   "D": "2026-07-13",
+   "status": "in position"
+  },
+  {
+   "D": "2026-07-14",
+   "exp": "2026-07-17",
+   "spot": 562.4749999999999,
+   "king": 560,
+   "floor": 560,
+   "ceiling": 565,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@560 ?",
+    "calf@565 ?",
+    "calf@555 ?",
+    "calf@570 ?"
+   ],
+   "status": "FILLED std2.25_gatekeeper up"
+  },
+  {
+   "D": "2026-07-15",
+   "exp": "2026-07-17",
+   "spot": 557.3050000000001,
+   "king": 560,
+   "floor": 555,
+   "ceiling": 560,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "calf@560 ?",
+    "calf@555 ?",
+    "calf@565 ?",
+    "calf@552.5 ?"
+   ],
+   "status": "no fill (blocked: std 15, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-16",
+   "exp": "2026-07-22",
+   "spot": 515.94,
+   "king": 515,
+   "floor": 515,
+   "ceiling": 530,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@515 ?",
+    "calf@510 ?",
+    "calf@517.5 ?"
+   ],
+   "status": "FILLED std2_normal up"
+  },
+  {
+   "D": "2026-07-17",
+   "exp": "2026-07-22",
+   "spot": 470.6,
+   "king": 480,
+   "floor": 470,
+   "ceiling": 480,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@470 ?",
+    "calf@477.5 ?"
+   ],
+   "status": "no option print at fill"
+  },
+  {
+   "D": "2026-07-20",
+   "exp": "2026-07-22",
+   "spot": 516.79,
+   "king": 530,
+   "floor": 515,
+   "ceiling": 530,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@515 ?",
+    "calf@510 ?",
+    "calf@520 ?"
+   ],
+   "status": "FILLED std2.5_normal up"
+  },
+  {
+   "D": "2026-07-21",
+   "exp": "2026-07-22",
+   "spot": 526.9749999999999,
+   "king": 540,
+   "floor": 517.5,
+   "ceiling": 540,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@525 ?",
+    "calf@530 ?"
+   ],
+   "status": "FILLED std2_normal down"
+  },
+  {
+   "D": "2026-07-22",
+   "exp": "2026-07-22",
+   "spot": 542.475,
+   "king": 547.5,
+   "floor": 540,
+   "ceiling": 547.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@547.5 ?",
+    "calf@540 ?",
+    "calf@535 ?",
+    "calf@537.5 ?",
+    "calf@542.5 ?"
+   ],
+   "status": "no fill (blocked: std 36, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-27",
+   "exp": "2026-07-31",
+   "spot": 521.7149999999999,
+   "king": 530,
+   "floor": 517.5,
+   "ceiling": 530,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@517.5 ?",
+    "calf@515 ?",
+    "calf@520 ?",
+    "calf@527.5 ?"
+   ],
+   "status": "no fill (blocked: std 10, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-28",
+   "exp": "2026-07-31",
+   "spot": 458.63,
+   "king": 450,
+   "floor": 450,
+   "ceiling": 467.5,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@462.5 ?",
+    "calf@452.5 ?",
+    "calf@455 ?"
+   ],
+   "status": "no fill (blocked: std 149, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-29",
+   "exp": "2026-07-31",
+   "spot": 454.33500000000004,
+   "king": 462.5,
+   "floor": 450,
+   "ceiling": 462.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@450 ?",
+    "calf@455 ?",
+    "calf@460 ?",
+    "calf@452.5 ?"
+   ],
+   "status": "no fill (blocked: std 25, vix 0, rr 13)"
+  },
+  {
+   "D": "2026-07-30",
+   "exp": "2026-08-07",
+   "spot": 461.725,
+   "king": 450,
+   "floor": 450,
+   "ceiling": 472.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@460 ?"
+   ],
+   "status": "no fill (blocked: std 3, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-07-31",
+   "exp": "2026-08-07",
+   "spot": 513.29,
+   "king": 500,
+   "floor": 500,
+   "ceiling": 515,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@510 ?",
+    "calf@515 ?",
+    "calf@520 ?"
+   ],
+   "status": "no fill (blocked: std 4, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-03",
+   "exp": "2026-08-07",
+   "spot": 458.27,
+   "king": 450,
+   "floor": 450,
+   "ceiling": 462.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@452.5 ?",
+    "calf@462.5 ?",
+    "calf@460 ?"
+   ],
+   "status": "no fill (blocked: std 21, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-04",
+   "exp": "2026-08-07",
+   "spot": 509.86,
+   "king": 495,
+   "floor": 495,
+   "ceiling": 510,
+   "regime": "negative",
+   "chart": "down",
+   "cands": [
+    "calf@510 ?",
+    "calf@502.5 ?",
+    "calf@505 ?"
+   ],
+   "status": "no fill (blocked: std 12, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-05",
+   "exp": "2026-08-07",
+   "spot": 493.825,
+   "king": 495,
+   "floor": 480,
+   "ceiling": 495,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@495 ?",
+    "calf@487.5 ?",
+    "calf@500 ?",
+    "calf@492.5 ?"
+   ],
+   "status": "no fill (blocked: std 207, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-06",
+   "exp": "2026-08-14",
+   "spot": 480.21500000000003,
+   "king": 470,
+   "floor": 470,
+   "ceiling": 482.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@480 ?",
+    "calf@482.5 ?",
+    "calf@475 ?",
+    "calf@477.5 ?"
+   ],
+   "status": "no fill (blocked: std 41, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-07",
+   "exp": "2026-08-14",
+   "spot": 491.695,
+   "king": 500,
+   "floor": 490,
+   "ceiling": 500,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@490 ?",
+    "calf@495 ?"
+   ],
+   "status": "no fill (blocked: std 12, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-10",
+   "exp": "2026-08-14",
+   "spot": 471.4,
+   "king": 462.5,
+   "floor": 462.5,
+   "ceiling": 485,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@477.5 ?",
+    "calf@475 ?"
+   ],
+   "status": "FILLED std2.25_normal up"
+  },
+  {
+   "D": "2026-08-11",
+   "exp": "2026-08-14",
+   "spot": 465.98,
+   "king": 462.5,
+   "floor": 462.5,
+   "ceiling": 472.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@462.5 ?",
+    "calf@460 ?",
+    "calf@472.5 ?",
+    "calf@470 ?"
+   ],
+   "status": "FILLED std2_normal down"
+  },
+  {
+   "D": "2026-08-12",
+   "exp": "2026-08-14",
+   "spot": 483.775,
+   "king": 497.5,
+   "floor": 480,
+   "ceiling": 497.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@485 ?",
+    "calf@490 ?",
+    "calf@480 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper down"
+  },
+  {
+   "D": "2026-08-13",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-14",
+   "exp": "2026-08-21",
+   "spot": 484.77,
+   "king": 490,
+   "floor": 475,
+   "ceiling": 490,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@490 ?",
+    "calf@480 ?",
+    "calf@482.5 ?"
+   ],
+   "status": "no fill (blocked: std 3, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-21",
+   "exp": "2026-08-28",
+   "spot": 473.64,
+   "king": 482.5,
+   "floor": 470,
+   "ceiling": 482.5,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": [
+    "calf@470 ?",
+    "calf@475 ?",
+    "calf@477.5 ?"
+   ],
+   "status": "FILLED std2.25_gatekeeper up"
+  },
+  {
+   "D": "2026-08-24",
+   "status": "in position"
+  },
+  {
+   "D": "2026-08-25",
+   "exp": "2026-08-28",
+   "spot": 477.405,
+   "king": 482.5,
+   "floor": 465,
+   "ceiling": 482.5,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@482.5 ?",
+    "calf@477.5 ?",
+    "calf@472.5 ?"
+   ],
+   "status": "no fill (blocked: std 173, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-26",
+   "exp": "2026-08-28",
+   "spot": 484.22,
+   "king": 482.5,
+   "floor": 482.5,
+   "ceiling": 492.5,
+   "regime": "mixed",
+   "chart": "down",
+   "cands": [
+    "calf@482.5 ?",
+    "calf@477.5 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper up"
+  },
+  {
+   "D": "2026-08-27",
+   "exp": "2026-09-04",
+   "spot": 473.04499999999996,
+   "king": 470,
+   "floor": 470,
+   "ceiling": 475,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@470 ?",
+    "calf@475 ?",
+    "calf@472.5 ?",
+    "calf@477.5 ?",
+    "calf@480 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  },
+  {
+   "D": "2026-08-28",
+   "exp": "2026-09-04",
+   "spot": 472.18,
+   "king": 485,
+   "floor": 460,
+   "ceiling": 485,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@475 ?",
+    "calf@472.5 ?"
+   ],
+   "status": "no fill (blocked: std 119, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-08-31",
+   "exp": "2026-09-04",
+   "spot": 471.54499999999996,
+   "king": 485,
+   "floor": 460,
+   "ceiling": 485,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@475 ?",
+    "calf@470 ?",
+    "calf@465 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  },
+  {
+   "D": "2026-09-01",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-02",
+   "exp": "2026-09-04",
+   "spot": 458.32500000000005,
+   "king": 470,
+   "floor": 447.5,
+   "ceiling": 470,
+   "regime": "positive",
+   "chart": "down",
+   "cands": [
+    "calf@465 ?",
+    "calf@460 ?",
+    "calf@455 ?",
+    "calf@457.5 ?"
+   ],
+   "status": "no option print at fill"
+  },
+  {
+   "D": "2026-09-03",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-09-04, 2026-09-09, 2)"
+  },
+  {
+   "D": "2026-09-04",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-09-04, 2026-09-09, 2)"
+  },
+  {
+   "D": "2026-09-08",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-09-09, 2026-09-11, 2)"
+  },
+  {
+   "D": "2026-09-09",
+   "exp": "2026-09-10",
+   "status": "no board (rest /v1/historical 404: {\"code\":\"expiration_not_found\",\"message\":\"None of the requested expirations are available for AMD. Available: 2026-09-09, 2026-09-11, 2)"
+  },
+  {
+   "D": "2026-09-10",
+   "exp": "2026-09-18",
+   "spot": 508.75,
+   "king": 520,
+   "floor": 500,
+   "ceiling": 520,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@510 ?",
+    "calf@505 ?"
+   ],
+   "status": "FILLED std2_normal up"
+  },
+  {
+   "D": "2026-09-14",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-15",
+   "exp": "2026-09-18",
+   "spot": 505.045,
+   "king": 520,
+   "floor": 502.5,
+   "ceiling": 520,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@502.5 ?",
+    "calf@510 ?",
+    "calf@507.5 ?",
+    "calf@500 ?"
+   ],
+   "status": "no fill (blocked: std 192, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-16",
+   "exp": "2026-09-18",
+   "spot": 518.9449999999999,
+   "king": 520,
+   "floor": 510,
+   "ceiling": 520,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@520 ?",
+    "calf@517.5 ?",
+    "calf@525 ?",
+    "calf@515 ?",
+    "calf@522.5 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper up"
+  },
+  {
+   "D": "2026-09-17",
+   "exp": "2026-09-25",
+   "spot": 529.475,
+   "king": 520,
+   "floor": 520,
+   "ceiling": 540,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "calf@525 ?"
+   ],
+   "status": "no fill (blocked: std 0, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-18",
+   "exp": "2026-09-25",
+   "spot": 549.2049999999999,
+   "king": 550,
+   "floor": 547.5,
+   "ceiling": 550,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "calf@550 ?",
+    "calf@547.5 ?",
+    "calf@555 ?",
+    "calf@545 ?"
+   ],
+   "status": "FILLED std2.25_gatekeeper up"
+  },
+  {
+   "D": "2026-09-21",
+   "exp": "2026-09-25",
+   "spot": 585.585,
+   "king": 580,
+   "floor": 580,
+   "ceiling": 600,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@580 ?",
+    "calf@585 ?"
+   ],
+   "status": "no fill (blocked: std 1, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-22",
+   "exp": "2026-09-25",
+   "spot": 614.4649999999999,
+   "king": 607.5,
+   "floor": 607.5,
+   "ceiling": 620,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@607.5 ?",
+    "calf@620 ?",
+    "calf@612.5 ?",
+    "calf@610 ?"
+   ],
+   "status": "FILLED std2.5_gatekeeper down"
+  },
+  {
+   "D": "2026-09-23",
+   "exp": "2026-09-25",
+   "spot": 618.735,
+   "king": 612.5,
+   "floor": 612.5,
+   "ceiling": 620,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@612.5 ?",
+    "calf@617.5 ?",
+    "calf@610 ?",
+    "calf@620 ?",
+    "calf@627.5 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  },
+  {
+   "D": "2026-09-24",
+   "status": "in position"
+  },
+  {
+   "D": "2026-09-25",
+   "exp": "2026-10-02",
+   "spot": 635.925,
+   "king": 630,
+   "floor": 630,
+   "ceiling": 642.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@630 ?",
+    "calf@642.5 ?",
+    "calf@627.5 ?",
+    "calf@640 ?",
+    "calf@632.5 ?"
+   ],
+   "status": "no option print at fill"
+  },
+  {
+   "D": "2026-09-28",
+   "exp": "2026-10-02",
+   "spot": 622.715,
+   "king": 630,
+   "floor": 617.5,
+   "ceiling": 630,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@630 ?",
+    "calf@617.5 ?",
+    "calf@620 ?",
+    "calf@627.5 ?"
+   ],
+   "status": "no fill (blocked: std 10, vix 0, rr 0)"
+  },
+  {
+   "D": "2026-09-29",
+   "exp": "2026-10-02",
+   "spot": 609.5250000000001,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 620,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "calf@615 ?",
+    "calf@612.5 ?",
+    "calf@617.5 ?",
+    "calf@602.5 ?"
+   ],
+   "status": "FILLED std2.25_pika down"
+  },
+  {
+   "D": "2026-09-30",
+   "status": "in position"
+  },
+  {
+   "D": "2026-10-01",
+   "status": "in position"
+  },
+  {
+   "D": "2026-10-02",
+   "exp": "2026-10-09",
+   "spot": 636.835,
+   "king": 640,
+   "floor": 625,
+   "ceiling": 640,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "calf@640 ?",
+    "calf@627.5 ?",
+    "calf@635 ?",
+    "calf@637.5 ?",
+    "calf@630 ?"
+   ],
+   "status": "FILLED std2.5_pika up"
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-07-08",
+   "et": "13:45",
+   "setup": "std2.5_gatekeeper",
+   "direction": "up",
+   "node": 510,
+   "nodeType": "gatekeeper",
+   "stop": 505,
+   "t1": 517.5,
+   "t2": 525,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260710C00510000",
+   "entryOpt": 13.88,
+   "exits": "T1@07-08 $17.4 · T2@07-09 $32",
+   "exitDay": "2026-07-09",
+   "retMid": 0.78,
+   "retWorst": 0.56
+  },
+  {
+   "D": "2026-07-10",
+   "et": "13:15",
+   "setup": "std2_pika",
+   "direction": "down",
+   "node": 555,
+   "nodeType": "pika",
+   "stop": 560,
+   "t1": 550,
+   "t2": 540,
+   "rr": 3,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD260717P00555000",
+   "entryOpt": 23.7,
+   "exits": "T1@07-13 $29.3 · T2@07-13 $29.3",
+   "exitDay": "2026-07-13",
+   "retMid": 0.236,
+   "retWorst": 0.236
+  },
+  {
+   "D": "2026-07-14",
+   "et": "12:07",
+   "setup": "std2.25_gatekeeper",
+   "direction": "up",
+   "node": 555,
+   "nodeType": "gatekeeper",
+   "stop": 552.5,
+   "t1": 565,
+   "t2": 570,
+   "rr": 6,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD260717C00555000",
+   "entryOpt": 19.35,
+   "exits": "stop(close)@07-14 $14.21",
+   "exitDay": "2026-07-14",
+   "retMid": -0.266,
+   "retWorst": -0.28
+  },
+  {
+   "D": "2026-07-16",
+   "et": "10:20",
+   "setup": "std2_normal",
+   "direction": "up",
+   "node": 510,
+   "nodeType": "normal",
+   "stop": 505,
+   "t1": 517.5,
+   "t2": 527.5,
+   "rr": 3.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD260722C00510000",
+   "entryOpt": 21.8,
+   "exits": "stop(close)@07-16 $15.25",
+   "exitDay": "2026-07-16",
+   "retMid": -0.3,
+   "retWorst": -0.307
+  },
+  {
+   "D": "2026-07-20",
+   "et": "09:59",
+   "setup": "std2.5_normal",
+   "direction": "up",
+   "node": 510,
+   "nodeType": "normal",
+   "stop": 507.5,
+   "t1": 517.5,
+   "t2": 520,
+   "rr": 4,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260722C00510000",
+   "entryOpt": 16.05,
+   "exits": "T1@07-20 $18.35 · breakeven@07-20 $14.95",
+   "exitDay": "2026-07-20",
+   "retMid": 0.037,
+   "retWorst": 0.019
+  },
+  {
+   "D": "2026-07-21",
+   "et": "10:18",
+   "setup": "std2_normal",
+   "direction": "down",
+   "node": 530,
+   "nodeType": "normal",
+   "stop": 532.5,
+   "t1": 525,
+   "t2": 517.5,
+   "rr": 5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260722P00530000",
+   "entryOpt": 12.7,
+   "exits": "stop(close)@07-21 $4.15",
+   "exitDay": "2026-07-21",
+   "retMid": -0.673,
+   "retWorst": -0.69
+  },
+  {
+   "D": "2026-08-10",
+   "et": "13:18",
+   "setup": "std2.25_normal",
+   "direction": "up",
+   "node": 475,
+   "nodeType": "normal",
+   "stop": 474,
+   "t1": 477.5,
+   "t2": 482.5,
+   "rr": 7.5,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260814C00475000",
+   "entryOpt": 13.16,
+   "exits": "stop(close)@08-10 $10.25",
+   "exitDay": "2026-08-10",
+   "retMid": -0.221,
+   "retWorst": -0.223
+  },
+  {
+   "D": "2026-08-11",
+   "et": "13:57",
+   "setup": "std2_normal",
+   "direction": "down",
+   "node": 470,
+   "nodeType": "normal",
+   "stop": 472.5,
+   "t1": 465,
+   "t2": 462.5,
+   "rr": 3,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260814P00470000",
+   "entryOpt": 11.27,
+   "exits": "stop(close)@08-11 $8.95",
+   "exitDay": "2026-08-11",
+   "retMid": -0.206,
+   "retWorst": -0.206
+  },
+  {
+   "D": "2026-08-12",
+   "et": "13:49",
+   "setup": "std2.5_gatekeeper",
+   "direction": "down",
+   "node": 490,
+   "nodeType": "gatekeeper",
+   "stop": 492.5,
+   "t1": 480,
+   "t2": null,
+   "rr": 4,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260814P00490000",
+   "entryOpt": 9.4,
+   "exits": "time@08-13 $10.15",
+   "exitDay": "2026-08-13",
+   "retMid": 0.08,
+   "retWorst": 0.048
+  },
+  {
+   "D": "2026-08-21",
+   "et": "14:31",
+   "setup": "std2.25_gatekeeper",
+   "direction": "up",
+   "node": 470,
+   "nodeType": "gatekeeper",
+   "stop": 469,
+   "t1": 475,
+   "t2": 482.5,
+   "rr": 12.5,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260828C00470000",
+   "entryOpt": 14.2,
+   "exits": "stop(close)@08-24 $6",
+   "exitDay": "2026-08-24",
+   "retMid": -0.577,
+   "retWorst": -0.577
+  },
+  {
+   "D": "2026-08-26",
+   "et": "11:03",
+   "setup": "std2.5_gatekeeper",
+   "direction": "up",
+   "node": 482.5,
+   "nodeType": "gatekeeper",
+   "stop": 480,
+   "t1": 485,
+   "t2": 492.5,
+   "rr": 4,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260828C00482500",
+   "entryOpt": 10,
+   "exits": "T1@08-26 $10.66 · breakeven@08-26 $9.28",
+   "exitDay": "2026-08-26",
+   "retMid": -0.003,
+   "retWorst": -0.004
+  },
+  {
+   "D": "2026-08-27",
+   "et": "12:11",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 472.5,
+   "nodeType": "pika",
+   "stop": 470,
+   "t1": 475,
+   "t2": 477.5,
+   "rr": 2,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260904C00472500",
+   "entryOpt": 16.6,
+   "exits": "T1@08-27 $0 · breakeven@08-27 $15.05",
+   "exitDay": "2026-08-27",
+   "retMid": -0.547,
+   "retWorst": -0.547
+  },
+  {
+   "D": "2026-08-31",
+   "et": "11:39",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 465,
+   "nodeType": "pika",
+   "stop": 464,
+   "t1": 472.5,
+   "t2": 475,
+   "rr": 10,
+   "chart": "down",
+   "chartOk": true,
+   "contract": "AMD260904C00465000",
+   "entryOpt": 10.6,
+   "exits": "stop(close)@09-01 $6.73",
+   "exitDay": "2026-09-01",
+   "retMid": -0.365,
+   "retWorst": -0.368
+  },
+  {
+   "D": "2026-09-10",
+   "et": "13:37",
+   "setup": "std2_normal",
+   "direction": "up",
+   "node": 505,
+   "nodeType": "normal",
+   "stop": 500,
+   "t1": 510,
+   "t2": 520,
+   "rr": 3,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260918C00505000",
+   "entryOpt": 15.35,
+   "exits": "stop(close)@09-14 $7.18",
+   "exitDay": "2026-09-14",
+   "retMid": -0.532,
+   "retWorst": -0.532
+  },
+  {
+   "D": "2026-09-16",
+   "et": "13:03",
+   "setup": "std2.5_gatekeeper",
+   "direction": "up",
+   "node": 520,
+   "nodeType": "gatekeeper",
+   "stop": 517.5,
+   "t1": 522.5,
+   "t2": 525,
+   "rr": 2,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260918C00520000",
+   "entryOpt": 10.4,
+   "exits": "T1@09-16 $10.65 · T2@09-16 $12.89",
+   "exitDay": "2026-09-16",
+   "retMid": 0.132,
+   "retWorst": 0.099
+  },
+  {
+   "D": "2026-09-18",
+   "et": "13:53",
+   "setup": "std2.25_gatekeeper",
+   "direction": "up",
+   "node": 545,
+   "nodeType": "gatekeeper",
+   "stop": 540,
+   "t1": 550,
+   "t2": 555,
+   "rr": 2,
+   "chart": "mixed",
+   "chartOk": true,
+   "contract": "AMD260925C00545000",
+   "entryOpt": 14.85,
+   "exits": "T1@09-18 $18.47 · T2@09-18 $21.61",
+   "exitDay": "2026-09-18",
+   "retMid": 0.349,
+   "retWorst": 0.152
+  },
+  {
+   "D": "2026-09-22",
+   "et": "12:07",
+   "setup": "std2.5_gatekeeper",
+   "direction": "down",
+   "node": 620,
+   "nodeType": "gatekeeper",
+   "stop": 621,
+   "t1": 612.5,
+   "t2": 607.5,
+   "rr": 12.5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD260925P00620000",
+   "entryOpt": 13,
+   "exits": "stop(close)@09-22 $10.9",
+   "exitDay": "2026-09-22",
+   "retMid": -0.162,
+   "retWorst": -0.162
+  },
+  {
+   "D": "2026-09-23",
+   "et": "13:03",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 610,
+   "nodeType": "pika",
+   "stop": 607.5,
+   "t1": 620,
+   "t2": 622.5,
+   "rr": 5,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD260925C00610000",
+   "entryOpt": 10.7,
+   "exits": "T1@09-24 $15.5 · T2@09-24 $16",
+   "exitDay": "2026-09-24",
+   "retMid": 0.472,
+   "retWorst": 0.302
+  },
+  {
+   "D": "2026-09-29",
+   "et": "10:01",
+   "setup": "std2.25_pika",
+   "direction": "down",
+   "node": 617.5,
+   "nodeType": "pika",
+   "stop": 620,
+   "t1": 607.5,
+   "t2": 600,
+   "rr": 7,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD261002P00617500",
+   "entryOpt": 13.41,
+   "exits": "T1@09-29 $0 · breakeven@10-01 $9.35",
+   "exitDay": "2026-10-01",
+   "retMid": -0.651,
+   "retWorst": -0.676
+  },
+  {
+   "D": "2026-10-02",
+   "et": "12:34",
+   "setup": "std2.5_pika",
+   "direction": "up",
+   "node": 630,
+   "nodeType": "pika",
+   "stop": 627.5,
+   "t1": 637.5,
+   "t2": 640,
+   "rr": 4,
+   "chart": "up",
+   "chartOk": true,
+   "contract": "AMD261009C00630000",
+   "entryOpt": 16.2,
+   "exits": "time@10-02 $16.95",
+   "exitDay": "2026-10-02",
+   "retMid": 0.046,
+   "retWorst": 0.027
+  }
+ ]
+}

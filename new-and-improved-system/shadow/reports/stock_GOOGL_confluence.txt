@@ -1,0 +1,26 @@
+
+=========== GOOGL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+GOOGL itself: 359.48 → 343.59 (-4.4%)
+ALL trades                 n= 8  win  13%  @$1k/trade mid -$2762  worst -$2923  avg -35%  SQN -2.88
+  chart-aligned only       n= 7  win  14%  @$1k/trade mid -$2133  worst -$2268  avg -30%  SQN -2.34
+  against chart            n= 1  win   0%  @$1k/trade mid -$629  worst -$655  avg -63%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  20%  @$1k/trade mid -$1427  worst -$1568  avg -29%  SQN -2.03
+  shorts                   n= 3  win   0%  @$1k/trade mid -$1335  worst -$1355  avg -45%  SQN -1.81
+
+day outcomes: no fill 31 · FILLED reverse_rug+std2 up 1 · in position 6 · no setup in reach 9 · no contract data 1 · FILLED ceiling+std2 down 1 · FILLED reverse_rug+std2.25 up 2 · FILLED floor+std2.5 up 2 · FILLED ceiling+std2.25 down 2 · no board 3
+
+-- every trade --
+  2026-07-09 13:32 CALL reverse_rug+std2 @355 (gatekeeper) stop 352.5 T1 357.5 T2 360 rr 2   GOOGL260717C00355000 in $7.3 → T1@07-09 $8.4 · breakeven@07-10 $6.04  =  -1%
+  2026-07-29 12:10 PUT  ceiling+std2 @335 (king) stop 337.5 T1 332.5 T2 325 rr 4   GOOGL260731P00335000 in $4.95 → T1@07-30 $4.9 · time@07-30 $3.35  =  -17%
+  2026-08-06 10:28 CALL reverse_rug+std2.25 @360 (king) stop 359 T1 365 T2 372.5 rr 12.5   GOOGL260814C00360000 in $7.7 → stop(close)@08-06 $5.85  =  -24%
+  2026-08-11 11:34 CALL floor+std2.5 @350 (king) stop 347.5 T1 357.5 T2 360 rr 4   GOOGL260814C00350000 in $4.6 → stop(close)@08-11 $1.89  =  -59%
+  2026-08-26 11:16 CALL floor+std2.5 @342.5 (barney) stop 340 T1 347.5 T2 352.5 rr 4 [vs chart]  GOOGL260828C00342500 in $3.5 → time@08-27 $1.3  =  -63%
+  2026-09-01 14:15 PUT  ceiling+std2.25 @335 (gatekeeper) stop 337.5 T1 332.5 T2 327.5 rr 3   GOOGL260904P00335000 in $3.8 → stop(close)@09-03 $0.25  =  -93%
+  2026-09-10 10:19 PUT  ceiling+std2.25 @330 (king) stop 331 T1 325 T2 322.5 rr 7.5   GOOGL260918P00330000 in $5.65 → stop(close)@09-10 $4.33  =  -23%
+  2026-09-16 11:32 CALL reverse_rug+std2.25 @345 (gatekeeper) stop 342.5 T1 347.5 T2 350 rr 2   GOOGL260918C00345000 in $4.05 → T1@09-17 $5.77 · breakeven@09-17 $2.67  =  4%
+
+credits used 15

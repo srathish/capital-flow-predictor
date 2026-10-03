@@ -1,0 +1,38 @@
+
+=========== AMD weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=calfnovix ===========
+AMD itself: 538.78 → 633.71 (17.6%)
+ALL trades                 n=20  win  40%  @$1k/trade mid -$2371  worst -$3129  avg -12%  SQN -1.34
+  chart-aligned only       n=20  win  40%  @$1k/trade mid -$2371  worst -$3129  avg -12%  SQN -1.34
+  against chart            n= 0
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n=14  win  43%  @$1k/trade mid -$995  worst -$1679  avg -7%  SQN -0.65
+  shorts                   n= 6  win  33%  @$1k/trade mid -$1376  worst -$1450  avg -23%  SQN -1.51
+
+day outcomes: no fill 22 · FILLED std2.5_gatekeeper up 3 · in position 9 · FILLED std2_pika down 1 · FILLED std2.25_gatekeeper up 3 · FILLED std2_normal up 2 · no option print at fill 3 · FILLED std2.5_normal up 1 · FILLED std2_normal down 2 · FILLED std2.25_normal up 1 · FILLED std2.5_gatekeeper down 2 · FILLED std2.5_pika up 4 · no board 4 · FILLED std2.25_pika down 1
+
+-- every trade --
+  2026-07-08 13:45 CALL std2.5_gatekeeper @510 (gatekeeper) stop 505 T1 517.5 T2 525 rr 3   AMD260710C00510000 in $13.88 → T1@07-08 $17.4 · T2@07-09 $32  =  78%
+  2026-07-10 13:15 PUT  std2_pika   @555 (pika) stop 560 T1 550 T2 540 rr 3   AMD260717P00555000 in $23.7 → T1@07-13 $29.3 · T2@07-13 $29.3  =  24%
+  2026-07-14 12:07 CALL std2.25_gatekeeper @555 (gatekeeper) stop 552.5 T1 565 T2 570 rr 6   AMD260717C00555000 in $19.35 → stop(close)@07-14 $14.21  =  -27%
+  2026-07-16 10:20 CALL std2_normal @510 (normal) stop 505 T1 517.5 T2 527.5 rr 3.5   AMD260722C00510000 in $21.8 → stop(close)@07-16 $15.25  =  -30%
+  2026-07-20 09:59 CALL std2.5_normal @510 (normal) stop 507.5 T1 517.5 T2 520 rr 4   AMD260722C00510000 in $16.05 → T1@07-20 $18.35 · breakeven@07-20 $14.95  =  4%
+  2026-07-21 10:18 PUT  std2_normal @530 (normal) stop 532.5 T1 525 T2 517.5 rr 5   AMD260722P00530000 in $12.7 → stop(close)@07-21 $4.15  =  -67%
+  2026-08-10 13:18 CALL std2.25_normal @475 (normal) stop 474 T1 477.5 T2 482.5 rr 7.5   AMD260814C00475000 in $13.16 → stop(close)@08-10 $10.25  =  -22%
+  2026-08-11 13:57 PUT  std2_normal @470 (normal) stop 472.5 T1 465 T2 462.5 rr 3   AMD260814P00470000 in $11.27 → stop(close)@08-11 $8.95  =  -21%
+  2026-08-12 13:49 PUT  std2.5_gatekeeper @490 (gatekeeper) stop 492.5 T1 480 T2 null rr 4   AMD260814P00490000 in $9.4 → time@08-13 $10.15  =  8%
+  2026-08-21 14:31 CALL std2.25_gatekeeper @470 (gatekeeper) stop 469 T1 475 T2 482.5 rr 12.5   AMD260828C00470000 in $14.2 → stop(close)@08-24 $6  =  -58%
+  2026-08-26 11:03 CALL std2.5_gatekeeper @482.5 (gatekeeper) stop 480 T1 485 T2 492.5 rr 4   AMD260828C00482500 in $10 → T1@08-26 $10.66 · breakeven@08-26 $9.28  =  -0%
+  2026-08-27 12:11 CALL std2.5_pika @472.5 (pika) stop 470 T1 475 T2 477.5 rr 2   AMD260904C00472500 in $16.6 → T1@08-27 $0 · breakeven@08-27 $15.05  =  -55%
+  2026-08-31 11:39 CALL std2.5_pika @465 (pika) stop 464 T1 472.5 T2 475 rr 10   AMD260904C00465000 in $10.6 → stop(close)@09-01 $6.73  =  -37%
+  2026-09-10 13:37 CALL std2_normal @505 (normal) stop 500 T1 510 T2 520 rr 3   AMD260918C00505000 in $15.35 → stop(close)@09-14 $7.18  =  -53%
+  2026-09-16 13:03 CALL std2.5_gatekeeper @520 (gatekeeper) stop 517.5 T1 522.5 T2 525 rr 2   AMD260918C00520000 in $10.4 → T1@09-16 $10.65 · T2@09-16 $12.89  =  13%
+  2026-09-18 13:53 CALL std2.25_gatekeeper @545 (gatekeeper) stop 540 T1 550 T2 555 rr 2   AMD260925C00545000 in $14.85 → T1@09-18 $18.47 · T2@09-18 $21.61  =  35%
+  2026-09-22 12:07 PUT  std2.5_gatekeeper @620 (gatekeeper) stop 621 T1 612.5 T2 607.5 rr 12.5   AMD260925P00620000 in $13 → stop(close)@09-22 $10.9  =  -16%
+  2026-09-23 13:03 CALL std2.5_pika @610 (pika) stop 607.5 T1 620 T2 622.5 rr 5   AMD260925C00610000 in $10.7 → T1@09-24 $15.5 · T2@09-24 $16  =  47%
+  2026-09-29 10:01 PUT  std2.25_pika @617.5 (pika) stop 620 T1 607.5 T2 600 rr 7   AMD261002P00617500 in $13.41 → T1@09-29 $0 · breakeven@10-01 $9.35  =  -65%
+  2026-10-02 12:34 CALL std2.5_pika @630 (pika) stop 627.5 T1 637.5 T2 640 rr 4   AMD261009C00630000 in $16.2 → time@10-02 $16.95  =  5%
+
+credits used 10

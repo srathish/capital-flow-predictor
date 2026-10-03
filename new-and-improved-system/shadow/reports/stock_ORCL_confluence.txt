@@ -1,0 +1,20 @@
+
+=========== ORCL weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 58 trading days · criteria=confluence ===========
+ORCL itself: 143.40 → 142.52 (-0.6%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid +$216  worst -$65  avg 11%  SQN 0.18
+  chart-aligned only       n= 1  win   0%  @$1k/trade mid -$483  worst -$490  avg -48%  SQN 0.00
+  against chart            n= 1  win 100%  @$1k/trade mid +$699  worst +$425  avg 70%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 2  win  50%  @$1k/trade mid +$216  worst -$65  avg 11%  SQN 0.18
+
+day outcomes: no fill 35 · no board 9 · no setup in reach 10 · FILLED ceiling+std3.5 down 1 · in position 2 · FILLED ceiling+std2.25 down 1
+
+-- every trade --
+  2026-07-29 14:00 PUT  ceiling+std3.5 @120 (king) stop 121 T1 119 T2 117 rr 3   ORCL260731P00120000 in $3.45 → T1@07-29 $3.57 · breakeven@07-30 $0  =  -48%
+  2026-08-31 11:42 PUT  ceiling+std2.25 @150 (gatekeeper) stop 151 T1 148 T2 146 rr 4 [vs chart]  ORCL260904P00150000 in $3.65 → T1@09-01 $6.2 · T2@09-01 $6.2  =  70%
+
+credits used 25
