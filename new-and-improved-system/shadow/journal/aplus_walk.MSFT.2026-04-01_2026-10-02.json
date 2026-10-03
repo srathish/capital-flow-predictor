@@ -218,7 +218,20 @@
    "contract": "MSFT260501C00390000",
    "in": 16.09,
    "exits": "TARGET@04-15 $19.5 · T2@04-15 $21.41",
-   "ret": 0.271
+   "ret": 0.271,
+   "R": 3.53,
+   "rs20": -0.064,
+   "mom5": 0.0308,
+   "atrPct": 0.0235,
+   "gap": 0.0091,
+   "spyTrend": "mixed",
+   "spyWith": false,
+   "share": 0.2292005084582432,
+   "structure": false,
+   "fib": false,
+   "level": false,
+   "vex": true,
+   "entryMin": 26
   },
   {
    "D": "2026-05-04",
@@ -235,7 +248,20 @@
    "contract": "MSFT260522C00415000",
    "in": 10.45,
    "exits": "TARGET@05-07 $13.5 · T2@05-07 $15.85",
-   "ret": 0.404
+   "ret": 0.404,
+   "R": 4.32,
+   "rs20": 0.0105,
+   "mom5": -0.0245,
+   "atrPct": 0.0298,
+   "gap": -0.0064,
+   "spyTrend": "up",
+   "spyWith": true,
+   "share": 0.45960970780402033,
+   "structure": false,
+   "fib": false,
+   "level": true,
+   "vex": true,
+   "entryMin": 158
   },
   {
    "D": "2026-08-05",
@@ -252,7 +278,20 @@
    "contract": "MSFT260821C00490000",
    "in": 13.8,
    "exits": "stop(close)@08-05 $11",
-   "ret": -0.203
+   "ret": -0.203,
+   "R": -1.02,
+   "rs20": 0.2352,
+   "mom5": 0.2517,
+   "atrPct": 0.0361,
+   "gap": 0.0086,
+   "spyTrend": "up",
+   "spyWith": true,
+   "share": 0.15795541960380133,
+   "structure": false,
+   "fib": false,
+   "level": false,
+   "vex": false,
+   "entryMin": 15
   },
   {
    "D": "2026-08-07",
@@ -269,7 +308,20 @@
    "contract": "MSFT260821C00500000",
    "in": 11.14,
    "exits": "TARGET@08-10 $15.45 · breakeven@08-12 $8.1",
-   "ret": 0.057
+   "ret": 0.057,
+   "R": 1.89,
+   "rs20": 0.2789,
+   "mom5": 0.1085,
+   "atrPct": 0.0357,
+   "gap": -0.0012,
+   "spyTrend": "up",
+   "spyWith": true,
+   "share": 0.3666127880599697,
+   "structure": false,
+   "fib": false,
+   "level": false,
+   "vex": false,
+   "entryMin": 210
   },
   {
    "D": "2026-09-09",
@@ -286,7 +338,20 @@
    "contract": "MSFT260925C00490000",
    "in": 12,
    "exits": "TARGET@09-14 $15 · T2@09-14 $15.3",
-   "ret": 0.263
+   "ret": 0.263,
+   "R": 4.57,
+   "rs20": -0.0147,
+   "mom5": -0.0263,
+   "atrPct": 0.0208,
+   "gap": -0.0017,
+   "spyTrend": "mixed",
+   "spyWith": false,
+   "share": 0.1289282826532212,
+   "structure": false,
+   "fib": true,
+   "level": true,
+   "vex": true,
+   "entryMin": 39
   },
   {
    "D": "2026-09-15",
@@ -303,7 +368,20 @@
    "contract": "MSFT261002C00500000",
    "in": 12.87,
    "exits": "stop(close)@09-15 $9.87",
-   "ret": -0.233
+   "ret": -0.233,
+   "R": -1.3,
+   "rs20": 0.0403,
+   "mom5": 0.0114,
+   "atrPct": 0.0207,
+   "gap": -0.0093,
+   "spyTrend": "mixed",
+   "spyWith": false,
+   "share": 0.5225336128492469,
+   "structure": false,
+   "fib": false,
+   "level": false,
+   "vex": true,
+   "entryMin": 5
   }
  ]
 }
