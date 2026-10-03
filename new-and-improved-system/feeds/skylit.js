@@ -16,11 +16,17 @@ async function gate() {
 }
 
 async function withRetry(fn, label) {
-  for (let attempt = 0; attempt < 4; attempt++) {
+  // Honor 429s properly: the 120/min budget is per ACCOUNT, so parallel jobs share it. Back off using Retry-After
+  // when Skylit sends it, else 5s, 10s, 15s … (up to ~3 minutes total) before giving up.
+  for (let attempt = 0; attempt < 10; attempt++) {
     await gate();
     usage.calls++;
     const res = await fn();
-    if (res.status === 429) { await sleep(2500 * (attempt + 1)); continue; }
+    if (res.status === 429) {
+      const ra = Number(res.headers?.get?.('retry-after'));
+      await sleep(Number.isFinite(ra) && ra > 0 ? ra * 1000 + 250 : 5000 * (attempt + 1));
+      continue;
+    }
     return res;
   }
   throw new Error(`${label}: rate-limited after retries`);
