@@ -1,0 +1,17 @@
+Part A — 624 stock-weeks · 16 names · next-week beta-adjusted return, signed by the flow call
+
+  7d direction (bull long / bear short) all -1.25% (t -0.7, n 13) | Jan–May -1.42% n 11 | Jun–Sep -0.36% n 2
+  1d direction                         all +0.72% (t 0.8, n 33) | Jan–May +0.15% n 24 | Jun–Sep +2.26% n 9
+  7d bullish only (long)               all -2.27% (t -3.1, n 2) | Jan–May - n 1 | Jun–Sep - n 1
+  7d bearish only (short)              all -1.07% (t -0.5, n 11) | Jan–May -1.40% n 10 | Jun–Sep - n 1
+  7d direction + sweep alignment       all -1.25% (t -0.7, n 13) | Jan–May -1.42% n 11 | Jun–Sep -0.36% n 2
+  composite-7d top4 − bottom4 (weekly) all -0.47% (t -0.7, n 39 weeks) | Jan–May -0.77% | Jun–Sep -0.08%
+  corr(composite 7d, next-week return) = -0.061
+
+Part B — A+ trades: did the prior session's flow agree with the trade?
+  7d flow agree    n   0 · win(R>0) 0% · avg R - · option-priced 0: -
+  7d flow neutral  n  68 · win(R>0) 37% · avg R -0.28 · option-priced 55: $-6582
+  7d flow against  n   1 · win(R>0) 0% · avg R -1.69 · option-priced 1: $-340
+  1d flow agree    n   2 · win(R>0) 50% · avg R -0.36 · option-priced 1: $-193
+  1d flow neutral  n  67 · win(R>0) 36% · avg R -0.30 · option-priced 55: $-6729
+  1d flow against  n   0 · win(R>0) 0% · avg R - · option-priced 0: -

@@ -1,0 +1,19 @@
+
+=========== APP weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+APP itself: 532.46 → 268.20 (-49.6%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$682  worst +$682  avg 68%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win 100%  @$1k/trade mid +$682  worst +$682  avg 68%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win 100%  @$1k/trade mid +$682  worst +$682  avg 68%  SQN 0.00
+
+day outcomes: no fill 47 · no setup in reach 15 · no contract data 3 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-09-18 09:35 PUT  inverse_floor @320 (king) stop 322.5 T1 315 T2 312.5 rr 3 [vs chart]  APP260925P00320000 in $7.02 → T1@09-18 $11.28 · T2@09-18 $12.34  =  68%
+
+credits used 0

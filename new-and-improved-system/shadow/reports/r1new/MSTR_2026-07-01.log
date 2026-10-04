@@ -1,0 +1,20 @@
+
+=========== MSTR weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+MSTR itself: 87.69 → 159.97 (82.4%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid -$276  worst -$376  avg -14%  SQN -0.29
+  chart-aligned only       n= 0
+  against chart            n= 2  win  50%  @$1k/trade mid -$276  worst -$376  avg -14%  SQN -0.29
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win  50%  @$1k/trade mid -$276  worst -$376  avg -14%  SQN -0.29
+  shorts                   n= 0
+
+day outcomes: no fill 54 · no setup in reach 10 · FILLED inverse_ceiling up 2
+
+-- every trade --
+  2026-08-28 09:35 CALL inverse_ceiling @135 (king) stop 134 T1 136 T2 137 rr 2 [vs chart]  MSTR260904C00135000 in $5.65 → stop(close)@08-28 $2.16  =  -62%
+  2026-09-17 09:35 CALL inverse_ceiling @130 (gatekeeper) stop 129 T1 132 T2 133 rr 3 [vs chart]  MSTR260925C00130000 in $5.05 → T1@09-17 $6.5 · T2@09-17 $7.05  =  34%
+
+credits used 0

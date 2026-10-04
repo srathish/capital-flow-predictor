@@ -1,0 +1,39 @@
+
+=== A+ walk-forward (map only) [wide stop] · JPM · 2026-01-02 → 2026-10-02 (189 trading days) · JPM 323 → 332 ===
+A+ setups found: 12 on 12 days · filled: 5
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-02-18 BEAR entry 310 stop 312.5 target 300 (R:R 4) — FILLED 10:31 · chart: level (1/4, STRUCTURE AGAINST)
+      why: king ceiling 310 (34%) · untouched target 300 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend down
+  2026-03-06 BEAR entry 287.5 stop 290 target 280 (R:R 3) — FILLED 11:18 · chart: structure (1/4)
+      why: gatekeeper ceiling 287.5 (29%) · untouched target 280 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-03-19 BEAR entry 290 stop 292.5 target 282.5 / 280 (R:R 3) — no retest that held
+      why: gatekeeper ceiling 290 (24%) · untouched target 282.5 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-03-26 BULL entry 290 stop 287.5 target 300 (R:R 4) — no retest that held
+      why: gatekeeper floor 290 (29%) · untouched target 300 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend mixed
+  2026-05-05 BULL entry 305 stop 302.5 target 312.5 / 315 (R:R 3) — no retest that held
+      why: gatekeeper floor 305 (15%) · untouched target 312.5 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+  2026-05-21 BULL entry 297.5 stop 295 target 305 / 307.5 (R:R 3) — no retest that held
+      why: gatekeeper floor 297.5 (25%) · untouched target 305 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+  2026-06-02 BEAR entry 302.5 stop 305 target 295 / 292.5 (R:R 3) — FILLED 14:35 · chart: structure+level (2/4)
+      why: gatekeeper ceiling 302.5 (22%) · untouched target 295 (king) · air pocket (1 small node(s) between) · R:R 3.0 · trend mixed
+  2026-06-22 BULL entry 327.5 stop 325 target 335 / 337.5 (R:R 3) — FILLED 09:35 · chart: structure (1/4)
+      why: king floor 327.5 (50%) · untouched target 335 (pika) · air pocket (0 small node(s) between) · R:R 3.0 · trend up
+  2026-07-14 BULL entry 332.5 stop 330 target 340 / 342.5 (R:R 3) — earnings blackout (2026-07-14)
+      why: king floor 332.5 (37%) · untouched target 340 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up
+  2026-09-01 BULL entry 352.5 stop 350 target 360 / 362.5 (R:R 3) — no retest that held
+      why: gatekeeper floor 352.5 (15%) · untouched target 360 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend up
+  2026-09-10 BULL entry 350 stop 347.5 target 360 (R:R 4) — no retest that held
+      why: king floor 350 (35%) · untouched target 360 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend mixed
+  2026-09-22 BULL entry 347.5 stop 345 target 355 / 357.5 (R:R 3) — FILLED 09:42 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king floor 347.5 (20%) · untouched target 355 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+  2026-02-18 10:31 PUT  @310 → tgt 300  [chart level 1/4]  JPM260220P00310000 in $4.72 → TARGET@02-23 $null · TARGET(all)@02-23 $undefined  =  unpriced  R 4.09
+  2026-03-06 11:18 PUT  @287.5 → tgt 280  [chart structure 1/4]  JPM260320P00287500 in $8 → TARGET@03-12 $9.57 · TARGET(all)@03-12 $9.57  =  20%  (+$196)  R 2.94
+  2026-06-02 14:35 PUT  @302.5 → tgt 295  [chart structure+level 2/4 ✓A+chart]  null in $null → stop(close)@06-04 $undefined  =  unpriced  R -3.36
+  2026-06-22 09:35 CALL @327.5 → tgt 335  [chart structure 1/4]  JPM260717C00330000 in $8.57 → TARGET@06-23 $11.79 · T2@06-25 $13.05  =  45%  (+$449)  R 3.57
+  2026-09-22 09:42 CALL @347.5 → tgt 355  [chart none 0/4]  JPM261009C00350000 in $6.47 → stop(close)@09-22 $2.69  =  -58%  (-$584)  R -2.98
+
+TOTAL: 5 trades · win 60% · +$61 on $1k/trade
+credits used 0

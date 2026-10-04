@@ -1,0 +1,32 @@
+
+=== A+ walk-forward (map only) [wide stop] · AVGO · 2026-01-02 → 2026-10-02 (189 trading days) · AVGO 353 → 355 ===
+A+ setups found: 8 on 8 days · filled: 6
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-03-09 BULL entry 325 stop 322.5 target 335 (R:R 4) — no retest that held
+      why: king floor 325 (83%) · untouched target 335 (normal) · air pocket (0 small node(s) between) · R:R 4.0 · trend mixed
+  2026-04-15 BULL entry 390 stop 387.5 target 397.5 / 400 (R:R 3) — FILLED 09:36 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king floor 390 (62%) · untouched target 397.5 (pika) · air pocket (0 small node(s) between) · R:R 3.0 · trend up
+  2026-05-06 BULL entry 430 stop 427.5 target 440 / 445 (R:R 4) — FILLED 09:44 · chart: structure+level (2/4)
+      why: gatekeeper floor 430 (18%) · untouched target 440 (king) · air pocket (1 small node(s) between) · R:R 4.0 · trend up
+  2026-06-09 BULL entry 395 stop 392.5 target 405 / 407.5 (R:R 4) — FILLED 10:10 · chart: structure (1/4)
+      why: gatekeeper floor 395 (18%) · untouched target 405 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend mixed
+  2026-06-17 BEAR entry 390 stop 392.5 target 375 (R:R 6) — FILLED 09:46 · chart: sweep (1/4)
+      why: gatekeeper ceiling 390 (24%) · untouched target 375 (gatekeeper) · air pocket (3 small node(s) between) · R:R 6.0 · trend mixed
+  2026-07-09 BULL entry 400 stop 397.5 target 410 (R:R 4) — FILLED 09:40 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king floor 400 (71%) · untouched target 410 (pika) · air pocket (0 small node(s) between) · R:R 4.0 · trend mixed
+  2026-09-02 BEAR entry 370 stop 372.5 target 355 (R:R 6) — earnings blackout (2026-09-02)
+      why: king ceiling 370 (55%) · untouched target 355 (normal) · air pocket (2 small node(s) between) · R:R 6.0 · trend down
+  2026-09-10 BEAR entry 360 stop 362.5 target 350 (R:R 4) — FILLED 09:35 · chart: level (1/4)
+      why: gatekeeper ceiling 360 (57%) · untouched target 350 (gatekeeper) · air pocket (0 small node(s) between) · R:R 4.0 · trend down
+
+-- trades (real option prices, $1k premium each) --
+  2026-04-15 09:36 CALL @390 → tgt 397.5  [chart none 0/4]  AVGO260501C00390000 in $16.5 → TARGET@04-16 $18 · T2@04-17 $20.36  =  16%  (+$162)  R 3.19
+  2026-05-06 09:44 CALL @430 → tgt 440  [chart structure+level 2/4 ✓A+chart]  AVGO260529C00430000 in $24.22 → stop(close)@05-07 $11.59  =  -52%  (-$521)  R -7.06
+  2026-06-09 10:10 CALL @395 → tgt 405  [chart structure 1/4]  AVGO260626C00395000 in $17.2 → stop(close)@06-10 $7.5  =  -56%  (-$564)  R -9.24
+  2026-06-17 09:46 PUT  @390 → tgt 375  [chart sweep 1/4]  AVGO260618P00390000 in $5.5 → stop(close)@06-18 $0.01  =  -100%  (-$998)  R -8.34
+  2026-07-09 09:40 CALL @400 → tgt 410  [chart none 0/4]  AVGO260724C00400000 in $19.05 → stop(close)@07-13 $8.7  =  -54%  (-$543)  R -6.63
+  2026-09-10 09:35 PUT  @360 → tgt 350  [chart level 1/4]  AVGO260918P00360000 in $8.75 → TARGET@09-14 $12.3 · TARGET(all)@09-14 $12.3  =  41%  (+$406)  R 4.53
+
+TOTAL: 6 trades · win 33% · -$2058 on $1k/trade · with sweep: 1 trades -$998
+credits used 0

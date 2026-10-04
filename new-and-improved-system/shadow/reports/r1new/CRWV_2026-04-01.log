@@ -1,0 +1,20 @@
+
+=========== CRWV weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+CRWV itself: 79.61 → 99.49 (25.0%)
+ALL trades                 n= 2  win 100%  @$1k/trade mid +$198  worst +$83  avg 10%  SQN 11.00
+  chart-aligned only       n= 0
+  against chart            n= 2  win 100%  @$1k/trade mid +$198  worst +$83  avg 10%  SQN 11.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win 100%  @$1k/trade mid +$198  worst +$83  avg 10%  SQN 11.00
+  shorts                   n= 0
+
+day outcomes: no fill 48 · no setup in reach 12 · FILLED inverse_ceiling up 1 · FILLED inverse_rug up 1
+
+-- every trade --
+  2026-04-29 09:36 CALL inverse_ceiling @110 (gatekeeper) stop 109 T1 111 T2 112 rr 2 [vs chart]  CRWV260501C00110000 in $4.73 → T1@04-29 $5.52 · breakeven@04-29 $4.96  =  11%
+  2026-06-01 09:38 CALL inverse_rug @118 (gatekeeper) stop 117 T1 120 T2 null rr 2 [vs chart]  CRWV260605C00120000 in $5 → T1@06-01 $5.8 · breakeven@06-01 $5.1  =  9%
+
+credits used 0

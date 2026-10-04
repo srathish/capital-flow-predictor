@@ -1,0 +1,19 @@
+
+=========== BAC weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+BAC itself: 57.15 → 53.77 (-5.9%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$957  worst -$957  avg -96%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$957  worst -$957  avg -96%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$957  worst -$957  avg -96%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no setup in reach 16 · no fill 49 · FILLED inverse_rug up 1
+
+-- every trade --
+  2026-09-14 09:36 CALL inverse_rug @62.5 (gatekeeper) stop 62 T1 63 T2 64 rr 3 [vs chart]  BAC260918C00062500 in $0.69 → stop(close)@09-14 $0.03  =  -96%
+
+credits used 0

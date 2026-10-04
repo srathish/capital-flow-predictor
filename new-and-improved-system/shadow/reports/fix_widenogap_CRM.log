@@ -1,0 +1,30 @@
+
+=== A+ walk-forward (map only) [wide stop] [no slide-in] · CRM · 2026-01-02 → 2026-10-02 (189 trading days) · CRM 265 → 235 ===
+A+ setups found: 9 on 9 days · filled: 2
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-03-03 BEAR entry 195 stop 196 target 190 / 187.5 (R:R 5) — no retest that held
+      why: gatekeeper ceiling 195 (26%) · untouched target 190 (gatekeeper) · air pocket (1 small node(s) between) · R:R 5.0 · trend down
+  2026-04-10 BEAR entry 170 stop 171 target 165 (R:R 5) — no retest that held
+      why: king ceiling 170 (52%) · untouched target 165 (gatekeeper) · air pocket (1 small node(s) between) · R:R 5.0 · trend down
+  2026-05-21 BEAR entry 175 stop 176 target 170 / 167.5 (R:R 5) — earnings blackout (2026-05-27)
+      why: gatekeeper ceiling 175 (24%) · untouched target 170 (king) · air pocket (1 small node(s) between) · R:R 5.0 · trend mixed
+  2026-05-28 BEAR entry 175 stop 176 target 170 (R:R 5) — FILLED 09:39 · chart: none (0/4)
+      why: king ceiling 175 (55%) · untouched target 170 (gatekeeper) · air pocket (0 small node(s) between) · R:R 5.0 · trend down
+  2026-07-15 BULL entry 170 stop 169 target 175 (R:R 5) — FILLED 09:44 · chart: structure (1/4)
+      why: gatekeeper floor 170 (30%) · untouched target 175 (king) · air pocket (1 small node(s) between) · R:R 5.0 · trend mixed
+  2026-07-22 BEAR entry 170 stop 171 target 165 (R:R 5) — no retest that held
+      why: king ceiling 170 (62%) · untouched target 165 (pika) · air pocket (1 small node(s) between) · R:R 5.0 · trend mixed
+  2026-08-05 BULL entry 190 stop 189 target 195 / 197.5 (R:R 5) — no retest that held
+      why: king floor 190 (53%) · untouched target 195 (gatekeeper) · air pocket (1 small node(s) between) · R:R 5.0 · trend up
+  2026-08-11 BULL entry 195 stop 194 target 200 / 202.5 (R:R 5) — no retest that held
+      why: king floor 195 (62%) · untouched target 200 (barney) · air pocket (0 small node(s) between) · R:R 5.0 · trend up
+  2026-09-22 BULL entry 237.5 stop 235 target 245 (R:R 3) — no retest that held
+      why: gatekeeper floor 237.5 (23%) · untouched target 245 (king) · air pocket (1 small node(s) between) · R:R 3.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+  2026-05-28 09:39 PUT  @175 → tgt 170  [chart none 0/4]  CRM260618P00175000 in $7.82 → stop(close)@05-29 $2.48  =  -68%  (-$683)  R -16.07
+  2026-07-15 09:44 CALL @170 → tgt 175  [chart structure 1/4]  CRM260717C00170000 in $3.18 → TARGET@07-17 $5.17 · TARGET(all)@07-17 $5.17  =  63%  (+$626)  R 4.94
+
+TOTAL: 2 trades · win 50% · -$57 on $1k/trade
+credits used 0

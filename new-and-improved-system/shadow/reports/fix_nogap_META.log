@@ -1,0 +1,37 @@
+
+=== A+ walk-forward (map only) [no slide-in] · META · 2026-01-02 → 2026-10-02 (189 trading days) · META 663 → 728 ===
+A+ setups found: 12 on 11 days · filled: 3
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-01-20 BEAR entry 615 stop 617.5 target 602.5 / 600 (R:R 5) — earnings blackout (2026-01-28)
+      why: gatekeeper ceiling 615 (17%) · untouched target 602.5 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend down
+  2026-01-23 BULL entry 650 stop 647.5 target 660 / 665 (R:R 4) — earnings blackout (2026-01-28)
+      why: gatekeeper floor 650 (22%) · untouched target 660 (gatekeeper) · air pocket (0 small node(s) between) · R:R 4.0 · trend mixed
+  2026-01-26 BEAR entry 670 stop 672.5 target 650 / 645 (R:R 8) — earnings blackout (2026-01-28)
+      why: gatekeeper ceiling 670 (21%) · untouched target 650 (gatekeeper) · air pocket (1 small node(s) between) · R:R 8.0 · trend mixed
+  2026-03-20 BEAR entry 600 stop 602.5 target 590 / 587.5 (R:R 4) — FILLED 09:35 · chart: structure (1/4)
+      why: gatekeeper ceiling 600 (27%) · untouched target 590 (barney) · air pocket (0 small node(s) between) · R:R 4.0 · trend down
+  2026-04-07 BEAR entry 575 stop 580 target 560 / 557.5 (R:R 3) — no retest that held
+      why: gatekeeper ceiling 575 (14%) · untouched target 560 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-04-20 BULL entry 675 stop 672.5 target 682.5 / 685 (R:R 3) — earnings blackout (2026-04-29)
+      why: king floor 675 (32%) · untouched target 682.5 (barney) · air pocket (0 small node(s) between) · R:R 3.0 · trend mixed
+  2026-04-20 BEAR entry 690 stop 692.5 target 675 (R:R 6) — earnings blackout (2026-04-29)
+      why: gatekeeper ceiling 690 (26%) · untouched target 675 (king) · air pocket (2 small node(s) between) · R:R 6.0 · trend mixed
+  2026-04-21 BEAR entry 675 stop 677.5 target 660 / 657.5 (R:R 6) — earnings blackout (2026-04-29)
+      why: king ceiling 675 (41%) · untouched target 660 (barney) · air pocket (0 small node(s) between) · R:R 6.0 · trend mixed
+  2026-07-30 BEAR entry 535 stop 537.5 target 520 (R:R 6) — no retest that held
+      why: gatekeeper ceiling 535 (44%) · untouched target 520 (pika) · air pocket (1 small node(s) between) · R:R 6.0 · trend mixed
+  2026-08-20 BEAR entry 550 stop 555 target 535 / 530 (R:R 3) — FILLED 09:46 · chart: none (0/4, STRUCTURE AGAINST)
+      why: gatekeeper ceiling 550 (29%) · untouched target 535 (pika) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-09-01 BEAR entry 570 stop 572.5 target 560 / 557.5 (R:R 4) — no retest that held
+      why: gatekeeper ceiling 570 (16%) · untouched target 560 (king) · air pocket (2 small node(s) between) · R:R 4.0 · trend down
+  2026-09-10 BULL entry 650 stop 647.5 target 660 / 670 (R:R 4) — FILLED 09:42 · chart: none (0/4)
+      why: king floor 650 (59%) · untouched target 660 (gatekeeper) · air pocket (0 small node(s) between) · R:R 4.0 · trend up
+
+-- trades (real option prices, $1k premium each) --
+  2026-03-20 09:35 PUT  @600 → tgt 590  [chart structure 1/4]  META260402P00600000 in $15.35 → TARGET@03-20 $20.17 · T2@03-20 $19.95  =  31%  (+$307)  R 4.48
+  2026-08-20 09:46 PUT  @550 → tgt 535  [chart none 0/4]  META260828P00550000 in $12.13 → stop(close)@08-24 $5.1  =  -58%  (-$580)  R -1.82
+  2026-09-10 09:42 CALL @650 → tgt 660  [chart none 0/4]  META260925C00650000 in $22.49 → stop(close)@09-10 $18.3  =  -19%  (-$186)  R -2.23
+
+TOTAL: 3 trades · win 33% · -$459 on $1k/trade
+credits used 0

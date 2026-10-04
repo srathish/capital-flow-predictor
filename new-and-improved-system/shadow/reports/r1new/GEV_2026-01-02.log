@@ -1,0 +1,21 @@
+
+=========== GEV weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+GEV itself: 661.19 → 873.00 (32.0%)
+ALL trades                 n= 3  win 100%  @$1k/trade mid +$906  worst +$410  avg 30%  SQN 2.73
+  chart-aligned only       n= 0
+  against chart            n= 3  win 100%  @$1k/trade mid +$906  worst +$410  avg 30%  SQN 2.73
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win 100%  @$1k/trade mid +$906  worst +$410  avg 30%  SQN 2.73
+  shorts                   n= 0
+
+day outcomes: FILLED inverse_rug up 2 · no fill 38 · FILLED inverse_ceiling up 1 · no setup in reach 17 · in position 1 · no contract data 2
+
+-- every trade --
+  2026-01-02 12:15 CALL inverse_rug @672.5 (pika) stop 671.5 T1 675 T2 680 rr 7.5 [vs chart]  GEV260109C00675000 in $11.02 → T1@01-02 $15.55 · breakeven@01-02 $14  =  34%
+  2026-01-20 10:36 CALL inverse_ceiling @690 (king) stop 685 T1 697.5 T2 700 rr 2 [vs chart]  GEV260123C00690000 in $12.74 → T1@01-20 $18.62 · T2@01-20 $18.85  =  47%
+  2026-01-27 11:10 CALL inverse_rug @690 (gatekeeper) stop 689 T1 700 T2 null rr 10 [vs chart]  GEV260130C00690000 in $18.28 → T1@01-28 $20 · breakeven@01-28 $20  =  9%
+
+credits used 0

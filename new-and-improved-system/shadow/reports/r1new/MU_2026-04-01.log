@@ -1,0 +1,21 @@
+
+=========== MU weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+MU itself: 348.70 → 1151.27 (230.2%)
+ALL trades                 n= 3  win  67%  @$1k/trade mid +$110  worst -$141  avg 4%  SQN 1.30
+  chart-aligned only       n= 0
+  against chart            n= 3  win  67%  @$1k/trade mid +$110  worst -$141  avg 4%  SQN 1.30
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  67%  @$1k/trade mid +$110  worst -$141  avg 4%  SQN 1.30
+  shorts                   n= 0
+
+day outcomes: no fill 54 · no setup in reach 5 · FILLED inverse_ceiling up 3
+
+-- every trade --
+  2026-05-12 09:38 CALL inverse_ceiling @770 (king) stop 765 T1 780 T2 790 rr 4 [vs chart]  MU260515C00770000 in $34.42 → T1@05-12 $40 · breakeven@05-12 $32  =  5%
+  2026-06-04 09:35 CALL inverse_ceiling @1015 (gatekeeper) stop 1014 T1 1020 T2 1040 rr 25 [vs chart]  MU260612C01015000 in $60.19 → T1@06-04 $62.24 · breakeven@06-04 $56.26  =  -2%
+  2026-06-30 09:35 CALL inverse_ceiling @1150 (barney) stop 1140 T1 1160 T2 1170 rr 2 [vs chart]  MU260702C01150000 in $40.72 → T1@06-30 $47.35 · breakeven@06-30 $40.6  =  8%
+
+credits used 0

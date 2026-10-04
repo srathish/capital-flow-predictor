@@ -1,0 +1,19 @@
+
+=========== TSM weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+TSM itself: 311.89 → 338.00 (8.4%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$577  worst -$577  avg -58%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$577  worst -$577  avg -58%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$577  worst -$577  avg -58%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no setup in reach 10 · no fill 50 · FILLED inverse_rug up 1
+
+-- every trade --
+  2026-01-30 10:40 CALL inverse_rug @340 (gatekeeper) stop 337.5 T1 345 T2 347.5 rr 3 [vs chart]  TSM260206C00340000 in $6.74 → stop(close)@01-30 $2.85  =  -58%
+
+credits used 0

@@ -1,0 +1,942 @@
+{
+ "plans": [
+  {
+   "D": "2026-01-02",
+   "exp": "2026-01-09",
+   "spot": 253,
+   "king": 260,
+   "floor": 250,
+   "ceiling": 260,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@250 up rr10"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":1})"
+  },
+  {
+   "D": "2026-01-05",
+   "exp": "2026-01-09",
+   "spot": 274.53,
+   "king": 280,
+   "floor": 270,
+   "ceiling": 280,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-01-06",
+   "exp": "2026-01-09",
+   "spot": 310.33,
+   "king": 302.5,
+   "floor": 302.5,
+   "ceiling": 315,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-01-07",
+   "exp": "2026-01-09",
+   "spot": 348.03,
+   "king": 340,
+   "floor": 340,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-01-08",
+   "exp": "2026-01-16",
+   "spot": 346.7,
+   "king": 350,
+   "floor": 340,
+   "ceiling": 350,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "ceiling@350 down rr10 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":2})"
+  },
+  {
+   "D": "2026-01-09",
+   "exp": "2026-01-16",
+   "spot": 345.95,
+   "king": 350,
+   "floor": 340,
+   "ceiling": 350,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "ceiling@350 down rr12.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5})"
+  },
+  {
+   "D": "2026-01-12",
+   "exp": "2026-01-16",
+   "spot": 388.75,
+   "king": 400,
+   "floor": 385,
+   "ceiling": 400,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@385 up rr15"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":16})"
+  },
+  {
+   "D": "2026-01-13",
+   "exp": "2026-01-16",
+   "spot": 385.58,
+   "king": 380,
+   "floor": 380,
+   "ceiling": 390,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@380 up rr5",
+    "ceiling@390 down rr4 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":104})"
+  },
+  {
+   "D": "2026-01-14",
+   "exp": "2026-01-16",
+   "spot": 394.175,
+   "king": 400,
+   "floor": 390,
+   "ceiling": 400,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@390 up rr6",
+    "ceiling@400 down rr12.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":106})"
+  },
+  {
+   "D": "2026-01-15",
+   "exp": "2026-01-23",
+   "spot": 406.04,
+   "king": 400,
+   "floor": 400,
+   "ceiling": 415,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@400 up rr15"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-01-16",
+   "exp": "2026-01-23",
+   "spot": 422.06,
+   "king": 415,
+   "floor": 415,
+   "ceiling": 427.5,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "rug@427.5 down rr4 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":9})"
+  },
+  {
+   "D": "2026-01-20",
+   "exp": "2026-01-23",
+   "spot": 433,
+   "king": 425,
+   "floor": 425,
+   "ceiling": 445,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-01-21",
+   "exp": "2026-01-23",
+   "spot": 454.22,
+   "king": 452.5,
+   "floor": 452.5,
+   "ceiling": 460,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@452.5 up rr3",
+    "ceiling@460 down rr15 (vs chart)"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3,\"trend\":2})"
+  },
+  {
+   "D": "2026-01-22",
+   "exp": "2026-01-30",
+   "spot": 478,
+   "king": 480,
+   "floor": 470,
+   "ceiling": 480,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@475 up rr15",
+    "ceiling@480 down rr10 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":6,\"trend\":14})"
+  },
+  {
+   "D": "2026-01-23",
+   "exp": "2026-01-30",
+   "spot": 484.1,
+   "king": 470,
+   "floor": 470,
+   "ceiling": 490,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@490 down rr4 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":13})"
+  },
+  {
+   "D": "2026-01-26",
+   "exp": "2026-01-30",
+   "spot": 459.64,
+   "king": 460,
+   "floor": 450,
+   "ceiling": 460,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "ceiling@460 down rr10 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":6})"
+  },
+  {
+   "D": "2026-01-27",
+   "exp": "2026-01-30",
+   "spot": 485.76,
+   "king": 475,
+   "floor": 475,
+   "ceiling": 490,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@490 down rr3 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"vex\":27})"
+  },
+  {
+   "D": "2026-01-28",
+   "exp": "2026-01-30",
+   "spot": 509.24,
+   "king": 520,
+   "floor": 505,
+   "ceiling": 520,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@505 up rr6"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":13})"
+  },
+  {
+   "D": "2026-01-29",
+   "exp": "2026-02-06",
+   "spot": 527.28,
+   "king": 530,
+   "floor": 522.5,
+   "ceiling": 530,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@522.5 up rr7.5",
+    "ceiling@530 down rr7.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":30})"
+  },
+  {
+   "D": "2026-01-30",
+   "exp": "2026-02-06",
+   "spot": 654.57,
+   "king": 670,
+   "floor": 640,
+   "ceiling": 670,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-02",
+   "exp": "2026-02-06",
+   "spot": 614.84,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 627.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-03",
+   "exp": "2026-02-06",
+   "spot": 699.01,
+   "king": 690,
+   "floor": 690,
+   "ceiling": 700,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@690 up rr20",
+    "ceiling@700 down rr20 (vs chart)"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":4})"
+  },
+  {
+   "D": "2026-02-04",
+   "exp": "2026-02-06",
+   "spot": 636.01,
+   "king": 630,
+   "floor": 630,
+   "ceiling": 655,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@630 up rr10"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":19})"
+  },
+  {
+   "D": "2026-02-05",
+   "exp": "2026-02-13",
+   "spot": 580.9,
+   "king": 590,
+   "floor": 570,
+   "ceiling": 590,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-06",
+   "exp": "2026-02-13",
+   "spot": 602.05,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 610,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@600 up rr4",
+    "ceiling@610 down rr5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":17,\"trend\":57})"
+  },
+  {
+   "D": "2026-02-09",
+   "exp": "2026-02-13",
+   "spot": 557.81,
+   "king": 550,
+   "floor": 550,
+   "ceiling": 570,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@550 up rr20"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-10",
+   "exp": "2026-02-13",
+   "spot": 566.72,
+   "king": 575,
+   "floor": 550,
+   "ceiling": 575,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@575 down rr4.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-11",
+   "exp": "2026-02-13",
+   "spot": 590.82,
+   "king": 590,
+   "floor": 590,
+   "ceiling": 605,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@590 up rr3"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0,\"trend\":29})"
+  },
+  {
+   "D": "2026-02-12",
+   "exp": "2026-02-20",
+   "spot": 644.57,
+   "king": 640,
+   "floor": 640,
+   "ceiling": 650,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@640 up rr17.5",
+    "ceiling@650 down rr20 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":75})"
+  },
+  {
+   "D": "2026-02-13",
+   "exp": "2026-02-20",
+   "spot": 605.49,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 610,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@600 up rr4",
+    "ceiling@610 down rr15 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":50})"
+  },
+  {
+   "D": "2026-02-17",
+   "exp": "2026-02-20",
+   "spot": 605.59,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 610,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@600 up rr4",
+    "ceiling@610 down rr20 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":76,\"trend\":44})"
+  },
+  {
+   "D": "2026-02-18",
+   "exp": "2026-02-20",
+   "spot": 577.23,
+   "king": 590,
+   "floor": 560,
+   "ceiling": 590,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-19",
+   "exp": "2026-02-27",
+   "spot": 607.36,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 620,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "floor@600 up rr4"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":9})"
+  },
+  {
+   "D": "2026-02-20",
+   "exp": "2026-02-27",
+   "spot": 638.01,
+   "king": 620,
+   "floor": 620,
+   "ceiling": 650,
+   "regime": "positive",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-02-23",
+   "exp": "2026-02-27",
+   "spot": 652.28,
+   "king": 650,
+   "floor": 650,
+   "ceiling": 670,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "floor@650 up rr20"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-02-24",
+   "exp": "2026-02-27",
+   "spot": 673,
+   "king": 680,
+   "floor": 670,
+   "ceiling": 680,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@670 up rr4",
+    "rug@680 down rr2.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":12})"
+  },
+  {
+   "D": "2026-02-25",
+   "exp": "2026-02-27",
+   "spot": 638.64,
+   "king": 650,
+   "floor": 630,
+   "ceiling": 650,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@630 up rr4"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":105})"
+  },
+  {
+   "D": "2026-02-26",
+   "exp": "2026-03-06",
+   "spot": 641.57,
+   "king": 630,
+   "floor": 630,
+   "ceiling": 650,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@650 down rr15 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":23})"
+  },
+  {
+   "D": "2026-02-27",
+   "exp": "2026-03-06",
+   "spot": 634.38,
+   "king": 640,
+   "floor": 630,
+   "ceiling": 640,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@630 up rr2",
+    "ceiling@640 down rr4 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":26,\"trend\":37})"
+  },
+  {
+   "D": "2026-03-02",
+   "exp": "2026-03-06",
+   "spot": 643.16,
+   "king": 640,
+   "floor": 640,
+   "ceiling": 650,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@640 up rr4",
+    "rug@650 down rr10 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":4})"
+  },
+  {
+   "D": "2026-03-03",
+   "exp": "2026-03-06",
+   "spot": 576.52,
+   "king": 580,
+   "floor": 570,
+   "ceiling": 580,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@570 up rr3",
+    "ceiling@580 down rr3 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "FILLED inverse_ceiling up"
+  },
+  {
+   "D": "2026-03-04",
+   "exp": "2026-03-06",
+   "spot": 587.05,
+   "king": 600,
+   "floor": 570,
+   "ceiling": 600,
+   "regime": "mixed",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-03-05",
+   "exp": "2026-03-13",
+   "spot": 598.99,
+   "king": 590,
+   "floor": 590,
+   "ceiling": 610,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-03-06",
+   "exp": "2026-03-13",
+   "spot": 556.01,
+   "king": 560,
+   "floor": 550,
+   "ceiling": 560,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@550 up rr10",
+    "rug@560 down rr2"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":71})"
+  },
+  {
+   "D": "2026-03-09",
+   "exp": "2026-03-13",
+   "spot": 529.48,
+   "king": 537.5,
+   "floor": 520,
+   "ceiling": 537.5,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-03-10",
+   "exp": "2026-03-13",
+   "spot": 607.01,
+   "king": 600,
+   "floor": 600,
+   "ceiling": 620,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": [
+    "floor@600 up rr4"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":6})"
+  },
+  {
+   "D": "2026-03-11",
+   "exp": "2026-03-13",
+   "spot": 621.43,
+   "king": 630,
+   "floor": 610,
+   "ceiling": 630,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@630 down rr8 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":26})"
+  },
+  {
+   "D": "2026-03-12",
+   "exp": "2026-03-20",
+   "spot": 647.56,
+   "king": 630,
+   "floor": 630,
+   "ceiling": 650,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@640 up rr15",
+    "ceiling@650 down rr2 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":15})"
+  },
+  {
+   "D": "2026-03-13",
+   "exp": "2026-03-20",
+   "spot": 638.59,
+   "king": 630,
+   "floor": 630,
+   "ceiling": 645,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@630 up rr3",
+    "ceiling@645 down rr15 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":42})"
+  },
+  {
+   "D": "2026-03-16",
+   "exp": "2026-03-20",
+   "spot": 693.215,
+   "king": 700,
+   "floor": 692.5,
+   "ceiling": 700,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@692.5 up rr8",
+    "ceiling@700 down rr20 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5,\"trend\":4})"
+  },
+  {
+   "D": "2026-03-17",
+   "exp": "2026-03-20",
+   "spot": 712.01,
+   "king": 720,
+   "floor": 692.5,
+   "ceiling": 720,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "ceiling@720 down rr20 (vs chart)"
+   ],
+   "vex": "down",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":0})"
+  },
+  {
+   "D": "2026-03-18",
+   "exp": "2026-03-20",
+   "spot": 732.57,
+   "king": 720,
+   "floor": 720,
+   "ceiling": 750,
+   "regime": "negative",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-03-19",
+   "exp": "2026-03-27",
+   "spot": 708.51,
+   "king": 700,
+   "floor": 700,
+   "ceiling": 712.5,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "floor@700 up rr12.5",
+    "ceiling@712.5 down rr12.5 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":3})"
+  },
+  {
+   "D": "2026-03-20",
+   "exp": "2026-03-27",
+   "spot": 767,
+   "king": 770,
+   "floor": 747.5,
+   "ceiling": 770,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "ceiling@770 down rr22.5 (vs chart)"
+   ],
+   "vex": "flat",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":5})"
+  },
+  {
+   "D": "2026-03-23",
+   "exp": "2026-03-27",
+   "spot": 707.1,
+   "king": 720,
+   "floor": 700,
+   "ceiling": 720,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "floor@700 up rr5",
+    "rug@715 down rr3 (vs chart)"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":18})"
+  },
+  {
+   "D": "2026-03-24",
+   "exp": "2026-03-27",
+   "spot": 705.93,
+   "king": 725,
+   "floor": 700,
+   "ceiling": 725,
+   "regime": "positive",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@700 up rr25"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":81})"
+  },
+  {
+   "D": "2026-03-25",
+   "exp": "2026-03-27",
+   "spot": 651,
+   "king": 635,
+   "floor": 635,
+   "ceiling": 670,
+   "regime": "mixed",
+   "chart": "up",
+   "cands": []
+  },
+  {
+   "D": "2026-03-26",
+   "exp": "2026-04-02",
+   "spot": 658.5,
+   "king": 670,
+   "floor": 650,
+   "ceiling": 670,
+   "regime": "negative",
+   "chart": "up",
+   "cands": [
+    "reverse_rug@650 up rr20"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":6})"
+  },
+  {
+   "D": "2026-03-27",
+   "exp": "2026-04-02",
+   "spot": 612.47,
+   "king": 620,
+   "floor": 610,
+   "ceiling": 620,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": [
+    "reverse_rug@610 up rr3",
+    "rug@620 down rr2.5"
+   ],
+   "vex": "up",
+   "roll": null,
+   "status": "no fill (blocked: {\"vix\":0,\"std\":0,\"rr\":69,\"trend\":43})"
+  },
+  {
+   "D": "2026-03-30",
+   "exp": "2026-04-02",
+   "spot": 629.52,
+   "king": 640,
+   "floor": 620,
+   "ceiling": 640,
+   "regime": "negative",
+   "chart": "mixed",
+   "cands": []
+  },
+  {
+   "D": "2026-03-31",
+   "exp": "2026-04-02",
+   "spot": 594.42,
+   "king": 610,
+   "floor": 577.5,
+   "ceiling": 610,
+   "regime": "positive",
+   "chart": "mixed",
+   "cands": []
+  }
+ ],
+ "trades": [
+  {
+   "D": "2026-03-03",
+   "et": "10:35",
+   "setup": "inverse_ceiling",
+   "direction": "up",
+   "node": 580,
+   "nodeType": "gatekeeper",
+   "stop": 579,
+   "t1": 585,
+   "t2": 590,
+   "rr": 10,
+   "chart": "up",
+   "chartOk": false,
+   "contract": "SNDK260306C00580000",
+   "entryOpt": 28.44,
+   "exits": "T1@03-03 $28.95 · breakeven@03-03 $25.86",
+   "exitDay": "2026-03-03",
+   "retMid": -0.036,
+   "retWorst": -0.042
+  }
+ ]
+}

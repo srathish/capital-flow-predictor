@@ -59,7 +59,12 @@ async function selectFeatures(D, a, bars, bi, exp) {
 
 import { findAplus as findAplusShared, retestHolds, APLUS } from '../system/aplus.js';
 import { technicals } from '../system/technicals.js';
-const CHART = process.argv.includes('--chart'); // require A+ CHART (map A+ AND chart technicals)
+const CHART = process.argv.includes('--chart');
+// Variants locked 2026-10-03 from the 22-trade autopsy (8/13 losers hit target later; losers opened away and slid into the level).
+//  --wide  : exit stop = daily CLOSE beyond entry ∓ max(1 step, 0.5×ATR14) instead of 1 strike (setup selection unchanged)
+//  --nogap : skip the day if it OPENED more than 0.3×ATR14 beyond the level on the trade's side (price sliding INTO the level)
+const WIDE = process.argv.includes('--wide'), NOGAP = process.argv.includes('--nogap');
+const atr14 = (D) => { const pr = days.filter((d) => d < D).slice(-15).map((d) => dmap.get(d)); let s = 0; for (let i = 1; i < pr.length; i++) s += Math.max(pr[i].h - pr[i].l, Math.abs(pr[i].h - pr[i - 1].c), Math.abs(pr[i].l - pr[i - 1].c)); return s / (pr.length - 1); }; // require A+ CHART (map A+ AND chart technicals)
 function findAplus(board, hier, D, chart) {
   const wk = days.filter((d) => d >= mondayOf(D) && d < D).map((d) => dmap.get(d));
   return findAplusShared({ board, hier, chart, weekHi: Math.max(-Infinity, ...wk.map((b) => b.h)), weekLo: Math.min(Infinity, ...wk.map((b) => b.l)) });
@@ -79,11 +84,14 @@ for (const D of tdays) {
   if (!aps.length) continue;
   const blackout = earningsIn(earn, D, holdEnd);
   const bars = await minuteBars(SYM, D), pd = dmap.get(days.filter((d) => d < D).slice(-1)[0]);
+  if (!bars.length) continue;
+  const ATR = atr14(D);
   let fill = null;
   for (let bi = 0; bi < bars.length && !fill && !blackout; bi++) {
     const b = bars[bi]; if (hm(b.t) < '09:35' || hm(b.t) > '15:30') continue;
     for (const a of aps) {
       if (!retestHolds(a, bars, bi, board.zone)) continue;
+      if (NOGAP && (a.dir === 'up' ? bars[0].o - a.entry : a.entry - bars[0].o) > 0.3 * ATR) continue;
       const tech = technicals({ dir: a.dir, node: a.entry, prior: days.filter((d) => d < D).map((d) => dmap.get(d)), session: bars.slice(0, bi + 1) });
       a.tech = tech;
       if (CHART && !tech.aplusChart) continue;
@@ -95,7 +103,7 @@ for (const D of tdays) {
   const fbi = bars.findIndex((x) => x.t === fill.t), feat = await selectFeatures(D, fill, bars, fbi, weekly(D));
   const type = fill.dir === 'up' ? 'call' : 'put', id = await contract(cexp, type, fill.entry, D);
   const e0 = id ? px(await optionBars(id, D), fill.t) : null;
-  const dir = fill.dir === 'up' ? 1 : -1, legs = []; let half = false, stopLvl = fill.stop;
+  const dir = fill.dir === 'up' ? 1 : -1, legs = []; let half = false, stopLvl = WIDE ? fill.entry - dir * Math.max(Math.abs(fill.entry - fill.stop), 0.5 * ATR) : fill.stop;
   const holdDays = days.filter((d) => d >= D && d <= holdEnd);
   outer: for (const d of holdDays) {
     const bs = (await minuteBars(SYM, d)).filter((x) => d !== D || x.t > fill.t);
@@ -117,7 +125,7 @@ for (const D of tdays) {
 
 const $ = (v) => (v >= 0 ? '+' : '-') + '$' + Math.abs(v).toFixed(0);
 const first = dmap.get(tdays[0]), last = dmap.get(tdays[tdays.length - 1]);
-console.log(`\n=== A+ walk-forward${CHART ? ' (MAP + CHART)' : ' (map only)'} · ${SYM} · ${FROM} → ${TO} (${tdays.length} trading days) · ${SYM} ${first.o.toFixed(0)} → ${last.c.toFixed(0)} ===`);
+console.log(`\n=== A+ walk-forward${CHART ? ' (MAP + CHART)' : ' (map only)'}${WIDE ? ' [wide stop]' : ''}${NOGAP ? ' [no slide-in]' : ''} · ${SYM} · ${FROM} → ${TO} (${tdays.length} trading days) · ${SYM} ${first.o.toFixed(0)} → ${last.c.toFixed(0)} ===`);
 console.log(`A+ setups found: ${found.length} on ${new Set(found.map((f) => f.D)).size} days · filled: ${trades.length}\n`);
 console.log('-- every A+ setup the system saw (as of 09:35 that day) --');
 for (const f of found) console.log(`  ${f.D} ${f.dir === 'up' ? 'BULL' : 'BEAR'} entry ${f.entry} stop ${f.stop} target ${f.target}${f.t2 ? ' / ' + f.t2 : ''} (R:R ${f.rr}) — ${f.status}\n      why: ${f.why}`);
@@ -125,5 +133,5 @@ console.log('\n-- trades (real option prices, $1k premium each) --');
 for (const t of trades) console.log(`  ${t.D} ${t.et} ${t.dir === 'up' ? 'CALL' : 'PUT '} @${t.entry} → tgt ${t.target}  [chart ${t.chart} ${t.chartN}/4${t.aplusChart ? ' ✓A+chart' : ''}]  ${t.contract} in $${t.in} → ${t.exits}  =  ${t.ret == null ? 'unpriced' : (t.ret * 100).toFixed(0) + '%  (' + $(t.ret * 1000) + ')'}  R ${t.R}`);
 const tot = trades.reduce((a, t) => a + (t.ret ?? 0), 0) * 1000;
 console.log(`\nTOTAL: ${trades.length} trades · win ${trades.length ? Math.round(trades.filter((t) => t.R > 0).length / trades.length * 100) : 0}% · ${$(tot)} on $1k/trade${trades.filter((t) => t.sweep).length ? ` · with sweep: ${trades.filter((t) => t.sweep).length} trades ${$(trades.filter((t) => t.sweep).reduce((a, t) => a + t.ret, 0) * 1000)}` : ''}`);
-fs.writeFileSync(path.join(HERE, 'journal', `aplus_walk.${SYM}.${FROM}_${TO}${CHART ? '.chart' : ''}.json`), JSON.stringify({ found, trades }, null, 1));
+fs.writeFileSync(path.join(HERE, 'journal', `aplus_walk.${SYM}.${FROM}_${TO}${CHART ? '.chart' : ''}${WIDE ? '.wide' : ''}${NOGAP ? '.nogap' : ''}.json`), JSON.stringify({ found, trades }, null, 1));
 const acct1 = await account().catch(() => null); console.log(`credits used ${acct0 && acct1 ? acct0.creditsBalance - acct1.creditsBalance : '?'}`);

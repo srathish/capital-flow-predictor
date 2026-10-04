@@ -1,0 +1,6 @@
+A+ fixes · 11 stocks · 2026-01-02 → 2026-10-02 · option P&L at $1k premium per trade (real UW prices)
+
+base        trades  42 · priced  33 · win 27% · total  -$6273 · avg -$190/trade · Jan–May -$286 (11) · Jun–Oct -$5987 (22)
+wide        trades  42 · priced  33 · win 36% · total  -$6767 · avg -$205/trade · Jan–May -$538 (11) · Jun–Oct -$6229 (22)
+nogap       trades  24 · priced  19 · win 42% · total  -$1609 · avg -$85/trade · Jan–May +$628 (8) · Jun–Oct -$2237 (11)
+wide+nogap  trades  24 · priced  19 · win 53% · total   -$973 · avg -$51/trade · Jan–May +$838 (8) · Jun–Oct -$1811 (11)

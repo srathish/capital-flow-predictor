@@ -1,0 +1,23 @@
+
+=========== UNH weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+UNH itself: 417.06 → 371.75 (-10.9%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid +$29  worst -$114  avg 1%  SQN 0.07
+  chart-aligned only       n= 0
+  against chart            n= 5  win  60%  @$1k/trade mid +$29  worst -$114  avg 1%  SQN 0.07
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win 100%  @$1k/trade mid +$92  worst -$51  avg 5%  SQN 9.20
+  shorts                   n= 3  win  33%  @$1k/trade mid -$63  worst -$63  avg -2%  SQN -0.14
+
+day outcomes: no fill 41 · FILLED inverse_ceiling up 1 · in position 5 · no setup in reach 15 · FILLED inverse_rug up 1 · FILLED inverse_floor down 2 · FILLED inverse_reverse_rug down 1
+
+-- every trade --
+  2026-07-07 09:36 CALL inverse_ceiling @425 (king) stop 422.5 T1 427.5 T2 435 rr 4 [vs chart]  UNH260710C00425000 in $5.5 → T1@07-07 $7 · breakeven@07-08 $4.45  =  4%
+  2026-07-15 09:38 CALL inverse_rug @420 (king) stop 419 T1 425 T2 427.5 rr 7.5 [vs chart]  UNH260717C00420000 in $11.7 → stop(close)@07-15 $12.3  =  5%
+  2026-08-28 09:35 PUT  inverse_floor @392.5 (gatekeeper) stop 395 T1 390 T2 387.5 rr 2 [vs chart]  UNH260904P00392500 in $4.96 → T1@08-31 $5.7 · breakeven@09-01 $4.2  =  -0%
+  2026-09-15 09:35 PUT  inverse_reverse_rug @380 (gatekeeper) stop 382.5 T1 377.5 T2 370 rr 4 [vs chart]  UNH260918P00380000 in $4.49 → T1@09-15 $5.45 · time@09-17 $5.57  =  23%
+  2026-09-24 09:35 PUT  inverse_floor @370 (gatekeeper) stop 371 T1 365 T2 362.5 rr 7.5 [vs chart]  UNH261002P00370000 in $6.74 → stop(close)@09-24 $4.8  =  -29%
+
+credits used 3

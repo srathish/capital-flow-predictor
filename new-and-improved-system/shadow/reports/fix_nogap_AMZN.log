@@ -1,0 +1,20 @@
+
+=== A+ walk-forward (map only) [no slide-in] · AMZN · 2026-01-02 → 2026-10-02 (189 trading days) · AMZN 231 → 251 ===
+A+ setups found: 5 on 5 days · filled: 0
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-04-28 BULL entry 255 stop 252.5 target 265 (R:R 4) — earnings blackout (2026-04-29)
+      why: king floor 255 (39%) · untouched target 265 (gatekeeper) · air pocket (3 small node(s) between) · R:R 4.0 · trend up
+  2026-06-26 BEAR entry 230 stop 232.5 target 222.5 (R:R 3) — no retest that held
+      why: king ceiling 230 (55%) · untouched target 222.5 (barney) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-07-16 BULL entry 250 stop 247.5 target 260 (R:R 4) — earnings blackout (2026-07-30)
+      why: gatekeeper floor 250 (25%) · untouched target 260 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend mixed
+  2026-08-17 BULL entry 260 stop 257.5 target 267.5 (R:R 3) — no retest that held
+      why: king floor 260 (85%) · untouched target 267.5 (normal) · air pocket (0 small node(s) between) · R:R 3.0 · trend up
+  2026-09-04 BULL entry 255 stop 252.5 target 265 (R:R 4) — no retest that held
+      why: gatekeeper floor 255 (22%) · untouched target 265 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+
+TOTAL: 0 trades · win 0% · +$0 on $1k/trade
+credits used 5

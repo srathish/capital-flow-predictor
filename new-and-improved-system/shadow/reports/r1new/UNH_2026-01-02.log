@@ -1,0 +1,20 @@
+
+=========== UNH weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+UNH itself: 331.10 → 270.56 (-18.3%)
+ALL trades                 n= 2  win   0%  @$1k/trade mid -$893  worst -$936  avg -45%  SQN -7.50
+  chart-aligned only       n= 0
+  against chart            n= 2  win   0%  @$1k/trade mid -$893  worst -$936  avg -45%  SQN -7.50
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$506  worst -$528  avg -51%  SQN 0.00
+  shorts                   n= 1  win   0%  @$1k/trade mid -$387  worst -$408  avg -39%  SQN 0.00
+
+day outcomes: no fill 50 · no setup in reach 9 · FILLED inverse_ceiling up 1 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-01-13 10:35 CALL inverse_ceiling @340 (normal) stop 339 T1 345 T2 347.5 rr 7.5 [vs chart]  UNH260116C00340000 in $4.19 → stop(close)@01-13 $2.07  =  -51%
+  2026-03-09 09:35 PUT  inverse_floor @280 (gatekeeper) stop 282.5 T1 277.5 T2 275 rr 2 [vs chart]  UNH260313P00280000 in $4.83 → stop(close)@03-09 $2.96  =  -39%
+
+credits used 0

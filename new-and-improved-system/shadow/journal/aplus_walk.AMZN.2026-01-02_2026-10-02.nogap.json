@@ -1,0 +1,80 @@
+{
+ "found": [
+  {
+   "D": "2026-04-28",
+   "spot": 257.55,
+   "dir": "up",
+   "entry": 255,
+   "entryType": "king",
+   "share": 0.38784411207359926,
+   "stop": 252.5,
+   "target": 265,
+   "targetType": "gatekeeper",
+   "t2": null,
+   "rr": 4,
+   "why": "king floor 255 (39%) · untouched target 265 (gatekeeper) · air pocket (3 small node(s) between) · R:R 4.0 · trend up",
+   "status": "earnings blackout (2026-04-29)"
+  },
+  {
+   "D": "2026-06-26",
+   "spot": 227.23,
+   "dir": "down",
+   "entry": 230,
+   "entryType": "king",
+   "share": 0.5508575671591941,
+   "stop": 232.5,
+   "target": 222.5,
+   "targetType": "barney",
+   "t2": null,
+   "rr": 3,
+   "why": "king ceiling 230 (55%) · untouched target 222.5 (barney) · air pocket (1 small node(s) between) · R:R 3.0 · trend down",
+   "status": "no retest that held"
+  },
+  {
+   "D": "2026-07-16",
+   "spot": 253.58,
+   "dir": "up",
+   "entry": 250,
+   "entryType": "gatekeeper",
+   "share": 0.24694130350991086,
+   "stop": 247.5,
+   "target": 260,
+   "targetType": "gatekeeper",
+   "t2": null,
+   "rr": 4,
+   "why": "gatekeeper floor 250 (25%) · untouched target 260 (gatekeeper) · air pocket (2 small node(s) between) · R:R 4.0 · trend mixed",
+   "status": "earnings blackout (2026-07-30)"
+  },
+  {
+   "D": "2026-08-17",
+   "spot": 261.83,
+   "dir": "up",
+   "entry": 260,
+   "entryType": "king",
+   "share": 0.8543476372289899,
+   "stop": 257.5,
+   "target": 267.5,
+   "targetType": "normal",
+   "t2": null,
+   "rr": 3,
+   "why": "king floor 260 (85%) · untouched target 267.5 (normal) · air pocket (0 small node(s) between) · R:R 3.0 · trend up",
+   "status": "no retest that held"
+  },
+  {
+   "D": "2026-09-04",
+   "spot": 258.83,
+   "dir": "up",
+   "entry": 255,
+   "entryType": "gatekeeper",
+   "share": 0.22193120114746043,
+   "stop": 252.5,
+   "target": 265,
+   "targetType": "king",
+   "t2": null,
+   "rr": 4,
+   "why": "gatekeeper floor 255 (22%) · untouched target 265 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend mixed",
+   "status": "no retest that held"
+  }
+ ],
+ "trades": []
+}

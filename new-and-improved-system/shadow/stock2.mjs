@@ -45,7 +45,8 @@ const ema = (vals, n) => { const k = 2 / (n + 1); let e = vals[0]; for (let i = 
 // ---- trading calendar + daily bars (one long daily pull) ----
 // ONE continuous daily history from FROM−200d to TO (fix 2026-10-03: the old four 20-day windows left ~10 trading days/quarter
 // out of the calendar and truncated the trend filter's EMA50 to ~20 closes early in each period)
-const dailyAll = await atlasHistory(SYM, 'D', etToUnix(FROM, '09:30') - 200 * 86400, etToUnix(TO, '16:00') + 86400);
+// +12 days past TO so the calendar knows post-period holidays (Good Friday 4/3, 7/3) — else the last week asks for a non-existent Friday expiry
+const dailyAll = await atlasHistory(SYM, 'D', etToUnix(FROM, '09:30') - 200 * 86400, etToUnix(TO, '16:00') + 12 * 86400);
 const dmap = new Map(); for (const b of dailyAll) dmap.set(ymd(b.t), b);
 const days = [...dmap.keys()].sort();
 const tradeDays = days.filter((d) => d >= FROM && d <= TO);

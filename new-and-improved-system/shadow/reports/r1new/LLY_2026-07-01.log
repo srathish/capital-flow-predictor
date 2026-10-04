@@ -1,0 +1,22 @@
+
+=========== LLY weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+LLY itself: 1214.40 → 1143.97 (-5.8%)
+ALL trades                 n= 4  win  25%  @$1k/trade mid -$880  worst -$948  avg -22%  SQN -0.91
+  chart-aligned only       n= 0
+  against chart            n= 4  win  25%  @$1k/trade mid -$880  worst -$948  avg -22%  SQN -0.91
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  33%  @$1k/trade mid -$868  worst -$936  avg -29%  SQN -0.88
+  shorts                   n= 1  win   0%  @$1k/trade mid -$12  worst -$12  avg -1%  SQN 0.00
+
+day outcomes: FILLED inverse_rug up 1 · no setup in reach 11 · no fill 47 · FILLED inverse_ceiling up 2 · in position 2 · no contract data 2 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-07-01 09:39 CALL inverse_rug @1200 (gatekeeper) stop 1195 T1 1210 T2 1220 rr 4 [vs chart]  LLY260702C01200000 in $14 → stop(close)@07-01 $6.3  =  -55%
+  2026-07-14 09:39 CALL inverse_ceiling @1160 (gatekeeper) stop 1150 T1 1170 T2 1180 rr 2 [vs chart]  LLY260717C01160000 in $14.66 → T1@07-16 $20 · T2@07-16 $20  =  36%
+  2026-08-26 09:35 CALL inverse_ceiling @1217.5 (king) stop 1215 T1 1220 T2 1232.5 rr 6 [vs chart]  LLY260828C01220000 in $11 → stop(close)@08-26 $3.5  =  -68%
+  2026-10-02 11:49 PUT  inverse_floor @1140 (gatekeeper) stop 1141 T1 1135 T2 1130 rr 10 [vs chart]  LLY261009P01140000 in $15.39 → stop(close)@10-02 $15.2  =  -1%
+
+credits used 0

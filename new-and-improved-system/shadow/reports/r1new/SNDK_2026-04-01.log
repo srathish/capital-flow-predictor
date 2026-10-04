@@ -1,0 +1,23 @@
+
+=========== SNDK weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+SNDK itself: 652.92 → 2270.74 (247.8%)
+ALL trades                 n= 5  win  60%  @$1k/trade mid -$432  worst -$509  avg -9%  SQN -0.67
+  chart-aligned only       n= 0
+  against chart            n= 5  win  60%  @$1k/trade mid -$432  worst -$509  avg -9%  SQN -0.67
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 5  win  60%  @$1k/trade mid -$432  worst -$509  avg -9%  SQN -0.67
+  shorts                   n= 0
+
+day outcomes: no fill 42 · no contract data 1 · FILLED inverse_rug up 2 · no setup in reach 14 · FILLED inverse_ceiling up 3
+
+-- every trade --
+  2026-04-07 09:35 CALL inverse_rug @730 (king) stop 727.5 T1 732.5 T2 740 rr 4 [vs chart]  SNDK260410C00730000 in $30.99 → stop(close)@04-07 $19  =  -39%
+  2026-04-22 10:46 CALL inverse_rug @930 (gatekeeper) stop 929 T1 935 T2 940 rr 10 [vs chart]  SNDK260424C00930000 in $31.4 → T1@04-22 $34.5 · T2@04-22 $39  =  17%
+  2026-05-07 10:22 CALL inverse_ceiling @1400 (barney) stop 1399 T1 1410 T2 1420 rr 20 [vs chart]  SNDK260515C01400000 in $88.5 → stop(close)@05-07 $52.2  =  -41%
+  2026-06-10 09:35 CALL inverse_ceiling @1600 (normal) stop 1599 T1 1602.5 T2 1607.5 rr 7.5 [vs chart]  SNDK260612C01600000 in $71.2 → T1@06-10 $77.69 · T2@06-10 $77.69  =  9%
+  2026-06-12 09:35 CALL inverse_ceiling @1900 (gatekeeper) stop 1890 T1 1910 T2 1950 rr 5 [vs chart]  SNDK260618C01900000 in $119.15 → T1@06-12 $120 · T2@06-12 $143  =  10%
+
+credits used 0

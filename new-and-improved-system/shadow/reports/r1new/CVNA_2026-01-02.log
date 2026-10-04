@@ -1,0 +1,23 @@
+
+=========== CVNA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+CVNA itself: 421.52 → 314.47 (-25.4%)
+ALL trades                 n= 5  win  40%  @$1k/trade mid -$398  worst -$417  avg -8%  SQN -0.46
+  chart-aligned only       n= 0
+  against chart            n= 5  win  40%  @$1k/trade mid -$398  worst -$417  avg -8%  SQN -0.46
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win   0%  @$1k/trade mid -$809  worst -$809  avg -40%  SQN -1.35
+  shorts                   n= 3  win  67%  @$1k/trade mid +$411  worst +$392  avg 14%  SQN 1.28
+
+day outcomes: no fill 45 · no setup in reach 11 · FILLED inverse_ceiling up 2 · FILLED inverse_floor down 3
+
+-- every trade --
+  2026-01-13 10:35 CALL inverse_ceiling @470 (king) stop 469 T1 475 T2 480 rr 10 [vs chart]  CVNA260116C00470000 in $10 → stop(close)@01-13 $8.95  =  -11%
+  2026-01-14 10:35 CALL inverse_ceiling @470 (king) stop 469 T1 475 T2 480 rr 10 [vs chart]  CVNA260116C00470000 in $11 → stop(close)@01-14 $3.26  =  -70%
+  2026-03-03 10:35 PUT  inverse_floor @315 (normal) stop 317.5 T1 312.5 T2 310 rr 2 [vs chart]  CVNA260306P00315000 in $9.84 → T1@03-03 $12.13 · T2@03-03 $13.2  =  29%
+  2026-03-26 09:42 PUT  inverse_floor @297.5 (normal) stop 298.5 T1 295 T2 292.5 rr 5 [vs chart]  CVNA260402P00297500 in $14 → T1@03-26 $13 · breakeven@03-26 $13  =  -7%
+  2026-03-30 09:36 PUT  inverse_floor @300 (barney) stop 302.5 T1 297.5 T2 295 rr 2 [vs chart]  CVNA260402P00300000 in $10.18 → T1@03-30 $12.1 · T2@03-30 $12.24  =  20%
+
+credits used 0

@@ -1,0 +1,20 @@
+
+=========== XOM weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+XOM itself: 120.00 → 169.66 (41.4%)
+ALL trades                 n= 2  win   0%  @$1k/trade mid -$893  worst -$1024  avg -45%  SQN -6.92
+  chart-aligned only       n= 0
+  against chart            n= 2  win   0%  @$1k/trade mid -$893  worst -$1024  avg -45%  SQN -6.92
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 2  win   0%  @$1k/trade mid -$893  worst -$1024  avg -45%  SQN -6.92
+  shorts                   n= 0
+
+day outcomes: no fill 52 · FILLED inverse_rug up 2 · no setup in reach 7
+
+-- every trade --
+  2026-01-07 10:38 CALL inverse_rug @120 (king) stop 119 T1 121 T2 122 rr 2 [vs chart]  XOM260109C00120000 in $0.94 → stop(close)@01-07 $0.46  =  -51%
+  2026-03-09 09:40 CALL inverse_rug @152.5 (gatekeeper) stop 151.5 T1 155 T2 null rr 2.5 [vs chart]  XOM260313C00152500 in $2.67 → stop(close)@03-09 $1.65  =  -38%
+
+credits used 0

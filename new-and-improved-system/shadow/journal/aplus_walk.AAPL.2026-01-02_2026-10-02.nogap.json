@@ -1,0 +1,65 @@
+{
+ "found": [
+  {
+   "D": "2026-04-30",
+   "spot": 269.03,
+   "dir": "up",
+   "entry": 265,
+   "entryType": "gatekeeper",
+   "share": 0.33762572777599015,
+   "stop": 262.5,
+   "target": 275,
+   "targetType": "king",
+   "t2": null,
+   "rr": 4,
+   "why": "gatekeeper floor 265 (34%) · untouched target 275 (king) · air pocket (3 small node(s) between) · R:R 4.0 · trend up",
+   "status": "earnings blackout (2026-04-30)"
+  },
+  {
+   "D": "2026-08-05",
+   "spot": 308.61,
+   "dir": "up",
+   "entry": 305,
+   "entryType": "gatekeeper",
+   "share": 0.2621052480856698,
+   "stop": 302.5,
+   "target": 312.5,
+   "targetType": "gatekeeper",
+   "t2": 315,
+   "rr": 3,
+   "why": "gatekeeper floor 305 (26%) · untouched target 312.5 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed",
+   "status": "no retest that held"
+  },
+  {
+   "D": "2026-09-01",
+   "spot": 315.05,
+   "dir": "up",
+   "entry": 315,
+   "entryType": "king",
+   "share": 0.34135204755054993,
+   "stop": 312.5,
+   "target": 322.5,
+   "targetType": "gatekeeper",
+   "t2": null,
+   "rr": 3,
+   "why": "king floor 315 (34%) · untouched target 322.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up",
+   "status": "no retest that held"
+  },
+  {
+   "D": "2026-09-04",
+   "spot": 327.11,
+   "dir": "up",
+   "entry": 325,
+   "entryType": "king",
+   "share": 0.4406780080094061,
+   "stop": 322.5,
+   "target": 335,
+   "targetType": "gatekeeper",
+   "t2": null,
+   "rr": 4,
+   "why": "king floor 325 (44%) · untouched target 335 (gatekeeper) · air pocket (1 small node(s) between) · R:R 4.0 · trend up",
+   "status": "no retest that held"
+  }
+ ],
+ "trades": []
+}

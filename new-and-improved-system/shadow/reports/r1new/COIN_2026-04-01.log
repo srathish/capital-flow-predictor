@@ -1,0 +1,20 @@
+
+=========== COIN weekly-option swing shadow · 2026-04-01 → 2026-06-30 · 62 trading days · criteria=inverse_trend_vex ===========
+COIN itself: 178.98 → 146.20 (-18.3%)
+ALL trades                 n= 2  win  50%  @$1k/trade mid -$75  worst -$205  avg -4%  SQN -0.18
+  chart-aligned only       n= 0
+  against chart            n= 2  win  50%  @$1k/trade mid -$75  worst -$205  avg -4%  SQN -0.18
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$248  worst -$276  avg -25%  SQN 0.00
+  shorts                   n= 1  win 100%  @$1k/trade mid +$173  worst +$71  avg 17%  SQN 0.00
+
+day outcomes: FILLED inverse_reverse_rug down 1 · no fill 47 · no setup in reach 12 · FILLED inverse_rug up 1 · in position 1
+
+-- every trade --
+  2026-04-01 09:41 PUT  inverse_reverse_rug @175 (pika) stop 176 T1 172.5 T2 null rr 2.5 [vs chart]  COIN260402P00175000 in $3.85 → T1@04-01 $5.35 · breakeven@04-01 $3.68  =  17%
+  2026-04-28 09:37 CALL inverse_rug @192.5 (gatekeeper) stop 191.5 T1 195 T2 null rr 2.5 [vs chart]  COIN260501C00192500 in $6.5 → T1@04-28 $7.75 · breakeven@04-29 $2.03  =  -25%
+
+credits used 0

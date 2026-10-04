@@ -1,0 +1,19 @@
+
+=========== TSM weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+TSM itself: 467.04 → 472.92 (1.3%)
+ALL trades                 n= 1  win   0%  @$1k/trade mid -$306  worst -$400  avg -31%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win   0%  @$1k/trade mid -$306  worst -$400  avg -31%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 1  win   0%  @$1k/trade mid -$306  worst -$400  avg -31%  SQN 0.00
+  shorts                   n= 0
+
+day outcomes: no fill 53 · no setup in reach 11 · no contract data 1 · FILLED inverse_ceiling up 1
+
+-- every trade --
+  2026-09-23 09:35 CALL inverse_ceiling @450 (king) stop 447.5 T1 452.5 T2 455 rr 2 [vs chart]  TSM260925C00450000 in $4.15 → stop(close)@09-23 $2.88  =  -31%
+
+credits used 0

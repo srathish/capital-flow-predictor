@@ -1,0 +1,19 @@
+
+=========== PLTR weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+PLTR itself: 181.30 → 146.23 (-19.3%)
+ALL trades                 n= 1  win 100%  @$1k/trade mid +$107  worst +$58  avg 11%  SQN 0.00
+  chart-aligned only       n= 0
+  against chart            n= 1  win 100%  @$1k/trade mid +$107  worst +$58  avg 11%  SQN 0.00
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 1  win 100%  @$1k/trade mid +$107  worst +$58  avg 11%  SQN 0.00
+
+day outcomes: no setup in reach 13 · no fill 47 · FILLED inverse_floor down 1
+
+-- every trade --
+  2026-01-30 10:35 PUT  inverse_floor @150 (gatekeeper) stop 151 T1 149 T2 148 rr 2 [vs chart]  PLTR260206P00150000 in $7.84 → T1@01-30 $8.5 · T2@01-30 $8.85  =  11%
+
+credits used 0

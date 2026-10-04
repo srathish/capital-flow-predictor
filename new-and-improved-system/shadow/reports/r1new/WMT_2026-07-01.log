@@ -1,0 +1,21 @@
+
+=========== WMT weekly-option swing shadow · 2026-07-01 → 2026-10-02 · 66 trading days · criteria=inverse_trend_vex ===========
+WMT itself: 110.00 → 104.29 (-5.2%)
+ALL trades                 n= 3  win  33%  @$1k/trade mid -$452  worst -$560  avg -15%  SQN -0.45
+  chart-aligned only       n= 0
+  against chart            n= 3  win  33%  @$1k/trade mid -$452  worst -$560  avg -15%  SQN -0.45
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 0
+  shorts                   n= 3  win  33%  @$1k/trade mid -$452  worst -$560  avg -15%  SQN -0.45
+
+day outcomes: no fill 51 · FILLED inverse_floor down 3 · no setup in reach 9 · in position 3
+
+-- every trade --
+  2026-07-02 09:35 PUT  inverse_floor @110 (king) stop 111 T1 109 T2 108 rr 2 [vs chart]  WMT260710P00110000 in $1.6 → stop(close)@07-02 $0.77  =  -52%
+  2026-07-16 09:37 PUT  inverse_floor @114 (gatekeeper) stop 115 T1 113 T2 111 rr 3 [vs chart]  WMT260724P00115000 in $2.04 → T1@07-20 $2.55 · T2@07-21 $3.62  =  51%
+  2026-07-27 09:37 PUT  inverse_floor @110 (gatekeeper) stop 111 T1 109 T2 107 rr 3 [vs chart]  WMT260731P00110000 in $1.1 → stop(close)@07-27 $0.61  =  -45%
+
+credits used 0

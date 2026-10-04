@@ -1,0 +1,21 @@
+
+=========== BA weekly-option swing shadow · 2026-01-02 → 2026-03-31 · 61 trading days · criteria=inverse_trend_vex ===========
+BA itself: 218.29 → 199.10 (-8.8%)
+ALL trades                 n= 3  win  33%  @$1k/trade mid -$129  worst -$155  avg -4%  SQN -0.08
+  chart-aligned only       n= 0
+  against chart            n= 3  win  33%  @$1k/trade mid -$129  worst -$155  avg -4%  SQN -0.08
+  reverse_rug              n= 0
+  floor                    n= 0
+  rug                      n= 0
+  ceiling                  n= 0
+  longs                    n= 3  win  33%  @$1k/trade mid -$129  worst -$155  avg -4%  SQN -0.08
+  shorts                   n= 0
+
+day outcomes: FILLED inverse_ceiling up 3 · no fill 42 · no setup in reach 15 · in position 1
+
+-- every trade --
+  2026-01-02 10:50 CALL inverse_ceiling @217.5 (gatekeeper) stop 216.5 T1 220 T2 222.5 rr 5 [vs chart]  BA260109C00217500 in $2.61 → T1@01-02 $4.25 · T2@01-02 $6.45  =  105%
+  2026-02-13 10:35 CALL inverse_ceiling @245 (gatekeeper) stop 244 T1 247.5 T2 250 rr 5 [vs chart]  BA260220C00245000 in $4.55 → stop(close)@02-13 $3  =  -34%
+  2026-02-17 10:41 CALL inverse_ceiling @245 (gatekeeper) stop 244 T1 247.5 T2 250 rr 5 [vs chart]  BA260220C00245000 in $3.09 → stop(close)@02-18 $0.5  =  -84%
+
+credits used 0

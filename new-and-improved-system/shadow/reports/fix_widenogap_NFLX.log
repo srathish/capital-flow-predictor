@@ -1,0 +1,22 @@
+
+=== A+ walk-forward (map only) [wide stop] [no slide-in] · NFLX · 2026-01-02 → 2026-10-02 (189 trading days) · NFLX 94 → 67 ===
+A+ setups found: 5 on 5 days · filled: 2
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-01-12 BEAR entry 91.5 stop 92 target 90 / 89.5 (R:R 3) — earnings blackout (2026-01-20)
+      why: king ceiling 91.5 (22%) · untouched target 90 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend down
+  2026-01-28 BEAR entry 86 stop 87 target 83 (R:R 3) — FILLED 10:56 · chart: structure (1/4)
+      why: king ceiling 86 (31%) · untouched target 83 (gatekeeper) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-04-24 BEAR entry 93 stop 94 target 90 (R:R 3) — FILLED 09:49 · chart: none (0/4, STRUCTURE AGAINST)
+      why: king ceiling 93 (34%) · untouched target 90 (gatekeeper) · air pocket (0 small node(s) between) · R:R 3.0 · trend mixed
+  2026-07-07 BEAR entry 78 stop 79 target 75 (R:R 3) — earnings blackout (2026-07-16)
+      why: gatekeeper ceiling 78 (15%) · untouched target 75 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend down
+  2026-09-11 BEAR entry 78 stop 79 target 75 (R:R 3) — no retest that held
+      why: gatekeeper ceiling 78 (39%) · untouched target 75 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+
+-- trades (real option prices, $1k premium each) --
+  2026-01-28 10:56 PUT  @86 → tgt 83  [chart structure 1/4]  NFLX260213P00085000 in $1.74 → TARGET@01-29 $3.01 · TARGET(all)@01-29 $3.01  =  73%  (+$730)  R 2.95
+  2026-04-24 09:49 PUT  @93 → tgt 90  [chart none 0/4]  NFLX260508P00093000 in $2.3 → TARGET@05-05 $3 · TARGET(all)@05-05 $3  =  30%  (+$304)  R 3.06
+
+TOTAL: 2 trades · win 100% · +$1034 on $1k/trade
+credits used 0
