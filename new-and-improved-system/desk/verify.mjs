@@ -6,9 +6,10 @@
 //   vol     tempest_events (earnings inside the hold → no trade) + tempest_iv (IV rank) — batched 10/call, 1 credit
 //   option  UW chain (no Skylit credits): expiries 2–7 weeks out ("buy time"), strikes within 2% of the level → the tightest
 //           real bid/ask with OI ≥ 100; shows bid/ask/mid so the card's cost is what you'd actually pay. A+ cards only.
-//   context vanna lean (batched, 1 credit) + UW headlines (no Skylit credits)
+//   context vanna lean (batched, 1 credit) + UW headlines, insiders, analysts, short interest, dark-pool levels (no Skylit credits)
 import { heatmapLive, mcp } from '../feeds/skylit.js';
 import { headlines, optionSymbols, contractQuote } from '../feeds/uw.js';
+import { uwContext } from './uwcontext.mjs';
 import { normalizeBoard } from '../map/board.js';
 import { hierarchy } from '../map/hierarchy.js';
 import { aplusDiagnose, APLUS } from '../system/aplus.js';
@@ -54,6 +55,7 @@ export async function verify(cands, { D, contracts = true }) {
   for (const card of cards.filter((x) => x.status === 'A+')) {
     if (contracts) card.contract = await pickContract(card.sym, card.dir, card.plan.entry, D);
     card.news = await headlines(card.sym, 3);
+    card.uw = await uwContext(card.sym, D, prevTD(D), card.plan.entry).catch(() => null);
     const rank = card.vol.ivRank == null ? null : Math.round(card.vol.ivRank);
     card.volNote = rank == null ? 'IV rank n/a' : rank >= 70 ? `IV rich (rank ${rank}) — premium is expensive; a debit spread caps the IV-crush risk` : rank <= 30 ? `IV cheap (rank ${rank}) — favorable to buy premium` : `IV normal (rank ${rank})`;
   }

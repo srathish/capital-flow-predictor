@@ -3,11 +3,24 @@
 //   • your tickers (direction from the daily trend; mixed trend → both sides are checked)
 //   • 12-1 momentum leaders (only selection rule positive in train/test/holdout, weak) — trend up AND stronger than SPY (20d)
 //   • hot themes: top-2 sector baskets by 20d return → their members that are trending up and stronger than SPY
+//   • insider buys: an open-market insider purchase ≥ $100k (Form 4 code P) filed in the last 20 sessions → long. The ONE selection
+//     signal that survived every check (shadow/uw_signals.mjs + uw_robust.mjs: +3.2% vs same-stock random dates over 20 sessions,
+//     t 2.7, positive every year 2022–26). Not gated by trend — insiders buying weakness is the point.
 // Hard filter (verified): never buy a dip in a laggard (weaker than SPY over 20d) — generated longs require rs20 > 0.
 // Universe ranking uses the cached daily bars (refresh weekly with --refresh-universe, ~300 credits); candidates are refreshed in Step 2.
-import { loadDaily, features, universe, THEMES, refreshDaily, prevTD } from './common.mjs';
+import { loadDaily, features, universe, THEMES, refreshDaily, prevTD, tdRange, addDays } from './common.mjs';
+import { UW_API_KEY } from '../feeds/env.js';
 
-export async function findCandidates({ tickers = [], D, momentumN = 15, themes = true, refreshUniverse = false }) {
+async function insiderBuys(D) { // market-wide recent open-market purchases (UW quota only)
+  const out = [];
+  for (let p = 0; p < 3; p++) {
+    const r = await fetch(`https://api.unusualwhales.com/api/insider/transactions?transaction_codes[]=P&limit=500&page=${p}`, { headers: { Authorization: `Bearer ${UW_API_KEY}`, Accept: 'application/json' } }).catch(() => null);
+    const d = r?.ok ? ((await r.json().catch(() => null))?.data ?? []) : []; out.push(...d); if (d.length < 500 || d.at(-1).filing_date < addDays(D, -35)) break;
+  }
+  return out;
+}
+
+export async function findCandidates({ tickers = [], D, momentumN = 15, themes = true, insiders = true, refreshUniverse = false }) {
   const spy = await refreshDaily('SPY', D), uni = universe();
   if (refreshUniverse) for (const s of uni) await refreshDaily(s, D);
   const feat = new Map();
@@ -36,6 +49,13 @@ export async function findCandidates({ tickers = [], D, momentumN = 15, themes =
       const fs_ = m.map((s) => feat.get(s)); return { k, m, r20: fs_.reduce((a, f) => a + f.r20, 0) / m.length, breadth: fs_.filter((f) => f.r5 > 0).length / m.length }; })
       .filter(Boolean).sort((a, b) => b.r20 - a.r20).slice(0, 2);
     hot.forEach((t, i) => t.m.forEach((s) => { const f = feat.get(s); if (f.trend === 'up' && f.rs20 > 0 && f.px >= 5) add(s, ['up'], `hot theme #${i + 1} ${t.k} (${pc(t.r20)} avg 20d, ${Math.round(t.breadth * 100)}% of names up this week) — leader ${pc(f.rs20)} vs SPY`); }));
+  }
+  if (insiders) {
+    let back = D; for (let k = 0; k < 20; k++) back = prevTD(back); // filings in the last 20 sessions before D
+    const by = {};
+    for (const r of await insiderBuys(D)) { if (r.transaction_code !== 'P' || r.filing_date < back || r.filing_date >= D || !uni.includes(r.ticker)) continue; const v = Math.abs(r.amount) * +r.price; if (v < 1e5) continue; (by[r.ticker] ??= []).push({ who: r.owner_name, v, f: r.filing_date, title: r.officer_title ?? (r.is_director ? 'director' : '') }); }
+    for (const [s, xs] of Object.entries(by)) { const v = xs.reduce((a, x) => a + x.v, 0), latest = xs.map((x) => x.f).sort().at(-1);
+      add(s, ['up'], `insider buy: ${new Set(xs.map((x) => x.who)).size} insider(s) bought $${v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.round(v / 1e3) + 'k'} on the open market (latest filed ${latest}; ${xs.slice(0, 2).map((x) => `${x.who.split(' ').slice(0, 2).join(' ')}${x.title ? ' — ' + x.title : ''}`).join(', ')})`); }
   }
   return { cands: [...C.values()].map((c) => ({ ...c, dirs: [...c.dirs], feat: feat.get(c.sym) ?? null })), hotThemes: hot.map((t) => ({ theme: t.k, r20: t.r20, breadth: t.breadth })),
     note: staleDays > feat.size / 2 ? `universe daily bars are stale (last ${[...feat.values()][0]?.last}) — momentum/theme ranks use them; run with --refresh-universe weekly (~300 credits)` : null };
