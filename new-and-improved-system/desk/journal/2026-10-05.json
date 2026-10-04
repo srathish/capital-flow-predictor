@@ -1,0 +1,902 @@
+{
+ "D": "2026-10-05",
+ "generatedAt": "2026-10-04T04:51:40.118Z",
+ "hotThemes": [
+  {
+   "theme": "cyber",
+   "r20": 0.19983139017916832,
+   "breadth": 1
+  },
+  {
+   "theme": "semis",
+   "r20": 0.16955532285788927,
+   "breadth": 0.8888888888888888
+  }
+ ],
+ "note": null,
+ "creditsUsed": 12,
+ "cards": [
+  {
+   "D": "2026-10-05",
+   "sym": "AMD",
+   "find": [
+    "your ticker (trend up, +39.4% vs SPY 20d)",
+    "12-1 momentum #9 (+178.3% over the year ex last month, +39.4% vs SPY 20d)",
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +39.4% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.3937,
+   "atr": 25.16,
+   "vol": {
+    "ivRank": 9.763381317075954,
+    "ivPct": 8.333333333333332,
+    "iv30": 52.9,
+    "nextEarnings": "2026-11-03",
+    "impliedMove": 8.85
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 633.91,
+   "status": "NO TRADE",
+   "reason": "floor 615 is 3.0% away (> 1.5%)",
+   "level": 615
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "GOOGL",
+   "find": [
+    "your ticker (trend mixed, +0.8% vs SPY 20d)"
+   ],
+   "trend": "mixed",
+   "rs20": 0.0079,
+   "atr": 9.13,
+   "vol": {
+    "ivRank": 40.75553471312356,
+    "ivPct": 57.936507936507944,
+    "iv30": 35.9,
+    "nextEarnings": "2026-10-28",
+    "impliedMove": 5.97
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 343.5,
+   "status": "NO TRADE",
+   "reason": "R:R 2.0 < 3 (entry 340, stop 337.5, target 345)",
+   "level": 340
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "GOOGL",
+   "find": [
+    "your ticker (trend mixed, +0.8% vs SPY 20d)"
+   ],
+   "trend": "mixed",
+   "rs20": 0.0079,
+   "atr": 9.13,
+   "vol": {
+    "ivRank": 40.75553471312356,
+    "ivPct": 57.936507936507944,
+    "iv30": 35.9,
+    "nextEarnings": "2026-10-28",
+    "impliedMove": 5.97
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "down",
+   "spot": 343.5,
+   "status": "NO TRADE",
+   "reason": "ceiling 350 is 1.9% away (> 1.5%)",
+   "level": 350
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "ORCL",
+   "find": [
+    "your ticker (trend down, -7.0% vs SPY 20d)"
+   ],
+   "trend": "down",
+   "rs20": -0.0703,
+   "atr": 6.3,
+   "vol": {
+    "ivRank": 25.47504280693483,
+    "ivPct": 32.53968253968254,
+    "iv30": 54.7,
+    "nextEarnings": "2026-12-09",
+    "impliedMove": 11.8
+   },
+   "vanna": "flat",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "down",
+   "spot": 142.3,
+   "status": "NO TRADE",
+   "reason": "ceiling 145 is 1.9% away (> 1.5%)",
+   "level": 145
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "PLTR",
+   "find": [
+    "your ticker (trend up, +3.9% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.0387,
+   "atr": 5.72,
+   "vol": {
+    "ivRank": 5.028272791631261,
+    "ivPct": 3.968253968253968,
+    "iv30": 50,
+    "nextEarnings": "2026-11-02",
+    "impliedMove": 12.2
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 188.75,
+   "status": "NO TRADE",
+   "reason": "R:R 2.5 < 3 (entry 187.5, stop 186.5, target 190)",
+   "level": 187.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "SNDK",
+   "find": [
+    "12-1 momentum #1 (+1181.5% over the year ex last month, +11.3% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.1134,
+   "atr": 92.95,
+   "vol": {
+    "ivRank": 0,
+    "ivPct": 0,
+    "iv30": 66.7,
+    "nextEarnings": "2026-10-29",
+    "impliedMove": 9.1
+   },
+   "vanna": "flat",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 1719.99,
+   "status": "NO TRADE",
+   "reason": "no floor on the map",
+   "level": null
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "AXTI",
+   "find": [
+    "12-1 momentum #2 (+1059.1% over the year ex last month, +53.2% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.5318,
+   "atr": 6.7,
+   "vol": {
+    "ivRank": 9.351816748055914,
+    "ivPct": 18.650793650793652,
+    "iv30": 120.3,
+    "nextEarnings": "2026-10-29",
+    "impliedMove": 19.12
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 85.87,
+   "status": "NO TRADE",
+   "reason": "R:R 2.0 < 3 (entry 85, stop 84, target 87)",
+   "level": 85
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "ASST",
+   "find": [
+    "12-1 momentum #3 (+876.3% over the year ex last month, +12.4% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.1239,
+   "atr": 1.87,
+   "vol": {
+    "ivRank": 3.125894418117009,
+    "ivPct": 1.593625498007968,
+    "iv30": 74.1,
+    "nextEarnings": "2026-11-09",
+    "impliedMove": 9.89
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 30.03,
+   "status": "NO TRADE",
+   "reason": "R:R 0.5 < 3 (entry 30, stop 29, target 30.5)",
+   "level": 30
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "MRNA",
+   "find": [
+    "12-1 momentum #4 (+447.2% over the year ex last month, +28.1% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2805,
+   "atr": 13.25,
+   "vol": {
+    "ivRank": 58.114755200032135,
+    "ivPct": 97.61904761904762,
+    "iv30": 97.5,
+    "nextEarnings": "2026-11-05",
+    "impliedMove": null
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 190.01,
+   "status": "A+",
+   "plan": {
+    "zone": 0.285,
+    "entry": 190,
+    "entryType": "gatekeeper",
+    "share": 0.328,
+    "target": 195,
+    "targetType": "gatekeeper",
+    "t2": null,
+    "nodeStop": 189,
+    "stopClose": 183.37,
+    "rr": 5,
+    "holdEnd": "2026-10-16",
+    "why": "gatekeeper floor 190 (33%) · untouched target 195 (gatekeeper) · air pocket (0 small node(s) between) · R:R 5.0 · trend up",
+    "entryRule": "wait for 09:35+; buy the 1-min bar that tags 190 (±0.29) and CLOSES back above it (1st/2nd tap, before 15:30). SKIP if the day opens above 193.98 (slides into the level).",
+    "exitRule": "half at 195, stop → entry; rest at 195; out on a daily CLOSE below 183.37; time exit 2026-10-16."
+   },
+   "contract": {
+    "occ": "MRNA261120C00190000",
+    "exp": "2026-11-20",
+    "strike": 190,
+    "type": "call",
+    "bid": 26,
+    "ask": 27.3,
+    "mid": 26.65,
+    "spreadPct": 4.9,
+    "oi": 638,
+    "volume": 40,
+    "iv": 95,
+    "quoteDate": "2026-10-02",
+    "liquid": true,
+    "note": "liquid"
+   },
+   "news": [
+    {
+     "at": "2026-08-27T20:05:43Z",
+     "headline": "MODERNA SAYS THE FDA HAS APPROVED ITS UPDATED 2026-2027 COVID-19 VACCINES, WITH MNEXSPIKE WINNING FDA APPROVAL FOR ITS NEW FORMULA AND SPIKEVAX RECEIVING APPROVAL FOR THE 2026-2027 FORMULA",
+     "source": "Tradex",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-08-27T11:25:55Z",
+     "headline": "MODERNA PLANS TO ISSUE $2 BILLION IN CONVERTIBLE SENIOR NOTES, WITH NET PROCEEDS GOING TO GENERAL CORPORATE PURPOSES AND SOME FOR CAPPED CALL TRANSACTIONS. THEY WILL ALSO OFFER AN OPTION FOR AN ADDITIONAL $300 MILLION OF NOTES.",
+     "source": "Tradex",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-08-27T11:23:16Z",
+     "headline": "MODERNA TO OFFER $2 BILLION OF CONVERTIBLE SENIOR NOTES",
+     "source": "Tradex",
+     "sentiment": "neutral"
+    }
+   ],
+   "volNote": "IV normal (rank 58)"
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "MU",
+   "find": [
+    "12-1 momentum #5 (+424.1% over the year ex last month, +12.6% vs SPY 20d)",
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +12.6% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1255,
+   "atr": 42.28,
+   "vol": {
+    "ivRank": 0,
+    "ivPct": 0,
+    "iv30": 51.2,
+    "nextEarnings": "2026-12-23",
+    "impliedMove": 5.72
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 1074.89,
+   "status": "NO TRADE",
+   "reason": "floor 1050 is 2.3% away (> 1.5%)",
+   "level": 1050
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "LITE",
+   "find": [
+    "12-1 momentum #6 (+407.8% over the year ex last month, +28.5% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2853,
+   "atr": 61.78,
+   "vol": {
+    "ivRank": 28.132390335951488,
+    "ivPct": 6.349206349206349,
+    "iv30": 70.6,
+    "nextEarnings": "2026-11-03",
+    "impliedMove": 5.88
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 1085.42,
+   "status": "NO TRADE",
+   "reason": "floor 1055 is 2.8% away (> 1.5%)",
+   "level": 1055
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "DELL",
+   "find": [
+    "12-1 momentum #7 (+228.8% over the year ex last month, +9.4% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.0943,
+   "atr": 26.97,
+   "vol": {
+    "ivRank": 34.004382792032935,
+    "ivPct": 39.68253968253968,
+    "iv30": 57.9,
+    "nextEarnings": "2026-11-24",
+    "impliedMove": 10.92
+   },
+   "vanna": "flat",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 562.52,
+   "status": "NO TRADE",
+   "reason": "no floor on the map",
+   "level": null
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "DOCN",
+   "find": [
+    "12-1 momentum #8 (+192.1% over the year ex last month, +28.3% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2833,
+   "atr": 8.85,
+   "vol": {
+    "ivRank": 46.86921452805999,
+    "ivPct": 48.41269841269841,
+    "iv30": 80.9,
+    "nextEarnings": "2026-11-04",
+    "impliedMove": 15.23
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 140.07,
+   "status": "NO TRADE",
+   "reason": "R:R 2.0 < 3 (entry 140, stop 139, target 142)",
+   "level": 140
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "INTC",
+   "find": [
+    "12-1 momentum #10 (+150.6% over the year ex last month, +30.6% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.3065,
+   "atr": 6.6,
+   "vol": {
+    "ivRank": 39.69360100427993,
+    "ivPct": 52.38095238095239,
+    "iv30": 71.5,
+    "nextEarnings": "2026-10-22",
+    "impliedMove": 8.89
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 119.33,
+   "status": "NO TRADE",
+   "reason": "floor 118 is a pika, not king/gatekeeper",
+   "level": 118
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "MRVL",
+   "find": [
+    "12-1 momentum #11 (+146.0% over the year ex last month, +30.8% vs SPY 20d)",
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +30.8% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.3083,
+   "atr": 11.76,
+   "vol": {
+    "ivRank": 28.181886869550464,
+    "ivPct": 34.523809523809526,
+    "iv30": 61.9,
+    "nextEarnings": "2026-12-01",
+    "impliedMove": 9.53
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 272.29,
+   "status": "NO TRADE",
+   "reason": "R:R 1.0 < 3 (entry 270, stop 267.5, target 272.5)",
+   "level": 270
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "TER",
+   "find": [
+    "12-1 momentum #12 (+141.9% over the year ex last month, +33.1% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.3306,
+   "atr": 17.95,
+   "vol": {
+    "ivRank": 41.380067729980304,
+    "ivPct": 69.04761904761905,
+    "iv30": 74.6,
+    "nextEarnings": "2026-10-27",
+    "impliedMove": 11.43
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 449.04,
+   "status": "A+",
+   "plan": {
+    "zone": 0.674,
+    "entry": 445,
+    "entryType": "gatekeeper",
+    "share": 0.458,
+    "target": 452.5,
+    "targetType": "normal",
+    "t2": null,
+    "nodeStop": 442.5,
+    "stopClose": 436.02,
+    "rr": 3,
+    "holdEnd": "2026-10-16",
+    "why": "gatekeeper floor 445 (46%) · untouched target 452.5 (normal) · air pocket (0 small node(s) between) · R:R 3.0 · trend up",
+    "entryRule": "wait for 09:35+; buy the 1-min bar that tags 445 (±0.67) and CLOSES back above it (1st/2nd tap, before 15:30). SKIP if the day opens above 450.39 (slides into the level).",
+    "exitRule": "half at 452.5, stop → entry; rest at 452.5; out on a daily CLOSE below 436.02; time exit 2026-10-16."
+   },
+   "contract": {
+    "occ": "TER261120C00450000",
+    "exp": "2026-11-20",
+    "strike": 450,
+    "type": "call",
+    "bid": 47.9,
+    "ask": 50,
+    "mid": 48.95,
+    "spreadPct": 4.3,
+    "oi": 168,
+    "volume": 57,
+    "iv": 74,
+    "quoteDate": "2026-10-02",
+    "liquid": true,
+    "note": "liquid"
+   },
+   "news": [
+    {
+     "at": "2026-09-15T03:39:14Z",
+     "headline": "Teradyne Opens Office in India, Deepening Commitment to the Country’s Growing Semiconductor Ecosystem",
+     "source": "Business Wire",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-08-24T18:37:38Z",
+     "headline": "Teradyne Declares Quarterly Cash Dividend",
+     "source": "Business Wire",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-07-28T20:43:56Z",
+     "headline": "Teradyne Reports Second Quarter 2026 Results",
+     "source": "Business Wire",
+     "sentiment": "neutral"
+    }
+   ],
+   "volNote": "IV normal (rank 41)"
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "BE",
+   "find": [
+    "12-1 momentum #13 (+140.7% over the year ex last month, +23.5% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2345,
+   "atr": 20.62,
+   "vol": {
+    "ivRank": 2.8608038921072314,
+    "ivPct": 2.380952380952381,
+    "iv30": 79.1,
+    "nextEarnings": "2026-10-27",
+    "impliedMove": 10.19
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 289.15,
+   "status": "NO TRADE",
+   "reason": "floor 282.5 is a pika, not king/gatekeeper",
+   "level": 282.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "COHR",
+   "find": [
+    "12-1 momentum #14 (+134.0% over the year ex last month, +27.9% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2787,
+   "atr": 19.42,
+   "vol": {
+    "ivRank": 30.861358585411782,
+    "ivPct": 19.444444444444446,
+    "iv30": 71.2,
+    "nextEarnings": "2026-11-04",
+    "impliedMove": 10.49
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 337.04,
+   "status": "NO TRADE",
+   "reason": "floor 330 is a barney, not king/gatekeeper",
+   "level": 330
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "TWLO",
+   "find": [
+    "12-1 momentum #15 (+120.9% over the year ex last month, +23.0% vs SPY 20d)"
+   ],
+   "trend": "up",
+   "rs20": 0.2296,
+   "atr": 15.79,
+   "vol": {
+    "ivRank": 72.0424744604113,
+    "ivPct": 78.96825396825396,
+    "iv30": 69.8,
+    "nextEarnings": "2026-10-29",
+    "impliedMove": 12.07
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 294.58,
+   "status": "NO TRADE",
+   "reason": "floor 290 is 1.6% away (> 1.5%)",
+   "level": 290
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "PANW",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +21.9% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.2192,
+   "atr": 16.15,
+   "vol": {
+    "ivRank": 46.154148996565254,
+    "ivPct": 61.111111111111114,
+    "iv30": 49.9,
+    "nextEarnings": "2026-11-18",
+    "impliedMove": 9.92
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 403.24,
+   "status": "A+",
+   "plan": {
+    "zone": 0.605,
+    "entry": 397.5,
+    "entryType": "gatekeeper",
+    "share": 0.171,
+    "target": 405,
+    "targetType": "gatekeeper",
+    "t2": 410,
+    "nodeStop": 395,
+    "stopClose": 389.42,
+    "rr": 3,
+    "holdEnd": "2026-10-16",
+    "why": "gatekeeper floor 397.5 (17%) · untouched target 405 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up",
+    "entryRule": "wait for 09:35+; buy the 1-min bar that tags 397.5 (±0.60) and CLOSES back above it (1st/2nd tap, before 15:30). SKIP if the day opens above 402.35 (slides into the level).",
+    "exitRule": "half at 405, stop → entry; rest at 410; out on a daily CLOSE below 389.42; time exit 2026-10-16."
+   },
+   "contract": {
+    "occ": "PANW261120C00400000",
+    "exp": "2026-11-20",
+    "strike": 400,
+    "type": "call",
+    "bid": 34.35,
+    "ask": 35.45,
+    "mid": 34.9,
+    "spreadPct": 3.2,
+    "oi": 1762,
+    "volume": 227,
+    "iv": 56.2,
+    "quoteDate": "2026-10-02",
+    "liquid": true,
+    "note": "liquid"
+   },
+   "news": [
+    {
+     "at": "2026-08-20T13:07:10Z",
+     "headline": "Zero Networks Expands Palo Alto Networks Integration to Deliver Zero-Touch Containment and AI Security",
+     "source": "Business Wire",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-08-20T10:06:56Z",
+     "headline": "NTT DATA and Palo Alto Networks Sign Global Strategic Alliance to Accelerate Secure AI Transformation",
+     "source": "Business Wire",
+     "sentiment": "neutral"
+    },
+    {
+     "at": "2026-08-19T13:08:32Z",
+     "headline": "Palo Alto Networks Introduces Frontier AI Critical Defense Program",
+     "source": "PR NewsWire",
+     "sentiment": "neutral"
+    }
+   ],
+   "volNote": "IV normal (rank 46)"
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "CRWD",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +26.1% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.2606,
+   "atr": 11.03,
+   "vol": {
+    "ivRank": 47.388999488108574,
+    "ivPct": 44.84126984126984,
+    "iv30": 51.1,
+    "nextEarnings": "2026-12-01",
+    "impliedMove": 10.85
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 270.04,
+   "status": "NO TRADE",
+   "reason": "floor 265 is a pika, not king/gatekeeper",
+   "level": 265
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "ZS",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +10.8% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1084,
+   "atr": 9.12,
+   "vol": {
+    "ivRank": 40.292992845033964,
+    "ivPct": 29.365079365079367,
+    "iv30": 53.7,
+    "nextEarnings": "2026-11-24",
+    "impliedMove": 13.43
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 196.6,
+   "status": "NO TRADE",
+   "reason": "floor 192.5 is a pika, not king/gatekeeper",
+   "level": 192.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "NET",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +23.1% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.2308,
+   "atr": 15.59,
+   "vol": {
+    "ivRank": 39.33290880834531,
+    "ivPct": 41.269841269841265,
+    "iv30": 60.9,
+    "nextEarnings": "2026-10-29",
+    "impliedMove": 6.14
+   },
+   "vanna": "down",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 349.07,
+   "status": "NO TRADE",
+   "reason": "floor 342.5 is 1.9% away (> 1.5%)",
+   "level": 342.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "FTNT",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +16.1% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1614,
+   "atr": 6.11,
+   "vol": {
+    "ivRank": 71.99482493475136,
+    "ivPct": 91.66666666666666,
+    "iv30": 61.1,
+    "nextEarnings": "2026-11-04",
+    "impliedMove": null
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 180.95,
+   "status": "NO TRADE",
+   "reason": "floor 177.5 is a barney, not king/gatekeeper",
+   "level": 177.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "OKTA",
+   "find": [
+    "hot theme #1 cyber (+20.0% avg 20d, 100% of names up this week) — leader +24.6% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.2456,
+   "atr": 9.28,
+   "vol": {
+    "ivRank": 53.84939996496109,
+    "ivPct": 44.04761904761904,
+    "iv30": 54.5,
+    "nextEarnings": "2026-12-01",
+    "impliedMove": 16.76
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 211.49,
+   "status": "NO TRADE",
+   "reason": "floor 210 is a barney, not king/gatekeeper",
+   "level": 210
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "NVDA",
+   "find": [
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +2.9% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.0288,
+   "atr": 5.14,
+   "vol": {
+    "ivRank": 0,
+    "ivPct": 0,
+    "iv30": 32.1,
+    "nextEarnings": "2026-11-18",
+    "impliedMove": 7.48
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 233.95,
+   "status": "NO TRADE",
+   "reason": "floor 227.5 is a barney, not king/gatekeeper",
+   "level": 227.5
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "TSM",
+   "find": [
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +13.8% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1385,
+   "atr": 9.81,
+   "vol": {
+    "ivRank": 4.875338906305576,
+    "ivPct": 4.365079365079365,
+    "iv30": 33.7,
+    "nextEarnings": "2026-10-15",
+    "impliedMove": 4.59
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 472.78,
+   "status": "NO TRADE",
+   "reason": "R:R 2.0 < 3 (entry 470, stop 467.5, target 475)",
+   "level": 470
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "ASML",
+   "find": [
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +13.9% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1391,
+   "atr": 45.25,
+   "vol": {
+    "ivRank": 40.469581550534635,
+    "ivPct": 35.714285714285715,
+    "iv30": 43.7,
+    "nextEarnings": "2026-10-14",
+    "impliedMove": 6.78
+   },
+   "vanna": "flat",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 1867.31,
+   "status": "NO TRADE",
+   "reason": "no floor on the map",
+   "level": null
+  },
+  {
+   "D": "2026-10-05",
+   "sym": "LRCX",
+   "find": [
+    "hot theme #2 semis (+17.0% avg 20d, 89% of names up this week) — leader +19.1% vs SPY"
+   ],
+   "trend": "up",
+   "rs20": 0.1914,
+   "atr": 12.94,
+   "vol": {
+    "ivRank": 27.50769838125849,
+    "ivPct": 36.507936507936506,
+    "iv30": 60.5,
+    "nextEarnings": "2026-10-21",
+    "impliedMove": 8.06
+   },
+   "vanna": "up",
+   "mapExpiry": "2026-10-09",
+   "decision": null,
+   "dir": "up",
+   "spot": 347.49,
+   "status": "NO TRADE",
+   "reason": "R:R 2.0 < 3 (entry 345, stop 342.5, target 350)",
+   "level": 345
+  }
+ ]
+}

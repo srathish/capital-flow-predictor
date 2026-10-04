@@ -57,7 +57,7 @@ async function selectFeatures(D, a, bars, bi, exp) {
     share: a.share, rr: a.rr, chartN: a.tech?.n ?? 0, structure: !!a.tech?.structure, fib: !!a.tech?.fib, level: !!a.tech?.level, sweep: !!a.tech?.sweep, vex: lean == null ? null : lean === a.dir, entryMin: Math.round((bars[bi].t - bars[0].t) / 60) };
 }
 
-import { findAplus as findAplusShared, retestHolds, APLUS } from '../system/aplus.js';
+import { findAplus as findAplusShared, retestHolds, APLUS, slidIn, stopLevel, manage } from '../system/aplus.js';
 import { technicals } from '../system/technicals.js';
 const CHART = process.argv.includes('--chart');
 // Variants locked 2026-10-03 from the 22-trade autopsy (8/13 losers hit target later; losers opened away and slid into the level).
@@ -91,7 +91,7 @@ for (const D of tdays) {
     const b = bars[bi]; if (hm(b.t) < '09:35' || hm(b.t) > '15:30') continue;
     for (const a of aps) {
       if (!retestHolds(a, bars, bi, board.zone)) continue;
-      if (NOGAP && (a.dir === 'up' ? bars[0].o - a.entry : a.entry - bars[0].o) > 0.3 * ATR) continue;
+      if (NOGAP && slidIn(a, bars[0].o, ATR)) continue;
       const tech = technicals({ dir: a.dir, node: a.entry, prior: days.filter((d) => d < D).map((d) => dmap.get(d)), session: bars.slice(0, bi + 1) });
       a.tech = tech;
       if (CHART && !tech.aplusChart) continue;
@@ -103,19 +103,9 @@ for (const D of tdays) {
   const fbi = bars.findIndex((x) => x.t === fill.t), feat = await selectFeatures(D, fill, bars, fbi, weekly(D));
   const type = fill.dir === 'up' ? 'call' : 'put', id = await contract(cexp, type, fill.entry, D);
   const e0 = id ? px(await optionBars(id, D), fill.t) : null;
-  const dir = fill.dir === 'up' ? 1 : -1, legs = []; let half = false, stopLvl = WIDE ? fill.entry - dir * Math.max(Math.abs(fill.entry - fill.stop), 0.5 * ATR) : fill.stop;
+  const dir = fill.dir === 'up' ? 1 : -1;
   const holdDays = days.filter((d) => d >= D && d <= holdEnd);
-  outer: for (const d of holdDays) {
-    const bs = (await minuteBars(SYM, d)).filter((x) => d !== D || x.t > fill.t);
-    for (const x of bs) {
-      if (!half && (dir > 0 ? x.h >= fill.target : x.l <= fill.target)) { legs.push({ d, t: x.t, f: 0.5, why: 'TARGET' }); half = true; stopLvl = fill.entry; if (fill.t2 == null) { legs.push({ d, t: x.t, f: 0.5, why: 'TARGET(all)' }); break outer; } }
-      if (half && fill.t2 != null && (dir > 0 ? x.h >= fill.t2 : x.l <= fill.t2)) { legs.push({ d, t: x.t, f: 0.5, why: 'T2' }); break outer; }
-      if (half && (dir > 0 ? x.l <= stopLvl - board.zone : x.h >= stopLvl + board.zone)) { legs.push({ d, t: x.t, f: 0.5, why: 'breakeven' }); break outer; }
-    }
-    const c = bs[bs.length - 1];
-    if (c && !half && (dir > 0 ? c.c < stopLvl : c.c > stopLvl)) { legs.push({ d, t: c.t, f: 1, why: 'stop(close)' }); break; }
-    if (d === holdDays[holdDays.length - 1] && c) { legs.push({ d, t: c.t, f: half ? 0.5 : 1, why: 'time' }); break; }
-  }
+  const legs = await manage({ fill, holdDays, getBars: (d) => minuteBars(SYM, d), stopLvl: stopLevel(fill, ATR, WIDE), zone: board.zone });
   // underlying R (always) + option return (only if every leg is priced from the cache)
   let R = 0; for (const l of legs) { const ub = px(await minuteBars(SYM, l.d), l.t); l.u = ub; R += dir * (ub - fill.entry) / Math.abs(fill.entry - fill.stop) * l.f; }
   let r = e0 ? 0 : null; if (e0) for (const l of legs) { const ob = await optionBars(id, l.d); l.px = ob.length ? px(ob, l.t) : null; if (l.px == null) { r = null; break; } r += (l.px - e0) / e0 * l.f; }

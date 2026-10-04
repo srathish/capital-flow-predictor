@@ -64,7 +64,7 @@ async function rest(host, pathAndQuery) {
 
 /** Live board(s). metric gamma|vanna. expirations='YYYY-MM-DD' isolates one column (0DTE for indices). */
 export async function heatmapLive(symbols, { metric = 'gamma', expirations } = {}) {
-  const args = { symbols: [].concat(symbols).join(','), metric };
+  const args = { symbols: [].concat(symbols).join(','), metric, maxStrikes: 'all' }; // 'all' = same strike set as /v1/historical (backtests)
   if (expirations) args.expirations = expirations;
   const out = await mcp('heat_heatmap', args);
   return out.data.symbols; // [{symbol, spot, previousClose, strikes:[{strike,value,nodeType,velocityPct}], expirations[]}]

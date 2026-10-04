@@ -23,3 +23,25 @@ export async function contractMinuteBars(id, date) {
   }
   return [];
 }
+
+/** Recent headlines that actually tag `ticker` (UW news; UW quota, no Skylit credits). → [{at, headline, source, sentiment}] */
+export async function headlines(ticker, n = 3) {
+  if (!UW_API_KEY) return [];
+  const r = await fetch(`https://api.unusualwhales.com/api/news/headlines?ticker=${ticker}&limit=20`, { headers: { Authorization: `Bearer ${UW_API_KEY}`, Accept: 'application/json' } }).catch(() => null);
+  const j = r?.ok ? await r.json().catch(() => null) : null;
+  return (j?.data ?? []).filter((h) => (h.tickers ?? []).includes(ticker)).slice(0, n).map((h) => ({ at: h.created_at, headline: h.headline, source: h.source, sentiment: h.sentiment }));
+}
+
+const uwGet = async (p) => { const wait = 250 - (Date.now() - last); if (wait > 0) await sleep(wait); last = Date.now(); const r = await fetch(`https://api.unusualwhales.com/api${p}`, { headers: { Authorization: `Bearer ${UW_API_KEY}`, Accept: 'application/json' } }).catch(() => null); return r?.ok ? r.json().catch(() => null) : null; };
+/** Every OCC symbol listed for `ticker` on `date` (parsed). */
+export async function optionSymbols(ticker, date) {
+  const j = await uwGet(`/stock/${ticker}/option-chains?date=${date}`);
+  return (j?.data ?? []).map((id) => { const m = id.match(/^([A-Z.]+)(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/); return m ? { id, exp: `20${m[2]}-${m[3]}-${m[4]}`, type: m[5] === 'C' ? 'call' : 'put', strike: +m[6] / 1000 } : null; }).filter(Boolean);
+}
+/** Last session's quote for one contract: NBBO bid/ask, OI, volume, IV (UW historic, newest row). */
+export async function contractQuote(id) {
+  const row = (await uwGet(`/option-contract/${id}/historic?limit=1`))?.chains?.[0];
+  if (!row) return null;
+  const bid = +row.nbbo_bid || 0, ask = +row.nbbo_ask || 0, mid = (bid + ask) / 2;
+  return { id, date: row.date, bid, ask, mid: +mid.toFixed(2), spreadPct: mid > 0 ? +((ask - bid) / mid * 100).toFixed(1) : null, oi: +row.open_interest || 0, volume: +row.volume || 0, iv: row.implied_volatility != null ? +(row.implied_volatility * 100).toFixed(1) : null };
+}
