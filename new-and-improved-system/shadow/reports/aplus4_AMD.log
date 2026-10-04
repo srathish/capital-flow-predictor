@@ -1,0 +1,20 @@
+
+=== A+ walk-forward (map only) · AMD · 2026-04-01 → 2026-10-02 (128 trading days) · AMD 208 → 634 ===
+A+ setups found: 4 on 4 days · filled: 2
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-04-09 BULL entry 230 stop 227.5 target 237.5 (R:R 3) — no retest that held
+      why: gatekeeper floor 230 (30%) · untouched target 237.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up
+  2026-05-28 BULL entry 500 stop 495 target 515 (R:R 3) — FILLED 09:35 · chart: structure (1/4)
+      why: gatekeeper floor 500 (30%) · untouched target 515 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend up
+  2026-07-13 BULL entry 530 stop 527.5 target 537.5 / 540 (R:R 3) — FILLED 09:42 · chart: none (0/4)
+      why: gatekeeper floor 530 (29%) · untouched target 537.5 (gatekeeper) · air pocket (1 small node(s) between) · R:R 3.0 · trend up
+  2026-09-22 BULL entry 607.5 stop 605 target 620 / 627.5 (R:R 5) — no retest that held
+      why: king floor 607.5 (25%) · untouched target 620 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend up
+
+-- trades (real option prices, $1k premium each) --
+  2026-05-28 09:35 CALL @500 → tgt 515  [chart structure 1/4]  AMD260612C00500000 in $32 → TARGET@05-28 $39.7 · TARGET(all)@05-28 $39.7  =  24%  (+$241)  R 3.16
+  2026-07-13 09:42 CALL @530 → tgt 537.5  [chart none 0/4]  AMD260731C00530000 in $37 → TARGET@07-13 $42.93 · T2@07-13 $43.66  =  17%  (+$170)  R 3.58
+
+TOTAL: 2 trades · win 100% · +$411 on $1k/trade
+credits used 0

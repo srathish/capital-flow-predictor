@@ -40,7 +40,8 @@ const isTD = (d) => dmap.has(d) || d > days[days.length - 1];
 const weekly = (d) => { let f = addDays(d, (5 - dow(d) + 7) % 7); if (dow(d) >= 4) f = addDays(f, 7); while (!isTD(f) && dow(f) >= 1) f = addDays(f, -1); return f; };
 const buyTime = (d) => { let f = addDays(d, DTE); while (dow(f) !== 5) f = addDays(f, 1); while (!isTD(f) && dow(f) >= 1) f = addDays(f, -1); return f; };
 const px = (bars, t, k = 'c') => { let best = null; for (const b of bars) { if (b.t > t) break; best = b; } if (!best) best = bars.find((b) => b.t > t) ?? null; return best ? best[k] : null; };
-async function contract(exp, type, strike, date) { for (const s of [2.5, 5, 1]) { const k = Math.round(strike / s) * s, id = occ(SYM, exp, type, k); if ((await optionBars(id, date)).length > 30) return id; } return null; }
+// liquid contract: chosen expiry first, then the next valid expiry a week out, then the front weekly (last resort) if the chain barely traded (≤30 prints)
+async function contract(exp, type, strike, date) { for (const e of [...new Set([exp, buyTime(addDays(date, 7)), weekly(date)])]) for (const s of [2.5, 5, 1]) { const k = Math.round(strike / s) * s, id = occ(SYM, e, type, k); if ((await optionBars(id, date)).length > 30) return id; } return null; }
 const earn = await earningsDates(SYM);
 const spyD = await atlasHistory('SPY', 'D', etToUnix(FROM, '09:30') - 200 * 86400, etToUnix(TO, '16:00') + 86400);
 const spyMap = new Map(spyD.map((b) => [ymd(b.t), b])), spyDays = [...spyMap.keys()].sort();

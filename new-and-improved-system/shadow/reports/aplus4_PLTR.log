@@ -1,0 +1,27 @@
+
+=== A+ walk-forward (map only) · PLTR · 2026-04-01 → 2026-10-02 (128 trading days) · PLTR 147 → 189 ===
+A+ setups found: 7 on 7 days · filled: 3
+
+-- every A+ setup the system saw (as of 09:35 that day) --
+  2026-04-17 BULL entry 142 stop 141 target 145 / 147 (R:R 3) — no retest that held
+      why: gatekeeper floor 142 (25%) · untouched target 145 (king) · air pocket (2 small node(s) between) · R:R 3.0 · trend mixed
+  2026-04-22 BULL entry 147 stop 146 target 150 (R:R 3) — earnings blackout (2026-05-04)
+      why: gatekeeper floor 147 (28%) · untouched target 150 (king) · air pocket (1 small node(s) between) · R:R 3.0 · trend mixed
+  2026-05-11 BEAR entry 135 stop 136 target 130 (R:R 5) — FILLED 10:00 · chart: structure+level (2/4)
+      why: gatekeeper ceiling 135 (40%) · untouched target 130 (gatekeeper) · air pocket (0 small node(s) between) · R:R 5.0 · trend down
+  2026-06-12 BEAR entry 130 stop 131 target 125 (R:R 5) — FILLED 11:07 · chart: none (0/4, STRUCTURE AGAINST)
+      why: gatekeeper ceiling 130 (35%) · untouched target 125 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend down
+  2026-07-21 BEAR entry 135 stop 136 target 130 (R:R 5) — earnings blackout (2026-08-03)
+      why: king ceiling 135 (44%) · untouched target 130 (gatekeeper) · air pocket (2 small node(s) between) · R:R 5.0 · trend mixed
+  2026-08-25 BULL entry 175 stop 174 target 180 (R:R 5) — FILLED 10:07 · chart: structure (1/4)
+      why: gatekeeper floor 175 (17%) · untouched target 180 (king) · air pocket (1 small node(s) between) · R:R 5.0 · trend up
+  2026-09-25 BULL entry 190 stop 189 target 195 / 197.5 (R:R 5) — no retest that held
+      why: gatekeeper floor 190 (27%) · untouched target 195 (gatekeeper) · air pocket (1 small node(s) between) · R:R 5.0 · trend up
+
+-- trades (real option prices, $1k premium each) --
+  2026-05-11 10:00 PUT  @135 → tgt 130  [chart structure+level 2/4 ✓A+chart]  PLTR260529P00135000 in $5.8 → stop(close)@05-11 $4.93  =  -15%  (-$150)  R -1.91
+  2026-06-12 11:07 PUT  @130 → tgt 125  [chart none 0/4]  PLTR260626P00130000 in $5 → stop(close)@06-15 $2.41  =  -52%  (-$518)  R -4.7
+  2026-08-25 10:07 CALL @175 → tgt 180  [chart structure 1/4]  PLTR260911C00175000 in $7.5 → stop(close)@08-25 $5.95  =  -21%  (-$207)  R -2.27
+
+TOTAL: 3 trades · win 0% · -$875 on $1k/trade
+credits used 0
