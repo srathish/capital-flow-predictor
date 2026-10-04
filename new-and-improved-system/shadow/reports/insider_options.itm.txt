@@ -1,0 +1,11 @@
+insider buy ≥$100k → ~10% ITM call ≥60 DTE, 10:00 entry, 20-session hold · events 236 · priced 148 · controls priced 146
+
+  EVENTS mid                 n 148 · avg    9.5% (t 1.2) · median  -14.7% · win 40% · total +$14105
+  EVENTS worst fill          n 148 · avg    9.3% (t 1.2) · median  -14.7% · win 40% · total +$13764
+  CONTROL mid                n 146 · avg   -7.1% (t -1.2) · median  -26.5% · win 40% · total -$10309
+  CONTROL worst fill         n 146 · avg   -7.2% (t -1.2) · median  -26.5% · win 40% · total -$10583
+  EVENTS mid, before 2026-05-14 n 121 · avg   10.1% (t 1.2) · median  -14.6% · win 40% · total +$12193
+  EVENTS mid, from 2026-05-14 n  27 · avg    7.1% (t 0.4) · median  -20.7% · win 37% · total +$1912
+  EVENT − CONTROL (paired)   n 110 · avg   12.7% (t 1.0) · median   -2.3% · win 49% · total +$13960
+
+  unpriced events: {"no entry print":61,"no exit print":25,"no listing":2}

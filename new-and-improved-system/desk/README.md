@@ -2,19 +2,27 @@
 
 Decision support, not an autotrader. It never sends orders.
 
-Every backtest (`shadow/reports/STOCK_SELECTION_FINDINGS.md`, Rule 1 and A+ out-of-sample) says the same thing:
-the Skylit map tells you **where** — level, room to target, invalidation — but not **which way**.
-So the desk gives each tool only the job it has passed:
+Every backtest says the same thing:
+- `shadow/reports/STOCK_SELECTION_FINDINGS.md`, Rule 1 and A+ out-of-sample: nothing mechanical makes money.
+- Unusual Whales, tested 2026-10-04: the first selection signal that holds.
 
-| Step | Job | Source | Evidence |
-|---|---|---|---|
-| 1 find | which stock, which side | your tickers · 12-1 momentum leaders · hot-theme leaders; laggards (weaker than SPY 20d) never bought | 12-1 is the only ranker positive in train/test/holdout (weak); dip-buys in laggards lost in both halves |
-| 2 verify | where, how much room, where wrong, what to buy | live gamma map (A+ rubric, exact failing reason) · Tempest earnings + IV rank · UW quotes for a contract 2–7 weeks out | nodes reject ~2× random; slide-in skip cut out-of-sample losses 75%; 8/13 losers were stopped too tight; options overprice earnings 80% of the time |
-| 2b watch | the entry and exit alerts | re-check at 09:35 on the live map, then UW 1-min bars | the backtest used the 09:35 map; weekend maps drift |
-| 3 decide + score | does your judgment beat the list? | your take/pass + mechanical scoring with the backtest's own code | — this is the open question |
+What the evidence supports, and what it doesn't:
 
-**No part of this is a proven edge.** The A+ plan with these defaults lost money out of sample (−$973 on 19 trades).
-The desk exists to test the one thing we haven't: whether **your** picks from the list beat the list.
+| Piece | Status | Evidence |
+|---|---|---|
+| **Insider open-market buy ≥ $100k** (Step 1 source) | ✅ **real, on the STOCK** | 660 events, 294 stocks, 2022–26: +3.86% beta-adjusted over 20 sessions (t 3.4). It beats random dates in the same stock by +3.2% (t 2.7), with a positive average every year. Median +1.4%, so the edge is small per trade. |
+| ...as an options trade | ❌ not validated | ATM calls ≥35 DTE: +9.9% average but −43% median, carried by 5 lottery wins, and the second half lost. ~10% ITM calls ≥60 DTE: +9.5% (t 1.2), and the second half lost. Express it in **shares** (or deep-ITM stock replacement); don't buy short premium on it. |
+| 12-1 momentum leaders (Step 1) | weak | Positive in train/test/holdout, t 1.8, flattered by survivorship. |
+| Not buying laggard dips (Step 1) | ✅ consistent | Lost in both halves across the dip-buy styles. |
+| Analyst upgrades/downgrades/PT raises, short-interest squeeze, options flow (UW + Skylit) | ❌ dead | ≈ 0 against controls. |
+| **Map nodes as support/resistance on single stocks** (Step 2) | ❌ **no better than random** | 2,829 touches, 35 stocks, Jan–Sep 2026: 72.2% rejection vs 75.0% for random levels. UW dark-pool levels were the same (71.6%). (On 0DTE index maps, nodes did reject ~2× random — that does not carry over to stock weekly maps.) |
+| A+ plan (entry at a node, slide-in skip, 0.5-ATR close stop) | ❌ lost out of sample | −$973 on 19 trades. The map gives you a **defined level to measure risk against**, not an edge. |
+| Earnings blackout; buy time; real bid/ask | ✅ cost control | Options overprice earnings 80% of the time. Thin chains showed fake prices. |
+
+So the honest shape of the desk is:
+- **Step 1 decides.** Insider buys are the strongest source.
+- **Step 2 is risk plumbing.** It gives a level to lean on, a stop, the earnings date, and a real price. It is not confirmation.
+- **Step 3** tests whether your judgment adds anything.
 
 ## Daily use
 

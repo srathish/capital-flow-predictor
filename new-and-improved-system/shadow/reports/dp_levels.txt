@@ -1,0 +1,9 @@
+dark-pool levels vs map nodes vs random · 2151 stock-days (35 stocks, every 3rd session Jan–Sep 2026)
+
+  DP level               touched  3350 · REJECT  71.6% · break  27.7% · neither   0.7% · untouched 3103
+  DP + node confluence   touched   661 · REJECT  71.7% · break  27.4% · neither   0.9% · untouched 445
+  map node               touched  2829 · REJECT  72.2% · break  27.5% · neither   0.4% · untouched 3017
+  random level           touched  2495 · REJECT  75.0% · break  24.4% · neither   0.5% · untouched 3958
+  DP level vs random: -3.4 pts (z -3.0)
+  map node vs random: -2.8 pts (z -2.4)
+  DP + node confluence vs random: -3.3 pts (z -1.7)

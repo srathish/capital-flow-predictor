@@ -1,0 +1,11 @@
+insider buy ≥$100k → ATM call ≥35 DTE, 10:00 entry, 20-session hold · events 236 · priced 147 · controls priced 142
+
+  EVENTS mid                 n 147 · avg    9.9% (t 0.8) · median  -42.9% · win 34% · total +$14610
+  EVENTS worst fill          n 147 · avg    9.6% (t 0.8) · median  -43.0% · win 34% · total +$14121
+  CONTROL mid                n 142 · avg  -11.1% (t -1.1) · median  -57.1% · win 34% · total -$15705
+  CONTROL worst fill         n 142 · avg  -11.2% (t -1.1) · median  -57.1% · win 34% · total -$15879
+  EVENTS mid, before 2025-11-14 n  69 · avg   30.3% (t 1.4) · median  -37.9% · win 38% · total +$20912
+  EVENTS mid, from 2025-11-14 n  78 · avg   -8.1% (t -0.6) · median  -49.8% · win 31% · total -$6301
+  EVENT − CONTROL (paired)   n 106 · avg   28.6% (t 1.4) · median    7.5% · win 52% · total +$30270
+
+  unpriced events: {"no exit print":18,"no entry print":69,"no listing":2}
