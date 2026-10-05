@@ -34,6 +34,20 @@ async function fts(q, year, ciks, from) {
     if (r?.status === 429 || r?.status === 503) { await sleep(3000 * (k + 1)); continue; } if (!r?.ok) return null; return r.json().catch(() => null); }
   return null;
 }
+export async function pull(terms, T, sub, outName) { // T = {ticker: cik}; cached per term-year under .cache/edgar/<sub>/
+  const byCik = Object.fromEntries(Object.entries(T).map(([t, c]) => [c, t])), ciks = Object.values(T), out = [];
+  for (const c of terms) for (const y of YEARS) {
+    const f = path.join(C, sub, `${c.replace(/[^a-z0-9]+/gi, '_')}_${y}.json`);
+    let rows = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;
+    if (!rows) { rows = []; for (let i = 0; i < ciks.length; i += 100) { const ch = ciks.slice(i, i + 100); let from = 0;
+        for (;;) { const j = await fts(c, y, ch, from); if (!j) break; const hits = j.hits?.hits ?? [];
+          for (const h of hits) { const t = (h._source.ciks ?? []).map((x) => byCik[x]).find(Boolean); if (t) rows.push({ t, c, d: h._source.file_date, f: h._source.form, s: +h._score.toFixed(2) }); }
+          from += hits.length; if (!hits.length || from >= (j.hits?.total?.value ?? 0) || from >= 9900) break; } }
+      fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, JSON.stringify(rows)); }
+    out.push(...rows); process.stderr.write(`\r${sub} ${c.padEnd(28)} ${y} · ${rows.length}   `);
+  }
+  fs.writeFileSync(path.join(C, outName), JSON.stringify(out)); return out;
+}
 if (decodeURIComponent(new URL(import.meta.url).pathname) === process.argv[1]) {
   const T = universeTickers(), byCik = Object.fromEntries(Object.entries(T).map(([t, c]) => [c, t])), ciks = Object.values(T);
   console.error(`${MODE}: ${Object.keys(T).length} companies with CIKs · ${TERMS.length} terms · ${YEARS.length} years`);
