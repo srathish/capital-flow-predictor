@@ -33,6 +33,11 @@ if (mode === 'fundamentals') {
     if (!fs.existsSync(fa)) { const j = await uw(`/screener/analysts?ticker=${t}&limit=500`); if (j) save(fa, (j.data ?? []).map((r) => ({ ts: r.timestamp, action: r.action, target: r.target != null ? +r.target : null, firm: r.firm, rec: r.recommendation }))); }
     if (++n % 100 === 0) console.error(`… ${n}`); }
 }
+if (mode === 'insider') { // open-market purchases (Form 4 code P) for the whole world universe → .cache/uw/insiderP/<T>.json
+  let n = 0; for (const { t } of U) { const f = path.join(C, 'uw', 'insiderP', `${t}.json`); if (fs.existsSync(f)) { n++; continue; }
+    const out = []; for (let p = 0; p < 4; p++) { const j = await uw(`/insider/transactions?ticker_symbol=${t}&transaction_codes[]=P&limit=500&page=${p}`); const d = j?.data ?? []; out.push(...d.filter((r) => r.transaction_code === 'P').map((r) => ({ f: r.filing_date, d: r.transaction_date, who: r.owner_name, v: Math.abs(r.amount) * +r.price }))); if (d.length < 500) break; }
+    save(f, out); if (++n % 100 === 0) console.error(`… ${n}`); }
+}
 if (mode === 'meta') {
   let n = 0; for (const { t, cik } of U) { const f = path.join(C, 'edgar', 'meta', `${t}.json`); if (fs.existsSync(f)) { n++; continue; }
     const j = await sec(`https://data.sec.gov/submissions/CIK${cik}.json`); if (!j) { n++; continue; }
