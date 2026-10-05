@@ -38,6 +38,14 @@ Options: `--momentum N` (default 15, 0 = off) · `--no-themes` · `--no-contract
 
 ## Cost
 
+**Credit guard (feeds/skylit.js):**
+- Every Skylit call is priced and checked *before* it is sent.
+- Each run stops at `SKYLIT_BUDGET` (default 50 credits).
+- All scripts together stop at `SKYLIT_DAILY_CAP` (default 200 per ET day). The ledger is `.cache/skylit_ledger.jsonl`.
+- A bigger research job has to opt in, e.g. `SKYLIT_BUDGET=700 node shadow/prefetch_boards.mjs …`.
+- `/v1/account` is free.
+
+
 About 12 Skylit credits per run for ~28 candidates:
 - the map: 1 credit per 10 stocks, for gamma and again for vanna
 - Tempest IV and earnings: 1 credit per 10 stocks each

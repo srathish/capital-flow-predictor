@@ -15,6 +15,33 @@ async function gate() {
   lastCall = Date.now();
 }
 
+// ---------- CREDIT GUARD ----------
+// Every billable call is checked BEFORE it is sent. Two limits (override per run with env vars):
+//   SKYLIT_BUDGET     max credits this process may spend (default 50)
+//   SKYLIT_DAILY_CAP  max credits ALL processes may spend per ET day (default 200), tracked in .cache/skylit_ledger.jsonl
+// Costs are Skylit's published per-call prices; /v1/account is free. Exceeding a limit throws — nothing is sent.
+import fs from 'node:fs';
+import path from 'node:path';
+const LEDGER = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..', '.cache', 'skylit_ledger.jsonl');
+const BUDGET = Number(process.env.SKYLIT_BUDGET ?? 50), DAILY_CAP = Number(process.env.SKYLIT_DAILY_CAP ?? 200);
+const COST = { '/v1/historical': 5, '/v1/history': 1, heat_heatmap: 1, heat_levels: 1, heat_historical_heatmap: 5, aggregate_score: 3, chain_bull_bear: 3, option_chain: 3 };
+const dayET = () => new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10);
+const script = path.basename(process.argv[1] ?? 'repl');
+export const spend = { process: 0, today: null };
+function todaySpent() {
+  if (spend.today != null) return spend.today;
+  let t = 0; const d = dayET();
+  try { for (const l of fs.readFileSync(LEDGER, 'utf8').split('\n')) { if (!l) continue; const x = JSON.parse(l); if (x.d === d) t += x.c; } } catch {}
+  return (spend.today = t);
+}
+function charge(label, cost) {
+  if (cost <= 0) return;
+  if (spend.process + cost > BUDGET) throw new Error(`Skylit credit guard: ${label} would take this run to ${spend.process + cost} > SKYLIT_BUDGET=${BUDGET}. Raise SKYLIT_BUDGET for this run if intended.`);
+  if (todaySpent() + cost > DAILY_CAP) throw new Error(`Skylit credit guard: ${label} would take today's total to ${todaySpent() + cost} > SKYLIT_DAILY_CAP=${DAILY_CAP}.`);
+  spend.process += cost; spend.today += cost;
+  try { fs.mkdirSync(path.dirname(LEDGER), { recursive: true }); fs.appendFileSync(LEDGER, JSON.stringify({ d: dayET(), at: new Date().toISOString(), script, label, c: cost }) + '\n'); } catch {}
+}
+
 async function withRetry(fn, label) {
   // Honor 429s properly: the 120/min budget is per ACCOUNT, so parallel jobs share it. Back off using Retry-After
   // when Skylit sends it, else 5s, 10s, 15s … (up to ~3 minutes total) before giving up.
@@ -34,6 +61,7 @@ async function withRetry(fn, label) {
 
 // ---------- MCP ----------
 export async function mcp(name, args = {}) {
+  charge(`mcp:${name}`, COST[name] ?? 1);
   const res = await withRetry(() => fetch('https://mcp.skylit.ai/mcp', {
     method: 'POST',
     headers: { ...H, 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' },
@@ -56,6 +84,7 @@ export async function mcp(name, args = {}) {
 
 // ---------- REST ----------
 async function rest(host, pathAndQuery) {
+  const ep = pathAndQuery.split('?')[0]; charge(`rest:${ep}`, ep === '/v1/account' ? 0 : (COST[ep] ?? 1));
   const res = await withRetry(() => fetch(`https://${host}.skylit.ai${pathAndQuery}`, { headers: H }), `rest:${pathAndQuery.split('?')[0]}`);
   const j = await res.json().catch(() => null);
   if (!res.ok) throw new Error(`rest ${pathAndQuery.split('?')[0]} ${res.status}: ${JSON.stringify(j?.error ?? j).slice(0, 200)}`);
