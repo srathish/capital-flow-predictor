@@ -1,0 +1,33 @@
+PRE-NEWS INFORMED-BUYING TEST · 1186 overnight gaps ≥8% (688 up / 498 down) · 1427 control days · 294 stocks, 2025–2026
+
+Q1 — abnormal options activity in the 5 sessions BEFORE the gap (|z| ≥ 2 on call vol, put vol, ask share or net premium)
+  2025: before news 44.1% (n 673) vs ordinary days 32.9% (n 878) · z 4.5
+  2026: before news 40.4% (n 513) vs ordinary days 32.2% (n 549) · z 2.7
+    callZ    mean before news 1.06 vs ordinary -0.09
+    putZ     mean before news 1.43 vs ordinary -0.04
+    askZ     mean before news 0.11 vs ordinary -0.02
+    premZ    mean before news 0.33 vs ordinary -0.00
+    callZ20  mean before news 0.65 vs ordinary 0.22
+    premZ20  mean before news 0.10 vs ordinary 0.00
+  → Q1 PASS
+
+Q2 — does the pre-news activity point the RIGHT WAY? (UP gaps vs DOWN gaps)
+    premZ    2025: up 0.88 vs down 0.26 (t 1.0) · 2026: up 0.08 vs down -0.21 (t 1.5)
+    callZ    2025: up 1.22 vs down 1.51 (t -0.4) · 2026: up 0.65 vs down 0.74 (t -0.2)
+    askZ     2025: up 0.13 vs down 0.25 (t -1.4) · 2026: up -0.01 vs down 0.08 (t -0.8)
+    premZ20  2025: up 0.39 vs down 0.10 (t 0.8) · 2026: up -0.06 vs down -0.16 (t 0.5)
+    insider buy in prior 90d: before UP gaps 11.7% · before DOWN 9.5% · ordinary 11.3% (2025)
+    insider buy in prior 90d: before UP gaps 11.6% · before DOWN 10.3% · ordinary 12.4% (2026)
+  → Q2 (primary: net premium) FAIL
+
+biggest pre-news call buying (premZ, T−5…T−1) before UP gaps:
+  2025-01-03 ONDS  gap 22.8% · premZ 231.6 · callZ 40.8 · ask undefined
+  2025-07-23 DNUT  gap 38.0% · premZ 37.2 · callZ 22.3 · ask 1.3
+  2026-06-01 SPCE  gap 17.2% · premZ 17.8 · callZ 17.4 · ask 0.9
+  2025-08-15 OPEN  gap 12.1% · premZ 11.2 · callZ 7.7 · ask 1.0
+  2025-07-02 CIFR  gap 9.1% · premZ 10.8 · callZ 13.4 · ask 1.7
+  2026-04-22 CAR   gap 8.2% · premZ 10.1 · callZ 41.0 · ask 0.9 · insider buy
+  2026-05-22 SG    gap 10.7% · premZ 8.3 · callZ 15.5 · ask 0.9 · insider buy
+  2025-10-13 LAES  gap 10.8% · premZ 7.1 · callZ 25.5 · ask -0.1
+  2025-07-15 OPEN  gap 14.0% · premZ 6.7 · callZ 15.1 · ask 2.2
+  2025-08-12 ONDS  gap 14.5% · premZ 6.6 · callZ 9.5 · ask -0.3
