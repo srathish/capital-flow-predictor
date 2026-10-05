@@ -1,0 +1,19 @@
+--holdout: 1165 companies
+positions 15483983 · managers 10785
+events (new/increased positions) 3473397
+scored events 2231442
+2025-01-31 skilled 10 · model -1.5% · crowd +8.6% · mom +34.2% · SA - (0) · rnd +2.1% · IC -0.015 · JD AAPL BABA CRWD DKNG SNOW DXCM ANET
+2025-02-28 skilled 10 · model +33.5% · crowd +19.2% · mom +68.7% · SA +34.8% (5) · rnd +11.7% · IC 0.101 · BIDU TLN NTES VST COIN ANET RKLB WMT
+2025-03-31 skilled 10 · model +42.1% · crowd +30.9% · mom +99.8% · SA +57.8% (5) · rnd +17.1% · IC 0.111 · BIDU TLN NTES VST COIN ANET RKLB WMT
+2025-04-30 skilled 10 · model +39.7% · crowd +33.8% · mom +92.5% · SA +58.9% (5) · rnd +25.7% · IC 0.092 · BIDU TLN NTES VST ASX PANW COIN RKLB
+2025-05-31 skilled 10 · model +29.2% · crowd +18.1% · mom +20.2% · SA +83.4% (7) · rnd +9.2% · IC 0.069 · GOOGL AAPL ASTS VST ASND RKLB TPR UBER
+2025-06-30 skilled 10 · model +24.7% · crowd +16.7% · mom +16.4% · SA +48.7% (8) · rnd +9.4% · IC 0.055 · GOOGL AAPL ASTS VST ASND RKLB TPR UBER
+2025-07-31 skilled 10 · model +27.5% · crowd +1.4% · mom +0.5% · SA +54.2% (10) · rnd +4.7% · IC 0.056 · GOOGL CORZ AAPL ASTS VST ASND RKLB TPR
+2025-08-31 skilled 10 · model -6.5% · crowd -7.7% · mom -4.3% · SA +14.2% (7) · rnd +6.0% · IC -0.052 · FSLR AAPL UNH NVDA HUM INTC GOOGL ARM
+2025-09-30 skilled 10 · model -12.5% · crowd -10.1% · mom -33.1% · SA -14.1% (7) · rnd -2.1% · IC -0.080 · FSLR AAPL UNH NVDA HUM INTC GOOGL ARM
+2025-10-31 skilled 10 · model +7.4% · crowd +0.3% · mom -21.8% · SA -17.3% (7) · rnd +11.1% · IC -0.012 · FSLR AAPL NVDA HUM MRVL INTC GOOGL ARM
+2025-11-30 skilled 10 · model +34.1% · crowd +34.8% · mom +36.7% · SA +132.5% (16) · rnd +23.3% · IC 0.068 · SHEL CORZ MRVL CRWV GNRC DD RKLB FSLR
+2025-12-31 skilled 10 · model +13.9% · crowd +24.9% · mom +31.1% · SA +107.0% (16) · rnd +19.2% · IC 0.007 · SHEL CORZ MRVL CRWV GNRC DD RKLB FSLR
+2026-01-31 skilled 10 · model -6.7% · crowd +8.9% · mom +2.2% · SA +25.9% (16) · rnd +3.9% · IC -0.037 · NVDA ORCL CORZ AMZN TLN CRWV META RIOT
+2026-02-28 skilled 10 · model +20.0% · crowd +14.2% · mom +9.1% · SA +22.5% (14) · rnd +11.8% · IC 0.042 · NVDA TPL SIMO AMZN MU ORCL TLN LITE
+2026-03-31 skilled 10 · model +36.0% · crowd +20.9% · mom +34.8% · SA +47.1% (14) · rnd +17.9% · IC 0.062 · NVDA TPL SIMO AMZN MU ORCL TLN LITE
