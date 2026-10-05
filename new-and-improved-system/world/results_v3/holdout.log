@@ -1,0 +1,19 @@
+--holdout: 1165 companies
+positions 14680750 · managers 10777
+events (new/increased positions) 3354330
+scored events 2112447
+2025-01-31 skilled 97 · model +15.9% · crowd +8.6% · mom +34.2% · SA - (0) · rnd +1.5% · IC 0.152 · AVGO RDDT WRB WSM SW CTAS DECK VRT
+2025-02-28 skilled 102 · model +38.2% · crowd +19.2% · mom +68.7% · SA +34.8% (5) · rnd +10.1% · IC 0.172 · PANW ANET TSCO ETR LRCX ALAB SMCI RDDT
+2025-03-31 skilled 102 · model +48.0% · crowd +30.9% · mom +99.8% · SA +57.8% (5) · rnd +20.3% · IC 0.220 · PANW ANET TSCO ETR LRCX ALAB SMCI RDDT
+2025-04-30 skilled 104 · model +66.9% · crowd +33.8% · mom +92.5% · SA +58.9% (5) · rnd +21.1% · IC 0.154 · PANW ANET ALAB TSCO LRCX SMCI ETR RDDT
+2025-05-31 skilled 108 · model +45.5% · crowd +18.1% · mom +20.2% · SA +83.4% (7) · rnd +4.6% · IC 0.061 · SNDK QBTS ACHR IP DASH SSB CART TEM
+2025-06-30 skilled 108 · model +32.3% · crowd +16.7% · mom +16.4% · SA +48.7% (8) · rnd +3.8% · IC 0.041 · SNDK QBTS ACHR IP DASH SSB CART TEM
+2025-07-31 skilled 109 · model +57.5% · crowd +5.7% · mom +0.5% · SA +54.2% (10) · rnd +0.9% · IC -0.024 · SNDK QBTS IP SSB ACHR TEM SAIL DASH
+2025-08-31 skilled 112 · model - · crowd - · mom -4.3% · SA +14.2% (7) · rnd - · IC undefined · 
+2025-09-30 skilled 112 · model - · crowd -5.2% · mom -33.1% · SA -14.1% (7) · rnd - · IC undefined · 
+2025-10-31 skilled 113 · model -9.6% · crowd +5.6% · mom -21.8% · SA -17.3% (7) · rnd -1.5% · IC -0.130 · IONQ JPM TSLA OKLO ORCL PLTR GOOGL CRWV
+2025-11-30 skilled 116 · model +6.3% · crowd +23.6% · mom +36.7% · SA +132.5% (16) · rnd +10.1% · IC 0.009 · CRWV IONQ CRCL FAST OKLO EOSE QBTS IBKR
+2025-12-31 skilled 116 · model -7.9% · crowd +13.8% · mom +31.1% · SA +107.0% (16) · rnd +4.8% · IC -0.079 · CRWV IONQ CRCL FAST OKLO EOSE QBTS IBKR
+2026-01-31 skilled 115 · model -11.7% · crowd +5.2% · mom +2.2% · SA +25.9% (16) · rnd -1.1% · IC -0.089 · CRWV IONQ BBAI RGTI CRCL IBKR OKLO EOSE
+2026-02-28 skilled 112 · model +8.1% · crowd +14.2% · mom +9.1% · SA +22.5% (14) · rnd +9.6% · IC 0.035 · NFLX NOW Q CRWV TPL OMC AMZN BMNR
+2026-03-31 skilled 112 · model +14.2% · crowd +20.9% · mom +34.8% · SA +47.1% (14) · rnd +13.4% · IC 0.062 · NFLX NOW Q CRWV TPL OMC RDW AMZN
