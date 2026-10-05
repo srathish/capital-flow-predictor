@@ -1,0 +1,17 @@
+VALIDATION on 293 stocks · 12892 stock-days (every 5th session, Nov 2025 → Sep 2026) · base BIG rate 5.4%
+
+H1 direction — extreme call/put volume ratio (z ≥ 2 → long, ≤ −2 → short) vs the board coin on the same days
+  Nov–Apr: fired 490 · right 49.0% vs coin 66.7% (calls-heavy 181 / puts-heavy 309)
+  May–Sep: fired 326 · right 50.3% vs coin 63.8% (calls-heavy 157 / puts-heavy 169)
+  → FAIL
+
+H2 size — implied vol rich vs realized (ivPrem z ≥ 2)
+  Nov–Apr: fired 367 · P(BIG) 10.6% vs base 5.9% → 1.81×
+  May–Sep: fired 247 · P(BIG) 6.1% vs base 4.8% → 1.28×
+  → FAIL
+
+H3 size — earnings inside the next 10 sessions
+  Nov–Apr: fired 1194 · P(BIG) 11.5% vs base 5.9% → 1.95×
+  May–Sep: fired 791 · P(BIG) 11.8% vs base 4.8% → 2.47×
+  → PASS
+
