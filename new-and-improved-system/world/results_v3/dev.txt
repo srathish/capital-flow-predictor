@@ -1,7 +1,7 @@
 
 === SMART-MONEY GRAPH v3 · DEV 2023-07-01 → 2024-12-31 · top-20 6-month excess vs universe median ===
   SKILLED-MANAGER CONSENSUS (v3)       +10.9%  (t 3.58, n 18)
-  crowd (all managers)                  +7.7%  (t 4.91, n 18)
+  crowd (all managers)                  +7.8%  (t 4.94, n 18)
   momentum 12-1                        +19.7%  (t 3.58, n 18)
   copy Situational Awareness 13F            -  (t -, n 0)
   random same-sector                    +2.0%  (t 2.19, n 18)

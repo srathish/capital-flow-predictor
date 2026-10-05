@@ -1,12 +1,12 @@
-positions 14680750 · managers 10777
-events (new/increased positions) 3354330
-scored events 2112447
+positions 15483983 · managers 10785
+events (new/increased positions) 3473397
+scored events 2231442
 2023-07-31 skilled 32 · model +5.9% · crowd +12.3% · mom -12.1% · SA - (0) · rnd +0.6% · IC 0.055 · CVS FERG MET NVDA MOH MNST AER CNC
 2023-08-31 skilled 45 · model +15.0% · crowd +16.2% · mom -5.6% · SA - (0) · rnd +2.3% · IC 0.063 · NVDA MSFT CP AMZN GOOGL META NFLX MU
 2023-09-30 skilled 45 · model +12.4% · crowd +14.5% · mom -2.6% · SA - (0) · rnd +2.3% · IC 0.052 · NVDA MSFT CP AMZN GOOGL META NFLX MU
 2023-10-31 skilled 50 · model +11.4% · crowd +8.1% · mom +49.5% · SA - (0) · rnd +3.0% · IC 0.042 · NVDA AMZN MSFT CP NFLX META MU GOOGL
 2023-11-30 skilled 60 · model +14.2% · crowd +9.5% · mom +55.9% · SA - (0) · rnd +5.0% · IC -0.035 · NVDA TTD APH FAST ICE AMZN GOOGL IVZ
-2023-12-31 skilled 60 · model +11.8% · crowd +14.8% · mom +36.5% · SA - (0) · rnd +3.7% · IC -0.036 · NVDA TTD APH FAST ICE AMZN GOOGL IVZ
+2023-12-31 skilled 60 · model +11.8% · crowd +15.0% · mom +36.5% · SA - (0) · rnd +3.7% · IC -0.036 · NVDA TTD APH FAST ICE AMZN GOOGL IVZ
 2024-01-31 skilled 63 · model +1.3% · crowd +1.0% · mom +35.5% · SA - (0) · rnd -1.1% · IC -0.114 · NVDA TTD APH AMD GOOGL FAST ICE IVZ
 2024-02-29 skilled 70 · model -9.1% · crowd -6.1% · mom -8.8% · SA - (0) · rnd -4.5% · IC -0.079 · VLTO AVGO AMZN IVZ ADBE AMD CELH SMCI
 2024-03-31 skilled 70 · model -8.2% · crowd -4.2% · mom +4.6% · SA - (0) · rnd -0.9% · IC -0.048 · VLTO AVGO AMZN IVZ ADBE AMD CELH SMCI
@@ -16,6 +16,6 @@ scored events 2112447
 2024-07-31 skilled 81 · model +45.6% · crowd +17.0% · mom +43.9% · SA - (0) · rnd +13.6% · IC 0.148 · NVDA GOOGL AMZN DELL MU AAPL META AVGO
 2024-08-31 skilled 86 · model +16.4% · crowd +14.6% · mom +22.8% · SA - (0) · rnd +5.9% · IC 0.116 · NVDA GEV AVGO CMG GOOGL AAPL AMZN MSFT
 2024-09-30 skilled 86 · model -1.0% · crowd +2.5% · mom -5.0% · SA - (0) · rnd -1.9% · IC -0.053 · NVDA GEV AVGO CMG GOOGL AAPL AMZN MSFT
-2024-10-31 skilled 89 · model +3.0% · crowd +3.4% · mom +2.8% · SA - (0) · rnd +0.2% · IC -0.006 · NVDA AVGO AMZN MSFT GEV DELL GOOGL VRT
+2024-10-31 skilled 89 · model +3.0% · crowd +4.1% · mom +2.8% · SA - (0) · rnd +0.2% · IC -0.006 · NVDA AVGO AMZN MSFT GEV DELL GOOGL VRT
 2024-11-30 skilled 95 · model +9.2% · crowd +9.2% · mom +0.2% · SA - (0) · rnd +1.8% · IC 0.068 · AVGO WRB WSM SW CTAS RDDT DECK EQT
 2024-12-31 skilled 95 · model +12.8% · crowd +6.8% · mom +17.7% · SA - (0) · rnd +0.9% · IC 0.097 · AVGO WRB WSM CORZ SW CTAS RDDT DECK
