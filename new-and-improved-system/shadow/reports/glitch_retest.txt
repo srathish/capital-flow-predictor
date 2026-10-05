@@ -1,0 +1,23 @@
+GLITCH break → retest → hold · SPY 1-min · 189 sessions · costs 0.03%/round trip included
+
+== TRAIN (Jan–Jun) ==
+  RETEST (Glitch)                n  348 · win  35% · avg -0.233R (t -3.0) · total -81.2R
+  CHASE (enter on the break)     n  415 · win  40% · avg -0.134R (t -2.0) · total -55.7R
+  RANDOM levels, same method     n  344 · win  40% · avg -0.158R (t -2.1) · total -54.2R
+  MIRROR (opposite side)         n  348 · win  33% · avg -0.230R (t -2.7) · total -80.1R
+== TEST (Jul–Oct 2) ==
+  RETEST (Glitch)                n  183 · win  33% · avg -0.357R (t -3.8) · total -65.3R
+  CHASE (enter on the break)     n  211 · win  36% · avg -0.304R (t -3.7) · total -64.1R
+  RANDOM levels, same method     n  167 · win  42% · avg -0.115R (t -0.9) · total -19.2R
+  MIRROR (opposite side)         n  183 · win  38% · avg -0.222R (t -2.3) · total -40.7R
+
+VERDICT: FAIL
+
+(descriptive, TRAIN only) by level:
+  PDH                            n   39 · win  41% · avg -0.106R (t -0.5) · total -4.1R
+  PDL                            n   39 · win  33% · avg -0.111R (t -0.4) · total -4.3R
+  PDC                            n   44 · win  34% · avg -0.343R (t -1.8) · total -15.1R
+  PMH                            n   55 · win  31% · avg -0.419R (t -2.3) · total -23.1R
+  PML                            n   48 · win  25% · avg -0.435R (t -1.7) · total -20.9R
+  ORH                            n   70 · win  44% · avg +0.029R (t 0.2) · total +2.1R
+  ORL                            n   53 · win  34% · avg -0.297R (t -1.6) · total -15.8R
