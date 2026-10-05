@@ -1,0 +1,25 @@
+universe 1091 with prices · exposure rows 304801 · constraint rows 48193 · link rows 87740 · big nodes 86 · mode dev
+2023-01-31 elig 781 · model +9.8% / +2.1% · mom -15.0% · shock +8.2% · theme +37.4% · SA - (0) · rnd +3.0% · IC 0.106 · 4s
+2023-02-28 elig 789 · model +12.4% / +12.5% · mom -12.8% · shock +22.7% · theme +26.2% · SA - (0) · rnd +5.3% · IC 0.127 · 4s
+2023-03-31 elig 801 · model +12.9% / -1.0% · mom -19.3% · shock +13.5% · theme +16.3% · SA - (0) · rnd +1.3% · IC -0.010 · 4s
+2023-04-28 elig 802 · model +0.9% / +6.2% · mom -13.1% · shock -0.4% · theme +28.6% · SA - (0) · rnd +0.5% · IC 0.020 · 7s
+2023-05-31 elig 800 · model -0.1% / +4.5% · mom -18.7% · shock +11.8% · theme +10.4% · SA - (0) · rnd -2.0% · IC -0.015 · 7s
+2023-06-30 elig 808 · model +6.5% / +1.1% · mom -10.6% · shock +11.2% · theme +12.0% · SA - (0) · rnd +0.2% · IC 0.061 · 4s
+2023-07-31 elig 811 · model -3.9% / +2.3% · mom -12.1% · shock -4.6% · theme +17.9% · SA - (0) · rnd -3.1% · IC 0.085 · 3s
+2023-08-31 elig 815 · model +17.7% / +20.8% · mom -5.6% · shock +22.8% · theme - · SA - (0) · rnd +0.1% · IC 0.021 · 3s
+2023-09-29 elig 822 · model +12.5% / +30.2% · mom -4.9% · shock +27.1% · theme +34.5% · SA - (0) · rnd +15.8% · IC -0.034 · 3s
+2023-10-31 elig 814 · model +17.9% / +25.3% · mom +49.5% · shock +6.7% · theme +66.0% · SA - (0) · rnd +10.1% · IC 0.043 · 3s
+2023-11-30 elig 813 · model +32.6% / +33.5% · mom +55.9% · shock -9.5% · theme +34.7% · SA - (0) · rnd +13.9% · IC 0.082 · 3s
+2023-12-29 elig 840 · model +26.3% / +26.3% · mom +38.4% · shock +10.3% · theme +28.4% · SA - (0) · rnd +11.2% · IC 0.182 · 3s
+2024-01-31 elig 831 · model +13.0% / +14.2% · mom +35.5% · shock -1.6% · theme +9.0% · SA - (0) · rnd +3.5% · IC 0.047 · 3s
+2024-02-29 elig 830 · model -15.5% / -13.1% · mom -8.8% · shock -15.3% · theme -6.3% · SA - (0) · rnd -2.2% · IC -0.138 · 3s
+2024-03-28 elig 827 · model -9.3% / -9.8% · mom +6.4% · shock +1.0% · theme +3.6% · SA - (0) · rnd +0.4% · IC -0.094 · 3s
+2024-04-30 elig 824 · model +13.3% / -12.2% · mom +35.2% · shock +2.6% · theme +25.3% · SA - (0) · rnd -4.1% · IC 0.022 · 3s
+2024-05-31 elig 835 · model -4.2% / +5.3% · mom +52.4% · shock +12.2% · theme +46.9% · SA - (0) · rnd +12.6% · IC 0.052 · 3s
+2024-06-28 elig 837 · model -2.9% / -18.2% · mom +26.4% · shock +17.6% · theme +10.8% · SA - (0) · rnd +7.4% · IC -0.015 · 3s
+2024-07-31 elig 842 · model +13.7% / -4.1% · mom +43.9% · shock +9.1% · theme +45.8% · SA - (0) · rnd +8.7% · IC 0.077 · 3s
+2024-08-30 elig 840 · model +2.2% / -3.7% · mom +22.8% · shock +17.0% · theme +27.3% · SA - (0) · rnd +7.1% · IC 0.073 · 3s
+2024-09-30 elig 851 · model -5.1% / -9.4% · mom -5.0% · shock +5.0% · theme +1.0% · SA - (0) · rnd -0.4% · IC -0.023 · 3s
+2024-10-31 elig 849 · model +12.4% / -5.9% · mom +2.5% · shock +21.2% · theme +7.8% · SA - (0) · rnd +0.3% · IC 0.028 · 3s
+2024-11-29 elig 861 · model -5.7% / -7.5% · mom +1.0% · shock +16.9% · theme +8.7% · SA - (0) · rnd -1.9% · IC 0.012 · 3s
+2024-12-31 elig 860 · model +13.7% / +3.2% · mom +17.7% · shock -0.4% · theme +13.4% · SA - (0) · rnd +0.4% · IC 0.015 · 3s

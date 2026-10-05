@@ -1,0 +1,7645 @@
+[
+ {
+  "d": "2025-01-31",
+  "emerging": [
+   "august july",
+   "june july change",
+   "november october",
+   "june and july",
+   "june july",
+   "millions september september",
+   "both the third",
+   "months ended august",
+   "september september change",
+   "september includes",
+   "june and june",
+   "june july june",
+   "millions june",
+   "july june july"
+  ],
+  "eligible": 865,
+  "model10": 0.13812049704284082,
+  "model11": 0.14741612932249099,
+  "mom": 0.34194679142428286,
+  "shock": 0.14181834533529214,
+  "theme": 0.3257575074008844,
+  "sa": null,
+  "saN": 0,
+  "random": 0.021119762116012117,
+  "ic10": -0.12371261324218143,
+  "ic11": 0.029347055982364992,
+  "picks10": [
+   {
+    "t": "CMG",
+    "ex": -0.2952819643956781,
+    "drivers": [
+     "advertising",
+     "consumer spending",
+     "interest rate"
+    ],
+    "p": 0.32,
+    "pct3": 0.37,
+    "bott": 0.94
+   },
+   {
+    "t": "MCD",
+    "ex": 0.020405045206197236,
+    "drivers": [
+     "advertising",
+     "artificial intelligence",
+     "interest rate"
+    ],
+    "p": 0.308,
+    "pct3": 0.32,
+    "bott": 0.98
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.409828096690088,
+    "drivers": [
+     "credit card",
+     "subscription",
+     "travel"
+    ],
+    "p": 0.322,
+    "pct3": 0.48,
+    "bott": 0.81
+   },
+   {
+    "t": "DRI",
+    "ex": 0.00039815348762917147,
+    "drivers": [
+     "credit card",
+     "SaaS",
+     "advertising"
+    ],
+    "p": 0.32,
+    "pct3": 0.86,
+    "bott": 0.78
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.772453175287255,
+    "drivers": [
+     "shipping",
+     "advertising",
+     "travel"
+    ],
+    "p": 0.283,
+    "pct3": 0.43,
+    "bott": 0.98
+   },
+   {
+    "t": "YUM",
+    "ex": 0.08153605513434026,
+    "drivers": [
+     "advertising",
+     "travel",
+     "interest rate"
+    ],
+    "p": 0.317,
+    "pct3": 0.34,
+    "bott": 0.75
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.03709569858707995,
+    "drivers": [
+     "rack",
+     "digital assets",
+     "server"
+    ],
+    "p": 0.298,
+    "pct3": 0.43,
+    "bott": 0.86
+   },
+   {
+    "t": "IREN",
+    "ex": 0.41808438113368496,
+    "drivers": [
+     "digital assets",
+     "hashrate",
+     "stablecoin"
+    ],
+    "p": 0.291,
+    "pct3": 0.74,
+    "bott": 0.89
+   },
+   {
+    "t": "RIOT",
+    "ex": -0.10357937806547968,
+    "drivers": [
+     "digital assets",
+     "electricity demand",
+     "colocation"
+    ],
+    "p": 0.293,
+    "pct3": 0.89,
+    "bott": 0.85
+   },
+   {
+    "t": "TOST",
+    "ex": 0.14234526347864174,
+    "drivers": [
+     "subscription",
+     "credit card",
+     "SaaS"
+    ],
+    "p": 0.295,
+    "pct3": 0.93,
+    "bott": 0.79
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.0050257044795025685,
+    "drivers": [
+     "shipping",
+     "travel",
+     "e-commerce"
+    ],
+    "p": 0.267,
+    "pct3": 0.7,
+    "bott": 0.91
+   },
+   {
+    "t": "NVO",
+    "ex": -0.44080208338095306,
+    "drivers": [
+     "GLP-1",
+     "medical device"
+    ],
+    "p": 0.264,
+    "pct3": 0.01,
+    "bott": 0.92
+   },
+   {
+    "t": "HUT",
+    "ex": -0.10981512525966342,
+    "drivers": [
+     "digital assets",
+     "inference",
+     "server"
+    ],
+    "p": 0.202,
+    "pct3": 0.94,
+    "bott": 0.87
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.4195462240675585,
+    "drivers": [
+     "launch vehicle",
+     "subscription",
+     "travel"
+    ],
+    "p": 0.331,
+    "pct3": 0.05,
+    "bott": 0
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.026697126313577235,
+    "drivers": [
+     "credit card",
+     "advertising",
+     "server"
+    ],
+    "p": 0.329,
+    "pct3": 0.27,
+    "bott": 0
+   },
+   {
+    "t": "RBRK",
+    "ex": 0.21290836913936517,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "server"
+    ],
+    "p": 0.32,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "QSR",
+    "ex": 0.07856793390503825,
+    "drivers": [
+     "restaurant",
+     "advertising",
+     "interest rate"
+    ],
+    "p": 0.315,
+    "pct3": 0.07,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.5550656387054835,
+    "drivers": [
+     "travel",
+     "freight"
+    ],
+    "p": 0.307,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "YUMC",
+    "ex": 0.013922990296103777,
+    "drivers": [
+     "advertising",
+     "e-commerce",
+     "travel"
+    ],
+    "p": 0.289,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.46525047922853613,
+    "drivers": [
+     "inference",
+     "server",
+     "subscription"
+    ],
+    "p": 0.151,
+    "pct3": 0.09,
+    "bott": 0.81
+   }
+  ],
+  "picks11": [
+   {
+    "t": "SOFI",
+    "ex": 0.3547082441620424,
+    "drivers": [
+     "credit card",
+     "digital assets",
+     "subscription"
+    ],
+    "p": 0.002,
+    "pct3": 0.96,
+    "bott": 0.66
+   },
+   {
+    "t": "MSCI",
+    "ex": -0.06683830588321127,
+    "drivers": [
+     "subscription",
+     "travel",
+     "shipping"
+    ],
+    "p": 0.013,
+    "pct3": 0.49,
+    "bott": 0.87
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.4195462240675585,
+    "drivers": [
+     "launch vehicle",
+     "subscription",
+     "travel"
+    ],
+    "p": 0.331,
+    "pct3": 0.05,
+    "bott": 0
+   },
+   {
+    "t": "MSTR",
+    "ex": 0.03243345335027281,
+    "drivers": [
+     "stablecoin",
+     "subscription",
+     "digital assets"
+    ],
+    "p": 0.114,
+    "pct3": 0.96,
+    "bott": 0.66
+   },
+   {
+    "t": "COIN",
+    "ex": 0.08260283295990445,
+    "drivers": [
+     "stablecoin",
+     "subscription",
+     "digital assets"
+    ],
+    "p": 0.063,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "LUNR",
+    "ex": -0.5349332951104933,
+    "drivers": [
+     "launch vehicle",
+     "nuclear power",
+     "travel"
+    ],
+    "p": 0.046,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "ADBE",
+    "ex": -0.23088552823063557,
+    "drivers": [
+     "months ended august",
+     "subscription",
+     "advertising"
+    ],
+    "p": 0.022,
+    "pct3": 0.12,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": 0.41808438113368496,
+    "drivers": [
+     "digital assets",
+     "hashrate",
+     "stablecoin"
+    ],
+    "p": 0.291,
+    "pct3": 0.74,
+    "bott": 0.89
+   },
+   {
+    "t": "SPOT",
+    "ex": 0.11832010400031723,
+    "drivers": [
+     "subscription",
+     "advertising",
+     "credit card"
+    ],
+    "p": 0.011,
+    "pct3": 0.95,
+    "bott": 0.82
+   },
+   {
+    "t": "GWRE",
+    "ex": 0.024096191178351267,
+    "drivers": [
+     "subscription",
+     "drone",
+     "travel"
+    ],
+    "p": 0.073,
+    "pct3": 0.76,
+    "bott": 0.93
+   },
+   {
+    "t": "HIMS",
+    "ex": 0.5830227354261739,
+    "drivers": [
+     "subscription",
+     "advertising",
+     "shipping"
+    ],
+    "p": 0.002,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "HOOD",
+    "ex": 0.9009923069200938,
+    "drivers": [
+     "credit card",
+     "subscription",
+     "stablecoin"
+    ],
+    "p": 0.001,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "DOCU",
+    "ex": -0.2586818372591271,
+    "drivers": [
+     "subscription",
+     "credit card",
+     "advertising"
+    ],
+    "p": 0.008,
+    "pct3": 0.94,
+    "bott": 0.77
+   },
+   {
+    "t": "ACHR",
+    "ex": 0.025674104648860885,
+    "drivers": [
+     "subscription",
+     "travel",
+     "interest rate"
+    ],
+    "p": 0,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.0050257044795025685,
+    "drivers": [
+     "shipping",
+     "travel",
+     "e-commerce"
+    ],
+    "p": 0.267,
+    "pct3": 0.7,
+    "bott": 0.91
+   },
+   {
+    "t": "NOW",
+    "ex": -0.1282757413416551,
+    "drivers": [
+     "subscription",
+     "AI agents",
+     "SaaS"
+    ],
+    "p": 0.037,
+    "pct3": 0.63,
+    "bott": 0.75
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.5550656387054835,
+    "drivers": [
+     "travel",
+     "freight"
+    ],
+    "p": 0.307,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "SYF",
+    "ex": -0.024011244818032962,
+    "drivers": [
+     "credit card",
+     "interest rate"
+    ],
+    "p": 0.002,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "TYL",
+    "ex": -0.05928548254706223,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "travel"
+    ],
+    "p": 0.081,
+    "pct3": 0.38,
+    "bott": 0.96
+   },
+   {
+    "t": "FICO",
+    "ex": -0.26833789939220865,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "credit card"
+    ],
+    "p": 0.004,
+    "pct3": 0.19,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2025-02-28",
+  "emerging": [
+   "august july",
+   "june july change",
+   "november october",
+   "june and july",
+   "june july",
+   "millions september september",
+   "both the third",
+   "months ended august",
+   "september september change",
+   "september includes",
+   "june and june",
+   "june july june",
+   "millions june",
+   "july june july"
+  ],
+  "eligible": 878,
+  "model10": 0.4098204453130684,
+  "model11": 0.1549466439717442,
+  "mom": 0.6869676456313505,
+  "shock": 0.1476466225656888,
+  "theme": 0.4878021475706227,
+  "sa": 0.4054695526976954,
+  "saN": 6,
+  "random": 0.14055060954224105,
+  "ic10": -0.06852060110259237,
+  "ic11": 0.012518102064958113,
+  "picks10": [
+   {
+    "t": "NVO",
+    "ex": -0.43904472911081194,
+    "drivers": [
+     "GLP-1",
+     "obesity",
+     "biosimilar"
+    ],
+    "p": 0.533,
+    "pct3": 0.15,
+    "bott": 0.92
+   },
+   {
+    "t": "CMG",
+    "ex": -0.2951699450295687,
+    "drivers": [
+     "restaurant",
+     "advertising",
+     "cybersecurity"
+    ],
+    "p": 0.347,
+    "pct3": 0.22,
+    "bott": 0.95
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.2999373091927573,
+    "drivers": [
+     "restaurant",
+     "travel",
+     "credit card"
+    ],
+    "p": 0.352,
+    "pct3": 0.02,
+    "bott": 0.81
+   },
+   {
+    "t": "DRI",
+    "ex": -0.014498988932284629,
+    "drivers": [
+     "credit card",
+     "advertising",
+     "SaaS"
+    ],
+    "p": 0.347,
+    "pct3": 0.91,
+    "bott": 0.79
+   },
+   {
+    "t": "YUM",
+    "ex": -0.13426813998880582,
+    "drivers": [
+     "advertising",
+     "travel",
+     "interest rate"
+    ],
+    "p": 0.317,
+    "pct3": 0.89,
+    "bott": 0.76
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.1455026007002187,
+    "drivers": [
+     "rack",
+     "server",
+     "wind"
+    ],
+    "p": 0.311,
+    "pct3": 0,
+    "bott": 0.78
+   },
+   {
+    "t": "IREN",
+    "ex": 2.4272181422524914,
+    "drivers": [
+     "wind",
+     "server",
+     "cybersecurity"
+    ],
+    "p": 0.289,
+    "pct3": 0.01,
+    "bott": 0.9
+   },
+   {
+    "t": "MCD",
+    "ex": -0.04040171891988553,
+    "drivers": [
+     "advertising",
+     "interest rate",
+     "cybersecurity"
+    ],
+    "p": 0.267,
+    "pct3": 0.74,
+    "bott": 0.98
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.11859020887489602,
+    "drivers": [
+     "restaurant",
+     "server",
+     "credit card"
+    ],
+    "p": 0.491,
+    "pct3": 0.27,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 2.801055935622159,
+    "drivers": [
+     "satellite",
+     "travel",
+     "advertising"
+    ],
+    "p": 0.21,
+    "pct3": 0.39,
+    "bott": 0.98
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.5337012559140515,
+    "drivers": [
+     "launch vehicle",
+     "aerospace",
+     "travel"
+    ],
+    "p": 0.399,
+    "pct3": 0.06,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": 0.024150972625354594,
+    "drivers": [
+     "natural gas",
+     "cybersecurity",
+     "steel"
+    ],
+    "p": 0.177,
+    "pct3": 0.68,
+    "bott": 0.99
+   },
+   {
+    "t": "QSR",
+    "ex": -0.0939377881750405,
+    "drivers": [
+     "restaurant",
+     "advertising",
+     "interest rate"
+    ],
+    "p": 0.314,
+    "pct3": 0.39,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.4822470522602149,
+    "drivers": [
+     "server",
+     "interest rate",
+     "cybersecurity"
+    ],
+    "p": 0.306,
+    "pct3": 0.05,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 0.8394260338332311,
+    "drivers": [
+     "custom ASIC",
+     "travel",
+     "subscription"
+    ],
+    "p": 0.301,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "MARA",
+    "ex": 0.08904017012524434,
+    "drivers": [
+     "liquid cooling",
+     "server",
+     "wind"
+    ],
+    "p": 0.28,
+    "pct3": 0,
+    "bott": 0
+   },
+   {
+    "t": "HUT",
+    "ex": 0.8276371481970095,
+    "drivers": [
+     "colocation",
+     "natural gas",
+     "inference"
+    ],
+    "p": 0.136,
+    "pct3": 0,
+    "bott": 0.88
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.3588628915693526,
+    "drivers": [
+     "satellite",
+     "cybersecurity",
+     "travel"
+    ],
+    "p": 0.127,
+    "pct3": 0.05,
+    "bott": 0.88
+   },
+   {
+    "t": "YUMC",
+    "ex": -0.15851965004860458,
+    "drivers": [
+     "advertising",
+     "e-commerce",
+     "interest rate"
+    ],
+    "p": 0.206,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "MSTR",
+    "ex": 0.2619351814346951,
+    "drivers": [
+     "subscription",
+     "stablecoin",
+     "server"
+    ],
+    "p": 0.086,
+    "pct3": 0.02,
+    "bott": 0.68
+   }
+  ],
+  "picks11": [
+   {
+    "t": "GSAT",
+    "ex": 0.3588628915693526,
+    "drivers": [
+     "satellite",
+     "cybersecurity",
+     "travel"
+    ],
+    "p": 0.127,
+    "pct3": 0.05,
+    "bott": 0.88
+   },
+   {
+    "t": "MSCI",
+    "ex": -0.10653647518093734,
+    "drivers": [
+     "subscription",
+     "travel",
+     "interest rate"
+    ],
+    "p": 0,
+    "pct3": 0.5,
+    "bott": 0.92
+   },
+   {
+    "t": "USFD",
+    "ex": 0.036031769149798,
+    "drivers": [
+     "restaurant",
+     "advertising",
+     "interest rate"
+    ],
+    "p": 0.037,
+    "pct3": 0.71,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.5337012559140515,
+    "drivers": [
+     "launch vehicle",
+     "aerospace",
+     "travel"
+    ],
+    "p": 0.399,
+    "pct3": 0.06,
+    "bott": 0
+   },
+   {
+    "t": "ADBE",
+    "ex": -0.2614429366641269,
+    "drivers": [
+     "months ended august",
+     "subscription",
+     "advertising"
+    ],
+    "p": 0.001,
+    "pct3": 0.16,
+    "bott": 0
+   },
+   {
+    "t": "KEY",
+    "ex": 0.06936454807922376,
+    "drivers": [
+     "credit card",
+     "housing",
+     "interest rate"
+    ],
+    "p": 0.001,
+    "pct3": 0.25,
+    "bott": 0.68
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.2999373091927573,
+    "drivers": [
+     "restaurant",
+     "travel",
+     "credit card"
+    ],
+    "p": 0.352,
+    "pct3": 0.02,
+    "bott": 0.81
+   },
+   {
+    "t": "GWRE",
+    "ex": 0.034696056938286146,
+    "drivers": [
+     "subscription",
+     "travel",
+     "advertising"
+    ],
+    "p": 0.004,
+    "pct3": 0.59,
+    "bott": 0.94
+   },
+   {
+    "t": "SHOP",
+    "ex": 0.25477667953497174,
+    "drivers": [
+     "subscription",
+     "credit card",
+     "travel"
+    ],
+    "p": 0.004,
+    "pct3": 0.51,
+    "bott": 0
+   },
+   {
+    "t": "SPOT",
+    "ex": 0.06593155230796865,
+    "drivers": [
+     "advertising",
+     "subscription",
+     "credit card"
+    ],
+    "p": 0,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "RMD",
+    "ex": 0.10684872584608707,
+    "drivers": [
+     "SaaS",
+     "medical device",
+     "obesity"
+    ],
+    "p": 0.009,
+    "pct3": 0.39,
+    "bott": 0
+   },
+   {
+    "t": "DOCU",
+    "ex": -0.1324894582901387,
+    "drivers": [
+     "subscription",
+     "credit card",
+     "advertising"
+    ],
+    "p": 0,
+    "pct3": 0.74,
+    "bott": 0.78
+   },
+   {
+    "t": "TYL",
+    "ex": -0.14255285431787368,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "travel"
+    ],
+    "p": 0.002,
+    "pct3": 0.49,
+    "bott": 0.98
+   },
+   {
+    "t": "LITE",
+    "ex": 0.9509685627958833,
+    "drivers": [
+     "june july",
+     "server",
+     "fiber optic"
+    ],
+    "p": 0,
+    "pct3": 0.11,
+    "bott": 0.86
+   },
+   {
+    "t": "ORCL",
+    "ex": 0.32489153808714644,
+    "drivers": [
+     "server",
+     "SaaS",
+     "subscription"
+    ],
+    "p": 0,
+    "pct3": 0.28,
+    "bott": 0
+   },
+   {
+    "t": "TOST",
+    "ex": 0.15407743201015456,
+    "drivers": [
+     "subscription",
+     "credit card",
+     "SaaS"
+    ],
+    "p": 0.126,
+    "pct3": 0.24,
+    "bott": 0
+   },
+   {
+    "t": "DUOL",
+    "ex": -0.06148936483837231,
+    "drivers": [
+     "subscription",
+     "advertising",
+     "travel"
+    ],
+    "p": 0,
+    "pct3": 0.27,
+    "bott": 0
+   },
+   {
+    "t": "SYF",
+    "ex": 0.24495283675267987,
+    "drivers": [
+     "credit card",
+     "housing",
+     "interest rate"
+    ],
+    "p": 0,
+    "pct3": 0.28,
+    "bott": 0
+   },
+   {
+    "t": "FFIV",
+    "ex": 0.031223227292557665,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "server"
+    ],
+    "p": 0,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "NOW",
+    "ex": -0.06294579835907088,
+    "drivers": [
+     "subscription",
+     "AI agents",
+     "server"
+    ],
+    "p": 0.001,
+    "pct3": 0.24,
+    "bott": 0.77
+   }
+  ]
+ },
+ {
+  "d": "2025-03-31",
+  "emerging": [
+   "august july",
+   "june july change",
+   "november october",
+   "june and july",
+   "june july",
+   "millions september september",
+   "both the third",
+   "months ended august",
+   "september september change",
+   "september includes",
+   "june and june",
+   "june july june",
+   "millions june",
+   "july june july"
+  ],
+  "eligible": 880,
+  "model10": -0.03790409198291873,
+  "model11": 0.0681498160773958,
+  "mom": 0.9975813855802107,
+  "shock": 0.13352716626501798,
+  "theme": null,
+  "sa": 0.588124093949629,
+  "saN": 6,
+  "random": -0.01956282393336856,
+  "ic10": -0.06915367337693132,
+  "ic11": -0.0541654798900556,
+  "picks10": [
+   {
+    "t": "CMG",
+    "ex": -0.3463964065334121,
+    "drivers": [
+     "restaurant",
+     "cybersecurity"
+    ],
+    "p": 0.656,
+    "pct3": 0.15,
+    "bott": 0.95
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.44440481176850366,
+    "drivers": [
+     "restaurant",
+     "cybersecurity"
+    ],
+    "p": 0.667,
+    "pct3": 0.1,
+    "bott": 0.81
+   },
+   {
+    "t": "DRI",
+    "ex": -0.19763490791567806,
+    "drivers": [
+     "cybersecurity"
+    ],
+    "p": 0.657,
+    "pct3": 0.79,
+    "bott": 0.79
+   },
+   {
+    "t": "YUM",
+    "ex": -0.1499411726830524,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.622,
+    "pct3": 0.91,
+    "bott": 0.76
+   },
+   {
+    "t": "MCD",
+    "ex": -0.15252997718389838,
+    "drivers": [
+     "restaurant",
+     "defense",
+     "cybersecurity"
+    ],
+    "p": 0.541,
+    "pct3": 0.69,
+    "bott": 0.98
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.13139176932523444,
+    "drivers": [
+     "restaurant",
+     "cybersecurity"
+    ],
+    "p": 0.831,
+    "pct3": 0.34,
+    "bott": 0
+   },
+   {
+    "t": "QSR",
+    "ex": -0.1419781810124261,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.61,
+    "pct3": 0.6,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": -0.0990766147912816,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.288,
+    "pct3": 0.72,
+    "bott": 0.99
+   },
+   {
+    "t": "SNX",
+    "ex": 0.47995095788872577,
+    "drivers": [
+     "cybersecurity"
+    ],
+    "p": 0.28,
+    "pct3": 0.27,
+    "bott": 0.84
+   },
+   {
+    "t": "YUMC",
+    "ex": -0.2949974745811099,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.438,
+    "pct3": 0.72,
+    "bott": 0
+   },
+   {
+    "t": "NVO",
+    "ex": -0.3027880996414031,
+    "drivers": [
+     "GLP-1",
+     "obesity",
+     "biosimilar"
+    ],
+    "p": 0.22,
+    "pct3": 0.12,
+    "bott": 0.92
+   },
+   {
+    "t": "FCX",
+    "ex": -0.14509298056221387,
+    "drivers": [
+     "copper",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.377,
+    "pct3": 0.51,
+    "bott": 0
+   },
+   {
+    "t": "LEN",
+    "ex": -0.0035928617994163137,
+    "drivers": [
+     "housing",
+     "mortgage",
+     "cybersecurity"
+    ],
+    "p": 0.174,
+    "pct3": 0.17,
+    "bott": 0.86
+   },
+   {
+    "t": "COP",
+    "ex": -0.209125573451433,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.175,
+    "pct3": 0.7,
+    "bott": 0.85
+   },
+   {
+    "t": "TOST",
+    "ex": -0.03483348945817877,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.261,
+    "pct3": 0.28,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.4714779934653084,
+    "drivers": [
+     "defense",
+     "housing",
+     "aerospace"
+    ],
+    "p": 0.249,
+    "pct3": 0.04,
+    "bott": 0
+   },
+   {
+    "t": "SCCO",
+    "ex": 0.17123344001743934,
+    "drivers": [
+     "copper",
+     "cybersecurity",
+     "oil"
+    ],
+    "p": 0.241,
+    "pct3": 0.6,
+    "bott": 0
+   },
+   {
+    "t": "SRE",
+    "ex": 0.1348889206650461,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "wind"
+    ],
+    "p": 0.126,
+    "pct3": 0.13,
+    "bott": 0.7
+   },
+   {
+    "t": "ET",
+    "ex": -0.20029178410459536,
+    "drivers": [
+     "natural gas",
+     "LNG",
+     "oil"
+    ],
+    "p": 0.213,
+    "pct3": 0.41,
+    "bott": 0
+   },
+   {
+    "t": "TTE",
+    "ex": -0.1615570468830574,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.211,
+    "pct3": 0.92,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "TPL",
+    "ex": -0.4380857466279199,
+    "drivers": [
+     "oil",
+     "natural gas"
+    ],
+    "p": 0.031,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "VST",
+    "ex": 0.5006689090466334,
+    "drivers": [
+     "natural gas",
+     "uranium",
+     "natural gas turbine"
+    ],
+    "p": 0,
+    "pct3": 0.16,
+    "bott": 0.78
+   },
+   {
+    "t": "XEL",
+    "ex": 0.013324081868883564,
+    "drivers": [
+     "natural gas",
+     "wind",
+     "uranium"
+    ],
+    "p": 0.017,
+    "pct3": 0.64,
+    "bott": 0.73
+   },
+   {
+    "t": "MPLX",
+    "ex": -0.18551984221591278,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.003,
+    "pct3": 0.82,
+    "bott": 0
+   },
+   {
+    "t": "FTAI",
+    "ex": 0.31875779271431126,
+    "drivers": [
+     "aerospace",
+     "oil"
+    ],
+    "p": 0,
+    "pct3": 0.22,
+    "bott": 0.75
+   },
+   {
+    "t": "EXE",
+    "ex": -0.17120355128697018,
+    "drivers": [
+     "natural gas",
+     "LNG",
+     "oil"
+    ],
+    "p": 0.124,
+    "pct3": 0.8,
+    "bott": 0
+   },
+   {
+    "t": "SRE",
+    "ex": 0.1348889206650461,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "wind"
+    ],
+    "p": 0.126,
+    "pct3": 0.13,
+    "bott": 0.7
+   },
+   {
+    "t": "USFD",
+    "ex": 0.04462663104393849,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.11,
+    "pct3": 0.46,
+    "bott": 0
+   },
+   {
+    "t": "CLH",
+    "ex": 0.04387107457539585,
+    "drivers": [
+     "oil",
+     "wind",
+     "housing"
+    ],
+    "p": 0.003,
+    "pct3": 0.18,
+    "bott": 0
+   },
+   {
+    "t": "PR",
+    "ex": -0.17440175261206614,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.074,
+    "pct3": 0.49,
+    "bott": 0.8
+   },
+   {
+    "t": "WBD",
+    "ex": 0.7290936838029289,
+    "drivers": [
+     "cybersecurity"
+    ],
+    "p": 0.001,
+    "pct3": 0.59,
+    "bott": 0
+   },
+   {
+    "t": "FANG",
+    "ex": -0.22608273905985043,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.037,
+    "pct3": 0.52,
+    "bott": 0
+   },
+   {
+    "t": "OXY",
+    "ex": -0.14076362656429497,
+    "drivers": [
+     "oil",
+     "natural gas",
+     "LNG"
+    ],
+    "p": 0.037,
+    "pct3": 0.58,
+    "bott": 0.9
+   },
+   {
+    "t": "CMG",
+    "ex": -0.3463964065334121,
+    "drivers": [
+     "restaurant",
+     "cybersecurity"
+    ],
+    "p": 0.656,
+    "pct3": 0.15,
+    "bott": 0.95
+   },
+   {
+    "t": "MPC",
+    "ex": 0.221298506444793,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.019,
+    "pct3": 0.69,
+    "bott": 0.93
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.1166356234367516,
+    "drivers": [
+     "satellite",
+     "defense",
+     "cybersecurity"
+    ],
+    "p": 0.067,
+    "pct3": 0.63,
+    "bott": 0
+   },
+   {
+    "t": "YPF",
+    "ex": -0.40452014412053716,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "LNG"
+    ],
+    "p": 0.015,
+    "pct3": 0.14,
+    "bott": 0.72
+   },
+   {
+    "t": "WMB",
+    "ex": -0.062471251790163995,
+    "drivers": [
+     "natural gas",
+     "LNG",
+     "oil"
+    ],
+    "p": 0.07,
+    "pct3": 0.77,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": -0.0990766147912816,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.288,
+    "pct3": 0.72,
+    "bott": 0.99
+   },
+   {
+    "t": "PBF",
+    "ex": 0.4883527735516431,
+    "drivers": [
+     "refining",
+     "oil",
+     "natural gas"
+    ],
+    "p": 0,
+    "pct3": 0.08,
+    "bott": 0.69
+   }
+  ]
+ },
+ {
+  "d": "2025-04-30",
+  "emerging": [
+   "november october",
+   "restricted stock unit",
+   "fasb issued",
+   "both the third",
+   "months ended november",
+   "millions september september",
+   "beginning after december",
+   "september september change",
+   "stock unit",
+   "after december",
+   "september includes",
+   "certain conditions",
+   "thousands december",
+   "beginning after",
+   "future taxable"
+  ],
+  "eligible": 889,
+  "model10": 0.9954365460579501,
+  "model11": 0.25087780300230195,
+  "mom": 0.9252171628879289,
+  "shock": -0.02183676775653893,
+  "theme": 0.09589796797112271,
+  "sa": 0.6014062541839928,
+  "saN": 6,
+  "random": 0.35476310310760556,
+  "ic10": -0.023941366922662806,
+  "ic11": -0.08615163696877694,
+  "picks10": [
+   {
+    "t": "CLSK",
+    "ex": 1.067463861037003,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "digital assets"
+    ],
+    "p": 0.642,
+    "pct3": 0.18,
+    "bott": 0.78
+   },
+   {
+    "t": "IREN",
+    "ex": 8.366207610673609,
+    "drivers": [
+     "digital assets",
+     "hashrate",
+     "bitcoin mining"
+    ],
+    "p": 0.587,
+    "pct3": 0.02,
+    "bott": 0.89
+   },
+   {
+    "t": "HUT",
+    "ex": 2.724200469036565,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "digital assets"
+    ],
+    "p": 0.53,
+    "pct3": 0.02,
+    "bott": 0.95
+   },
+   {
+    "t": "CMG",
+    "ex": -0.32873564729485816,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.433,
+    "pct3": 0.34,
+    "bott": 0.99
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.4790607806665125,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.429,
+    "pct3": 0.04,
+    "bott": 0.81
+   },
+   {
+    "t": "DRI",
+    "ex": -0.2061898493380373,
+    "drivers": [
+     "grid",
+     "SaaS",
+     "vaccine"
+    ],
+    "p": 0.419,
+    "pct3": 0.73,
+    "bott": 0.78
+   },
+   {
+    "t": "MCD",
+    "ex": -0.1548754156520057,
+    "drivers": [
+     "restaurant",
+     "defense"
+    ],
+    "p": 0.363,
+    "pct3": 0.85,
+    "bott": 0.98
+   },
+   {
+    "t": "YUM",
+    "ex": -0.18220309225545483,
+    "drivers": [],
+    "p": 0.4,
+    "pct3": 0.92,
+    "bott": 0.75
+   },
+   {
+    "t": "RIOT",
+    "ex": 1.738080031331009,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "grid"
+    ],
+    "p": 0.63,
+    "pct3": 0.03,
+    "bott": 0
+   },
+   {
+    "t": "NVO",
+    "ex": -0.33579946326290655,
+    "drivers": [
+     "obesity",
+     "GLP-1",
+     "biosimilar"
+    ],
+    "p": 0.322,
+    "pct3": 0.17,
+    "bott": 0.91
+   },
+   {
+    "t": "MARA",
+    "ex": 0.22752183865111064,
+    "drivers": [
+     "digital assets",
+     "hashrate",
+     "bitcoin mining"
+    ],
+    "p": 0.57,
+    "pct3": 0.08,
+    "bott": 0
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.09440949801834586,
+    "drivers": [
+     "restaurant",
+     "data center"
+    ],
+    "p": 0.518,
+    "pct3": 0.45,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.8720796771243378,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.515,
+    "pct3": 0.11,
+    "bott": 0
+   },
+   {
+    "t": "QSR",
+    "ex": -0.10707796527206459,
+    "drivers": [
+     "restaurant",
+     "grid"
+    ],
+    "p": 0.394,
+    "pct3": 0.74,
+    "bott": 0
+   },
+   {
+    "t": "NBIS",
+    "ex": 4.10996139383626,
+    "drivers": [
+     "autonomous driving",
+     "data center",
+     "restaurant"
+    ],
+    "p": 0.185,
+    "pct3": 0.13,
+    "bott": 1
+   },
+   {
+    "t": "MSTR",
+    "ex": -0.39728544015097733,
+    "drivers": [
+     "digital assets",
+     "stablecoin",
+     "bitcoin mining"
+    ],
+    "p": 0.206,
+    "pct3": 0.87,
+    "bott": 0.68
+   },
+   {
+    "t": "ASTS",
+    "ex": 2.358966620312352,
+    "drivers": [
+     "launch vehicle",
+     "defense",
+     "data center"
+    ],
+    "p": 0.318,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "YUMC",
+    "ex": -0.10710859539126893,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.305,
+    "pct3": 0.55,
+    "bott": 0
+   },
+   {
+    "t": "FCX",
+    "ex": 0.03986886525847266,
+    "drivers": [
+     "copper",
+     "steel",
+     "aerospace"
+    ],
+    "p": 0.269,
+    "pct3": 0.64,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": -0.20287369879928774,
+    "drivers": [
+     "nuclear power",
+     "defense",
+     "steel"
+    ],
+    "p": 0.118,
+    "pct3": 0.69,
+    "bott": 0.99
+   }
+  ],
+  "picks11": [
+   {
+    "t": "FTAI",
+    "ex": 0.8834227644167925,
+    "drivers": [
+     "aerospace"
+    ],
+    "p": 0,
+    "pct3": 0.86,
+    "bott": 0.74
+   },
+   {
+    "t": "WBD",
+    "ex": 1.4125566183850986,
+    "drivers": [
+     "satellite"
+    ],
+    "p": 0,
+    "pct3": 0.26,
+    "bott": 0
+   },
+   {
+    "t": "XEL",
+    "ex": 0.013081495717137681,
+    "drivers": [
+     "wind",
+     "uranium",
+     "nuclear power"
+    ],
+    "p": 0.001,
+    "pct3": 0.8,
+    "bott": 0.83
+   },
+   {
+    "t": "VG",
+    "ex": -0.10738447868202616,
+    "drivers": [
+     "construction",
+     "steel",
+     "nuclear power"
+    ],
+    "p": 0.058,
+    "pct3": 0,
+    "bott": 0.89
+   },
+   {
+    "t": "CMG",
+    "ex": -0.32873564729485816,
+    "drivers": [
+     "restaurant"
+    ],
+    "p": 0.433,
+    "pct3": 0.34,
+    "bott": 0.99
+   },
+   {
+    "t": "ADSK",
+    "ex": -0.03262329259986907,
+    "drivers": [
+     "SaaS",
+     "data center"
+    ],
+    "p": 0.005,
+    "pct3": 0.43,
+    "bott": 0.83
+   },
+   {
+    "t": "GS",
+    "ex": 0.29502084051526234,
+    "drivers": [
+     "defense",
+     "wind",
+     "digital assets"
+    ],
+    "p": 0,
+    "pct3": 0.32,
+    "bott": 0.76
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.8720796771243378,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.515,
+    "pct3": 0.11,
+    "bott": 0
+   },
+   {
+    "t": "EXE",
+    "ex": -0.1480772232891292,
+    "drivers": [
+     "steel",
+     "wind"
+    ],
+    "p": 0.008,
+    "pct3": 0.68,
+    "bott": 0
+   },
+   {
+    "t": "MSTR",
+    "ex": -0.39728544015097733,
+    "drivers": [
+     "digital assets",
+     "stablecoin",
+     "bitcoin mining"
+    ],
+    "p": 0.206,
+    "pct3": 0.87,
+    "bott": 0.68
+   },
+   {
+    "t": "RDDT",
+    "ex": 0.6554288700943811,
+    "drivers": [
+     "steel"
+    ],
+    "p": 0,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "GME",
+    "ex": -0.2665272915264244,
+    "drivers": [
+     "wind"
+    ],
+    "p": 0.055,
+    "pct3": 0.68,
+    "bott": 0
+   },
+   {
+    "t": "TSLA",
+    "ex": 0.5263159069728578,
+    "drivers": [
+     "digital assets",
+     "grid",
+     "data center"
+    ],
+    "p": 0.008,
+    "pct3": 0.08,
+    "bott": 0.82
+   },
+   {
+    "t": "KEY",
+    "ex": 0.041895117677232196,
+    "drivers": [
+     "defense",
+     "housing"
+    ],
+    "p": 0,
+    "pct3": 0.28,
+    "bott": 0.68
+   },
+   {
+    "t": "CRM",
+    "ex": -0.18522856261785503,
+    "drivers": [
+     "AI agents",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.036,
+    "pct3": 0.12,
+    "bott": 0.88
+   },
+   {
+    "t": "ARW",
+    "ex": -0.09208117252136283,
+    "drivers": [
+     "wind"
+    ],
+    "p": 0,
+    "pct3": 0.54,
+    "bott": 0
+   },
+   {
+    "t": "VST",
+    "ex": 0.3331970149848329,
+    "drivers": [
+     "uranium",
+     "wind",
+     "nuclear power"
+    ],
+    "p": 0,
+    "pct3": 0.27,
+    "bott": 0.78
+   },
+   {
+    "t": "HWM",
+    "ex": 0.2557075009648455,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "steel"
+    ],
+    "p": 0.009,
+    "pct3": 0.84,
+    "bott": 0.98
+   },
+   {
+    "t": "MLI",
+    "ex": 0.3068153348570397,
+    "drivers": [
+     "copper",
+     "steel",
+     "housing"
+    ],
+    "p": 0.085,
+    "pct3": 0.49,
+    "bott": 0
+   },
+   {
+    "t": "HMY",
+    "ex": -0.020021972981278724,
+    "drivers": [
+     "uranium",
+     "copper",
+     "wind"
+    ],
+    "p": 0.002,
+    "pct3": 1,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2025-05-30",
+  "emerging": [
+   "november october",
+   "restricted stock unit",
+   "fasb issued",
+   "both the third",
+   "months ended november",
+   "millions september september",
+   "beginning after december",
+   "september september change",
+   "stock unit",
+   "after december",
+   "september includes",
+   "certain conditions",
+   "thousands december",
+   "beginning after",
+   "future taxable"
+  ],
+  "eligible": 896,
+  "model10": 0.339275272102651,
+  "model11": 0.13245891122844755,
+  "mom": 0.17836986789926446,
+  "shock": 0.16416559493918975,
+  "theme": 0.08467825057259051,
+  "sa": 0.8211046787068448,
+  "saN": 8,
+  "random": 0.18801884242017447,
+  "ic10": -0.049772207775165105,
+  "ic11": -0.10235403153237599,
+  "picks10": [
+   {
+    "t": "TXRH",
+    "ex": -0.19826602846455033,
+    "drivers": [
+     "advertising",
+     "credit card",
+     "data center"
+    ],
+    "p": 0.478,
+    "pct3": 0.7,
+    "bott": 0.98
+   },
+   {
+    "t": "HUT",
+    "ex": 1.8600724189702376,
+    "drivers": [
+     "GPU",
+     "colocation",
+     "digital assets"
+    ],
+    "p": 0.372,
+    "pct3": 0.65,
+    "bott": 0.95
+   },
+   {
+    "t": "CMG",
+    "ex": -0.4058910902949139,
+    "drivers": [
+     "consumer spending",
+     "advertising",
+     "construction"
+    ],
+    "p": 0.347,
+    "pct3": 0.29,
+    "bott": 0.99
+   },
+   {
+    "t": "IREN",
+    "ex": 4.3780102921817035,
+    "drivers": [
+     "digital assets",
+     "GPU",
+     "data center"
+    ],
+    "p": 0.357,
+    "pct3": 0.6,
+    "bott": 0.88
+   },
+   {
+    "t": "NVO",
+    "ex": -0.4209020802892034,
+    "drivers": [
+     "GLP-1",
+     "construction"
+    ],
+    "p": 0.337,
+    "pct3": 0.06,
+    "bott": 0.91
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.4962920780711826,
+    "drivers": [
+     "credit card",
+     "advertising",
+     "construction"
+    ],
+    "p": 0.334,
+    "pct3": 0.13,
+    "bott": 0.82
+   },
+   {
+    "t": "DRI",
+    "ex": -0.27037741887748246,
+    "drivers": [
+     "advertising",
+     "grid",
+     "credit card"
+    ],
+    "p": 0.332,
+    "pct3": 0.72,
+    "bott": 0.78
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.6573064908018049,
+    "drivers": [
+     "hashrate",
+     "data center",
+     "wind"
+    ],
+    "p": 0.333,
+    "pct3": 0.74,
+    "bott": 0.75
+   },
+   {
+    "t": "YUM",
+    "ex": -0.039183670942115834,
+    "drivers": [
+     "advertising"
+    ],
+    "p": 0.322,
+    "pct3": 0.27,
+    "bott": 0.76
+   },
+   {
+    "t": "MCD",
+    "ex": -0.10125787844708911,
+    "drivers": [
+     "advertising",
+     "defense",
+     "construction"
+    ],
+    "p": 0.271,
+    "pct3": 0.59,
+    "bott": 0.97
+   },
+   {
+    "t": "LNG",
+    "ex": -0.24145857891400613,
+    "drivers": [
+     "nuclear power",
+     "construction",
+     "defense"
+    ],
+    "p": 0.184,
+    "pct3": 0.65,
+    "bott": 0.99
+   },
+   {
+    "t": "MARA",
+    "ex": -0.27722790774915407,
+    "drivers": [
+     "digital assets",
+     "hashrate",
+     "inference"
+    ],
+    "p": 0.338,
+    "pct3": 0.57,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.8024943051390074,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "grid"
+    ],
+    "p": 0.329,
+    "pct3": 0.15,
+    "bott": 0
+   },
+   {
+    "t": "QSR",
+    "ex": -0.09309079601990056,
+    "drivers": [
+     "advertising",
+     "grid"
+    ],
+    "p": 0.302,
+    "pct3": 0.78,
+    "bott": 0
+   },
+   {
+    "t": "CW",
+    "ex": 0.17465259326758642,
+    "drivers": [
+     "aerospace",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.143,
+    "pct3": 0.97,
+    "bott": 0.99
+   },
+   {
+    "t": "FCX",
+    "ex": -0.028021783981710513,
+    "drivers": [
+     "copper",
+     "aerospace",
+     "defense"
+    ],
+    "p": 0.258,
+    "pct3": 0.67,
+    "bott": 0
+   },
+   {
+    "t": "NBIS",
+    "ex": 1.5353070847870585,
+    "drivers": [
+     "GPU",
+     "data center",
+     "InfiniBand"
+    ],
+    "p": 0.121,
+    "pct3": 0.83,
+    "bott": 1
+   },
+   {
+    "t": "HWM",
+    "ex": 0.08649108929721505,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "wind"
+    ],
+    "p": 0.118,
+    "pct3": 0.94,
+    "bott": 0.98
+   },
+   {
+    "t": "MSTR",
+    "ex": -0.6225625839695069,
+    "drivers": [
+     "stablecoin",
+     "digital assets",
+     "wind"
+    ],
+    "p": 0.136,
+    "pct3": 0.98,
+    "bott": 0.68
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.48570306362922233,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "foundry"
+    ],
+    "p": 0.22,
+    "pct3": 0.95,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MSTR",
+    "ex": -0.6225625839695069,
+    "drivers": [
+     "stablecoin",
+     "digital assets",
+     "wind"
+    ],
+    "p": 0.136,
+    "pct3": 0.98,
+    "bott": 0.68
+   },
+   {
+    "t": "OKLO",
+    "ex": 0.644110178768948,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.001,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "FTAI",
+    "ex": 0.3409607550118128,
+    "drivers": [
+     "aerospace",
+     "shipping"
+    ],
+    "p": 0.012,
+    "pct3": 0.25,
+    "bott": 0
+   },
+   {
+    "t": "TSLA",
+    "ex": 0.1567669836060006,
+    "drivers": [
+     "digital assets",
+     "construction",
+     "data center"
+    ],
+    "p": 0.006,
+    "pct3": 0.89,
+    "bott": 0.8
+   },
+   {
+    "t": "CRM",
+    "ex": -0.217305719700557,
+    "drivers": [
+     "AI agents",
+     "hyperscale",
+     "subscription"
+    ],
+    "p": 0.005,
+    "pct3": 0.2,
+    "bott": 0.88
+   },
+   {
+    "t": "PLTR",
+    "ex": 0.17724231010955527,
+    "drivers": [
+     "defense",
+     "foundry",
+     "inference"
+    ],
+    "p": 0,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "HWM",
+    "ex": 0.08649108929721505,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "wind"
+    ],
+    "p": 0.118,
+    "pct3": 0.94,
+    "bott": 0.98
+   },
+   {
+    "t": "CRS",
+    "ex": 0.22912976483812764,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.009,
+    "pct3": 0.84,
+    "bott": 0.98
+   },
+   {
+    "t": "ACHR",
+    "ex": -0.29522035431471294,
+    "drivers": [
+     "defense",
+     "aerospace",
+     "construction"
+    ],
+    "p": 0.002,
+    "pct3": 0.84,
+    "bott": 0
+   },
+   {
+    "t": "GEV",
+    "ex": 0.1377238836733965,
+    "drivers": [
+     "nuclear power",
+     "wind",
+     "transformer"
+    ],
+    "p": 0.004,
+    "pct3": 0.98,
+    "bott": 0.79
+   },
+   {
+    "t": "AMD",
+    "ex": 0.7991633041284028,
+    "drivers": [
+     "GPU",
+     "data center",
+     "hyperscale"
+    ],
+    "p": 0.028,
+    "pct3": 0.8,
+    "bott": 0.9
+   },
+   {
+    "t": "GWRE",
+    "ex": -0.09506944001420159,
+    "drivers": [
+     "drone",
+     "advertising",
+     "large language model"
+    ],
+    "p": 0.003,
+    "pct3": 0.72,
+    "bott": 0.92
+   },
+   {
+    "t": "DRS",
+    "ex": -0.3205019982056928,
+    "drivers": [
+     "defense",
+     "aerospace",
+     "cybersecurity"
+    ],
+    "p": 0.001,
+    "pct3": 0.97,
+    "bott": 0.87
+   },
+   {
+    "t": "ESLT",
+    "ex": 0.030442625026407155,
+    "drivers": [
+     "defense",
+     "aerospace",
+     "drone"
+    ],
+    "p": 0,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "HMY",
+    "ex": 0.17398444669854607,
+    "drivers": [
+     "uranium",
+     "copper",
+     "nuclear power"
+    ],
+    "p": 0.001,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "SHOP",
+    "ex": 0.39051074643676653,
+    "drivers": [
+     "subscription",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.003,
+    "pct3": 0.39,
+    "bott": 0
+   },
+   {
+    "t": "CW",
+    "ex": 0.17465259326758642,
+    "drivers": [
+     "aerospace",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.143,
+    "pct3": 0.97,
+    "bott": 0.99
+   },
+   {
+    "t": "GME",
+    "ex": -0.3631941467596742,
+    "drivers": [
+     "e-commerce",
+     "wind"
+    ],
+    "p": 0.104,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "RGLD",
+    "ex": -0.006760903852010891,
+    "drivers": [
+     "copper"
+    ],
+    "p": 0.085,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.2286146905225428,
+    "drivers": [
+     "launch vehicle",
+     "defense",
+     "data center"
+    ],
+    "p": 0.002,
+    "pct3": 0.12,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2025-06-30",
+  "emerging": [
+   "november october",
+   "restricted stock unit",
+   "fasb issued",
+   "both the third",
+   "months ended november",
+   "millions september september",
+   "beginning after december",
+   "september september change",
+   "stock unit",
+   "after december",
+   "september includes",
+   "certain conditions",
+   "thousands december",
+   "beginning after",
+   "future taxable"
+  ],
+  "eligible": 903,
+  "model10": 0.31220895695914297,
+  "model11": 0.496776084410352,
+  "mom": 0.16380745364582064,
+  "shock": 0.27371824745323653,
+  "theme": 0.3142037140136584,
+  "sa": 0.4688955376430828,
+  "saN": 9,
+  "random": 0.08464128992123242,
+  "ic10": -0.04641138255276465,
+  "ic11": 0.025760008417285082,
+  "picks10": [
+   {
+    "t": "TXRH",
+    "ex": -0.1759548537473442,
+    "drivers": [
+     "server",
+     "credit card",
+     "data center"
+    ],
+    "p": 0.551,
+    "pct3": 0.62,
+    "bott": 0.98
+   },
+   {
+    "t": "CMG",
+    "ex": -0.42726688399064494,
+    "drivers": [
+     "consumer spending",
+     "advertising",
+     "construction"
+    ],
+    "p": 0.414,
+    "pct3": 0.61,
+    "bott": 0.99
+   },
+   {
+    "t": "CAVA",
+    "ex": -0.3364743856726363,
+    "drivers": [
+     "smartphone",
+     "credit card",
+     "subscription"
+    ],
+    "p": 0.399,
+    "pct3": 0.28,
+    "bott": 0.82
+   },
+   {
+    "t": "LNG",
+    "ex": -0.2490095319121184,
+    "drivers": [
+     "nuclear power",
+     "shipping",
+     "defense"
+    ],
+    "p": 0.359,
+    "pct3": 0.47,
+    "bott": 0.99
+   },
+   {
+    "t": "DRI",
+    "ex": -0.21383449443120617,
+    "drivers": [
+     "credit card",
+     "grid",
+     "data center"
+    ],
+    "p": 0.396,
+    "pct3": 0.46,
+    "bott": 0.77
+   },
+   {
+    "t": "YUM",
+    "ex": -0.05233742884447423,
+    "drivers": [
+     "advertising",
+     "artificial intelligence",
+     "travel"
+    ],
+    "p": 0.384,
+    "pct3": 0.17,
+    "bott": 0.76
+   },
+   {
+    "t": "MU",
+    "ex": 1.370050647204275,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "rare earth"
+    ],
+    "p": 0.327,
+    "pct3": 0.91,
+    "bott": 0.98
+   },
+   {
+    "t": "MCD",
+    "ex": -0.02786243683774403,
+    "drivers": [
+     "defense",
+     "advertising",
+     "consumer spending"
+    ],
+    "p": 0.326,
+    "pct3": 0.16,
+    "bott": 0.97
+   },
+   {
+    "t": "HUT",
+    "ex": 1.5773430893693283,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "digital assets"
+    ],
+    "p": 0.328,
+    "pct3": 0.96,
+    "bott": 0.95
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.6452238520175331,
+    "drivers": [
+     "GPU",
+     "data center",
+     "inference"
+    ],
+    "p": 0.314,
+    "pct3": 1,
+    "bott": 1
+   },
+   {
+    "t": "IREN",
+    "ex": 1.5226830142726149,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "digital assets"
+    ],
+    "p": 0.328,
+    "pct3": 1,
+    "bott": 0.88
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.09836642975174292,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.328,
+    "pct3": 0.96,
+    "bott": 0.75
+   },
+   {
+    "t": "AMD",
+    "ex": 0.5191134727586231,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.298,
+    "pct3": 0.89,
+    "bott": 0.9
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.162815721759769,
+    "drivers": [
+     "GPU",
+     "data center",
+     "CPU"
+    ],
+    "p": 0.309,
+    "pct3": 0.92,
+    "bott": 0.8
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.8014144091110393,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.307,
+    "pct3": 0.68,
+    "bott": 0.79
+   },
+   {
+    "t": "VG",
+    "ex": -0.5944635445686728,
+    "drivers": [
+     "certain conditions",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.284,
+    "pct3": 0.94,
+    "bott": 0.89
+   },
+   {
+    "t": "UMC",
+    "ex": -0.017666751862589036,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "power semiconductor"
+    ],
+    "p": 0.275,
+    "pct3": 0.51,
+    "bott": 0.95
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.2760128924449385,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.265,
+    "pct3": 0.9,
+    "bott": 0.97
+   },
+   {
+    "t": "ENTG",
+    "ex": -0.021251771765003147,
+    "drivers": [
+     "deposition",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.289,
+    "pct3": 0.13,
+    "bott": 0.79
+   },
+   {
+    "t": "MP",
+    "ex": 0.5840105536289146,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "inference"
+    ],
+    "p": 0.279,
+    "pct3": 0.88,
+    "bott": 0.86
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MSTR",
+    "ex": -0.6487125475555826,
+    "drivers": [
+     "digital assets",
+     "stablecoin",
+     "bitcoin mining"
+    ],
+    "p": 0.17,
+    "pct3": 0.9,
+    "bott": 0.67
+   },
+   {
+    "t": "HOOD",
+    "ex": 0.2068780414023852,
+    "drivers": [
+     "stablecoin",
+     "credit card",
+     "digital assets"
+    ],
+    "p": 0,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "FTAI",
+    "ex": 0.4529438119092748,
+    "drivers": [
+     "aerospace",
+     "shipping"
+    ],
+    "p": 0.001,
+    "pct3": 0.43,
+    "bott": 0
+   },
+   {
+    "t": "AMD",
+    "ex": 0.5191134727586231,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.298,
+    "pct3": 0.89,
+    "bott": 0.9
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.9775554728689246,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.315,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.5870421422668057,
+    "drivers": [
+     "rack",
+     "hyperscale",
+     "optical transceiver"
+    ],
+    "p": 0.13,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 0.5193764402643508,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "custom ASIC"
+    ],
+    "p": 0.322,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "PLTR",
+    "ex": 0.3444240723594023,
+    "drivers": [
+     "foundry",
+     "defense",
+     "inference"
+    ],
+    "p": 0,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": 0.5840105536289146,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "inference"
+    ],
+    "p": 0.279,
+    "pct3": 0.88,
+    "bott": 0.86
+   },
+   {
+    "t": "CW",
+    "ex": 0.11441150022610769,
+    "drivers": [
+     "aerospace",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.047,
+    "pct3": 0.95,
+    "bott": 0.99
+   },
+   {
+    "t": "BE",
+    "ex": 2.9300564439466688,
+    "drivers": [
+     "server",
+     "grid",
+     "data center"
+    ],
+    "p": 0.1,
+    "pct3": 0.77,
+    "bott": 0.91
+   },
+   {
+    "t": "ALAB",
+    "ex": 0.8536487729330764,
+    "drivers": [
+     "GPU",
+     "DRAM",
+     "rack"
+    ],
+    "p": 0.044,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "HWM",
+    "ex": 0.12382516534578647,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "automotive"
+    ],
+    "p": 0.049,
+    "pct3": 0.91,
+    "bott": 0.98
+   },
+   {
+    "t": "LI",
+    "ex": -0.4253903711073299,
+    "drivers": [
+     "autonomous driving",
+     "automotive",
+     "silicon carbide"
+    ],
+    "p": 0.005,
+    "pct3": 0.52,
+    "bott": 0.87
+   },
+   {
+    "t": "TSLA",
+    "ex": 0.46354291788484314,
+    "drivers": [
+     "digital assets",
+     "automotive",
+     "electric vehicle"
+    ],
+    "p": 0.018,
+    "pct3": 0.78,
+    "bott": 0.8
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.2759462755987441,
+    "drivers": [
+     "colocation",
+     "data center",
+     "hyperscale"
+    ],
+    "p": 0.002,
+    "pct3": 0.57,
+    "bott": 0.96
+   },
+   {
+    "t": "SNOW",
+    "ex": -0.03288513797585946,
+    "drivers": [
+     "GPU",
+     "subscription",
+     "data center"
+    ],
+    "p": 0.001,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "LITE",
+    "ex": 3.0077126114565247,
+    "drivers": [
+     "optical transceiver",
+     "data center",
+     "rare earth"
+    ],
+    "p": 0.002,
+    "pct3": 0.94,
+    "bott": 0.92
+   },
+   {
+    "t": "RBRK",
+    "ex": -0.14914761684079547,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "colocation"
+    ],
+    "p": 0.137,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "VRSN",
+    "ex": -0.21693778196633728,
+    "drivers": [
+     "server",
+     "data center",
+     "satellite"
+    ],
+    "p": 0.002,
+    "pct3": 0.64,
+    "bott": 0.93
+   }
+  ]
+ },
+ {
+  "d": "2025-07-31",
+  "emerging": [
+   "trade policy",
+   "trade policies",
+   "global trade",
+   "march march change",
+   "international trade",
+   "march included",
+   "march march march",
+   "millions march march",
+   "ifrs accounting",
+   "ifrs accounting standards",
+   "thousands december",
+   "february and february",
+   "february february",
+   "services include",
+   "december millions"
+  ],
+  "eligible": 914,
+  "model10": 0.8197399938322834,
+  "model11": 0.6814844068337609,
+  "mom": 0.004650347402229821,
+  "shock": 0.11313459769666809,
+  "theme": 0.7076436239640594,
+  "sa": 0.5123607492348466,
+  "saN": 11,
+  "random": 0.32967051959610866,
+  "ic10": 0.010082273086580737,
+  "ic11": -0.002705665919932031,
+  "picks10": [
+   {
+    "t": "NVO",
+    "ex": 0.12853274126538716,
+    "drivers": [
+     "GLP-1"
+    ],
+    "p": 0.421,
+    "pct3": 0.01,
+    "bott": 0.91
+   },
+   {
+    "t": "MU",
+    "ex": 3.05249412109469,
+    "drivers": [
+     "DRAM",
+     "rare earth",
+     "server"
+    ],
+    "p": 0.326,
+    "pct3": 0.88,
+    "bott": 0.98
+   },
+   {
+    "t": "SQM",
+    "ex": 1.1778113764628888,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "refining"
+    ],
+    "p": 0.319,
+    "pct3": 0.49,
+    "bott": 0.96
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.7225567567808946,
+    "drivers": [
+     "GPU",
+     "server",
+     "data center"
+    ],
+    "p": 0.303,
+    "pct3": 0.98,
+    "bott": 1
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.809437647035474,
+    "drivers": [
+     "launch vehicle",
+     "aerospace",
+     "accelerator"
+    ],
+    "p": 0.598,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "NUE",
+    "ex": 0.19476114628336605,
+    "drivers": [
+     "steel"
+    ],
+    "p": 0.287,
+    "pct3": 0.69,
+    "bott": 0.85
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.00552700953067764,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.29,
+    "pct3": 0.94,
+    "bott": 0.81
+   },
+   {
+    "t": "AMD",
+    "ex": 0.3660889685993618,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "server"
+    ],
+    "p": 0.265,
+    "pct3": 0.97,
+    "bott": 0.89
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.1028242192035298,
+    "drivers": [
+     "data center",
+     "server",
+     "wind"
+    ],
+    "p": 0.253,
+    "pct3": 0.82,
+    "bott": 0.76
+   },
+   {
+    "t": "AMKR",
+    "ex": 1.1962150238012306,
+    "drivers": [
+     "high bandwidth memory",
+     "wafer",
+     "NAND"
+    ],
+    "p": 0.248,
+    "pct3": 0.8,
+    "bott": 0.79
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.0968969052317934,
+    "drivers": [
+     "credit card",
+     "server",
+     "advertising"
+    ],
+    "p": 0.214,
+    "pct3": 0.56,
+    "bott": 0.98
+   },
+   {
+    "t": "HUT",
+    "ex": 2.008082345954108,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.213,
+    "pct3": 0.93,
+    "bott": 0.95
+   },
+   {
+    "t": "UMC",
+    "ex": 0.4509620996025372,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "automotive"
+    ],
+    "p": 0.21,
+    "pct3": 0.21,
+    "bott": 0.95
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.6856636046977547,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.196,
+    "pct3": 0.96,
+    "bott": 0.97
+   },
+   {
+    "t": "STLD",
+    "ex": 0.3844119280458478,
+    "drivers": [
+     "steel",
+     "automotive",
+     "grid"
+    ],
+    "p": 0.19,
+    "pct3": 0.22,
+    "bott": 0.96
+   },
+   {
+    "t": "IREN",
+    "ex": 2.7830787348028725,
+    "drivers": [
+     "GPU",
+     "data center",
+     "grid"
+    ],
+    "p": 0.187,
+    "pct3": 0.99,
+    "bott": 0.88
+   },
+   {
+    "t": "CW",
+    "ex": 0.24243515697788554,
+    "drivers": [
+     "aerospace",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.173,
+    "pct3": 0.88,
+    "bott": 0.99
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.2246614372700588,
+    "drivers": [
+     "launch vehicle",
+     "custom ASIC",
+     "data center"
+    ],
+    "p": 0.336,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.12616496267611887,
+    "drivers": [
+     "rare earth",
+     "automotive",
+     "wind"
+    ],
+    "p": 0.179,
+    "pct3": 0.99,
+    "bott": 0.86
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.08231742714501333,
+    "drivers": [
+     "silicon carbide",
+     "data center",
+     "rack"
+    ],
+    "p": 0.167,
+    "pct3": 1,
+    "bott": 0.96
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MSTR",
+    "ex": -0.712078313369477,
+    "drivers": [
+     "stablecoin",
+     "server",
+     "wind"
+    ],
+    "p": 0.057,
+    "pct3": 0.42,
+    "bott": 0.67
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.08231742714501333,
+    "drivers": [
+     "silicon carbide",
+     "data center",
+     "rack"
+    ],
+    "p": 0.167,
+    "pct3": 1,
+    "bott": 0.96
+   },
+   {
+    "t": "HOOD",
+    "ex": -0.08922213749799957,
+    "drivers": [
+     "credit card",
+     "stablecoin",
+     "inference"
+    ],
+    "p": 0.002,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.809437647035474,
+    "drivers": [
+     "launch vehicle",
+     "aerospace",
+     "accelerator"
+    ],
+    "p": 0.598,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.1010647094084085,
+    "drivers": [
+     "rack",
+     "hyperscale",
+     "GPU"
+    ],
+    "p": 0.238,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 1.2246614372700588,
+    "drivers": [
+     "launch vehicle",
+     "custom ASIC",
+     "data center"
+    ],
+    "p": 0.336,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.3874830261636859,
+    "drivers": [
+     "colocation",
+     "data center",
+     "CPU"
+    ],
+    "p": 0.235,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "ALAB",
+    "ex": 0.12131563139217216,
+    "drivers": [
+     "GPU",
+     "accelerator",
+     "DRAM"
+    ],
+    "p": 0.061,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": 2.7830787348028725,
+    "drivers": [
+     "GPU",
+     "data center",
+     "grid"
+    ],
+    "p": 0.187,
+    "pct3": 0.99,
+    "bott": 0.88
+   },
+   {
+    "t": "BE",
+    "ex": 3.159619351049371,
+    "drivers": [
+     "server",
+     "grid",
+     "data center"
+    ],
+    "p": 0.146,
+    "pct3": 0.98,
+    "bott": 0.9
+   },
+   {
+    "t": "APLD",
+    "ex": 1.9437644490885868,
+    "drivers": [
+     "data center",
+     "GPU",
+     "transformer"
+    ],
+    "p": 0.015,
+    "pct3": 0.99,
+    "bott": 0.73
+   },
+   {
+    "t": "LITE",
+    "ex": 2.4729175049566035,
+    "drivers": [
+     "optical transceiver",
+     "rare earth",
+     "data center"
+    ],
+    "p": 0.006,
+    "pct3": 0.96,
+    "bott": 0.92
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.00552700953067764,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.29,
+    "pct3": 0.94,
+    "bott": 0.81
+   },
+   {
+    "t": "ITW",
+    "ex": -0.0608219089630162,
+    "drivers": [
+     "automotive",
+     "steel",
+     "cybersecurity"
+    ],
+    "p": 0,
+    "pct3": 0.46,
+    "bott": 0.95
+   },
+   {
+    "t": "MP",
+    "ex": -0.12616496267611887,
+    "drivers": [
+     "rare earth",
+     "automotive",
+     "wind"
+    ],
+    "p": 0.179,
+    "pct3": 0.99,
+    "bott": 0.86
+   },
+   {
+    "t": "ORCL",
+    "ex": -0.4111618580875851,
+    "drivers": [
+     "server",
+     "data center",
+     "hyperscale"
+    ],
+    "p": 0,
+    "pct3": 0.96,
+    "bott": 0.69
+   },
+   {
+    "t": "CW",
+    "ex": 0.24243515697788554,
+    "drivers": [
+     "aerospace",
+     "nuclear power",
+     "defense"
+    ],
+    "p": 0.173,
+    "pct3": 0.88,
+    "bott": 0.99
+   },
+   {
+    "t": "VRSN",
+    "ex": -0.1823732755977,
+    "drivers": [
+     "server",
+     "data center",
+     "advertising"
+    ],
+    "p": 0.006,
+    "pct3": 0.18,
+    "bott": 0.92
+   },
+   {
+    "t": "HUT",
+    "ex": 2.008082345954108,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.213,
+    "pct3": 0.93,
+    "bott": 0.95
+   },
+   {
+    "t": "SNOW",
+    "ex": -0.1301938379078036,
+    "drivers": [
+     "GPU",
+     "travel",
+     "data center"
+    ],
+    "p": 0.003,
+    "pct3": 0.84,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2025-08-29",
+  "emerging": [
+   "trade policy",
+   "trade policies",
+   "global trade",
+   "march march change",
+   "international trade",
+   "march included",
+   "march march march",
+   "millions march march",
+   "ifrs accounting",
+   "ifrs accounting standards",
+   "thousands december",
+   "february and february",
+   "february february",
+   "services include",
+   "december millions"
+  ],
+  "eligible": 915,
+  "model10": 0.11424914567688356,
+  "model11": 0.24519135712113888,
+  "mom": -0.09673277900052576,
+  "shock": 0.32995449156879547,
+  "theme": 1.4446822543696123,
+  "sa": 0.1421983850255628,
+  "saN": 7,
+  "random": 0.058687153023210245,
+  "ic10": 0.02007270553600008,
+  "ic11": 0.0960933658508924,
+  "picks10": [
+   {
+    "t": "HUT",
+    "ex": 0.8475704921014127,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "hashrate"
+    ],
+    "p": 0.447,
+    "pct3": 0.97,
+    "bott": 0.96
+   },
+   {
+    "t": "IREN",
+    "ex": 0.3116028435897267,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.435,
+    "pct3": 1,
+    "bott": 0.91
+   },
+   {
+    "t": "NVO",
+    "ex": -0.4308875985918238,
+    "drivers": [],
+    "p": 0.39,
+    "pct3": 0.02,
+    "bott": 0.9
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.29242301841299323,
+    "drivers": [
+     "GPU",
+     "server",
+     "InfiniBand"
+    ],
+    "p": 0.337,
+    "pct3": 0.98,
+    "bott": 1
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.061969616063936694,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.333,
+    "pct3": 0.54,
+    "bott": 0.76
+   },
+   {
+    "t": "SQM",
+    "ex": 0.663339455652165,
+    "drivers": [
+     "lithium",
+     "solar",
+     "electric vehicle"
+    ],
+    "p": 0.299,
+    "pct3": 0.95,
+    "bott": 0.96
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.24289513848784638,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "data center"
+    ],
+    "p": 0.572,
+    "pct3": 0.85,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.11943598852213833,
+    "drivers": [
+     "colocation",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.534,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.05759656877769692,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "CPU"
+    ],
+    "p": 0.296,
+    "pct3": 0.84,
+    "bott": 0.8
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.38069181246454065,
+    "drivers": [
+     "satellite",
+     "shipping",
+     "travel"
+    ],
+    "p": 0.269,
+    "pct3": 1,
+    "bott": 0.97
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.3062082330728031,
+    "drivers": [
+     "launch vehicle",
+     "solar",
+     "satellite"
+    ],
+    "p": 0.467,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "FCX",
+    "ex": 0.41977852941962124,
+    "drivers": [
+     "copper",
+     "refining",
+     "electric vehicle"
+    ],
+    "p": 0.446,
+    "pct3": 0.66,
+    "bott": 0
+   },
+   {
+    "t": "MARA",
+    "ex": -0.539436398373199,
+    "drivers": [
+     "hashrate",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.398,
+    "pct3": 0.61,
+    "bott": 0
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.027463259777953386,
+    "drivers": [
+     "credit card",
+     "server",
+     "travel"
+    ],
+    "p": 0.183,
+    "pct3": 0.07,
+    "bott": 0.98
+   },
+   {
+    "t": "AMD",
+    "ex": 0.138297559118713,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.185,
+    "pct3": 0.94,
+    "bott": 0.89
+   },
+   {
+    "t": "WULF",
+    "ex": 0.5917856500248726,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.348,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.3008683447407492,
+    "drivers": [
+     "GPU",
+     "server",
+     "rack"
+    ],
+    "p": 0.338,
+    "pct3": 0.38,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.062073452735086576,
+    "drivers": [
+     "bitcoin mining",
+     "grid",
+     "digital assets"
+    ],
+    "p": 0.337,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 0.5289468745616079,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "custom ASIC"
+    ],
+    "p": 0.311,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "MSTR",
+    "ex": -0.7160540713248044,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "stablecoin"
+    ],
+    "p": 0.186,
+    "pct3": 0.1,
+    "bott": 0.67
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MSTR",
+    "ex": -0.7160540713248044,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "stablecoin"
+    ],
+    "p": 0.186,
+    "pct3": 0.1,
+    "bott": 0.67
+   },
+   {
+    "t": "AXON",
+    "ex": -0.3656960065960193,
+    "drivers": [
+     "drone",
+     "shipping",
+     "defense"
+    ],
+    "p": 0.042,
+    "pct3": 0.27,
+    "bott": 0
+   },
+   {
+    "t": "TTMI",
+    "ex": 1.223375100252697,
+    "drivers": [
+     "data center",
+     "shipping",
+     "automotive"
+    ],
+    "p": 0.005,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.24276254980331058,
+    "drivers": [
+     "GPU",
+     "server",
+     "data center"
+    ],
+    "p": 0.003,
+    "pct3": 0.13,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.3062082330728031,
+    "drivers": [
+     "launch vehicle",
+     "solar",
+     "satellite"
+    ],
+    "p": 0.467,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "KTOS",
+    "ex": 0.2100006839240649,
+    "drivers": [
+     "satellite",
+     "drone",
+     "travel"
+    ],
+    "p": 0.109,
+    "pct3": 0.98,
+    "bott": 0.97
+   },
+   {
+    "t": "HUT",
+    "ex": 0.8475704921014127,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "hashrate"
+    ],
+    "p": 0.447,
+    "pct3": 0.97,
+    "bott": 0.96
+   },
+   {
+    "t": "D",
+    "ex": -0.027494120138749967,
+    "drivers": [
+     "solar",
+     "battery storage",
+     "grid"
+    ],
+    "p": 0,
+    "pct3": 0.44,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 0.5289468745616079,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "custom ASIC"
+    ],
+    "p": 0.311,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": 0.3116028435897267,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.435,
+    "pct3": 1,
+    "bott": 0.91
+   },
+   {
+    "t": "ALSN",
+    "ex": 0.3326272826848884,
+    "drivers": [
+     "defense",
+     "automotive",
+     "advertising"
+    ],
+    "p": 0,
+    "pct3": 0.04,
+    "bott": 0.99
+   },
+   {
+    "t": "CRDO",
+    "ex": -0.1916941711964807,
+    "drivers": [
+     "GPU",
+     "optical transceiver",
+     "hyperscale"
+    ],
+    "p": 0.142,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "ENPH",
+    "ex": 0.04764964319117104,
+    "drivers": [
+     "solar",
+     "grid",
+     "battery storage"
+    ],
+    "p": 0.058,
+    "pct3": 0.11,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.062073452735086576,
+    "drivers": [
+     "bitcoin mining",
+     "grid",
+     "digital assets"
+    ],
+    "p": 0.337,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.05759656877769692,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "CPU"
+    ],
+    "p": 0.296,
+    "pct3": 0.84,
+    "bott": 0.8
+   },
+   {
+    "t": "WBD",
+    "ex": 1.3291382647561611,
+    "drivers": [
+     "satellite",
+     "advertising"
+    ],
+    "p": 0,
+    "pct3": 0.69,
+    "bott": 0
+   },
+   {
+    "t": "EXE",
+    "ex": 0.003739531037046717,
+    "drivers": [
+     "solar",
+     "steel"
+    ],
+    "p": 0.002,
+    "pct3": 0.03,
+    "bott": 0
+   },
+   {
+    "t": "ALAB",
+    "ex": -0.413139879698873,
+    "drivers": [
+     "GPU",
+     "server",
+     "CPU"
+    ],
+    "p": 0.009,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.22108585275916548,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "refining"
+    ],
+    "p": 0.058,
+    "pct3": 1,
+    "bott": 0.85
+   },
+   {
+    "t": "BE",
+    "ex": 1.9364179608112113,
+    "drivers": [
+     "server",
+     "grid",
+     "solar"
+    ],
+    "p": 0.034,
+    "pct3": 1,
+    "bott": 0.9
+   }
+  ]
+ },
+ {
+  "d": "2025-09-30",
+  "emerging": [
+   "trade policy",
+   "trade policies",
+   "global trade",
+   "march march change",
+   "international trade",
+   "march included",
+   "march march march",
+   "millions march march",
+   "ifrs accounting",
+   "ifrs accounting standards",
+   "thousands december",
+   "february and february",
+   "february february",
+   "services include",
+   "december millions"
+  ],
+  "eligible": 924,
+  "model10": 0.03351085307561562,
+  "model11": 0.10438531197061063,
+  "mom": -0.3309727388327743,
+  "shock": 0.4524342090959955,
+  "theme": 0.3711495515205942,
+  "sa": -0.14069384560163067,
+  "saN": 7,
+  "random": -0.03414238960108793,
+  "ic10": 0.08442205681642301,
+  "ic11": 0.09661855464672366,
+  "picks10": [
+   {
+    "t": "HUT",
+    "ex": 0.27038854579747174,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "hashrate"
+    ],
+    "p": 0.667,
+    "pct3": 0.98,
+    "bott": 0.96
+   },
+   {
+    "t": "MU",
+    "ex": 0.8409736405372121,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "data center"
+    ],
+    "p": 0.657,
+    "pct3": 0.91,
+    "bott": 0.98
+   },
+   {
+    "t": "IREN",
+    "ex": -0.2856391229451334,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.667,
+    "pct3": 1,
+    "bott": 0.91
+   },
+   {
+    "t": "NBIS",
+    "ex": -0.11626125164563872,
+    "drivers": [
+     "GPU",
+     "data center",
+     "server"
+    ],
+    "p": 0.6,
+    "pct3": 0.99,
+    "bott": 1
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.4309709296657054,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.651,
+    "pct3": 0.88,
+    "bott": 0.76
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.08233655868247403,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "data center"
+    ],
+    "p": 0.573,
+    "pct3": 0.81,
+    "bott": 0.8
+   },
+   {
+    "t": "AMD",
+    "ex": 0.22658973020776885,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.512,
+    "pct3": 0.79,
+    "bott": 0.89
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.5142331028600069,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.513,
+    "pct3": 0.88,
+    "bott": 0.79
+   },
+   {
+    "t": "UMC",
+    "ex": 0.19811437556488265,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "large language model"
+    ],
+    "p": 0.438,
+    "pct3": 0.35,
+    "bott": 0.95
+   },
+   {
+    "t": "MP",
+    "ex": -0.29937010566538536,
+    "drivers": [
+     "rare earth",
+     "hard disk drive",
+     "electric vehicle"
+    ],
+    "p": 0.442,
+    "pct3": 0.98,
+    "bott": 0.86
+   },
+   {
+    "t": "BMNR",
+    "ex": -0.6359921783559128,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "transformer"
+    ],
+    "p": 0.446,
+    "pct3": 0.69,
+    "bott": 0.68
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.2340035384957877,
+    "drivers": [
+     "deposition",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.419,
+    "pct3": 0.67,
+    "bott": 0.79
+   },
+   {
+    "t": "CRCL",
+    "ex": -0.2743210276822047,
+    "drivers": [
+     "stablecoin",
+     "digital assets",
+     "subscription"
+    ],
+    "p": 0.684,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.1830221682790133,
+    "drivers": [
+     "digital assets",
+     "colocation",
+     "bitcoin mining"
+    ],
+    "p": 0.664,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.49882984634371796,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "data center"
+    ],
+    "p": 0.661,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "CIFR",
+    "ex": 0.008478405025103664,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.66,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "WULF",
+    "ex": 0.24517488782064079,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.659,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.4825618040479025,
+    "drivers": [
+     "wafer",
+     "etch",
+     "DRAM"
+    ],
+    "p": 0.645,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.8177888031166469,
+    "drivers": [
+     "etch",
+     "data center",
+     "deposition"
+    ],
+    "p": 0.349,
+    "pct3": 0.86,
+    "bott": 0.85
+   },
+   {
+    "t": "RIOT",
+    "ex": -0.3613465826959258,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "data center"
+    ],
+    "p": 0.643,
+    "pct3": 0.97,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MSTR",
+    "ex": -0.6449780395042224,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "subscription"
+    ],
+    "p": 0.314,
+    "pct3": 0.08,
+    "bott": 0.67
+   },
+   {
+    "t": "AXON",
+    "ex": -0.4167333238237796,
+    "drivers": [
+     "drone",
+     "shipping",
+     "subscription"
+    ],
+    "p": 0.006,
+    "pct3": 0.18,
+    "bott": 0
+   },
+   {
+    "t": "TSLA",
+    "ex": -0.20465947859813094,
+    "drivers": [
+     "digital assets",
+     "solar",
+     "automotive"
+    ],
+    "p": 0.021,
+    "pct3": 0.93,
+    "bott": 0.81
+   },
+   {
+    "t": "TTMI",
+    "ex": 0.6354682595521097,
+    "drivers": [
+     "data center",
+     "automotive",
+     "shipping"
+    ],
+    "p": 0,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.4484933175798025,
+    "drivers": [
+     "GPU",
+     "data center",
+     "server"
+    ],
+    "p": 0.014,
+    "pct3": 0.1,
+    "bott": 0
+   },
+   {
+    "t": "MRVL",
+    "ex": 0.16695137035064467,
+    "drivers": [
+     "data center",
+     "server",
+     "GPU"
+    ],
+    "p": 0.054,
+    "pct3": 0.64,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": -0.2856391229451334,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.667,
+    "pct3": 1,
+    "bott": 0.91
+   },
+   {
+    "t": "HUT",
+    "ex": 0.27038854579747174,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "hashrate"
+    ],
+    "p": 0.667,
+    "pct3": 0.98,
+    "bott": 0.96
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.324991919643967,
+    "drivers": [
+     "solar",
+     "foundry",
+     "accelerator"
+    ],
+    "p": 0.291,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.5142331028600069,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.513,
+    "pct3": 0.88,
+    "bott": 0.79
+   },
+   {
+    "t": "WULF",
+    "ex": 0.24517488782064079,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.659,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "CIFR",
+    "ex": 0.008478405025103664,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.66,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": -0.3613465826959258,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "data center"
+    ],
+    "p": 0.643,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "CRDO",
+    "ex": -0.36598008634274104,
+    "drivers": [
+     "rack",
+     "GPU",
+     "optical transceiver"
+    ],
+    "p": 0.416,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": 0.441630172433239,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "smartphone"
+    ],
+    "p": 0.441,
+    "pct3": 0.61,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.29937010566538536,
+    "drivers": [
+     "rare earth",
+     "hard disk drive",
+     "electric vehicle"
+    ],
+    "p": 0.442,
+    "pct3": 0.98,
+    "bott": 0.86
+   },
+   {
+    "t": "LITE",
+    "ex": 3.0863552182244436,
+    "drivers": [
+     "march march march",
+     "optical transceiver",
+     "data center"
+    ],
+    "p": 0.028,
+    "pct3": 0.97,
+    "bott": 0.98
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.08233655868247403,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "data center"
+    ],
+    "p": 0.573,
+    "pct3": 0.81,
+    "bott": 0.8
+   },
+   {
+    "t": "ES",
+    "ex": -0.046163702526779704,
+    "drivers": [
+     "grid",
+     "wind",
+     "power purchase agreement"
+    ],
+    "p": 0.018,
+    "pct3": 0.64,
+    "bott": 0
+   },
+   {
+    "t": "ALAB",
+    "ex": -0.45026532393103946,
+    "drivers": [
+     "GPU",
+     "server",
+     "data center"
+    ],
+    "p": 0.038,
+    "pct3": 0.99,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2025-10-31",
+  "emerging": [
+   "trade policy",
+   "global trade",
+   "trade policies",
+   "august august august",
+   "march march change",
+   "march included",
+   "march march march",
+   "june june change",
+   "millions march march",
+   "millions june june",
+   "august august",
+   "june june june",
+   "lower interest",
+   "august and august",
+   "june the decrease"
+  ],
+  "eligible": 923,
+  "model10": 0.27916079090316676,
+  "model11": 0.07116409143439553,
+  "mom": -0.2176836653947789,
+  "shock": 0.7380640775111886,
+  "theme": 0.6502034663483973,
+  "sa": -0.17280983491362983,
+  "saN": 7,
+  "random": 0.09831491966016209,
+  "ic10": 0.03264005555411256,
+  "ic11": 0.08791584206328638,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 1.2209741016011555,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.631,
+    "pct3": 0.98,
+    "bott": 0.99
+   },
+   {
+    "t": "UUUU",
+    "ex": 0.15565794587318438,
+    "drivers": [
+     "uranium",
+     "copper",
+     "grid"
+    ],
+    "p": 0.631,
+    "pct3": 0.98,
+    "bott": 0.83
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.1931422384069037,
+    "drivers": [
+     "GPU",
+     "data center",
+     "server"
+    ],
+    "p": 0.556,
+    "pct3": 0.99,
+    "bott": 1
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.1299999784556285,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.513,
+    "pct3": 0.73,
+    "bott": 0.8
+   },
+   {
+    "t": "CRCL",
+    "ex": -0.24333283177997445,
+    "drivers": [
+     "stablecoin",
+     "digital assets",
+     "travel"
+    ],
+    "p": 0.911,
+    "pct3": 0.02,
+    "bott": 0
+   },
+   {
+    "t": "HUT",
+    "ex": 0.3103846450415242,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.453,
+    "pct3": 0.99,
+    "bott": 0.96
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.7894480699886699,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "high bandwidth memory"
+    ],
+    "p": 0.472,
+    "pct3": 0.91,
+    "bott": 0.79
+   },
+   {
+    "t": "AMD",
+    "ex": 0.29930980653514316,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.442,
+    "pct3": 0.92,
+    "bott": 0.9
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.19555428075305725,
+    "drivers": [
+     "launch vehicle",
+     "solar",
+     "satellite"
+    ],
+    "p": 0.83,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.6065816147384939,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.411,
+    "pct3": 0.99,
+    "bott": 0.97
+   },
+   {
+    "t": "IREN",
+    "ex": -0.41530337911144477,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "digital assets"
+    ],
+    "p": 0.415,
+    "pct3": 1,
+    "bott": 0.92
+   },
+   {
+    "t": "NVO",
+    "ex": -0.19574734066773714,
+    "drivers": [
+     "biosimilar",
+     "medical device"
+    ],
+    "p": 0.41,
+    "pct3": 0.46,
+    "bott": 0.91
+   },
+   {
+    "t": "SQM",
+    "ex": 0.8181366329178172,
+    "drivers": [
+     "lithium",
+     "solar",
+     "electric vehicle"
+    ],
+    "p": 0.373,
+    "pct3": 0.88,
+    "bott": 0.97
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.3267136340307817,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "EUV"
+    ],
+    "p": 0.405,
+    "pct3": 0.88,
+    "bott": 0.77
+   },
+   {
+    "t": "UMC",
+    "ex": 0.5752890977316911,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "power semiconductor"
+    ],
+    "p": 0.363,
+    "pct3": 0.68,
+    "bott": 0.95
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.09283594798552053,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "smartphone"
+    ],
+    "p": 0.637,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 1.1347252003938477,
+    "drivers": [
+     "wafer",
+     "lithography",
+     "advanced packaging"
+    ],
+    "p": 0.612,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.532423549368638,
+    "drivers": [
+     "satellite",
+     "solar",
+     "shipping"
+    ],
+    "p": 0.311,
+    "pct3": 0.98,
+    "bott": 0.91
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.3915772999901884,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.328,
+    "pct3": 0.95,
+    "bott": 0.76
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.10632822132708009,
+    "drivers": [
+     "server",
+     "data center",
+     "credit card"
+    ],
+    "p": 0.285,
+    "pct3": 0.13,
+    "bott": 0.98
+   }
+  ],
+  "picks11": [
+   {
+    "t": "TSLA",
+    "ex": -0.2548259441003161,
+    "drivers": [
+     "solar",
+     "digital assets",
+     "automotive"
+    ],
+    "p": 0.032,
+    "pct3": 0.92,
+    "bott": 0.8
+   },
+   {
+    "t": "MSTR",
+    "ex": -0.41985208886725445,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "server"
+    ],
+    "p": 0.092,
+    "pct3": 0.02,
+    "bott": 0.66
+   },
+   {
+    "t": "LAC",
+    "ex": 0.031454856478762006,
+    "drivers": [
+     "lithium",
+     "uranium",
+     "fiber optic"
+    ],
+    "p": 0.236,
+    "pct3": 0.98,
+    "bott": 0.91
+   },
+   {
+    "t": "HEI",
+    "ex": -0.23689163981966654,
+    "drivers": [
+     "satellite",
+     "aerospace",
+     "defense"
+    ],
+    "p": 0.008,
+    "pct3": 0.3,
+    "bott": 0
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.14712062296469386,
+    "drivers": [
+     "data center",
+     "GPU",
+     "server"
+    ],
+    "p": 0.014,
+    "pct3": 0.84,
+    "bott": 0
+   },
+   {
+    "t": "MRVL",
+    "ex": 0.7360221554784145,
+    "drivers": [
+     "data center",
+     "server",
+     "GPU"
+    ],
+    "p": 0.026,
+    "pct3": 0.82,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": -0.41530337911144477,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "digital assets"
+    ],
+    "p": 0.415,
+    "pct3": 1,
+    "bott": 0.92
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.1931422384069037,
+    "drivers": [
+     "GPU",
+     "data center",
+     "server"
+    ],
+    "p": 0.556,
+    "pct3": 0.99,
+    "bott": 1
+   },
+   {
+    "t": "MP",
+    "ex": 0.06651584428460522,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "refining"
+    ],
+    "p": 0.271,
+    "pct3": 0.34,
+    "bott": 0.85
+   },
+   {
+    "t": "HUT",
+    "ex": 0.3103846450415242,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.453,
+    "pct3": 0.99,
+    "bott": 0.96
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.09283594798552053,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "smartphone"
+    ],
+    "p": 0.637,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "KTOS",
+    "ex": -0.4084310032119123,
+    "drivers": [
+     "satellite",
+     "drone",
+     "defense"
+    ],
+    "p": 0.132,
+    "pct3": 0.94,
+    "bott": 0.97
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.6065816147384939,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.411,
+    "pct3": 0.99,
+    "bott": 0.97
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.532423549368638,
+    "drivers": [
+     "satellite",
+     "solar",
+     "shipping"
+    ],
+    "p": 0.311,
+    "pct3": 0.98,
+    "bott": 0.91
+   },
+   {
+    "t": "RIOT",
+    "ex": -0.1962048813181616,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "digital assets"
+    ],
+    "p": 0.323,
+    "pct3": 0.96,
+    "bott": 0.73
+   },
+   {
+    "t": "CIFR",
+    "ex": -0.3408447750659448,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.335,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "MU",
+    "ex": 1.2209741016011555,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.631,
+    "pct3": 0.98,
+    "bott": 0.99
+   },
+   {
+    "t": "CRDO",
+    "ex": -0.06854755561875447,
+    "drivers": [
+     "rack",
+     "hyperscale",
+     "GPU"
+    ],
+    "p": 0.34,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.19555428075305725,
+    "drivers": [
+     "launch vehicle",
+     "solar",
+     "satellite"
+    ],
+    "p": 0.83,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "CLS",
+    "ex": 0.11108638060002596,
+    "drivers": [
+     "data center",
+     "server",
+     "rack"
+    ],
+    "p": 0,
+    "pct3": 0.96,
+    "bott": 0.87
+   }
+  ]
+ },
+ {
+  "d": "2025-11-28",
+  "emerging": [
+   "trade policy",
+   "global trade",
+   "trade policies",
+   "august august august",
+   "march march change",
+   "march included",
+   "march march march",
+   "june june change",
+   "millions march march",
+   "millions june june",
+   "august august",
+   "june june june",
+   "lower interest",
+   "august and august",
+   "june the decrease"
+  ],
+  "eligible": 928,
+  "model10": 0.7216256365709014,
+  "model11": 0.650222225614814,
+  "mom": 0.37844771504090147,
+  "shock": 1.0418634845997796,
+  "theme": 1.384832856349856,
+  "sa": 1.2552839284205803,
+  "saN": 17,
+  "random": 0.256499183737702,
+  "ic10": 0.12768792743678534,
+  "ic11": 0.2991798931597982,
+  "picks10": [
+   {
+    "t": "SQM",
+    "ex": 0.2746632244589997,
+    "drivers": [
+     "lithium",
+     "solar",
+     "electric vehicle"
+    ],
+    "p": 0.526,
+    "pct3": 0.93,
+    "bott": 0.97
+   },
+   {
+    "t": "HUT",
+    "ex": 1.7965201183009956,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "hashrate"
+    ],
+    "p": 0.468,
+    "pct3": 0.98,
+    "bott": 0.95
+   },
+   {
+    "t": "IREN",
+    "ex": 0.24184863557500003,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.435,
+    "pct3": 0.98,
+    "bott": 0.92
+   },
+   {
+    "t": "LAC",
+    "ex": -0.09006021778910533,
+    "drivers": [
+     "lithium",
+     "fiber optic",
+     "copper"
+    ],
+    "p": 0.408,
+    "pct3": 0.99,
+    "bott": 0.91
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6840593420634045,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "grid"
+    ],
+    "p": 0.43,
+    "pct3": 0.78,
+    "bott": 0.73
+   },
+   {
+    "t": "UUUU",
+    "ex": 0.23119025938527482,
+    "drivers": [
+     "uranium",
+     "copper",
+     "deposition"
+    ],
+    "p": 0.404,
+    "pct3": 0.85,
+    "bott": 0.84
+   },
+   {
+    "t": "MU",
+    "ex": 2.969569016565398,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.347,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "NBIS",
+    "ex": 1.2389142044726331,
+    "drivers": [
+     "GPU",
+     "data center",
+     "InfiniBand"
+    ],
+    "p": 0.327,
+    "pct3": 0.92,
+    "bott": 1
+   },
+   {
+    "t": "FCX",
+    "ex": 0.45713127172061174,
+    "drivers": [
+     "copper",
+     "refining",
+     "tariff"
+    ],
+    "p": 0.634,
+    "pct3": 0.35,
+    "bott": 0
+   },
+   {
+    "t": "CRCL",
+    "ex": 0.4194922181474068,
+    "drivers": [
+     "travel"
+    ],
+    "p": 0.623,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.7746126176371999,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "high bandwidth memory"
+    ],
+    "p": 0.311,
+    "pct3": 0.95,
+    "bott": 0.79
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.1242172982191101,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "hashrate"
+    ],
+    "p": 0.556,
+    "pct3": 0.73,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.5921590938747334,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.31,
+    "pct3": 0.9,
+    "bott": 0.77
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.10499692787530157,
+    "drivers": [
+     "data center",
+     "GPU",
+     "wafer"
+    ],
+    "p": 0.29,
+    "pct3": 0.48,
+    "bott": 0.9
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.552591501498437,
+    "drivers": [
+     "colocation",
+     "bitcoin mining",
+     "data center"
+    ],
+    "p": 0.508,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "NVO",
+    "ex": -0.1273724588629438,
+    "drivers": [
+     "obesity",
+     "GLP-1",
+     "biosimilar"
+    ],
+    "p": 0.264,
+    "pct3": 0.14,
+    "bott": 0.91
+   },
+   {
+    "t": "ONDS",
+    "ex": 0.6789968432375526,
+    "drivers": [
+     "travel",
+     "freight",
+     "aerospace"
+    ],
+    "p": 0.489,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.4006943520154846,
+    "drivers": [
+     "defense",
+     "shipping",
+     "travel"
+    ],
+    "p": 0.247,
+    "pct3": 0.59,
+    "bott": 0.96
+   },
+   {
+    "t": "UMC",
+    "ex": 1.8770264915533004,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithium"
+    ],
+    "p": 0.244,
+    "pct3": 0.74,
+    "bott": 0.95
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.2312619914692362,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "data center"
+    ],
+    "p": 0.446,
+    "pct3": 0.97,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "IONQ",
+    "ex": 0.4609745138388046,
+    "drivers": [
+     "personal computer",
+     "data center",
+     "CPU"
+    ],
+    "p": 0.011,
+    "pct3": 0.76,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.552591501498437,
+    "drivers": [
+     "colocation",
+     "bitcoin mining",
+     "data center"
+    ],
+    "p": 0.508,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "LSCC",
+    "ex": 1.0751861920604109,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "automotive"
+    ],
+    "p": 0.005,
+    "pct3": 0.58,
+    "bott": 0
+   },
+   {
+    "t": "LAC",
+    "ex": -0.09006021778910533,
+    "drivers": [
+     "lithium",
+     "fiber optic",
+     "copper"
+    ],
+    "p": 0.408,
+    "pct3": 0.99,
+    "bott": 0.91
+   },
+   {
+    "t": "CRWV",
+    "ex": 0.35283534197219746,
+    "drivers": [
+     "data center",
+     "GPU",
+     "cloud computing"
+    ],
+    "p": 0.02,
+    "pct3": 0.02,
+    "bott": 0
+   },
+   {
+    "t": "HEI",
+    "ex": 0.05568833616199331,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "travel"
+    ],
+    "p": 0.006,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "FTAI",
+    "ex": 0.4704007041078231,
+    "drivers": [
+     "aerospace",
+     "shipping"
+    ],
+    "p": 0.004,
+    "pct3": 0.73,
+    "bott": 0
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.1242172982191101,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "hashrate"
+    ],
+    "p": 0.556,
+    "pct3": 0.73,
+    "bott": 0
+   },
+   {
+    "t": "AMT",
+    "ex": -0.007879036765526592,
+    "drivers": [
+     "data center",
+     "colocation",
+     "smartphone"
+    ],
+    "p": 0.005,
+    "pct3": 0.17,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": 0.24184863557500003,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "GPU"
+    ],
+    "p": 0.435,
+    "pct3": 0.98,
+    "bott": 0.92
+   },
+   {
+    "t": "MU",
+    "ex": 2.969569016565398,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.347,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "CIFR",
+    "ex": 0.1324905911616352,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "power purchase agreement"
+    ],
+    "p": 0.406,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.4006943520154846,
+    "drivers": [
+     "defense",
+     "shipping",
+     "travel"
+    ],
+    "p": 0.247,
+    "pct3": 0.59,
+    "bott": 0.96
+   },
+   {
+    "t": "NBIS",
+    "ex": 1.2389142044726331,
+    "drivers": [
+     "GPU",
+     "data center",
+     "InfiniBand"
+    ],
+    "p": 0.327,
+    "pct3": 0.92,
+    "bott": 1
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.5921590938747334,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.31,
+    "pct3": 0.9,
+    "bott": 0.77
+   },
+   {
+    "t": "WULF",
+    "ex": 0.6027171928005985,
+    "drivers": [
+     "bitcoin mining",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.418,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "QS",
+    "ex": -0.3021137250737974,
+    "drivers": [
+     "lithium",
+     "automotive",
+     "electric vehicle"
+    ],
+    "p": 0.135,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "NVTS",
+    "ex": 2.1394319630969028,
+    "drivers": [
+     "power semiconductor",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.066,
+    "pct3": 0.95,
+    "bott": 0.95
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.3107192124401419,
+    "drivers": [
+     "optical transceiver",
+     "hyperscale",
+     "wafer"
+    ],
+    "p": 0.16,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6840593420634045,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "grid"
+    ],
+    "p": 0.43,
+    "pct3": 0.78,
+    "bott": 0.73
+   }
+  ]
+ },
+ {
+  "d": "2025-12-31",
+  "emerging": [
+   "trade policy",
+   "global trade",
+   "trade policies",
+   "august august august",
+   "march march change",
+   "march included",
+   "march march march",
+   "june june change",
+   "millions march march",
+   "millions june june",
+   "august august",
+   "june june june",
+   "lower interest",
+   "august and august",
+   "june the decrease"
+  ],
+  "eligible": 920,
+  "model10": 0.7604380889805415,
+  "model11": 0.23629085745164674,
+  "mom": 0.31092718311856815,
+  "shock": 0.5942013125777931,
+  "theme": 1.3812732780025325,
+  "sa": 1.027279213547233,
+  "saN": 17,
+  "random": 0.2556893481326302,
+  "ic10": 0.08535428634567817,
+  "ic11": 0.18503995725728492,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 2.203700578028504,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.99,
+    "bott": 1
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.7946847407446105,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.885,
+    "pct3": 0.96,
+    "bott": 0.79
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8601518738666959,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "EUV"
+    ],
+    "p": 0.87,
+    "pct3": 0.67,
+    "bott": 0.77
+   },
+   {
+    "t": "UMC",
+    "ex": 2.210321568635133,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithium"
+    ],
+    "p": 0.702,
+    "pct3": 0.63,
+    "bott": 0.95
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.7754466472507688,
+    "drivers": [
+     "deposition",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.756,
+    "pct3": 0.18,
+    "bott": 0.79
+   },
+   {
+    "t": "HUT",
+    "ex": 0.9943747305669626,
+    "drivers": [
+     "CPU",
+     "travel",
+     "tariff"
+    ],
+    "p": 0.659,
+    "pct3": 0.92,
+    "bott": 0.95
+   },
+   {
+    "t": "IREN",
+    "ex": -0.054495259735559465,
+    "drivers": [
+     "foundry",
+     "GPU",
+     "copper"
+    ],
+    "p": 0.658,
+    "pct3": 0.07,
+    "bott": 0.92
+   },
+   {
+    "t": "NBIS",
+    "ex": 1.4788447561202438,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "CPU"
+    ],
+    "p": 0.568,
+    "pct3": 0.03,
+    "bott": 1
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6207980168809806,
+    "drivers": [
+     "tariff",
+     "artificial intelligence"
+    ],
+    "p": 0.64,
+    "pct3": 0.02,
+    "bott": 0.73
+   },
+   {
+    "t": "SQM",
+    "ex": -0.004623942768912315,
+    "drivers": [
+     "lithium",
+     "copper",
+     "shipping"
+    ],
+    "p": 0.523,
+    "pct3": 0.99,
+    "bott": 0.97
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.022788001642541023,
+    "drivers": [
+     "CPU",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.531,
+    "pct3": 0.45,
+    "bott": 0.9
+   },
+   {
+    "t": "LRCX",
+    "ex": 1.0452180555990962,
+    "drivers": [
+     "wafer",
+     "etch",
+     "DRAM"
+    ],
+    "p": 0.996,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.1372032766731182,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.507,
+    "pct3": 0.86,
+    "bott": 0.96
+   },
+   {
+    "t": "ONTO",
+    "ex": 1.0492702381734857,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "lithography"
+    ],
+    "p": 0.992,
+    "pct3": 0.83,
+    "bott": 0
+   },
+   {
+    "t": "AMD",
+    "ex": 1.3513544584993618,
+    "drivers": [
+     "wafer",
+     "accelerator",
+     "foundry"
+    ],
+    "p": 0.475,
+    "pct3": 0.95,
+    "bott": 0.9
+   },
+   {
+    "t": "FORM",
+    "ex": 1.416708773795961,
+    "drivers": [
+     "DRAM",
+     "semiconductor test",
+     "wafer"
+    ],
+    "p": 0.876,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": 0.37798201249828933,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "NAND"
+    ],
+    "p": 0.842,
+    "pct3": 0.43,
+    "bott": 0
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.5362373227921049,
+    "drivers": [
+     "etch",
+     "deposition",
+     "trade policy"
+    ],
+    "p": 0.454,
+    "pct3": 0.88,
+    "bott": 0.83
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.03750683971394997,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "smartphone"
+    ],
+    "p": 0.742,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.1961825210798709,
+    "drivers": [
+     "satellite",
+     "travel",
+     "shipping"
+    ],
+    "p": 0.377,
+    "pct3": 0.99,
+    "bott": 0.86
+   }
+  ],
+  "picks11": [
+   {
+    "t": "IONQ",
+    "ex": 0.029979916258980666,
+    "drivers": [
+     "satellite",
+     "personal computer",
+     "CPU"
+    ],
+    "p": 0.009,
+    "pct3": 0.03,
+    "bott": 0
+   },
+   {
+    "t": "LSCC",
+    "ex": 0.7911246940811159,
+    "drivers": [
+     "wafer",
+     "automotive",
+     "drone"
+    ],
+    "p": 0.045,
+    "pct3": 0.46,
+    "bott": 0
+   },
+   {
+    "t": "FTAI",
+    "ex": 0.17571979947489003,
+    "drivers": [
+     "aerospace",
+     "shipping"
+    ],
+    "p": 0,
+    "pct3": 0.81,
+    "bott": 0
+   },
+   {
+    "t": "AVGO",
+    "ex": -0.0065331454615407125,
+    "drivers": [
+     "wafer",
+     "accelerator",
+     "hard disk drive"
+    ],
+    "p": 0.256,
+    "pct3": 0.58,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 1.1372032766731182,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.507,
+    "pct3": 0.86,
+    "bott": 0.96
+   },
+   {
+    "t": "MU",
+    "ex": 2.203700578028504,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.99,
+    "bott": 1
+   },
+   {
+    "t": "RBA",
+    "ex": 0.025572886995762323,
+    "drivers": [
+     "automotive",
+     "lower interest",
+     "shipping"
+    ],
+    "p": 0,
+    "pct3": 0.32,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.03750683971394997,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "smartphone"
+    ],
+    "p": 0.742,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "COO",
+    "ex": -0.1819482199361947,
+    "drivers": [
+     "medical device",
+     "copper",
+     "e-commerce"
+    ],
+    "p": 0.002,
+    "pct3": 0.89,
+    "bott": 0.83
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.9047161772248378,
+    "drivers": [
+     "power semiconductor",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.187,
+    "pct3": 0.38,
+    "bott": 0.95
+   },
+   {
+    "t": "QS",
+    "ex": -0.3819957178452663,
+    "drivers": [
+     "lithium",
+     "automotive",
+     "shipping"
+    ],
+    "p": 0.085,
+    "pct3": 0.03,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8601518738666959,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "EUV"
+    ],
+    "p": 0.87,
+    "pct3": 0.67,
+    "bott": 0.77
+   },
+   {
+    "t": "J",
+    "ex": -0.14821723476949422,
+    "drivers": [
+     "june june june",
+     "aerospace",
+     "travel"
+    ],
+    "p": 0,
+    "pct3": 0.13,
+    "bott": 0.87
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.1961825210798709,
+    "drivers": [
+     "satellite",
+     "travel",
+     "shipping"
+    ],
+    "p": 0.377,
+    "pct3": 0.99,
+    "bott": 0.86
+   },
+   {
+    "t": "NEM",
+    "ex": -0.14726057210498034,
+    "drivers": [
+     "copper",
+     "shipping",
+     "travel"
+    ],
+    "p": 0.047,
+    "pct3": 0.84,
+    "bott": 0.74
+   },
+   {
+    "t": "SQM",
+    "ex": -0.004623942768912315,
+    "drivers": [
+     "lithium",
+     "copper",
+     "shipping"
+    ],
+    "p": 0.523,
+    "pct3": 0.99,
+    "bott": 0.97
+   },
+   {
+    "t": "EOSE",
+    "ex": -0.6412138568558179,
+    "drivers": [
+     "lithium",
+     "travel",
+     "electric vehicle"
+    ],
+    "p": 0.009,
+    "pct3": 0.24,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": 1.0452180555990962,
+    "drivers": [
+     "wafer",
+     "etch",
+     "DRAM"
+    ],
+    "p": 0.996,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": 0.37798201249828933,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "NAND"
+    ],
+    "p": 0.842,
+    "pct3": 0.43,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.24786863444132146,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.552,
+    "pct3": 0.98,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-01-30",
+  "emerging": [
+   "tariff costs",
+   "favorable currency",
+   "august august august",
+   "november november november",
+   "favorable changes",
+   "august august",
+   "june june change",
+   "august and august",
+   "millions june june",
+   "global trade",
+   "trade policies",
+   "british pound",
+   "trade policy",
+   "june june june",
+   "june the decrease"
+  ],
+  "eligible": 918,
+  "model10": 0.13465452825642193,
+  "model11": -0.07963863463959532,
+  "mom": 0.1366259361940073,
+  "shock": 0.18466315998119034,
+  "theme": 0.28454620317854235,
+  "sa": 0.2649850075536593,
+  "saN": 17,
+  "random": 0.04356387013490025,
+  "ic10": 0.043519451987491624,
+  "ic11": 0.1038361724065372,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.8254545568386935,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.967,
+    "pct3": 1,
+    "bott": 1
+   },
+   {
+    "t": "SQM",
+    "ex": -0.16330499143119703,
+    "drivers": [
+     "lithium",
+     "copper",
+     "electric vehicle"
+    ],
+    "p": 0.811,
+    "pct3": 0.98,
+    "bott": 0.96
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.019820479224307297,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.807,
+    "pct3": 0.97,
+    "bott": 0.79
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.9248495751736444,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.772,
+    "pct3": 0.77,
+    "bott": 0.76
+   },
+   {
+    "t": "UMC",
+    "ex": 0.8409505445643559,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithium"
+    ],
+    "p": 0.627,
+    "pct3": 0.92,
+    "bott": 0.95
+   },
+   {
+    "t": "NBIS",
+    "ex": 1.1053552668729434,
+    "drivers": [
+     "data center",
+     "InfiniBand",
+     "GPU"
+    ],
+    "p": 0.555,
+    "pct3": 0.03,
+    "bott": 1
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.027101098858144157,
+    "drivers": [
+     "wafer",
+     "automotive",
+     "hyperscale"
+    ],
+    "p": 0.511,
+    "pct3": 0.22,
+    "bott": 0.89
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.22291205287582128,
+    "drivers": [
+     "wafer",
+     "lithography",
+     "advanced packaging"
+    ],
+    "p": 0.96,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "AMD",
+    "ex": 0.8789792475539968,
+    "drivers": [
+     "wafer",
+     "hyperscale",
+     "foundry"
+    ],
+    "p": 0.451,
+    "pct3": 0.2,
+    "bott": 0.89
+   },
+   {
+    "t": "HUT",
+    "ex": 0.8613385546457812,
+    "drivers": [
+     "colocation",
+     "data center",
+     "grid"
+    ],
+    "p": 0.432,
+    "pct3": 0.58,
+    "bott": 0.95
+   },
+   {
+    "t": "ENTG",
+    "ex": -0.05806671081986581,
+    "drivers": [
+     "deposition",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.466,
+    "pct3": 0.91,
+    "bott": 0.79
+   },
+   {
+    "t": "FORM",
+    "ex": 0.43564025771959214,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "semiconductor test"
+    ],
+    "p": 0.788,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.35527941554111364,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "hard disk drive"
+    ],
+    "p": 0.402,
+    "pct3": 0.21,
+    "bott": 0.85
+   },
+   {
+    "t": "IREN",
+    "ex": -0.36117463970234553,
+    "drivers": [
+     "foundry",
+     "colocation",
+     "data center"
+    ],
+    "p": 0.384,
+    "pct3": 0.16,
+    "bott": 0.92
+   },
+   {
+    "t": "RKLB",
+    "ex": -0.1785406074828837,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.721,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.17930063892375991,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.692,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "UUUU",
+    "ex": -0.508991591652681,
+    "drivers": [
+     "copper",
+     "rare earth",
+     "deposition"
+    ],
+    "p": 0.363,
+    "pct3": 0.55,
+    "bott": 0.84
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.19380500551321578,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "etch"
+    ],
+    "p": 0.613,
+    "pct3": 0.93,
+    "bott": 0
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.13913488254092965,
+    "drivers": [
+     "solar",
+     "deposition",
+     "copper"
+    ],
+    "p": 0.294,
+    "pct3": 0.13,
+    "bott": 0.98
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.21902624535753512,
+    "drivers": [
+     "NAND",
+     "lithography",
+     "wafer"
+    ],
+    "p": 0.562,
+    "pct3": 0.99,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MU",
+    "ex": 0.8254545568386935,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.967,
+    "pct3": 1,
+    "bott": 1
+   },
+   {
+    "t": "JNJ",
+    "ex": 0.056474796419341056,
+    "drivers": [
+     "biosimilar",
+     "vaccine",
+     "medical device"
+    ],
+    "p": 0,
+    "pct3": 0.83,
+    "bott": 0
+   },
+   {
+    "t": "ALLY",
+    "ex": -0.026716358978966293,
+    "drivers": [
+     "automotive",
+     "mortgage",
+     "electric vehicle"
+    ],
+    "p": 0.004,
+    "pct3": 0.53,
+    "bott": 0.69
+   },
+   {
+    "t": "AVGO",
+    "ex": 0.12121401546105326,
+    "drivers": [
+     "wafer",
+     "august august",
+     "hard disk drive"
+    ],
+    "p": 0.302,
+    "pct3": 0.17,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.7039322178711287,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.273,
+    "pct3": 0.68,
+    "bott": 0.96
+   },
+   {
+    "t": "RKLB",
+    "ex": -0.1785406074828837,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "aerospace"
+    ],
+    "p": 0.721,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.49033578786775245,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "custom ASIC"
+    ],
+    "p": 0.523,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.31736505762104605,
+    "drivers": [
+     "satellite",
+     "defense",
+     "shipping"
+    ],
+    "p": 0.198,
+    "pct3": 0.67,
+    "bott": 0.85
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.17930063892375991,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.692,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.35527941554111364,
+    "drivers": [
+     "rare earth",
+     "drone",
+     "hard disk drive"
+    ],
+    "p": 0.402,
+    "pct3": 0.21,
+    "bott": 0.85
+   },
+   {
+    "t": "SQM",
+    "ex": -0.16330499143119703,
+    "drivers": [
+     "lithium",
+     "copper",
+     "electric vehicle"
+    ],
+    "p": 0.811,
+    "pct3": 0.98,
+    "bott": 0.96
+   },
+   {
+    "t": "NEM",
+    "ex": -0.22407345337388695,
+    "drivers": [
+     "copper",
+     "refining",
+     "wind"
+    ],
+    "p": 0.06,
+    "pct3": 0.95,
+    "bott": 0.74
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.9248495751736444,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.772,
+    "pct3": 0.77,
+    "bott": 0.76
+   },
+   {
+    "t": "PL",
+    "ex": -0.1588669942102897,
+    "drivers": [
+     "satellite",
+     "aerospace",
+     "defense"
+    ],
+    "p": 0.208,
+    "pct3": 1,
+    "bott": 0.73
+   },
+   {
+    "t": "ALB",
+    "ex": -0.3411954847906068,
+    "drivers": [
+     "lithium",
+     "refining",
+     "electric vehicle"
+    ],
+    "p": 0.559,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "KTOS",
+    "ex": -0.5697107329144296,
+    "drivers": [
+     "satellite",
+     "drone",
+     "defense"
+    ],
+    "p": 0.021,
+    "pct3": 0.68,
+    "bott": 0.97
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.05133009427476454,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.261,
+    "pct3": 0.88,
+    "bott": 0.83
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.019820479224307297,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.807,
+    "pct3": 0.97,
+    "bott": 0.79
+   },
+   {
+    "t": "TER",
+    "ex": 0.4190624547163977,
+    "drivers": [
+     "semiconductor test",
+     "aerospace",
+     "defense"
+    ],
+    "p": 0.509,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "EOSE",
+    "ex": -0.8142126439290132,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "grid"
+    ],
+    "p": 0.037,
+    "pct3": 0.18,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-02-27",
+  "emerging": [
+   "tariff costs",
+   "favorable currency",
+   "august august august",
+   "november november november",
+   "favorable changes",
+   "august august",
+   "june june change",
+   "august and august",
+   "millions june june",
+   "global trade",
+   "trade policies",
+   "british pound",
+   "trade policy",
+   "june june june",
+   "june the decrease"
+  ],
+  "eligible": 925,
+  "model10": 0.07555101232572736,
+  "model11": -0.002574705628341001,
+  "mom": 0.13416115924053001,
+  "shock": 0.021255118091404325,
+  "theme": 0.16329075613098093,
+  "sa": 0.20461226301238242,
+  "saN": 15,
+  "random": 0.047410434560796466,
+  "ic10": -0.041813830323549545,
+  "ic11": -0.07209028669071865,
+  "picks10": [
+   {
+    "t": "SQM",
+    "ex": -0.0006863776299501634,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "copper"
+    ],
+    "p": 0.772,
+    "pct3": 0.73,
+    "bott": 0.96
+   },
+   {
+    "t": "MU",
+    "ex": 1.2201939919203935,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.681,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.925991145182754,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.63,
+    "pct3": 0.85,
+    "bott": 0.75
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.03888904767594159,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.603,
+    "pct3": 0.87,
+    "bott": 0.78
+   },
+   {
+    "t": "ENTG",
+    "ex": -0.04463361932370791,
+    "drivers": [
+     "deposition",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.495,
+    "pct3": 0.98,
+    "bott": 0.78
+   },
+   {
+    "t": "UMC",
+    "ex": 0.8426154248127848,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "power semiconductor"
+    ],
+    "p": 0.446,
+    "pct3": 0.91,
+    "bott": 0.94
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.2665732304071271,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.784,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "WULF",
+    "ex": -0.07970358251553211,
+    "drivers": [
+     "hyperscale",
+     "battery storage",
+     "construction"
+    ],
+    "p": 0.38,
+    "pct3": 0.44,
+    "bott": 0.98
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.11475631253181495,
+    "drivers": [
+     "construction",
+     "tariff",
+     "grid"
+    ],
+    "p": 0.416,
+    "pct3": 0.37,
+    "bott": 0.71
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.2015179539553822,
+    "drivers": [
+     "wafer",
+     "lithography",
+     "advanced packaging"
+    ],
+    "p": 0.678,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "IREN",
+    "ex": -0.18386610234677425,
+    "drivers": [
+     "foundry",
+     "wind",
+     "tariff"
+    ],
+    "p": 0.349,
+    "pct3": 0.15,
+    "bott": 0.92
+   },
+   {
+    "t": "CIFR",
+    "ex": -0.07810698362587876,
+    "drivers": [
+     "data center",
+     "power purchase agreement",
+     "hyperscale"
+    ],
+    "p": 0.344,
+    "pct3": 0.08,
+    "bott": 0.95
+   },
+   {
+    "t": "FCX",
+    "ex": 0.0791372320324848,
+    "drivers": [
+     "copper",
+     "refining",
+     "oil"
+    ],
+    "p": 0.668,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.2615490712091503,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "etch"
+    ],
+    "p": 0.654,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": -0.020343146429008918,
+    "drivers": [
+     "DRAM",
+     "semiconductor test",
+     "wafer"
+    ],
+    "p": 0.654,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "HUT",
+    "ex": 0.46609598888284487,
+    "drivers": [
+     "wind",
+     "natural gas",
+     "hyperscale"
+    ],
+    "p": 0.318,
+    "pct3": 0.73,
+    "bott": 0.97
+   },
+   {
+    "t": "TER",
+    "ex": 0.04907996346169208,
+    "drivers": [
+     "semiconductor test",
+     "aerospace",
+     "DRAM"
+    ],
+    "p": 0.602,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "NVO",
+    "ex": 0.16753877263326267,
+    "drivers": [
+     "obesity",
+     "biosimilar",
+     "construction"
+    ],
+    "p": 0.287,
+    "pct3": 0.08,
+    "bott": 0.99
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.006727802765089441,
+    "drivers": [
+     "NAND",
+     "lithography",
+     "wafer"
+    ],
+    "p": 0.55,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "ALB",
+    "ex": -0.269447350949631,
+    "drivers": [
+     "refining",
+     "favorable currency",
+     "electric vehicle"
+    ],
+    "p": 0.54,
+    "pct3": 0.9,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "MU",
+    "ex": 1.2201939919203935,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 0.681,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "CHRW",
+    "ex": -0.23715941450261668,
+    "drivers": [
+     "freight",
+     "trade policies",
+     "aerospace"
+    ],
+    "p": 0.006,
+    "pct3": 0.7,
+    "bott": 0
+   },
+   {
+    "t": "CR",
+    "ex": -0.027236496801190446,
+    "drivers": [
+     "aerospace",
+     "defense",
+     "copper"
+    ],
+    "p": 0.001,
+    "pct3": 0.55,
+    "bott": 0.8
+   },
+   {
+    "t": "EXE",
+    "ex": -0.1355693254731003,
+    "drivers": [
+     "oil",
+     "natural gas",
+     "LNG"
+    ],
+    "p": 0.039,
+    "pct3": 0.18,
+    "bott": 0
+   },
+   {
+    "t": "EPD",
+    "ex": 0.017386048202867377,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "LNG"
+    ],
+    "p": 0.015,
+    "pct3": 0.57,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.2665732304071271,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.784,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.3857687540480361,
+    "drivers": [
+     "defense",
+     "construction",
+     "shipping"
+    ],
+    "p": 0.214,
+    "pct3": 0.88,
+    "bott": 0.96
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.3724976772095697,
+    "drivers": [
+     "satellite",
+     "launch vehicle",
+     "custom ASIC"
+    ],
+    "p": 0.297,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.925991145182754,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.63,
+    "pct3": 0.85,
+    "bott": 0.75
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.27835650090007524,
+    "drivers": [
+     "satellite",
+     "tariff",
+     "defense"
+    ],
+    "p": 0.202,
+    "pct3": 0.4,
+    "bott": 0.83
+   },
+   {
+    "t": "TER",
+    "ex": 0.04907996346169208,
+    "drivers": [
+     "semiconductor test",
+     "aerospace",
+     "DRAM"
+    ],
+    "p": 0.602,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.03888904767594159,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.603,
+    "pct3": 0.87,
+    "bott": 0.78
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.006727802765089441,
+    "drivers": [
+     "NAND",
+     "lithography",
+     "wafer"
+    ],
+    "p": 0.55,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "RKLB",
+    "ex": -0.13306840830735922,
+    "drivers": [
+     "aerospace",
+     "trade policy",
+     "defense"
+    ],
+    "p": 0.208,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": -0.020343146429008918,
+    "drivers": [
+     "DRAM",
+     "semiconductor test",
+     "wafer"
+    ],
+    "p": 0.654,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "UBER",
+    "ex": -0.002565158086100139,
+    "drivers": [
+     "freight",
+     "restaurant",
+     "autonomous driving"
+    ],
+    "p": 0.001,
+    "pct3": 0.16,
+    "bott": 0.83
+   },
+   {
+    "t": "APH",
+    "ex": 0.12670808420874646,
+    "drivers": [
+     "fiber optic",
+     "aerospace",
+     "automotive"
+    ],
+    "p": 0,
+    "pct3": 0.42,
+    "bott": 0
+   },
+   {
+    "t": "NEM",
+    "ex": -0.046179324270386624,
+    "drivers": [
+     "copper",
+     "refining",
+     "wind"
+    ],
+    "p": 0.067,
+    "pct3": 0.93,
+    "bott": 0.74
+   },
+   {
+    "t": "SCCO",
+    "ex": -0.08170570107948072,
+    "drivers": [
+     "copper",
+     "refining",
+     "freight"
+    ],
+    "p": 0.413,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "CRML",
+    "ex": -0.3810836434633389,
+    "drivers": [
+     "june june june",
+     "lithium",
+     "wind"
+    ],
+    "p": 0.258,
+    "pct3": 0.79,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-03-31",
+  "emerging": [
+   "tariff costs",
+   "favorable currency",
+   "august august august",
+   "november november november",
+   "favorable changes",
+   "august august",
+   "june june change",
+   "august and august",
+   "millions june june",
+   "global trade",
+   "trade policies",
+   "british pound",
+   "trade policy",
+   "june june june",
+   "june the decrease"
+  ],
+  "eligible": 931,
+  "model10": 0.33702536144655004,
+  "model11": 0.0883774157514555,
+  "mom": 0.3475181851453956,
+  "shock": 0.20574930799532742,
+  "theme": 0.2881078499761302,
+  "sa": 0.45673200563076494,
+  "saN": 15,
+  "random": 0.15755647663699937,
+  "ic10": -0.024221646658328145,
+  "ic11": -0.01568707373941073,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 1.848940455291214,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.999,
+    "pct3": 0.8,
+    "bott": 0.99
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.11807264321571509,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.835,
+    "pct3": 0.73,
+    "bott": 0.77
+   },
+   {
+    "t": "SQM",
+    "ex": -0.23885237605048515,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "refining"
+    ],
+    "p": 0.731,
+    "pct3": 0.81,
+    "bott": 0.96
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.9171692090642602,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.807,
+    "pct3": 0.82,
+    "bott": 0.74
+   },
+   {
+    "t": "UMC",
+    "ex": 1.7093739695699275,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithium"
+    ],
+    "p": 0.691,
+    "pct3": 0.76,
+    "bott": 0.94
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.25728660565871886,
+    "drivers": [
+     "wafer",
+     "deposition",
+     "etch"
+    ],
+    "p": 0.745,
+    "pct3": 0.92,
+    "bott": 0.78
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.412284245538997,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.989,
+    "pct3": 0.86,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.3926388293866734,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "lithography"
+    ],
+    "p": 0.971,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.6123371674989466,
+    "drivers": [
+     "wafer",
+     "fiber optic",
+     "solar"
+    ],
+    "p": 0.908,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.18249682051930194,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.867,
+    "pct3": 0.9,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.019534198655988044,
+    "drivers": [
+     "colocation",
+     "data center",
+     "CPU"
+    ],
+    "p": 0.383,
+    "pct3": 0.57,
+    "bott": 0.99
+   },
+   {
+    "t": "FORM",
+    "ex": 0.30373418790415685,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "semiconductor test"
+    ],
+    "p": 0.747,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": -0.07747510293781223,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.33,
+    "pct3": 0.95,
+    "bott": 0.99
+   },
+   {
+    "t": "HUT",
+    "ex": 0.9142474781119148,
+    "drivers": [
+     "CPU",
+     "GPU",
+     "data center"
+    ],
+    "p": 0.332,
+    "pct3": 0.55,
+    "bott": 0.96
+   },
+   {
+    "t": "WULF",
+    "ex": -0.002249433018289393,
+    "drivers": [
+     "hyperscale",
+     "data center",
+     "battery storage"
+    ],
+    "p": 0.329,
+    "pct3": 0.9,
+    "bott": 0.97
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6592627535548219,
+    "drivers": [
+     "data center",
+     "grid",
+     "electricity demand"
+    ],
+    "p": 0.33,
+    "pct3": 0.47,
+    "bott": 0.91
+   },
+   {
+    "t": "IREN",
+    "ex": 0.16736682931263136,
+    "drivers": [
+     "GPU",
+     "data center",
+     "foundry"
+    ],
+    "p": 0.33,
+    "pct3": 0.29,
+    "bott": 0.91
+   },
+   {
+    "t": "CIFR",
+    "ex": 0.2623097253353852,
+    "drivers": [
+     "data center",
+     "power purchase agreement",
+     "hyperscale"
+    ],
+    "p": 0.324,
+    "pct3": 0.28,
+    "bott": 0.94
+   },
+   {
+    "t": "ET",
+    "ex": 0.00031397639252972454,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "LNG"
+    ],
+    "p": 0.32,
+    "pct3": 0.8,
+    "bott": 0.92
+   },
+   {
+    "t": "VSAT",
+    "ex": 0.48104710509352855,
+    "drivers": [
+     "satellite",
+     "defense",
+     "construction"
+    ],
+    "p": 0.311,
+    "pct3": 0.9,
+    "bott": 0.95
+   }
+  ],
+  "picks11": [
+   {
+    "t": "CORZ",
+    "ex": 0.019534198655988044,
+    "drivers": [
+     "colocation",
+     "data center",
+     "CPU"
+    ],
+    "p": 0.383,
+    "pct3": 0.57,
+    "bott": 0.99
+   },
+   {
+    "t": "TSM",
+    "ex": 0.2918326439352976,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.011,
+    "pct3": 0.75,
+    "bott": 0
+   },
+   {
+    "t": "SRE",
+    "ex": -0.24389186985169398,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "wind"
+    ],
+    "p": 0.276,
+    "pct3": 0.7,
+    "bott": 0.83
+   },
+   {
+    "t": "IONQ",
+    "ex": 0.533585898261103,
+    "drivers": [
+     "satellite",
+     "fiber optic",
+     "personal computer"
+    ],
+    "p": 0.029,
+    "pct3": 0.03,
+    "bott": 0
+   },
+   {
+    "t": "TPL",
+    "ex": -0.2980726801611123,
+    "drivers": [
+     "oil",
+     "natural gas",
+     "data center"
+    ],
+    "p": 0.2,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "ADM",
+    "ex": 0.05066082553077211,
+    "drivers": [
+     "oil",
+     "refining",
+     "natural gas"
+    ],
+    "p": 0,
+    "pct3": 0.88,
+    "bott": 0
+   },
+   {
+    "t": "CHRW",
+    "ex": -0.15799222635516352,
+    "drivers": [
+     "freight",
+     "trade policies",
+     "shipping"
+    ],
+    "p": 0.004,
+    "pct3": 0.58,
+    "bott": 0
+   },
+   {
+    "t": "EPD",
+    "ex": -0.0841491911662332,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "LNG"
+    ],
+    "p": 0.202,
+    "pct3": 0.81,
+    "bott": 0
+   },
+   {
+    "t": "EXE",
+    "ex": -0.2525526259509332,
+    "drivers": [
+     "oil",
+     "natural gas",
+     "LNG"
+    ],
+    "p": 0.277,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "CR",
+    "ex": 0.15864488341103766,
+    "drivers": [
+     "aerospace",
+     "oil",
+     "defense"
+    ],
+    "p": 0,
+    "pct3": 0.33,
+    "bott": 0.79
+   },
+   {
+    "t": "HEI",
+    "ex": 0.06833889937563531,
+    "drivers": [
+     "aerospace",
+     "satellite",
+     "defense"
+    ],
+    "p": 0,
+    "pct3": 0.18,
+    "bott": 0.78
+   },
+   {
+    "t": "CSX",
+    "ex": 0.08600182174125859,
+    "drivers": [
+     "freight",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0,
+    "pct3": 0.75,
+    "bott": 0.87
+   },
+   {
+    "t": "CMS",
+    "ex": -0.23218215866038105,
+    "drivers": [
+     "natural gas",
+     "solar",
+     "wind"
+    ],
+    "p": 0.012,
+    "pct3": 0.72,
+    "bott": 0.79
+   },
+   {
+    "t": "MU",
+    "ex": 1.848940455291214,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.999,
+    "pct3": 0.8,
+    "bott": 0.99
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.412284245538997,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.989,
+    "pct3": 0.86,
+    "bott": 0
+   },
+   {
+    "t": "TER",
+    "ex": 0.2444243938970143,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "aerospace"
+    ],
+    "p": 0.562,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.11807264321571509,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.835,
+    "pct3": 0.73,
+    "bott": 0.77
+   },
+   {
+    "t": "FORM",
+    "ex": 0.30373418790415685,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "semiconductor test"
+    ],
+    "p": 0.747,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.9171692090642602,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "DRAM"
+    ],
+    "p": 0.807,
+    "pct3": 0.82,
+    "bott": 0.74
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.18249682051930194,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.867,
+    "pct3": 0.9,
+    "bott": 0
+   }
+  ]
+ }
+]

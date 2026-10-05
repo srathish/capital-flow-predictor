@@ -1,0 +1,17 @@
+--holdout: 1165 companies
+universe 1091 with prices · exposure rows 304801 · constraint rows 48193 · link rows 87740 · big nodes 86 · mode holdout
+2025-01-31 elig 865 · model +14.7% / +13.8% · mom +34.2% · shock +14.2% · theme +32.6% · SA - (0) · rnd +2.1% · IC 0.029 · 3s
+2025-02-28 elig 878 · model +15.5% / +41.0% · mom +68.7% · shock +14.8% · theme +48.8% · SA +40.5% (6) · rnd +14.1% · IC 0.013 · 3s
+2025-03-31 elig 880 · model +6.8% / -3.8% · mom +99.8% · shock +13.4% · theme - · SA +58.8% (6) · rnd -2.0% · IC -0.054 · 3s
+2025-04-30 elig 889 · model +25.1% / +99.5% · mom +92.5% · shock -2.2% · theme +9.6% · SA +60.1% (6) · rnd +35.5% · IC -0.086 · 5s
+2025-05-30 elig 896 · model +13.2% / +33.9% · mom +17.8% · shock +16.4% · theme +8.5% · SA +82.1% (8) · rnd +18.8% · IC -0.102 · 5s
+2025-06-30 elig 903 · model +49.7% / +31.2% · mom +16.4% · shock +27.4% · theme +31.4% · SA +46.9% (9) · rnd +8.5% · IC 0.026 · 3s
+2025-07-31 elig 914 · model +68.1% / +82.0% · mom +0.5% · shock +11.3% · theme +70.8% · SA +51.2% (11) · rnd +33.0% · IC -0.003 · 3s
+2025-08-29 elig 915 · model +24.5% / +11.4% · mom -9.7% · shock +33.0% · theme +144.5% · SA +14.2% (7) · rnd +5.9% · IC 0.096 · 3s
+2025-09-30 elig 924 · model +10.4% / +3.4% · mom -33.1% · shock +45.2% · theme +37.1% · SA -14.1% (7) · rnd -3.4% · IC 0.097 · 3s
+2025-10-31 elig 923 · model +7.1% / +27.9% · mom -21.8% · shock +73.8% · theme +65.0% · SA -17.3% (7) · rnd +9.8% · IC 0.088 · 3s
+2025-11-28 elig 928 · model +65.0% / +72.2% · mom +37.8% · shock +104.2% · theme +138.5% · SA +125.5% (17) · rnd +25.6% · IC 0.299 · 3s
+2025-12-31 elig 920 · model +23.6% / +76.0% · mom +31.1% · shock +59.4% · theme +138.1% · SA +102.7% (17) · rnd +25.6% · IC 0.185 · 3s
+2026-01-30 elig 918 · model -8.0% / +13.5% · mom +13.7% · shock +18.5% · theme +28.5% · SA +26.5% (17) · rnd +4.4% · IC 0.104 · 3s
+2026-02-27 elig 925 · model -0.3% / +7.6% · mom +13.4% · shock +2.1% · theme +16.3% · SA +20.5% (15) · rnd +4.7% · IC -0.072 · 3s
+2026-03-31 elig 931 · model +8.8% / +33.7% · mom +34.8% · shock +20.6% · theme +28.8% · SA +45.7% (15) · rnd +15.8% · IC -0.016 · 3s

@@ -38,9 +38,12 @@ const INS = new Map(T.map((t) => [t, rd(path.join(C, 'uw', 'insiderP', `${t}.jso
 const qk = (d) => `${d.slice(0, 4)}Q${Math.floor((+d.slice(5, 7) - 1) / 3) + 1}`;
 const PDF = new Map(); for (const [t, fs_] of TF) for (const f of fs_) { const q = qk(f.d); for (const p of Object.keys(f.phrases)) { let m = PDF.get(p); if (!m) PDF.set(p, (m = new Map())); let s = m.get(q); if (!s) m.set(q, (s = new Set())); s.add(t); } }
 const prevQ = (q, n) => { let y = +q.slice(0, 4), k = +q.slice(5); for (let i = 0; i < n; i++) { k--; if (!k) { k = 4; y--; } } return `${y}Q${k}`; };
+// v2.1 bug fix (2026-10-05, from INSPECTING the discovered phrases, not returns — disclosed): exclude filing boilerplate —
+// month names, period/fiscal/accounting language, share-unit and rule-driven disclosure phrases
+const BOILER = /\b(january|february|march|april|may|june|july|august|september|october|november|december|months?|quarters?|fiscal|ended|respectively|fasb|asu|accounting|stock unit|restricted|millions?|billions?|thousands?|percent|cybersecurity|information officer|risk management program|special assessment|beginning after|issued|change|primarily|increase|decrease|compared|period|year|annual)\b/;
 function emerging(d) { // phrases in ≥10 companies over the last 2 completed quarters AND ≥3× their average per-quarter company count over the prior 4
   const q0 = prevQ(qk(d), 1), rec = [q0, prevQ(q0, 1)], pri = [2, 3, 4, 5].map((n) => prevQ(q0, n)), out = [];
-  for (const [p, m] of PDF) { const r = new Set(); for (const q of rec) for (const t of m.get(q) ?? []) r.add(t); if (r.size < 10) continue;
+  for (const [p, m] of PDF) { if (BOILER.test(p)) continue; const r = new Set(); for (const q of rec) for (const t of m.get(q) ?? []) r.add(t); if (r.size < 10) continue;
     const pa = pri.reduce((a, q) => a + (m.get(q)?.size ?? 0), 0) / 4, ra = rec.reduce((a, q) => a + (m.get(q)?.size ?? 0), 0) / 2; if (ra >= 3 * Math.max(pa, 0.5)) out.push([p, ra / Math.max(pa, 0.5)]); }
   return out.sort((a, b) => b[1] - a[1]).slice(0, 100).map((x) => x[0]); // cap 100 per month (compute bound; fixed before results)
 }
