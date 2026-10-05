@@ -1,0 +1,7 @@
+13F STALENESS · 2477784 new/increased positions (2022–2026 filings) · median filing lag 42 days after quarter-end
+
+average excess return vs the median stock, by window:
+                                          1 BUYING (quarter)  2 LAG (to filing)  3 COPY (6m after)   share of the move a copier misses
+  all managers                                         +4.7%              +0.8%              +5.4%   51%  (n 2477784)
+  top-decile managers (hindsight label)               +16.0%              +3.6%             +15.2%   56%  (n 132995)
+  Situational Awareness LP                            +35.6%             +19.8%             +90.1%   38%  (n 42)
