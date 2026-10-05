@@ -114,3 +114,25 @@ Impact on company *i* = Σ over concepts c: exposure(i,c) × shock(c) + Σ over 
 - **The taxonomy is still mine.** Mitigated by its breadth and by the shock-only baseline. If the graph only "works" through AI concepts, that will show in the per-concept breakdown.
 - **Mentions are not dependence.** A filing can mention a concept as a risk factor rather than as revenue. This adds noise; it does not add look-ahead.
 - **Small effective sample.** About 15 holdout month-ends with overlapping 6-month windows. Only a strong result counts.
+
+---
+
+## Amendment v1.1 (2026-10-05). Added after the user's "Situational Awareness" framing, BEFORE any model output or results.
+
+**A. Bottleneck layer (the Aschenbrenner logic: demand shock → what becomes scarce → who owns the scarcity).**
+
+For each company and year, count filings that use **constraint language**:
+- "supply constrained" · "supply constraints" · "shortage" · "lead times" · "sold out"
+- "allocation" · "capacity constrained" · "price increases" · "backlog" · "capacity expansion"
+
+This uses the same EDGAR full-text pull and is point-in-time.
+
+**Score v1.1 = P(impact > 1 sd) × (1 − own 3-month percentile) × (1 + bottleneck)**, where:
+- bottleneck = the company's constraint-language filing share, as a percentile in [0, 1] within that month's cross-section.
+- A bottleneck owner gets up to 2× weight.
+
+v1.0 (no bottleneck term) is **also reported**, so the amendment's own contribution is visible. v1.0 and v1.1 are two pre-registered variants. Each must beat the baselines on its own.
+
+**B. Fifth baseline: copy Situational Awareness LP** (CIK 0002045724). For each month, hold the long equity positions from its most recent 13F that was public by that date (the filing date is about 45 days after quarter-end). Equal weight, 6-month forward excess vs the universe median. Only positions in our universe with price data are counted.
+
+These are a real thesis investor's public, dated holdings. If the model can't match them using the same public information, it hasn't learned the skill.
