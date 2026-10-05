@@ -1,0 +1,30 @@
+supply chain knowledge graph stocks
+company knowledge graph finance
+sec edgar nlp
+10-k nlp
+earnings call transcripts nlp
+thematic investing
+theme detection stocks
+narrative economics nlp
+stock knowledge graph
+financial knowledge graph
+alternative data trading
+event driven trading
+nowcasting economy
+economic linkages stock returns
+customer supplier network stocks
+llm investment research agent
+llm hedge fund
+ai hedge fund
+quant research platform
+backtesting framework
+factor investing
+insider trading form 4
+13f holdings analysis
+options flow analysis
+unusual options activity
+graph neural network stock prediction
+temporal knowledge graph finance
+news sentiment trading
+market simulator agent based
+agent based market simulation

@@ -1,0 +1,16 @@
+input output table economy python
+bea input output
+supply chain network extraction
+supplier customer relationship extraction
+10-k customer extraction
+sec filings topic modeling
+emerging technology trend detection
+patent trend detection
+google trends stock
+company embeddings
+firm similarity 10-k
+text based industry classification
+earnings call nlp
+financial event extraction
+economic shock propagation network
+production network
