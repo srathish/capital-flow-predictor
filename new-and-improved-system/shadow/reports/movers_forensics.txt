@@ -1,0 +1,111 @@
+
+MOVER FORENSICS · MRNA TEAM BMNR MSTR HPE TE SMCI APP VLO OKTA · 1180 stock-days 2026-04-01→2026-10-02 · BIG = |next-10d move| in the stock's top 5% · base rate 5.1%
+
+feature      fired-days  P(BIG|fired)  lift   direction right (fired & BIG)   note
+  iv             105/1180       1.9%    0.37×   2/2 (size-only signal)
+  ivPrem         118/1180       8.5%    1.67×   10/10 (size-only signal)
+  callput         61/1180       1.6%    0.32×   1/1
+  optvol         306/1180       3.9%    0.77×   12/12 (size-only signal)
+  flow            64/1180       9.4%    1.84×   4/6
+  askcall         62/1180       3.2%    0.63×   1/2
+  gex             91/1180       3.3%    0.65×   1/3
+  vanna          151/1180       2.6%    0.52×   2/4
+  stockvol       154/1180       1.9%    0.38×   3/3 (size-only signal)
+  squeeze        154/1180       0.0%    0.00×   - (size-only signal)
+  rs20           141/1180       2.1%    0.42×   1/3
+  mapNet         413/1180       3.1%    0.62×   13/13 (size-only signal)
+  mapSkew        464/1180       6.0%    1.19×   15/28
+  insiderBuy      53/1180       7.5%    1.48×   4/4
+  insiderSell     25/1180       0.0%    0.00×   -
+  earnings       180/1180      12.2%    2.40×   22/22 (size-only signal)
+  analyst        119/1180       0.0%    0.00×   -
+  si             160/1180       4.4%    0.86×   7/7 (size-only signal)
+
+DIRECTION vs the BOARD COIN (bet with the universe's majority side each day): coin is right 55.1% of all stock-days
+  callput      fired   61 · direction right 60.7% vs board coin on the same days 49.2%  ← beats coin by 5pp
+  flow         fired   64 · direction right 34.4% vs board coin on the same days 57.8%  
+  askcall      fired   62 · direction right 56.5% vs board coin on the same days 64.5%  
+  gex          fired   91 · direction right 53.8% vs board coin on the same days 54.9%  
+  vanna        fired  151 · direction right 51.0% vs board coin on the same days 60.9%  
+  rs20         fired  141 · direction right 47.5% vs board coin on the same days 61.7%  
+  mapSkew      fired  464 · direction right 50.0% vs board coin on the same days 58.2%  
+  insiderBuy   fired   53 · direction right 77.4% vs board coin on the same days 67.9%  ← beats coin by 5pp
+  insiderSell  fired   25 · direction right 40.0% vs board coin on the same days 76.0%  
+  analyst      fired  119 · direction right 40.3% vs board coin on the same days 51.3%  
+
+SIZE: rank correlation with the next-10-day |move| (within each stock) — own implied vol vs trailing 20d realized vol
+  MRNA  IV ρ -0.19 · realized ρ  0.15 
+  TEAM  IV ρ  0.45 · realized ρ  0.04 ← IV better
+  BMNR  IV ρ -0.43 · realized ρ  0.09 
+  MSTR  IV ρ -0.54 · realized ρ -0.41 
+  HPE   IV ρ -0.27 · realized ρ -0.33 ← IV better
+  TE    IV ρ  0.30 · realized ρ -0.25 ← IV better
+  SMCI  IV ρ  0.20 · realized ρ  0.03 ← IV better
+  APP   IV ρ  0.27 · realized ρ -0.23 ← IV better
+  VLO   IV ρ -0.23 · realized ρ -0.26 ← IV better
+  OKTA  IV ρ  0.14 · realized ρ -0.14 ← IV better
+  IV ranked size better on 7 of 10 stocks
+
+— each stock's main burst: what was lit the day before it started (|z|≥2 or flag), and the news around it —
+
+MRNA 211% 2026-08-05→2026-08-19 · EARNINGS 2026-07-31
+  lit on 2026-08-04: nothing
+  news (reach back to 2026-07-05): 
+    08-06 Moderna expects MFLUSIVA flu vaccine doses to reach select retail locations within the next few weeks.
+    08-04 MODERNA HAS STARTED PHASE 1 TRIAL FOR MRNA-1469 IN CANADA AS PART OF A BROADER PARTNERSHIP WITH THE COALITION FOR EPIDEM
+    08-04 MODERNA STARTS PHASE 1 CLINICAL TRIAL FOR MRNA-1469, A NEW VACCINE TARGETING BUNDIBUGYO EBOLAVIRUS.
+    08-04 MODERNA INITIATES PHASE 1 TRIAL OF MRNA-1469 TO TEST SAFETY AND IMMUNE RESPONSE AGAINST BUNDIBUGYO EBOLAVIRUS.
+    07-31 $MRNA Moderna Q2 2026 Earnings - Rev. $145M (est $103.5M) - Loss/SHR $1.97 Vs. Loss/SHR $2.13 Y/Y - Cash & Cash Equivale
+
+TEAM 71% 2026-07-24→2026-08-07
+  lit on 2026-07-23: askcall(-2.26) · earnings
+  news (reach back to 2026-07-15): 
+    07-28 China team unearths world’s oldest amber, hidden in ancient Xinjiang coal seam - SCMP
+
+BMNR 40% 2026-08-13→2026-08-27
+  lit on 2026-08-12: mapSkew(-0.58)
+  news (reach back to 2026-07-05): 
+    08-17 BitMine, $BMNR, now holds 5,815,164 $ETH, or 4.8% of supply, after adding 9,926 tokens last week. Of that total, 5,067,3
+    08-14 Bitmine Immersion Technologies Announces Record and Payment Dates for Cash Dividends on 9.50% Series A Perpetual Preferr
+    08-14 Norway’s $2.34T sovereign wealth fund disclosed a 1.16% stake in BitMine, $BMNR, worth about $88.3M as of June 30, its f
+
+MSTR 42% 2026-08-13→2026-08-27
+  lit on 2026-08-12: mapNet(-0.55)
+  news (reach back to 2026-07-05): 
+    08-17 MSTR's price hovers at $93.73 amid uncertainty. Predicted to go up to $96 or down to $91, current support at $92.82.Long
+    08-17 Bitcoin holdings untouched as company raises $334M by selling MSTR stock, halting BTC sales after $xxxM in three weeks.
+    08-17 Strategy, $MSTR, sold 3.46 million shares last week, raising $333.7 million net, but bought no Bitcoin. Holdings remain 
+    08-16 MSTR's price at $94 being dominated by bears, but big traders quietly accumulating with 70% long positions despite the b
+    08-13 Michael Saylor maps digital assets across a “monetary spectrum”: $BTC = digital capital $STRC = digital credit STRC-back
+    08-11 Saylor's strategy sells $108M of Bitcoin and $650M of MSTR stock, but MSTR stock remains unaffected.
+    08-11 STRATEGY SAYS BITCOIN ALONE WASN’T ENOUGH FOR YIELD INVESTORS. $MSTR has built a $4.75B cash reserve covering ~2.7 years
+    08-10 ₿ STRATEGY IS SELLING BITCOIN TO BUILD CASH. Strategy sold another 1,690 BTC last week, bringing two-week sales to 3,327
+
+HPE 32% 2026-07-29→2026-08-12
+  lit on 2026-07-28: askcall(-2.09)
+  news (reach back to 2026-07-13): 
+    07-27 Rigetti Expands Collaboration with HPE and Pittsburgh Supercomputing Center to Build New Hybrid Quantum-Classical Superc
+    07-24 HPE Names David Goulden to Board of Directors
+
+TE -44% 2026-07-15→2026-07-29
+  lit on 2026-07-14: optvol(-2.61) · stockvol(-2.35) · mapNet(-0.44) · si(0.17)
+  news (reach back to 2026-07-22): none in window
+
+SMCI 46% 2026-07-29→2026-08-12
+  lit on 2026-07-28: mapNet(-0.55) · mapSkew(0.81) · earnings · si(0.16)
+  news (reach back to 2026-07-08): 
+    07-30 Supermicro launches an AI rack series under the DCBBS Portfolio. $SMCI
+
+APP -27% 2026-08-04→2026-08-18 · EARNINGS 2026-08-05
+  lit on 2026-08-03: ivPrem(3.08) · mapNet(-0.71) · mapSkew(-0.73) · earnings
+  news (reach back to 2026-07-08): 
+    08-05 AppLovin Announces Second Quarter 2026 Financial Results
+
+VLO 18% 2026-07-07→2026-07-21
+  lit on 2026-07-06: mapNet(-0.94)
+  news (reach back to 2026-07-16): none in window
+
+OKTA 32% 2026-08-25→2026-09-09 · EARNINGS 2026-08-26
+  lit on 2026-08-24: earnings · analyst(2.00)
+  news (reach back to 2026-08-26): 
+    08-26 Okta Announces Second Quarter Fiscal Year 2027 Financial Results
