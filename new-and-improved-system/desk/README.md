@@ -28,6 +28,7 @@ So the honest shape of the desk is:
 ## Daily use
 
 ```bash
+node desk/insider.mjs                          # THE strategy: new insider buys to take at the open ($10k, 20-session hold), open positions, scorecard
 node desk/run.mjs AMD GOOGL ORCL PLTR          # evening / premarket: cards for the next session (your tickers + momentum + themes)
 node desk/decide.mjs 2026-10-05 MRNA take up   # your call on each A+ card (take | pass) — do this BEFORE the open
 node desk/watch.mjs                            # run during the session: 09:35 re-verify, entry/skip/exit notifications
