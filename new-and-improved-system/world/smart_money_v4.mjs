@@ -46,9 +46,11 @@ console.error(`scored events ${scored}`);
 const byMgr = new Map(); for (const e of events) { let a = byMgr.get(e.m); if (!a) byMgr.set(e.m, (a = [])); a.push(e); }
 for (const a of byMgr.values()) a.sort((x, y) => x.f.localeCompare(y.f));
 
+// v4.1 (2026-10-05, user suggestion AFTER seeing v4 → judged on DEV only): MIN_AUM env, default $50M (v4)
+const MIN_USD = +(process.env.MIN_AUM ?? 5e7), TAG = process.env.MIN_AUM ? `_aum${Math.round(MIN_USD / 1e6)}m` : '';
 const latestAcc = new Map(); // manager → sorted filings stats
 for (const o of ACC.values()) { let a = latestAcc.get(o.m); if (!a) latestAcc.set(o.m, (a = [])); a.push(o); } for (const a of latestAcc.values()) a.sort((x, y) => x.f.localeCompare(y.f));
-const concentrated = (m, t) => { const a = latestAcc.get(m); if (!a) return false; let L = null; for (const o of a) { if (o.f > t) break; L = o; } return !!L && L.n >= 5 && L.n <= 40 && L.usd >= 5e7; };
+const concentrated = (m, t) => { const a = latestAcc.get(m); if (!a) return false; let L = null; for (const o of a) { if (o.f > t) break; L = o; } return !!L && L.n >= 5 && L.n <= 40 && L.usd >= MIN_USD; };
 function skilled(t) { // DESIGN_v4 §4–5: conviction-weighted skill, n ≥ 10, shrink n/(n+10), concentrated now, top 10 positive
   const s = []; for (const [m, a] of byMgr) { if (!concentrated(m, t)) continue; let n = 0, sw = 0, sx = 0; const lo = addD(t, -365 * LOOKBACK_Y), done = addD(t, -FWD - 3);
     for (const e of a) { if (e.f < lo || e.f > done || e.x == null || !(e.w > 0)) continue; n++; sw += e.w; sx += e.w * e.x; } if (n >= 10 && sw > 0) s.push([m, (sx / sw) * n / (n + 10)]); }
@@ -80,9 +82,9 @@ const OUT = path.join(ROOT, 'world', 'results_v4'); fs.mkdirSync(OUT, { recursiv
 if (MODE === 'live') { const t = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10), r = month(t); fs.mkdirSync(path.join(ROOT, 'world', 'live_v4'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'live_v4', `${t}.json`), JSON.stringify(r, null, 1));
   console.log(`# Smart-money consensus — ${t} · ${r.skilledN} skilled managers\n`); for (const p of r.picks) console.log(`- ${p.t} (skill-weighted buys ${p.w})`); process.exit(0); }
 const [a, b] = MODE === 'holdout' ? ['2025-01-01', '2026-03-31'] : ['2023-07-01', '2024-12-31'];
-if (MODE === 'holdout' && fs.existsSync(path.join(OUT, 'holdout.json'))) { console.error('HOLDOUT already run once — refusing (DESIGN_v4).'); process.exit(1); }
+if (MODE === 'holdout' && !TAG && fs.existsSync(path.join(OUT, 'holdout.json'))) { console.error('HOLDOUT already run once — refusing (DESIGN_v4).'); process.exit(1); }
 const res = []; for (const t of monthEnds(a, b)) { const r = month(t); res.push(r); console.error(`${t} skilled ${r.skilledN} · model ${fmt(r.model)} · crowd ${fmt(r.crowd)} · mom ${fmt(r.mom)} · SA ${fmt(r.sa)} (${r.saN}) · rnd ${fmt(r.random)} · IC ${r.ic?.toFixed(3)} · ${r.picks.slice(0, 8).map((p) => p.t).join(' ')}`); }
-fs.writeFileSync(path.join(OUT, `${MODE}.json`), JSON.stringify(res, null, 1));
+fs.writeFileSync(path.join(OUT, `${MODE}${TAG}.json`), JSON.stringify(res, null, 1));
 const st = (k) => { const v = res.map((r) => r[k]).filter((x) => x != null); const m = v.reduce((p, q) => p + q, 0) / v.length, s = Math.sqrt(v.reduce((p, q) => p + (q - m) ** 2, 0) / Math.max(1, v.length - 1)); return { m, t: m / (s / Math.sqrt(v.length)), n: v.length }; };
 console.log(`\n=== FIND-THE-NEXT-LEOPOLD v4 · ${MODE.toUpperCase()} ${a} → ${b} · top-${TOP} 6-month excess vs universe median ===`);
 for (const [k, nm] of [['model', 'CONCENTRATED SKILLED MANAGERS (v4)'], ['crowd', 'crowd (all managers)'], ['mom', 'momentum 12-1'], ['sa', 'copy Situational Awareness 13F'], ['random', 'random same-sector']]) { const s = st(k); console.log(`  ${nm.padEnd(34)} ${fmt(s.m).padStart(8)}  (t ${Number.isFinite(s.t) ? s.t.toFixed(2) : '-'}, n ${s.n})`); }

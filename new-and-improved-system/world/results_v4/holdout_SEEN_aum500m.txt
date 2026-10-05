@@ -1,0 +1,9 @@
+
+=== FIND-THE-NEXT-LEOPOLD v4 · HOLDOUT 2025-01-01 → 2026-03-31 · top-20 6-month excess vs universe median ===
+  CONCENTRATED SKILLED MANAGERS (v4)   +17.0%  (t 3.46, n 15)
+  crowd (all managers)                 +14.3%  (t 3.94, n 15)
+  momentum 12-1                        +25.8%  (t 2.62, n 15)
+  copy Situational Awareness 13F       +46.8%  (t 4.19, n 14)
+  random same-sector                    +8.9%  (t 5.22, n 15)
+  IC mean 0.009 (t 0.79)
+  VERDICT: FAIL (> SA false · > crowd true · > momentum false · IC t≥2 false · symbols W/L 35/32)
