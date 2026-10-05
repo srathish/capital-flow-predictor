@@ -1,0 +1,243 @@
+{
+ "asOf": "2026-10-05",
+ "generatedAt": "2026-10-05T17:17:36.870Z",
+ "digest": "DATA DIGEST as of 2026-10-05 (point-in-time: SEC filings' Business + MD&A sections from 1165 companies, UW insider buys, SA LP 13F).\n\nA. CONCEPTS WHERE COMPANIES ARE TALKING MORE (mentions per filing, last 6 months vs the 12 months before). basket3m = median 3-month return of companies mentioning it (= how much is already priced).\n  high bandwidth memory: attention +72% · 8 cos · basket3m +2%\n  etch: attention +51% · 5 cos · basket3m -2%\n  inference: attention +26% · 51 cos · basket3m -3%\n  credit card: attention +25% · 121 cos · basket3m -5%\n  transformer: attention +21% · 21 cos · basket3m -12%\n  CPU: attention +16% · 14 cos · basket3m +7%\n  copper: attention +13% · 54 cos · basket3m -4%\n  data center: attention +13% · 284 cos · basket3m -5%\n  silicon carbide: attention +12% · 7 cos · basket3m -11%\n  AI agents: attention +11% · 25 cos · basket3m +16%\n  housing: attention +9% · 136 cos · basket3m -9%\n  steel: attention +9% · 75 cos · basket3m -11%\n  hyperscale: attention +9% · 39 cos · basket3m -10%\n  lithium: attention +5% · 22 cos · basket3m -12%\n  tariff: attention +4% · 615 cos · basket3m -4%\n  autonomous driving: attention +4% · 19 cos · basket3m -10%\n  deposition: attention +3% · 10 cos · basket3m -1%\n  electric vehicle: attention -2% · 55 cos · basket3m -11%\n  e-commerce: attention -2% · 92 cos · basket3m -6%\n  optical transceiver: attention -4% · 6 cos · basket3m +11%\n  GPU: attention -7% · 31 cos · basket3m +4%\n  freight: attention -9% · 162 cos · basket3m -8%\n  rare earth: attention -9% · 24 cos · basket3m -6%\n  power purchase agreement: attention -10% · 38 cos · basket3m -11%\n  personal computer: attention -10% · 13 cos · basket3m -1%\n\nB. CONCEPTS WITH RISING SCARCITY LANGUAGE (shortage / lead times / capacity constrained / sold out / price increases within ~25 words of the concept), with the companies saying it most.\n  tariff: scarcity 9.7 per 100 filings (-12% vs prior) · basket3m -4% · loudest: A(12) FE(12) CMS(8) GNRC(8) ITW(6) PAG(5)\n  interest rate: scarcity 6.2 per 100 filings (+11% vs prior) · basket3m -5% · loudest: FE(8) AGNC(8) SCHW(6) MTB(5) COF(4) TDG(4)\n  data center: scarcity 4.8 per 100 filings (+25% vs prior) · basket3m -5% · loudest: CORZ(8) IREN(7) FE(6) ARES(4) AAON(4) GDS(4)\n  subscription: scarcity 5.3 per 100 filings (+8% vs prior) · basket3m +0% · loudest: WDAY(27) PTON(12) CRWD(8) GWRE(8) MSCI(6) NYT(5)\n  construction: scarcity 5.3 per 100 filings (+2% vs prior) · basket3m -8% · loudest: TOL(10) MTZ(6) TAK(5) FCEL(5) LIN(4) NI(4)\n  defense: scarcity 3.3 per 100 filings (-7% vs prior) · basket3m -7% · loudest: RTX(10) RBC(10) CRS(8) GD(7) VSAT(4) ALSN(3)\n  NAND: scarcity 0.3 per 100 filings (+884% vs prior) · basket3m -1% · loudest: AAPL(2) LI(2) MU(1)\n  freight: scarcity 1.8 per 100 filings (+45% vs prior) · basket3m -8% · loudest: CSL(5) CMG(3) UNP(2) INSM(2) PKG(2) STE(2)\n  oil: scarcity 2.4 per 100 filings (-13% vs prior) · basket3m -4% · loudest: CAT(4) PAA(4) VLO(3) OXY(3) FANG(3) RYAAY(3)\n  aerospace: scarcity 2.3 per 100 filings (+2% vs prior) · basket3m -7% · loudest: GD(10) CRS(8) PH(5) RBC(5) ATI(4) ETN(2)\n  grid: scarcity 1.1 per 100 filings (+78% vs prior) · basket3m -13% · loudest: CLF(4) IREN(3) FE(2) NRG(2) KEP(2) WULF(2)\n  mortgage: scarcity 1.9 per 100 filings (-18% vs prior) · basket3m -8% · loudest: FNF(4) SSB(4) PGR(3) NVR(3) SCHW(2) DHI(2)\n  SaaS: scarcity 0.5 per 100 filings (+254% vs prior) · basket3m +8% · loudest: TYL(8) BEKE(1)\n  housing: scarcity 1.1 per 100 filings (+51% vs prior) · basket3m -9% · loudest: LEN(4) INVH(4) BEKE(3) CNH(2) STRL(2) WY(2)\n  wind: scarcity 1.1 per 100 filings (+56% vs prior) · basket3m -9% · loudest: GEV(6) AES(6) NEE(4) ENB(2) IBM(1)\n  GPU: scarcity 0.9 per 100 filings (+75% vs prior) · basket3m +4% · loudest: IREN(5) NBIS(3) SHAZ(3) HPE(2) SMCI(2) BTDR(1)\n  solar: scarcity 1.5 per 100 filings (-17% vs prior) · basket3m -11% · loudest: FSLR(10) PNW(8) AES(4) NEE(2) AEE(1) RDW(1)\n  server: scarcity 1.4 per 100 filings (+7% vs prior) · basket3m -1% · loudest: FSLY(6) NET(4) RBRK(4) DELL(2) HPE(2) SMCI(2)\n  DRAM: scarcity 0.3 per 100 filings (+392% vs prior) · basket3m -1% · loudest: AAPL(2) LI(2) MU(1)\n  advertising: scarcity 1.3 per 100 filings (-36% vs prior) · basket3m -4% · loudest: MCD(6) FOXA(5) NWSA(3) NFLX(2) PEP(2) UBER(2)\n\nC. INSIDER OPEN-MARKET BUYS ≥ $100k (last 60 days):\n  FLUT (Flutter Entertainment plc): $266.51M by 1 insider(s)\n  CRBG (Corebridge Financial, Inc.): $142.81M by 1 insider(s)\n  GME (GameStop Corp.): $76.42M by 5 insider(s)\n  GRAB (Grab Holdings Ltd): $30.78M by 2 insider(s)\n  GSAT (Globalstar, Inc.): $29.84M by 1 insider(s)\n  BBD (BANK BRADESCO): $27.96M by 22 insider(s)\n  BABA (Alibaba Group Holding Ltd): $25.69M by 2 insider(s)\n  ET (Energy Transfer LP): $21.51M by 2 insider(s)\n  UBER (Uber Technologies, Inc): $15.31M by 2 insider(s)\n  INTC (INTEL CORP): $10.00M by 1 insider(s)\n  APTV (Aptiv PLC): $8.25M by 4 insider(s)\n  CX (CEMEX SAB DE CV): $6.93M by 1 insider(s)\n  AON (Aon plc): $6.55M by 1 insider(s)\n  DKS (DICK'S SPORTING GOODS, INC.): $5.59M by 7 insider(s)\n  ONON (On Holding AG): $3.99M by 2 insider(s)\n  ORCL (ORACLE CORP): $3.48M by 1 insider(s)\n  AMRZ (Amrize Ltd): $2.43M by 7 insider(s)\n  SGI (SOMNIGROUP INTERNATIONAL INC.): $1.89M by 1 insider(s)\n  COO (COOPER COMPANIES, INC.): $1.88M by 3 insider(s)\n  CELH (Celsius Holdings, Inc.): $1.83M by 3 insider(s)\n  TTMI (TTM TECHNOLOGIES INC): $1.64M by 2 insider(s)\n  TM (TOYOTA MOTOR CORP/): $1.56M by 1 insider(s)\n  ELAN (Elanco Animal Health Inc): $1.28M by 3 insider(s)\n  DINO (HF Sinclair Corp): $1.28M by 1 insider(s)\n  UPST (Upstart Holdings, Inc.): $1.28M by 1 insider(s)\n\nD. SITUATIONAL AWARENESS LP 13F (filed 2026-08-14, period 2026-06-30) — the benchmark to beat: SNDK 28%, MU 28%, BE 9%, TSM 6%, NBIS 6%, CRWV 4%, CORZ 3%, STM 3%, APLD 2%, RIOT 2%, SHAZ 2%, IREN 2%, CLSK 1%, KEEL 1%, SEI 0%\n\nE. ALLOWED TICKERS (pick ONLY from these): NVDA AAPL GOOGL MSFT AMZN META AVGO TSLA MU LLY AMD JPM WMT ASML V XOM INTC JNJ MA ABBV PLTR CSCO LRCX AMAT ORCL CVX COST CAT BAC KO MRK DELL PG UNH HSBC GE PANW ARM PM MS NFLX CYATY HD CRWD SHEL NVS RY BABA GEV KLAC SNDK GS ANET TXN MUFG RTX AZN SAP TMO MRVL WFC AMGN LIN TM IBM BHP APH STX C AXP QCOM ADI SHOP CRM RTNTF SAN TD VZ TTE GILD DE DIS TMUS BLK PEP ETN SCHW ATEYY ABT SCCO T NVO WDC MCD WELL UNP PFE NEE SMFG HTHIY COP RIO DHR BA BBVA TJX IBKR UBS ISRG NOW BUD DTEGY UBER GLW SMERY SONY PBR BX ACN FTNT VRTX MFG UL CB BMY PLD NET PGR PH NEM BKNG SNOW COF HDB MPC VLO LMT ASX BMO SPGI BTI BP MO MDT BNS PDD CVS SBUX PSX SYK ADP MCK ENB LOW SPOT TT HOOD EQIX EQNR FCX CM DDOG PWR CNQ IBN SNY BNY ING ADBE CDNS SO ABNB CME VRT APP GSK SNPS LITE MAR ITUB HCA AEM JCI CEG HWM GD MGCLY DUK USB EMR IFNNY PNC SNHIY HPE CSX MELI ICE WMB KKR MMM ELV MNST MRSH SU BN BE WM UPS DASH BCS CTAS SHW WBD NTES E EPD MCO LYG CMCSA MRNA REGN ECL SPG INTU NGG ROST TRV AMT BAESY EOG ITW MSI CP MDLZ RCL SLB TGT HLT GM BAM CMI CNI CI MFC NSC CVNA ET NOC ORLY NWG FDX HON KMI APO RACE CL MPWR DLR B DB AEP TER URI KEYS MSTR NBIS RSG NU UMC TEL BSX ALAB COHR AMX NXPI APD WPM TDG GWW NTRA TRGP AJG MET CSLLY FIX COR ARGX AON CVE PCAR RELX SE NOK OXY MPLX TAK FAST AME VALE ALL LNG GWLIF TFC AFL BKR GRMN DAL OKE CRH NKE D CIEN PSA NUE CAH FANG DVN NDAQ SRE O COIN LSEGY EONGY EW HONA F ROK WAB BDX CRWV MT TEAM ETR STM AU STT A EBAY CLS MDLN DEO SMTOY TWLO VMRK VST INFY VEEV FNV VYLR TEVA PYPL HUM CARR FITB RKLB WDAY GALDY AZO P ADSK RVMD ABEV XYZ CCEP LHX XEL AMP TRI FERG IQV TYHOY SLF MCHP VTR HEI KB WAT NTAP JXAMY FLEX EXC KDP JHPCY RBGLY IDXX ONC HMC ILMN CMG CBRS SCMWY MSCI BSBR AIG CRDO FMX ARES LYV PRU IX HLN DHI ED TTWO ADM FER CBRE WCN VOD YUM SYY CCJ OKTA BBD UI ODFL PCG UAL PAYX ROP SHG JD KR CHT VIK RSHGY DLMAY MLM AXON HIG EME PEG CCL RKT BIIB KVUE EC RPRX NTR IRM WEC TKO CKHGF DXCM EL ESLT ZS STLD FRFHF RMD HSY ACGL TECK QSR GFI VG KMB EXPE VMC JBL ALNY EQT MTB RBLX NTRS ALC ON SUNB RJF HBAN PUK CNC BAP ERIC MTD CQP EXR IR BIDU HPQ CCI GEHC CBOE ZTS RDDT KGC UNVGY TDY KBGGY NMR MDB FSNUY TS CTSH TSEM RYAAY ZM AEE SMCI GFS WTW WSM FTI FTS NVT CFG Q HAL KHC SYM ATO DG PBA ROIV VRSN WST ECHO FOXA ATI WRB DTE CPAY DGX SN FFIV AWK DOV CPRT UTHR FE VICI CINF LH CPNG OTIS HUBB LPLA PPL TCOM BNTX CNP EXPD ENTG ES INSM FISV INCY RBRK PFG LVS GH TPR AFRM IHG IOT XYL TPL PHG PPG VLTO ULTA FCNCA SYF MTSI CRCL CASY RF SW TROW AER ASTS ROKU EDPFY CHD DRI TW VRSK PHM CHLSY SNX GMAB RL DLTR RIVN L MKL PS JBHT CIB GPN CNGKY KEY IFF XPO BRO EIX FWONA BSP OMC ARXS PKG THC SOFI CNH SITM BG LUV STE AMRZ VTRS NRG USFD DINO MTNOY CW HKHHY RS CMS EXE HSAI RGLD GELHY DOW WWD LEN BCH SOAGY AMCR NTNX YPF STZ U CRS SNA ONTO NI FSLR LYB PAAS MKSI BCE SSNC ESS BBY SBS LSCC WES PR BEKE NDSN BR SQM WCC EVRG VIV CDE TELNY IONQ ZBRA CHRW WF TSN WIT TPG TRMOY KSPI DD SMTC IP GPC APG CF FTAI MGA FIS WTKWY DT CDW BURL MTZ IEX STLA EWBC GIS PKX TOST RVTY MEDP SBAC ZBH PAA FTV FDXF EFX OVV RCI LNT BEN TSCO CLH NVR DIDIY J DOCN BAWAY BMNR DSEEY ARNNY FN RGA PTC RBC IREN AS SCRNY LNTCY HST INVH LDOS STRL NWSA AKAM BSAC TLN JAZZ APA H FUTU ASND RBA BALL PHYS CRBG GIB KIM SOLV LOGI LECO ROL EMA ZTO VNOM JHX WPC CHTR VICR OHI CG EXEL FICO LAMR GFL PFGC WMG ARMK NBIX PNFP RML JLL TIGO EG NLY KEP EQH TEM OWL SUN W SUI OBICY BEP CRL YUMC CACI UNM MAA DOC ARCC VARRY INIO SKM GLXY ULS TYL MLI SMMT CX TRMB DFKUY MAS SWK REG AGI RNR IVZ WY CHKP GEN PAG TXT HTHT TTMI AMKR AIZ DKS SGI FLUT DOCU ALLE EMBJ IESC AVY BBIO TMTNY TU TWST CSL GWRE EQX GRAB TME GL TOL RPM SWKS HAS GGG PEN COKE BWXT WSO AEG ICLR QNT AMH SEIC AIT ALB LII QXO IT SJM CNA PSLV GDDY CORT UDR NVMI GME HALO TLK BWA NXT FIVE GNRC DTM BAX MANH MAIR TRU MKC BJ SANM BLMOY WTS FROG CR FPS UHAL EHC FMS ARW AEIS PAC TXG RMBS SAIL HBM ERIE FORM FIG MDGL ELS CCK HL FRO AFG BMRN PNW JBS TECH ALLY DVA BTSG GLPI CSGP HUBS WSE AUR SNN CPT VIAV LFUS AHR YARIY AA HMY WTRG HRL FRHC COO LI ELAN BXP PINS LULU BZLFY FHN DECK HII GSAT XP AKZOY AES AGNC SF PSKY HUT KNX SCI EGP IAG CART FNF AR NCLTY CGNX RRX SNROY MICC DLAKY UHS ALGN DDS PAYP NYT RDY PAYC TXRH DCI SUZ AVTR CHYM RGEN ONON JKHY GMED BNT QRVO EVR FDS BSY MOD BPOP ENSG RTO IBRX UMBF EGO TFII DPZ DRS RYAN KRYS DAR PSO SSB CLX GKOS VSAT ESTC PBF AMG MINBY WTFC WMS AM ALSN BIO MOH AXSM BRKR SIMO LKNCY CFR ONB HSIC OGE MTCH DKNG SNAP BULL TIGR PTON UEC CORZ NIO UPXI WULF CLOV RR RIOT LCID PLUG HTZ CLSK LMND LUMN BROS BBAI MARA ACHR DUOL SOUN DIA DJT BB GTLB PATH RH TLRY CELH KEEL AMC NNE QBTS CIFR APLD FCEL POET LUNR TE USO ONDS ENPH NVTS UAMY AMPX ETHA IBIT RGTI TTD MGM UPST ELF DBX AXTI CHWY WYNN ETSY AAOI CAR FUBO QS SEDG OKLO PL NVAX CRSP LASR SG SRPT UUUU KTOS SPCE ASST PCT VKTX OSCR RUN HIMS ZETA WOLF LAES SBET CAVA BYND MP UVXY JOBY DNUT EOSE LYFT SLV AI GLD TSM OPEN GOOG SPY AAON ACMR ALGM AMBA APTV BIRK BLNK BRZE BTBT BTDR BTU CCOI CENX CLF CRML CROX DFTX DGXX DHT EVC EXK FLNC FLY FRMI FSLY GDS GLOB GOLD HNRG INOD INVZ IRDM KLTR KOD KOPN LAC LPX LW MBLY METC MXL OCUL OLED PENG PENN PLAY POWI PUMP QURE RDW RXT SA SBSW SHAK SHAZ SI SKHY SMR SNDL SOLS SPCX TENB TFIN UVIX WFRD",
+ "result": {
+  "asOf": "2026-10-05",
+  "theses": [
+   {
+    "title": "Memory is the new GPU: AI inference shifts the bottleneck from logic to HBM/DRAM/NAND bits",
+    "chain": [
+     "AI capex has over-provisioned GPU compute but each inference token consumes memory bandwidth and capacity, not just FLOPs",
+     "HBM attention jumped +72% across filers while its basket is up only +2% — companies are talking about it, the market has not re-rated the owners (A)",
+     "NAND scarcity language exploded +884% and DRAM +392% off a near-zero base, and the voices are DEMAND-side buyers (AAPL, LI, MU) flagging they cannot get bits (B)",
+     "Memory fabs are capex- and yield-constrained; HBM steals wafer capacity from commodity DRAM/NAND, so a demand shock tightens the WHOLE memory complex, not one node",
+     "Owners of the constrained bit supply (MU, SNDK, WDC) see ASPs and margins inflect while the tape still prices them as late-cycle commodity cyclicals"
+    ],
+    "bottleneck": "HBM/DRAM/NAND bit supply and memory-fab wafer capacity",
+    "beneficiaries": [
+     "MU",
+     "SNDK",
+     "WDC"
+    ],
+    "whyNow": "NAND/DRAM scarcity language is up ~400-900% off zero (B) and HBM attention +72% with basket +2% (A) — the attention/price gap is widest here of any concept",
+    "pricedIn": "Almost nothing: HBM basket +2%, NAND/DRAM scarcity baskets ~-1% (A,B). Smart money disagrees with the tape — SA LP holds 56% in SNDK+MU (D)",
+    "killCriteria": "DRAM/NAND spot contract prices roll over 2 quarters in a row, HBM qualification orders from hyperscalers get pushed, or memory makers guide capex UP into a demand air-pocket (classic top). Any of these within 6 months kills it.",
+    "confidence": 0.7
+   },
+   {
+    "title": "Power and the electrical interconnect, not silicon, is the hard physical ceiling on the AI buildout",
+    "chain": [
+     "A data center is useless without megawatts delivered to the rack; the US grid, transformers, and switchgear have decade-long lead times",
+     "grid scarcity language +78% and data-center scarcity +25% (B), yet the grid basket is -13% and data-center basket -5% (A) — the constraint is loud but unpriced",
+     "The named scarcity voices are the builders themselves (CORZ, IREN, GDS, AAON on data center; CLF, FE, NRG on grid) (B) — supply-side capitulation, not hype",
+     "Electrical-equipment and power-gen owners (GEV, ETN, VRT, CEG, VST) sell into multi-year backlogs with pricing power as utilities and hyperscalers bid for scarce capacity",
+     "Earnings must rise because backlog coverage and book-to-bill expand while the component (transformers, cooling, firm power) stays sold out"
+    ],
+    "bottleneck": "Grid interconnect capacity, high-voltage electrical gear, and firm 24/7 power",
+    "beneficiaries": [
+     "GEV",
+     "ETN",
+     "VRT",
+     "CEG",
+     "VST"
+    ],
+    "whyNow": "Grid scarcity +78% and data-center scarcity +25% are among the fastest-rising shortage signals (B) while the baskets are deeply negative (A)",
+    "pricedIn": "Lightly: grid basket -13%, data-center -5% (A). Note 'transformer' basket is -12% (A) — that sub-theme already ran and corrected, so I lean to grid/electrical breadth not transformers specifically",
+    "killCriteria": "Hyperscaler capex guides flat/down for 2026, data-center interconnect queues start clearing, or GEV/ETN/VRT book-to-bill drops below 1.0 within 6 months.",
+    "confidence": 0.6
+   },
+   {
+    "title": "HBM and advanced packaging are etch-and-deposition intensive — the pick-and-shovel layer under the memory shock",
+    "chain": [
+     "HBM stacks and advanced packaging (hybrid bonding, TSV) require far more etch/deposition steps per wafer than planar logic",
+     "etch attention +51% and deposition +3% with baskets roughly flat (-2%/-1%) (A) — rising mention, no price",
+     "If Thesis 1 (memory shortage) is right, memory-makers must add capacity, and capacity = WFE orders to the etch/deposition/inspection leaders",
+     "Owners (LRCX, AMAT, KLAC, ONTO, ACMR) capture the capex regardless of which memory maker wins the HBM share war — a lower-variance way to own the memory bottleneck",
+     "Their earnings rise as memory WFE re-accelerates off a trough while the market still models flat 2026 WFE"
+    ],
+    "bottleneck": "Advanced etch/deposition/inspection tool capacity for HBM and packaging",
+    "beneficiaries": [
+     "LRCX",
+     "AMAT",
+     "KLAC",
+     "ONTO",
+     "ACMR"
+    ],
+    "whyNow": "etch attention +51% (A) directly precedes the memory-capacity response implied by the +884% NAND scarcity signal (B)",
+    "pricedIn": "Modestly: etch/deposition baskets ~flat (A). GPU basket +4% shows the logic-WFE leg is more discovered than the memory-WFE leg",
+    "killCriteria": "Memory makers cut or delay capex, LRCX/AMAT memory-segment revenue mix shrinks for 2 quarters, or China WFE restrictions deepen enough to offset HBM demand — within 6 months.",
+    "confidence": 0.6
+   },
+   {
+    "title": "Foundry and EUV are the un-substitutable chokepoint — own the toll-booth",
+    "chain": [
+     "Every leading-edge AI chip and HBM base-die routes through TSMC; CoWoS advanced-packaging capacity is the single tightest line in the AI supply chain",
+     "EUV lithography has one supplier (ASML); there is no second source at the node",
+     "Inference attention +26% and data-center breadth across 284 cos (A) means volume, not just price, flows through the one foundry and the one litho vendor",
+     "Earnings must rise because TSMC prices CoWoS/leading-edge up into scarcity and ASML's backlog is multi-year and order-covered",
+     "SA LP holds TSM at 6% (D) — the smart-money anchor agrees this is the durable toll"
+    ],
+    "bottleneck": "Leading-edge foundry + CoWoS packaging (TSM) and EUV scanners (ASML)",
+    "beneficiaries": [
+     "TSM",
+     "ASML"
+    ],
+    "whyNow": "This is the lower-beta anchor to the memory/power theses; inference +26% broadens the demand base (A)",
+    "pricedIn": "Partially — these are consensus AI winners, so sized smaller than the unpriced memory/grid legs. Edge is durability, not surprise.",
+    "killCriteria": "TSMC CoWoS capacity additions outrun demand (utilization dips), ASML bookings miss for 2 quarters, or a credible leading-edge second source emerges within 6 months.",
+    "confidence": 0.65
+   },
+   {
+    "title": "Copper is the embedded commodity in every megawatt of AI power",
+    "chain": [
+     "Electrification of data centers (Thesis 2) is copper-intensive: busbars, transformers, cabling, cooling",
+     "copper attention +13% with basket only -4% (A) — rising mention, price still soft",
+     "Mine supply is inelastic (decade-long permitting/ramp) while AI-power demand is a step-change on top of EV/grid baseline",
+     "Owners of low-cost copper reserves (FCX, SCCO) see realized prices rise against a fixed cost base, expanding margins",
+     "This is the second-derivative of the power thesis and the least-crowded expression of it"
+    ],
+    "bottleneck": "Mined copper supply vs. electrification demand",
+    "beneficiaries": [
+     "FCX",
+     "SCCO"
+    ],
+    "whyNow": "copper attention +13% while grid/data-center scarcity surges (A,B) — demand signal building, price not yet there",
+    "pricedIn": "Barely: copper basket -4% (A). Lowest-confidence leg because it's macro/China-sensitive, so sized small.",
+    "killCriteria": "China property/demand weakens further, copper inventories build, or a global-growth scare drops the price under cost-curve support within 6 months.",
+    "confidence": 0.45
+   }
+  ],
+  "picks": [
+   {
+    "ticker": "MU",
+    "weight": 14,
+    "thesis": "Memory is the new bottleneck",
+    "rationale": "Broadest memory-shortage leverage (HBM+DRAM+NAND); HBM attention +72%/basket +2% (A), DRAM scarcity +392% (B); SA LP top holding at 28% (D)"
+   },
+   {
+    "ticker": "SNDK",
+    "weight": 10,
+    "thesis": "Memory is the new bottleneck",
+    "rationale": "Pure NAND play into a +884% NAND scarcity signal off zero (B); SA LP's co-top holding at 28% (D) — strongest smart-money/tape divergence"
+   },
+   {
+    "ticker": "TSM",
+    "weight": 9,
+    "thesis": "Foundry/EUV chokepoint",
+    "rationale": "Un-substitutable leading-edge + CoWoS toll-booth; inference +26% broadens volume (A); SA LP 6% (D); durable anchor"
+   },
+   {
+    "ticker": "LRCX",
+    "weight": 8,
+    "thesis": "Etch/deposition under the memory shock",
+    "rationale": "Etch leader; etch attention +51% basket -2% (A); captures memory capex regardless of who wins HBM share"
+   },
+   {
+    "ticker": "GEV",
+    "weight": 7,
+    "thesis": "Power/grid bottleneck",
+    "rationale": "Grid equipment into grid scarcity +78% basket -13% (A,B); multi-year backlog with pricing power"
+   },
+   {
+    "ticker": "WDC",
+    "weight": 6,
+    "thesis": "Memory is the new bottleneck",
+    "rationale": "NAND/HDD capacity tightening (B); cheapest expression of the bit-shortage; mean-reversion torque if DRAM/NAND inflect"
+   },
+   {
+    "ticker": "AMAT",
+    "weight": 6,
+    "thesis": "Etch/deposition under the memory shock",
+    "rationale": "Deposition breadth; memory-WFE re-acceleration under-modeled vs. logic (GPU basket +4% already found, A)"
+   },
+   {
+    "ticker": "ASML",
+    "weight": 6,
+    "thesis": "Foundry/EUV chokepoint",
+    "rationale": "EUV monopoly, order-covered multi-year backlog; lower-variance toll on the entire leading-edge buildout"
+   },
+   {
+    "ticker": "ETN",
+    "weight": 5,
+    "thesis": "Power/electrical bottleneck",
+    "rationale": "Electrical gear into data-center scarcity +25% (B); book-to-bill driven by sold-out switchgear/power management"
+   },
+   {
+    "ticker": "VRT",
+    "weight": 5,
+    "thesis": "Power/electrical bottleneck",
+    "rationale": "Power + thermal management for racks; direct beneficiary of data-center scarcity (B), server scarcity +7% (B)"
+   },
+   {
+    "ticker": "KLAC",
+    "weight": 5,
+    "thesis": "Etch/deposition under the memory shock",
+    "rationale": "Process control/inspection scales with advanced-packaging complexity; captures capex across all memory/foundry players"
+   },
+   {
+    "ticker": "CEG",
+    "weight": 4,
+    "thesis": "Power bottleneck — firm 24/7 power",
+    "rationale": "Nuclear baseload is the scarce firm power hyperscalers are signing PPAs for; grid scarcity +78% (B)"
+   },
+   {
+    "ticker": "FCX",
+    "weight": 4,
+    "thesis": "Copper/electrification",
+    "rationale": "Largest-cap copper leverage to electrification; copper attention +13% basket -4% (A) — unpriced second-derivative of power"
+   },
+   {
+    "ticker": "VST",
+    "weight": 3,
+    "thesis": "Power bottleneck — merchant power",
+    "rationale": "Merchant generation re-rates as AI load tightens regional power; complements CEG with cheaper beta"
+   },
+   {
+    "ticker": "ONTO",
+    "weight": 3,
+    "thesis": "Advanced-packaging inspection",
+    "rationale": "Leveraged to HBM/advanced-packaging metrology; small-cap torque on the packaging-intensity story (deposition +3%, A)"
+   },
+   {
+    "ticker": "ACMR",
+    "weight": 3,
+    "thesis": "Etch/clean under memory capacity adds",
+    "rationale": "Wafer-clean steps multiply with HBM stacking; small-cap WFE leverage if memory capex re-accelerates"
+   },
+   {
+    "ticker": "SCCO",
+    "weight": 3,
+    "thesis": "Copper/electrification",
+    "rationale": "Low-cost, long-reserve copper; margin expansion on realized-price lift against fixed cost base"
+   }
+  ],
+  "avoid": [
+   {
+    "ticker": "NVDA",
+    "why": "GPU is the DISCOVERED leg — GPU basket +4% (A) vs. flat/negative memory, grid and etch baskets. The un-priced edge is downstream of the GPU, not in it; capex concentration risk if hyperscaler spend plateaus."
+   },
+   {
+    "ticker": "PLTR",
+    "why": "AI agents basket +16% (A) — already priced; buying the narrative at the point of maximum attention, not an unpriced bottleneck."
+   },
+   {
+    "ticker": "APP",
+    "why": "AI-agents/application layer already ran (basket +16%, A); no physical bottleneck owned, valuation discounts the theme."
+   },
+   {
+    "ticker": "CIEN",
+    "why": "Optical transceiver basket +11% (A) — the only basket already clearly up; the optical leg of the buildout is priced, poor risk/reward vs. memory/power."
+   },
+   {
+    "ticker": "LITE",
+    "why": "Same optical-transceiver crowding (basket +11%, A); chasing a theme that has already re-rated."
+   },
+   {
+    "ticker": "ARM",
+    "why": "CPU basket already +7% (A), among the few positive baskets; licensing model doesn't own the physical memory/power/wafer bottleneck where the unpriced edge sits."
+   }
+  ]
+ },
+ "stderr": ""
+}
