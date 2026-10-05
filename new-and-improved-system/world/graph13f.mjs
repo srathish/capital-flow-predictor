@@ -15,8 +15,9 @@ import { worldUniverse } from './collect.mjs';
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), B = path.join(ROOT, '.cache', 'sec_bulk');
 const MON = { JAN: '01', FEB: '02', MAR: '03', APR: '04', MAY: '05', JUN: '06', JUL: '07', AUG: '08', SEP: '09', OCT: '10', NOV: '11', DEC: '12' };
 const iso = (s) => { const m = /^(\d{2})-([A-Z]{3})-(\d{4})$/.exec(s ?? ''); return m ? `${m[3]}-${MON[m[2]]}-${m[1]}` : null; };
+// wildcard member name: some SEC zips nest the TSVs in a subfolder (01JUN2025-31AUG2025_form13f/…)
 async function* tsv(zip, file) {
-  const p = spawn('unzip', ['-p', zip, `*${file}`]); // wildcard: some SEC zips nest the TSVs in a subfolder (01JUN2025-31AUG2025_form13f/…) const rl = readline.createInterface({ input: p.stdout, crlfDelay: Infinity }); let head = null;
+  const p = spawn('unzip', ['-p', zip, `*${file}`]); const rl = readline.createInterface({ input: p.stdout, crlfDelay: Infinity }); let head = null;
   for await (const line of rl) { const c = line.split('\t'); if (!head) { head = Object.fromEntries(c.map((h, i) => [h, i])); continue; } yield { c, h: head }; }
 }
 const norm = (s) => (s ?? '').toUpperCase().replace(/&/g, ' AND ').replace(/[.,'"()]/g, ' ').replace(/\b(INC|INCORPORATED|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|PLC|HOLDINGS?|HLDGS?|GROUP|GRP|THE|NEW|CL|CLASS|A|B|C|COM|SA|NV|AG|SE|LP|LLC|ADR|SPONSORED|SPON|SHS|ORD|DEL|TECHNOLOGIES|TECHNOLOGY|TECH)\b/g, ' ').replace(/\s+/g, ' ').trim();
