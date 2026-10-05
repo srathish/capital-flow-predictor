@@ -1,0 +1,28 @@
+T1 TURN OF MONTH (SPY 2022–2026)
+  TOM day +6.7bp vs other day +4.1bp (n 227/963) · per-month TOM trade +25.6bp net vs 4 normal days +16.4bp · halves = TOM trade minus 4 normal days
+  halves: +27.6bp / -4.1bp · t 0.35 → fails
+
+T2 OVERNIGHT DRIFT (SPY 2022–2026)
+  overnight (net of 0.01%) +2.2bp/day (n 1190) vs intraday +1.4bp/day · annualized overnight-only ≈ 5.7%
+  halves: -1.6bp / +4.9bp · t 1.47 → fails
+
+T3 INTRADAY MOMENTUM (SPY 2023–2026, last 30 min in the direction of the first 30 min)
+  941 minute-days · per trade net -0.6bp (n 853, win 47%)
+  halves: -0.4bp / -0.9bp · t -0.86 → fails
+
+T5 PRE-FOMC DRIFT (SPY prior close → 14:00, 2023–2026)
+  FOMC days +9.1bp (n 30) vs other days +8.0bp (n 901) · halves = FOMC minus other
+  halves: +10.7bp / -9.7bp · t 0.13 → fails
+
+T4 POST-EARNINGS DRIFT (294 stocks, top/bottom 20% surprise, 40 sessions, β-adj)
+  4623 reports → 1836 legs · per leg net -303.8bp (long-surprise and short-surprise signed)
+  halves: -8.0bp / -525.8bp · t -1.85 → fails
+
+SUMMARY (Benjamini–Hochberg q = 0.10 across the 5 tests):
+  T2 OVERNIGHT DRIFT           one-sided p 0.0705 · halves NOT both + → no
+  T1 TURN OF MONTH             one-sided p 0.3641 · halves NOT both + → no
+  T5 PRE-FOMC DRIFT            one-sided p 0.4482 · halves NOT both + → no
+  T3 INTRADAY MOMENTUM         one-sided p 0.8046 · halves NOT both + → no
+  T4 POST-EARNINGS DRIFT       one-sided p 0.9679 · halves NOT both + → no
+
+[exited with code 0]
