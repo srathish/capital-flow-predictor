@@ -1,0 +1,7381 @@
+[
+ {
+  "d": "2025-01-31",
+  "eligible": 865,
+  "model10": 0.08989867881305609,
+  "model11": 0.09992726206690106,
+  "mom": 0.34194679142428286,
+  "shock": 0.14181834533529214,
+  "theme": 0.3257575074008844,
+  "sa": null,
+  "saN": 0,
+  "random": 0.0419276401531461,
+  "ic10": -0.02160318108850919,
+  "ic11": -0.020832877499365552,
+  "picks10": [
+   {
+    "t": "ETR",
+    "ex": 0.06914022855989699,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "subscription"
+    ],
+    "p": 0.597,
+    "pct3": 0,
+    "bott": 0.57
+   },
+   {
+    "t": "AES",
+    "ex": 0.2114309332376727,
+    "drivers": [
+     "natural gas turbine",
+     "LNG",
+     "electricity demand"
+    ],
+    "p": 0.601,
+    "pct3": 0.01,
+    "bott": 0.98
+   },
+   {
+    "t": "CHTR",
+    "ex": -0.24878265732300253,
+    "drivers": [
+     "fiber optic",
+     "colocation",
+     "satellite"
+    ],
+    "p": 0.715,
+    "pct3": 0.2,
+    "bott": 0.66
+   },
+   {
+    "t": "ES",
+    "ex": 0.09664963610343436,
+    "drivers": [
+     "nuclear power",
+     "credit card",
+     "LNG"
+    ],
+    "p": 0.632,
+    "pct3": 0.11,
+    "bott": 0.52
+   },
+   {
+    "t": "BWXT",
+    "ex": 0.30727384702147487,
+    "drivers": [
+     "small modular reactor",
+     "uranium",
+     "nuclear power"
+    ],
+    "p": 0.557,
+    "pct3": 0.14,
+    "bott": 0.81
+   },
+   {
+    "t": "DLR",
+    "ex": 0.042914985695303276,
+    "drivers": [
+     "colocation",
+     "SaaS",
+     "defense"
+    ],
+    "p": 0.548,
+    "pct3": 0.16,
+    "bott": 0.74
+   },
+   {
+    "t": "PEG",
+    "ex": 0.042028752813568104,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "artificial intelligence"
+    ],
+    "p": 0.508,
+    "pct3": 0.24,
+    "bott": 0.64
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.03709569858707995,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "stablecoin"
+    ],
+    "p": 0.591,
+    "pct3": 0.43,
+    "bott": 0.63
+   },
+   {
+    "t": "DUK",
+    "ex": 0.06191420074962428,
+    "drivers": [
+     "nuclear power",
+     "uranium",
+     "LNG"
+    ],
+    "p": 0.524,
+    "pct3": 0.37,
+    "bott": 0.43
+   },
+   {
+    "t": "APA",
+    "ex": -0.16405880620724356,
+    "drivers": [
+     "oil",
+     "LNG",
+     "defense"
+    ],
+    "p": 0.421,
+    "pct3": 0.22,
+    "bott": 0.54
+   },
+   {
+    "t": "AMD",
+    "ex": 0.4787184205612973,
+    "drivers": [
+     "nuclear power",
+     "server",
+     "cloud computing"
+    ],
+    "p": 0.323,
+    "pct3": 0.03,
+    "bott": 0.94
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.46525047922853613,
+    "drivers": [
+     "AI agents",
+     "large language model",
+     "cloud computing"
+    ],
+    "p": 0.319,
+    "pct3": 0.09,
+    "bott": 0.74
+   },
+   {
+    "t": "AMGN",
+    "ex": 0.0038655517002825768,
+    "drivers": [
+     "GLP-1",
+     "artificial intelligence",
+     "medical device"
+    ],
+    "p": 0.321,
+    "pct3": 0.09,
+    "bott": 0.95
+   },
+   {
+    "t": "PCG",
+    "ex": -0.09246476752284272,
+    "drivers": [
+     "nuclear power",
+     "electricity demand",
+     "solar"
+    ],
+    "p": 0.284,
+    "pct3": 0.02,
+    "bott": 0.7
+   },
+   {
+    "t": "MELI",
+    "ex": 0.22079080479905855,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.329,
+    "pct3": 0.17,
+    "bott": 0.58
+   },
+   {
+    "t": "HST",
+    "ex": -0.08208028568288517,
+    "drivers": [
+     "credit card",
+     "restaurant",
+     "consumer spending"
+    ],
+    "p": 0.358,
+    "pct3": 0.27,
+    "bott": 0.7
+   },
+   {
+    "t": "VICI",
+    "ex": 0.0875836098168643,
+    "drivers": [
+     "consumer spending",
+     "travel",
+     "subscription"
+    ],
+    "p": 0.328,
+    "pct3": 0.21,
+    "bott": 0.38
+   },
+   {
+    "t": "REGN",
+    "ex": -0.18578865490499985,
+    "drivers": [
+     "GLP-1",
+     "cloud computing",
+     "artificial intelligence"
+    ],
+    "p": 0.265,
+    "pct3": 0.03,
+    "bott": 0.18
+   },
+   {
+    "t": "MOD",
+    "ex": 0.36205990048747294,
+    "drivers": [
+     "colocation",
+     "subscription",
+     "server"
+    ],
+    "p": 0.288,
+    "pct3": 0.12,
+    "bott": 0.89
+   },
+   {
+    "t": "CBOE",
+    "ex": 0.15862309571468902,
+    "drivers": [
+     "digital assets",
+     "subscription",
+     "wind"
+    ],
+    "p": 0.346,
+    "pct3": 0.3,
+    "bott": 0.32
+   }
+  ],
+  "picks11": [
+   {
+    "t": "AES",
+    "ex": 0.2114309332376727,
+    "drivers": [
+     "natural gas turbine",
+     "LNG",
+     "electricity demand"
+    ],
+    "p": 0.601,
+    "pct3": 0.01,
+    "bott": 0.98
+   },
+   {
+    "t": "CHTR",
+    "ex": -0.24878265732300253,
+    "drivers": [
+     "fiber optic",
+     "colocation",
+     "satellite"
+    ],
+    "p": 0.715,
+    "pct3": 0.2,
+    "bott": 0.66
+   },
+   {
+    "t": "ETR",
+    "ex": 0.06914022855989699,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "subscription"
+    ],
+    "p": 0.597,
+    "pct3": 0,
+    "bott": 0.57
+   },
+   {
+    "t": "BWXT",
+    "ex": 0.30727384702147487,
+    "drivers": [
+     "small modular reactor",
+     "uranium",
+     "nuclear power"
+    ],
+    "p": 0.557,
+    "pct3": 0.14,
+    "bott": 0.81
+   },
+   {
+    "t": "ES",
+    "ex": 0.09664963610343436,
+    "drivers": [
+     "nuclear power",
+     "credit card",
+     "LNG"
+    ],
+    "p": 0.632,
+    "pct3": 0.11,
+    "bott": 0.52
+   },
+   {
+    "t": "DLR",
+    "ex": 0.042914985695303276,
+    "drivers": [
+     "colocation",
+     "SaaS",
+     "defense"
+    ],
+    "p": 0.548,
+    "pct3": 0.16,
+    "bott": 0.74
+   },
+   {
+    "t": "PEG",
+    "ex": 0.042028752813568104,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "artificial intelligence"
+    ],
+    "p": 0.508,
+    "pct3": 0.24,
+    "bott": 0.64
+   },
+   {
+    "t": "AMD",
+    "ex": 0.4787184205612973,
+    "drivers": [
+     "nuclear power",
+     "server",
+     "cloud computing"
+    ],
+    "p": 0.323,
+    "pct3": 0.03,
+    "bott": 0.94
+   },
+   {
+    "t": "AMGN",
+    "ex": 0.0038655517002825768,
+    "drivers": [
+     "GLP-1",
+     "artificial intelligence",
+     "medical device"
+    ],
+    "p": 0.321,
+    "pct3": 0.09,
+    "bott": 0.95
+   },
+   {
+    "t": "CLSK",
+    "ex": -0.03709569858707995,
+    "drivers": [
+     "digital assets",
+     "bitcoin mining",
+     "stablecoin"
+    ],
+    "p": 0.591,
+    "pct3": 0.43,
+    "bott": 0.63
+   },
+   {
+    "t": "APA",
+    "ex": -0.16405880620724356,
+    "drivers": [
+     "oil",
+     "LNG",
+     "defense"
+    ],
+    "p": 0.421,
+    "pct3": 0.22,
+    "bott": 0.54
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.46525047922853613,
+    "drivers": [
+     "AI agents",
+     "large language model",
+     "cloud computing"
+    ],
+    "p": 0.319,
+    "pct3": 0.09,
+    "bott": 0.74
+   },
+   {
+    "t": "WCC",
+    "ex": 0.1001425601774455,
+    "drivers": [
+     "cloud computing",
+     "e-commerce",
+     "fiber optic"
+    ],
+    "p": 0.362,
+    "pct3": 0.33,
+    "bott": 0.99
+   },
+   {
+    "t": "MOD",
+    "ex": 0.36205990048747294,
+    "drivers": [
+     "colocation",
+     "subscription",
+     "server"
+    ],
+    "p": 0.288,
+    "pct3": 0.12,
+    "bott": 0.89
+   },
+   {
+    "t": "STT",
+    "ex": 0.08227922162096934,
+    "drivers": [
+     "digital assets",
+     "SaaS",
+     "subscription"
+    ],
+    "p": 0.735,
+    "pct3": 0.67,
+    "bott": 1
+   },
+   {
+    "t": "DUK",
+    "ex": 0.06191420074962428,
+    "drivers": [
+     "nuclear power",
+     "uranium",
+     "LNG"
+    ],
+    "p": 0.524,
+    "pct3": 0.37,
+    "bott": 0.43
+   },
+   {
+    "t": "PCG",
+    "ex": -0.09246476752284272,
+    "drivers": [
+     "nuclear power",
+     "electricity demand",
+     "solar"
+    ],
+    "p": 0.284,
+    "pct3": 0.02,
+    "bott": 0.7
+   },
+   {
+    "t": "HST",
+    "ex": -0.08208028568288517,
+    "drivers": [
+     "credit card",
+     "restaurant",
+     "consumer spending"
+    ],
+    "p": 0.358,
+    "pct3": 0.27,
+    "bott": 0.7
+   },
+   {
+    "t": "MELI",
+    "ex": 0.22079080479905855,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.329,
+    "pct3": 0.17,
+    "bott": 0.58
+   },
+   {
+    "t": "QSR",
+    "ex": 0.07856793390503825,
+    "drivers": [
+     "restaurant",
+     "credit card",
+     "subscription"
+    ],
+    "p": 0.255,
+    "pct3": 0.07,
+    "bott": 0.72
+   }
+  ]
+ },
+ {
+  "d": "2025-02-28",
+  "eligible": 878,
+  "model10": 0.1939277632637805,
+  "model11": 0.21716473795764796,
+  "mom": 0.6869676456313505,
+  "shock": 0.1476466225656888,
+  "theme": 0.4878021475706227,
+  "sa": 0.4054695526976954,
+  "saN": 6,
+  "random": 0.18171112290754945,
+  "ic10": 0.025783769911204037,
+  "ic11": 0.026684456719586493,
+  "picks10": [
+   {
+    "t": "RKLB",
+    "ex": 1.5337012559140515,
+    "drivers": [
+     "launch vehicle",
+     "advertising"
+    ],
+    "p": 0.548,
+    "pct3": 0.06,
+    "bott": 0.48
+   },
+   {
+    "t": "ETR",
+    "ex": -0.06852478006559148,
+    "drivers": [
+     "battery storage",
+     "advertising"
+    ],
+    "p": 0.354,
+    "pct3": 0.01,
+    "bott": 0.57
+   },
+   {
+    "t": "HUT",
+    "ex": 0.8276371481970095,
+    "drivers": [
+     "digital assets",
+     "colocation"
+    ],
+    "p": 0.337,
+    "pct3": 0,
+    "bott": 0.67
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.1455026007002187,
+    "drivers": [
+     "digital assets",
+     "credit card"
+    ],
+    "p": 0.338,
+    "pct3": 0,
+    "bott": 0.55
+   },
+   {
+    "t": "VST",
+    "ex": 0.4548954932958398,
+    "drivers": [
+     "battery storage",
+     "credit card"
+    ],
+    "p": 0.379,
+    "pct3": 0.14,
+    "bott": 0.55
+   },
+   {
+    "t": "COIN",
+    "ex": 0.4093454562164507,
+    "drivers": [
+     "digital assets",
+     "e-commerce",
+     "credit card"
+    ],
+    "p": 0.337,
+    "pct3": 0.04,
+    "bott": 0.37
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.4822470522602149,
+    "drivers": [
+     "digital assets",
+     "LNG",
+     "advertising"
+    ],
+    "p": 0.338,
+    "pct3": 0.05,
+    "bott": 0.49
+   },
+   {
+    "t": "BAC",
+    "ex": 0.042895872955569736,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.658,
+    "pct3": 0.52,
+    "bott": 0.75
+   },
+   {
+    "t": "MARA",
+    "ex": 0.08904017012524434,
+    "drivers": [
+     "digital assets",
+     "battery storage"
+    ],
+    "p": 0.318,
+    "pct3": 0,
+    "bott": 0.18
+   },
+   {
+    "t": "XYZ",
+    "ex": 0.1975544817692345,
+    "drivers": [
+     "restaurant",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.329,
+    "pct3": 0.05,
+    "bott": 0.95
+   },
+   {
+    "t": "CHTR",
+    "ex": -0.3542946592545635,
+    "drivers": [
+     "credit card",
+     "advertising"
+    ],
+    "p": 0.444,
+    "pct3": 0.34,
+    "bott": 0.56
+   },
+   {
+    "t": "BLK",
+    "ex": 0.09544381511372713,
+    "drivers": [
+     "digital assets",
+     "advertising"
+    ],
+    "p": 0.44,
+    "pct3": 0.44,
+    "bott": 0.75
+   },
+   {
+    "t": "PEG",
+    "ex": -0.06382872753684565,
+    "drivers": [
+     "battery storage",
+     "advertising"
+    ],
+    "p": 0.274,
+    "pct3": 0.18,
+    "bott": 0.59
+   },
+   {
+    "t": "DLR",
+    "ex": 0.008589256078021634,
+    "drivers": [
+     "advertising"
+    ],
+    "p": 0.243,
+    "pct3": 0.09,
+    "bott": 0.79
+   },
+   {
+    "t": "LUNR",
+    "ex": -0.41875574213756295,
+    "drivers": [
+     "credit card"
+    ],
+    "p": 0.283,
+    "pct3": 0.26,
+    "bott": 0.63
+   },
+   {
+    "t": "STT",
+    "ex": 0.11470181359193621,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "advertising"
+    ],
+    "p": 0.543,
+    "pct3": 0.64,
+    "bott": 1
+   },
+   {
+    "t": "GS",
+    "ex": 0.16048868100935465,
+    "drivers": [
+     "digital assets",
+     "credit card"
+    ],
+    "p": 0.639,
+    "pct3": 0.7,
+    "bott": 0.75
+   },
+   {
+    "t": "CEG",
+    "ex": 0.2550423448262231,
+    "drivers": [
+     "battery storage",
+     "LNG"
+    ],
+    "p": 0.412,
+    "pct3": 0.54,
+    "bott": 0.82
+   },
+   {
+    "t": "WFC",
+    "ex": -0.00394328312844805,
+    "drivers": [
+     "credit card",
+     "e-commerce",
+     "advertising"
+    ],
+    "p": 0.606,
+    "pct3": 0.71,
+    "bott": 0.75
+   },
+   {
+    "t": "TXN",
+    "ex": -0.029182984654474664,
+    "drivers": [
+     "custom ASIC",
+     "e-commerce",
+     "advertising"
+    ],
+    "p": 0.362,
+    "pct3": 0.53,
+    "bott": 0.39
+   }
+  ],
+  "picks11": [
+   {
+    "t": "RKLB",
+    "ex": 1.5337012559140515,
+    "drivers": [
+     "launch vehicle",
+     "advertising"
+    ],
+    "p": 0.548,
+    "pct3": 0.06,
+    "bott": 0.48
+   },
+   {
+    "t": "XYZ",
+    "ex": 0.1975544817692345,
+    "drivers": [
+     "restaurant",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.329,
+    "pct3": 0.05,
+    "bott": 0.95
+   },
+   {
+    "t": "HUT",
+    "ex": 0.8276371481970095,
+    "drivers": [
+     "digital assets",
+     "colocation"
+    ],
+    "p": 0.337,
+    "pct3": 0,
+    "bott": 0.67
+   },
+   {
+    "t": "BAC",
+    "ex": 0.042895872955569736,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "e-commerce"
+    ],
+    "p": 0.658,
+    "pct3": 0.52,
+    "bott": 0.75
+   },
+   {
+    "t": "ETR",
+    "ex": -0.06852478006559148,
+    "drivers": [
+     "battery storage",
+     "advertising"
+    ],
+    "p": 0.354,
+    "pct3": 0.01,
+    "bott": 0.57
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.1455026007002187,
+    "drivers": [
+     "digital assets",
+     "credit card"
+    ],
+    "p": 0.338,
+    "pct3": 0,
+    "bott": 0.55
+   },
+   {
+    "t": "VST",
+    "ex": 0.4548954932958398,
+    "drivers": [
+     "battery storage",
+     "credit card"
+    ],
+    "p": 0.379,
+    "pct3": 0.14,
+    "bott": 0.55
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.4822470522602149,
+    "drivers": [
+     "digital assets",
+     "LNG",
+     "advertising"
+    ],
+    "p": 0.338,
+    "pct3": 0.05,
+    "bott": 0.49
+   },
+   {
+    "t": "CHTR",
+    "ex": -0.3542946592545635,
+    "drivers": [
+     "credit card",
+     "advertising"
+    ],
+    "p": 0.444,
+    "pct3": 0.34,
+    "bott": 0.56
+   },
+   {
+    "t": "COIN",
+    "ex": 0.4093454562164507,
+    "drivers": [
+     "digital assets",
+     "e-commerce",
+     "credit card"
+    ],
+    "p": 0.337,
+    "pct3": 0.04,
+    "bott": 0.37
+   },
+   {
+    "t": "BLK",
+    "ex": 0.09544381511372713,
+    "drivers": [
+     "digital assets",
+     "advertising"
+    ],
+    "p": 0.44,
+    "pct3": 0.44,
+    "bott": 0.75
+   },
+   {
+    "t": "STT",
+    "ex": 0.11470181359193621,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "advertising"
+    ],
+    "p": 0.543,
+    "pct3": 0.64,
+    "bott": 1
+   },
+   {
+    "t": "DLR",
+    "ex": 0.008589256078021634,
+    "drivers": [
+     "advertising"
+    ],
+    "p": 0.243,
+    "pct3": 0.09,
+    "bott": 0.79
+   },
+   {
+    "t": "MARA",
+    "ex": 0.08904017012524434,
+    "drivers": [
+     "digital assets",
+     "battery storage"
+    ],
+    "p": 0.318,
+    "pct3": 0,
+    "bott": 0.18
+   },
+   {
+    "t": "PEG",
+    "ex": -0.06382872753684565,
+    "drivers": [
+     "battery storage",
+     "advertising"
+    ],
+    "p": 0.274,
+    "pct3": 0.18,
+    "bott": 0.59
+   },
+   {
+    "t": "CEG",
+    "ex": 0.2550423448262231,
+    "drivers": [
+     "battery storage",
+     "LNG"
+    ],
+    "p": 0.412,
+    "pct3": 0.54,
+    "bott": 0.82
+   },
+   {
+    "t": "LUNR",
+    "ex": -0.41875574213756295,
+    "drivers": [
+     "credit card"
+    ],
+    "p": 0.283,
+    "pct3": 0.26,
+    "bott": 0.63
+   },
+   {
+    "t": "GS",
+    "ex": 0.16048868100935465,
+    "drivers": [
+     "digital assets",
+     "credit card"
+    ],
+    "p": 0.639,
+    "pct3": 0.7,
+    "bott": 0.75
+   },
+   {
+    "t": "WFC",
+    "ex": -0.00394328312844805,
+    "drivers": [
+     "credit card",
+     "e-commerce",
+     "advertising"
+    ],
+    "p": 0.606,
+    "pct3": 0.71,
+    "bott": 0.75
+   },
+   {
+    "t": "PWR",
+    "ex": 0.43555650922287525,
+    "drivers": [
+     "battery storage",
+     "LNG"
+    ],
+    "p": 0.163,
+    "pct3": 0.06,
+    "bott": 1
+   }
+  ]
+ },
+ {
+  "d": "2025-03-31",
+  "eligible": 880,
+  "model10": 0.26577552975776075,
+  "model11": 0.30598084991083824,
+  "mom": 0.9975813855802107,
+  "shock": 0.13352716626501798,
+  "theme": null,
+  "sa": 0.588124093949629,
+  "saN": 6,
+  "random": 0.13934276010492405,
+  "ic10": 0.06812225554227622,
+  "ic11": 0.06966270336285962,
+  "picks10": [
+   {
+    "t": "RKLB",
+    "ex": 1.4714779934653084,
+    "drivers": [
+     "mortgage"
+    ],
+    "p": 0.457,
+    "pct3": 0.04,
+    "bott": 0.5
+   },
+   {
+    "t": "LUNR",
+    "ex": 0.25555866878366196,
+    "drivers": [
+     "satellite",
+     "drone",
+     "wind"
+    ],
+    "p": 0.307,
+    "pct3": 0,
+    "bott": 0.63
+   },
+   {
+    "t": "NOW",
+    "ex": 0.04072009777442798,
+    "drivers": [
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.286,
+    "pct3": 0.08,
+    "bott": 0.18
+   },
+   {
+    "t": "DLR",
+    "ex": 0.04613345222645959,
+    "drivers": [
+     "mortgage",
+     "natural gas"
+    ],
+    "p": 0.289,
+    "pct3": 0.12,
+    "bott": 0.79
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.354730523349843,
+    "drivers": [],
+    "p": 0.309,
+    "pct3": 0.19,
+    "bott": 0.98
+   },
+   {
+    "t": "COIN",
+    "ex": 0.7951588143425954,
+    "drivers": [
+     "oil",
+     "mortgage",
+     "wind"
+    ],
+    "p": 0.254,
+    "pct3": 0.04,
+    "bott": 0.31
+   },
+   {
+    "t": "VST",
+    "ex": 0.5006689090466334,
+    "drivers": [
+     "battery storage",
+     "natural gas turbine",
+     "uranium"
+    ],
+    "p": 0.28,
+    "pct3": 0.16,
+    "bott": 0.57
+   },
+   {
+    "t": "DDOG",
+    "ex": 0.3187592910497561,
+    "drivers": [],
+    "p": 0.231,
+    "pct3": 0.04,
+    "bott": 0.56
+   },
+   {
+    "t": "STT",
+    "ex": 0.20148091515110256,
+    "drivers": [
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.311,
+    "pct3": 0.3,
+    "bott": 1
+   },
+   {
+    "t": "BLK",
+    "ex": 0.12658643433843797,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.292,
+    "pct3": 0.33,
+    "bott": 0.73
+   },
+   {
+    "t": "WCC",
+    "ex": 0.23262920640018092,
+    "drivers": [
+     "natural gas",
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.242,
+    "pct3": 0.2,
+    "bott": 0.99
+   },
+   {
+    "t": "BAC",
+    "ex": 0.14483232160173087,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.33,
+    "pct3": 0.42,
+    "bott": 0.73
+   },
+   {
+    "t": "GS",
+    "ex": 0.34756364129777984,
+    "drivers": [
+     "uranium",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.332,
+    "pct3": 0.43,
+    "bott": 0.73
+   },
+   {
+    "t": "ZM",
+    "ex": 0.010819828707514523,
+    "drivers": [],
+    "p": 0.252,
+    "pct3": 0.26,
+    "bott": 0.19
+   },
+   {
+    "t": "HST",
+    "ex": 0.08845906074856669,
+    "drivers": [
+     "restaurant",
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.2,
+    "pct3": 0.11,
+    "bott": 0.7
+   },
+   {
+    "t": "MS",
+    "ex": 0.2738266603976034,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.274,
+    "pct3": 0.35,
+    "bott": 0.73
+   },
+   {
+    "t": "CRM",
+    "ex": -0.21149880364243545,
+    "drivers": [
+     "mortgage"
+    ],
+    "p": 0.185,
+    "pct3": 0.11,
+    "bott": 0.35
+   },
+   {
+    "t": "CEG",
+    "ex": 0.49667030776250165,
+    "drivers": [
+     "battery storage",
+     "power purchase agreement",
+     "LNG"
+    ],
+    "p": 0.218,
+    "pct3": 0.26,
+    "bott": 0.83
+   },
+   {
+    "t": "BWXT",
+    "ex": 0.6921227844029374,
+    "drivers": [
+     "uranium",
+     "nuclear power"
+    ],
+    "p": 0.194,
+    "pct3": 0.22,
+    "bott": 0.95
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.16172846534970553,
+    "drivers": [
+     "mortgage",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.19,
+    "pct3": 0.21,
+    "bott": 0.73
+   }
+  ],
+  "picks11": [
+   {
+    "t": "RKLB",
+    "ex": 1.4714779934653084,
+    "drivers": [
+     "mortgage"
+    ],
+    "p": 0.457,
+    "pct3": 0.04,
+    "bott": 0.5
+   },
+   {
+    "t": "LUNR",
+    "ex": 0.25555866878366196,
+    "drivers": [
+     "satellite",
+     "drone",
+     "wind"
+    ],
+    "p": 0.307,
+    "pct3": 0,
+    "bott": 0.63
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.354730523349843,
+    "drivers": [],
+    "p": 0.309,
+    "pct3": 0.19,
+    "bott": 0.98
+   },
+   {
+    "t": "DLR",
+    "ex": 0.04613345222645959,
+    "drivers": [
+     "mortgage",
+     "natural gas"
+    ],
+    "p": 0.289,
+    "pct3": 0.12,
+    "bott": 0.79
+   },
+   {
+    "t": "STT",
+    "ex": 0.20148091515110256,
+    "drivers": [
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.311,
+    "pct3": 0.3,
+    "bott": 1
+   },
+   {
+    "t": "WCC",
+    "ex": 0.23262920640018092,
+    "drivers": [
+     "natural gas",
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.242,
+    "pct3": 0.2,
+    "bott": 0.99
+   },
+   {
+    "t": "VST",
+    "ex": 0.5006689090466334,
+    "drivers": [
+     "battery storage",
+     "natural gas turbine",
+     "uranium"
+    ],
+    "p": 0.28,
+    "pct3": 0.16,
+    "bott": 0.57
+   },
+   {
+    "t": "DDOG",
+    "ex": 0.3187592910497561,
+    "drivers": [],
+    "p": 0.231,
+    "pct3": 0.04,
+    "bott": 0.56
+   },
+   {
+    "t": "BLK",
+    "ex": 0.12658643433843797,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.292,
+    "pct3": 0.33,
+    "bott": 0.73
+   },
+   {
+    "t": "BAC",
+    "ex": 0.14483232160173087,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.33,
+    "pct3": 0.42,
+    "bott": 0.73
+   },
+   {
+    "t": "GS",
+    "ex": 0.34756364129777984,
+    "drivers": [
+     "uranium",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.332,
+    "pct3": 0.43,
+    "bott": 0.73
+   },
+   {
+    "t": "COIN",
+    "ex": 0.7951588143425954,
+    "drivers": [
+     "oil",
+     "mortgage",
+     "wind"
+    ],
+    "p": 0.254,
+    "pct3": 0.04,
+    "bott": 0.31
+   },
+   {
+    "t": "NOW",
+    "ex": 0.04072009777442798,
+    "drivers": [
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.286,
+    "pct3": 0.08,
+    "bott": 0.18
+   },
+   {
+    "t": "MS",
+    "ex": 0.2738266603976034,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.274,
+    "pct3": 0.35,
+    "bott": 0.73
+   },
+   {
+    "t": "HST",
+    "ex": 0.08845906074856669,
+    "drivers": [
+     "restaurant",
+     "mortgage",
+     "oil"
+    ],
+    "p": 0.2,
+    "pct3": 0.11,
+    "bott": 0.7
+   },
+   {
+    "t": "CEG",
+    "ex": 0.49667030776250165,
+    "drivers": [
+     "battery storage",
+     "power purchase agreement",
+     "LNG"
+    ],
+    "p": 0.218,
+    "pct3": 0.26,
+    "bott": 0.83
+   },
+   {
+    "t": "BWXT",
+    "ex": 0.6921227844029374,
+    "drivers": [
+     "uranium",
+     "nuclear power"
+    ],
+    "p": 0.194,
+    "pct3": 0.22,
+    "bott": 0.95
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.16172846534970553,
+    "drivers": [
+     "mortgage",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.19,
+    "pct3": 0.21,
+    "bott": 0.73
+   },
+   {
+    "t": "C",
+    "ex": 0.34382801115646067,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "mortgage"
+    ],
+    "p": 0.329,
+    "pct3": 0.56,
+    "bott": 0.73
+   },
+   {
+    "t": "RBRK",
+    "ex": 0.25959941697016786,
+    "drivers": [],
+    "p": 0.182,
+    "pct3": 0.27,
+    "bott": 0.89
+   }
+  ]
+ },
+ {
+  "d": "2025-04-30",
+  "eligible": 889,
+  "model10": 0.596950610436626,
+  "model11": 0.6327206526225978,
+  "mom": 0.9252171628879289,
+  "shock": -0.02183676775653893,
+  "theme": 0.09589796797112271,
+  "sa": 0.6014062541839928,
+  "saN": 6,
+  "random": 0.4126753682526568,
+  "ic10": 0.05118865992020658,
+  "ic11": 0.052945852136257736,
+  "picks10": [
+   {
+    "t": "COIN",
+    "ex": 0.6129146117131636,
+    "drivers": [
+     "stablecoin",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.843,
+    "pct3": 0.05,
+    "bott": 0.34
+   },
+   {
+    "t": "C",
+    "ex": 0.3357734551189042,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "steel"
+    ],
+    "p": 0.674,
+    "pct3": 0.3,
+    "bott": 0.74
+   },
+   {
+    "t": "RIOT",
+    "ex": 1.738080031331009,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "hashrate"
+    ],
+    "p": 0.485,
+    "pct3": 0.03,
+    "bott": 0.44
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.8720796771243378,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "wind"
+    ],
+    "p": 0.529,
+    "pct3": 0.11,
+    "bott": 0.59
+   },
+   {
+    "t": "BAC",
+    "ex": 0.1900582861192921,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "grid"
+    ],
+    "p": 0.668,
+    "pct3": 0.31,
+    "bott": 0.74
+   },
+   {
+    "t": "GS",
+    "ex": 0.29502084051526234,
+    "drivers": [
+     "uranium",
+     "satellite",
+     "digital assets"
+    ],
+    "p": 0.669,
+    "pct3": 0.32,
+    "bott": 0.74
+   },
+   {
+    "t": "BLK",
+    "ex": 0.07962804688438707,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "SaaS"
+    ],
+    "p": 0.636,
+    "pct3": 0.35,
+    "bott": 0.74
+   },
+   {
+    "t": "HUT",
+    "ex": 2.724200469036565,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "colocation"
+    ],
+    "p": 0.416,
+    "pct3": 0.02,
+    "bott": 0.79
+   },
+   {
+    "t": "XYZ",
+    "ex": 0.18943180196014264,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "restaurant"
+    ],
+    "p": 0.389,
+    "pct3": 0.03,
+    "bott": 0.98
+   },
+   {
+    "t": "STT",
+    "ex": 0.19691074212862092,
+    "drivers": [
+     "digital assets",
+     "SaaS",
+     "wind"
+    ],
+    "p": 0.573,
+    "pct3": 0.36,
+    "bott": 1
+   },
+   {
+    "t": "CLSK",
+    "ex": 1.067463861037003,
+    "drivers": [
+     "colocation",
+     "stablecoin",
+     "bitcoin mining"
+    ],
+    "p": 0.435,
+    "pct3": 0.18,
+    "bott": 0.54
+   },
+   {
+    "t": "CEG",
+    "ex": 0.5494711219448156,
+    "drivers": [
+     "nuclear power",
+     "uranium",
+     "power purchase agreement"
+    ],
+    "p": 0.401,
+    "pct3": 0.14,
+    "bott": 0.83
+   },
+   {
+    "t": "JPM",
+    "ex": 0.11855494336036498,
+    "drivers": [
+     "wind"
+    ],
+    "p": 0.642,
+    "pct3": 0.47,
+    "bott": 0.74
+   },
+   {
+    "t": "APA",
+    "ex": 0.2707636852138311,
+    "drivers": [
+     "wind",
+     "grid"
+    ],
+    "p": 0.344,
+    "pct3": 0.04,
+    "bott": 0.59
+   },
+   {
+    "t": "MARA",
+    "ex": 0.22752183865111064,
+    "drivers": [
+     "colocation",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.36,
+    "pct3": 0.08,
+    "bott": 0.23
+   },
+   {
+    "t": "CCOI",
+    "ex": -0.3326680512337167,
+    "drivers": [
+     "colocation",
+     "fiber optic",
+     "satellite"
+    ],
+    "p": 0.315,
+    "pct3": 0.08,
+    "bott": 0.37
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.4235454273254414,
+    "drivers": [
+     "SaaS"
+    ],
+    "p": 0.358,
+    "pct3": 0.28,
+    "bott": 0.94
+   },
+   {
+    "t": "MS",
+    "ex": 0.28596881897541415,
+    "drivers": [],
+    "p": 0.333,
+    "pct3": 0.26,
+    "bott": 0.74
+   },
+   {
+    "t": "AMD",
+    "ex": 1.6160410822054034,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "wind"
+    ],
+    "p": 0.305,
+    "pct3": 0.25,
+    "bott": 0.93
+   },
+   {
+    "t": "AES",
+    "ex": 0.3253423739720487,
+    "drivers": [
+     "battery storage",
+     "power purchase agreement",
+     "wind"
+    ],
+    "p": 0.385,
+    "pct3": 0.42,
+    "bott": 0.96
+   }
+  ],
+  "picks11": [
+   {
+    "t": "COIN",
+    "ex": 0.6129146117131636,
+    "drivers": [
+     "stablecoin",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.843,
+    "pct3": 0.05,
+    "bott": 0.34
+   },
+   {
+    "t": "C",
+    "ex": 0.3357734551189042,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "steel"
+    ],
+    "p": 0.674,
+    "pct3": 0.3,
+    "bott": 0.74
+   },
+   {
+    "t": "BAC",
+    "ex": 0.1900582861192921,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "grid"
+    ],
+    "p": 0.668,
+    "pct3": 0.31,
+    "bott": 0.74
+   },
+   {
+    "t": "GS",
+    "ex": 0.29502084051526234,
+    "drivers": [
+     "uranium",
+     "satellite",
+     "digital assets"
+    ],
+    "p": 0.669,
+    "pct3": 0.32,
+    "bott": 0.74
+   },
+   {
+    "t": "XYZ",
+    "ex": 0.18943180196014264,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "restaurant"
+    ],
+    "p": 0.389,
+    "pct3": 0.03,
+    "bott": 0.98
+   },
+   {
+    "t": "RKLB",
+    "ex": 1.8720796771243378,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "wind"
+    ],
+    "p": 0.529,
+    "pct3": 0.11,
+    "bott": 0.59
+   },
+   {
+    "t": "HUT",
+    "ex": 2.724200469036565,
+    "drivers": [
+     "bitcoin mining",
+     "hashrate",
+     "colocation"
+    ],
+    "p": 0.416,
+    "pct3": 0.02,
+    "bott": 0.79
+   },
+   {
+    "t": "STT",
+    "ex": 0.19691074212862092,
+    "drivers": [
+     "digital assets",
+     "SaaS",
+     "wind"
+    ],
+    "p": 0.573,
+    "pct3": 0.36,
+    "bott": 1
+   },
+   {
+    "t": "BLK",
+    "ex": 0.07962804688438707,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "SaaS"
+    ],
+    "p": 0.636,
+    "pct3": 0.35,
+    "bott": 0.74
+   },
+   {
+    "t": "RIOT",
+    "ex": 1.738080031331009,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "hashrate"
+    ],
+    "p": 0.485,
+    "pct3": 0.03,
+    "bott": 0.44
+   },
+   {
+    "t": "CEG",
+    "ex": 0.5494711219448156,
+    "drivers": [
+     "nuclear power",
+     "uranium",
+     "power purchase agreement"
+    ],
+    "p": 0.401,
+    "pct3": 0.14,
+    "bott": 0.83
+   },
+   {
+    "t": "JPM",
+    "ex": 0.11855494336036498,
+    "drivers": [
+     "wind"
+    ],
+    "p": 0.642,
+    "pct3": 0.47,
+    "bott": 0.74
+   },
+   {
+    "t": "CLSK",
+    "ex": 1.067463861037003,
+    "drivers": [
+     "colocation",
+     "stablecoin",
+     "bitcoin mining"
+    ],
+    "p": 0.435,
+    "pct3": 0.18,
+    "bott": 0.54
+   },
+   {
+    "t": "APA",
+    "ex": 0.2707636852138311,
+    "drivers": [
+     "wind",
+     "grid"
+    ],
+    "p": 0.344,
+    "pct3": 0.04,
+    "bott": 0.59
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.4235454273254414,
+    "drivers": [
+     "SaaS"
+    ],
+    "p": 0.358,
+    "pct3": 0.28,
+    "bott": 0.94
+   },
+   {
+    "t": "AES",
+    "ex": 0.3253423739720487,
+    "drivers": [
+     "battery storage",
+     "power purchase agreement",
+     "wind"
+    ],
+    "p": 0.385,
+    "pct3": 0.42,
+    "bott": 0.96
+   },
+   {
+    "t": "AMD",
+    "ex": 1.6160410822054034,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "wind"
+    ],
+    "p": 0.305,
+    "pct3": 0.25,
+    "bott": 0.93
+   },
+   {
+    "t": "WCC",
+    "ex": 0.382732792485718,
+    "drivers": [
+     "fiber optic",
+     "hyperscale",
+     "colocation"
+    ],
+    "p": 0.338,
+    "pct3": 0.36,
+    "bott": 0.99
+   },
+   {
+    "t": "MS",
+    "ex": 0.28596881897541415,
+    "drivers": [],
+    "p": 0.333,
+    "pct3": 0.26,
+    "bott": 0.74
+   },
+   {
+    "t": "MARA",
+    "ex": 0.22752183865111064,
+    "drivers": [
+     "colocation",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.36,
+    "pct3": 0.08,
+    "bott": 0.23
+   }
+  ]
+ },
+ {
+  "d": "2025-05-30",
+  "eligible": 896,
+  "model10": 0.15168326351181274,
+  "model11": 0.14981037908156247,
+  "mom": 0.17836986789926446,
+  "shock": 0.16416559493918975,
+  "theme": 0.08467825057259051,
+  "sa": 0.8211046787068448,
+  "saN": 8,
+  "random": 0.07576788098477626,
+  "ic10": 0.028577839360032567,
+  "ic11": 0.030376542606469305,
+  "picks10": [
+   {
+    "t": "C",
+    "ex": 0.2682471547276808,
+    "drivers": [
+     "digital assets",
+     "solar",
+     "wind"
+    ],
+    "p": 0.902,
+    "pct3": 0.34,
+    "bott": 0.75
+   },
+   {
+    "t": "BAC",
+    "ex": 0.11859780047132751,
+    "drivers": [
+     "digital assets",
+     "aerospace",
+     "solar"
+    ],
+    "p": 0.721,
+    "pct3": 0.39,
+    "bott": 0.75
+   },
+   {
+    "t": "GS",
+    "ex": 0.2811691808195791,
+    "drivers": [
+     "uranium",
+     "digital assets",
+     "satellite"
+    ],
+    "p": 0.622,
+    "pct3": 0.41,
+    "bott": 0.75
+   },
+   {
+    "t": "ETR",
+    "ex": 0.07445380746017327,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "nuclear power"
+    ],
+    "p": 0.565,
+    "pct3": 0.38,
+    "bott": 0.74
+   },
+   {
+    "t": "AES",
+    "ex": 0.28263202650793184,
+    "drivers": [
+     "power purchase agreement",
+     "natural gas turbine",
+     "battery storage"
+    ],
+    "p": 0.402,
+    "pct3": 0.15,
+    "bott": 0.96
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.8024943051390074,
+    "drivers": [
+     "colocation",
+     "power purchase agreement",
+     "digital assets"
+    ],
+    "p": 0.384,
+    "pct3": 0.15,
+    "bott": 0.49
+   },
+   {
+    "t": "BLK",
+    "ex": -0.027725207837732357,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "SaaS"
+    ],
+    "p": 0.688,
+    "pct3": 0.53,
+    "bott": 0.75
+   },
+   {
+    "t": "ENPH",
+    "ex": -0.39972977903656104,
+    "drivers": [
+     "electricity demand",
+     "battery storage",
+     "solar"
+    ],
+    "p": 0.314,
+    "pct3": 0.02,
+    "bott": 0.29
+   },
+   {
+    "t": "ALB",
+    "ex": 1.2610859299436743,
+    "drivers": [
+     "lithium",
+     "uranium",
+     "transformer"
+    ],
+    "p": 0.3,
+    "pct3": 0.02,
+    "bott": 0.81
+   },
+   {
+    "t": "JPM",
+    "ex": 0.08444424894344849,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "subscription"
+    ],
+    "p": 0.591,
+    "pct3": 0.52,
+    "bott": 0.75
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.2525574800927144,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "accelerator"
+    ],
+    "p": 0.49,
+    "pct3": 0.47,
+    "bott": 0.82
+   },
+   {
+    "t": "SAIL",
+    "ex": -0.03622372566234566,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "grid"
+    ],
+    "p": 0.262,
+    "pct3": 0.03,
+    "bott": 0.89
+   },
+   {
+    "t": "EXC",
+    "ex": -0.022462703609152257,
+    "drivers": [
+     "nuclear power",
+     "power purchase agreement",
+     "electricity demand"
+    ],
+    "p": 0.49,
+    "pct3": 0.5,
+    "bott": 0.51
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.1583725107882339,
+    "drivers": [
+     "electricity demand",
+     "battery storage",
+     "hyperscale"
+    ],
+    "p": 0.302,
+    "pct3": 0.22,
+    "bott": 0.91
+   },
+   {
+    "t": "CMS",
+    "ex": -0.024169667186709543,
+    "drivers": [
+     "nuclear power",
+     "power purchase agreement",
+     "battery storage"
+    ],
+    "p": 0.393,
+    "pct3": 0.4,
+    "bott": 0.28
+   },
+   {
+    "t": "WCC",
+    "ex": 0.5176535429945643,
+    "drivers": [
+     "fiber optic",
+     "hyperscale",
+     "copper"
+    ],
+    "p": 0.337,
+    "pct3": 0.31,
+    "bott": 0.99
+   },
+   {
+    "t": "EVRG",
+    "ex": 0.06924951152201997,
+    "drivers": [
+     "uranium",
+     "electricity demand",
+     "nuclear power"
+    ],
+    "p": 0.392,
+    "pct3": 0.41,
+    "bott": 0.69
+   },
+   {
+    "t": "DUK",
+    "ex": -0.041269554301341715,
+    "drivers": [
+     "battery storage",
+     "nuclear power",
+     "solar"
+    ],
+    "p": 0.472,
+    "pct3": 0.53,
+    "bott": 0.33
+   },
+   {
+    "t": "ES",
+    "ex": -0.06369538628484195,
+    "drivers": [
+     "transformer",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.594,
+    "pct3": 0.63,
+    "bott": 0.61
+   },
+   {
+    "t": "XYZ",
+    "ex": -0.016901245069986803,
+    "drivers": [
+     "wind",
+     "digital assets",
+     "data center"
+    ],
+    "p": 0.33,
+    "pct3": 0.35,
+    "bott": 0.99
+   }
+  ],
+  "picks11": [
+   {
+    "t": "C",
+    "ex": 0.2682471547276808,
+    "drivers": [
+     "digital assets",
+     "solar",
+     "wind"
+    ],
+    "p": 0.902,
+    "pct3": 0.34,
+    "bott": 0.75
+   },
+   {
+    "t": "BAC",
+    "ex": 0.11859780047132751,
+    "drivers": [
+     "digital assets",
+     "aerospace",
+     "solar"
+    ],
+    "p": 0.721,
+    "pct3": 0.39,
+    "bott": 0.75
+   },
+   {
+    "t": "AES",
+    "ex": 0.28263202650793184,
+    "drivers": [
+     "power purchase agreement",
+     "natural gas turbine",
+     "battery storage"
+    ],
+    "p": 0.402,
+    "pct3": 0.15,
+    "bott": 0.96
+   },
+   {
+    "t": "GS",
+    "ex": 0.2811691808195791,
+    "drivers": [
+     "uranium",
+     "digital assets",
+     "satellite"
+    ],
+    "p": 0.622,
+    "pct3": 0.41,
+    "bott": 0.75
+   },
+   {
+    "t": "ETR",
+    "ex": 0.07445380746017327,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "nuclear power"
+    ],
+    "p": 0.565,
+    "pct3": 0.38,
+    "bott": 0.74
+   },
+   {
+    "t": "BLK",
+    "ex": -0.027725207837732357,
+    "drivers": [
+     "digital assets",
+     "wind",
+     "SaaS"
+    ],
+    "p": 0.688,
+    "pct3": 0.53,
+    "bott": 0.75
+   },
+   {
+    "t": "ALB",
+    "ex": 1.2610859299436743,
+    "drivers": [
+     "lithium",
+     "uranium",
+     "transformer"
+    ],
+    "p": 0.3,
+    "pct3": 0.02,
+    "bott": 0.81
+   },
+   {
+    "t": "JPM",
+    "ex": 0.08444424894344849,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "subscription"
+    ],
+    "p": 0.591,
+    "pct3": 0.52,
+    "bott": 0.75
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.8024943051390074,
+    "drivers": [
+     "colocation",
+     "power purchase agreement",
+     "digital assets"
+    ],
+    "p": 0.384,
+    "pct3": 0.15,
+    "bott": 0.49
+   },
+   {
+    "t": "SAIL",
+    "ex": -0.03622372566234566,
+    "drivers": [
+     "SaaS",
+     "subscription",
+     "grid"
+    ],
+    "p": 0.262,
+    "pct3": 0.03,
+    "bott": 0.89
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.2525574800927144,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "accelerator"
+    ],
+    "p": 0.49,
+    "pct3": 0.47,
+    "bott": 0.82
+   },
+   {
+    "t": "WCC",
+    "ex": 0.5176535429945643,
+    "drivers": [
+     "fiber optic",
+     "hyperscale",
+     "copper"
+    ],
+    "p": 0.337,
+    "pct3": 0.31,
+    "bott": 0.99
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.1583725107882339,
+    "drivers": [
+     "electricity demand",
+     "battery storage",
+     "hyperscale"
+    ],
+    "p": 0.302,
+    "pct3": 0.22,
+    "bott": 0.91
+   },
+   {
+    "t": "XYZ",
+    "ex": -0.016901245069986803,
+    "drivers": [
+     "wind",
+     "digital assets",
+     "data center"
+    ],
+    "p": 0.33,
+    "pct3": 0.35,
+    "bott": 0.99
+   },
+   {
+    "t": "ENPH",
+    "ex": -0.39972977903656104,
+    "drivers": [
+     "electricity demand",
+     "battery storage",
+     "solar"
+    ],
+    "p": 0.314,
+    "pct3": 0.02,
+    "bott": 0.29
+   },
+   {
+    "t": "EVRG",
+    "ex": 0.06924951152201997,
+    "drivers": [
+     "uranium",
+     "electricity demand",
+     "nuclear power"
+    ],
+    "p": 0.392,
+    "pct3": 0.41,
+    "bott": 0.69
+   },
+   {
+    "t": "EXC",
+    "ex": -0.022462703609152257,
+    "drivers": [
+     "nuclear power",
+     "power purchase agreement",
+     "electricity demand"
+    ],
+    "p": 0.49,
+    "pct3": 0.5,
+    "bott": 0.51
+   },
+   {
+    "t": "ES",
+    "ex": -0.06369538628484195,
+    "drivers": [
+     "transformer",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.594,
+    "pct3": 0.63,
+    "bott": 0.61
+   },
+   {
+    "t": "PEG",
+    "ex": -0.07872724290634747,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.415,
+    "pct3": 0.52,
+    "bott": 0.55
+   },
+   {
+    "t": "CMS",
+    "ex": -0.024169667186709543,
+    "drivers": [
+     "nuclear power",
+     "power purchase agreement",
+     "battery storage"
+    ],
+    "p": 0.393,
+    "pct3": 0.4,
+    "bott": 0.28
+   }
+  ]
+ },
+ {
+  "d": "2025-06-30",
+  "eligible": 903,
+  "model10": 0.47045021455821906,
+  "model11": 0.511893730512016,
+  "mom": 0.16380745364582064,
+  "shock": 0.27371824745323653,
+  "theme": 0.3142037140136584,
+  "sa": 0.4688955376430828,
+  "saN": 9,
+  "random": 0.062288633625204856,
+  "ic10": -0.020518289504932345,
+  "ic11": -0.017567106042602858,
+  "picks10": [
+   {
+    "t": "DOCN",
+    "ex": 0.6959121541375368,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "SaaS"
+    ],
+    "p": 0.425,
+    "pct3": 0.05,
+    "bott": 0.25
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.5220768575466763,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "lithography"
+    ],
+    "p": 0.331,
+    "pct3": 0.04,
+    "bott": 0.85
+   },
+   {
+    "t": "ENTG",
+    "ex": -0.021251771765003147,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.316,
+    "pct3": 0.13,
+    "bott": 0.83
+   },
+   {
+    "t": "ALB",
+    "ex": 1.2335962294459981,
+    "drivers": [
+     "lithium",
+     "deposition",
+     "uranium"
+    ],
+    "p": 0.282,
+    "pct3": 0.07,
+    "bott": 0.81
+   },
+   {
+    "t": "SNDK",
+    "ex": 4.367633833619147,
+    "drivers": [
+     "hard disk drive",
+     "flash storage",
+     "NAND"
+    ],
+    "p": 0.331,
+    "pct3": 0.21,
+    "bott": 0.97
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.10316850741813643,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "data center"
+    ],
+    "p": 0.361,
+    "pct3": 0.28,
+    "bott": 0.82
+   },
+   {
+    "t": "BLK",
+    "ex": -0.03259981669435308,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "SaaS"
+    ],
+    "p": 0.618,
+    "pct3": 0.59,
+    "bott": 0.75
+   },
+   {
+    "t": "BAC",
+    "ex": 0.084559782333685,
+    "drivers": [
+     "digital assets",
+     "aerospace",
+     "automotive"
+    ],
+    "p": 0.668,
+    "pct3": 0.63,
+    "bott": 0.75
+   },
+   {
+    "t": "LSCC",
+    "ex": 0.42206337041789044,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "foundry"
+    ],
+    "p": 0.28,
+    "pct3": 0.15,
+    "bott": 0.61
+   },
+   {
+    "t": "INTC",
+    "ex": 0.5402787131911666,
+    "drivers": [
+     "foundry",
+     "wafer",
+     "advanced packaging"
+    ],
+    "p": 0.331,
+    "pct3": 0.31,
+    "bott": 0.28
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.27545870138080375,
+    "drivers": [
+     "server",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.257,
+    "pct3": 0.22,
+    "bott": 0.94
+   },
+   {
+    "t": "JPM",
+    "ex": 0.04983028130919065,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.661,
+    "pct3": 0.72,
+    "bott": 0.75
+   },
+   {
+    "t": "TER",
+    "ex": 1.0821114932891684,
+    "drivers": [
+     "semiconductor test",
+     "high bandwidth memory",
+     "DRAM"
+    ],
+    "p": 0.398,
+    "pct3": 0.54,
+    "bott": 0.71
+   },
+   {
+    "t": "C",
+    "ex": 0.3043327403041516,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.667,
+    "pct3": 0.74,
+    "bott": 0.75
+   },
+   {
+    "t": "ETR",
+    "ex": 0.0634652157586304,
+    "drivers": [
+     "hyperscale",
+     "nuclear power",
+     "uranium"
+    ],
+    "p": 0.216,
+    "pct3": 0.27,
+    "bott": 0.75
+   },
+   {
+    "t": "APA",
+    "ex": 0.22224988092342723,
+    "drivers": [
+     "accelerator",
+     "defense",
+     "electric vehicle"
+    ],
+    "p": 0.164,
+    "pct3": 0.06,
+    "bott": 0.42
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.2759462755987441,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.328,
+    "pct3": 0.57,
+    "bott": 1
+   },
+   {
+    "t": "OKTA",
+    "ex": -0.1712134150090937,
+    "drivers": [
+     "digital assets",
+     "SaaS",
+     "data center"
+    ],
+    "p": 0.16,
+    "pct3": 0.2,
+    "bott": 0.57
+   },
+   {
+    "t": "AMZN",
+    "ex": -0.012310313413440355,
+    "drivers": [
+     "GPU",
+     "satellite",
+     "data center"
+    ],
+    "p": 0.38,
+    "pct3": 0.67,
+    "bott": 0.36
+   },
+   {
+    "t": "GOOG",
+    "ex": 0.7128425401672867,
+    "drivers": [
+     "autonomous driving",
+     "large language model",
+     "AI agents"
+    ],
+    "p": 0.333,
+    "pct3": 0.63,
+    "bott": 0.93
+   }
+  ],
+  "picks11": [
+   {
+    "t": "ONTO",
+    "ex": 0.5220768575466763,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "lithography"
+    ],
+    "p": 0.331,
+    "pct3": 0.04,
+    "bott": 0.85
+   },
+   {
+    "t": "SNDK",
+    "ex": 4.367633833619147,
+    "drivers": [
+     "hard disk drive",
+     "flash storage",
+     "NAND"
+    ],
+    "p": 0.331,
+    "pct3": 0.21,
+    "bott": 0.97
+   },
+   {
+    "t": "DOCN",
+    "ex": 0.6959121541375368,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "SaaS"
+    ],
+    "p": 0.425,
+    "pct3": 0.05,
+    "bott": 0.25
+   },
+   {
+    "t": "ENTG",
+    "ex": -0.021251771765003147,
+    "drivers": [
+     "etch",
+     "wafer",
+     "deposition"
+    ],
+    "p": 0.316,
+    "pct3": 0.13,
+    "bott": 0.83
+   },
+   {
+    "t": "ALB",
+    "ex": 1.2335962294459981,
+    "drivers": [
+     "lithium",
+     "deposition",
+     "uranium"
+    ],
+    "p": 0.282,
+    "pct3": 0.07,
+    "bott": 0.81
+   },
+   {
+    "t": "EQIX",
+    "ex": -0.10316850741813643,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "data center"
+    ],
+    "p": 0.361,
+    "pct3": 0.28,
+    "bott": 0.82
+   },
+   {
+    "t": "BLK",
+    "ex": -0.03259981669435308,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "SaaS"
+    ],
+    "p": 0.618,
+    "pct3": 0.59,
+    "bott": 0.75
+   },
+   {
+    "t": "BAC",
+    "ex": 0.084559782333685,
+    "drivers": [
+     "digital assets",
+     "aerospace",
+     "automotive"
+    ],
+    "p": 0.668,
+    "pct3": 0.63,
+    "bott": 0.75
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.27545870138080375,
+    "drivers": [
+     "server",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.257,
+    "pct3": 0.22,
+    "bott": 0.94
+   },
+   {
+    "t": "LSCC",
+    "ex": 0.42206337041789044,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "foundry"
+    ],
+    "p": 0.28,
+    "pct3": 0.15,
+    "bott": 0.61
+   },
+   {
+    "t": "JPM",
+    "ex": 0.04983028130919065,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.661,
+    "pct3": 0.72,
+    "bott": 0.75
+   },
+   {
+    "t": "TER",
+    "ex": 1.0821114932891684,
+    "drivers": [
+     "semiconductor test",
+     "high bandwidth memory",
+     "DRAM"
+    ],
+    "p": 0.398,
+    "pct3": 0.54,
+    "bott": 0.71
+   },
+   {
+    "t": "C",
+    "ex": 0.3043327403041516,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.667,
+    "pct3": 0.74,
+    "bott": 0.75
+   },
+   {
+    "t": "INTC",
+    "ex": 0.5402787131911666,
+    "drivers": [
+     "foundry",
+     "wafer",
+     "advanced packaging"
+    ],
+    "p": 0.331,
+    "pct3": 0.31,
+    "bott": 0.28
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.2759462755987441,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.328,
+    "pct3": 0.57,
+    "bott": 1
+   },
+   {
+    "t": "ETR",
+    "ex": 0.0634652157586304,
+    "drivers": [
+     "hyperscale",
+     "nuclear power",
+     "uranium"
+    ],
+    "p": 0.216,
+    "pct3": 0.27,
+    "bott": 0.75
+   },
+   {
+    "t": "GOOG",
+    "ex": 0.7128425401672867,
+    "drivers": [
+     "autonomous driving",
+     "large language model",
+     "AI agents"
+    ],
+    "p": 0.333,
+    "pct3": 0.63,
+    "bott": 0.93
+   },
+   {
+    "t": "APA",
+    "ex": 0.22224988092342723,
+    "drivers": [
+     "accelerator",
+     "defense",
+     "electric vehicle"
+    ],
+    "p": 0.164,
+    "pct3": 0.06,
+    "bott": 0.42
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.8014144091110393,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.33,
+    "pct3": 0.68,
+    "bott": 0.99
+   },
+   {
+    "t": "DLR",
+    "ex": -0.15606781845763773,
+    "drivers": [
+     "colocation",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.505,
+    "pct3": 0.77,
+    "bott": 0.75
+   }
+  ]
+ },
+ {
+  "d": "2025-07-31",
+  "eligible": 914,
+  "model10": 0.2001960094995575,
+  "model11": 0.20340266762422918,
+  "mom": 0.004650347402229821,
+  "shock": 0.11313459769666809,
+  "theme": 0.7076436239640594,
+  "sa": 0.5123607492348466,
+  "saN": 11,
+  "random": 0.07402861182699344,
+  "ic10": -0.011941433698282091,
+  "ic11": -0.01022604343811834,
+  "picks10": [
+   {
+    "t": "EQIX",
+    "ex": -0.03227597851102426,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.406,
+    "pct3": 0.09,
+    "bott": 0.85
+   },
+   {
+    "t": "PCG",
+    "ex": -0.028981159976568804,
+    "drivers": [
+     "nuclear power",
+     "electric vehicle",
+     "power purchase agreement"
+    ],
+    "p": 0.356,
+    "pct3": 0.04,
+    "bott": 0.7
+   },
+   {
+    "t": "EXC",
+    "ex": -0.10845601207102806,
+    "drivers": [
+     "nuclear power",
+     "electric vehicle",
+     "natural gas"
+    ],
+    "p": 0.414,
+    "pct3": 0.19,
+    "bott": 0.54
+   },
+   {
+    "t": "ONTO",
+    "ex": 1.1573856579963284,
+    "drivers": [
+     "advanced packaging",
+     "DRAM",
+     "lithography"
+    ],
+    "p": 0.344,
+    "pct3": 0.02,
+    "bott": 0.88
+   },
+   {
+    "t": "DOCN",
+    "ex": 1.0780171297412677,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.333,
+    "pct3": 0.06,
+    "bott": 0.27
+   },
+   {
+    "t": "DUK",
+    "ex": -0.11907034059492116,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "electric vehicle"
+    ],
+    "p": 0.367,
+    "pct3": 0.28,
+    "bott": 0.26
+   },
+   {
+    "t": "INTC",
+    "ex": 1.4173023051217306,
+    "drivers": [
+     "CPU",
+     "foundry",
+     "advanced packaging"
+    ],
+    "p": 0.344,
+    "pct3": 0.25,
+    "bott": 0.37
+   },
+   {
+    "t": "EVRG",
+    "ex": -0.03527007222517953,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "natural gas"
+    ],
+    "p": 0.407,
+    "pct3": 0.37,
+    "bott": 0.72
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.44467752729969456,
+    "drivers": [
+     "server",
+     "data center",
+     "refining"
+    ],
+    "p": 0.258,
+    "pct3": 0.03,
+    "bott": 0.94
+   },
+   {
+    "t": "AEE",
+    "ex": -0.08637857314234032,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "data center"
+    ],
+    "p": 0.367,
+    "pct3": 0.35,
+    "bott": 0.41
+   },
+   {
+    "t": "WEC",
+    "ex": -0.10109346092592664,
+    "drivers": [
+     "lithium",
+     "foundry",
+     "solar"
+    ],
+    "p": 0.327,
+    "pct3": 0.28,
+    "bott": 0.19
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.2654334145104269,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "colocation"
+    ],
+    "p": 0.284,
+    "pct3": 0.17,
+    "bott": 1
+   },
+   {
+    "t": "ENB",
+    "ex": -0.036834685110547216,
+    "drivers": [
+     "LNG",
+     "solar",
+     "natural gas"
+    ],
+    "p": 0.295,
+    "pct3": 0.21,
+    "bott": 0.95
+   },
+   {
+    "t": "BAC",
+    "ex": 0.05986992434044858,
+    "drivers": [
+     "digital assets",
+     "automotive",
+     "credit card"
+    ],
+    "p": 0.688,
+    "pct3": 0.67,
+    "bott": 0.73
+   },
+   {
+    "t": "ENPH",
+    "ex": 0.11490104997973916,
+    "drivers": [
+     "electric vehicle",
+     "lithium",
+     "solar"
+    ],
+    "p": 0.226,
+    "pct3": 0.02,
+    "bott": 0.34
+   },
+   {
+    "t": "ES",
+    "ex": -0.05122441437441827,
+    "drivers": [
+     "transformer",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.518,
+    "pct3": 0.58,
+    "bott": 0.59
+   },
+   {
+    "t": "DLR",
+    "ex": -0.13033429082198733,
+    "drivers": [
+     "hyperscale",
+     "data center",
+     "colocation"
+    ],
+    "p": 0.444,
+    "pct3": 0.51,
+    "bott": 0.73
+   },
+   {
+    "t": "XEL",
+    "ex": -0.06860805669608694,
+    "drivers": [
+     "uranium",
+     "fiber optic",
+     "small modular reactor"
+    ],
+    "p": 0.344,
+    "pct3": 0.39,
+    "bott": 0.42
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.5192254060010904,
+    "drivers": [
+     "etch",
+     "deposition",
+     "hard disk drive"
+    ],
+    "p": 0.278,
+    "pct3": 0.24,
+    "bott": 0.8
+   },
+   {
+    "t": "SCCO",
+    "ex": 1.165856703070695,
+    "drivers": [
+     "refining",
+     "copper",
+     "power purchase agreement"
+    ],
+    "p": 0.344,
+    "pct3": 0.4,
+    "bott": 0.71
+   }
+  ],
+  "picks11": [
+   {
+    "t": "EQIX",
+    "ex": -0.03227597851102426,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.406,
+    "pct3": 0.09,
+    "bott": 0.85
+   },
+   {
+    "t": "ONTO",
+    "ex": 1.1573856579963284,
+    "drivers": [
+     "advanced packaging",
+     "DRAM",
+     "lithography"
+    ],
+    "p": 0.344,
+    "pct3": 0.02,
+    "bott": 0.88
+   },
+   {
+    "t": "PCG",
+    "ex": -0.028981159976568804,
+    "drivers": [
+     "nuclear power",
+     "electric vehicle",
+     "power purchase agreement"
+    ],
+    "p": 0.356,
+    "pct3": 0.04,
+    "bott": 0.7
+   },
+   {
+    "t": "EXC",
+    "ex": -0.10845601207102806,
+    "drivers": [
+     "nuclear power",
+     "electric vehicle",
+     "natural gas"
+    ],
+    "p": 0.414,
+    "pct3": 0.19,
+    "bott": 0.54
+   },
+   {
+    "t": "TEAM",
+    "ex": -0.44467752729969456,
+    "drivers": [
+     "server",
+     "data center",
+     "refining"
+    ],
+    "p": 0.258,
+    "pct3": 0.03,
+    "bott": 0.94
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.2654334145104269,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "colocation"
+    ],
+    "p": 0.284,
+    "pct3": 0.17,
+    "bott": 1
+   },
+   {
+    "t": "ENB",
+    "ex": -0.036834685110547216,
+    "drivers": [
+     "LNG",
+     "solar",
+     "natural gas"
+    ],
+    "p": 0.295,
+    "pct3": 0.21,
+    "bott": 0.95
+   },
+   {
+    "t": "EVRG",
+    "ex": -0.03527007222517953,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "natural gas"
+    ],
+    "p": 0.407,
+    "pct3": 0.37,
+    "bott": 0.72
+   },
+   {
+    "t": "DOCN",
+    "ex": 1.0780171297412677,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.333,
+    "pct3": 0.06,
+    "bott": 0.27
+   },
+   {
+    "t": "BAC",
+    "ex": 0.05986992434044858,
+    "drivers": [
+     "digital assets",
+     "automotive",
+     "credit card"
+    ],
+    "p": 0.688,
+    "pct3": 0.67,
+    "bott": 0.73
+   },
+   {
+    "t": "RIVN",
+    "ex": 0.1227279385877793,
+    "drivers": [
+     "lithium",
+     "autonomous driving",
+     "automotive"
+    ],
+    "p": 0.223,
+    "pct3": 0.12,
+    "bott": 0.95
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.5192254060010904,
+    "drivers": [
+     "etch",
+     "deposition",
+     "hard disk drive"
+    ],
+    "p": 0.278,
+    "pct3": 0.24,
+    "bott": 0.8
+   },
+   {
+    "t": "DLR",
+    "ex": -0.13033429082198733,
+    "drivers": [
+     "hyperscale",
+     "data center",
+     "colocation"
+    ],
+    "p": 0.444,
+    "pct3": 0.51,
+    "bott": 0.73
+   },
+   {
+    "t": "INTC",
+    "ex": 1.4173023051217306,
+    "drivers": [
+     "CPU",
+     "foundry",
+     "advanced packaging"
+    ],
+    "p": 0.344,
+    "pct3": 0.25,
+    "bott": 0.37
+   },
+   {
+    "t": "SCCO",
+    "ex": 1.165856703070695,
+    "drivers": [
+     "refining",
+     "copper",
+     "power purchase agreement"
+    ],
+    "p": 0.344,
+    "pct3": 0.4,
+    "bott": 0.71
+   },
+   {
+    "t": "ES",
+    "ex": -0.05122441437441827,
+    "drivers": [
+     "transformer",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.518,
+    "pct3": 0.58,
+    "bott": 0.59
+   },
+   {
+    "t": "JPM",
+    "ex": -0.0437144464430852,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "data center"
+    ],
+    "p": 0.663,
+    "pct3": 0.71,
+    "bott": 0.73
+   },
+   {
+    "t": "BLK",
+    "ex": -0.06968079729353427,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "data center"
+    ],
+    "p": 0.679,
+    "pct3": 0.71,
+    "bott": 0.73
+   },
+   {
+    "t": "DUK",
+    "ex": -0.11907034059492116,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "electric vehicle"
+    ],
+    "p": 0.367,
+    "pct3": 0.28,
+    "bott": 0.26
+   },
+   {
+    "t": "AEE",
+    "ex": -0.08637857314234032,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "data center"
+    ],
+    "p": 0.367,
+    "pct3": 0.35,
+    "bott": 0.41
+   }
+  ]
+ },
+ {
+  "d": "2025-08-29",
+  "eligible": 915,
+  "model10": 0.05528583012285052,
+  "model11": 0.11260517478352838,
+  "mom": -0.09673277900052576,
+  "shock": 0.32995449156879547,
+  "theme": 1.4446822543696123,
+  "sa": 0.1421983850255628,
+  "saN": 7,
+  "random": 0.07170139633173928,
+  "ic10": 0.053342654796890834,
+  "ic11": 0.055944304934041976,
+  "picks10": [
+   {
+    "t": "CRWV",
+    "ex": -0.24276254980331058,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "rack"
+    ],
+    "p": 0.644,
+    "pct3": 0.13,
+    "bott": 0.74
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.16758426266691395,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.604,
+    "pct3": 0.07,
+    "bott": 0.83
+   },
+   {
+    "t": "CEG",
+    "ex": -0.021267156345077698,
+    "drivers": [
+     "power purchase agreement",
+     "uranium",
+     "transformer"
+    ],
+    "p": 0.502,
+    "pct3": 0.3,
+    "bott": 0.9
+   },
+   {
+    "t": "DLR",
+    "ex": -0.0076800997464292475,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "rack"
+    ],
+    "p": 0.442,
+    "pct3": 0.23,
+    "bott": 0.82
+   },
+   {
+    "t": "BAC",
+    "ex": -0.106831943497947,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "automotive"
+    ],
+    "p": 0.882,
+    "pct3": 0.65,
+    "bott": 0.74
+   },
+   {
+    "t": "ETR",
+    "ex": 0.1302444332646695,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "uranium"
+    ],
+    "p": 0.505,
+    "pct3": 0.44,
+    "bott": 0.7
+   },
+   {
+    "t": "ES",
+    "ex": 0.10125908713515863,
+    "drivers": [
+     "transformer",
+     "power purchase agreement",
+     "electric vehicle"
+    ],
+    "p": 0.355,
+    "pct3": 0.25,
+    "bott": 0.59
+   },
+   {
+    "t": "PCG",
+    "ex": 0.14507863945900046,
+    "drivers": [
+     "electric vehicle",
+     "power purchase agreement",
+     "nuclear power"
+    ],
+    "p": 0.287,
+    "pct3": 0.1,
+    "bott": 0.7
+   },
+   {
+    "t": "BLK",
+    "ex": -0.1413639900794228,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "data center"
+    ],
+    "p": 0.721,
+    "pct3": 0.65,
+    "bott": 0.74
+   },
+   {
+    "t": "ENPH",
+    "ex": 0.04764964319117104,
+    "drivers": [
+     "electric vehicle",
+     "lithium",
+     "solar"
+    ],
+    "p": 0.283,
+    "pct3": 0.11,
+    "bott": 0.33
+   },
+   {
+    "t": "PNW",
+    "ex": 0.03437426667890975,
+    "drivers": [
+     "drone",
+     "solar",
+     "power purchase agreement"
+    ],
+    "p": 0.317,
+    "pct3": 0.23,
+    "bott": 0.5
+   },
+   {
+    "t": "PEG",
+    "ex": -0.043058363971542724,
+    "drivers": [
+     "uranium",
+     "electric vehicle",
+     "power purchase agreement"
+    ],
+    "p": 0.347,
+    "pct3": 0.33,
+    "bott": 0.61
+   },
+   {
+    "t": "SCCO",
+    "ex": 1.149599839295228,
+    "drivers": [
+     "copper",
+     "refining",
+     "satellite"
+    ],
+    "p": 0.409,
+    "pct3": 0.44,
+    "bott": 0.71
+   },
+   {
+    "t": "JPM",
+    "ex": -0.09312823582359253,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "credit card"
+    ],
+    "p": 0.618,
+    "pct3": 0.63,
+    "bott": 0.74
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.3008683447407492,
+    "drivers": [
+     "liquid cooling",
+     "GPU",
+     "hard disk drive"
+    ],
+    "p": 0.365,
+    "pct3": 0.38,
+    "bott": 0.39
+   },
+   {
+    "t": "NRG",
+    "ex": 0.13814107359332883,
+    "drivers": [
+     "power purchase agreement",
+     "solar",
+     "consumer spending"
+    ],
+    "p": 0.253,
+    "pct3": 0.14,
+    "bott": 0.89
+   },
+   {
+    "t": "XEL",
+    "ex": 0.0604006742897365,
+    "drivers": [
+     "uranium",
+     "fiber optic",
+     "lithium"
+    ],
+    "p": 0.333,
+    "pct3": 0.37,
+    "bott": 0.41
+   },
+   {
+    "t": "AEE",
+    "ex": 0.04085050826345471,
+    "drivers": [
+     "uranium",
+     "solar",
+     "data center"
+    ],
+    "p": 0.322,
+    "pct3": 0.37,
+    "bott": 0.5
+   },
+   {
+    "t": "EXC",
+    "ex": 0.045519981219828365,
+    "drivers": [
+     "electric vehicle",
+     "power purchase agreement",
+     "data center"
+    ],
+    "p": 0.277,
+    "pct3": 0.27,
+    "bott": 0.61
+   },
+   {
+    "t": "CMS",
+    "ex": 0.0019748774076824294,
+    "drivers": [
+     "power purchase agreement",
+     "electric vehicle",
+     "solar"
+    ],
+    "p": 0.29,
+    "pct3": 0.34,
+    "bott": 0.36
+   }
+  ],
+  "picks11": [
+   {
+    "t": "EQIX",
+    "ex": 0.16758426266691395,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.604,
+    "pct3": 0.07,
+    "bott": 0.83
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.24276254980331058,
+    "drivers": [
+     "bitcoin mining",
+     "GPU",
+     "rack"
+    ],
+    "p": 0.644,
+    "pct3": 0.13,
+    "bott": 0.74
+   },
+   {
+    "t": "CEG",
+    "ex": -0.021267156345077698,
+    "drivers": [
+     "power purchase agreement",
+     "uranium",
+     "transformer"
+    ],
+    "p": 0.502,
+    "pct3": 0.3,
+    "bott": 0.9
+   },
+   {
+    "t": "DLR",
+    "ex": -0.0076800997464292475,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "rack"
+    ],
+    "p": 0.442,
+    "pct3": 0.23,
+    "bott": 0.82
+   },
+   {
+    "t": "BAC",
+    "ex": -0.106831943497947,
+    "drivers": [
+     "digital assets",
+     "credit card",
+     "automotive"
+    ],
+    "p": 0.882,
+    "pct3": 0.65,
+    "bott": 0.74
+   },
+   {
+    "t": "ETR",
+    "ex": 0.1302444332646695,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "uranium"
+    ],
+    "p": 0.505,
+    "pct3": 0.44,
+    "bott": 0.7
+   },
+   {
+    "t": "PCG",
+    "ex": 0.14507863945900046,
+    "drivers": [
+     "electric vehicle",
+     "power purchase agreement",
+     "nuclear power"
+    ],
+    "p": 0.287,
+    "pct3": 0.1,
+    "bott": 0.7
+   },
+   {
+    "t": "BLK",
+    "ex": -0.1413639900794228,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "data center"
+    ],
+    "p": 0.721,
+    "pct3": 0.65,
+    "bott": 0.74
+   },
+   {
+    "t": "ES",
+    "ex": 0.10125908713515863,
+    "drivers": [
+     "transformer",
+     "power purchase agreement",
+     "electric vehicle"
+    ],
+    "p": 0.355,
+    "pct3": 0.25,
+    "bott": 0.59
+   },
+   {
+    "t": "NRG",
+    "ex": 0.13814107359332883,
+    "drivers": [
+     "power purchase agreement",
+     "solar",
+     "consumer spending"
+    ],
+    "p": 0.253,
+    "pct3": 0.14,
+    "bott": 0.89
+   },
+   {
+    "t": "JPM",
+    "ex": -0.09312823582359253,
+    "drivers": [
+     "digital assets",
+     "refining",
+     "credit card"
+    ],
+    "p": 0.618,
+    "pct3": 0.63,
+    "bott": 0.74
+   },
+   {
+    "t": "SCCO",
+    "ex": 1.149599839295228,
+    "drivers": [
+     "copper",
+     "refining",
+     "satellite"
+    ],
+    "p": 0.409,
+    "pct3": 0.44,
+    "bott": 0.71
+   },
+   {
+    "t": "PEG",
+    "ex": -0.043058363971542724,
+    "drivers": [
+     "uranium",
+     "electric vehicle",
+     "power purchase agreement"
+    ],
+    "p": 0.347,
+    "pct3": 0.33,
+    "bott": 0.61
+   },
+   {
+    "t": "PNW",
+    "ex": 0.03437426667890975,
+    "drivers": [
+     "drone",
+     "solar",
+     "power purchase agreement"
+    ],
+    "p": 0.317,
+    "pct3": 0.23,
+    "bott": 0.5
+   },
+   {
+    "t": "ENPH",
+    "ex": 0.04764964319117104,
+    "drivers": [
+     "electric vehicle",
+     "lithium",
+     "solar"
+    ],
+    "p": 0.283,
+    "pct3": 0.11,
+    "bott": 0.33
+   },
+   {
+    "t": "TDG",
+    "ex": -0.09673191767355016,
+    "drivers": [
+     "transformer",
+     "aerospace",
+     "satellite"
+    ],
+    "p": 0.22,
+    "pct3": 0.18,
+    "bott": 0.82
+   },
+   {
+    "t": "EXC",
+    "ex": 0.045519981219828365,
+    "drivers": [
+     "electric vehicle",
+     "power purchase agreement",
+     "data center"
+    ],
+    "p": 0.277,
+    "pct3": 0.27,
+    "bott": 0.61
+   },
+   {
+    "t": "AMAT",
+    "ex": 1.267629170691255,
+    "drivers": [
+     "etch",
+     "wafer",
+     "advanced packaging"
+    ],
+    "p": 0.254,
+    "pct3": 0.36,
+    "bott": 0.96
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.3008683447407492,
+    "drivers": [
+     "liquid cooling",
+     "GPU",
+     "hard disk drive"
+    ],
+    "p": 0.365,
+    "pct3": 0.38,
+    "bott": 0.39
+   },
+   {
+    "t": "EVRG",
+    "ex": 0.07871570015672602,
+    "drivers": [
+     "uranium",
+     "solar",
+     "copper"
+    ],
+    "p": 0.341,
+    "pct3": 0.48,
+    "bott": 0.73
+   }
+  ]
+ },
+ {
+  "d": "2025-09-30",
+  "eligible": 924,
+  "model10": 0.03393693879547956,
+  "model11": 0.0545220089950306,
+  "mom": -0.3309727388327743,
+  "shock": 0.4524342090959955,
+  "theme": 0.3711495515205942,
+  "sa": -0.14069384560163067,
+  "saN": 7,
+  "random": 0.03969919722775145,
+  "ic10": 0.015673355955046094,
+  "ic11": 0.016891353792762243,
+  "picks10": [
+   {
+    "t": "CRWV",
+    "ex": -0.4484933175798025,
+    "drivers": [
+     "GPU",
+     "liquid cooling",
+     "bitcoin mining"
+    ],
+    "p": 0.669,
+    "pct3": 0.1,
+    "bott": 1
+   },
+   {
+    "t": "MTSI",
+    "ex": 0.7409003525904962,
+    "drivers": [
+     "wafer",
+     "power purchase agreement",
+     "optical transceiver"
+    ],
+    "p": 0.604,
+    "pct3": 0.16,
+    "bott": 0.75
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.05438133170770598,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.469,
+    "pct3": 0.05,
+    "bott": 0.99
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.25278029837406213,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.639,
+    "pct3": 0.33,
+    "bott": 0.83
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.5791365394684538,
+    "drivers": [
+     "liquid cooling",
+     "hard disk drive",
+     "GPU"
+    ],
+    "p": 0.668,
+    "pct3": 0.41,
+    "bott": 0.43
+   },
+   {
+    "t": "ALGM",
+    "ex": 0.09515987647046487,
+    "drivers": [
+     "wafer",
+     "liquid cooling",
+     "rare earth"
+    ],
+    "p": 0.406,
+    "pct3": 0.07,
+    "bott": 0.67
+   },
+   {
+    "t": "AMZN",
+    "ex": -0.06978286117277999,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.567,
+    "pct3": 0.35,
+    "bott": 0.37
+   },
+   {
+    "t": "DLR",
+    "ex": 0.03733214540842944,
+    "drivers": [
+     "colocation",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.587,
+    "pct3": 0.39,
+    "bott": 0.83
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.1830221682790133,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.669,
+    "pct3": 0.48,
+    "bott": 0.37
+   },
+   {
+    "t": "FORM",
+    "ex": 1.4917926524924217,
+    "drivers": [
+     "high bandwidth memory",
+     "DRAM",
+     "semiconductor test"
+    ],
+    "p": 0.669,
+    "pct3": 0.48,
+    "bott": 0.61
+   },
+   {
+    "t": "MCHP",
+    "ex": -0.005962372584963571,
+    "drivers": [
+     "wafer",
+     "rare earth",
+     "InfiniBand"
+    ],
+    "p": 0.388,
+    "pct3": 0.13,
+    "bott": 0.86
+   },
+   {
+    "t": "ON",
+    "ex": 0.2669003728546626,
+    "drivers": [
+     "autonomous driving",
+     "silicon carbide",
+     "rack"
+    ],
+    "p": 0.411,
+    "pct3": 0.18,
+    "bott": 0.57
+   },
+   {
+    "t": "SWKS",
+    "ex": -0.31229434711443027,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.469,
+    "pct3": 0.36,
+    "bott": 0.23
+   },
+   {
+    "t": "COIN",
+    "ex": -0.5093561179173515,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "stablecoin"
+    ],
+    "p": 0.411,
+    "pct3": 0.38,
+    "bott": 0.43
+   },
+   {
+    "t": "AMAT",
+    "ex": 0.5559547073649829,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "high bandwidth memory"
+    ],
+    "p": 0.669,
+    "pct3": 0.66,
+    "bott": 0.92
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.2340035384957877,
+    "drivers": [
+     "etch",
+     "hard disk drive",
+     "wafer"
+    ],
+    "p": 0.656,
+    "pct3": 0.67,
+    "bott": 0.84
+   },
+   {
+    "t": "JPM",
+    "ex": -0.06702657039706916,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.542,
+    "pct3": 0.61,
+    "bott": 0.75
+   },
+   {
+    "t": "BMNR",
+    "ex": -0.6359921783559128,
+    "drivers": [
+     "hashrate",
+     "bitcoin mining",
+     "digital assets"
+    ],
+    "p": 0.669,
+    "pct3": 0.69,
+    "bott": 0.3
+   },
+   {
+    "t": "XYZ",
+    "ex": -0.19387045971552141,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "digital assets"
+    ],
+    "p": 0.441,
+    "pct3": 0.53,
+    "bott": 0.98
+   },
+   {
+    "t": "GS",
+    "ex": 0.06323309615128792,
+    "drivers": [
+     "uranium",
+     "digital assets",
+     "cloud computing"
+    ],
+    "p": 0.642,
+    "pct3": 0.68,
+    "bott": 0.75
+   }
+  ],
+  "picks11": [
+   {
+    "t": "CRWV",
+    "ex": -0.4484933175798025,
+    "drivers": [
+     "GPU",
+     "liquid cooling",
+     "bitcoin mining"
+    ],
+    "p": 0.669,
+    "pct3": 0.1,
+    "bott": 1
+   },
+   {
+    "t": "MTSI",
+    "ex": 0.7409003525904962,
+    "drivers": [
+     "wafer",
+     "power purchase agreement",
+     "optical transceiver"
+    ],
+    "p": 0.604,
+    "pct3": 0.16,
+    "bott": 0.75
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.05438133170770598,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.469,
+    "pct3": 0.05,
+    "bott": 0.99
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.25278029837406213,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.639,
+    "pct3": 0.33,
+    "bott": 0.83
+   },
+   {
+    "t": "DLR",
+    "ex": 0.03733214540842944,
+    "drivers": [
+     "colocation",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.587,
+    "pct3": 0.39,
+    "bott": 0.83
+   },
+   {
+    "t": "ALGM",
+    "ex": 0.09515987647046487,
+    "drivers": [
+     "wafer",
+     "liquid cooling",
+     "rare earth"
+    ],
+    "p": 0.406,
+    "pct3": 0.07,
+    "bott": 0.67
+   },
+   {
+    "t": "MCHP",
+    "ex": -0.005962372584963571,
+    "drivers": [
+     "wafer",
+     "rare earth",
+     "InfiniBand"
+    ],
+    "p": 0.388,
+    "pct3": 0.13,
+    "bott": 0.86
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.5791365394684538,
+    "drivers": [
+     "liquid cooling",
+     "hard disk drive",
+     "GPU"
+    ],
+    "p": 0.668,
+    "pct3": 0.41,
+    "bott": 0.43
+   },
+   {
+    "t": "FORM",
+    "ex": 1.4917926524924217,
+    "drivers": [
+     "high bandwidth memory",
+     "DRAM",
+     "semiconductor test"
+    ],
+    "p": 0.669,
+    "pct3": 0.48,
+    "bott": 0.61
+   },
+   {
+    "t": "ON",
+    "ex": 0.2669003728546626,
+    "drivers": [
+     "autonomous driving",
+     "silicon carbide",
+     "rack"
+    ],
+    "p": 0.411,
+    "pct3": 0.18,
+    "bott": 0.57
+   },
+   {
+    "t": "AMZN",
+    "ex": -0.06978286117277999,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.567,
+    "pct3": 0.35,
+    "bott": 0.37
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.1830221682790133,
+    "drivers": [
+     "bitcoin mining",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.669,
+    "pct3": 0.48,
+    "bott": 0.37
+   },
+   {
+    "t": "AMAT",
+    "ex": 0.5559547073649829,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "high bandwidth memory"
+    ],
+    "p": 0.669,
+    "pct3": 0.66,
+    "bott": 0.92
+   },
+   {
+    "t": "XYZ",
+    "ex": -0.19387045971552141,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "digital assets"
+    ],
+    "p": 0.441,
+    "pct3": 0.53,
+    "bott": 0.98
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.2340035384957877,
+    "drivers": [
+     "etch",
+     "hard disk drive",
+     "wafer"
+    ],
+    "p": 0.656,
+    "pct3": 0.67,
+    "bott": 0.84
+   },
+   {
+    "t": "CDNS",
+    "ex": -0.22429077436489198,
+    "drivers": [
+     "hyperscale",
+     "GPU",
+     "CPU"
+    ],
+    "p": 0.632,
+    "pct3": 0.7,
+    "bott": 0.98
+   },
+   {
+    "t": "JPM",
+    "ex": -0.06702657039706916,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "cloud computing"
+    ],
+    "p": 0.542,
+    "pct3": 0.61,
+    "bott": 0.75
+   },
+   {
+    "t": "SWKS",
+    "ex": -0.31229434711443027,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.469,
+    "pct3": 0.36,
+    "bott": 0.23
+   },
+   {
+    "t": "COIN",
+    "ex": -0.5093561179173515,
+    "drivers": [
+     "bitcoin mining",
+     "digital assets",
+     "stablecoin"
+    ],
+    "p": 0.411,
+    "pct3": 0.38,
+    "bott": 0.43
+   },
+   {
+    "t": "GS",
+    "ex": 0.06323309615128792,
+    "drivers": [
+     "uranium",
+     "digital assets",
+     "cloud computing"
+    ],
+    "p": 0.642,
+    "pct3": 0.68,
+    "bott": 0.75
+   }
+  ]
+ },
+ {
+  "d": "2025-10-31",
+  "eligible": 923,
+  "model10": 0.030684563522420345,
+  "model11": 0.04029846161824437,
+  "mom": -0.2176836653947789,
+  "shock": 0.7380640775111886,
+  "theme": 0.6502034663483973,
+  "sa": -0.17280983491362983,
+  "saN": 7,
+  "random": 0.11739569766073338,
+  "ic10": 0.051880172010934894,
+  "ic11": 0.053408035244826055,
+  "picks10": [
+   {
+    "t": "GEV",
+    "ex": 0.7394480027002781,
+    "drivers": [
+     "nuclear power",
+     "accelerator",
+     "transformer"
+    ],
+    "p": 0.784,
+    "pct3": 0.12,
+    "bott": 0.99
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.5554586151465637,
+    "drivers": [
+     "liquid cooling",
+     "hard disk drive",
+     "GPU"
+    ],
+    "p": 0.676,
+    "pct3": 0.17,
+    "bott": 0.42
+   },
+   {
+    "t": "ON",
+    "ex": 0.9525635806520887,
+    "drivers": [
+     "silicon carbide",
+     "autonomous driving",
+     "CPU"
+    ],
+    "p": 0.612,
+    "pct3": 0.1,
+    "bott": 0.57
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.494504006596,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "electricity demand"
+    ],
+    "p": 0.595,
+    "pct3": 0.09,
+    "bott": 0.96
+   },
+   {
+    "t": "BLK",
+    "ex": -0.09594127633554661,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "refining"
+    ],
+    "p": 0.792,
+    "pct3": 0.35,
+    "bott": 1
+   },
+   {
+    "t": "CDNS",
+    "ex": -0.07276443437552604,
+    "drivers": [
+     "hyperscale",
+     "CPU",
+     "GPU"
+    ],
+    "p": 0.664,
+    "pct3": 0.23,
+    "bott": 0.98
+   },
+   {
+    "t": "PEG",
+    "ex": -0.1041238916528533,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.577,
+    "pct3": 0.14,
+    "bott": 0.7
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.10330564912500406,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.528,
+    "pct3": 0.11,
+    "bott": 0.99
+   },
+   {
+    "t": "DLR",
+    "ex": 0.07788017254263413,
+    "drivers": [
+     "colocation",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.632,
+    "pct3": 0.34,
+    "bott": 0.81
+   },
+   {
+    "t": "FIG",
+    "ex": -0.7002128977519915,
+    "drivers": [
+     "digital assets",
+     "server",
+     "inference"
+    ],
+    "p": 0.39,
+    "pct3": 0,
+    "bott": 0.74
+   },
+   {
+    "t": "D",
+    "ex": 0.003926602485686992,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "battery storage"
+    ],
+    "p": 0.512,
+    "pct3": 0.28,
+    "bott": 0.41
+   },
+   {
+    "t": "TLN",
+    "ex": -0.18931459038475107,
+    "drivers": [
+     "nuclear power",
+     "bitcoin mining",
+     "hyperscale"
+    ],
+    "p": 0.732,
+    "pct3": 0.53,
+    "bott": 0.44
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.4161160109356845,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "silicon carbide"
+    ],
+    "p": 0.43,
+    "pct3": 0.21,
+    "bott": 0.85
+   },
+   {
+    "t": "ETR",
+    "ex": 0.11266838050704964,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "uranium"
+    ],
+    "p": 0.726,
+    "pct3": 0.56,
+    "bott": 0.78
+   },
+   {
+    "t": "VST",
+    "ex": -0.284858846651201,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "power purchase agreement"
+    ],
+    "p": 0.346,
+    "pct3": 0.14,
+    "bott": 0.61
+   },
+   {
+    "t": "SMR",
+    "ex": -0.7922389859797563,
+    "drivers": [
+     "small modular reactor",
+     "nuclear power",
+     "CPU"
+    ],
+    "p": 0.487,
+    "pct3": 0.4,
+    "bott": 0.55
+   },
+   {
+    "t": "MTSI",
+    "ex": 0.8028849083443708,
+    "drivers": [
+     "gallium nitride",
+     "wafer",
+     "silicon carbide"
+    ],
+    "p": 0.672,
+    "pct3": 0.59,
+    "bott": 0.74
+   },
+   {
+    "t": "WEC",
+    "ex": -0.027322417446661307,
+    "drivers": [
+     "lithium",
+     "foundry",
+     "power purchase agreement"
+    ],
+    "p": 0.465,
+    "pct3": 0.42,
+    "bott": 0.22
+   },
+   {
+    "t": "CEG",
+    "ex": -0.2743143327697356,
+    "drivers": [
+     "power purchase agreement",
+     "nuclear power",
+     "uranium"
+    ],
+    "p": 0.716,
+    "pct3": 0.63,
+    "bott": 0.9
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.21355554330420445,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.679,
+    "pct3": 0.61,
+    "bott": 0.88
+   }
+  ],
+  "picks11": [
+   {
+    "t": "GEV",
+    "ex": 0.7394480027002781,
+    "drivers": [
+     "nuclear power",
+     "accelerator",
+     "transformer"
+    ],
+    "p": 0.784,
+    "pct3": 0.12,
+    "bott": 0.99
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.494504006596,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "electricity demand"
+    ],
+    "p": 0.595,
+    "pct3": 0.09,
+    "bott": 0.96
+   },
+   {
+    "t": "BLK",
+    "ex": -0.09594127633554661,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "refining"
+    ],
+    "p": 0.792,
+    "pct3": 0.35,
+    "bott": 1
+   },
+   {
+    "t": "CDNS",
+    "ex": -0.07276443437552604,
+    "drivers": [
+     "hyperscale",
+     "CPU",
+     "GPU"
+    ],
+    "p": 0.664,
+    "pct3": 0.23,
+    "bott": 0.98
+   },
+   {
+    "t": "FTNT",
+    "ex": -0.10330564912500406,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "foundry"
+    ],
+    "p": 0.528,
+    "pct3": 0.11,
+    "bott": 0.99
+   },
+   {
+    "t": "ON",
+    "ex": 0.9525635806520887,
+    "drivers": [
+     "silicon carbide",
+     "autonomous driving",
+     "CPU"
+    ],
+    "p": 0.612,
+    "pct3": 0.1,
+    "bott": 0.57
+   },
+   {
+    "t": "PEG",
+    "ex": -0.1041238916528533,
+    "drivers": [
+     "uranium",
+     "nuclear power",
+     "power purchase agreement"
+    ],
+    "p": 0.577,
+    "pct3": 0.14,
+    "bott": 0.7
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.5554586151465637,
+    "drivers": [
+     "liquid cooling",
+     "hard disk drive",
+     "GPU"
+    ],
+    "p": 0.676,
+    "pct3": 0.17,
+    "bott": 0.42
+   },
+   {
+    "t": "DLR",
+    "ex": 0.07788017254263413,
+    "drivers": [
+     "colocation",
+     "hyperscale",
+     "data center"
+    ],
+    "p": 0.632,
+    "pct3": 0.34,
+    "bott": 0.81
+   },
+   {
+    "t": "FIG",
+    "ex": -0.7002128977519915,
+    "drivers": [
+     "digital assets",
+     "server",
+     "inference"
+    ],
+    "p": 0.39,
+    "pct3": 0,
+    "bott": 0.74
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.4161160109356845,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "silicon carbide"
+    ],
+    "p": 0.43,
+    "pct3": 0.21,
+    "bott": 0.85
+   },
+   {
+    "t": "ETR",
+    "ex": 0.11266838050704964,
+    "drivers": [
+     "hyperscale",
+     "power purchase agreement",
+     "uranium"
+    ],
+    "p": 0.726,
+    "pct3": 0.56,
+    "bott": 0.78
+   },
+   {
+    "t": "D",
+    "ex": 0.003926602485686992,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "battery storage"
+    ],
+    "p": 0.512,
+    "pct3": 0.28,
+    "bott": 0.41
+   },
+   {
+    "t": "CEG",
+    "ex": -0.2743143327697356,
+    "drivers": [
+     "power purchase agreement",
+     "nuclear power",
+     "uranium"
+    ],
+    "p": 0.716,
+    "pct3": 0.63,
+    "bott": 0.9
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.21355554330420445,
+    "drivers": [
+     "hyperscale",
+     "colocation",
+     "GPU"
+    ],
+    "p": 0.679,
+    "pct3": 0.61,
+    "bott": 0.88
+   },
+   {
+    "t": "TLN",
+    "ex": -0.18931459038475107,
+    "drivers": [
+     "nuclear power",
+     "bitcoin mining",
+     "hyperscale"
+    ],
+    "p": 0.732,
+    "pct3": 0.53,
+    "bott": 0.44
+   },
+   {
+    "t": "C",
+    "ex": 0.16495554446981942,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "refining"
+    ],
+    "p": 0.637,
+    "pct3": 0.62,
+    "bott": 0.99
+   },
+   {
+    "t": "MTSI",
+    "ex": 0.8028849083443708,
+    "drivers": [
+     "gallium nitride",
+     "wafer",
+     "silicon carbide"
+    ],
+    "p": 0.672,
+    "pct3": 0.59,
+    "bott": 0.74
+   },
+   {
+    "t": "VST",
+    "ex": -0.284858846651201,
+    "drivers": [
+     "nuclear power",
+     "solar",
+     "power purchase agreement"
+    ],
+    "p": 0.346,
+    "pct3": 0.14,
+    "bott": 0.61
+   },
+   {
+    "t": "SMR",
+    "ex": -0.7922389859797563,
+    "drivers": [
+     "small modular reactor",
+     "nuclear power",
+     "CPU"
+    ],
+    "p": 0.487,
+    "pct3": 0.4,
+    "bott": 0.55
+   }
+  ]
+ },
+ {
+  "d": "2025-11-28",
+  "eligible": 928,
+  "model10": 0.22737217125664572,
+  "model11": 0.34254832629820425,
+  "mom": 0.37844771504090147,
+  "shock": 1.0418634845997796,
+  "theme": 1.366079719263007,
+  "sa": 1.2552839284205803,
+  "saN": 17,
+  "random": 0.2753650831578317,
+  "ic10": 0.1584968153470685,
+  "ic11": 0.15945397403819853,
+  "picks10": [
+   {
+    "t": "CRWV",
+    "ex": 0.35283534197219746,
+    "drivers": [
+     "GPU",
+     "rack",
+     "data center"
+    ],
+    "p": 0.727,
+    "pct3": 0.02,
+    "bott": 1
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.7938932691820964,
+    "drivers": [
+     "hyperscale",
+     "electricity demand",
+     "electric vehicle"
+    ],
+    "p": 0.749,
+    "pct3": 0.07,
+    "bott": 0.96
+   },
+   {
+    "t": "SMCI",
+    "ex": 0.31100245043353336,
+    "drivers": [
+     "hard disk drive",
+     "rack",
+     "liquid cooling"
+    ],
+    "p": 0.625,
+    "pct3": 0.07,
+    "bott": 0.53
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.7507177273964003,
+    "drivers": [
+     "etch",
+     "deposition",
+     "hard disk drive"
+    ],
+    "p": 0.595,
+    "pct3": 0.23,
+    "bott": 0.74
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.38799947357966436,
+    "drivers": [
+     "hyperscale",
+     "autonomous driving",
+     "accelerator"
+    ],
+    "p": 0.633,
+    "pct3": 0.31,
+    "bott": 0.82
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.14241134878265216,
+    "drivers": [
+     "hyperscale",
+     "high bandwidth memory",
+     "advanced packaging"
+    ],
+    "p": 0.514,
+    "pct3": 0.17,
+    "bott": 0.97
+   },
+   {
+    "t": "BLK",
+    "ex": -0.06185117533426476,
+    "drivers": [
+     "refining",
+     "natural gas",
+     "data center"
+    ],
+    "p": 0.548,
+    "pct3": 0.25,
+    "bott": 1
+   },
+   {
+    "t": "FIG",
+    "ex": -0.3540387868865035,
+    "drivers": [
+     "freight",
+     "shipping",
+     "defense"
+    ],
+    "p": 0.392,
+    "pct3": 0,
+    "bott": 0.86
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.702952061219237,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "silicon carbide"
+    ],
+    "p": 0.414,
+    "pct3": 0.08,
+    "bott": 0.9
+   },
+   {
+    "t": "ANET",
+    "ex": 0.17626499664359918,
+    "drivers": [
+     "InfiniBand",
+     "CPU",
+     "Ethernet switch"
+    ],
+    "p": 0.529,
+    "pct3": 0.31,
+    "bott": 0.98
+   },
+   {
+    "t": "DLR",
+    "ex": 0.1463868020855814,
+    "drivers": [
+     "hyperscale",
+     "data center",
+     "rack"
+    ],
+    "p": 0.525,
+    "pct3": 0.31,
+    "bott": 0.83
+   },
+   {
+    "t": "MARA",
+    "ex": 0.18223590163137127,
+    "drivers": [
+     "bitcoin mining",
+     "grid",
+     "data center"
+    ],
+    "p": 0.37,
+    "pct3": 0.03,
+    "bott": 0.25
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.10499692787530157,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "InfiniBand"
+    ],
+    "p": 0.678,
+    "pct3": 0.48,
+    "bott": 0.71
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.48389364010230085,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "rack"
+    ],
+    "p": 0.573,
+    "pct3": 0.4,
+    "bott": 0.74
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.0069641937782807,
+    "drivers": [
+     "rack",
+     "DRAM",
+     "CPU"
+    ],
+    "p": 0.384,
+    "pct3": 0.13,
+    "bott": 0.44
+   },
+   {
+    "t": "SMR",
+    "ex": -0.3690771234526061,
+    "drivers": [
+     "power purchase agreement",
+     "lithium",
+     "nuclear power"
+    ],
+    "p": 0.332,
+    "pct3": 0.01,
+    "bott": 0.61
+   },
+   {
+    "t": "BMNR",
+    "ex": -0.4026642364354588,
+    "drivers": [
+     "hashrate",
+     "bitcoin mining",
+     "deposition"
+    ],
+    "p": 0.336,
+    "pct3": 0.04,
+    "bott": 0.28
+   },
+   {
+    "t": "COIN",
+    "ex": -0.3410384919445637,
+    "drivers": [
+     "data center",
+     "refining",
+     "wind"
+    ],
+    "p": 0.381,
+    "pct3": 0.18,
+    "bott": 0.47
+   },
+   {
+    "t": "SWKS",
+    "ex": 0.11406688635668827,
+    "drivers": [
+     "wafer",
+     "rare earth",
+     "foundry"
+    ],
+    "p": 0.358,
+    "pct3": 0.16,
+    "bott": 0.2
+   },
+   {
+    "t": "CRCL",
+    "ex": 0.4194922181474068,
+    "drivers": [],
+    "p": 0.29,
+    "pct3": 0.01,
+    "bott": 0.43
+   }
+  ],
+  "picks11": [
+   {
+    "t": "CRWV",
+    "ex": 0.35283534197219746,
+    "drivers": [
+     "GPU",
+     "rack",
+     "data center"
+    ],
+    "p": 0.727,
+    "pct3": 0.02,
+    "bott": 1
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.7938932691820964,
+    "drivers": [
+     "hyperscale",
+     "electricity demand",
+     "electric vehicle"
+    ],
+    "p": 0.749,
+    "pct3": 0.07,
+    "bott": 0.96
+   },
+   {
+    "t": "SMCI",
+    "ex": 0.31100245043353336,
+    "drivers": [
+     "hard disk drive",
+     "rack",
+     "liquid cooling"
+    ],
+    "p": 0.625,
+    "pct3": 0.07,
+    "bott": 0.53
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.14241134878265216,
+    "drivers": [
+     "hyperscale",
+     "high bandwidth memory",
+     "advanced packaging"
+    ],
+    "p": 0.514,
+    "pct3": 0.17,
+    "bott": 0.97
+   },
+   {
+    "t": "BLK",
+    "ex": -0.06185117533426476,
+    "drivers": [
+     "refining",
+     "natural gas",
+     "data center"
+    ],
+    "p": 0.548,
+    "pct3": 0.25,
+    "bott": 1
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.7507177273964003,
+    "drivers": [
+     "etch",
+     "deposition",
+     "hard disk drive"
+    ],
+    "p": 0.595,
+    "pct3": 0.23,
+    "bott": 0.74
+   },
+   {
+    "t": "EQIX",
+    "ex": 0.38799947357966436,
+    "drivers": [
+     "hyperscale",
+     "autonomous driving",
+     "accelerator"
+    ],
+    "p": 0.633,
+    "pct3": 0.31,
+    "bott": 0.82
+   },
+   {
+    "t": "FIG",
+    "ex": -0.3540387868865035,
+    "drivers": [
+     "freight",
+     "shipping",
+     "defense"
+    ],
+    "p": 0.392,
+    "pct3": 0,
+    "bott": 0.86
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.702952061219237,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "silicon carbide"
+    ],
+    "p": 0.414,
+    "pct3": 0.08,
+    "bott": 0.9
+   },
+   {
+    "t": "ANET",
+    "ex": 0.17626499664359918,
+    "drivers": [
+     "InfiniBand",
+     "CPU",
+     "Ethernet switch"
+    ],
+    "p": 0.529,
+    "pct3": 0.31,
+    "bott": 0.98
+   },
+   {
+    "t": "DLR",
+    "ex": 0.1463868020855814,
+    "drivers": [
+     "hyperscale",
+     "data center",
+     "rack"
+    ],
+    "p": 0.525,
+    "pct3": 0.31,
+    "bott": 0.83
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.10499692787530157,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "InfiniBand"
+    ],
+    "p": 0.678,
+    "pct3": 0.48,
+    "bott": 0.71
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.48389364010230085,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "rack"
+    ],
+    "p": 0.573,
+    "pct3": 0.4,
+    "bott": 0.74
+   },
+   {
+    "t": "SMR",
+    "ex": -0.3690771234526061,
+    "drivers": [
+     "power purchase agreement",
+     "lithium",
+     "nuclear power"
+    ],
+    "p": 0.332,
+    "pct3": 0.01,
+    "bott": 0.61
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.0069641937782807,
+    "drivers": [
+     "rack",
+     "DRAM",
+     "CPU"
+    ],
+    "p": 0.384,
+    "pct3": 0.13,
+    "bott": 0.44
+   },
+   {
+    "t": "GEV",
+    "ex": 0.6099638356074877,
+    "drivers": [
+     "accelerator",
+     "transformer",
+     "personal computer"
+    ],
+    "p": 0.38,
+    "pct3": 0.37,
+    "bott": 0.99
+   },
+   {
+    "t": "COIN",
+    "ex": -0.3410384919445637,
+    "drivers": [
+     "data center",
+     "refining",
+     "wind"
+    ],
+    "p": 0.381,
+    "pct3": 0.18,
+    "bott": 0.47
+   },
+   {
+    "t": "MARA",
+    "ex": 0.18223590163137127,
+    "drivers": [
+     "bitcoin mining",
+     "grid",
+     "data center"
+    ],
+    "p": 0.37,
+    "pct3": 0.03,
+    "bott": 0.25
+   },
+   {
+    "t": "TXN",
+    "ex": 0.7492679412319092,
+    "drivers": [
+     "wafer",
+     "automotive",
+     "tariff"
+    ],
+    "p": 0.298,
+    "pct3": 0.09,
+    "bott": 0.65
+   },
+   {
+    "t": "LSCC",
+    "ex": 1.0751861920604109,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "foundry"
+    ],
+    "p": 0.579,
+    "pct3": 0.58,
+    "bott": 0.74
+   }
+  ]
+ },
+ {
+  "d": "2025-12-31",
+  "eligible": 920,
+  "model10": 0.3028288228892215,
+  "model11": 0.3323637806802494,
+  "mom": 0.31092718311856815,
+  "shock": 0.5942013125777931,
+  "theme": 1.3812732780025325,
+  "sa": 1.027279213547233,
+  "saN": 17,
+  "random": 0.29981951877320456,
+  "ic10": 0.09429723169414857,
+  "ic11": 0.09585849042210896,
+  "picks10": [
+   {
+    "t": "RMBS",
+    "ex": 0.1782652529581774,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.999,
+    "pct3": 0.17,
+    "bott": 0.95
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.7754466472507688,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.994,
+    "pct3": 0.18,
+    "bott": 0.75
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.17592731076158685,
+    "drivers": [
+     "hard disk drive",
+     "advanced packaging",
+     "freight"
+    ],
+    "p": 0.684,
+    "pct3": 0.01,
+    "bott": 0.59
+   },
+   {
+    "t": "MARA",
+    "ex": 0.2818177466116243,
+    "drivers": [
+     "deposition",
+     "shipping",
+     "freight"
+    ],
+    "p": 0.669,
+    "pct3": 0,
+    "bott": 0.28
+   },
+   {
+    "t": "CRWV",
+    "ex": 0.0112294128620829,
+    "drivers": [
+     "GPU",
+     "credit card",
+     "shipping"
+    ],
+    "p": 0.669,
+    "pct3": 0.01,
+    "bott": 0.99
+   },
+   {
+    "t": "BMNR",
+    "ex": -0.6153441176457914,
+    "drivers": [
+     "deposition",
+     "CPU",
+     "rare earth"
+    ],
+    "p": 0.668,
+    "pct3": 0.01,
+    "bott": 0.23
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6207980168809806,
+    "drivers": [
+     "satellite",
+     "transformer",
+     "credit card"
+    ],
+    "p": 0.668,
+    "pct3": 0.02,
+    "bott": 0.75
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.024166681210259444,
+    "drivers": [
+     "satellite",
+     "shipping",
+     "credit card"
+    ],
+    "p": 0.663,
+    "pct3": 0.02,
+    "bott": 0.88
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.11209401938319696,
+    "drivers": [
+     "foundry",
+     "tariff",
+     "shipping"
+    ],
+    "p": 0.668,
+    "pct3": 0.03,
+    "bott": 0.24
+   },
+   {
+    "t": "IREN",
+    "ex": -0.054495259735559465,
+    "drivers": [
+     "InfiniBand",
+     "foundry",
+     "rare earth"
+    ],
+    "p": 0.669,
+    "pct3": 0.07,
+    "bott": 0.28
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.4165918427022066,
+    "drivers": [
+     "InfiniBand",
+     "CPU",
+     "rare earth"
+    ],
+    "p": 0.669,
+    "pct3": 0.07,
+    "bott": 0.24
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.9047161772248378,
+    "drivers": [
+     "gallium nitride",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.999,
+    "pct3": 0.38,
+    "bott": 0.53
+   },
+   {
+    "t": "ANET",
+    "ex": 0.17814052256401025,
+    "drivers": [
+     "InfiniBand",
+     "CPU",
+     "Ethernet switch"
+    ],
+    "p": 0.685,
+    "pct3": 0.14,
+    "bott": 0.99
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.3305170237385378,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "CPU"
+    ],
+    "p": 0.655,
+    "pct3": 0.12,
+    "bott": 0.49
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.3997553796348783,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "freight"
+    ],
+    "p": 0.717,
+    "pct3": 0.19,
+    "bott": 0.75
+   },
+   {
+    "t": "SWKS",
+    "ex": -0.04517791161352336,
+    "drivers": [
+     "wafer",
+     "aerospace",
+     "rare earth"
+    ],
+    "p": 0.612,
+    "pct3": 0.08,
+    "bott": 0.2
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.14789849373507025,
+    "drivers": [
+     "high bandwidth memory",
+     "aerospace",
+     "accelerator"
+    ],
+    "p": 0.644,
+    "pct3": 0.15,
+    "bott": 0.97
+   },
+   {
+    "t": "LSCC",
+    "ex": 0.7911246940811159,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "automotive"
+    ],
+    "p": 0.946,
+    "pct3": 0.46,
+    "bott": 0.75
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.022788001642541023,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "autonomous driving"
+    ],
+    "p": 0.895,
+    "pct3": 0.45,
+    "bott": 0.72
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.8460805107662028,
+    "drivers": [
+     "copper",
+     "foundry",
+     "freight"
+    ],
+    "p": 0.51,
+    "pct3": 0.07,
+    "bott": 0.97
+   }
+  ],
+  "picks11": [
+   {
+    "t": "RMBS",
+    "ex": 0.1782652529581774,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.999,
+    "pct3": 0.17,
+    "bott": 0.95
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.7754466472507688,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.994,
+    "pct3": 0.18,
+    "bott": 0.75
+   },
+   {
+    "t": "CRWV",
+    "ex": 0.0112294128620829,
+    "drivers": [
+     "GPU",
+     "credit card",
+     "shipping"
+    ],
+    "p": 0.669,
+    "pct3": 0.01,
+    "bott": 0.99
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.024166681210259444,
+    "drivers": [
+     "satellite",
+     "shipping",
+     "credit card"
+    ],
+    "p": 0.663,
+    "pct3": 0.02,
+    "bott": 0.88
+   },
+   {
+    "t": "ANET",
+    "ex": 0.17814052256401025,
+    "drivers": [
+     "InfiniBand",
+     "CPU",
+     "Ethernet switch"
+    ],
+    "p": 0.685,
+    "pct3": 0.14,
+    "bott": 0.99
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.6207980168809806,
+    "drivers": [
+     "satellite",
+     "transformer",
+     "credit card"
+    ],
+    "p": 0.668,
+    "pct3": 0.02,
+    "bott": 0.75
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.14789849373507025,
+    "drivers": [
+     "high bandwidth memory",
+     "aerospace",
+     "accelerator"
+    ],
+    "p": 0.644,
+    "pct3": 0.15,
+    "bott": 0.97
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.17592731076158685,
+    "drivers": [
+     "hard disk drive",
+     "advanced packaging",
+     "freight"
+    ],
+    "p": 0.684,
+    "pct3": 0.01,
+    "bott": 0.59
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.3997553796348783,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "freight"
+    ],
+    "p": 0.717,
+    "pct3": 0.19,
+    "bott": 0.75
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.9047161772248378,
+    "drivers": [
+     "gallium nitride",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.999,
+    "pct3": 0.38,
+    "bott": 0.53
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.8460805107662028,
+    "drivers": [
+     "copper",
+     "foundry",
+     "freight"
+    ],
+    "p": 0.51,
+    "pct3": 0.07,
+    "bott": 0.97
+   },
+   {
+    "t": "MOD",
+    "ex": 0.6672961754652951,
+    "drivers": [
+     "copper",
+     "automotive",
+     "aerospace"
+    ],
+    "p": 0.568,
+    "pct3": 0.19,
+    "bott": 0.96
+   },
+   {
+    "t": "LSCC",
+    "ex": 0.7911246940811159,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "automotive"
+    ],
+    "p": 0.946,
+    "pct3": 0.46,
+    "bott": 0.75
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.2948169114439467,
+    "drivers": [
+     "wafer",
+     "silicon carbide",
+     "aerospace"
+    ],
+    "p": 0.804,
+    "pct3": 0.44,
+    "bott": 0.93
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.3305170237385378,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "CPU"
+    ],
+    "p": 0.655,
+    "pct3": 0.12,
+    "bott": 0.49
+   },
+   {
+    "t": "MARA",
+    "ex": 0.2818177466116243,
+    "drivers": [
+     "deposition",
+     "shipping",
+     "freight"
+    ],
+    "p": 0.669,
+    "pct3": 0,
+    "bott": 0.28
+   },
+   {
+    "t": "NVDA",
+    "ex": -0.022788001642541023,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "autonomous driving"
+    ],
+    "p": 0.895,
+    "pct3": 0.45,
+    "bott": 0.72
+   },
+   {
+    "t": "BMNR",
+    "ex": -0.6153441176457914,
+    "drivers": [
+     "deposition",
+     "CPU",
+     "rare earth"
+    ],
+    "p": 0.668,
+    "pct3": 0.01,
+    "bott": 0.23
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.11209401938319696,
+    "drivers": [
+     "foundry",
+     "tariff",
+     "shipping"
+    ],
+    "p": 0.668,
+    "pct3": 0.03,
+    "bott": 0.24
+   },
+   {
+    "t": "IREN",
+    "ex": -0.054495259735559465,
+    "drivers": [
+     "InfiniBand",
+     "foundry",
+     "rare earth"
+    ],
+    "p": 0.669,
+    "pct3": 0.07,
+    "bott": 0.28
+   }
+  ]
+ },
+ {
+  "d": "2026-01-30",
+  "eligible": 918,
+  "model10": 0.23840468822370048,
+  "model11": 0.2470579481770252,
+  "mom": 0.1366259361940073,
+  "shock": 0.18466315998119034,
+  "theme": 0.28454620317854235,
+  "sa": 0.2649850075536593,
+  "saN": 17,
+  "random": 0.10577539697561607,
+  "ic10": 0.07577373344961062,
+  "ic11": 0.07650334774173037,
+  "picks10": [
+   {
+    "t": "CRDO",
+    "ex": 0.6710240484813321,
+    "drivers": [
+     "semiconductor test",
+     "hyperscale",
+     "fiber optic"
+    ],
+    "p": 0.869,
+    "pct3": 0.04,
+    "bott": 0.72
+   },
+   {
+    "t": "AVGO",
+    "ex": 0.12121401546105326,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "high bandwidth memory"
+    ],
+    "p": 0.994,
+    "pct3": 0.17,
+    "bott": 0.91
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.027101098858144157,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "InfiniBand"
+    ],
+    "p": 0.945,
+    "pct3": 0.22,
+    "bott": 0.72
+   },
+   {
+    "t": "SWKS",
+    "ex": 0.04143227066014843,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.771,
+    "pct3": 0.06,
+    "bott": 0.21
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.09856068014300823,
+    "drivers": [
+     "hard disk drive",
+     "liquid cooling",
+     "advanced packaging"
+    ],
+    "p": 0.694,
+    "pct3": 0.01,
+    "bott": 0.52
+   },
+   {
+    "t": "ALAB",
+    "ex": 0.987187951274435,
+    "drivers": [
+     "custom ASIC",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.747,
+    "pct3": 0.1,
+    "bott": 0.45
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.24751927751902214,
+    "drivers": [
+     "rack",
+     "freight",
+     "shipping"
+    ],
+    "p": 0.67,
+    "pct3": 0.04,
+    "bott": 0.99
+   },
+   {
+    "t": "MARA",
+    "ex": 0.183210202537065,
+    "drivers": [
+     "deposition",
+     "hyperscale",
+     "wind"
+    ],
+    "p": 0.642,
+    "pct3": 0.01,
+    "bott": 0.3
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.12129901478665106,
+    "drivers": [
+     "high bandwidth memory",
+     "hyperscale",
+     "aerospace"
+    ],
+    "p": 0.744,
+    "pct3": 0.15,
+    "bott": 0.97
+   },
+   {
+    "t": "AMD",
+    "ex": 0.8789792475539968,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "hyperscale"
+    ],
+    "p": 0.746,
+    "pct3": 0.2,
+    "bott": 0.82
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.10260320725067018,
+    "drivers": [
+     "rare earth",
+     "hyperscale",
+     "InfiniBand"
+    ],
+    "p": 0.67,
+    "pct3": 0.12,
+    "bott": 0.24
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.2650356481226803,
+    "drivers": [
+     "hyperscale",
+     "transformer",
+     "steel"
+    ],
+    "p": 0.634,
+    "pct3": 0.09,
+    "bott": 0.74
+   },
+   {
+    "t": "WULF",
+    "ex": 0.25963716762922306,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "deposition"
+    ],
+    "p": 0.66,
+    "pct3": 0.14,
+    "bott": 0.49
+   },
+   {
+    "t": "TLN",
+    "ex": -0.074127406542017,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "uranium"
+    ],
+    "p": 0.655,
+    "pct3": 0.15,
+    "bott": 0.64
+   },
+   {
+    "t": "IREN",
+    "ex": -0.36117463970234553,
+    "drivers": [
+     "InfiniBand",
+     "rare earth",
+     "foundry"
+    ],
+    "p": 0.662,
+    "pct3": 0.16,
+    "bott": 0.31
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.1868336186845041,
+    "drivers": [
+     "foundry",
+     "tariff",
+     "hyperscale"
+    ],
+    "p": 0.576,
+    "pct3": 0.03,
+    "bott": 0.24
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.25983843265837225,
+    "drivers": [
+     "transformer",
+     "satellite",
+     "hyperscale"
+    ],
+    "p": 0.608,
+    "pct3": 0.1,
+    "bott": 0.85
+   },
+   {
+    "t": "ANET",
+    "ex": 0.24892168090502298,
+    "drivers": [
+     "InfiniBand",
+     "rare earth",
+     "freight"
+    ],
+    "p": 0.658,
+    "pct3": 0.17,
+    "bott": 0.99
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.777052841716809,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "freight"
+    ],
+    "p": 0.601,
+    "pct3": 0.11,
+    "bott": 0.75
+   },
+   {
+    "t": "FTNT",
+    "ex": 0.937782187117038,
+    "drivers": [
+     "foundry",
+     "hyperscale",
+     "tariff"
+    ],
+    "p": 0.62,
+    "pct3": 0.21,
+    "bott": 1
+   }
+  ],
+  "picks11": [
+   {
+    "t": "AVGO",
+    "ex": 0.12121401546105326,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "high bandwidth memory"
+    ],
+    "p": 0.994,
+    "pct3": 0.17,
+    "bott": 0.91
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.6710240484813321,
+    "drivers": [
+     "semiconductor test",
+     "hyperscale",
+     "fiber optic"
+    ],
+    "p": 0.869,
+    "pct3": 0.04,
+    "bott": 0.72
+   },
+   {
+    "t": "CRWV",
+    "ex": -0.24751927751902214,
+    "drivers": [
+     "rack",
+     "freight",
+     "shipping"
+    ],
+    "p": 0.67,
+    "pct3": 0.04,
+    "bott": 0.99
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.027101098858144157,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "InfiniBand"
+    ],
+    "p": 0.945,
+    "pct3": 0.22,
+    "bott": 0.72
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.12129901478665106,
+    "drivers": [
+     "high bandwidth memory",
+     "hyperscale",
+     "aerospace"
+    ],
+    "p": 0.744,
+    "pct3": 0.15,
+    "bott": 0.97
+   },
+   {
+    "t": "AMD",
+    "ex": 0.8789792475539968,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "hyperscale"
+    ],
+    "p": 0.746,
+    "pct3": 0.2,
+    "bott": 0.82
+   },
+   {
+    "t": "ANET",
+    "ex": 0.24892168090502298,
+    "drivers": [
+     "InfiniBand",
+     "rare earth",
+     "freight"
+    ],
+    "p": 0.658,
+    "pct3": 0.17,
+    "bott": 0.99
+   },
+   {
+    "t": "SMCI",
+    "ex": -0.09856068014300823,
+    "drivers": [
+     "hard disk drive",
+     "liquid cooling",
+     "advanced packaging"
+    ],
+    "p": 0.694,
+    "pct3": 0.01,
+    "bott": 0.52
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.25983843265837225,
+    "drivers": [
+     "transformer",
+     "satellite",
+     "hyperscale"
+    ],
+    "p": 0.608,
+    "pct3": 0.1,
+    "bott": 0.85
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.2650356481226803,
+    "drivers": [
+     "hyperscale",
+     "transformer",
+     "steel"
+    ],
+    "p": 0.634,
+    "pct3": 0.09,
+    "bott": 0.74
+   },
+   {
+    "t": "ALAB",
+    "ex": 0.987187951274435,
+    "drivers": [
+     "custom ASIC",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.747,
+    "pct3": 0.1,
+    "bott": 0.45
+   },
+   {
+    "t": "FTNT",
+    "ex": 0.937782187117038,
+    "drivers": [
+     "foundry",
+     "hyperscale",
+     "tariff"
+    ],
+    "p": 0.62,
+    "pct3": 0.21,
+    "bott": 1
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.777052841716809,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "freight"
+    ],
+    "p": 0.601,
+    "pct3": 0.11,
+    "bott": 0.75
+   },
+   {
+    "t": "TLN",
+    "ex": -0.074127406542017,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "uranium"
+    ],
+    "p": 0.655,
+    "pct3": 0.15,
+    "bott": 0.64
+   },
+   {
+    "t": "SWKS",
+    "ex": 0.04143227066014843,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.771,
+    "pct3": 0.06,
+    "bott": 0.21
+   },
+   {
+    "t": "GNRC",
+    "ex": 0.0984919745393551,
+    "drivers": [
+     "refining",
+     "copper",
+     "hyperscale"
+    ],
+    "p": 0.649,
+    "pct3": 0.33,
+    "bott": 0.97
+   },
+   {
+    "t": "WULF",
+    "ex": 0.25963716762922306,
+    "drivers": [
+     "hyperscale",
+     "foundry",
+     "deposition"
+    ],
+    "p": 0.66,
+    "pct3": 0.14,
+    "bott": 0.49
+   },
+   {
+    "t": "CEG",
+    "ex": -0.08448107214659151,
+    "drivers": [
+     "solar",
+     "uranium",
+     "power purchase agreement"
+    ],
+    "p": 0.471,
+    "pct3": 0.07,
+    "bott": 0.94
+   },
+   {
+    "t": "MARA",
+    "ex": 0.183210202537065,
+    "drivers": [
+     "deposition",
+     "hyperscale",
+     "wind"
+    ],
+    "p": 0.642,
+    "pct3": 0.01,
+    "bott": 0.3
+   },
+   {
+    "t": "DLR",
+    "ex": 0.08731648290655936,
+    "drivers": [
+     "hyperscale",
+     "construction",
+     "rack"
+    ],
+    "p": 0.605,
+    "pct3": 0.27,
+    "bott": 0.86
+   }
+  ]
+ },
+ {
+  "d": "2026-02-27",
+  "eligible": 925,
+  "model10": 0.30416706854739595,
+  "model11": 0.2928261915127376,
+  "mom": 0.13416115924053001,
+  "shock": 0.021255118091404325,
+  "theme": 0.16329075613098093,
+  "sa": 0.20461226301238242,
+  "saN": 15,
+  "random": 0.10574795773824305,
+  "ic10": 0.013173535938114772,
+  "ic11": 0.012945484262978863,
+  "picks10": [
+   {
+    "t": "AVGO",
+    "ex": 0.11638103087047003,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "rare earth"
+    ],
+    "p": 0.903,
+    "pct3": 0.11,
+    "bott": 0.92
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.9973810206440894,
+    "drivers": [
+     "semiconductor test",
+     "fiber optic",
+     "hyperscale"
+    ],
+    "p": 0.681,
+    "pct3": 0.02,
+    "bott": 0.71
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.827045725128249,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "automotive"
+    ],
+    "p": 0.711,
+    "pct3": 0.18,
+    "bott": 0.83
+   },
+   {
+    "t": "MP",
+    "ex": -0.15929245158596728,
+    "drivers": [
+     "rare earth",
+     "aerospace",
+     "refining"
+    ],
+    "p": 0.731,
+    "pct3": 0.26,
+    "bott": 0.87
+   },
+   {
+    "t": "AMD",
+    "ex": 1.3037209348491623,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "rack"
+    ],
+    "p": 0.654,
+    "pct3": 0.22,
+    "bott": 0.86
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.1518322684609923,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "hard disk drive"
+    ],
+    "p": 0.721,
+    "pct3": 0.34,
+    "bott": 0.76
+   },
+   {
+    "t": "INTC",
+    "ex": 0.9260204498543467,
+    "drivers": [
+     "NAND",
+     "advanced packaging",
+     "wafer"
+    ],
+    "p": 0.972,
+    "pct3": 0.61,
+    "bott": 0.31
+   },
+   {
+    "t": "SANM",
+    "ex": 0.323034033600186,
+    "drivers": [
+     "aerospace",
+     "automotive",
+     "DRAM"
+    ],
+    "p": 0.55,
+    "pct3": 0.33,
+    "bott": 0.77
+   },
+   {
+    "t": "RMBS",
+    "ex": -0.1730392606616744,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.631,
+    "pct3": 0.43,
+    "bott": 0.85
+   },
+   {
+    "t": "BRKR",
+    "ex": 0.3934574238323907,
+    "drivers": [
+     "EUV",
+     "high bandwidth memory",
+     "copper"
+    ],
+    "p": 0.405,
+    "pct3": 0.13,
+    "bott": 0.85
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.08171301546384258,
+    "drivers": [
+     "aerospace",
+     "hyperscale",
+     "high bandwidth memory"
+    ],
+    "p": 0.48,
+    "pct3": 0.29,
+    "bott": 0.96
+   },
+   {
+    "t": "BMNR",
+    "ex": 0.12631349014738702,
+    "drivers": [
+     "deposition",
+     "solar",
+     "rare earth"
+    ],
+    "p": 0.338,
+    "pct3": 0.01,
+    "bott": 0.22
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.06543429976155513,
+    "drivers": [
+     "foundry",
+     "tariff",
+     "construction"
+    ],
+    "p": 0.338,
+    "pct3": 0.03,
+    "bott": 0.25
+   },
+   {
+    "t": "COIN",
+    "ex": -0.07598263020099005,
+    "drivers": [
+     "refining",
+     "construction",
+     "wind"
+    ],
+    "p": 0.333,
+    "pct3": 0.02,
+    "bott": 0.31
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.3608911204529313,
+    "drivers": [
+     "custom ASIC",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.347,
+    "pct3": 0.07,
+    "bott": 0.36
+   },
+   {
+    "t": "MARA",
+    "ex": 0.08821825205214884,
+    "drivers": [
+     "hyperscale",
+     "grid",
+     "natural gas"
+    ],
+    "p": 0.338,
+    "pct3": 0.07,
+    "bott": 0.38
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.01733706524138512,
+    "drivers": [
+     "wafer",
+     "solar",
+     "copper"
+    ],
+    "p": 0.331,
+    "pct3": 0.06,
+    "bott": 0.78
+   },
+   {
+    "t": "TLN",
+    "ex": -0.20209873194901584,
+    "drivers": [
+     "nuclear power",
+     "natural gas",
+     "hyperscale"
+    ],
+    "p": 0.412,
+    "pct3": 0.25,
+    "bott": 0.67
+   },
+   {
+    "t": "CIFR",
+    "ex": -0.07810698362587876,
+    "drivers": [
+     "power purchase agreement",
+     "deposition",
+     "hyperscale"
+    ],
+    "p": 0.338,
+    "pct3": 0.08,
+    "bott": 0.36
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.027755429095078332,
+    "drivers": [
+     "transformer",
+     "construction",
+     "hyperscale"
+    ],
+    "p": 0.338,
+    "pct3": 0.09,
+    "bott": 0.89
+   }
+  ],
+  "picks11": [
+   {
+    "t": "AVGO",
+    "ex": 0.11638103087047003,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "rare earth"
+    ],
+    "p": 0.903,
+    "pct3": 0.11,
+    "bott": 0.92
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.9973810206440894,
+    "drivers": [
+     "semiconductor test",
+     "fiber optic",
+     "hyperscale"
+    ],
+    "p": 0.681,
+    "pct3": 0.02,
+    "bott": 0.71
+   },
+   {
+    "t": "NTAP",
+    "ex": 0.827045725128249,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "automotive"
+    ],
+    "p": 0.711,
+    "pct3": 0.18,
+    "bott": 0.83
+   },
+   {
+    "t": "MP",
+    "ex": -0.15929245158596728,
+    "drivers": [
+     "rare earth",
+     "aerospace",
+     "refining"
+    ],
+    "p": 0.731,
+    "pct3": 0.26,
+    "bott": 0.87
+   },
+   {
+    "t": "AMD",
+    "ex": 1.3037209348491623,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "rack"
+    ],
+    "p": 0.654,
+    "pct3": 0.22,
+    "bott": 0.86
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.1518322684609923,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "hard disk drive"
+    ],
+    "p": 0.721,
+    "pct3": 0.34,
+    "bott": 0.76
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.08171301546384258,
+    "drivers": [
+     "aerospace",
+     "hyperscale",
+     "high bandwidth memory"
+    ],
+    "p": 0.48,
+    "pct3": 0.29,
+    "bott": 0.96
+   },
+   {
+    "t": "RMBS",
+    "ex": -0.1730392606616744,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.631,
+    "pct3": 0.43,
+    "bott": 0.85
+   },
+   {
+    "t": "BRKR",
+    "ex": 0.3934574238323907,
+    "drivers": [
+     "EUV",
+     "high bandwidth memory",
+     "copper"
+    ],
+    "p": 0.405,
+    "pct3": 0.13,
+    "bott": 0.85
+   },
+   {
+    "t": "SANM",
+    "ex": 0.323034033600186,
+    "drivers": [
+     "aerospace",
+     "automotive",
+     "DRAM"
+    ],
+    "p": 0.55,
+    "pct3": 0.33,
+    "bott": 0.77
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.027755429095078332,
+    "drivers": [
+     "transformer",
+     "construction",
+     "hyperscale"
+    ],
+    "p": 0.338,
+    "pct3": 0.09,
+    "bott": 0.89
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.01733706524138512,
+    "drivers": [
+     "wafer",
+     "solar",
+     "copper"
+    ],
+    "p": 0.331,
+    "pct3": 0.06,
+    "bott": 0.78
+   },
+   {
+    "t": "ANET",
+    "ex": 0.47070637491150125,
+    "drivers": [
+     "InfiniBand",
+     "rare earth",
+     "freight"
+    ],
+    "p": 0.445,
+    "pct3": 0.39,
+    "bott": 0.98
+   },
+   {
+    "t": "CLS",
+    "ex": 0.07845722126332566,
+    "drivers": [
+     "aerospace",
+     "wafer",
+     "tariff"
+    ],
+    "p": 0.299,
+    "pct3": 0.11,
+    "bott": 1
+   },
+   {
+    "t": "TLN",
+    "ex": -0.20209873194901584,
+    "drivers": [
+     "nuclear power",
+     "natural gas",
+     "hyperscale"
+    ],
+    "p": 0.412,
+    "pct3": 0.25,
+    "bott": 0.67
+   },
+   {
+    "t": "REGN",
+    "ex": -0.03607907781036079,
+    "drivers": [
+     "biosimilar",
+     "vaccine",
+     "obesity"
+    ],
+    "p": 0.457,
+    "pct3": 0.35,
+    "bott": 0.69
+   },
+   {
+    "t": "INTC",
+    "ex": 0.9260204498543467,
+    "drivers": [
+     "NAND",
+     "advanced packaging",
+     "wafer"
+    ],
+    "p": 0.972,
+    "pct3": 0.61,
+    "bott": 0.31
+   },
+   {
+    "t": "OKLO",
+    "ex": -0.4195888255986546,
+    "drivers": [
+     "hyperscale",
+     "nuclear power",
+     "uranium"
+    ],
+    "p": 0.283,
+    "pct3": 0.04,
+    "bott": 0.75
+   },
+   {
+    "t": "CEG",
+    "ex": -0.19443680532475727,
+    "drivers": [
+     "solar",
+     "natural gas",
+     "battery storage"
+    ],
+    "p": 0.294,
+    "pct3": 0.2,
+    "bott": 0.94
+   },
+   {
+    "t": "ALAB",
+    "ex": 1.3608911204529313,
+    "drivers": [
+     "custom ASIC",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 0.347,
+    "pct3": 0.07,
+    "bott": 0.36
+   }
+  ]
+ },
+ {
+  "d": "2026-03-31",
+  "eligible": 931,
+  "model10": 0.40768567604935296,
+  "model11": 0.3162092626782839,
+  "mom": 0.3475181851453956,
+  "shock": 0.20574930799532742,
+  "theme": 0.2881078499761302,
+  "sa": 0.45673200563076494,
+  "saN": 15,
+  "random": 0.2031170888372344,
+  "ic10": 0.03590173888073559,
+  "ic11": 0.03648421106166258,
+  "picks10": [
+   {
+    "t": "AVGO",
+    "ex": 0.0862526333476954,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "high bandwidth memory"
+    ],
+    "p": 0.792,
+    "pct3": 0.28,
+    "bott": 0.89
+   },
+   {
+    "t": "RMBS",
+    "ex": 0.09993580157990745,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.828,
+    "pct3": 0.32,
+    "bott": 0.86
+   },
+   {
+    "t": "NTAP",
+    "ex": 1.0035015266037621,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "shipping"
+    ],
+    "p": 0.915,
+    "pct3": 0.41,
+    "bott": 0.92
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.24632340272073416,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "hard disk drive"
+    ],
+    "p": 0.74,
+    "pct3": 0.37,
+    "bott": 0.77
+   },
+   {
+    "t": "RIVN",
+    "ex": -0.04447084111092248,
+    "drivers": [
+     "lithium",
+     "automotive",
+     "natural gas"
+    ],
+    "p": 0.499,
+    "pct3": 0.12,
+    "bott": 0.84
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.1584767706883703,
+    "drivers": [
+     "wafer",
+     "oil",
+     "silicon carbide"
+    ],
+    "p": 0.905,
+    "pct3": 0.53,
+    "bott": 0.98
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.9588380575362099,
+    "drivers": [
+     "fiber optic",
+     "hyperscale",
+     "rack"
+    ],
+    "p": 0.419,
+    "pct3": 0.04,
+    "bott": 0.76
+   },
+   {
+    "t": "TLN",
+    "ex": -0.08683488396852701,
+    "drivers": [
+     "natural gas",
+     "nuclear power",
+     "oil"
+    ],
+    "p": 0.497,
+    "pct3": 0.2,
+    "bott": 0.68
+   },
+   {
+    "t": "SWKS",
+    "ex": 0.6077864405523712,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.483,
+    "pct3": 0.18,
+    "bott": 0.21
+   },
+   {
+    "t": "SITM",
+    "ex": 0.792005025950584,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.665,
+    "pct3": 0.42,
+    "bott": 0.94
+   },
+   {
+    "t": "CEG",
+    "ex": -0.0997244182190401,
+    "drivers": [
+     "natural gas",
+     "solar",
+     "oil"
+    ],
+    "p": 0.424,
+    "pct3": 0.12,
+    "bott": 0.94
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.017318440557877457,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "solar"
+    ],
+    "p": 0.523,
+    "pct3": 0.33,
+    "bott": 0.52
+   },
+   {
+    "t": "ALAB",
+    "ex": 2.3188930819942692,
+    "drivers": [
+     "rack",
+     "custom ASIC",
+     "DRAM"
+    ],
+    "p": 0.34,
+    "pct3": 0.03,
+    "bott": 0.41
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.15925592669445598,
+    "drivers": [
+     "solar",
+     "wafer",
+     "natural gas"
+    ],
+    "p": 0.36,
+    "pct3": 0.09,
+    "bott": 0.85
+   },
+   {
+    "t": "OKLO",
+    "ex": -0.2744797053592618,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "oil"
+    ],
+    "p": 0.346,
+    "pct3": 0.06,
+    "bott": 0.86
+   },
+   {
+    "t": "BMNR",
+    "ex": 0.31106302620190407,
+    "drivers": [
+     "deposition",
+     "oil",
+     "solar"
+    ],
+    "p": 0.337,
+    "pct3": 0.07,
+    "bott": 0.22
+   },
+   {
+    "t": "SANM",
+    "ex": 0.6644598270217401,
+    "drivers": [
+     "rack",
+     "hyperscale",
+     "DRAM"
+    ],
+    "p": 0.398,
+    "pct3": 0.22,
+    "bott": 0.79
+   },
+   {
+    "t": "SMCI",
+    "ex": 0.775822326227467,
+    "drivers": [
+     "hard disk drive",
+     "rack",
+     "battery storage"
+    ],
+    "p": 0.334,
+    "pct3": 0.12,
+    "bott": 0.32
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.2816731129436376,
+    "drivers": [
+     "transformer",
+     "data center",
+     "construction"
+    ],
+    "p": 0.337,
+    "pct3": 0.15,
+    "bott": 0.9
+   },
+   {
+    "t": "CLSK",
+    "ex": 0.4961298224127373,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "data center"
+    ],
+    "p": 0.337,
+    "pct3": 0.16,
+    "bott": 0.25
+   }
+  ],
+  "picks11": [
+   {
+    "t": "AVGO",
+    "ex": 0.0862526333476954,
+    "drivers": [
+     "wafer",
+     "hard disk drive",
+     "high bandwidth memory"
+    ],
+    "p": 0.792,
+    "pct3": 0.28,
+    "bott": 0.89
+   },
+   {
+    "t": "RMBS",
+    "ex": 0.09993580157990745,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.828,
+    "pct3": 0.32,
+    "bott": 0.86
+   },
+   {
+    "t": "NTAP",
+    "ex": 1.0035015266037621,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "shipping"
+    ],
+    "p": 0.915,
+    "pct3": 0.41,
+    "bott": 0.92
+   },
+   {
+    "t": "MCHP",
+    "ex": 0.1584767706883703,
+    "drivers": [
+     "wafer",
+     "oil",
+     "silicon carbide"
+    ],
+    "p": 0.905,
+    "pct3": 0.53,
+    "bott": 0.98
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.24632340272073416,
+    "drivers": [
+     "wafer",
+     "InfiniBand",
+     "hard disk drive"
+    ],
+    "p": 0.74,
+    "pct3": 0.37,
+    "bott": 0.77
+   },
+   {
+    "t": "RIVN",
+    "ex": -0.04447084111092248,
+    "drivers": [
+     "lithium",
+     "automotive",
+     "natural gas"
+    ],
+    "p": 0.499,
+    "pct3": 0.12,
+    "bott": 0.84
+   },
+   {
+    "t": "SITM",
+    "ex": 0.792005025950584,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.665,
+    "pct3": 0.42,
+    "bott": 0.94
+   },
+   {
+    "t": "CEG",
+    "ex": -0.0997244182190401,
+    "drivers": [
+     "natural gas",
+     "solar",
+     "oil"
+    ],
+    "p": 0.424,
+    "pct3": 0.12,
+    "bott": 0.94
+   },
+   {
+    "t": "CRDO",
+    "ex": 0.9588380575362099,
+    "drivers": [
+     "fiber optic",
+     "hyperscale",
+     "rack"
+    ],
+    "p": 0.419,
+    "pct3": 0.04,
+    "bott": 0.76
+   },
+   {
+    "t": "TLN",
+    "ex": -0.08683488396852701,
+    "drivers": [
+     "natural gas",
+     "nuclear power",
+     "oil"
+    ],
+    "p": 0.497,
+    "pct3": 0.2,
+    "bott": 0.68
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.15925592669445598,
+    "drivers": [
+     "solar",
+     "wafer",
+     "natural gas"
+    ],
+    "p": 0.36,
+    "pct3": 0.09,
+    "bott": 0.85
+   },
+   {
+    "t": "OKLO",
+    "ex": -0.2744797053592618,
+    "drivers": [
+     "nuclear power",
+     "hyperscale",
+     "oil"
+    ],
+    "p": 0.346,
+    "pct3": 0.06,
+    "bott": 0.86
+   },
+   {
+    "t": "SANM",
+    "ex": 0.6644598270217401,
+    "drivers": [
+     "rack",
+     "hyperscale",
+     "DRAM"
+    ],
+    "p": 0.398,
+    "pct3": 0.22,
+    "bott": 0.79
+   },
+   {
+    "t": "GLXY",
+    "ex": 0.2816731129436376,
+    "drivers": [
+     "transformer",
+     "data center",
+     "construction"
+    ],
+    "p": 0.337,
+    "pct3": 0.15,
+    "bott": 0.9
+   },
+   {
+    "t": "RKLB",
+    "ex": 0.017318440557877457,
+    "drivers": [
+     "launch vehicle",
+     "satellite",
+     "solar"
+    ],
+    "p": 0.523,
+    "pct3": 0.33,
+    "bott": 0.52
+   },
+   {
+    "t": "CDNS",
+    "ex": 0.11048604342425605,
+    "drivers": [
+     "hyperscale",
+     "high bandwidth memory",
+     "automotive"
+    ],
+    "p": 0.361,
+    "pct3": 0.27,
+    "bott": 0.97
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.11807264321571509,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "NAND"
+    ],
+    "p": 0.982,
+    "pct3": 0.73,
+    "bott": 0.96
+   },
+   {
+    "t": "AMD",
+    "ex": 1.8438213027750254,
+    "drivers": [
+     "rack",
+     "advanced packaging",
+     "wafer"
+    ],
+    "p": 0.452,
+    "pct3": 0.41,
+    "bott": 0.9
+   },
+   {
+    "t": "SWKS",
+    "ex": 0.6077864405523712,
+    "drivers": [
+     "rare earth",
+     "wafer",
+     "automotive"
+    ],
+    "p": 0.483,
+    "pct3": 0.18,
+    "bott": 0.21
+   },
+   {
+    "t": "AES",
+    "ex": 0,
+    "drivers": [
+     "LNG",
+     "battery storage",
+     "solar"
+    ],
+    "p": 0.451,
+    "pct3": 0.47,
+    "bott": 0.99
+   }
+  ]
+ }
+]

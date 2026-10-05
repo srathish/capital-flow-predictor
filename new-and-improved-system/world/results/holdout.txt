@@ -1,0 +1,13 @@
+
+=== WORLD MODEL · HOLDOUT 2025-01-01 → 2026-03-31 · 15 month-ends · top-20 6-month excess vs universe median ===
+  MODEL v1.1 (bottleneck)            +25.7%  (t 6.08, n 15)
+  MODEL v1.0                         +23.8%  (t 5.65, n 15)
+  momentum 12-1                      +26.4%  (t 2.69, n 15)
+  shock only (no graph)              +30.1%  (t 4.01, n 15)
+  hot theme                          +56.9%  (t 4.40, n 14)
+  copy Situational Awareness 13F     +46.0%  (t 4.29, n 14)
+  random same-sector                 +14.7%  (t 5.25, n 15)
+  IC v1.1 mean 0.043 (t 3.49)
+  IC v1.0 mean 0.041 (t 3.38)
+  VERDICT v1.1: FAIL (beats all baselines: false, IC t ≥ 2: true, symbols W/L 76/27)
+  VERDICT v1.0: FAIL (beats all baselines: false, IC t ≥ 2: true, symbols W/L 76/27)

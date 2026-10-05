@@ -1,0 +1,11 @@
+
+=== WORLD MODEL · DEV 2023-01-01 → 2024-12-31 · 24 month-ends · top-20 6-month excess vs universe median ===
+  MODEL v1.1 (bottleneck)             +7.8%  (t 2.52, n 24)
+  MODEL v1.0                         +10.1%  (t 3.31, n 24)
+  momentum 12-1                      +10.9%  (t 2.12, n 24)
+  shock only (no graph)               +8.5%  (t 3.92, n 24)
+  hot theme                          +22.0%  (t 6.17, n 23)
+  copy Situational Awareness 13F          -  (t -, n 0)
+  random same-sector                  +5.0%  (t 5.85, n 24)
+  IC v1.1 mean 0.013 (t 0.89)
+  IC v1.0 mean 0.013 (t 0.90)
