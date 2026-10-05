@@ -44,7 +44,7 @@ export async function verify(cands, { D, contracts = true }) {
     for (const dir of c.dirs) {
       const d = diag.find((x) => x.dir === dir), card = { ...base, dir, spot: +board.spot.toFixed(2) };
       if (!d.ok) { cards.push({ ...card, status: 'NO TRADE', reason: d.reason, level: d.entry ?? null }); continue; }
-      if (earnIn) { cards.push({ ...card, status: 'NO TRADE', reason: `earnings ${next} inside the hold (implied ±${e?.implied_move_pct ?? '?'}%) — options overprice earnings 80% of the time`, level: d.entry }); continue; }
+      if (earnIn) { cards.push({ ...card, status: 'NO TRADE', reason: `earnings ${next} inside the hold (implied ±${e?.implied_move_pct ?? '?'}%) — a 1-day straddle through earnings lost ~19% per trade bought or sold (UW, 1,869 reports): IV crush vs fat tails`, level: d.entry }); continue; }
       const sg = dir === 'up' ? 1 : -1, stopClose = +(d.entry - sg * Math.max(Math.abs(d.entry - d.stop), APLUS.STOP_ATR * (f?.atr ?? 0))).toFixed(2);
       cards.push({ ...card, status: 'A+', plan: { zone: +board.zone.toFixed(3), entry: d.entry, entryType: d.entryType, share: +d.share.toFixed(3), target: d.target, targetType: d.targetType, t2: d.t2, nodeStop: d.stop, stopClose, rr: d.rr, holdEnd, why: d.why,
         entryRule: `wait for 09:35+; buy the 1-min bar that tags ${d.entry} (±${board.zone.toFixed(2)}) and CLOSES back ${dir === 'up' ? 'above' : 'below'} it (1st/2nd tap, before 15:30). SKIP if the day opens ${dir === 'up' ? 'above' : 'below'} ${(d.entry + sg * APLUS.SLIDE_ATR * (f?.atr ?? 0)).toFixed(2)} (slides into the level).`,

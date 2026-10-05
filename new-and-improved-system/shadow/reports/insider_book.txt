@@ -1,0 +1,13 @@
+INSIDER-BUY BOOK (shares, $10k per position, 20-session hold, costs included) · 563 trades
+
+== TRAIN (2022–2024) · 330 trades
+  unhedged per trade +3.99% (t 3.2, median +1.20%, win 54%) · SPY same windows +0.83%
+  HEDGED   per trade +3.14% (t 2.7, median +0.62%, win 53%)
+  book: avg capital $94,652 · unhedged ann. +51.44% Sharpe 0.96 · HEDGED ann. +39.85% Sharpe 0.75 · P&L $103,267 hedged
+== TEST (2025–2026) · 233 trades
+  unhedged per trade +3.29% (t 2.4, median +0.91%, win 55%) · SPY same windows +0.48%
+  HEDGED   per trade +2.45% (t 1.9, median +0.91%, win 55%)
+  book: avg capital $107,968 · unhedged ann. +43.43% Sharpe 1.08 · HEDGED ann. +32.31% Sharpe 0.60 · P&L $60,623 hedged
+
+VERDICT: FAIL
+hedged per trade by year: 2022 +3.38% (n 109) · 2023 +3.18% (n 113) · 2024 +2.86% (n 108) · 2025 +2.32% (n 137) · 2026 +2.64% (n 96)

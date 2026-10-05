@@ -11,13 +11,14 @@ What the evidence supports, and what it doesn't:
 | Piece | Status | Evidence |
 |---|---|---|
 | **Insider open-market buy ≥ $100k** (Step 1 source) | ✅ **real, on the STOCK** | 660 events, 294 stocks, 2022–26: +3.86% beta-adjusted over 20 sessions (t 3.4). It beats random dates in the same stock by +3.2% (t 2.7), with a positive average every year. Median +1.4%, so the edge is small per trade. |
+| ...as a SHARE book | 🟡 **best strategy found** | 563 trades 2022–26, $10k each, 20-session hold, after costs. Unhedged: +3.99%/trade (t 3.2) in 2022–24 and **+3.29% (t 2.4)** in 2025–26, Sharpe 0.96 / 1.08. SPY-hedged: +3.14% / +2.45% (t 1.9, just under the t ≥ 2 bar), positive every year. Literature filters (officer, ≥$500k, +10% holdings, opportunistic) did not beat the plain rule. |
 | ...as an options trade | ❌ not validated | ATM calls ≥35 DTE: +9.9% average but −43% median, carried by 5 lottery wins, and the second half lost. ~10% ITM calls ≥60 DTE: +9.5% (t 1.2), and the second half lost. Express it in **shares** (or deep-ITM stock replacement); don't buy short premium on it. |
 | 12-1 momentum leaders (Step 1) | weak | Positive in train/test/holdout, t 1.8, flattered by survivorship. |
 | Not buying laggard dips (Step 1) | ✅ consistent | Lost in both halves across the dip-buy styles. |
 | Analyst upgrades/downgrades/PT raises, short-interest squeeze, options flow (UW + Skylit) | ❌ dead | ≈ 0 against controls. |
 | **Map nodes as support/resistance on single stocks** (Step 2) | ❌ **no better than random** | 2,829 touches, 35 stocks, Jan–Sep 2026: 72.2% rejection vs 75.0% for random levels. UW dark-pool levels were the same (71.6%). (On 0DTE index maps, nodes did reject ~2× random — that does not carry over to stock weekly maps.) |
 | A+ plan (entry at a node, slide-in skip, 0.5-ATR close stop) | ❌ lost out of sample | −$973 on 19 trades. The map gives you a **defined level to measure risk against**, not an edge. |
-| Earnings blackout; buy time; real bid/ask | ✅ cost control | Options overprice earnings 80% of the time. Thin chains showed fake prices. |
+| Earnings blackout; buy time; real bid/ask | ✅ cost control | UW data on 1,869 reports: earnings options are about fairly priced on average. Buying the 1-day straddle lost −19.8% and selling it lost −18.2% (spreads plus fat tails). The "80% overpriced" figure (Skylit `priced_pct`, about 1.7× UW's expected move) only describes the typical report, not expected profit. Thin chains showed fake prices. |
 
 So the honest shape of the desk is:
 - **Step 1 decides.** Insider buys are the strongest source.
