@@ -9,7 +9,8 @@ const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let next = 0; const gate = async () => { const now = Date.now(), t = Math.max(now, next); next = t + 110; if (t > now) await sleep(t - now); };
 async function uw(p) { for (let k = 0; k < 6; k++) { await gate(); const r = await fetch(`https://api.unusualwhales.com/api${p}`, { headers: { Authorization: `Bearer ${UW_API_KEY}`, Accept: 'application/json' } }).catch(() => null);
-  if (r?.status === 429) { next = Date.now() + 8000 * (k + 1); continue; } return r?.ok ? r.json().catch(() => null) : null; } return null; }
+  if (r?.status === 429) { const b = await r.text().catch(() => ''); if (b.includes('daily_request_limit_hit')) { console.error('UW daily request limit hit — stopping without writing partial files'); process.exit(3); } next = Date.now() + 8000 * (k + 1); continue; }
+  return r?.ok ? r.json().catch(() => null) : null; } console.error('UW kept refusing — stopping without writing partial files'); process.exit(3); }
 fs.mkdirSync(OUT, { recursive: true });
 const L = fs.readdirSync(path.join(C, 'wdaily')).filter((f) => !fs.existsSync(path.join(OUT, f)) && fs.statSync(path.join(C, 'wdaily', f)).size > 2).map((f) => f.replace('.json', ''));
 console.error(`${L.length} tickers to fetch`); let n = 0, empty = 0;
