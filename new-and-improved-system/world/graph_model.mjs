@@ -57,9 +57,11 @@ const TWBEA = (k) => /semicon|半導體/i.test(k) ? ['334'] : /computer|電腦/i
   : /auto|汽車/i.test(k) ? ['3361MV'] : /shipping|航運/i.test(k) ? ['483', '481'] : /oil|gas|electric|油電燃氣/i.test(k) ? ['324', '22'] : /bio|生技/i.test(k) ? ['325'] : /bellwether|ai/i.test(k) ? ['334', '335', '5415', '514'] : [];
 const TWN = new Map();
 { const tw = rd(path.join(C, 'tw', 'industry_index.json'), {}); const flat = [];
-  for (const [k, v] of Object.entries(tw)) { if (v && typeof v === 'object' && Object.keys(v).some((x) => /^\d{4}-\d{2}$/.test(x))) flat.push([k, v]); else if (v && typeof v === 'object') for (const [k2, v2] of Object.entries(v)) if (v2 && typeof v2 === 'object' && Object.keys(v2).some((x) => /^\d{4}-\d{2}$/.test(x))) flat.push([k + ':' + k2, v2]); }
+  for (const [k, v] of Object.entries(tw.industries ?? {})) flat.push([k, v]); // amendment 2d: industries + one combined AI-bellwether node
+  { const agg = {}; for (const ser of Object.values(tw.bellwethers ?? {})) for (const [m, o] of Object.entries(ser)) { if (!(o?.rev > 0) || o.yoy == null || o.yoy <= -1) continue; const a = (agg[m] ??= { rev: 0, prev: 0 }); a.rev += o.rev; a.prev += o.rev / (1 + o.yoy); }
+    flat.push(['ai_bellwethers', Object.fromEntries(Object.entries(agg).filter(([, a]) => a.prev > 0).map(([m, a]) => [m, { rev: a.rev, yoy: a.rev / a.prev - 1 }]))]); }
   for (const [k, mon] of flat) { const bea = TWBEA(k); if (!bea.length) continue; const qv = new Map();
-    for (const [m, o] of Object.entries(mon)) { if (!(o?.rev > 0) || o.yoy == null || !Number.isFinite(o.yoy)) continue; const kk = qk(`${m.slice(0, 4)}Q${Math.floor((+m.slice(5, 7) - 1) / 3) + 1}`); const a = qv.get(kk) ?? []; a.push(o); qv.set(kk, a); }
+    for (const [m, o] of Object.entries(mon)) { if (m < '2014-01' || !(o?.rev > 0) || o.yoy == null || !Number.isFinite(o.yoy)) continue; const kk = qk(`${m.slice(0, 4)}Q${Math.floor((+m.slice(5, 7) - 1) / 3) + 1}`); const a = qv.get(kk) ?? []; a.push(o); qv.set(kk, a); }
     const q = new Map(); for (const [kk, a] of qv) { if (a.length < 3) continue; const cur = a.reduce((s2, o) => s2 + o.rev, 0), prev = a.reduce((s2, o) => s2 + o.rev / (1 + o.yoy), 0); if (prev > 0) q.set(kk, { v: clip(cur / prev - 1), f: addD(qEnd(kk), 10) }); }
     if (q.size >= 16) { OUT.set('tw:' + k, q); TWN.set('tw:' + k, bea); } } }
 

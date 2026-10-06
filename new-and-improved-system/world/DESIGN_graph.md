@@ -150,3 +150,9 @@ ridge regression beat graph models out of sample. Amendment-2 rules stay as they
   8486 → 333/334; transformers, switchgear, cable, batteries, generators → 335 (+22/23/331 as listed); turbines → 333/3364OT/22;
   cooling/AC → 333/23; copper → 331/212; silicon/wafers → 325/334; cars/parts → 3361MV/441; medicines → 325; petroleum →
   324/211; total imports/exports → all industries.
+
+### Amendment 2d (2026-10-06, before any 2019+ result) — Taiwan data rules
+- Taiwan nodes = the MOPS industry indices (matched-company revenue YoY) plus **one** combined node for the 26 AI-chain
+  bellwethers (sum of their revenue vs the same months a year earlier). Individual companies are not separate nodes.
+- Taiwan adopted IFRS in 2013, so YoY is used only for months from 2014-01 (both months on the same basis).
+- Values are the current MOPS pages (minor later corrections included), available the 10th of the following month.
