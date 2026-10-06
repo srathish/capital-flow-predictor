@@ -103,3 +103,23 @@ Services. With ~28 quarters per company and ~1,300 candidate connections each, c
    bitcoin, freight, retail sales); Taiwan monthly revenue by industry (`.cache/tw`, available the 10th of the next month);
    further FRED series from the free-data scan if added before the run. Census trade by HS code is deferred (API now needs a
    key).
+
+### Amendment 2b (2026-10-06, before any 2019+ result) — added free outside nodes and the first-release rule
+
+- **First-release values.** Revised monthly FRED series use ALFRED vintages (`output_type=1`): each month's YoY growth is
+  computed inside the vintage in which that month was first published (so index re-basings cannot corrupt growth), available
+  on that first-release date. Months before a series' vintage history begins use the earliest vintage, available month-end +
+  60 days. Daily market prices (oil, gas, yields, dollar, bitcoin) are not revised: available the next day.
+- **Added nodes** (from the free-data scan; BEA mapping fixed in `world/sic_bea.mjs`):
+  - Census M3 new/unfilled orders and inventories: A34SNO, A34SUO, A34STI, A34ANO, A35SNO, A35SUO, A33SNO, A36SNO, NEWORDER
+    (core capital goods), ADEFNO (defense capital goods), ANAPNO (nondefense aircraft);
+  - construction: TLMFGCONS (manufacturing); Census C30 "data center" construction (from 2014, current vintage, +35 days);
+  - production: IPG3341S (computers), CAPUTLG3344S (semis capacity use), IPG2211S (electric power generation);
+  - PPI data processing/hosting PCU518210518210; employment CES6054150001 (computer systems design), CES5051800001 (data
+    processing/hosting);
+  - commodities: PURANUSDM (uranium), PNICKUSDM, PIORECRUSDM, PCOALAUUSDM;
+  - exports: XTEXVA01KRM667S (Korea), XTEXVA01JPM667S (Japan), XTEXVA01CNM667S (China);
+  - freight: RAILFRTCARLOADSD11, TRUCKD11; regional surveys NOFDFSA066MSFRBPHI (Philly Fed future new orders); CFNAI;
+  - WSTS global semiconductor billings (monthly, +45 days); NY Fed GSCPI (supply-chain pressure, +5 days); bitcoin hash rate
+    and miner revenue (blockchain.info, daily).
+- Deferred (need a key or scraping): Korea customs 10/20-day exports, Japan e-Stat HS 8486, Census trade by HS, EIA, SEAJ.
