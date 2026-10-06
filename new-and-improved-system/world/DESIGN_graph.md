@@ -82,3 +82,24 @@ Services. With ~28 quarters per company and ~1,300 candidate connections each, c
   t-statistic deflated by √3 for overlap between companies; same keep rules.
 - A company's forecast = its industry's connections + its own-node connections. Everything else (walk-forward, portfolio,
   benchmarks, pass criteria) is unchanged.
+
+## Amendment 2 (2026-10-06) — economic links only, overlap-robust stats, placebo, harder baselines, more free data
+(before any 2019+ result; motivated by the prior-art scan in world/PRIOR_ART.md)
+
+1. **Links must exist in the economy.** Each industry node (SIC 3-digit group) maps to one or more BEA summary industries (71;
+   `world/sic_bea.mjs`, mapping fixed by hand from SIC/NAICS definitions). A driver industry D may connect to a target industry
+   T only if they share a BEA industry, or, in the BEA Use table (before redefinitions, producer prices) for year
+   (cut-off year − 2): T sells ≥ 2% of its output to D (D is a customer), or D supplies ≥ 2% of T's intermediate inputs.
+   Outside nodes get a fixed BEA mapping (listed in code; macro-wide series — 10-year yield, dollar, retail sales — may connect
+   to any industry) and the same link rule.
+2. **Overlap-robust evidence.** Replace the plain t-stat with a Newey-West t-stat (4 lags) and keep a connection only if
+   |t_NW| ≥ 3.0, same sign in both time splits, last third ≥ half as strong. Max 5 per industry.
+3. **Placebo.** At the 2019 cut-off, re-learn 20 times with every driver series circularly shifted by a random 2–6 years
+   (keeps each series' own pattern, breaks timing). Criterion 1 now also requires: real connections ≥ 2× the placebo average.
+4. **Harder baselines for criterion 1:** the graph's IC must beat (a) persistence and (b) the company's own industry's latest
+   median acceleration.
+5. **Size split** reported: portfolio excess for stocks with 50-day dollar volume ≥ $100M vs the rest.
+6. **More outside nodes (all free, point-in-time by release lag):** the six extra FRED series (10-year yield, dollar, WTI,
+   bitcoin, freight, retail sales); Taiwan monthly revenue by industry (`.cache/tw`, available the 10th of the next month);
+   further FRED series from the free-data scan if added before the run. Census trade by HS code is deferred (API now needs a
+   key).
