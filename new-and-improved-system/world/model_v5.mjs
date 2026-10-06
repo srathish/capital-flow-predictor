@@ -7,20 +7,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { worldUniverse } from './collect.mjs';
 import { TAGS } from './facts_collect.mjs';
+import { universeV2 } from './universe_prices.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_v5');
-const HOLD = process.argv.includes('--holdout'), [A, Bm] = HOLD ? ['2025-01', '2026-03'] : ['2023-03', '2024-12'];
-if (HOLD && fs.existsSync(path.join(RES, 'holdout.json')) && !process.argv.includes('--force')) { console.error('holdout already run'); process.exit(1); }
+const HOLD = process.argv.includes('--holdout'), WIDE = process.argv.includes('--wide'), [A, Bm] = HOLD ? ['2025-01', '2026-03'] : ['2023-03', '2024-12'];
+const TAG = (WIDE ? 'wide_' : '') + (HOLD ? 'holdout' : 'dev'); // --wide = DESIGN_v5 addendum: all SEC operating companies with XBRL revenue
+if (HOLD && fs.existsSync(path.join(RES, TAG + '.json')) && !process.argv.includes('--force')) { console.error('holdout already run'); process.exit(1); }
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
 const ymd = (t) => new Date((t + 12 * 3600) * 1000).toISOString().slice(0, 10), addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
 const days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
 const TOP = 20, FWD = 182, DRAWS = 200;
 
 // ---------- prices / eligibility (same rules as v1–v4) ----------
-const U = worldUniverse(), P = new Map();
+const U = WIDE ? universeV2(1e9) : worldUniverse(), P = new Map();
 for (const { t } of U) { let b = rd(path.join(C, 'wdaily', `${t}.json`), []); if (!b.length) b = (rd(path.join(C, 'daily', `${t}.json`), []) || []).map((x) => ({ d: ymd(x.t), c: x.c, v: x.v }));
   if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0) }); }
-const META = new Map([...P.keys()].map((t) => [t, rd(path.join(C, 'edgar', 'meta', `${t}.json`), null)]));
+const META = new Map([...P.keys()].map((t) => [t, WIDE ? { sic: !!rd(path.join(C, 'edgar', 'facts', `${t}.json`), {}).rev } : rd(path.join(C, 'edgar', 'meta', `${t}.json`), null)]));
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
 const fwdFrom = (t, d) => { const p = P.get(t); if (!p) return null; const j = at(t, d) + 1, k = at(t, addD(d, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(d, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
@@ -72,7 +74,7 @@ for (const mo of monthsBetween(A, Bm)) { const M = me(mo), { elig, scored } = ra
 function pcF(x) { return x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}%`; }
 const avg = (k) => { const a = res.map((r) => r[k]).filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; };
 const rdm = drawM.map((d) => { const a = d.filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; }).sort((a, b) => a - b), p95 = rdm[Math.floor(DRAWS * 0.95)];
-const out = [`# World model v5 — reported-numbers bottleneck · ${HOLD ? 'HOLDOUT' : 'DEVELOPMENT'} ${A} → ${Bm} (${res.length} month-ends)\n`,
+const out = [`# World model v5 — reported-numbers bottleneck · ${WIDE ? 'WIDE UNIVERSE · ' : ''}${HOLD ? 'HOLDOUT' : 'DEVELOPMENT'} ${A} → ${Bm} (${res.length} month-ends)\n`,
   '| | mean 6m excess vs median | months positive |', '|---|---|---|'];
 for (const [k, nm] of [['A', 'A: top 20 by growth + acceleration + margin expansion'], ['B', 'B: same, positive momentum only'], ['mom', 'momentum 12-1 top 20']]) { const a = res.map((r) => r[k]).filter((x) => x != null); out.push(`| ${nm} | **${pcF(avg(k))}** | ${a.filter((x) => x > 0).length}/${a.length} |`); }
 out.push(`| random 20 (${DRAWS} draws) | median ${pcF(rdm[DRAWS >> 1])} · 95th pct ${pcF(p95)} | |`);
@@ -85,6 +87,6 @@ if (HOLD) { // early flags across all months 2023-03 → 2026-09 (ranks only), a
   out.push('\n**Early flags (first month in top 20 / top 50):** ' + W.map((t) => `${t} ${first[t]?.top20 ?? 'never'} / ${first[t]?.top50 ?? 'never'}`).join(' · '));
   const L = rank(me('2026-09')).scored, live = L.slice(0, TOP), liveB = L.filter((x) => (mom(x.t, me('2026-09')) ?? -1) > 0).slice(0, TOP);
   out.push('\n## Live list (2026-09-30)\n**A:** ' + live.map((x) => `${x.t} (rev ${pcF(x.g0)} YoY, GM ${pcF(x.dGM)} pts)`).join(' · ') + '\n\n**B (positive momentum):** ' + liveB.map((x) => x.t).join(' · '));
-  fs.mkdirSync(path.join(ROOT, 'world', 'v5_live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'v5_live', '2026-09.json'), JSON.stringify({ A: live, B: liveB }, null, 1)); }
+  fs.mkdirSync(path.join(ROOT, 'world', 'v5_live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'v5_live', (WIDE ? 'wide_' : '') + '2026-09.json'), JSON.stringify({ A: live, B: liveB }, null, 1)); }
 const txt = out.join('\n'); console.log(txt); fs.mkdirSync(RES, { recursive: true });
-fs.writeFileSync(path.join(RES, HOLD ? 'holdout.json' : 'dev.json'), JSON.stringify(res, null, 1)); fs.writeFileSync(path.join(RES, HOLD ? 'holdout.txt' : 'dev.txt'), txt + '\n');
+fs.writeFileSync(path.join(RES, TAG + '.json'), JSON.stringify(res, null, 1)); fs.writeFileSync(path.join(RES, TAG + '.txt'), txt + '\n');

@@ -1,0 +1,37 @@
+# World model v5 — reported-numbers bottleneck · WIDE UNIVERSE · DEVELOPMENT 2023-03 → 2024-12 (22 month-ends)
+
+| | mean 6m excess vs median | months positive |
+|---|---|---|
+| A: top 20 by growth + acceleration + margin expansion | **+7.3%** | 15/22 |
+| B: same, positive momentum only | **+10.2%** | 12/15 |
+| momentum 12-1 top 20 | **+13.1%** | 10/15 |
+| random 20 (200 draws) | median +1.2% · 95th pct +3.6% | |
+
+**A pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
+
+**B pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
+
+| month | A excess | B excess | momentum | A top 8 |
+|---|---|---|---|---|
+| 2023-03 | -9.1% | — | — | LCID IRM STEM ALB SHLS DKNG BA CALM |
+| 2023-04 | -1.5% | — | — | IRM STEM ALB SHLS FSLR AAON IRTC CALM |
+| 2023-05 | +3.8% | — | — | NCLH PEG FLNC FSLR RHP RCL ELF NFE |
+| 2023-06 | +6.3% | — | — | NCLH PEG FLNC FSLR RHP RCL ELF NFE |
+| 2023-07 | +5.0% | — | — | NCLH ALKS PEG FLNC RHP ELF NFE VRT |
+| 2023-08 | -11.9% | — | — | NVAX NVDA ALKS FLNC AMSC TLRY U APTV |
+| 2023-09 | -1.5% | — | — | NVAX UEC NVDA ALKS FLNC AMSC TLRY U |
+| 2023-10 | +4.1% | +11.6% | +38.3% | GPRE NVAX UEC NVDA TREX FLNC APTV U |
+| 2023-11 | +24.9% | +25.0% | +41.8% | UEC GPRE NVDA TREX IRM POST ALNY APP |
+| 2023-12 | +17.4% | +28.6% | +26.0% | GPRE NVDA TREX SSRM AVAV IRM POST ALNY |
+| 2024-01 | +5.2% | +7.2% | +19.9% | GPRE NVDA TREX SSRM AVAV AMPH IRM POST |
+| 2024-02 | +3.2% | +4.4% | -6.9% | NVDA POWL APP NXT NOG SDGR LPX PRCT |
+| 2024-03 | +7.6% | +4.7% | -5.6% | NVDA MU POWL NXT APP NOG SDGR LPX |
+| 2024-04 | +14.8% | +16.8% | +28.8% | MU NVDA POWL APP NXT WDC SDGR LPX |
+| 2024-05 | +17.5% | +19.5% | +35.3% | BBIO ASPN MU FSLR TREX WDC APP IESC |
+| 2024-06 | +16.6% | +19.7% | +27.2% | BBIO ASPN MU AZZ CORZ CRDO FSLR TREX |
+| 2024-07 | +54.2% | +36.0% | +18.1% | BBIO ASPN MU RKLB CORZ CRDO TREX NEM |
+| 2024-08 | +7.0% | -4.5% | +6.5% | ASPN ALNY ADMA MU CRDO SCCO NEM WDC |
+| 2024-09 | -6.9% | -11.4% | -17.6% | ASPN ALNY ADMA MU SCCO NEM WDC OKE |
+| 2024-10 | -0.3% | -5.6% | -16.5% | ASPN CALM ADMA STX MU HALO NEM EQT |
+| 2024-11 | -0.8% | +0.0% | -7.6% | RXRX NOG HUT CALM STX EVGO MU PFE |
+| 2024-12 | +5.7% | +1.0% | +8.9% | RXRX CALM NOG HUT RUM STX PFE RGLD |
