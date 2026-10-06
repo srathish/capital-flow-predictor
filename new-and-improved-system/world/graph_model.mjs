@@ -48,7 +48,7 @@ for (const [id, s] of Object.entries(fred)) {
   OUT.set('fred:' + id, m); }
 for (const [id, s] of Object.entries(rd(path.join(G, 'extra.json'), {}))) { const by = new Map(s.obs.map((o) => [o.m, o])), yoy = []; // WSTS, C30 data centers, bitcoin network
   for (const o of s.obs) { const p = by.get(`${+o.m.slice(0, 4) - 1}${o.m.slice(4)}`); if (p && p.v > 0) yoy.push({ m: o.m, g: o.v / p.v - 1, avail: o.avail }); } OUT.set(id, fromMonthly(yoy)); }
-const TRADE = new Map(); for (const [id, s] of Object.entries(rd(path.join(C, 'trade', 'trade.json'), {})?.series ?? {})) { const bea = tradeBea('trade:' + id); if (!bea.length) continue; // amendment 2c
+const TRADE = new Map(); for (const [id, s] of Object.entries(rd(path.join(C, 'trade', 'trade.json'), {})?.series ?? {})) { if (!/^(imports|exports):(\d{4}|TOTAL)(:[A-Z]{2})?$/.test(id)) continue; const bea = tradeBea('trade:' + id); if (!bea.length) continue; // amendments 2c + 2e (70 core series)
   const by = new Map(s.obs.map((o) => [o.m, o])), yoy = []; for (const o of s.obs) { const p = by.get(`${+o.m.slice(0, 4) - 1}${o.m.slice(4)}`); if (p && p.v > 0 && o.v > 0) yoy.push({ m: o.m, g: o.v / p.v - 1, avail: o.avail }); }
   const q = fromMonthly(yoy); if (q.size >= 16) { OUT.set('trade:' + id, q); TRADE.set('trade:' + id, bea); } }
 // Taiwan monthly revenue by industry (amendment 2): quarterly YoY of matched-company revenue, public the 10th after quarter end

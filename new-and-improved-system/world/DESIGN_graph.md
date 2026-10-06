@@ -156,3 +156,8 @@ ridge regression beat graph models out of sample. Amendment-2 rules stay as they
   bellwethers (sum of their revenue vs the same months a year earlier). Individual companies are not separate nodes.
 - Taiwan adopted IFRS in 2013, so YoY is used only for months from 2014-01 (both months on the same basis).
 - Values are the current MOPS pages (minor later corrections included), available the 10th of the following month.
+
+### Amendment 2e (2026-10-06, before any 2019+ result) — trade series used
+Only the 70 core trade series enter the model: the 27 four-digit HS codes × imports/exports, total imports/exports, and the
+HS 8471/8542 import splits by country (TW, KR, CN, MX, MY, VN, JP). The 6-digit children are excluded (optional, uneven
+coverage — 14 of them failed to download).
