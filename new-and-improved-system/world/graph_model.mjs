@@ -7,7 +7,7 @@
 // Runs once per mode (refuses if the report exists). 0 Skylit credits.
 import fs from 'node:fs';
 import path from 'node:path';
-import { sicToBea, OUTSIDE_BEA } from './sic_bea.mjs';
+import { sicToBea, OUTSIDE_BEA, tradeBea } from './sic_bea.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), G = path.join(C, 'graph'), RES = path.join(ROOT, 'world', 'results_graph');
 const RIDGE = process.argv.includes('--ridge'), SMOKE = process.argv.includes('--smoke'), TAG = RIDGE ? 'graph_ridge' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
@@ -48,6 +48,9 @@ for (const [id, s] of Object.entries(fred)) {
   OUT.set('fred:' + id, m); }
 for (const [id, s] of Object.entries(rd(path.join(G, 'extra.json'), {}))) { const by = new Map(s.obs.map((o) => [o.m, o])), yoy = []; // WSTS, C30 data centers, bitcoin network
   for (const o of s.obs) { const p = by.get(`${+o.m.slice(0, 4) - 1}${o.m.slice(4)}`); if (p && p.v > 0) yoy.push({ m: o.m, g: o.v / p.v - 1, avail: o.avail }); } OUT.set(id, fromMonthly(yoy)); }
+const TRADE = new Map(); for (const [id, s] of Object.entries(rd(path.join(C, 'trade', 'trade.json'), {})?.series ?? {})) { const bea = tradeBea('trade:' + id); if (!bea.length) continue; // amendment 2c
+  const by = new Map(s.obs.map((o) => [o.m, o])), yoy = []; for (const o of s.obs) { const p = by.get(`${+o.m.slice(0, 4) - 1}${o.m.slice(4)}`); if (p && p.v > 0 && o.v > 0) yoy.push({ m: o.m, g: o.v / p.v - 1, avail: o.avail }); }
+  const q = fromMonthly(yoy); if (q.size >= 16) { OUT.set('trade:' + id, q); TRADE.set('trade:' + id, bea); } }
 // Taiwan monthly revenue by industry (amendment 2): quarterly YoY of matched-company revenue, public the 10th after quarter end
 const TWBEA = (k) => /semicon|半導體/i.test(k) ? ['334'] : /computer|電腦/i.test(k) ? ['334'] : /optoelec|光電/i.test(k) ? ['334'] : /communic|通信/i.test(k) ? ['334', '513'] : /electronic (parts|comp)|電子零組件/i.test(k) ? ['334'] : /electronic|電子/i.test(k) ? ['334']
   : /information service|資訊服務/i.test(k) ? ['5415', '514'] : /electric (machin|appl)|電機/i.test(k) ? ['335', '333'] : /cable|電器電纜/i.test(k) ? ['335', '331'] : /plastic|塑膠/i.test(k) ? ['326', '325'] : /chemic|化學/i.test(k) ? ['325'] : /steel|鋼鐵/i.test(k) ? ['331']
@@ -80,7 +83,7 @@ const INDBEA = new Map([...IND].map(([s, a]) => [s, new Set(a.map((t) => SIC.get
 // amendment 2: a driver may connect to a target industry only through a real BEA input-output link (table year = cut-off year − 2)
 const USE = rd(path.join(C, 'bea', 'use_summary.json'), {}), allowC = new Map();
 function allowed(name, s, cutYear) { const key = name + '|' + s + '|' + cutYear; if (allowC.has(key)) return allowC.get(key);
-  const T = INDBEA.get(s) ?? new Set(), D = name.startsWith('ind:') ? INDBEA.get(name.slice(4)) ?? new Set() : new Set(OUTSIDE_BEA[name] ?? TWN.get(name) ?? []);
+  const T = INDBEA.get(s) ?? new Set(), D = name.startsWith('ind:') ? INDBEA.get(name.slice(4)) ?? new Set() : new Set(OUTSIDE_BEA[name] ?? TWN.get(name) ?? TRADE.get(name) ?? []);
   let ok = D.has('ALL') || [...D].some((d) => T.has(d)); const U = USE[String(Math.min(+cutYear - 2, 2023))];
   if (!ok && U) for (const t of T) for (const d of D) { const out = U.use[t]?.[d] ?? 0, inp = U.use[d]?.[t] ?? 0; if ((U.rowTotal[t] && out / U.rowTotal[t] >= 0.02) || (U.inter[t] && inp / U.inter[t] >= 0.02)) ok = true; }
   allowC.set(key, ok); return ok; }
@@ -208,7 +211,7 @@ const ics = (from, to) => { const a = months.filter((m) => m.M >= from && m.M <=
 const A = ics('2019', '2026-12'), Bc = ics('2019', '2022-12-31'), exm = (R, from = '', to = '9') => mean(R.out.filter((o) => o.M >= from && o.M <= to).map((o) => o.ex));
 const p95 = RAND[Math.floor(DRAWS * 0.95)];
 const crit = [A.g > A.p && A.gi > A.i && A.pos >= 0.6 && Bc.g > Bc.p && Bc.gi > Bc.i && Bc.pos >= 0.6 && (RIDGE ? Bc.g > pic95 : REAL >= 2 * placMean), exm(G1) > exm(MO), exm(G1) > exm(V5), exm(G1) > p95];
-const L = [`# Node graph (amendment 2: BEA-linked, Newey-West, placebo, ${OUT.size} outside nodes incl. ${TWN.size} Taiwan) · test months 2019-01 → 2026-03\n`,
+const L = [`# Node graph (amendment 2: BEA-linked, Newey-West, placebo, ${OUT.size} outside nodes incl. ${TWN.size} Taiwan, ${TRADE.size} trade) · test months 2019-01 → 2026-03\n`,
   RIDGE ? `Ridge version (amendment 3). Placebo: 2019–2022 mean IC of ${PIC.length} timing-scrambled models — 95th pct ${pic95?.toFixed(3)} (all: ${PIC.map((x) => x.toFixed(3)).join(' ')}) vs real ${Bc.g.toFixed(3)} → ${Bc.g > pic95 ? 'beats placebo' : 'does NOT beat placebo'}\n`
     : `Placebo (2019 cut-off, ${PLAC.length} shuffles): ${placMean.toFixed(1)} connections on average vs ${REAL} real → ${REAL >= 2 * placMean ? 'real ≥ 2× placebo' : 'NOT ≥ 2× placebo'}\n`,
   `Learned connections per year: ${[...learned].map(([y, l]) => `${y} ${l.nConn} (${l.model.size} industries)`).join(' · ')}\n`,

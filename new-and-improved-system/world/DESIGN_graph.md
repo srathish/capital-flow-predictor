@@ -140,3 +140,13 @@ ridge regression beat graph models out of sample. Amendment-2 rules stay as they
   2019–2022), positive in ≥ 60% of months, **and** the 2019–2022 mean IC beats the 95th percentile of 20 placebo models (every
   driver series circularly shifted 2–6 years, re-learned each January exactly like the real one).
 - Criteria 2–4 unchanged (beat momentum, v5, and random 95th percentile).
+
+### Amendment 2c (2026-10-06, before any 2019+ result) — US trade by product (Census, key now available)
+
+- Census international trade, imports and exports by HS code, monthly from 2010 (`world/trade_collect.mjs` →
+  `.cache/trade/trade.json`). Current vintage (annual revisions are small), available month end + 40 days. Each series' YoY
+  enters as an outside node `trade:<flow>:<HS>[:<country>]` with a fixed BEA mapping by HS code (`tradeBea()` in
+  `world/sic_bea.mjs`): computers/parts/chips/storage/monitors/telecom/optics → 334 (computers also 514/5415); chip equipment
+  8486 → 333/334; transformers, switchgear, cable, batteries, generators → 335 (+22/23/331 as listed); turbines → 333/3364OT/22;
+  cooling/AC → 333/23; copper → 331/212; silicon/wafers → 325/334; cars/parts → 3361MV/441; medicines → 325; petroleum →
+  324/211; total imports/exports → all industries.
