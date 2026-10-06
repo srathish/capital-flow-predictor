@@ -1,0 +1,12 @@
+# Sean breakout swing — DEVELOPMENT (signals 2023-01-01 → 2024-12-31) · 928 tickers · design DESIGN_sean.md
+
+**With SPY gate (the system):** n 63 · win 22% · mean +0.54% (t 0.30) · median -3.24% · mean R 0.17 · excess vs SPY -0.20% · avg hold 18 sessions · avg risk +5.70% · top-5 trades = 587% of total P&L · still open 0
+**No SPY gate:** n 85 · win 29% · mean +0.57% (t 0.42) · median -2.62% · mean R 0.20 · excess vs SPY -0.33% · avg hold 18 sessions · avg risk +5.15% · top-5 trades = 409% of total P&L · still open 0
+**Random-entry control** (200 draws, same day, scan-passing stock, same management): median of means +0.40% · 95th pct +2.21% · share of draws ≥ system 43.5%
+
+**By year:** 2023: n 33, mean -0.38%, win 18%, excess -1.19% · 2024: n 30, mean +1.55%, win 27%, excess +0.90%
+
+**Biggest winners:** VRT 2023-05-22 +78.01% (109d) · NVDA 2024-01-08 +40.23% (71d) · RBRK 2024-11-21 +33.89% (61d) · AS 2024-11-07 +31.12% (70d) · XYZ 2024-10-10 +16.61% (56d) · THC 2024-01-08 +15.04% (69d) · YPF 2023-06-06 +14.41% (42d) · KGC 2024-05-08 +12.64% (62d)
+**Biggest losers:** IONQ 2024-12-16 -16.98% · HSAI 2023-07-11 -13.91% · IBRX 2024-03-20 -10.18% · PLTR 2024-03-06 -9.28% · IREN 2023-04-11 -9.11%
+
+**Pass criteria (informational on dev):** mean>0 & t≥2 FAIL · beats control 95th pct FAIL · excess vs SPY > 0 FAIL → **FAIL**

@@ -1,0 +1,12 @@
+# Sean breakout swing — HOLDOUT (signals 2025-01-01 → 2026-09-30) · 928 tickers · design DESIGN_sean.md
+
+**With SPY gate (the system):** n 84 · win 23% · mean +2.85% (t 0.83) · median -2.97% · mean R 0.70 · excess vs SPY +2.52% · avg hold 19 sessions · avg risk +5.40% · top-5 trades = 168% of total P&L · still open 5
+**No SPY gate:** n 116 · win 28% · mean +2.81% (t 1.11) · median -2.65% · mean R 0.64 · excess vs SPY +2.13% · avg hold 20 sessions · avg risk +5.49% · top-5 trades = 126% of total P&L · still open 11
+**Random-entry control** (200 draws, same day, scan-passing stock, same management): median of means +0.59% · 95th pct +3.63% · share of draws ≥ system 8.5%
+
+**By year:** 2025: n 55, mean +3.50%, win 18%, excess +3.04% · 2026: n 29, mean +1.62%, win 31%, excess +1.52%
+
+**Biggest winners:** LITE 2025-06-04 +277.56% (252d) · TWST 2026-08-03 +46.83% (42d) · CHYM 2026-07-31 +29.13% (36d) · FIX 2025-07-24 +28.42% (102d) · BTSG 2026-05-01 +21.07% (62d) · AXSM 2025-10-15 +13.35% (89d) · SHOP 2025-07-16 +12.82% (80d) · URI 2025-06-24 +10.92% (85d)
+**Biggest losers:** SMTC 2025-01-15 -9.96% · IBRX 2025-06-06 -9.45% · AVGO 2026-05-29 -9.23% · RBRK 2025-07-30 -8.85% · TWLO 2026-06-01 -8.38%
+
+**Pass criteria:** mean>0 & t≥2 FAIL · beats control 95th pct FAIL · excess vs SPY > 0 PASS → **FAIL**

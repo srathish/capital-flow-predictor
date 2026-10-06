@@ -24,3 +24,4 @@ Every mechanical idea was tested honestly (see `world/DESIGN*.md` and `shadow/re
 - Options flow (UW, Skylit, Discord), analyst actions, short interest, 50 price/theme/seasonality rankers, fib/trendlines, earnings straddles.
 - World models v1–v2 (keyword and filing-text graphs), v3/v4 (13F skilled-manager consensus or concentration). All lost to copying SA and to momentum.
 - Fresh filings (13D, 8-K contracts, guidance). Priced at or before filing.
+- Sean (SRxTrades) breakout swing system: tight base + volume breakout, low-of-day stop, EMA 8/21/50 trims (`shadow/DESIGN_sean.md`). Holdout 2025–26: +2.85%/trade (t 0.83), 23% win rate, one trade (LITE +278%) is the whole result; random entries with the same exits beat it 8.5% of the time. FAIL.
