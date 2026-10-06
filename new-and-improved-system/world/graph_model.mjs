@@ -7,6 +7,7 @@
 // Runs once per mode (refuses if the report exists). 0 Skylit credits.
 import fs from 'node:fs';
 import path from 'node:path';
+import { sicToBea, OUTSIDE_BEA } from './sic_bea.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), G = path.join(C, 'graph'), RES = path.join(ROOT, 'world', 'results_graph');
 const EXTRA = process.argv.includes('--extra'), SMOKE = process.argv.includes('--smoke'), TAG = EXTRA ? 'graph_extra' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
@@ -35,12 +36,29 @@ const HYP = ['MSFT', 'GOOGL', 'AMZN', 'META', 'ORCL'], root = new Map();
     if (ok) root.set(k, { v: clip(a / b - 1), f }); } }
 
 // ---------- outside nodes (FRED) ----------
-const fred = rd(path.join(G, 'fred.json')), DAILY = new Set(['DHHNGSP', 'DGS10', 'DTWEXBGS', 'DCOILWTICO', 'CBBTCUSD']), OUT = new Map();
-for (const [id, s] of Object.entries(fred)) { if (!s.locked && !EXTRA) continue; const qv = new Map();
-  for (const o of s.obs) { const k = qk(`${o.d.slice(0, 4)}Q${Math.floor((+o.d.slice(5, 7) - 1) / 3) + 1}`); const a = qv.get(k) ?? []; a.push(o.v); qv.set(k, a); }
+const fred = rd(path.join(G, 'fred.json')), OUT = new Map(); // amendment 2b: monthly series carry first-release YoY (ALFRED); daily prices are unrevised
+const qOf = (m) => qk(`${m.slice(0, 4)}Q${Math.floor((+m.slice(5, 7) - 1) / 3) + 1}`);
+const fromMonthly = (yoy) => { const qv = new Map(); for (const o of yoy) { const a = qv.get(qOf(o.m)) ?? []; a.push(o); qv.set(qOf(o.m), a); }
+  const m = new Map(); for (const [k, a] of qv) if (a.length === 3) m.set(k, { v: clip(mean(a.map((o) => o.g))), f: a.map((o) => o.avail).sort().at(-1) }); return m; };
+for (const [id, s] of Object.entries(fred)) {
+  if (s.kind === 'monthly') { OUT.set('fred:' + id, fromMonthly(s.yoy.map((o) => ({ ...o, g: s.level ? o.g / 100 : o.g })))); continue; }
+  const qv = new Map(); for (const o of s.obs) { const k = qOf(o.d); const a = qv.get(k) ?? []; a.push(o.v); qv.set(k, a); }
   const m = new Map(); for (const [k, a] of qv) { const p = qv.get(k - 4); if (!p) continue; const x = mean(a), y = mean(p);
-    const v = id === 'DGS10' ? (x - y) / 100 : y > 0 ? clip(x / y - 1) : null; if (v != null) m.set(k, { v, f: addD(qEnd(k), DAILY.has(id) ? 1 : 60) }); }
+    const v = s.level ? (x - y) / 100 : y > 0 ? clip(x / y - 1) : null; if (v != null) m.set(k, { v, f: addD(qEnd(k), 1) }); }
   OUT.set('fred:' + id, m); }
+for (const [id, s] of Object.entries(rd(path.join(G, 'extra.json'), {}))) { const by = new Map(s.obs.map((o) => [o.m, o])), yoy = []; // WSTS, C30 data centers, bitcoin network
+  for (const o of s.obs) { const p = by.get(`${+o.m.slice(0, 4) - 1}${o.m.slice(4)}`); if (p && p.v > 0) yoy.push({ m: o.m, g: o.v / p.v - 1, avail: o.avail }); } OUT.set(id, fromMonthly(yoy)); }
+// Taiwan monthly revenue by industry (amendment 2): quarterly YoY of matched-company revenue, public the 10th after quarter end
+const TWBEA = (k) => /semicon|半導體/i.test(k) ? ['334'] : /computer|電腦/i.test(k) ? ['334'] : /optoelec|光電/i.test(k) ? ['334'] : /communic|通信/i.test(k) ? ['334', '513'] : /electronic (parts|comp)|電子零組件/i.test(k) ? ['334'] : /electronic|電子/i.test(k) ? ['334']
+  : /information service|資訊服務/i.test(k) ? ['5415', '514'] : /electric (machin|appl)|電機/i.test(k) ? ['335', '333'] : /cable|電器電纜/i.test(k) ? ['335', '331'] : /plastic|塑膠/i.test(k) ? ['326', '325'] : /chemic|化學/i.test(k) ? ['325'] : /steel|鋼鐵/i.test(k) ? ['331']
+  : /auto|汽車/i.test(k) ? ['3361MV'] : /shipping|航運/i.test(k) ? ['483', '481'] : /oil|gas|electric|油電燃氣/i.test(k) ? ['324', '22'] : /bio|生技/i.test(k) ? ['325'] : /bellwether|ai/i.test(k) ? ['334', '335', '5415', '514'] : [];
+const TWN = new Map();
+{ const tw = rd(path.join(C, 'tw', 'industry_index.json'), {}); const flat = [];
+  for (const [k, v] of Object.entries(tw)) { if (v && typeof v === 'object' && Object.keys(v).some((x) => /^\d{4}-\d{2}$/.test(x))) flat.push([k, v]); else if (v && typeof v === 'object') for (const [k2, v2] of Object.entries(v)) if (v2 && typeof v2 === 'object' && Object.keys(v2).some((x) => /^\d{4}-\d{2}$/.test(x))) flat.push([k + ':' + k2, v2]); }
+  for (const [k, mon] of flat) { const bea = TWBEA(k); if (!bea.length) continue; const qv = new Map();
+    for (const [m, o] of Object.entries(mon)) { if (!(o?.rev > 0) || o.yoy == null || !Number.isFinite(o.yoy)) continue; const kk = qk(`${m.slice(0, 4)}Q${Math.floor((+m.slice(5, 7) - 1) / 3) + 1}`); const a = qv.get(kk) ?? []; a.push(o); qv.set(kk, a); }
+    const q = new Map(); for (const [kk, a] of qv) { if (a.length < 3) continue; const cur = a.reduce((s2, o) => s2 + o.rev, 0), prev = a.reduce((s2, o) => s2 + o.rev / (1 + o.yoy), 0); if (prev > 0) q.set(kk, { v: clip(cur / prev - 1), f: addD(qEnd(kk), 10) }); }
+    if (q.size >= 16) { OUT.set('tw:' + k, q); TWN.set('tw:' + k, bea); } } }
 
 // ---------- prices / eligibility ----------
 const P = new Map();
@@ -55,29 +73,42 @@ const hardRule = (t, d) => { const c = CO.get(t), kq = latestQ(c.acc, d); if (kq
 // ---------- learning (Amendment 1: industry nodes, connections learned per industry) ----------
 function corr(x, y) { const n = x.length; if (n < 3) return 0; const mx = mean(x), my = mean(y); let a = 0, b = 0, c = 0; for (let i = 0; i < n; i++) { const dx = x[i] - mx, dy = y[i] - my; a += dx * dy; b += dx * dx; c += dy * dy; } return b && c ? a / Math.sqrt(b * c) : 0; }
 const tstat = (r, n) => (n > 2 && Math.abs(r) < 1 ? (r * Math.sqrt(n - 2)) / Math.sqrt(1 - r * r) : 0);
-const SIC = new Map(); for (const t of CO.keys()) { const j = rd(path.join(C, 'edgar', 'sic', `${t}.json`)); if (j?.sic) SIC.set(t, { s: String(j.sic).slice(0, 3), desc: j.desc }); }
+const SIC = new Map(); for (const t of CO.keys()) { const j = rd(path.join(C, 'edgar', 'sic', `${t}.json`)); if (j?.sic) SIC.set(t, { s: String(j.sic).padStart(4, '0').slice(0, 3), desc: j.desc, bea: sicToBea(j.sic) }); }
 const IND = new Map(); for (const [t, x] of SIC) { const a = IND.get(x.s) ?? []; a.push(t); IND.set(x.s, a); } for (const [k, a] of [...IND]) if (a.length < 5) IND.delete(k);
 const indOf = (t) => (IND.has(SIC.get(t)?.s) ? SIC.get(t).s : null), indDesc = (s) => { const c = new Map(); for (const t of IND.get(s) ?? []) { const d = SIC.get(t).desc; c.set(d, (c.get(d) ?? 0) + 1); } return `SIC ${s}x: ${[...c].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '?'}`; };
+const INDBEA = new Map([...IND].map(([s, a]) => [s, new Set(a.map((t) => SIC.get(t).bea).filter(Boolean))]));
+// amendment 2: a driver may connect to a target industry only through a real BEA input-output link (table year = cut-off year − 2)
+const USE = rd(path.join(C, 'bea', 'use_summary.json'), {}), allowC = new Map();
+function allowed(name, s, cutYear) { const key = name + '|' + s + '|' + cutYear; if (allowC.has(key)) return allowC.get(key);
+  const T = INDBEA.get(s) ?? new Set(), D = name.startsWith('ind:') ? INDBEA.get(name.slice(4)) ?? new Set() : new Set(OUTSIDE_BEA[name] ?? TWN.get(name) ?? []);
+  let ok = D.has('ALL') || [...D].some((d) => T.has(d)); const U = USE[String(Math.min(+cutYear - 2, 2023))];
+  if (!ok && U) for (const t of T) for (const d of D) { const out = U.use[t]?.[d] ?? 0, inp = U.use[d]?.[t] ?? 0; if ((U.rowTotal[t] && out / U.rowTotal[t] >= 0.02) || (U.inter[t] && inp / U.inter[t] >= 0.02)) ok = true; }
+  allowC.set(key, ok); return ok; }
 function indVal(s, k, d, field) { const v = []; for (const t of IND.get(s)) { const x = CO.get(t)[field].get(k); if (x && x.f <= d) v.push(x.v); } if (v.length < 3) return null; v.sort((a, b) => a - b); return v[v.length >> 1]; }
 const OWN = [['own:capex', 'cxg'], ['own:inventory', 'ivg'], ['own:backlog', 'rpg']];
-function keepRule(xs, ys, nEff) { const n = xs.length; if (n < 12) return null; const k1 = Math.floor((n * 2) / 3), r = corr(xs, ys), r1 = corr(xs.slice(0, k1), ys.slice(0, k1)), r2 = corr(xs.slice(k1), ys.slice(k1)), t = tstat(r, nEff ?? n);
-  return Math.abs(t) >= 4 && Math.sign(r1) === Math.sign(r) && Math.sign(r2) === Math.sign(r) && Math.abs(r2) >= 0.5 * Math.abs(r1) ? { r, t, n } : null; }
-function learn(cut) {
-  const ks = []; for (let k = qk('2010Q1'); qEnd(k) < cut; k++) ks.push(k);
+function nwT(x, y, lags = 4) { const n = x.length, mx = mean(x), my = mean(y), u = x.map((v) => v - mx); const sxx = u.reduce((a, v) => a + v * v, 0); if (!sxx) return 0; // Newey-West t of the OLS slope
+  const b = u.reduce((a, v, i) => a + v * (y[i] - my), 0) / sxx, e = y.map((v, i) => v - my - b * u[i]), g = u.map((v, i) => v * e[i]); let S = g.reduce((a, v) => a + v * v, 0);
+  for (let l = 1; l <= lags; l++) { let c = 0; for (let i = l; i < n; i++) c += g[i] * g[i - l]; S += 2 * (1 - l / (lags + 1)) * c; } return S > 0 ? b / (Math.sqrt(S) / sxx) : 0; }
+function keepRule(xs, ys, deflate = 1) { const n = xs.length; if (n < 12) return null; const k1 = Math.floor((n * 2) / 3), r = corr(xs, ys), r1 = corr(xs.slice(0, k1), ys.slice(0, k1)), r2 = corr(xs.slice(k1), ys.slice(k1)), t = nwT(xs, ys) / deflate;
+  return Math.abs(t) >= 3 && Math.sign(r1) === Math.sign(r) && Math.sign(r2) === Math.sign(r) && Math.abs(r2) >= 0.5 * Math.abs(r1) ? { r, t, n } : null; }
+function learn(cut, placeboSeed = null) { // placeboSeed: circularly shift every driver series by 2–6 years (amendment 2 placebo)
+  const ks = []; for (let k = qk('2010Q1'); qEnd(k) < cut; k++) ks.push(k); const cutYear = cut.slice(0, 4);
+  let ps = placeboSeed ?? 0; const prnd = () => ((ps = (ps * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const shift = (m) => { if (placeboSeed == null || m.size < 8) return m; const keys = [...m.keys()].sort((a, b) => a - b), lo = keys[0], span = keys.at(-1) - lo + 1, off = 8 + Math.floor(prnd() * 17); return new Map([...m].map(([k, v]) => [lo + ((k - lo + off) % span), v])); };
   const ser = (m) => new Map([...m].filter(([, x]) => x.f < cut).map(([k, x]) => [k, x.v]));
   const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'g')]).filter(([, v]) => v != null))]));
   const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'acc')]).filter(([, v]) => v != null))]));
-  const drivers = [['root:hyperscaler_capex', ser(root)], ...[...OUT].map(([k, m]) => [k, ser(m)]), ...[...indG].map(([s, m]) => ['ind:' + s, m])];
+  const drivers = [['root:hyperscaler_capex', shift(ser(root))], ...[...OUT].map(([k, m]) => [k, shift(ser(m))]), ...[...indG].map(([s, m]) => ['ind:' + s, shift(m)])];
   const Z = new Map(); for (const [name, m] of drivers) { const v = [...m.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((x) => (x - mu) ** 2))) || 1; Z.set(name, { m, mu, sd }); }
   const model = new Map(); let nConn = 0;
   for (const [s, y] of indA) { const yk = [...y.keys()].sort((a, b) => a - b); if (yk.length < 16) continue; const cand = [];
-    for (const [name, zz] of Z) { if (name === 'ind:' + s) continue; for (const L of LAGS) { const xs = [], ys = []; for (const k of yk) { const v = zz.m.get(k - L); if (v != null) { xs.push(v); ys.push(y.get(k)); } }
+    for (const [name, zz] of Z) { if (name === 'ind:' + s || !allowed(name, s, cutYear)) continue; for (const L of LAGS) { const xs = [], ys = []; for (const k of yk) { const v = zz.m.get(k - L); if (v != null) { xs.push(v); ys.push(y.get(k)); } }
       const kr = keepRule(xs, ys); if (kr) cand.push({ name, L, ...kr, mu: zz.mu, sd: zz.sd }); } }
     const conns = cand.sort((a, b) => Math.abs(b.t) - Math.abs(a.t)).slice(0, 5).map((x) => ({ name: x.name, L: x.L, w: x.r * (x.n / (x.n + 12)), mu: x.mu, sd: x.sd, t: x.t }));
     const own = []; for (const [name, fld] of OWN) { let best = null; for (const L of LAGS) { const S = [];
-        for (const t of IND.get(s)) { const c = CO.get(t), xm = ser(c[fld]); const v = [...xm.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((q) => (q - mu) ** 2))) || 1;
+        for (const t of IND.get(s)) { const c = CO.get(t), xm = shift(ser(c[fld])); const v = [...xm.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((q) => (q - mu) ** 2))) || 1;
           for (const [k, a] of c.acc) if (a.f < cut && xm.has(k - L)) S.push([k, (xm.get(k - L) - mu) / sd, a.v]); }
-        S.sort((p, q) => p[0] - q[0]); const kr = keepRule(S.map((x) => x[1]), S.map((x) => x[2]), S.length / 3); if (kr && (!best || Math.abs(kr.t) > Math.abs(best.t))) best = { name, L, w: kr.r, t: kr.t }; }
+        S.sort((p, q) => p[0] - q[0]); const kr = keepRule(S.map((x) => x[1]), S.map((x) => x[2]), Math.sqrt(3)); if (kr && (!best || Math.abs(kr.t) > Math.abs(best.t))) best = { name, L, w: kr.r, t: kr.t }; }
       if (best) own.push(best); }
     if (conns.length || own.length) { model.set(s, { conns, own }); nConn += conns.length + own.length; } }
   return { model, nConn }; }
@@ -104,16 +135,19 @@ const learned = new Map(), months = [];
 for (const M of monthEnds) { const Y = M.slice(0, 4); if (!learned.has(Y)) { const L = learn(`${Y}-01-01`); learned.set(Y, L); console.error(`learned ${Y}: ${L.model.size} industries, ${L.nConn} connections`); }
   const { model } = learned.get(Y), elig = [...CO.keys()].filter((t) => eligible(t, M) && hardRule(t, M)), cache = new Map();
   const fc = new Map(); for (const t of elig) { const f = forecast(t, M, model, cache); if (f) fc.set(t, f); }
-  const ev = [...fc.values()].filter((f) => f.actual != null), ic = ev.length > 30 ? spear(ev.map((f) => f.pred), ev.map((f) => f.actual)) : null, icP = ev.length > 30 ? spear(ev.map((f) => f.persist), ev.map((f) => f.actual)) : null;
+  for (const [t, f] of fc) f.ind = indVal(indOf(t), f.kq, M, 'acc');
+  const ev = [...fc.values()].filter((f) => f.actual != null), evI = ev.filter((f) => f.ind != null), ic = ev.length > 30 ? spear(ev.map((f) => f.pred), ev.map((f) => f.actual)) : null, icP = ev.length > 30 ? spear(ev.map((f) => f.persist), ev.map((f) => f.actual)) : null;
+  const icI = evI.length > 30 ? spear(evI.map((f) => f.ind), evI.map((f) => f.actual)) : null, icGI = evI.length > 30 ? spear(evI.map((f) => f.pred), evI.map((f) => f.actual)) : null;
+  const big = new Set(elig.filter((t) => { const p = P.get(t), j = at(t, M); let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return dv / 50 >= 1e8; }));
   const v5 = v5score(elig, M), mo = new Map(elig.map((t) => [t, mom(t, M)]).filter(([, v]) => v != null));
-  months.push({ M, elig, ranks: { graph: new Map([...fc].map(([t, f]) => [t, f.pred])), momentum: mo, v5 }, ic, icP, nfc: fc.size });
+  months.push({ M, elig, big, ranks: { graph: new Map([...fc].map(([t, f]) => [t, f.pred])), momentum: mo, v5 }, ic, icP, icI, icGI, nfc: fc.size });
   console.error(`${M} elig ${elig.length} · forecasts ${fc.size} · IC ${ic?.toFixed(3)} (persistence ${icP?.toFixed(3)})`); }
 
 // ---------- portfolios (buy top 20, hold while in top 60) ----------
 const ret = (t, a, b) => { const p = P.get(t); if (!p) return null; const i = at(t, a) + 1, j = at(t, b) + 1; return i > 0 && j > i && j < p.c.length ? p.c[j] / p.c[i] - 1 : null; };
 const medRet = months.slice(0, -1).map((m, i) => { const nxt = months[i + 1].M, v = m.elig.map((t) => ret(t, m.M, nxt)).filter((x) => x != null).sort((a, b) => a - b); return v[v.length >> 1] ?? 0; });
-function run(rankOf, log = false) { let hold = new Set(); const out = [], trades = [];
-  for (let i = 0; i < months.length - 1; i++) { const m = months[i], r = rankOf(m, i); const order = [...r].sort((a, b) => b[1] - a[1]).map(([t]) => t), keep = new Set(order.slice(0, KEEP));
+function run(rankOf, log = false, filt = null) { let hold = new Set(); const out = [], trades = [];
+  for (let i = 0; i < months.length - 1; i++) { const m = months[i], r = rankOf(m, i); const order = [...r].filter(([t]) => !filt || filt(m, t)).sort((a, b) => b[1] - a[1]).map(([t]) => t), keep = new Set(order.slice(0, KEEP));
     const next = new Set([...hold].filter((t) => keep.has(t))); for (const t of order) { if (next.size >= TOP) break; next.add(t); }
     const bought = [...next].filter((t) => !hold.has(t)), sold = [...hold].filter((t) => !next.has(t));
     if (log) { for (const t of bought) trades.push({ M: m.M, t, side: 'buy' }); for (const t of sold) trades.push({ M: m.M, t, side: 'sell' }); }
@@ -121,16 +155,20 @@ function run(rankOf, log = false) { let hold = new Set(); const out = [], trades
     const pr = rs.length ? mean(rs) - COST * turn : 0; out.push({ M: m.M, r: pr, ex: pr - medRet[i], n: next.size, hold: [...next] }); hold = next; }
   return { out, trades }; }
 const G1 = run((m) => m.ranks.graph, true), MO = run((m) => m.ranks.momentum), V5 = run((m) => m.ranks.v5);
+const GB = run((m) => m.ranks.graph, false, (m, t) => m.big.has(t)), GS = run((m) => m.ranks.graph, false, (m, t) => !m.big.has(t)), MB = run((m) => m.ranks.momentum, false, (m, t) => m.big.has(t)), MS = run((m) => m.ranks.momentum, false, (m, t) => !m.big.has(t));
+const REAL = learned.get(SMOKE ? '2018' : '2019')?.nConn ?? 0, PLAC = Array.from({ length: SMOKE ? 3 : 20 }, (_, i) => learn(SMOKE ? '2018-01-01' : '2019-01-01', 1000 + i).nConn), placMean = mean(PLAC);
+console.error(`placebo connections: ${PLAC.join(' ')} (mean ${placMean.toFixed(1)}) vs real ${REAL}`);
 let seed = 4242; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
 const RAND = Array.from({ length: DRAWS }, () => run((m) => new Map(m.elig.map((t) => [t, rnd()])))).map((x) => mean(x.out.map((o) => o.ex))).sort((a, b) => a - b);
 
 // ---------- report ----------
 const pc = (x, d = 1) => (x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(d)}%`), comp = (a) => a.reduce((s, x) => s * (1 + x), 1) - 1;
-const ics = (from, to) => { const a = months.filter((m) => m.M >= from && m.M <= to && m.ic != null); return { g: mean(a.map((m) => m.ic)), p: mean(a.map((m) => m.icP)), pos: a.filter((m) => m.ic > 0).length / a.length, n: a.length }; };
+const ics = (from, to) => { const a = months.filter((m) => m.M >= from && m.M <= to && m.ic != null), b = a.filter((m) => m.icI != null); return { g: mean(a.map((m) => m.ic)), p: mean(a.map((m) => m.icP)), i: mean(b.map((m) => m.icI)), gi: mean(b.map((m) => m.icGI)), pos: a.filter((m) => m.ic > 0).length / a.length, n: a.length }; };
 const A = ics('2019', '2026-12'), Bc = ics('2019', '2022-12-31'), exm = (R, from = '', to = '9') => mean(R.out.filter((o) => o.M >= from && o.M <= to).map((o) => o.ex));
 const p95 = RAND[Math.floor(DRAWS * 0.95)];
-const crit = [A.g > A.p && A.pos >= 0.6 && Bc.g > Bc.p && Bc.pos >= 0.6, exm(G1) > exm(MO), exm(G1) > exm(V5), exm(G1) > p95];
-const L = [`# Node graph — ${EXTRA ? 'locked + extra world factors' : 'locked world factors'} · test months 2019-01 → 2026-03\n`,
+const crit = [A.g > A.p && A.gi > A.i && A.pos >= 0.6 && Bc.g > Bc.p && Bc.gi > Bc.i && Bc.pos >= 0.6 && REAL >= 2 * placMean, exm(G1) > exm(MO), exm(G1) > exm(V5), exm(G1) > p95];
+const L = [`# Node graph (amendment 2: BEA-linked, Newey-West, placebo, ${OUT.size} outside nodes incl. ${TWN.size} Taiwan) · test months 2019-01 → 2026-03\n`,
+  `Placebo (2019 cut-off, ${PLAC.length} shuffles): ${placMean.toFixed(1)} connections on average vs ${REAL} real → ${REAL >= 2 * placMean ? 'real ≥ 2× placebo' : 'NOT ≥ 2× placebo'}\n`,
   `Learned connections per year: ${[...learned].map(([y, l]) => `${y} ${l.nConn} (${l.model.size} industries)`).join(' · ')}\n`,
   '## 1. Does it forecast growth? (rank correlation of predicted vs actual next-quarter revenue acceleration)\n',
   '| | graph IC | persistence IC | months graph IC > 0 |', '|---|---|---|---|',

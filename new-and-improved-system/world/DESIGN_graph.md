@@ -123,3 +123,20 @@ Services. With ~28 quarters per company and ~1,300 candidate connections each, c
   - WSTS global semiconductor billings (monthly, +45 days); NY Fed GSCPI (supply-chain pressure, +5 days); bitcoin hash rate
     and miner revenue (blockchain.info, daily).
 - Deferred (need a key or scraping): Korea customs 10/20-day exports, Japan e-Stat HS 8486, Census trade by HS, EIA, SEAJ.
+
+## Amendment 3 (2026-10-06, before any 2019+ result) — a second, ridge version, run alongside
+
+**Why:** the smoke test on 2018 (training years only) found the placebo (timing scrambled) selects as many connections as the
+real data (503 vs 492), so link *selection* on ~30 quarters is not distinguishable from chance. The prior-art scan found plain
+ridge regression beat graph models out of sample. Amendment-2 rules stay as they are and are judged as written (`graph`).
+
+**Second version (`graph_ridge`, `--ridge`):** no link selection.
+- Per target industry: ridge regression of the industry's median revenue acceleration on **all** economically allowed drivers
+  (amendment 2 BEA rule) × lags 1–4, z-scored. The penalty is picked from {1, 3, 10, 30, 100, 300} by fitting on the first
+  two-thirds of the training quarters and scoring the last third, then refit on all training quarters.
+- Own-company nodes (capex, inventory, backlog × lags): one pooled ridge over all companies, same penalty rule.
+- Forecast = industry prediction + own-node prediction. Same walk-forward, portfolio, benchmarks and size split.
+- **Criterion 1 (forecasting) for this version:** mean IC beats persistence and the industry baseline (2019–2026 and
+  2019–2022), positive in ≥ 60% of months, **and** the 2019–2022 mean IC beats the 95th percentile of 20 placebo models (every
+  driver series circularly shifted 2–6 years, re-learned each January exactly like the real one).
+- Criteria 2–4 unchanged (beat momentum, v5, and random 95th percentile).

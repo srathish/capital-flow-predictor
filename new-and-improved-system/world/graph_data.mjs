@@ -11,11 +11,19 @@ import { TAGS2 } from './facts2_collect.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), OUT = path.join(C, 'graph');
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
+const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
 const days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
 export const FRED_LOCKED = { PCU334413334413: 'PPI semiconductors', PCU33443344: 'PPI semis & electronic components', IPG3344S: 'IP semiconductors',
   PCU335311335311: 'PPI transformers', PCU335313335313: 'PPI switchgear', PCU2211222112: 'PPI power transmission/distribution', APU000072610: 'electricity price',
   DHHNGSP: 'Henry Hub gas', PCOPPUSDM: 'copper', PALUMUSDM: 'aluminum', TLPWRCONS: 'construction: power', TLCOMCONS: 'construction: commercial' };
 export const FRED_EXTRA = { DGS10: '10-year Treasury yield', DTWEXBGS: 'US dollar index', DCOILWTICO: 'WTI oil', CBBTCUSD: 'Bitcoin', TSIFRGHT: 'freight shipments', RSAFS: 'retail sales' };
+export const FRED_MORE = { A34SNO: 'M3 new orders: computers & electronics', A34SUO: 'M3 unfilled orders: computers & electronics', A34STI: 'M3 inventories: computers & electronics',
+  A34ANO: 'M3 new orders: computers', A35SNO: 'M3 new orders: electrical equipment', A35SUO: 'M3 unfilled orders: electrical equipment', A33SNO: 'M3 new orders: machinery', A36SNO: 'M3 new orders: transportation equipment',
+  NEWORDER: 'M3 core capital goods orders', ADEFNO: 'M3 defense capital goods orders', ANAPNO: 'M3 nondefense aircraft orders', TLMFGCONS: 'construction: manufacturing', IPG3341S: 'IP computers',
+  CAPUTLG3344S: 'capacity use: semiconductors', IPG2211S: 'IP electric power generation', PCU518210518210: 'PPI data processing & hosting', CES6054150001: 'jobs: computer systems design',
+  CES5051800001: 'jobs: data processing & hosting', PURANUSDM: 'uranium', PNICKUSDM: 'nickel', PIORECRUSDM: 'iron ore', PCOALAUUSDM: 'coal', XTEXVA01KRM667S: 'Korea exports',
+  XTEXVA01JPM667S: 'Japan exports', XTEXVA01CNM667S: 'China exports', RAILFRTCARLOADSD11: 'rail carloads', TRUCKD11: 'truck tonnage', NOFDFSA066MSFRBPHI: 'Philly Fed future new orders', CFNAI: 'Chicago Fed activity index' };
+export const DAILY = new Set(['DHHNGSP', 'DGS10', 'DTWEXBGS', 'DCOILWTICO', 'CBBTCUSD']), LEVEL = new Set(['DGS10', 'CFNAI', 'NOFDFSA066MSFRBPHI']);
 
 // calendar quarter key for a fiscal period end: nearest quarter-end within ±46 days → 'YYYYQn'
 export function cq(e) { const d = new Date(e + 'T12:00:00Z'); let best = null;
@@ -53,8 +61,18 @@ if (decodeURIComponent(new URL(import.meta.url).pathname) === process.argv[1]) {
       if (!rows[k] || rows[k].f > row.f) rows[k] = row; }
     if (Object.keys(rows).length >= 6) { panel[t] = rows; n++; } }
   fs.writeFileSync(path.join(OUT, 'panel.json'), JSON.stringify(panel)); console.error(`panel: ${n} companies`);
-  await import('../feeds/env.js'); const FRED_API_KEY = process.env.FRED_API_KEY; const fred = {};
-  for (const [id, name] of Object.entries({ ...FRED_LOCKED, ...FRED_EXTRA })) { const j = await (await fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=${id}&api_key=${FRED_API_KEY}&file_type=json&observation_start=2008-01-01`)).json().catch(() => null);
-    const o = (j?.observations ?? []).filter((x) => x.value !== '.').map((x) => ({ d: x.date, v: +x.value })); fred[id] = { name, locked: id in FRED_LOCKED, obs: o }; console.error(`${id} ${name}: ${o.length} obs ${o[0]?.d ?? ''} → ${o.at(-1)?.d ?? ''}`); }
+  await import('../feeds/env.js'); const K = process.env.FRED_API_KEY, fred = {}; // amendment 2b: first-release values (ALFRED vintages) for revised monthly series
+  const api = async (q) => { for (let k = 0; k < 4; k++) { const j = await (await fetch(`https://api.stlouisfed.org/fred/series/observations?${q}&api_key=${K}&file_type=json&limit=100000`)).json().catch(() => null); if (j?.observations) return j.observations; await new Promise((r) => setTimeout(r, 2000 * (k + 1))); } return []; };
+  const mEnd = (m) => new Date(Date.UTC(+m.slice(0, 4), +m.slice(5, 7), 0)).toISOString().slice(0, 10), m12 = (m) => `${+m.slice(0, 4) - 1}${m.slice(4, 7)}`;
+  for (const [id, name] of Object.entries({ ...FRED_LOCKED, ...FRED_EXTRA, ...FRED_MORE })) {
+    if (DAILY.has(id)) { const o = (await api(`series_id=${id}&observation_start=2008-01-01`)).filter((x) => x.value !== '.').map((x) => ({ d: x.date, v: +x.value })); fred[id] = { name, kind: 'daily', level: LEVEL.has(id), obs: o }; console.error(`${id} ${name}: ${o.length} daily obs`); continue; }
+    const recs = (await api(`series_id=${id}&observation_start=2008-01-01&output_type=1&realtime_start=1776-07-04&realtime_end=9999-12-31`)).filter((x) => x.value !== '.');
+    const by = new Map(); for (const x of recs) { const m = x.date.slice(0, 7), a = by.get(m) ?? []; a.push({ rs: x.realtime_start, re: x.realtime_end, v: +x.value }); by.set(m, a); }
+    for (const a of by.values()) a.sort((p, q) => p.rs.localeCompare(q.rs));
+    const yoy = []; for (const [m, a] of by) { const prev = by.get(m12(m)); if (!prev) continue; let r = a[0].rs, v = a[0].v, pv;
+      if (r > addD(mEnd(m), 200)) { pv = prev[0].v; r = addD(mEnd(m), 60); } // vintage history starts later than this month: earliest vintage, month-end + 60 days
+      else { const hit = prev.find((x) => x.rs <= r && r <= x.re) ?? prev[0]; pv = hit.v; }
+      const g = LEVEL.has(id) ? v - pv : pv > 0 ? v / pv - 1 : null; if (g != null && Number.isFinite(g)) yoy.push({ m, g, avail: r }); }
+    fred[id] = { name, kind: 'monthly', level: LEVEL.has(id), yoy: yoy.sort((p, q) => p.m.localeCompare(q.m)) }; console.error(`${id} ${name}: ${yoy.length} first-release YoY months ${yoy[0]?.m ?? ''} → ${yoy.at(-1)?.m ?? ''}`); }
   fs.writeFileSync(path.join(OUT, 'fred.json'), JSON.stringify(fred));
 }
