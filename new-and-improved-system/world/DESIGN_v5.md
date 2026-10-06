@@ -69,3 +69,19 @@ Retest with **identical rules** on a wide universe:
 - Dev 2023-03 → 2024-12 and holdout 2025-01 → 2026-03, each run once, same three pass criteria.
 - **PASS = the holdout passes again on the wide universe.** If it fails, v5 is logged as a survivorship artifact.
 - Remaining bias: companies delisted before today are still missing (no ticker in today's SEC list).
+
+## Addendum 2026-10-06 (2) — 2012–2022 out-of-sample test (locked before the older prices are pulled)
+
+v5 has only been seen in 2023–2026, a bull market led by its own theme. This tests the **frozen rules** on years never looked at.
+
+- **Signals:** month-ends 2012-01 → 2022-12 (132 months; 6-month returns run to 2023-06). XBRL is mandatory for all filers
+  from mid-2011, so 2012 is the first year with five quarters of history.
+- **Universe:** the wide rule (SEC operating companies with XBRL revenue + UW prices), prices from UW back to 2009-10
+  (`.cache/wdaily_hist`).
+- **Rules:** unchanged (score, top 20, eligibility, 6-month hold, benchmarks, 200 random draws).
+- **Pass:** the same three criteria over the full 2012–2022 run (mean > momentum's; mean > random 95th percentile; ≥ 60% of
+  months positive).
+- **Reported, not part of pass/fail:** results per calendar year, with 2018, 2020 and 2022 called out; concentration (median
+  pick, top-5 names' share).
+- **Bias, larger than in 2023–26:** companies delisted or acquired before today (e.g., the old SanDisk, bought in 2016) have no
+  current ticker, so they are missing. This mostly removes failures, so read a pass as an upper bound.
