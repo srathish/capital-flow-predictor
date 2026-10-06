@@ -10,7 +10,7 @@ import path from 'node:path';
 import { sicToBea, OUTSIDE_BEA } from './sic_bea.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), G = path.join(C, 'graph'), RES = path.join(ROOT, 'world', 'results_graph');
-const EXTRA = process.argv.includes('--extra'), SMOKE = process.argv.includes('--smoke'), TAG = EXTRA ? 'graph_extra' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
+const RIDGE = process.argv.includes('--ridge'), SMOKE = process.argv.includes('--smoke'), TAG = RIDGE ? 'graph_ridge' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
 if (!SMOKE && fs.existsSync(path.join(RES, TAG + '.txt')) && !process.argv.includes('--force')) { console.error('already run: ' + TAG); process.exit(1); }
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
@@ -84,7 +84,7 @@ function allowed(name, s, cutYear) { const key = name + '|' + s + '|' + cutYear;
   let ok = D.has('ALL') || [...D].some((d) => T.has(d)); const U = USE[String(Math.min(+cutYear - 2, 2023))];
   if (!ok && U) for (const t of T) for (const d of D) { const out = U.use[t]?.[d] ?? 0, inp = U.use[d]?.[t] ?? 0; if ((U.rowTotal[t] && out / U.rowTotal[t] >= 0.02) || (U.inter[t] && inp / U.inter[t] >= 0.02)) ok = true; }
   allowC.set(key, ok); return ok; }
-function indVal(s, k, d, field) { const v = []; for (const t of IND.get(s)) { const x = CO.get(t)[field].get(k); if (x && x.f <= d) v.push(x.v); } if (v.length < 3) return null; v.sort((a, b) => a - b); return v[v.length >> 1]; }
+function indVal(s, k, d, field) { if (!IND.has(s)) return null; const v = []; for (const t of IND.get(s)) { const x = CO.get(t)[field].get(k); if (x && x.f <= d) v.push(x.v); } if (v.length < 3) return null; v.sort((a, b) => a - b); return v[v.length >> 1]; }
 const OWN = [['own:capex', 'cxg'], ['own:inventory', 'ivg'], ['own:backlog', 'rpg']];
 function nwT(x, y, lags = 4) { const n = x.length, mx = mean(x), my = mean(y), u = x.map((v) => v - mx); const sxx = u.reduce((a, v) => a + v * v, 0); if (!sxx) return 0; // Newey-West t of the OLS slope
   const b = u.reduce((a, v, i) => a + v * (y[i] - my), 0) / sxx, e = y.map((v, i) => v - my - b * u[i]), g = u.map((v, i) => v * e[i]); let S = g.reduce((a, v) => a + v * v, 0);
@@ -112,6 +112,40 @@ function learn(cut, placeboSeed = null) { // placeboSeed: circularly shift every
       if (best) own.push(best); }
     if (conns.length || own.length) { model.set(s, { conns, own }); nConn += conns.length + own.length; } }
   return { model, nConn }; }
+// ---------- amendment 3: ridge version (no link selection) ----------
+function solve(A, b) { const n = b.length, M = A.map((r, i) => [...r, b[i]]); for (let i = 0; i < n; i++) { let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(M[r][i]) > Math.abs(M[p][i])) p = r; [M[i], M[p]] = [M[p], M[i]];
+    const d = M[i][i] || 1e-12; for (let r = 0; r < n; r++) if (r !== i) { const f = M[r][i] / d; if (f) for (let c = i; c <= n; c++) M[r][c] -= f * M[i][c]; } } return M.map((r, i) => r[n] / (r[i] || 1e-12)); }
+function ridgeFit(X, y, lam) { const n = X.length, p = X[0]?.length ?? 0, ym = mean(y), yc = y.map((v) => v - ym); if (!p) return { b: [], ym };
+  if (p > n) { const K = X.map((a) => X.map((c) => a.reduce((s2, v, j) => s2 + v * c[j], 0))); for (let i = 0; i < n; i++) K[i][i] += lam; const al = solve(K, yc); return { b: Array.from({ length: p }, (_, j) => X.reduce((s2, r, i) => s2 + r[j] * al[i], 0)), ym }; }
+  const A = Array.from({ length: p }, (_, i) => Array.from({ length: p }, (_, j) => X.reduce((s2, r) => s2 + r[i] * r[j], 0) + (i === j ? lam : 0))), c = Array.from({ length: p }, (_, j) => X.reduce((s2, r, i) => s2 + r[j] * yc[i], 0)); return { b: solve(A, c), ym }; }
+const LAMS = [1, 3, 10, 30, 100, 300], dot = (b, x) => b.reduce((s2, v, j) => s2 + v * x[j], 0);
+function ridgePick(X, y) { const n = X.length, k1 = Math.floor((n * 2) / 3); let best = LAMS[2], bm = Infinity;
+  if (k1 >= 8 && n - k1 >= 4) for (const lam of LAMS) { const f = ridgeFit(X.slice(0, k1), y.slice(0, k1), lam); const mse = mean(X.slice(k1).map((x, i) => (f.ym + dot(f.b, x) - y[k1 + i]) ** 2)); if (mse < bm) { bm = mse; best = lam; } }
+  return { ...ridgeFit(X, y, best), lam: best }; }
+function learnRidge(cut, placeboSeed = null) {
+  const ks = []; for (let k = qk('2010Q1'); qEnd(k) < cut; k++) ks.push(k); const cutYear = cut.slice(0, 4);
+  let ps = placeboSeed ?? 0; const prnd = () => ((ps = (ps * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const shift = (m) => { if (placeboSeed == null || m.size < 8) return m; const keys = [...m.keys()].sort((a, b) => a - b), lo = keys[0], span = keys.at(-1) - lo + 1, off = 8 + Math.floor(prnd() * 17); return new Map([...m].map(([k, v]) => [lo + ((k - lo + off) % span), v])); };
+  const ser = (m) => new Map([...m].filter(([, x]) => x.f < cut).map(([k, x]) => [k, x.v]));
+  const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'g')]).filter(([, v]) => v != null))]));
+  const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'acc')]).filter(([, v]) => v != null))]));
+  const drivers = [['root:hyperscaler_capex', shift(ser(root))], ...[...OUT].map(([k, m]) => [k, shift(ser(m))]), ...[...indG].map(([s, m]) => ['ind:' + s, shift(m)])];
+  const Z = new Map(); for (const [name, m] of drivers) { const v = [...m.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((x) => (x - mu) ** 2))) || 1; Z.set(name, { m, mu, sd }); }
+  const model = new Map(); let nConn = 0;
+  for (const [s, y] of indA) { const yk = [...y.keys()].sort((a, b) => a - b); if (yk.length < 16) continue;
+    const feats = []; for (const [name, zz] of Z) if (name !== 'ind:' + s && allowed(name, s, cutYear)) for (const L of LAGS) feats.push({ name, L, mu: zz.mu, sd: zz.sd, m: zz.m });
+    if (!feats.length) continue; const X = yk.map((k) => feats.map((f) => { const v = f.m.get(k - f.L); return v == null ? 0 : (v - f.mu) / f.sd; })), Y = yk.map((k) => y.get(k));
+    const fit = ridgePick(X, Y); model.set(s, { feats: feats.map(({ name, L, mu, sd }) => ({ name, L, mu, sd })), b: fit.b, ym: fit.ym, lam: fit.lam }); nConn += feats.length; }
+  const oX = [], oY = [], oK = []; // pooled own-company ridge
+  for (const [t, c] of CO) { const st = OWN.map(([, fld]) => { const v = [...shift(ser(c[fld])).values()]; if (v.length < 8) return null; const mu = mean(v); return { mu, sd: Math.sqrt(mean(v.map((q) => (q - mu) ** 2))) || 1, m: shift(ser(c[fld])) }; });
+    if (st.every((x) => !x)) continue; for (const [k, a] of c.acc) { if (a.f >= cut) continue; const x = []; for (const z of st) for (const L of LAGS) { const v = z?.m.get(k - L); x.push(v == null ? 0 : (v - z.mu) / z.sd); } if (x.some((v) => v !== 0)) { oX.push(x); oY.push(a.v); oK.push(k); } } }
+  const ord = oK.map((k, i) => [k, i]).sort((p, q) => p[0] - q[0]).map(([, i]) => i), own = oX.length > 50 ? ridgePick(ord.map((i) => oX[i]), ord.map((i) => oY[i])) : null;
+  return { model, own, nConn }; }
+function forecastRidge(t, d, L, cache) { const s = indOf(t), m = L.model.get(s), c = CO.get(t), kq = latestQ(c.acc, d); if (kq == null || (!m && !L.own)) return null; const kt = kq + 1; let pred = 0;
+  if (m) { const x = m.feats.map((f) => { const k = kt - f.L; let v; if (f.name.startsWith('ind:')) { const key = f.name + '|' + k; if (!cache.has(key)) cache.set(key, indVal(f.name.slice(4), k, d, 'g')); v = cache.get(key); } else v = known(f.name === 'root:hyperscaler_capex' ? root : OUT.get(f.name), k, d); return v == null ? 0 : (v - f.mu) / f.sd; }); pred += m.ym + dot(m.b, x); }
+  if (L.own) { const x = []; for (const [, fld] of OWN) { const vals = [...c[fld].values()].filter((q) => q.f <= d).map((q) => q.v), mu = vals.length >= 8 ? mean(vals) : 0, sd = vals.length >= 8 ? Math.sqrt(mean(vals.map((q) => (q - mu) ** 2))) || 1 : 1;
+      for (const Lg of LAGS) { const v = vals.length >= 8 ? known(c[fld], kt - Lg, d) : null; x.push(v == null ? 0 : (v - mu) / sd); } } pred += dot(L.own.b, x); }
+  return { pred, kq, kt, persist: c.acc.get(kq).v, actual: c.acc.get(kt)?.v ?? null }; }
 function forecast(t, d, mdl, cache) { const s = indOf(t), m = mdl.get(s); if (!m) return null; const c = CO.get(t), kq = latestQ(c.acc, d); if (kq == null) return null; const kt = kq + 1; let sum = 0, used = 0;
   for (const x of m.conns) { const k = kt - x.L; let v;
     if (x.name.startsWith('ind:')) { const key = x.name + '|' + k; if (!cache.has(key)) cache.set(key, indVal(x.name.slice(4), k, d, 'g')); v = cache.get(key); }
@@ -132,15 +166,15 @@ const monthEnds = []; for (let y = 2019; y <= 2026; y++) for (let m = 1; m <= 12
 if (SMOKE) monthEnds.splice(0, monthEnds.length, '2018-06-30', '2018-07-31', '2018-08-31', '2018-09-30');
 const spear = (a, b) => { const rk = (x) => { const o = x.map((v, i) => [v, i]).sort((p, q) => p[0] - q[0]), r = new Array(x.length); o.forEach(([, i], j) => (r[i] = j)); return r; }; return corr(rk(a), rk(b)); };
 const learned = new Map(), months = [];
-for (const M of monthEnds) { const Y = M.slice(0, 4); if (!learned.has(Y)) { const L = learn(`${Y}-01-01`); learned.set(Y, L); console.error(`learned ${Y}: ${L.model.size} industries, ${L.nConn} connections`); }
-  const { model } = learned.get(Y), elig = [...CO.keys()].filter((t) => eligible(t, M) && hardRule(t, M)), cache = new Map();
-  const fc = new Map(); for (const t of elig) { const f = forecast(t, M, model, cache); if (f) fc.set(t, f); }
+for (const M of monthEnds) { const Y = M.slice(0, 4); if (!learned.has(Y)) { const L = RIDGE ? learnRidge(`${Y}-01-01`) : learn(`${Y}-01-01`); learned.set(Y, L); console.error(`learned ${Y}: ${L.model.size} industries, ${L.nConn} connections`); }
+  const LY = learned.get(Y), { model } = LY, elig = [...CO.keys()].filter((t) => eligible(t, M) && hardRule(t, M)), cache = new Map();
+  const fc = new Map(); for (const t of elig) { const f = RIDGE ? forecastRidge(t, M, LY, cache) : forecast(t, M, model, cache); if (f) fc.set(t, f); }
   for (const [t, f] of fc) f.ind = indVal(indOf(t), f.kq, M, 'acc');
   const ev = [...fc.values()].filter((f) => f.actual != null), evI = ev.filter((f) => f.ind != null), ic = ev.length > 30 ? spear(ev.map((f) => f.pred), ev.map((f) => f.actual)) : null, icP = ev.length > 30 ? spear(ev.map((f) => f.persist), ev.map((f) => f.actual)) : null;
   const icI = evI.length > 30 ? spear(evI.map((f) => f.ind), evI.map((f) => f.actual)) : null, icGI = evI.length > 30 ? spear(evI.map((f) => f.pred), evI.map((f) => f.actual)) : null;
   const big = new Set(elig.filter((t) => { const p = P.get(t), j = at(t, M); let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return dv / 50 >= 1e8; }));
   const v5 = v5score(elig, M), mo = new Map(elig.map((t) => [t, mom(t, M)]).filter(([, v]) => v != null));
-  months.push({ M, elig, big, ranks: { graph: new Map([...fc].map(([t, f]) => [t, f.pred])), momentum: mo, v5 }, ic, icP, icI, icGI, nfc: fc.size });
+  months.push({ M, elig, fcKeys: [...fc.keys()], big, ranks: { graph: new Map([...fc].map(([t, f]) => [t, f.pred])), momentum: mo, v5 }, ic, icP, icI, icGI, nfc: fc.size });
   console.error(`${M} elig ${elig.length} · forecasts ${fc.size} · IC ${ic?.toFixed(3)} (persistence ${icP?.toFixed(3)})`); }
 
 // ---------- portfolios (buy top 20, hold while in top 60) ----------
@@ -156,8 +190,15 @@ function run(rankOf, log = false, filt = null) { let hold = new Set(); const out
   return { out, trades }; }
 const G1 = run((m) => m.ranks.graph, true), MO = run((m) => m.ranks.momentum), V5 = run((m) => m.ranks.v5);
 const GB = run((m) => m.ranks.graph, false, (m, t) => m.big.has(t)), GS = run((m) => m.ranks.graph, false, (m, t) => !m.big.has(t)), MB = run((m) => m.ranks.momentum, false, (m, t) => m.big.has(t)), MS = run((m) => m.ranks.momentum, false, (m, t) => !m.big.has(t));
-const REAL = learned.get(SMOKE ? '2018' : '2019')?.nConn ?? 0, PLAC = Array.from({ length: SMOKE ? 3 : 20 }, (_, i) => learn(SMOKE ? '2018-01-01' : '2019-01-01', 1000 + i).nConn), placMean = mean(PLAC);
-console.error(`placebo connections: ${PLAC.join(' ')} (mean ${placMean.toFixed(1)}) vs real ${REAL}`);
+const REAL = learned.get(SMOKE ? '2018' : '2019')?.nConn ?? 0, PLAC = RIDGE ? [] : Array.from({ length: SMOKE ? 3 : 20 }, (_, i) => learn(SMOKE ? '2018-01-01' : '2019-01-01', 1000 + i).nConn), placMean = RIDGE ? 0 : mean(PLAC);
+// ridge placebo (amendment 3): 20 models with every driver series circularly shifted, re-learned each January; mean IC over 2019–2022 test months
+const testM = months.filter((m) => m.M <= (SMOKE ? '2018-12-31' : '2022-12-31')), PIC = [];
+if (RIDGE) for (let r = 0; r < (SMOKE ? 2 : 20); r++) { const Ls = new Map(), ics2 = [];
+  for (const m of testM) { const Y = m.M.slice(0, 4); if (!Ls.has(Y)) Ls.set(Y, learnRidge(`${Y}-01-01`, 5000 + r)); const cache = new Map(), ev = [];
+    for (const t of m.fcKeys) { const f = forecastRidge(t, m.M, Ls.get(Y), cache); if (f?.actual != null) ev.push(f); } if (ev.length > 30) ics2.push(spear(ev.map((f) => f.pred), ev.map((f) => f.actual))); }
+  PIC.push(mean(ics2)); console.error(`ridge placebo ${r}: IC ${PIC.at(-1).toFixed(3)}`); }
+const pic95 = PIC.length ? [...PIC].sort((a, b) => a - b)[Math.min(PIC.length - 1, Math.floor(PIC.length * 0.95))] : null;
+if (!RIDGE) console.error(`placebo connections: ${PLAC.join(' ')} (mean ${placMean.toFixed(1)}) vs real ${REAL}`);
 let seed = 4242; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
 const RAND = Array.from({ length: DRAWS }, () => run((m) => new Map(m.elig.map((t) => [t, rnd()])))).map((x) => mean(x.out.map((o) => o.ex))).sort((a, b) => a - b);
 
@@ -166,16 +207,18 @@ const pc = (x, d = 1) => (x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).t
 const ics = (from, to) => { const a = months.filter((m) => m.M >= from && m.M <= to && m.ic != null), b = a.filter((m) => m.icI != null); return { g: mean(a.map((m) => m.ic)), p: mean(a.map((m) => m.icP)), i: mean(b.map((m) => m.icI)), gi: mean(b.map((m) => m.icGI)), pos: a.filter((m) => m.ic > 0).length / a.length, n: a.length }; };
 const A = ics('2019', '2026-12'), Bc = ics('2019', '2022-12-31'), exm = (R, from = '', to = '9') => mean(R.out.filter((o) => o.M >= from && o.M <= to).map((o) => o.ex));
 const p95 = RAND[Math.floor(DRAWS * 0.95)];
-const crit = [A.g > A.p && A.gi > A.i && A.pos >= 0.6 && Bc.g > Bc.p && Bc.gi > Bc.i && Bc.pos >= 0.6 && REAL >= 2 * placMean, exm(G1) > exm(MO), exm(G1) > exm(V5), exm(G1) > p95];
+const crit = [A.g > A.p && A.gi > A.i && A.pos >= 0.6 && Bc.g > Bc.p && Bc.gi > Bc.i && Bc.pos >= 0.6 && (RIDGE ? Bc.g > pic95 : REAL >= 2 * placMean), exm(G1) > exm(MO), exm(G1) > exm(V5), exm(G1) > p95];
 const L = [`# Node graph (amendment 2: BEA-linked, Newey-West, placebo, ${OUT.size} outside nodes incl. ${TWN.size} Taiwan) · test months 2019-01 → 2026-03\n`,
-  `Placebo (2019 cut-off, ${PLAC.length} shuffles): ${placMean.toFixed(1)} connections on average vs ${REAL} real → ${REAL >= 2 * placMean ? 'real ≥ 2× placebo' : 'NOT ≥ 2× placebo'}\n`,
+  RIDGE ? `Ridge version (amendment 3). Placebo: 2019–2022 mean IC of ${PIC.length} timing-scrambled models — 95th pct ${pic95?.toFixed(3)} (all: ${PIC.map((x) => x.toFixed(3)).join(' ')}) vs real ${Bc.g.toFixed(3)} → ${Bc.g > pic95 ? 'beats placebo' : 'does NOT beat placebo'}\n`
+    : `Placebo (2019 cut-off, ${PLAC.length} shuffles): ${placMean.toFixed(1)} connections on average vs ${REAL} real → ${REAL >= 2 * placMean ? 'real ≥ 2× placebo' : 'NOT ≥ 2× placebo'}\n`,
   `Learned connections per year: ${[...learned].map(([y, l]) => `${y} ${l.nConn} (${l.model.size} industries)`).join(' · ')}\n`,
   '## 1. Does it forecast growth? (rank correlation of predicted vs actual next-quarter revenue acceleration)\n',
-  '| | graph IC | persistence IC | months graph IC > 0 |', '|---|---|---|---|',
-  `| 2019–2026 | **${A.g.toFixed(3)}** | ${A.p.toFixed(3)} | ${(A.pos * 100).toFixed(0)}% of ${A.n} |`, `| 2019–2022 (clean) | **${Bc.g.toFixed(3)}** | ${Bc.p.toFixed(3)} | ${(Bc.pos * 100).toFixed(0)}% of ${Bc.n} |`,
+  '| | graph IC | persistence IC | industry-baseline IC (graph IC on same names) | months graph IC > 0 |', '|---|---|---|---|---|',
+  `| 2019–2026 | **${A.g.toFixed(3)}** | ${A.p.toFixed(3)} | ${A.i.toFixed(3)} (${A.gi.toFixed(3)}) | ${(A.pos * 100).toFixed(0)}% of ${A.n} |`, `| 2019–2022 (clean) | **${Bc.g.toFixed(3)}** | ${Bc.p.toFixed(3)} | ${Bc.i.toFixed(3)} (${Bc.gi.toFixed(3)}) | ${(Bc.pos * 100).toFixed(0)}% of ${Bc.n} |`,
   '\n## 2–4. Buy & hold (top 20, hold while in top 60): average monthly return minus the typical stock\n', '| | 2019–2026 | 2019–2022 (clean) | 2023–2026 |', '|---|---|---|---|'];
 for (const [n, R] of [['**Node graph**', G1], ['Momentum', MO], ['v5 bottleneck (A)', V5]]) L.push(`| ${n} | ${pc(exm(R), 2)} | ${pc(exm(R, '', '2022-12-31'), 2)} | ${pc(exm(R, '2023'), 2)} |`);
 L.push(`| Random, 95th pct of ${DRAWS} | ${pc(p95, 2)} | | |`);
+L.push(`| Node graph, $100M+/day names only | ${pc(exm(GB), 2)} | ${pc(exm(GB, '', '2022-12-31'), 2)} | ${pc(exm(GB, '2023'), 2)} |`, `| Node graph, smaller names | ${pc(exm(GS), 2)} | ${pc(exm(GS, '', '2022-12-31'), 2)} | ${pc(exm(GS, '2023'), 2)} |`, `| Momentum, $100M+/day / smaller | ${pc(exm(MB), 2)} / ${pc(exm(MS), 2)} | | |`);
 L.push(`\n**Pass:** forecasts growth ${crit[0] ? 'PASS' : 'FAIL'} · beats momentum ${crit[1] ? 'PASS' : 'FAIL'} · beats v5 ${crit[2] ? 'PASS' : 'FAIL'} · beats random ${crit[3] ? 'PASS' : 'FAIL'} → **${crit.every(Boolean) ? 'PASS' : crit[0] ? 'FAIL' : 'FAIL (connections not real; 2–4 not judged)'}**`);
 L.push('\n## Year by year (compounded)\n\n| Year | Node graph | Momentum | v5 | Typical stock | Most-held names |\n|---|---|---|---|---|---|');
 for (let y = 2019; y <= 2026; y++) { const f = (R) => R.out.filter((o) => o.M.startsWith(String(y))), cnt = new Map(); for (const o of f(G1)) for (const t of o.hold) cnt.set(t, (cnt.get(t) ?? 0) + 1);
@@ -183,7 +226,9 @@ for (let y = 2019; y <= 2026; y++) { const f = (R) => R.out.filter((o) => o.M.st
   L.push(`| ${y} | **${pc(comp(f(G1).map((o) => o.r)), 0)}** | ${pc(comp(f(MO).map((o) => o.r)), 0)} | ${pc(comp(f(V5).map((o) => o.r)), 0)} | ${pc(comp(med), 0)} | ${[...cnt].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([t]) => t).join(', ')} |`); }
 const yr = learned.get('2026') ?? [...learned.values()].at(-1), show = ['MU', 'NVDA', 'VRT', 'LITE', 'CEG', 'WDC', 'AMD', 'BE'], nm = (n) => n.startsWith('ind:') ? indDesc(n.slice(4)) : n.replace('fred:', '').replace('root:', '');
 L.push('\n## Learned connections, latest model (industry ← what it follows, lag in quarters, weight)\n');
-for (const t of show) { const s = indOf(t), m = s && yr.model.get(s); L.push(`- **${t}** (${indDesc(s)}) ← ${m ? [...m.conns, ...m.own].map((x) => `${nm(x.name)} (${x.L}q, ${x.w >= 0 ? '+' : ''}${x.w.toFixed(2)})`).join(', ') : 'no connection passed'}`); }
+for (const t of show) { const s = indOf(t), m = s && yr.model.get(s);
+  const parts = !m ? null : RIDGE ? m.feats.map((f, j) => ({ name: f.name, L: f.L, w: m.b[j] })).sort((a, b) => Math.abs(b.w) - Math.abs(a.w)).slice(0, 6) : [...m.conns, ...m.own];
+  L.push(`- **${t}** (${indDesc(s)}) ← ${parts ? parts.map((x) => `${nm(x.name)} (${x.L}q, ${x.w >= 0 ? '+' : ''}${x.w.toFixed(RIDGE ? 3 : 2)})`).join(', ') : 'no connection passed'}`); }
 const txt = L.join('\n'); console.log(txt); if (SMOKE) process.exit(0); fs.mkdirSync(RES, { recursive: true }); fs.writeFileSync(path.join(RES, TAG + '.txt'), txt + '\n');
 fs.writeFileSync(path.join(RES, TAG + '.json'), JSON.stringify({ months: months.map((m) => ({ M: m.M, ic: m.ic, icP: m.icP, nfc: m.nfc })), graph: G1.out, trades: G1.trades, momentum: MO.out, v5: V5.out, rand95: p95, crit,
-  connections: Object.fromEntries([...learned].map(([y, l]) => [y, Object.fromEntries([...l.model].map(([s, m]) => [s, [...m.conns, ...m.own].map((x) => [x.name, x.L, +x.w.toFixed(3)])]))])) }));
+  connections: Object.fromEntries([...learned].map(([y, l]) => [y, Object.fromEntries([...l.model].map(([s, m]) => [s, RIDGE ? m.feats.map((f, j) => [f.name, f.L, +m.b[j].toFixed(4)]).sort((a, b) => Math.abs(b[2]) - Math.abs(a[2])).slice(0, 10) : [...m.conns, ...m.own].map((x) => [x.name, x.L, +x.w.toFixed(3)])]))])) }));
