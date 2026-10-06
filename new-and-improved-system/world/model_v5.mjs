@@ -25,7 +25,8 @@ for (const { t } of U) { let b = rd(path.join(C, 'wdaily', `${t}.json`), []); if
   if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0) }); }
 const META = new Map([...P.keys()].map((t) => [t, WIDE ? { sic: !!rd(path.join(C, 'edgar', 'facts', `${t}.json`), {}).rev } : rd(path.join(C, 'edgar', 'meta', `${t}.json`), null)]));
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
-const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
+// audit fix #4: a stock is not eligible on a stale price (last bar more than 7 days before the date)
+const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7)) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
 const fwdFrom = (t, d) => { const p = P.get(t); if (!p) return null; const j = at(t, d) + 1, k = at(t, addD(d, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(d, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
 const above200 = (t, d) => { const p = P.get(t), j = at(t, d); if (j < 199) return false; let s = 0; for (let k = j - 199; k <= j; k++) s += p.c[k]; return p.c[j] > s / 200; }; // Model C (addendum 3)
 const mom = (t, d) => { const p = P.get(t), i = at(t, addD(d, -365)), j = at(t, addD(d, -30)); return i >= 0 && j > i ? p.c[j] / p.c[i] - 1 : null; };

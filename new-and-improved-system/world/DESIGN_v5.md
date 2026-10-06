@@ -100,3 +100,9 @@ margin-change size did not separate them.
 
 Tested once on 2012–2022 with the same three pass criteria, **plus: C must beat A** there. C was designed on 2023–26 data, so
 only the 2012–2022 result counts.
+
+### Audit fix (2026-10-06, before the 2012–2022 run)
+`eligibleAt` now rejects stale prices (last bar more than 7 days before the month-end). Found by an independent audit: 13 of
+320 sampled tickers have multi-month gaps between the old and new price files, and the last pre-gap price could make a stock
+eligible months later. Earlier v5 runs (dev/holdout/wide) used only the 2022-10+ price files, where this gap pattern does not
+arise; the 2012–2022 run is the first to use the merged files.

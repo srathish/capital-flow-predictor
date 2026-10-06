@@ -32,7 +32,7 @@ for (const [t, rows] of Object.entries(panel)) { const R = new Map(Object.entrie
 // ---------- root node: hyperscaler capex ----------
 const HYP = ['MSFT', 'GOOGL', 'AMZN', 'META', 'ORCL'], root = new Map();
 { const ks = new Set(HYP.flatMap((t) => [...(CO.get(t)?.R.keys() ?? [])]));
-  for (const k of ks) { let a = 0, b = 0, f = '', ok = true; for (const t of HYP) { const r = CO.get(t)?.R, x = r?.get(k), p = r?.get(k - 4); if (!(x?.capex > 0 && p?.capex > 0)) { ok = false; break; } a += x.capex; b += p.capex; f = [f, x.fcx ?? x.f, x.f].sort().at(-1); }
+  for (const k of ks) { let a = 0, b = 0, f = '', ok = true; for (const t of HYP) { const r = CO.get(t)?.R, x = r?.get(k), p = r?.get(k - 4); if (!(x?.capex > 0 && p?.capex > 0)) { ok = false; break; } a += x.capex; b += p.capex; f = [f, x.fcx ?? x.f, x.f, p.fcx ?? p.f, p.f].sort().at(-1); }
     if (ok) root.set(k, { v: clip(a / b - 1), f }); } }
 
 // ---------- outside nodes (FRED) ----------
@@ -101,8 +101,9 @@ function learn(cut, placeboSeed = null) { // placeboSeed: circularly shift every
   let ps = placeboSeed ?? 0; const prnd = () => ((ps = (ps * 1103515245 + 12345) % 2147483648) / 2147483648);
   const shift = (m) => { if (placeboSeed == null || m.size < 8) return m; const keys = [...m.keys()].sort((a, b) => a - b), lo = keys[0], span = keys.at(-1) - lo + 1, off = 8 + Math.floor(prnd() * 17); return new Map([...m].map(([k, v]) => [lo + ((k - lo + off) % span), v])); };
   const ser = (m) => new Map([...m].filter(([, x]) => x.f < cut).map(([k, x]) => [k, x.v]));
-  const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'g')]).filter(([, v]) => v != null))]));
-  const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'acc')]).filter(([, v]) => v != null))]));
+  const pre = addD(cut, -1); // audit fix #5: strictly before the cut-off, like ser()
+  const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, pre, 'g')]).filter(([, v]) => v != null))]));
+  const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, pre, 'acc')]).filter(([, v]) => v != null))]));
   const drivers = [['root:hyperscaler_capex', shift(ser(root))], ...[...OUT].map(([k, m]) => [k, shift(ser(m))]), ...[...indG].map(([s, m]) => ['ind:' + s, shift(m)])];
   const Z = new Map(); for (const [name, m] of drivers) { const v = [...m.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((x) => (x - mu) ** 2))) || 1; Z.set(name, { m, mu, sd }); }
   const model = new Map(); let nConn = 0;
@@ -132,8 +133,9 @@ function learnRidge(cut, placeboSeed = null) {
   let ps = placeboSeed ?? 0; const prnd = () => ((ps = (ps * 1103515245 + 12345) % 2147483648) / 2147483648);
   const shift = (m) => { if (placeboSeed == null || m.size < 8) return m; const keys = [...m.keys()].sort((a, b) => a - b), lo = keys[0], span = keys.at(-1) - lo + 1, off = 8 + Math.floor(prnd() * 17); return new Map([...m].map(([k, v]) => [lo + ((k - lo + off) % span), v])); };
   const ser = (m) => new Map([...m].filter(([, x]) => x.f < cut).map(([k, x]) => [k, x.v]));
-  const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'g')]).filter(([, v]) => v != null))]));
-  const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, cut, 'acc')]).filter(([, v]) => v != null))]));
+  const pre = addD(cut, -1); // audit fix #5: strictly before the cut-off, like ser()
+  const indG = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, pre, 'g')]).filter(([, v]) => v != null))]));
+  const indA = new Map([...IND.keys()].map((s) => [s, new Map(ks.map((k) => [k, indVal(s, k, pre, 'acc')]).filter(([, v]) => v != null))]));
   const drivers = [['root:hyperscaler_capex', shift(ser(root))], ...[...OUT].map(([k, m]) => [k, shift(ser(m))]), ...[...indG].map(([s, m]) => ['ind:' + s, shift(m)])];
   const Z = new Map(); for (const [name, m] of drivers) { const v = [...m.values()]; if (v.length < 8) continue; const mu = mean(v), sd = Math.sqrt(mean(v.map((x) => (x - mu) ** 2))) || 1; Z.set(name, { m, mu, sd }); }
   const model = new Map(); let nConn = 0;
@@ -161,15 +163,19 @@ function forecast(t, d, mdl, cache) { const s = indOf(t), m = mdl.get(s); if (!m
   return used ? { pred: sum, kq, kt, persist: c.acc.get(kq).v, actual: c.acc.get(kt)?.v ?? null } : null; }
 
 // ---------- v5 score (for the comparison) from the same panel ----------
-function v5score(ts, d) { const F = []; for (const t of ts) { const c = CO.get(t), kq = latestQ(c.acc, d); if (kq == null) continue; const r = c.R.get(kq), r4 = c.R.get(kq - 4); const g = c.g.get(kq), a = c.acc.get(kq);
-    if (r?.gm == null || r4?.gm == null || !g || !a || r.rev < 25e6) continue; F.push([t, g.v, a.v, r.gm - r4.gm]); }
+function v5score(ts, d) { const F = []; // audit fix #2: mirrors model_v5.mjs features() exactly (day windows, 200-day freshness, $25M, every value public ≤ d)
+  const days = (x, y) => (Date.parse(y) - Date.parse(x)) / 864e5;
+  for (const t of ts) { const rows = [...CO.get(t).R.values()].map((r) => ({ e: r.e, rev: r.rev, gm: r.gm ?? null, f: r.gm != null ? [r.f, r.fgm ?? r.f].sort().at(-1) : r.f })).filter((x) => x.f <= d).sort((x, y) => x.e.localeCompare(y.e));
+    const q0 = rows.at(-1); if (!q0 || days(q0.e, d) > 200 || q0.rev < 25e6) continue; const find = (ref, lo, hi) => rows.filter((x) => { const dd = days(x.e, ref.e); return dd >= lo && dd <= hi; }).at(-1);
+    const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385); if (!q1 || !q4) continue; const q5 = find(q1, 345, 385); if (!q5 || !(q4.rev > 0 && q5.rev > 0) || q0.gm == null || q4.gm == null) continue;
+    const g0 = q0.rev / q4.rev - 1; F.push([t, g0, g0 - (q1.rev / q5.rev - 1), q0.gm - q4.gm]); }
   const rk = [1, 2, 3].map((i) => { const s = F.map((x) => x[i]).sort((a, b) => a - b); return (v) => { let lo = 0, hi = s.length; while (lo < hi) { const m = (lo + hi) >> 1; if (s[m] < v) lo = m + 1; else hi = m; } return lo / (s.length - 1 || 1); }; });
   return new Map(F.map((x) => [x[0], (rk[0](x[1]) + rk[1](x[2]) + rk[2](x[3])) / 3])); }
 
 // ---------- walk-forward ----------
 const monthEnds = []; for (let y = 2019; y <= 2026; y++) for (let m = 1; m <= 12; m++) { const mo = `${y}-${String(m).padStart(2, '0')}`; if (mo <= '2026-03') monthEnds.push(new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10)); }
 if (SMOKE) monthEnds.splice(0, monthEnds.length, '2018-06-30', '2018-07-31', '2018-08-31', '2018-09-30');
-const spear = (a, b) => { const rk = (x) => { const o = x.map((v, i) => [v, i]).sort((p, q) => p[0] - q[0]), r = new Array(x.length); o.forEach(([, i], j) => (r[i] = j)); return r; }; return corr(rk(a), rk(b)); };
+const spear = (a, b) => { const rk = (x) => { const o = x.map((v, i) => [v, i]).sort((p, q) => p[0] - q[0]), r = new Array(x.length); for (let i = 0; i < o.length; ) { let j = i; while (j + 1 < o.length && o[j + 1][0] === o[i][0]) j++; for (let k = i; k <= j; k++) r[o[k][1]] = (i + j) / 2; i = j + 1; } return r; }; return corr(rk(a), rk(b)); }; // audit fix #3: average ranks for ties
 const learned = new Map(), months = [];
 for (const M of monthEnds) { const Y = M.slice(0, 4); if (!learned.has(Y)) { const L = RIDGE ? learnRidge(`${Y}-01-01`) : learn(`${Y}-01-01`); learned.set(Y, L); console.error(`learned ${Y}: ${L.model.size} industries, ${L.nConn} connections`); }
   const LY = learned.get(Y), { model } = LY, elig = [...CO.keys()].filter((t) => eligible(t, M) && hardRule(t, M)), cache = new Map();
@@ -205,7 +211,7 @@ if (RIDGE) for (let r = 0; r < (SMOKE ? 2 : 20); r++) { const Ls = new Map(), ic
 const pic95 = PIC.length ? [...PIC].sort((a, b) => a - b)[Math.min(PIC.length - 1, Math.floor(PIC.length * 0.95))] : null;
 if (!RIDGE) console.error(`placebo connections: ${PLAC.join(' ')} (mean ${placMean.toFixed(1)}) vs real ${REAL}`);
 let seed = 4242; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
-const RAND = Array.from({ length: DRAWS }, () => run((m) => new Map(m.elig.map((t) => [t, rnd()])))).map((x) => mean(x.out.map((o) => o.ex))).sort((a, b) => a - b);
+const RAND = Array.from({ length: DRAWS }, () => { const sc = new Map(); return run((m) => new Map(m.elig.map((t) => { if (!sc.has(t)) sc.set(t, rnd()); return [t, sc.get(t)]; }))); }).map((x) => mean(x.out.map((o) => o.ex))).sort((a, b) => a - b); // audit fix #1: persistent random score per ticker
 
 // ---------- report ----------
 const pc = (x, d = 1) => (x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(d)}%`), comp = (a) => a.reduce((s, x) => s * (1 + x), 1) - 1;

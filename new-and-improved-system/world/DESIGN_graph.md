@@ -161,3 +161,18 @@ ridge regression beat graph models out of sample. Amendment-2 rules stay as they
 Only the 70 core trade series enter the model: the 27 four-digit HS codes × imports/exports, total imports/exports, and the
 HS 8471/8542 import splits by country (TW, KR, CN, MX, MY, VN, JP). The 6-digit children are excluded (optional, uneven
 coverage — 14 of them failed to download).
+
+## Independent audit fixes (2026-10-06, before any 2019+ result)
+
+An independent agent audited the code against this design (no results existed). No future leak was found in the data
+pipeline (filed-date gating, Q4 derivation, FRED first-release vintages, price merge, entry timing, placebo shifts, Newey-West).
+Fixed, because they tilted the pass/fail checks toward PASS:
+1. Random benchmark turnover: each random draw now keeps one random score per ticker across months, so the hold-while-top-60
+   rule gives turnover comparable to the strategy (criterion 4 says "same turnover"; fresh monthly scores paid ~0.2%/month extra cost).
+2. The v5 benchmark now mirrors `model_v5.mjs` exactly (day-window quarters, 200-day freshness, $25M revenue floor) and checks
+   that gross-margin values were public by the date (they were the one ungated field).
+3. Rank correlations use average ranks for ties (the industry baseline is heavily tied; ordinal tie-breaking penalized it).
+4. (model_v5) no stock is eligible on a stale price (last bar > 7 days before the date), as in graph_model.
+5. Learning uses data public strictly before the cut-off everywhere. 6. Root-node public date includes the prior-year filings.
+Noted, not changed: training data starts 2010Q1 (design said 2011); "≤ 5 per industry" counts industry connections, own-company
+nodes are extra (≤ 3); criterion 1 "quarters" is computed over months; no liquidation cost in the final month (same for all).
