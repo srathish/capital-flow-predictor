@@ -64,6 +64,18 @@ const me = (mo) => new Date(Date.UTC(+mo.slice(0, 4), +mo.slice(5, 7), 0)).toISO
 const monthsBetween = (a, b) => { const out = []; for (let y = +a.slice(0, 4), m = +a.slice(5, 7); `${y}-${String(m).padStart(2, '0')}` <= b; m === 12 ? (y++, m = 1) : m++) out.push(`${y}-${String(m).padStart(2, '0')}`); return out; };
 let seed = 777; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
 
+// HARD RULE for any live list (user, 2026-10-06): a company whose gross margin was NEGATIVE a year ago is "losing less", not gaining
+// pricing power — never recommend it. 2023–26 picks like that (EOSE, LCID, PLUG, STEM): median −14% vs the typical stock, 25% beat it.
+function noRecovery(x) { return x.gm4 >= 0; }
+if (process.argv.includes('--live')) { // node world/model_v5.mjs --wide --live → today's list with the hard rule applied
+  const D = SPYLAST(), { scored } = rank(D), keep = scored.filter(noRecovery), dropped = scored.slice(0, TOP).filter((x) => !noRecovery(x));
+  const rows = keep.slice(0, TOP).map((x) => ({ t: x.t, score: +x.score.toFixed(3), revYoY: +x.g0.toFixed(2), gm: +x.gm.toFixed(3), gmYearAgo: +x.gm4.toFixed(3), uptrend: (mom(x.t, D) ?? -1) > 0 && above200(x.t, D) }));
+  console.log(`# v5 live list as of ${D} (hard rule: margin must have been positive a year ago)\n`);
+  for (const r of rows) console.log(`${r.uptrend ? '✓ uptrend ' : '✗ no trend'}  ${r.t.padEnd(6)} rev ${pcF(r.revYoY)} YoY · gross margin ${pcF(r.gm)} (a year ago ${pcF(r.gmYearAgo)})`);
+  console.log(`\nRemoved by the rule (were losing money per sale a year ago): ${dropped.map((x) => x.t).join(', ') || 'none'}`);
+  fs.mkdirSync(path.join(ROOT, 'world', 'v5_live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'v5_live', `${D}.json`), JSON.stringify({ asOf: D, list: rows, removed: dropped.map((x) => x.t) }, null, 1));
+  process.exit(0); }
+function SPYLAST() { let d = ''; for (const p of P.values()) if (p.d.at(-1) > d) d = p.d.at(-1); return d; }
 const res = [], drawM = Array.from({ length: DRAWS }, () => []);
 for (const mo of monthsBetween(A, Bm)) { const M = me(mo), { elig, scored } = rank(M);
   const fw = new Map(elig.map((t) => [t, fwdFrom(t, M)])), v = [...fw.values()].filter((x) => x != null).sort((a, b) => a - b), med = v[v.length >> 1];
@@ -88,7 +100,7 @@ if (HOLD && !HIST) { // early flags across all months 2023-03 → 2026-09 (ranks
   const W = ['MU', 'SNDK', 'WDC', 'STX', 'IREN', 'LITE', 'CLS', 'VRT', 'NVDA', 'APP', 'PLTR', 'CORZ', 'COHR'], first = {};
   for (const mo of monthsBetween('2023-03', '2026-09')) { const { scored } = rank(me(mo)); scored.forEach((x, i) => { for (const [n, lim] of [['top20', 20], ['top50', 50]]) if (i < lim && W.includes(x.t)) (first[x.t] ??= {})[n] ??= mo; }); }
   out.push('\n**Early flags (first month in top 20 / top 50):** ' + W.map((t) => `${t} ${first[t]?.top20 ?? 'never'} / ${first[t]?.top50 ?? 'never'}`).join(' · '));
-  const L = rank(me('2026-09')).scored, live = L.slice(0, TOP), liveB = L.filter((x) => (mom(x.t, me('2026-09')) ?? -1) > 0).slice(0, TOP);
+  const L = rank(me('2026-09')).scored.filter(noRecovery), live = L.slice(0, TOP), liveB = L.filter((x) => (mom(x.t, me('2026-09')) ?? -1) > 0).slice(0, TOP);
   out.push('\n## Live list (2026-09-30)\n**A:** ' + live.map((x) => `${x.t} (rev ${pcF(x.g0)} YoY, GM ${pcF(x.dGM)} pts)`).join(' · ') + '\n\n**B (positive momentum):** ' + liveB.map((x) => x.t).join(' · '));
   fs.mkdirSync(path.join(ROOT, 'world', 'v5_live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'v5_live', (WIDE ? 'wide_' : '') + '2026-09.json'), JSON.stringify({ A: live, B: liveB }, null, 1)); }
 const txt = out.join('\n'); console.log(txt); fs.mkdirSync(RES, { recursive: true });

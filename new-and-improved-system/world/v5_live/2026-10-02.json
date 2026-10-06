@@ -1,0 +1,171 @@
+{
+ "asOf": "2026-10-02",
+ "list": [
+  {
+   "t": "BMNR",
+   "score": 0.998,
+   "revYoY": 21.68,
+   "gm": 0.877,
+   "gmYearAgo": 0.239,
+   "uptrend": false
+  },
+  {
+   "t": "UUUU",
+   "score": 0.994,
+   "revYoY": 4.96,
+   "gm": 0.574,
+   "gmYearAgo": 0.132,
+   "uptrend": false
+  },
+  {
+   "t": "MU",
+   "score": 0.993,
+   "revYoY": 3.46,
+   "gm": 0.846,
+   "gmYearAgo": 0.377,
+   "uptrend": true
+  },
+  {
+   "t": "SNDK",
+   "score": 0.993,
+   "revYoY": 3.72,
+   "gm": 0.846,
+   "gmYearAgo": 0.262,
+   "uptrend": true
+  },
+  {
+   "t": "AXTI",
+   "score": 0.989,
+   "revYoY": 1.65,
+   "gm": 0.449,
+   "gmYearAgo": 0.08,
+   "uptrend": true
+  },
+  {
+   "t": "CORZ",
+   "score": 0.98,
+   "revYoY": 1.09,
+   "gm": 0.427,
+   "gmYearAgo": 0.064,
+   "uptrend": false
+  },
+  {
+   "t": "INSM",
+   "score": 0.974,
+   "revYoY": 2.96,
+   "gm": 0.842,
+   "gmYearAgo": 0.739,
+   "uptrend": false
+  },
+  {
+   "t": "AGIO",
+   "score": 0.965,
+   "revYoY": 2.59,
+   "gm": 0.933,
+   "gmYearAgo": 0.863,
+   "uptrend": false
+  },
+  {
+   "t": "MP",
+   "score": 0.964,
+   "revYoY": 0.89,
+   "gm": 0.334,
+   "gmYearAgo": 0.121,
+   "uptrend": false
+  },
+  {
+   "t": "SITM",
+   "score": 0.962,
+   "revYoY": 1.27,
+   "gm": 0.63,
+   "gmYearAgo": 0.519,
+   "uptrend": true
+  },
+  {
+   "t": "SM",
+   "score": 0.961,
+   "revYoY": 2.15,
+   "gm": 0.778,
+   "gmYearAgo": 0.717,
+   "uptrend": true
+  },
+  {
+   "t": "PARR",
+   "score": 0.953,
+   "revYoY": 0.57,
+   "gm": 0.287,
+   "gmYearAgo": 0.158,
+   "uptrend": true
+  },
+  {
+   "t": "LITE",
+   "score": 0.953,
+   "revYoY": 1.09,
+   "gm": 0.474,
+   "gmYearAgo": 0.333,
+   "uptrend": true
+  },
+  {
+   "t": "IOVA",
+   "score": 0.952,
+   "revYoY": 0.66,
+   "gm": 0.561,
+   "gmYearAgo": 0.055,
+   "uptrend": true
+  },
+  {
+   "t": "URGN",
+   "score": 0.95,
+   "revYoY": 1.99,
+   "gm": 0.909,
+   "gmYearAgo": 0.853,
+   "uptrend": true
+  },
+  {
+   "t": "ETON",
+   "score": 0.934,
+   "revYoY": 0.99,
+   "gm": 0.676,
+   "gmYearAgo": 0.63,
+   "uptrend": true
+  },
+  {
+   "t": "HCC",
+   "score": 0.934,
+   "revYoY": 0.71,
+   "gm": 0.333,
+   "gmYearAgo": 0.239,
+   "uptrend": false
+  },
+  {
+   "t": "VLO",
+   "score": 0.929,
+   "revYoY": 0.49,
+   "gm": 0.123,
+   "gmYearAgo": 0.042,
+   "uptrend": true
+  },
+  {
+   "t": "KMT",
+   "score": 0.929,
+   "revYoY": 0.43,
+   "gm": 0.589,
+   "gmYearAgo": 0.282,
+   "uptrend": false
+  },
+  {
+   "t": "DK",
+   "score": 0.927,
+   "revYoY": 0.48,
+   "gm": 0.089,
+   "gmYearAgo": 0.019,
+   "uptrend": true
+  }
+ ],
+ "removed": [
+  "RUM",
+  "RDW",
+  "XE",
+  "PBF"
+ ]
+}
