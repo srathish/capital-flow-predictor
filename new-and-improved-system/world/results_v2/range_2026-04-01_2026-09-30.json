@@ -1,0 +1,3027 @@
+[
+ {
+  "d": "2026-04-30",
+  "emerging": [
+   "reporting periods",
+   "help customers",
+   "materially affect",
+   "trust company",
+   "chief operating",
+   "coverage and reimbursement"
+  ],
+  "eligible": 932,
+  "model10": 0.05637413635258104,
+  "model11": -0.010984581460699588,
+  "mom": -0.021726189369412407,
+  "shock": 0.1136639815737484,
+  "theme": 0.3260858382627447,
+  "sa": 0.01547067439733533,
+  "saN": 15,
+  "random": 0.03921768861935999,
+  "ic10": -0.08537628737317891,
+  "ic11": -0.1027097750823699,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.9843546861093697,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.81,
+    "bott": 0.99
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.21005390602317775,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "smartphone"
+    ],
+    "p": 0.965,
+    "pct3": 0.93,
+    "bott": 0.76
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8782204078012434,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.955,
+    "pct3": 0.57,
+    "bott": 0.73
+   },
+   {
+    "t": "UMC",
+    "ex": 1.0149577218900656,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "power semiconductor"
+    ],
+    "p": 0.85,
+    "pct3": 0.85,
+    "bott": 0.93
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.1718655424895701,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.906,
+    "pct3": 0.78,
+    "bott": 0.78
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.18927086750983568,
+    "drivers": [
+     "colocation",
+     "data center",
+     "grid"
+    ],
+    "p": 0.758,
+    "pct3": 0.62,
+    "bott": 1
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.28751258627197473,
+    "drivers": [
+     "power semiconductor",
+     "wafer",
+     "gallium nitride"
+    ],
+    "p": 0.783,
+    "pct3": 0.98,
+    "bott": 0.8
+   },
+   {
+    "t": "SQM",
+    "ex": -0.3019102719651142,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "shipping"
+    ],
+    "p": 0.74,
+    "pct3": 0.75,
+    "bott": 0.89
+   },
+   {
+    "t": "HUT",
+    "ex": 0.16625929895292435,
+    "drivers": [
+     "colocation",
+     "CPU",
+     "GPU"
+    ],
+    "p": 0.605,
+    "pct3": 0.85,
+    "bott": 0.96
+   },
+   {
+    "t": "RIOT",
+    "ex": 0.06816501929570196,
+    "drivers": [
+     "bitcoin mining",
+     "data center",
+     "grid"
+    ],
+    "p": 0.606,
+    "pct3": 0.51,
+    "bott": 0.88
+   },
+   {
+    "t": "IREN",
+    "ex": -0.08348302707404165,
+    "drivers": [
+     "hashrate",
+     "GPU",
+     "bitcoin mining"
+    ],
+    "p": 0.596,
+    "pct3": 0.06,
+    "bott": 0.91
+   },
+   {
+    "t": "WULF",
+    "ex": -0.2702417869117666,
+    "drivers": [
+     "hashrate",
+     "hyperscale",
+     "grid"
+    ],
+    "p": 0.567,
+    "pct3": 0.96,
+    "bott": 0.97
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.3555067823032476,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.998,
+    "pct3": 0.57,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.12090536598417323,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.994,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": -0.10367209740843597,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "fiber optic"
+    ],
+    "p": 0.969,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.19700133124327968,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.964,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "CIFR",
+    "ex": -0.07528577448662355,
+    "drivers": [
+     "data center",
+     "bitcoin mining",
+     "hashrate"
+    ],
+    "p": 0.491,
+    "pct3": 0.47,
+    "bott": 0.94
+   },
+   {
+    "t": "FORM",
+    "ex": 0.08768470556282137,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.943,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.5736183898299863,
+    "drivers": [
+     "GPU",
+     "data center",
+     "inference"
+    ],
+    "p": 0.441,
+    "pct3": 0.95,
+    "bott": 0.99
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.18081727132925396,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "data center"
+    ],
+    "p": 0.449,
+    "pct3": 0.56,
+    "bott": 0.96
+   }
+  ],
+  "picks11": [
+   {
+    "t": "CORZ",
+    "ex": -0.18927086750983568,
+    "drivers": [
+     "colocation",
+     "data center",
+     "grid"
+    ],
+    "p": 0.758,
+    "pct3": 0.62,
+    "bott": 1
+   },
+   {
+    "t": "TSM",
+    "ex": 0.19067986509164725,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "DRAM"
+    ],
+    "p": 0.023,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "SRE",
+    "ex": -0.17014050396971658,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "wind"
+    ],
+    "p": 0.042,
+    "pct3": 0.69,
+    "bott": 0.83
+   },
+   {
+    "t": "EPD",
+    "ex": -0.04671490397598266,
+    "drivers": [
+     "natural gas",
+     "oil",
+     "LNG"
+    ],
+    "p": 0.015,
+    "pct3": 0.76,
+    "bott": 0
+   },
+   {
+    "t": "EXE",
+    "ex": -0.1438941080213203,
+    "drivers": [
+     "oil",
+     "natural gas",
+     "LNG"
+    ],
+    "p": 0.051,
+    "pct3": 0.32,
+    "bott": 0
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.28751258627197473,
+    "drivers": [
+     "power semiconductor",
+     "wafer",
+     "gallium nitride"
+    ],
+    "p": 0.783,
+    "pct3": 0.98,
+    "bott": 0.8
+   },
+   {
+    "t": "MU",
+    "ex": 0.9843546861093697,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.81,
+    "bott": 0.99
+   },
+   {
+    "t": "TER",
+    "ex": 0.3019135318086257,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "high bandwidth memory"
+    ],
+    "p": 0.833,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.21005390602317775,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "smartphone"
+    ],
+    "p": 0.965,
+    "pct3": 0.93,
+    "bott": 0.76
+   },
+   {
+    "t": "AXTI",
+    "ex": -0.10367209740843597,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "fiber optic"
+    ],
+    "p": 0.969,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.3555067823032476,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.998,
+    "pct3": 0.57,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": 0.08768470556282137,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.943,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.0011076504812621568,
+    "drivers": [
+     "NAND",
+     "lithography",
+     "wafer"
+    ],
+    "p": 0.817,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "SNDK",
+    "ex": 0.4509536483862393,
+    "drivers": [
+     "NAND",
+     "wafer",
+     "personal computer"
+    ],
+    "p": 0.115,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "AMT",
+    "ex": -0.1049464726272159,
+    "drivers": [
+     "data center",
+     "colocation",
+     "fiber optic"
+    ],
+    "p": 0.004,
+    "pct3": 0.49,
+    "bott": 0.68
+   },
+   {
+    "t": "ASTS",
+    "ex": -0.1735522409307525,
+    "drivers": [
+     "satellite",
+     "smartphone",
+     "launch vehicle"
+    ],
+    "p": 0.628,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8782204078012434,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.955,
+    "pct3": 0.57,
+    "bott": 0.73
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.19700133124327968,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.964,
+    "pct3": 0.48,
+    "bott": 0
+   },
+   {
+    "t": "HEI",
+    "ex": 0.12904575625602877,
+    "drivers": [
+     "aerospace",
+     "satellite",
+     "defense"
+    ],
+    "p": 0,
+    "pct3": 0.11,
+    "bott": 0.77
+   },
+   {
+    "t": "AEIS",
+    "ex": -0.21595882943029854,
+    "drivers": [
+     "etch",
+     "rack",
+     "deposition"
+    ],
+    "p": 0.513,
+    "pct3": 0.94,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-05-29",
+  "emerging": [
+   "reporting periods",
+   "help customers",
+   "materially affect",
+   "trust company",
+   "chief operating",
+   "coverage and reimbursement"
+  ],
+  "eligible": 936,
+  "model10": -0.09168657646147009,
+  "model11": -0.12102262419470247,
+  "mom": -0.1599248257336672,
+  "shock": -0.025823059641303235,
+  "theme": -0.06065850143748195,
+  "sa": -0.11256983534917366,
+  "saN": 14,
+  "random": -0.012637419886470318,
+  "ic10": -0.12364507654230801,
+  "ic11": -0.15902007465821894,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.046817941143537545,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.98,
+    "bott": 0.99
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.2211872889941352,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "smartphone"
+    ],
+    "p": 0.956,
+    "pct3": 0.9,
+    "bott": 0.75
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8845795221652231,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "EUV"
+    ],
+    "p": 0.963,
+    "pct3": 0.85,
+    "bott": 0.72
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.23525738601383372,
+    "drivers": [
+     "wafer",
+     "deposition",
+     "etch"
+    ],
+    "p": 0.908,
+    "pct3": 0.61,
+    "bott": 0.77
+   },
+   {
+    "t": "TER",
+    "ex": 0.2241408930948735,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "high bandwidth memory"
+    ],
+    "p": 0.831,
+    "pct3": 0.78,
+    "bott": 0.91
+   },
+   {
+    "t": "SQM",
+    "ex": -0.21778602630732957,
+    "drivers": [
+     "lithium",
+     "electric vehicle",
+     "solar"
+    ],
+    "p": 0.84,
+    "pct3": 0.73,
+    "bott": 0.89
+   },
+   {
+    "t": "MKSI",
+    "ex": -0.11234123010814678,
+    "drivers": [
+     "NAND",
+     "etch",
+     "wafer"
+    ],
+    "p": 0.855,
+    "pct3": 0.87,
+    "bott": 0.82
+   },
+   {
+    "t": "UMC",
+    "ex": 0.15644108156339442,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "power semiconductor"
+    ],
+    "p": 0.804,
+    "pct3": 0.98,
+    "bott": 0.92
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.4930317900211926,
+    "drivers": [
+     "power semiconductor",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.753,
+    "pct3": 1,
+    "bott": 0.82
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.10454651021593764,
+    "drivers": [
+     "wafer",
+     "etch",
+     "DRAM"
+    ],
+    "p": 0.998,
+    "pct3": 0.88,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.29058195239171825,
+    "drivers": [
+     "wafer",
+     "NAND",
+     "lithography"
+    ],
+    "p": 0.996,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.16908890658642317,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.967,
+    "pct3": 0.76,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": -0.20700103413376236,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "solar"
+    ],
+    "p": 0.95,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": 0.3049458969315392,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.948,
+    "pct3": 0.85,
+    "bott": 0
+   },
+   {
+    "t": "FSLR",
+    "ex": -0.4149510261925974,
+    "drivers": [
+     "solar",
+     "wafer",
+     "grid"
+    ],
+    "p": 0.434,
+    "pct3": 0.92,
+    "bott": 0.98
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.041461190796961644,
+    "drivers": [
+     "rack",
+     "etch",
+     "server"
+    ],
+    "p": 0.453,
+    "pct3": 0.25,
+    "bott": 0.79
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.41466243811865333,
+    "drivers": [
+     "colocation",
+     "data center",
+     "grid"
+    ],
+    "p": 0.337,
+    "pct3": 0.93,
+    "bott": 1
+   },
+   {
+    "t": "FCX",
+    "ex": 0.0833606856468444,
+    "drivers": [
+     "copper",
+     "refining",
+     "data center"
+    ],
+    "p": 0.646,
+    "pct3": 0.43,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": 0.1933930562409224,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.311,
+    "pct3": 0.4,
+    "bott": 0.99
+   },
+   {
+    "t": "ALB",
+    "ex": -0.38004886064150123,
+    "drivers": [
+     "refining",
+     "grid",
+     "automotive"
+    ],
+    "p": 0.61,
+    "pct3": 0.49,
+    "bott": 0
+   }
+  ],
+  "picks11": [
+   {
+    "t": "TSM",
+    "ex": 0.09353188483217945,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "DRAM"
+    ],
+    "p": 0.017,
+    "pct3": 0.72,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.3135184144181111,
+    "drivers": [
+     "rare earth",
+     "refining",
+     "hard disk drive"
+    ],
+    "p": 0.425,
+    "pct3": 0.69,
+    "bott": 0
+   },
+   {
+    "t": "ETN",
+    "ex": 0.09883533534697608,
+    "drivers": [
+     "data center",
+     "chief operating",
+     "hyperscale"
+    ],
+    "p": 0,
+    "pct3": 0.64,
+    "bott": 0.97
+   },
+   {
+    "t": "DINO",
+    "ex": 0.6096821738877553,
+    "drivers": [
+     "refining",
+     "oil",
+     "rack"
+    ],
+    "p": 0.01,
+    "pct3": 0.89,
+    "bott": 0.74
+   },
+   {
+    "t": "CLH",
+    "ex": 0.14226589122868216,
+    "drivers": [
+     "oil",
+     "automotive",
+     "refining"
+    ],
+    "p": 0.007,
+    "pct3": 0.41,
+    "bott": 0
+   },
+   {
+    "t": "WOLF",
+    "ex": -0.32678516625944987,
+    "drivers": [
+     "silicon carbide",
+     "wafer",
+     "power semiconductor"
+    ],
+    "p": 0.217,
+    "pct3": 1,
+    "bott": 0.71
+   },
+   {
+    "t": "FORM",
+    "ex": 0.3049458969315392,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.948,
+    "pct3": 0.85,
+    "bott": 0
+   },
+   {
+    "t": "RIVN",
+    "ex": -0.14756383614615898,
+    "drivers": [
+     "automotive",
+     "electric vehicle",
+     "steel"
+    ],
+    "p": 0.001,
+    "pct3": 0.64,
+    "bott": 0.77
+   },
+   {
+    "t": "AXTI",
+    "ex": -0.20700103413376236,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "solar"
+    ],
+    "p": 0.95,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.2211872889941352,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "smartphone"
+    ],
+    "p": 0.956,
+    "pct3": 0.9,
+    "bott": 0.75
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.4930317900211926,
+    "drivers": [
+     "power semiconductor",
+     "silicon carbide",
+     "wafer"
+    ],
+    "p": 0.753,
+    "pct3": 1,
+    "bott": 0.82
+   },
+   {
+    "t": "AMD",
+    "ex": 0.2514223786581301,
+    "drivers": [
+     "CPU",
+     "GPU",
+     "wafer"
+    ],
+    "p": 0.311,
+    "pct3": 0.99,
+    "bott": 0.91
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.29058195239171825,
+    "drivers": [
+     "wafer",
+     "NAND",
+     "lithography"
+    ],
+    "p": 0.996,
+    "pct3": 0.79,
+    "bott": 0
+   },
+   {
+    "t": "WULF",
+    "ex": -0.38630745668744093,
+    "drivers": [
+     "hashrate",
+     "data center",
+     "bitcoin mining"
+    ],
+    "p": 0.247,
+    "pct3": 0.93,
+    "bott": 0.98
+   },
+   {
+    "t": "IREN",
+    "ex": -0.35200536671007177,
+    "drivers": [
+     "GPU",
+     "data center",
+     "foundry"
+    ],
+    "p": 0.281,
+    "pct3": 0.92,
+    "bott": 0.95
+   },
+   {
+    "t": "MU",
+    "ex": 0.046817941143537545,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.98,
+    "bott": 0.99
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.8845795221652231,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "EUV"
+    ],
+    "p": 0.963,
+    "pct3": 0.85,
+    "bott": 0.72
+   },
+   {
+    "t": "NBIS",
+    "ex": -0.07326013951291199,
+    "drivers": [
+     "GPU",
+     "inference",
+     "data center"
+    ],
+    "p": 0.299,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "RKLB",
+    "ex": -0.38725074059904085,
+    "drivers": [
+     "launch vehicle",
+     "solar",
+     "accelerator"
+    ],
+    "p": 0.261,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "ENPH",
+    "ex": -0.4660451826670684,
+    "drivers": [
+     "solar",
+     "grid",
+     "gallium nitride"
+    ],
+    "p": 0.142,
+    "pct3": 0.93,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-06-30",
+  "emerging": [
+   "reporting periods",
+   "help customers",
+   "materially affect",
+   "trust company",
+   "chief operating",
+   "coverage and reimbursement"
+  ],
+  "eligible": 945,
+  "model10": -0.014711631319598868,
+  "model11": -0.05369630943750572,
+  "mom": -0.08098793704009366,
+  "shock": 0.09761490035145107,
+  "theme": 0.021624000010321925,
+  "sa": -0.06060711482714786,
+  "saN": 15,
+  "random": 0.016664484303880848,
+  "ic10": -0.102943279293299,
+  "ic11": -0.04134887361138839,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.07441757692185103,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "TER",
+    "ex": 0.08391925558344038,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "high bandwidth memory"
+    ],
+    "p": 0.887,
+    "pct3": 0.92,
+    "bott": 0.91
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.26652244123721747,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.933,
+    "pct3": 0.95,
+    "bott": 0.75
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.18963319053769678,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.937,
+    "pct3": 0,
+    "bott": 0.72
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.04088866963617466,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.909,
+    "pct3": 0.9,
+    "bott": 0.76
+   },
+   {
+    "t": "MKSI",
+    "ex": -0.28774552046928137,
+    "drivers": [
+     "etch",
+     "NAND",
+     "deposition"
+    ],
+    "p": 0.831,
+    "pct3": 0.96,
+    "bott": 0.82
+   },
+   {
+    "t": "UMC",
+    "ex": 0.05492142458245486,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithography"
+    ],
+    "p": 0.779,
+    "pct3": 0.99,
+    "bott": 0.92
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.21761618427693674,
+    "drivers": [
+     "wafer",
+     "power semiconductor",
+     "foundry"
+    ],
+    "p": 0.68,
+    "pct3": 0.96,
+    "bott": 0.82
+   },
+   {
+    "t": "LRCX",
+    "ex": -0.07872932862244675,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.997,
+    "pct3": 0.96,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": -0.033999100005583816,
+    "drivers": [
+     "wafer",
+     "NAND",
+     "lithography"
+    ],
+    "p": 0.991,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.3535582207520499,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.948,
+    "pct3": 0.78,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": -0.17871832007941468,
+    "drivers": [
+     "advanced packaging",
+     "wafer",
+     "NAND"
+    ],
+    "p": 0.944,
+    "pct3": 0.77,
+    "bott": 0
+   },
+   {
+    "t": "SQM",
+    "ex": -0.09755251913465357,
+    "drivers": [
+     "solar",
+     "tariff",
+     "electric vehicle"
+    ],
+    "p": 0.488,
+    "pct3": 0.19,
+    "bott": 0.88
+   },
+   {
+    "t": "FORM",
+    "ex": 0.046869371562192064,
+    "drivers": [
+     "DRAM",
+     "foundry",
+     "wafer"
+    ],
+    "p": 0.907,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "AEIS",
+    "ex": -0.11298037068970834,
+    "drivers": [
+     "etch",
+     "deposition",
+     "rack"
+    ],
+    "p": 0.452,
+    "pct3": 0.65,
+    "bott": 0.79
+   },
+   {
+    "t": "LNG",
+    "ex": 0.13985533306722042,
+    "drivers": [
+     "tariff",
+     "interest rate",
+     "grid"
+    ],
+    "p": 0.325,
+    "pct3": 0.1,
+    "bott": 0.99
+   },
+   {
+    "t": "ET",
+    "ex": 0.10768069898470645,
+    "drivers": [
+     "rack",
+     "tariff",
+     "credit card"
+    ],
+    "p": 0.318,
+    "pct3": 0.31,
+    "bott": 0.91
+   },
+   {
+    "t": "VSAT",
+    "ex": -0.09959908244227789,
+    "drivers": [
+     "interest rate",
+     "travel",
+     "tariff"
+    ],
+    "p": 0.319,
+    "pct3": 0.96,
+    "bott": 0.9
+   },
+   {
+    "t": "E",
+    "ex": 0.23414945260248576,
+    "drivers": [
+     "accelerator",
+     "solar",
+     "wind"
+    ],
+    "p": 0.304,
+    "pct3": 0.08,
+    "bott": 0.92
+   },
+   {
+    "t": "EOG",
+    "ex": 0.13260342741066455,
+    "drivers": [
+     "tariff",
+     "interest rate"
+    ],
+    "p": 0.294,
+    "pct3": 0.17,
+    "bott": 0.86
+   }
+  ],
+  "picks11": [
+   {
+    "t": "TSM",
+    "ex": 0.09755595174894138,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "DRAM"
+    ],
+    "p": 0.025,
+    "pct3": 0.87,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": -0.10159934611188515,
+    "drivers": [
+     "rare earth",
+     "hard disk drive",
+     "automotive"
+    ],
+    "p": 0.232,
+    "pct3": 0.66,
+    "bott": 0
+   },
+   {
+    "t": "AVGO",
+    "ex": -0.005306942871156961,
+    "drivers": [
+     "accelerator",
+     "rack",
+     "server"
+    ],
+    "p": 0.011,
+    "pct3": 0.74,
+    "bott": 0.75
+   },
+   {
+    "t": "ENPH",
+    "ex": -0.25208628573571346,
+    "drivers": [
+     "solar",
+     "grid",
+     "rack"
+    ],
+    "p": 0.059,
+    "pct3": 0.82,
+    "bott": 0
+   },
+   {
+    "t": "AUR",
+    "ex": -0.16487978541018977,
+    "drivers": [
+     "automotive",
+     "accelerator",
+     "artificial intelligence"
+    ],
+    "p": 0,
+    "pct3": 0.92,
+    "bott": 0.8
+   },
+   {
+    "t": "RIVN",
+    "ex": -0.13449677039157482,
+    "drivers": [
+     "automotive",
+     "tariff",
+     "artificial intelligence"
+    ],
+    "p": 0.001,
+    "pct3": 0.65,
+    "bott": 0.77
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.3535582207520499,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.948,
+    "pct3": 0.78,
+    "bott": 0
+   },
+   {
+    "t": "MU",
+    "ex": 0.07441757692185103,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.99,
+    "bott": 0.99
+   },
+   {
+    "t": "FORM",
+    "ex": 0.046869371562192064,
+    "drivers": [
+     "DRAM",
+     "foundry",
+     "wafer"
+    ],
+    "p": 0.907,
+    "pct3": 0.92,
+    "bott": 0
+   },
+   {
+    "t": "AMD",
+    "ex": 0.20513750214906457,
+    "drivers": [
+     "CPU",
+     "GPU",
+     "wafer"
+    ],
+    "p": 0.277,
+    "pct3": 0.99,
+    "bott": 0.91
+   },
+   {
+    "t": "NVTS",
+    "ex": -0.21761618427693674,
+    "drivers": [
+     "wafer",
+     "power semiconductor",
+     "foundry"
+    ],
+    "p": 0.68,
+    "pct3": 0.96,
+    "bott": 0.82
+   },
+   {
+    "t": "MKSI",
+    "ex": -0.28774552046928137,
+    "drivers": [
+     "etch",
+     "NAND",
+     "deposition"
+    ],
+    "p": 0.831,
+    "pct3": 0.96,
+    "bott": 0.82
+   },
+   {
+    "t": "TER",
+    "ex": 0.08391925558344038,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "high bandwidth memory"
+    ],
+    "p": 0.887,
+    "pct3": 0.92,
+    "bott": 0.91
+   },
+   {
+    "t": "AMKR",
+    "ex": -0.26652244123721747,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "NAND"
+    ],
+    "p": 0.933,
+    "pct3": 0.95,
+    "bott": 0.75
+   },
+   {
+    "t": "ONTO",
+    "ex": -0.033999100005583816,
+    "drivers": [
+     "wafer",
+     "NAND",
+     "lithography"
+    ],
+    "p": 0.991,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "UMC",
+    "ex": 0.05492142458245486,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "lithography"
+    ],
+    "p": 0.779,
+    "pct3": 0.99,
+    "bott": 0.92
+   },
+   {
+    "t": "AMAT",
+    "ex": -0.13719075112445023,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "foundry"
+    ],
+    "p": 0.508,
+    "pct3": 0.97,
+    "bott": 0
+   },
+   {
+    "t": "KLAC",
+    "ex": -0.18963319053769678,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "advanced packaging"
+    ],
+    "p": 0.937,
+    "pct3": 0,
+    "bott": 0.72
+   },
+   {
+    "t": "SNDK",
+    "ex": -0.12049984525597512,
+    "drivers": [
+     "NAND",
+     "wafer",
+     "flash storage"
+    ],
+    "p": 0.086,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "LRCX",
+    "ex": -0.07872932862244675,
+    "drivers": [
+     "etch",
+     "deposition",
+     "wafer"
+    ],
+    "p": 0.997,
+    "pct3": 0.96,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-07-31",
+  "emerging": [
+   "brand name",
+   "securities laws",
+   "help customers",
+   "reporting periods",
+   "materially affect",
+   "could affect",
+   "market participants"
+  ],
+  "eligible": 940,
+  "model10": 0.14110213537654534,
+  "model11": 0.11919900204703185,
+  "mom": 0.21338930585106408,
+  "shock": 0.22654872828846556,
+  "theme": 0.2849221451769144,
+  "sa": 0.14881323657135,
+  "saN": 14,
+  "random": 0.07943617321732417,
+  "ic10": 0.13285296716742573,
+  "ic11": 0.2735701110976186,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.34045516585164215,
+    "drivers": [
+     "personal computer",
+     "CPU",
+     "cybersecurity"
+    ],
+    "p": 0.668,
+    "pct3": 0.97,
+    "bott": 0.99
+   },
+   {
+    "t": "UMC",
+    "ex": 0.45019082629417206,
+    "drivers": [
+     "oil",
+     "interest rate",
+     "cybersecurity"
+    ],
+    "p": 0.616,
+    "pct3": 0.97,
+    "bott": 0.92
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.14651463026125433,
+    "drivers": [
+     "NAND",
+     "copper",
+     "DRAM"
+    ],
+    "p": 0.661,
+    "pct3": 0.03,
+    "bott": 0.75
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.37425894117339364,
+    "drivers": [
+     "NAND",
+     "copper",
+     "personal computer"
+    ],
+    "p": 0.651,
+    "pct3": 0.11,
+    "bott": 0.76
+   },
+   {
+    "t": "MKSI",
+    "ex": -0.0548316762363249,
+    "drivers": [
+     "NAND",
+     "interest rate",
+     "medical device"
+    ],
+    "p": 0.626,
+    "pct3": 0.58,
+    "bott": 0.82
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.17671937656978276,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "hard disk drive"
+    ],
+    "p": 0.66,
+    "pct3": 0,
+    "bott": 0.71
+   },
+   {
+    "t": "NVTS",
+    "ex": 0.11878073319254656,
+    "drivers": [
+     "refining",
+     "interest rate"
+    ],
+    "p": 0.606,
+    "pct3": 0.01,
+    "bott": 0.81
+   },
+   {
+    "t": "LNG",
+    "ex": 0.09061984370454534,
+    "drivers": [
+     "LNG",
+     "natural gas",
+     "oil"
+    ],
+    "p": 0.496,
+    "pct3": 0.34,
+    "bott": 0.99
+   },
+   {
+    "t": "SQM",
+    "ex": 0.007180433576537748,
+    "drivers": [
+     "could affect",
+     "refining",
+     "copper"
+    ],
+    "p": 0.498,
+    "pct3": 0.04,
+    "bott": 0.88
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.07128132328495185,
+    "drivers": [
+     "medical device",
+     "interest rate"
+    ],
+    "p": 0.428,
+    "pct3": 0.05,
+    "bott": 0.79
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.23461149162689854,
+    "drivers": [
+     "colocation",
+     "could affect",
+     "materially affect"
+    ],
+    "p": 0.355,
+    "pct3": 0.45,
+    "bott": 1
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.22411788449077874,
+    "drivers": [
+     "DRAM",
+     "copper",
+     "NAND"
+    ],
+    "p": 0.668,
+    "pct3": 0.77,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.26541669932313106,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "hard disk drive"
+    ],
+    "p": 0.668,
+    "pct3": 0.17,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": 0.05079872243688288,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "copper"
+    ],
+    "p": 0.662,
+    "pct3": 0.08,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.2961565194462916,
+    "drivers": [
+     "freight",
+     "restaurant"
+    ],
+    "p": 0.661,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": 0.4154903239022041,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "semiconductor test"
+    ],
+    "p": 0.652,
+    "pct3": 0.06,
+    "bott": 0
+   },
+   {
+    "t": "TER",
+    "ex": 0.2721823948667299,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "interest rate"
+    ],
+    "p": 0.622,
+    "pct3": 0.57,
+    "bott": 0
+   },
+   {
+    "t": "TXRH",
+    "ex": -0.21421448781196273,
+    "drivers": [
+     "credit card",
+     "travel",
+     "cybersecurity"
+    ],
+    "p": 0.289,
+    "pct3": 0.94,
+    "bott": 0.97
+   },
+   {
+    "t": "IREN",
+    "ex": 0.0951923910498178,
+    "drivers": [
+     "freight",
+     "steel",
+     "cybersecurity"
+    ],
+    "p": 0.291,
+    "pct3": 0.09,
+    "bott": 0.95
+   },
+   {
+    "t": "VSAT",
+    "ex": -0.06965584621856913,
+    "drivers": [
+     "interest rate",
+     "cybersecurity",
+     "travel"
+    ],
+    "p": 0.296,
+    "pct3": 0.83,
+    "bott": 0.9
+   }
+  ],
+  "picks11": [
+   {
+    "t": "DINO",
+    "ex": 0.32336295793889813,
+    "drivers": [
+     "refining",
+     "oil",
+     "natural gas"
+    ],
+    "p": 0.026,
+    "pct3": 0.95,
+    "bott": 0
+   },
+   {
+    "t": "AVGO",
+    "ex": -0.049935510898355684,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "hard disk drive"
+    ],
+    "p": 0.01,
+    "pct3": 0.22,
+    "bott": 0.75
+   },
+   {
+    "t": "FORM",
+    "ex": 0.4154903239022041,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "semiconductor test"
+    ],
+    "p": 0.652,
+    "pct3": 0.06,
+    "bott": 0
+   },
+   {
+    "t": "MP",
+    "ex": 0.11564778514251417,
+    "drivers": [
+     "rare earth",
+     "refining",
+     "freight"
+    ],
+    "p": 0.311,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "TSM",
+    "ex": 0.2090380781905523,
+    "drivers": [
+     "DRAM",
+     "subscription",
+     "cybersecurity"
+    ],
+    "p": 0.024,
+    "pct3": 0.45,
+    "bott": 0
+   },
+   {
+    "t": "SNDK",
+    "ex": 0.37999121282811066,
+    "drivers": [
+     "flash storage",
+     "NAND",
+     "personal computer"
+    ],
+    "p": 0.024,
+    "pct3": 0.46,
+    "bott": 0
+   },
+   {
+    "t": "AMG",
+    "ex": 0.019789786326124603,
+    "drivers": [
+     "subscription",
+     "interest rate"
+    ],
+    "p": 0,
+    "pct3": 0.91,
+    "bott": 0
+   },
+   {
+    "t": "ADSK",
+    "ex": -0.05213134767874561,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "travel"
+    ],
+    "p": 0,
+    "pct3": 0.3,
+    "bott": 0.81
+   },
+   {
+    "t": "YPF",
+    "ex": 0.017403478265006767,
+    "drivers": [
+     "oil",
+     "LNG",
+     "refining"
+    ],
+    "p": 0.024,
+    "pct3": 0.87,
+    "bott": 0.7
+   },
+   {
+    "t": "DOCN",
+    "ex": 0.14606537195043967,
+    "drivers": [
+     "SaaS",
+     "AI agents",
+     "CPU"
+    ],
+    "p": 0.037,
+    "pct3": 0.77,
+    "bott": 0
+   },
+   {
+    "t": "AUR",
+    "ex": -0.12032210029427859,
+    "drivers": [
+     "freight",
+     "subscription",
+     "restaurant"
+    ],
+    "p": 0,
+    "pct3": 0.55,
+    "bott": 0.79
+   },
+   {
+    "t": "CORZ",
+    "ex": -0.23461149162689854,
+    "drivers": [
+     "colocation",
+     "could affect",
+     "materially affect"
+    ],
+    "p": 0.355,
+    "pct3": 0.45,
+    "bott": 1
+   },
+   {
+    "t": "ADBE",
+    "ex": -0.0096825509591274,
+    "drivers": [
+     "subscription",
+     "AI agents",
+     "SaaS"
+    ],
+    "p": 0,
+    "pct3": 0.4,
+    "bott": 0
+   },
+   {
+    "t": "FROG",
+    "ex": 0.20360693583824063,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "AI agents"
+    ],
+    "p": 0.006,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "ASND",
+    "ex": -0.0193703605903236,
+    "drivers": [
+     "biosimilar",
+     "obesity",
+     "medical device"
+    ],
+    "p": 0,
+    "pct3": 0.67,
+    "bott": 0
+   },
+   {
+    "t": "PANW",
+    "ex": 0.20626608482665865,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "AI agents"
+    ],
+    "p": 0.001,
+    "pct3": 0.99,
+    "bott": 0
+   },
+   {
+    "t": "ARM",
+    "ex": 0.3308724839924595,
+    "drivers": [
+     "CPU",
+     "steel",
+     "AI agents"
+    ],
+    "p": 0.036,
+    "pct3": 0.75,
+    "bott": 0.79
+   },
+   {
+    "t": "CRWD",
+    "ex": 0.377893856029482,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "cybersecurity"
+    ],
+    "p": 0.002,
+    "pct3": 0.99,
+    "bott": 0.98
+   },
+   {
+    "t": "AZN",
+    "ex": 0.03785291531941293,
+    "drivers": [
+     "biosimilar",
+     "obesity",
+     "cybersecurity"
+    ],
+    "p": 0.008,
+    "pct3": 0.21,
+    "bott": 0
+   },
+   {
+    "t": "AMAT",
+    "ex": 0.08675213243826185,
+    "drivers": [
+     "NAND",
+     "DRAM",
+     "personal computer"
+    ],
+    "p": 0.452,
+    "pct3": 0.94,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-08-31",
+  "emerging": [
+   "brand name",
+   "securities laws",
+   "help customers",
+   "reporting periods",
+   "materially affect",
+   "could affect",
+   "market participants"
+  ],
+  "eligible": 928,
+  "model10": 0.21842433221450772,
+  "model11": 0.06554389394323912,
+  "mom": 0.3077350016375746,
+  "shock": 0.1453117675085807,
+  "theme": 0.22291743694703717,
+  "sa": 0.1703957333246432,
+  "saN": 13,
+  "random": 0.10421363275363292,
+  "ic10": 0.13972862189929836,
+  "ic11": 0.22398806201109003,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": 0.19398462324101073,
+    "drivers": [
+     "flash storage",
+     "server",
+     "shipping"
+    ],
+    "p": 0.667,
+    "pct3": 0.22,
+    "bott": 0.99
+   },
+   {
+    "t": "UMC",
+    "ex": 0.3257898455711046,
+    "drivers": [
+     "large language model",
+     "oil",
+     "shipping"
+    ],
+    "p": 0.597,
+    "pct3": 0.14,
+    "bott": 0.93
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.2674647708536433,
+    "drivers": [
+     "copper",
+     "housing",
+     "consumer spending"
+    ],
+    "p": 0.654,
+    "pct3": 0.04,
+    "bott": 0.75
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.25311019948823765,
+    "drivers": [
+     "subscription",
+     "travel",
+     "cybersecurity"
+    ],
+    "p": 0.658,
+    "pct3": 0,
+    "bott": 0.73
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.32783173832103873,
+    "drivers": [
+     "copper",
+     "oil",
+     "shipping"
+    ],
+    "p": 0.637,
+    "pct3": 0.37,
+    "bott": 0.76
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.17517844652767067,
+    "drivers": [
+     "medical device",
+     "interest rate",
+     "cybersecurity"
+    ],
+    "p": 0.614,
+    "pct3": 0.1,
+    "bott": 0.82
+   },
+   {
+    "t": "SQM",
+    "ex": -0.15616049822219136,
+    "drivers": [
+     "copper",
+     "refining",
+     "could affect"
+    ],
+    "p": 0.547,
+    "pct3": 0.27,
+    "bott": 0.89
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.18207383840614755,
+    "drivers": [
+     "medical device",
+     "server",
+     "shipping"
+    ],
+    "p": 0.415,
+    "pct3": 0.25,
+    "bott": 0.78
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.06481556502234143,
+    "drivers": [
+     "could affect",
+     "materially affect",
+     "housing"
+    ],
+    "p": 0.337,
+    "pct3": 0.02,
+    "bott": 1
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.23986394570655012,
+    "drivers": [
+     "reporting periods",
+     "copper",
+     "server"
+    ],
+    "p": 0.667,
+    "pct3": 0.28,
+    "bott": 0
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.32095209532619173,
+    "drivers": [
+     "copper",
+     "freight",
+     "travel"
+    ],
+    "p": 0.665,
+    "pct3": 0.51,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.5723316872450055,
+    "drivers": [
+     "shipping",
+     "freight",
+     "restaurant"
+    ],
+    "p": 0.658,
+    "pct3": 0.01,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": 0.2156505974656162,
+    "drivers": [
+     "copper",
+     "travel",
+     "server"
+    ],
+    "p": 0.655,
+    "pct3": 0.06,
+    "bott": 0
+   },
+   {
+    "t": "FORM",
+    "ex": 0.6057016979847769,
+    "drivers": [
+     "copper",
+     "shipping",
+     "interest rate"
+    ],
+    "p": 0.638,
+    "pct3": 0.14,
+    "bott": 0
+   },
+   {
+    "t": "FCX",
+    "ex": 0.03651488052146967,
+    "drivers": [
+     "copper",
+     "refining",
+     "oil"
+    ],
+    "p": 0.629,
+    "pct3": 0.72,
+    "bott": 0
+   },
+   {
+    "t": "LNG",
+    "ex": -0.03976017699966228,
+    "drivers": [
+     "oil",
+     "cybersecurity",
+     "shipping"
+    ],
+    "p": 0.317,
+    "pct3": 0.94,
+    "bott": 0.99
+   },
+   {
+    "t": "NVO",
+    "ex": -0.13042397018417828,
+    "drivers": [
+     "obesity",
+     "GLP-1",
+     "biosimilar"
+    ],
+    "p": 0.3,
+    "pct3": 0.46,
+    "bott": 0.99
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.25929712237125235,
+    "drivers": [
+     "GPU",
+     "InfiniBand",
+     "server"
+    ],
+    "p": 0.299,
+    "pct3": 0.08,
+    "bott": 0.99
+   },
+   {
+    "t": "SMCI",
+    "ex": 0.23258729696431724,
+    "drivers": [
+     "freight",
+     "shipping",
+     "travel"
+    ],
+    "p": 0.301,
+    "pct3": 0.09,
+    "bott": 0.96
+   },
+   {
+    "t": "AMD",
+    "ex": 0.4216829386798122,
+    "drivers": [
+     "cybersecurity",
+     "could affect",
+     "server"
+    ],
+    "p": 0.305,
+    "pct3": 0.22,
+    "bott": 0.91
+   }
+  ],
+  "picks11": [
+   {
+    "t": "DINO",
+    "ex": 0.13276288404341186,
+    "drivers": [
+     "refining",
+     "oil",
+     "interest rate"
+    ],
+    "p": 0.024,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "YPF",
+    "ex": -0.010735007570312427,
+    "drivers": [
+     "oil",
+     "LNG",
+     "refining"
+    ],
+    "p": 0.021,
+    "pct3": 0.26,
+    "bott": 0.7
+   },
+   {
+    "t": "BG",
+    "ex": -0.07585962711489236,
+    "drivers": [
+     "refining",
+     "oil",
+     "freight"
+    ],
+    "p": 0.011,
+    "pct3": 0.18,
+    "bott": 0
+   },
+   {
+    "t": "ET",
+    "ex": -0.0019027035214850274,
+    "drivers": [
+     "oil",
+     "LNG",
+     "refining"
+    ],
+    "p": 0.139,
+    "pct3": 0.69,
+    "bott": 0.91
+   },
+   {
+    "t": "PFE",
+    "ex": 0.016178667964646065,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "obesity"
+    ],
+    "p": 0.063,
+    "pct3": 0.68,
+    "bott": 0
+   },
+   {
+    "t": "WES",
+    "ex": -0.04389578162637453,
+    "drivers": [
+     "oil",
+     "interest rate"
+    ],
+    "p": 0.02,
+    "pct3": 0.68,
+    "bott": 0.9
+   },
+   {
+    "t": "FTI",
+    "ex": -0.07873666359851372,
+    "drivers": [
+     "oil",
+     "LNG"
+    ],
+    "p": 0,
+    "pct3": 0.75,
+    "bott": 0.76
+   },
+   {
+    "t": "DTM",
+    "ex": -0.02671079584834568,
+    "drivers": [
+     "LNG"
+    ],
+    "p": 0,
+    "pct3": 0.27,
+    "bott": 0
+   },
+   {
+    "t": "CW",
+    "ex": -0.013521456226232353,
+    "drivers": [
+     "oil",
+     "freight",
+     "travel"
+    ],
+    "p": 0.049,
+    "pct3": 0.1,
+    "bott": 0.99
+   },
+   {
+    "t": "MRNA",
+    "ex": 0.27412011458568486,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "obesity"
+    ],
+    "p": 0.261,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "AZN",
+    "ex": 0.008165117948622735,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "obesity"
+    ],
+    "p": 0.063,
+    "pct3": 0.19,
+    "bott": 0
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.06481556502234143,
+    "drivers": [
+     "could affect",
+     "materially affect",
+     "housing"
+    ],
+    "p": 0.337,
+    "pct3": 0.02,
+    "bott": 1
+   },
+   {
+    "t": "TTMI",
+    "ex": 0.18586291979480896,
+    "drivers": [
+     "freight",
+     "shipping",
+     "interest rate"
+    ],
+    "p": 0,
+    "pct3": 0.05,
+    "bott": 0
+   },
+   {
+    "t": "PBF",
+    "ex": 0.11965866494731459,
+    "drivers": [
+     "refining",
+     "oil",
+     "subscription"
+    ],
+    "p": 0.028,
+    "pct3": 1,
+    "bott": 0.64
+   },
+   {
+    "t": "IBRX",
+    "ex": 0.3493098696060295,
+    "drivers": [
+     "vaccine",
+     "medical device",
+     "subscription"
+    ],
+    "p": 0.004,
+    "pct3": 0.64,
+    "bott": 0.69
+   },
+   {
+    "t": "TSM",
+    "ex": 0.18476721082106384,
+    "drivers": [
+     "subscription",
+     "cybersecurity",
+     "oil"
+    ],
+    "p": 0.02,
+    "pct3": 0.28,
+    "bott": 0
+   },
+   {
+    "t": "MRK",
+    "ex": 0.005347075699781434,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "refining"
+    ],
+    "p": 0.105,
+    "pct3": 0.94,
+    "bott": 0
+   },
+   {
+    "t": "VLO",
+    "ex": 0.16485506655893145,
+    "drivers": [
+     "refining",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.039,
+    "pct3": 0.98,
+    "bott": 0.85
+   },
+   {
+    "t": "AME",
+    "ex": 0.13154572455572344,
+    "drivers": [
+     "refining",
+     "oil",
+     "cybersecurity"
+    ],
+    "p": 0.003,
+    "pct3": 0.53,
+    "bott": 0.72
+   },
+   {
+    "t": "FTAI",
+    "ex": -0.07514896717742181,
+    "drivers": [
+     "oil",
+     "shipping"
+    ],
+    "p": 0.002,
+    "pct3": 0.07,
+    "bott": 0
+   }
+  ]
+ },
+ {
+  "d": "2026-09-30",
+  "emerging": [
+   "brand name",
+   "securities laws",
+   "help customers",
+   "reporting periods",
+   "materially affect",
+   "could affect",
+   "market participants"
+  ],
+  "eligible": 932,
+  "model10": 0.026366362151507665,
+  "model11": -0.0031368311796989125,
+  "mom": 0.01108903121595899,
+  "shock": 0.007828748887246422,
+  "theme": 0.0018461698914122638,
+  "sa": 0.013761386228904616,
+  "saN": 13,
+  "random": 0.011825246435841852,
+  "ic10": 0.11309046449469164,
+  "ic11": 0.1940840418236038,
+  "picks10": [
+   {
+    "t": "MU",
+    "ex": -0.02433853017313259,
+    "drivers": [
+     "DRAM",
+     "NAND",
+     "wafer"
+    ],
+    "p": 1,
+    "pct3": 0.67,
+    "bott": 0.99
+   },
+   {
+    "t": "KLAC",
+    "ex": 0.028910632919757928,
+    "drivers": [
+     "wafer",
+     "DRAM",
+     "foundry"
+    ],
+    "p": 0.938,
+    "pct3": 0.05,
+    "bott": 0.72
+   },
+   {
+    "t": "AMKR",
+    "ex": 0.05514386981800645,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "smartphone"
+    ],
+    "p": 0.913,
+    "pct3": 0.02,
+    "bott": 0.74
+   },
+   {
+    "t": "UMC",
+    "ex": 0.03821147059154639,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "large language model"
+    ],
+    "p": 0.771,
+    "pct3": 0.47,
+    "bott": 0.93
+   },
+   {
+    "t": "ENTG",
+    "ex": 0.04658112010404136,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "etch"
+    ],
+    "p": 0.847,
+    "pct3": 0.4,
+    "bott": 0.75
+   },
+   {
+    "t": "MKSI",
+    "ex": 0.025327029201683837,
+    "drivers": [
+     "wafer",
+     "lithography",
+     "NAND"
+    ],
+    "p": 0.761,
+    "pct3": 0.01,
+    "bott": 0.81
+   },
+   {
+    "t": "CORZ",
+    "ex": 0.0019715097346271193,
+    "drivers": [
+     "colocation",
+     "data center",
+     "digital assets"
+    ],
+    "p": 0.603,
+    "pct3": 0.02,
+    "bott": 1
+   },
+   {
+    "t": "SMCI",
+    "ex": 0.03838794621160502,
+    "drivers": [
+     "server",
+     "GPU",
+     "CPU"
+    ],
+    "p": 0.553,
+    "pct3": 0.98,
+    "bott": 0.96
+   },
+   {
+    "t": "AMD",
+    "ex": 0.02569059234144566,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "wafer"
+    ],
+    "p": 0.539,
+    "pct3": 0.83,
+    "bott": 0.91
+   },
+   {
+    "t": "NBIS",
+    "ex": 0.04149788229821816,
+    "drivers": [
+     "GPU",
+     "server",
+     "inference"
+    ],
+    "p": 0.515,
+    "pct3": 0.66,
+    "bott": 0.99
+   },
+   {
+    "t": "LRCX",
+    "ex": 0.01789356703260303,
+    "drivers": [
+     "wafer",
+     "etch",
+     "deposition"
+    ],
+    "p": 0.995,
+    "pct3": 0.16,
+    "bott": 0
+   },
+   {
+    "t": "NVDA",
+    "ex": 0.009549399106290934,
+    "drivers": [
+     "GPU",
+     "CPU",
+     "InfiniBand"
+    ],
+    "p": 0.505,
+    "pct3": 0.86,
+    "bott": 0.95
+   },
+   {
+    "t": "ONTO",
+    "ex": 0.03710089344365364,
+    "drivers": [
+     "wafer",
+     "NAND",
+     "DRAM"
+    ],
+    "p": 0.982,
+    "pct3": 0.25,
+    "bott": 0
+   },
+   {
+    "t": "NVMI",
+    "ex": 0.020789599102535306,
+    "drivers": [
+     "wafer",
+     "advanced packaging",
+     "foundry"
+    ],
+    "p": 0.925,
+    "pct3": 0.07,
+    "bott": 0
+   },
+   {
+    "t": "AXTI",
+    "ex": 0.0463633797578511,
+    "drivers": [
+     "wafer",
+     "gallium nitride",
+     "data center"
+    ],
+    "p": 0.919,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "TER",
+    "ex": 0.0761329169735998,
+    "drivers": [
+     "semiconductor test",
+     "DRAM",
+     "high bandwidth memory"
+    ],
+    "p": 0.916,
+    "pct3": 0.43,
+    "bott": 0
+   },
+   {
+    "t": "AEIS",
+    "ex": 0.030743562820232162,
+    "drivers": [
+     "server",
+     "rack",
+     "etch"
+    ],
+    "p": 0.512,
+    "pct3": 0.09,
+    "bott": 0.78
+   },
+   {
+    "t": "FORM",
+    "ex": 0.0009477411065019758,
+    "drivers": [
+     "DRAM",
+     "wafer",
+     "foundry"
+    ],
+    "p": 0.906,
+    "pct3": 0.63,
+    "bott": 0
+   },
+   {
+    "t": "SQM",
+    "ex": 0.0024029669503915496,
+    "drivers": [
+     "refining",
+     "could affect",
+     "oil"
+    ],
+    "p": 0.454,
+    "pct3": 0.24,
+    "bott": 0.89
+   },
+   {
+    "t": "CRWV",
+    "ex": 0.008019693688694485,
+    "drivers": [
+     "GPU",
+     "inference",
+     "server"
+    ],
+    "p": 0.459,
+    "pct3": 0.63,
+    "bott": 0.75
+   }
+  ],
+  "picks11": [
+   {
+    "t": "DINO",
+    "ex": 0.0020209193145535043,
+    "drivers": [
+     "refining",
+     "oil",
+     "rack"
+    ],
+    "p": 0.094,
+    "pct3": 0.98,
+    "bott": 0
+   },
+   {
+    "t": "BG",
+    "ex": -0.0028035380883795202,
+    "drivers": [
+     "refining",
+     "oil",
+     "shipping"
+    ],
+    "p": 0.022,
+    "pct3": 0.64,
+    "bott": 0
+   },
+   {
+    "t": "DVN",
+    "ex": 0.006554824922377023,
+    "drivers": [
+     "oil",
+     "tariff"
+    ],
+    "p": 0.067,
+    "pct3": 0.85,
+    "bott": 0.88
+   },
+   {
+    "t": "FTI",
+    "ex": -0.0042710660786374754,
+    "drivers": [
+     "oil",
+     "LNG",
+     "data center"
+    ],
+    "p": 0.03,
+    "pct3": 0.69,
+    "bott": 0.76
+   },
+   {
+    "t": "ET",
+    "ex": 0.014572623967861853,
+    "drivers": [
+     "oil",
+     "refining",
+     "LNG"
+    ],
+    "p": 0.317,
+    "pct3": 0.68,
+    "bott": 0.91
+   },
+   {
+    "t": "WES",
+    "ex": 0.0047270792713354215,
+    "drivers": [
+     "oil",
+     "tariff"
+    ],
+    "p": 0.165,
+    "pct3": 0.66,
+    "bott": 0.9
+   },
+   {
+    "t": "PFE",
+    "ex": -0.015215137084628072,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "tariff"
+    ],
+    "p": 0.044,
+    "pct3": 0.89,
+    "bott": 0
+   },
+   {
+    "t": "CRM",
+    "ex": -0.01228520737060812,
+    "drivers": [
+     "subscription",
+     "AI agents",
+     "help customers"
+    ],
+    "p": 0.047,
+    "pct3": 0.97,
+    "bott": 0.88
+   },
+   {
+    "t": "MSCI",
+    "ex": -0.02114405109573514,
+    "drivers": [
+     "subscription",
+     "data center",
+     "artificial intelligence"
+    ],
+    "p": 0.03,
+    "pct3": 0.38,
+    "bott": 0.97
+   },
+   {
+    "t": "DTM",
+    "ex": 0.0038262227295500217,
+    "drivers": [
+     "LNG"
+    ],
+    "p": 0.018,
+    "pct3": 0.15,
+    "bott": 0
+   },
+   {
+    "t": "COO",
+    "ex": -0.012544620327990197,
+    "drivers": [
+     "medical device",
+     "cloud computing",
+     "copper"
+    ],
+    "p": 0.002,
+    "pct3": 0.09,
+    "bott": 0.78
+   },
+   {
+    "t": "GLXY",
+    "ex": -0.0020977167698050803,
+    "drivers": [
+     "digital assets",
+     "data center",
+     "securities laws"
+    ],
+    "p": 0.197,
+    "pct3": 0.26,
+    "bott": 0
+   },
+   {
+    "t": "TSM",
+    "ex": 0.02608756981877214,
+    "drivers": [
+     "wafer",
+     "foundry",
+     "subscription"
+    ],
+    "p": 0.032,
+    "pct3": 0.66,
+    "bott": 0
+   },
+   {
+    "t": "GSAT",
+    "ex": 0.0002669803711736751,
+    "drivers": [
+     "could affect",
+     "shipping",
+     "cybersecurity"
+    ],
+    "p": 0.056,
+    "pct3": 0.65,
+    "bott": 0.68
+   },
+   {
+    "t": "PBF",
+    "ex": -0.022781170576540166,
+    "drivers": [
+     "refining",
+     "oil",
+     "rack"
+    ],
+    "p": 0.077,
+    "pct3": 0.99,
+    "bott": 0.63
+   },
+   {
+    "t": "FROG",
+    "ex": -0.02525146493285424,
+    "drivers": [
+     "subscription",
+     "SaaS",
+     "AI agents"
+    ],
+    "p": 0.134,
+    "pct3": 0.75,
+    "bott": 0
+   },
+   {
+    "t": "VLO",
+    "ex": -0.009123491742086376,
+    "drivers": [
+     "refining",
+     "oil",
+     "rack"
+    ],
+    "p": 0.143,
+    "pct3": 0.97,
+    "bott": 0.85
+   },
+   {
+    "t": "MRNA",
+    "ex": 0.0018278372630879947,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "shipping"
+    ],
+    "p": 0.233,
+    "pct3": 1,
+    "bott": 0
+   },
+   {
+    "t": "AZN",
+    "ex": -0.008908259503178417,
+    "drivers": [
+     "vaccine",
+     "biosimilar",
+     "cybersecurity"
+    ],
+    "p": 0.043,
+    "pct3": 0.25,
+    "bott": 0
+   },
+   {
+    "t": "PANW",
+    "ex": 0.013805042317752925,
+    "drivers": [
+     "subscription",
+     "AI agents",
+     "help customers"
+    ],
+    "p": 0.058,
+    "pct3": 0.83,
+    "bott": 0.67
+   }
+  ]
+ }
+]

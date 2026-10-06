@@ -141,10 +141,11 @@ if (MODE === 'live') {
   console.log(`# World model — top ${TOP} as of ${d} (v1.1, bottleneck-weighted). Score 6 months later.\n`);
   for (const p of r.picks11) console.log(`- ${p.t.padEnd(5)} hit-prob ${p.p} · 3m-move pct ${p.pct3} · bottleneck ${p.bott} · drivers: ${p.drivers.join(', ')}`);
 } else {
-  const [a, b] = MODE === 'holdout' ? ['2025-01-01', '2026-03-31'] : ['2023-01-01', '2024-12-31'];
-  if (MODE === 'holdout' && fs.existsSync(path.join(OUTD, 'holdout.json')) && !process.argv.includes('--i-know')) { console.error('HOLDOUT already run once — refusing (DESIGN §6). Read world/results/holdout.json.'); process.exit(1); }
+  const ARG = (k) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : null; };
+  const [a, b] = ARG('from') ? [ARG('from'), ARG('to')] : MODE === 'holdout' ? ['2025-01-01', '2026-03-31'] : ['2023-01-01', '2024-12-31']; // --from/--to = recent months for the live conviction list
+  if (!ARG('from') && MODE === 'holdout' && fs.existsSync(path.join(OUTD, 'holdout.json')) && !process.argv.includes('--i-know')) { console.error('HOLDOUT already run once — refusing (DESIGN §6). Read world/results/holdout.json.'); process.exit(1); }
   const rows = []; for (const me of monthEnds(a, b)) { const d = lastTD(me); const t0 = Date.now(); const r = month(d); rows.push(r); console.error(`${d} elig ${r.eligible} · model ${fmt(r.model11)} / ${fmt(r.model10)} · mom ${fmt(r.mom)} · shock ${fmt(r.shock)} · theme ${fmt(r.theme)} · SA ${fmt(r.sa)} (${r.saN}) · rnd ${fmt(r.random)} · IC ${r.ic11?.toFixed(3)} · ${((Date.now() - t0) / 1000).toFixed(0)}s`); }
-  fs.writeFileSync(path.join(OUTD, `${MODE}.json`), JSON.stringify(rows, null, 1));
+  fs.writeFileSync(path.join(OUTD, ARG('from') ? `range_${a}_${b}.json` : `${MODE}.json`), JSON.stringify(rows, null, 1));
   const st = (k) => { const v = rows.map((r) => r[k]).filter((x) => x != null); const m = v.reduce((a, x) => a + x, 0) / v.length, s = Math.sqrt(v.reduce((a, x) => a + (x - m) ** 2, 0) / Math.max(1, v.length - 1)); return { m, t: m / (s / Math.sqrt(v.length)), n: v.length }; };
   console.log(`\n=== WORLD MODEL · ${MODE.toUpperCase()} ${a} → ${b} · ${rows.length} month-ends · top-${TOP} 6-month excess vs universe median ===`);
   for (const [k, name] of [['model11', 'MODEL v1.1 (bottleneck)'], ['model10', 'MODEL v1.0'], ['mom', 'momentum 12-1'], ['shock', 'shock only (no graph)'], ['theme', 'hot theme'], ['sa', 'copy Situational Awareness 13F'], ['random', 'random same-sector']]) { const s = st(k); console.log(`  ${name.padEnd(32)} ${fmt(s.m).padStart(8)}  (t ${Number.isFinite(s.t) ? s.t.toFixed(2) : '-'}, n ${s.n})`); }

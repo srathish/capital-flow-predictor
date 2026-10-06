@@ -81,10 +81,11 @@ const monthEnds = (a, b) => { const o = []; let [y, m] = a.split('-').map(Number
 const OUT = path.join(ROOT, 'world', 'results_v4'); fs.mkdirSync(OUT, { recursive: true });
 if (MODE === 'live') { const t = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10), r = month(t); fs.mkdirSync(path.join(ROOT, 'world', 'live_v4'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'live_v4', `${t}.json`), JSON.stringify(r, null, 1));
   console.log(`# Smart-money consensus — ${t} · ${r.skilledN} skilled managers\n`); for (const p of r.picks) console.log(`- ${p.t} (skill-weighted buys ${p.w})`); process.exit(0); }
-const [a, b] = MODE === 'holdout' ? ['2025-01-01', '2026-03-31'] : ['2023-07-01', '2024-12-31'];
-if (MODE === 'holdout' && !TAG && fs.existsSync(path.join(OUT, 'holdout.json'))) { console.error('HOLDOUT already run once — refusing (DESIGN_v4).'); process.exit(1); }
+const ARG = (k) => { const i = process.argv.indexOf(`--${k}`); return i > -1 ? process.argv[i + 1] : null; };
+const [a, b] = ARG('from') ? [ARG('from'), ARG('to')] : MODE === 'holdout' ? ['2025-01-01', '2026-03-31'] : ['2023-07-01', '2024-12-31'];
+if (!ARG('from') && MODE === 'holdout' && !TAG && fs.existsSync(path.join(OUT, 'holdout.json'))) { console.error('HOLDOUT already run once — refusing (DESIGN_v4).'); process.exit(1); }
 const res = []; for (const t of monthEnds(a, b)) { const r = month(t); res.push(r); console.error(`${t} skilled ${r.skilledN} · model ${fmt(r.model)} · crowd ${fmt(r.crowd)} · mom ${fmt(r.mom)} · SA ${fmt(r.sa)} (${r.saN}) · rnd ${fmt(r.random)} · IC ${r.ic?.toFixed(3)} · ${r.picks.slice(0, 8).map((p) => p.t).join(' ')}`); }
-fs.writeFileSync(path.join(OUT, `${MODE}${TAG}.json`), JSON.stringify(res, null, 1));
+fs.writeFileSync(path.join(OUT, ARG('from') ? `range_${a}_${b}${TAG}.json` : `${MODE}${TAG}.json`), JSON.stringify(res, null, 1));
 const st = (k) => { const v = res.map((r) => r[k]).filter((x) => x != null); const m = v.reduce((p, q) => p + q, 0) / v.length, s = Math.sqrt(v.reduce((p, q) => p + (q - m) ** 2, 0) / Math.max(1, v.length - 1)); return { m, t: m / (s / Math.sqrt(v.length)), n: v.length }; };
 console.log(`\n=== FIND-THE-NEXT-LEOPOLD v4 · ${MODE.toUpperCase()} ${a} → ${b} · top-${TOP} 6-month excess vs universe median ===`);
 for (const [k, nm] of [['model', 'CONCENTRATED SKILLED MANAGERS (v4)'], ['crowd', 'crowd (all managers)'], ['mom', 'momentum 12-1'], ['sa', 'copy Situational Awareness 13F'], ['random', 'random same-sector']]) { const s = st(k); console.log(`  ${nm.padEnd(34)} ${fmt(s.m).padStart(8)}  (t ${Number.isFinite(s.t) ? s.t.toFixed(2) : '-'}, n ${s.n})`); }
