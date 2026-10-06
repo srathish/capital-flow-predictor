@@ -56,3 +56,16 @@ For each eligible stock (same rule as v1–v4: price ≥ $5, 50-day dollar volum
 - Survivorship: universe = today's ~1,165 largest companies + watchlists. Benchmarks share it.
 - Foreign filers (20-F: TSM, ASML; IREN until it switched to 10-K/10-Q) have no quarterly US XBRL and are invisible.
 - Banks/insurers have no gross profit, so they are excluded.
+
+## Addendum 2026-10-06 — wide-universe retest (locked before the wide data is pulled)
+
+The original passed on the holdout, but its universe was today's ~1,165 largest companies, which can flatter a growth sort.
+Retest with **identical rules** on a wide universe:
+
+- **Universe:** every operating company in SEC `company_tickers.json` (~8,000; same ticker filter as v2) that has XBRL revenue
+  facts and UW daily prices. Eligibility at each month-end is the same price ≥ $5 and 50-day dollar volume ≥ $20M filter
+  (the SIC check is replaced by "has XBRL revenue", so funds/ETFs stay out).
+- The median benchmark, momentum and random draws all use the wide eligible set.
+- Dev 2023-03 → 2024-12 and holdout 2025-01 → 2026-03, each run once, same three pass criteria.
+- **PASS = the holdout passes again on the wide universe.** If it fails, v5 is logged as a survivorship artifact.
+- Remaining bias: companies delisted before today are still missing (no ticker in today's SEC list).
