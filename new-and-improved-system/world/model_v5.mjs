@@ -10,8 +10,9 @@ import { TAGS } from './facts_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_v5');
-const HOLD = process.argv.includes('--holdout'), WIDE = process.argv.includes('--wide'), [A, Bm] = HOLD ? ['2025-01', '2026-03'] : ['2023-03', '2024-12'];
-const TAG = (WIDE ? 'wide_' : '') + (HOLD ? 'holdout' : 'dev'); // --wide = DESIGN_v5 addendum: all SEC operating companies with XBRL revenue
+const HIST = process.argv.includes('--hist'), HOLD = HIST || process.argv.includes('--holdout'), WIDE = HIST || process.argv.includes('--wide');
+const [A, Bm] = HIST ? ['2012-01', '2022-12'] : HOLD ? ['2025-01', '2026-03'] : ['2023-03', '2024-12']; // --hist = DESIGN_v5 addendum 2 (2012–2022, run once)
+const TAG = HIST ? 'hist' : (WIDE ? 'wide_' : '') + (HOLD ? 'holdout' : 'dev'); // --wide = DESIGN_v5 addendum: all SEC operating companies with XBRL revenue
 if (HOLD && fs.existsSync(path.join(RES, TAG + '.json')) && !process.argv.includes('--force')) { console.error('holdout already run'); process.exit(1); }
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
 const ymd = (t) => new Date((t + 12 * 3600) * 1000).toISOString().slice(0, 10), addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10);
@@ -20,7 +21,7 @@ const TOP = 20, FWD = 182, DRAWS = 200;
 
 // ---------- prices / eligibility (same rules as v1–v4) ----------
 const U = WIDE ? universeV2(1e9) : worldUniverse(), P = new Map();
-for (const { t } of U) { let b = rd(path.join(C, 'wdaily', `${t}.json`), []); if (!b.length) b = (rd(path.join(C, 'daily', `${t}.json`), []) || []).map((x) => ({ d: ymd(x.t), c: x.c, v: x.v }));
+for (const { t } of U) { let b = rd(path.join(C, 'wdaily', `${t}.json`), []); if (HIST) b = [...rd(path.join(C, 'wdaily_hist', `${t}.json`), []), ...b]; if (!b.length) b = (rd(path.join(C, 'daily', `${t}.json`), []) || []).map((x) => ({ d: ymd(x.t), c: x.c, v: x.v }));
   if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0) }); }
 const META = new Map([...P.keys()].map((t) => [t, WIDE ? { sic: !!rd(path.join(C, 'edgar', 'facts', `${t}.json`), {}).rev } : rd(path.join(C, 'edgar', 'meta', `${t}.json`), null)]));
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
@@ -74,14 +75,14 @@ for (const mo of monthsBetween(A, Bm)) { const M = me(mo), { elig, scored } = ra
 function pcF(x) { return x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}%`; }
 const avg = (k) => { const a = res.map((r) => r[k]).filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; };
 const rdm = drawM.map((d) => { const a = d.filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; }).sort((a, b) => a - b), p95 = rdm[Math.floor(DRAWS * 0.95)];
-const out = [`# World model v5 — reported-numbers bottleneck · ${WIDE ? 'WIDE UNIVERSE · ' : ''}${HOLD ? 'HOLDOUT' : 'DEVELOPMENT'} ${A} → ${Bm} (${res.length} month-ends)\n`,
+const out = [`# World model v5 — reported-numbers bottleneck · ${WIDE ? 'WIDE UNIVERSE · ' : ''}${HIST ? '2012–2022 OUT-OF-SAMPLE' : HOLD ? 'HOLDOUT' : 'DEVELOPMENT'} ${A} → ${Bm} (${res.length} month-ends)\n`,
   '| | mean 6m excess vs median | months positive |', '|---|---|---|'];
 for (const [k, nm] of [['A', 'A: top 20 by growth + acceleration + margin expansion'], ['B', 'B: same, positive momentum only'], ['mom', 'momentum 12-1 top 20']]) { const a = res.map((r) => r[k]).filter((x) => x != null); out.push(`| ${nm} | **${pcF(avg(k))}** | ${a.filter((x) => x > 0).length}/${a.length} |`); }
 out.push(`| random 20 (${DRAWS} draws) | median ${pcF(rdm[DRAWS >> 1])} · 95th pct ${pcF(p95)} | |`);
 for (const k of ['A', 'B']) { const a = res.map((r) => r[k]).filter((x) => x != null), pos = a.filter((x) => x > 0).length / a.length, m = avg(k);
   const c = [m > avg('mom'), m > p95, pos >= 0.6]; out.push(`\n**${k} pass${HOLD ? '' : ' (informational on dev)'}:** beats momentum ${c[0] ? 'PASS' : 'FAIL'} · beats random 95th ${c[1] ? 'PASS' : 'FAIL'} · ≥60% months positive ${c[2] ? 'PASS' : 'FAIL'} → **${c.every(Boolean) ? 'PASS' : 'FAIL'}**`); }
 out.push('\n| month | A excess | B excess | momentum | A top 8 |\n|---|---|---|---|---|'); for (const r of res) out.push(`| ${r.mo} | ${pcF(r.A)} | ${pcF(r.B)} | ${pcF(r.mom)} | ${r.picksA.slice(0, 8).map((x) => x.t).join(' ')} |`);
-if (HOLD) { // early flags across all months 2023-03 → 2026-09 (ranks only), and the live list
+if (HOLD && !HIST) { // early flags across all months 2023-03 → 2026-09 (ranks only), and the live list
   const W = ['MU', 'SNDK', 'WDC', 'STX', 'IREN', 'LITE', 'CLS', 'VRT', 'NVDA', 'APP', 'PLTR', 'CORZ', 'COHR'], first = {};
   for (const mo of monthsBetween('2023-03', '2026-09')) { const { scored } = rank(me(mo)); scored.forEach((x, i) => { for (const [n, lim] of [['top20', 20], ['top50', 50]]) if (i < lim && W.includes(x.t)) (first[x.t] ??= {})[n] ??= mo; }); }
   out.push('\n**Early flags (first month in top 20 / top 50):** ' + W.map((t) => `${t} ${first[t]?.top20 ?? 'never'} / ${first[t]?.top50 ?? 'never'}`).join(' · '));
