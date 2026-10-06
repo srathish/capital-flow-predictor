@@ -64,3 +64,21 @@ If 1 fails, the connections are not real and 2–4 are not judged.
 - Survivorship: delisted companies are missing (worse in 2012–2018).
 - Quarterly filings limit how fast company nodes move; monthly updates come from outside nodes and new filings.
 - A brand-new theme with no history has no learned connections. That stays the thesis engine's job.
+
+## Amendment 1 (2026-10-06) — industry nodes instead of company pairs (before any 2019+ result was computed)
+
+**Why:** the smoke test on 2018 (training years only, `--smoke`) learned connections like MU ← Capital One and NVDA ← Republic
+Services. With ~28 quarters per company and ~1,300 candidate connections each, chance correlations pass the stability check.
+
+**Change:**
+- **Hub nodes are replaced by industry nodes:** 3-digit SIC groups with ≥ 5 companies (153 groups; `world/sic_collect.mjs`).
+  An industry node's value for a quarter = the median revenue YoY growth of its members whose numbers were public by that date
+  (at least 3 members).
+- **Connections are learned per target industry, not per company:** target = the industry's median revenue acceleration;
+  candidates = the root node, the outside nodes, and every other industry node (lags 1–4).
+- **Stricter evidence:** keep a connection only if |t| ≥ 4 over the full window (n = quarters), the same sign in the first
+  two-thirds and the last third, and the last third at least half as strong. At most 5 per industry. Weight = r × n / (n + 12).
+- **Own-company nodes** (capex, inventory, backlog growth): learned per target industry from pooled company-quarters, with the
+  t-statistic deflated by √3 for overlap between companies; same keep rules.
+- A company's forecast = its industry's connections + its own-node connections. Everything else (walk-forward, portfolio,
+  benchmarks, pass criteria) is unchanged.
