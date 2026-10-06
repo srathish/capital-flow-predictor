@@ -1,0 +1,37 @@
+# World model v5 — reported-numbers bottleneck · DEVELOPMENT 2023-03 → 2024-12 (22 month-ends)
+
+| | mean 6m excess vs median | months positive |
+|---|---|---|
+| A: top 20 by growth + acceleration + margin expansion | **+10.7%** | 19/22 |
+| B: same, positive momentum only | **+5.2%** | 14/22 |
+| momentum 12-1 top 20 | **+13.3%** | 13/22 |
+| random 20 (200 draws) | median +2.3% · 95th pct +5.1% | |
+
+**A pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
+
+**B pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
+
+| month | A excess | B excess | momentum | A top 8 |
+|---|---|---|---|---|
+| 2023-03 | +0.5% | -22.3% | -19.3% | LCID IRM ALB DKNG BA PLUG IR ELF |
+| 2023-04 | +5.6% | -15.5% | -13.1% | IRM ALB FSLR VRT PLUG IR ROK ELF |
+| 2023-05 | +3.9% | -30.8% | -18.7% | PEG FSLR ELF RCL VRT ROK APP BE |
+| 2023-06 | +5.0% | -2.7% | -10.6% | PEG FSLR ELF RCL VRT ROK APP BE |
+| 2023-07 | +4.6% | -9.9% | -12.1% | PEG ELF VRT ROK APP BE TOST PATH |
+| 2023-08 | +11.9% | +4.4% | -5.6% | NVDA U DKNG MKSI WWD CAT PATH MOD |
+| 2023-09 | +12.5% | +6.6% | -2.6% | NVAX NVDA MDB NTNX U DKNG MKSI WWD |
+| 2023-10 | +15.6% | +18.6% | +49.5% | NVAX UEC NVDA MDB NTNX U DKNG MKSI |
+| 2023-11 | +20.7% | +21.9% | +55.9% | UEC NVDA IRM APP ALNY NTNX DECK MDB |
+| 2023-12 | +30.0% | +28.8% | +36.5% | NVDA IRM ALNY APP DECK SCCO LLY MELI |
+| 2024-01 | +13.1% | +8.2% | +35.5% | NVDA IRM APP ALNY DECK SCCO LLY MELI |
+| 2024-02 | -3.5% | +6.2% | -8.8% | NVDA APP NXT CLX ELF WWD TEVA WES |
+| 2024-03 | -5.6% | -2.0% | +4.6% | NVDA MU APP NXT CLX ELF WWD IOT |
+| 2024-04 | +6.4% | +6.3% | +35.2% | MU NVDA APP NXT WDC NEM ELF WWD |
+| 2024-05 | +23.8% | +25.3% | +52.4% | BBIO MU FSLR WDC APP IESC CVNA NEM |
+| 2024-06 | +19.2% | +24.0% | +31.1% | BBIO MU FSLR CRDO WDC APP IESC NEM |
+| 2024-07 | +54.0% | +34.5% | +43.9% | BBIO MU RKLB CRDO NEM WDC APP VEEV |
+| 2024-08 | +7.5% | +4.8% | +22.8% | ALNY MU CRDO SCCO NEM WDC OKE RGLD |
+| 2024-09 | -3.1% | -2.4% | -5.0% | ALNY MU SCCO NEM WDC OKE RGLD NXT |
+| 2024-10 | +6.1% | +4.3% | +2.8% | STX MU HALO NEM EQT CLX NXT RMBS |
+| 2024-11 | +1.7% | -1.0% | +0.2% | HUT STX MU PFE RGLD HALO NEM EQT |
+| 2024-12 | +5.7% | +6.8% | +17.7% | HUT STX PFE HALO RGLD NEM EQT CLX |
