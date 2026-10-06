@@ -85,3 +85,18 @@ v5 has only been seen in 2023–2026, a bull market led by its own theme. This t
   pick, top-5 names' share).
 - **Bias, larger than in 2023–26:** companies delisted or acquired before today (e.g., the old SanDisk, bought in 2016) have no
   current ticker, so they are missing. This mostly removes failures, so read a pass as an upper bound.
+
+## Addendum 2026-10-06 (3) — Model C, from the winners-vs-losers study (locked before the 2012–2022 run)
+
+`world/v5_winners.mjs` (2023-03 → 2026-03 picks, seen data) found three pick-time traits that separated winners from losers:
+the stock was already in an uptrend (losers below the 200-day average: median −9%, 39% beat the typical stock), and the margin
+"expansion" was not a recovery from losses (gross margin negative a year earlier: median −14%, 25% beat). Growth speed and
+margin-change size did not separate them.
+
+**Model C** = Model A's score, top 20 among stocks that also have, at the month-end:
+1. positive 12-1 momentum;
+2. price above its 200-day average;
+3. gross margin a year earlier (q−4) ≥ 0.
+
+Tested once on 2012–2022 with the same three pass criteria, **plus: C must beat A** there. C was designed on 2023–26 data, so
+only the 2012–2022 result counts.

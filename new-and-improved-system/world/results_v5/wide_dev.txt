@@ -4,12 +4,15 @@
 |---|---|---|
 | A: top 20 by growth + acceleration + margin expansion | **+7.3%** | 15/22 |
 | B: same, positive momentum only | **+10.2%** | 12/15 |
+| C: A + uptrend (momentum > 0, above 200-day) + margin was positive a year ago | **+12.7%** | 12/15 |
 | momentum 12-1 top 20 | **+13.1%** | 10/15 |
 | random 20 (200 draws) | median +1.2% · 95th pct +3.6% | |
 
 **A pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
 
 **B pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
+
+**C pass (informational on dev):** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS · beats A PASS → **FAIL**
 
 | month | A excess | B excess | momentum | A top 8 |
 |---|---|---|---|---|

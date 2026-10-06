@@ -27,6 +27,7 @@ const META = new Map([...P.keys()].map((t) => [t, WIDE ? { sic: !!rd(path.join(C
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
 const fwdFrom = (t, d) => { const p = P.get(t); if (!p) return null; const j = at(t, d) + 1, k = at(t, addD(d, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(d, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
+const above200 = (t, d) => { const p = P.get(t), j = at(t, d); if (j < 199) return false; let s = 0; for (let k = j - 199; k <= j; k++) s += p.c[k]; return p.c[j] > s / 200; }; // Model C (addendum 3)
 const mom = (t, d) => { const p = P.get(t), i = at(t, addD(d, -365)), j = at(t, addD(d, -30)); return i >= 0 && j > i ? p.c[j] / p.c[i] - 1 : null; };
 
 // ---------- point-in-time quarterly series from XBRL ----------
@@ -52,7 +53,7 @@ function features(t, M) { const rows = (Q.get(t) ?? []).filter((x) => x.f <= M);
   const find = (ref, lo, hi) => rows.filter((x) => { const d = days(x.e, ref.e); return d >= lo && d <= hi; }).at(-1);
   const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385); if (!q1 || !q4) return null; const q5 = find(q1, 345, 385); if (!q5) return null;
   if (!(q4.rev > 0 && q5.rev > 0) || q0.gm == null || q4.gm == null) return null;
-  const g0 = q0.rev / q4.rev - 1, g1 = q1.rev / q5.rev - 1; return { g0, accel: g0 - g1, dGM: q0.gm - q4.gm, gm: q0.gm, qe: q0.e }; }
+  const g0 = q0.rev / q4.rev - 1, g1 = q1.rev / q5.rev - 1; return { g0, accel: g0 - g1, dGM: q0.gm - q4.gm, gm: q0.gm, gm4: q4.gm, qe: q0.e }; }
 const pctRank = (arr) => { const s = [...arr].sort((a, b) => a - b); return (x) => { let lo = 0, hi = s.length; while (lo < hi) { const m = (lo + hi) >> 1; if (s[m] < x) lo = m + 1; else hi = m; } return lo / (s.length - 1 || 1); }; };
 function rank(M) { const elig = [...P.keys()].filter((t) => eligibleAt(t, M)), F = elig.map((t) => [t, features(t, M)]).filter(([, f]) => f);
   const r = ['g0', 'accel', 'dGM'].map((k) => pctRank(F.map(([, f]) => f[k])));
@@ -68,19 +69,20 @@ for (const mo of monthsBetween(A, Bm)) { const M = me(mo), { elig, scored } = ra
   const fw = new Map(elig.map((t) => [t, fwdFrom(t, M)])), v = [...fw.values()].filter((x) => x != null).sort((a, b) => a - b), med = v[v.length >> 1];
   const ex = (ts) => { const a = ts.map((t) => fw.get(t)).filter((x) => x != null); return a.length ? a.reduce((s, x) => s + x, 0) / a.length - med : null; };
   const pa = scored.slice(0, TOP).map((x) => x.t), pb = scored.filter((x) => (mom(x.t, M) ?? -1) > 0).slice(0, TOP).map((x) => x.t);
+  const pc3 = scored.filter((x) => (mom(x.t, M) ?? -1) > 0 && above200(x.t, M) && x.gm4 >= 0).slice(0, TOP).map((x) => x.t);
   const pm = elig.map((t) => [t, mom(t, M)]).filter(([, m]) => m != null).sort((a, b) => b[1] - a[1]).slice(0, TOP).map(([t]) => t);
   const pool = elig.filter((t) => fw.get(t) != null); for (const d of drawM) { const s = new Set(); while (s.size < TOP && s.size < pool.length) s.add(pool[Math.floor(rnd() * pool.length)]); d.push(ex([...s])); }
-  const r = { mo, M, n: scored.length, eligN: elig.length, A: ex(pa), B: ex(pb), mom: ex(pm), picksA: scored.slice(0, TOP).map((x) => ({ t: x.t, s: +x.score.toFixed(3), g0: +x.g0.toFixed(2), dGM: +x.dGM.toFixed(3) })), picksB: pb };
-  res.push(r); console.error(`${mo} scored ${r.n}/${r.eligN} · A ${pcF(r.A)} · B ${pcF(r.B)} · mom ${pcF(r.mom)} · ${pa.slice(0, 8).join(' ')}`); }
+  const r = { mo, M, n: scored.length, eligN: elig.length, A: ex(pa), B: ex(pb), C: ex(pc3), mom: ex(pm), picksA: scored.slice(0, TOP).map((x) => ({ t: x.t, s: +x.score.toFixed(3), g0: +x.g0.toFixed(2), dGM: +x.dGM.toFixed(3) })), picksB: pb, picksC: pc3 };
+  res.push(r); console.error(`${mo} scored ${r.n}/${r.eligN} · A ${pcF(r.A)} · B ${pcF(r.B)} · C ${pcF(r.C)} · mom ${pcF(r.mom)} · ${pa.slice(0, 8).join(' ')}`); }
 function pcF(x) { return x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}%`; }
 const avg = (k) => { const a = res.map((r) => r[k]).filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; };
 const rdm = drawM.map((d) => { const a = d.filter((x) => x != null); return a.reduce((s, x) => s + x, 0) / a.length; }).sort((a, b) => a - b), p95 = rdm[Math.floor(DRAWS * 0.95)];
 const out = [`# World model v5 — reported-numbers bottleneck · ${WIDE ? 'WIDE UNIVERSE · ' : ''}${HIST ? '2012–2022 OUT-OF-SAMPLE' : HOLD ? 'HOLDOUT' : 'DEVELOPMENT'} ${A} → ${Bm} (${res.length} month-ends)\n`,
   '| | mean 6m excess vs median | months positive |', '|---|---|---|'];
-for (const [k, nm] of [['A', 'A: top 20 by growth + acceleration + margin expansion'], ['B', 'B: same, positive momentum only'], ['mom', 'momentum 12-1 top 20']]) { const a = res.map((r) => r[k]).filter((x) => x != null); out.push(`| ${nm} | **${pcF(avg(k))}** | ${a.filter((x) => x > 0).length}/${a.length} |`); }
+for (const [k, nm] of [['A', 'A: top 20 by growth + acceleration + margin expansion'], ['B', 'B: same, positive momentum only'], ['C', 'C: A + uptrend (momentum > 0, above 200-day) + margin was positive a year ago'], ['mom', 'momentum 12-1 top 20']]) { const a = res.map((r) => r[k]).filter((x) => x != null); out.push(`| ${nm} | **${pcF(avg(k))}** | ${a.filter((x) => x > 0).length}/${a.length} |`); }
 out.push(`| random 20 (${DRAWS} draws) | median ${pcF(rdm[DRAWS >> 1])} · 95th pct ${pcF(p95)} | |`);
-for (const k of ['A', 'B']) { const a = res.map((r) => r[k]).filter((x) => x != null), pos = a.filter((x) => x > 0).length / a.length, m = avg(k);
-  const c = [m > avg('mom'), m > p95, pos >= 0.6]; out.push(`\n**${k} pass${HOLD ? '' : ' (informational on dev)'}:** beats momentum ${c[0] ? 'PASS' : 'FAIL'} · beats random 95th ${c[1] ? 'PASS' : 'FAIL'} · ≥60% months positive ${c[2] ? 'PASS' : 'FAIL'} → **${c.every(Boolean) ? 'PASS' : 'FAIL'}**`); }
+for (const k of ['A', 'B', 'C']) { const a = res.map((r) => r[k]).filter((x) => x != null), pos = a.filter((x) => x > 0).length / a.length, m = avg(k);
+  const c = [m > avg('mom'), m > p95, pos >= 0.6, ...(k === 'C' ? [m > avg('A')] : [])]; out.push(`\n**${k} pass${HOLD ? '' : ' (informational on dev)'}:** beats momentum ${c[0] ? 'PASS' : 'FAIL'} · beats random 95th ${c[1] ? 'PASS' : 'FAIL'} · ≥60% months positive ${c[2] ? 'PASS' : 'FAIL'}${k === 'C' ? ` · beats A ${c[3] ? 'PASS' : 'FAIL'}` : ''} → **${c.every(Boolean) ? 'PASS' : 'FAIL'}**`); }
 out.push('\n| month | A excess | B excess | momentum | A top 8 |\n|---|---|---|---|---|'); for (const r of res) out.push(`| ${r.mo} | ${pcF(r.A)} | ${pcF(r.B)} | ${pcF(r.mom)} | ${r.picksA.slice(0, 8).map((x) => x.t).join(' ')} |`);
 if (HOLD && !HIST) { // early flags across all months 2023-03 → 2026-09 (ranks only), and the live list
   const W = ['MU', 'SNDK', 'WDC', 'STX', 'IREN', 'LITE', 'CLS', 'VRT', 'NVDA', 'APP', 'PLTR', 'CORZ', 'COHR'], first = {};
