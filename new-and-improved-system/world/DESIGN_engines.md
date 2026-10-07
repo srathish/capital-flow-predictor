@@ -114,3 +114,37 @@ Engines were wired and firing, but four definitions misfired on inspection:
 4. **E3 backlog** — tiny bases produced "+3,157%". The year-earlier backlog value must now be ≥ $50M.
 
 Also: all prices now come from the clean layer (`DATA_FIX_2026-10-06.md`).
+
+## Amendment 5 (2026-10-06, before the real run) — independent-audit fixes + commodity/freight trend sleeve
+
+Independent audit findings fixed (no engine result has been computed):
+1. **Concept membership:** every mention date is kept; a company belongs to a concept at M if it mentioned it in any 10-K/10-Q
+   filed in [M−730, M] (was: first-ever mention only, which dropped MARA/RIOT/CLSK from bitcoin by 2024). **10-K/10-Q only** in
+   both periods (the 2022+ file also has 8-Ks; they are dropped so build and test membership are equally dense). The run
+   asserts the 2014–2021 concept file exists.
+2. **E10 listings:** a ticker counts as newly listed only if its first price bar is not a data-start cluster date (a date on
+   which > 20 tickers' histories begin) and it is within 400 days of its first SEC financial filing. Spin-offs additionally
+   need the Form 10 filed in [first bar − 365, first bar + 60] days.
+3. **Price gaps:** a stock is not eligible at M if its price history has a gap of > 7 calendar days within [M − 380, M]; any
+   forward or mover return spanning a gap is dropped.
+4. **Precision** = mean 6-month return of flagged names minus the **mean** of all eligible names (was median; skew made random
+   lists look profitable).
+5. **Quarantine is point-in-time:** eligibility at M is blocked only for split-like jumps at or before M (window [jump, jump +
+   400 days]); forward and mover returns that cross a jump are dropped; in the build phase only jumps ≤ 2022-12-31 are known.
+   The same change is applied to every verdict script (`prices_clean.mjs`), which are re-run again.
+6. **E3** deferred revenue: one tag per period (ContractWithCustomerLiabilityCurrent, else DeferredRevenueCurrent), earliest filing.
+7. **E12** windows use calendar days (last 30 days vs the 180 days before them); a baseline of ≥ 10 views a day is required
+   (previously implicit).
+8. Flag window starts with the July month-end of Y−1, as written.
+9. E9 note: the S&P bar is applied by calendar year (mid-year changes not modeled).
+
+**E2c — commodity / freight / crypto trend sleeve** (a separate small portfolio, not a stock-mover engine):
+- Universe at each month-end = every commodity, freight and crypto futures ETF in a fixed category list that had ≥ 13 months of
+  prices then: GLD, SLV, PPLT, PALL, CPER, USO, BNO, UNG, UGA, DBA, CORN, WEAT, SOYB, CANE, DBC, URA, LIT, REMX, BDRY, BWET,
+  BITO, plus bitcoin (FRED). (Freight ETFs enter when they exist: BDRY 2018, BWET 2023.)
+- Rule (textbook time-series momentum, not tuned): hold each asset whose 12-month return > 0 **and** price > its 200-day average,
+  equal weight across held assets, checked monthly; cash otherwise.
+- Build/report 2011–2022; 2023–2026 reported as a partly-seen check (the gold/silver/tanker moves were discussed before this
+  was written). Judged on return, drawdown and Sharpe vs equal-weight buy-and-hold of the same universe.
+- **E2b gains a freight group:** when BDRY or BWET is up ≥ the E2b threshold over 6 months, flag shipping companies (SIC 4400,
+  4412, 4424) ranked by 3-month momentum.
