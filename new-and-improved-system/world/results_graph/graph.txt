@@ -1,0 +1,50 @@
+# Node graph (amendment 2: BEA-linked, Newey-West, placebo, 139 outside nodes incl. 18 Taiwan, 70 trade) · test months 2019-01 → 2026-03
+
+Placebo (2019 cut-off, 20 shuffles): 541.0 connections on average vs 539 real → NOT ≥ 2× placebo
+
+Learned connections per year: 2019 539 (118 industries) · 2020 585 (130 industries) · 2021 515 (125 industries) · 2022 619 (134 industries) · 2023 641 (141 industries) · 2024 662 (143 industries) · 2025 638 (142 industries) · 2026 648 (142 industries)
+
+## 1. Does it forecast growth? (rank correlation of predicted vs actual next-quarter revenue acceleration)
+
+| | graph IC | persistence IC | industry-baseline IC (graph IC on same names) | months graph IC > 0 |
+|---|---|---|---|---|
+| 2019–2026 | **0.090** | 0.004 | 0.035 (0.090) | 92% of 87 |
+| 2019–2022 (clean) | **0.093** | -0.008 | 0.014 (0.092) | 92% of 48 |
+
+## 2–4. Buy & hold (top 20, hold while in top 60): average monthly return minus the typical stock
+
+| | 2019–2026 | 2019–2022 (clean) | 2023–2026 |
+|---|---|---|---|
+| **Node graph** | +0.30% | +0.44% | +0.12% |
+| Momentum | +1.51% | -0.12% | +3.56% |
+| v5 bottleneck (A) | +1.37% | +0.80% | +2.09% |
+| Random, 95th pct of 200 | +0.92% | | |
+| Node graph, $100M+/day names only | +0.28% | +0.38% | +0.14% |
+| Node graph, smaller names | +0.04% | +0.57% | -0.62% |
+| Momentum, $100M+/day / smaller | +2.00% / +0.31% | | |
+
+**Pass:** forecasts growth FAIL · beats momentum FAIL · beats v5 FAIL · beats random FAIL → **FAIL (connections not real; 2–4 not judged)**
+
+## Year by year (compounded)
+
+| Year | Node graph | Momentum | v5 | Typical stock | Most-held names |
+|---|---|---|---|---|---|
+| 2019 | **+13%** | +24% | +36% | +16% | FFIV, NUE, WOLF, FTNT, OMCL, BBWI, DRI, TEL |
+| 2020 | **+25%** | +137% | +66% | +17% | ANET, CSCO, DELL, FFIV, FTNT, HPE, HPQ, NTAP |
+| 2021 | **+1%** | -48% | -14% | +4% | APLE, BXP, CCI, ADSK, APPS, ASAN, CUBE, LAMR |
+| 2022 | **+13%** | -32% | -6% | -4% | KR, COST, MLM, AMR, VMC, FIVE, OLLI, WMT |
+| 2023 | **+4%** | +18% | +12% | +4% | JEF, CNP, NRG, OGE, SEIC, AZO, GO, PNW |
+| 2024 | **+11%** | +73% | +45% | +8% | ARRY, SHLS, OLED, MRVL, WMS, AMAT, SWKS, MPWR |
+| 2025 | **-2%** | +53% | +54% | +4% | SSD, SWK, SGI, ALSN, BLBD, GNTX, ADNT, TNK |
+| 2026 | **-3%** | +7% | -10% | -7% | ADNT, ATMU, BLBD, GNTX, FTNT, ANET, CSCO, FFIV |
+
+## Learned connections, latest model (industry ← what it follows, lag in quarters, weight)
+
+- **MU** (SIC 367x: Semiconductors & Related Devices) ← trade:imports:9001 (1q, -0.35), trade:exports:8418 (1q, -0.51), trade:imports:8411 (1q, -0.52), trade:exports:8544 (1q, -0.48), trade:exports:8415 (1q, -0.41), own:inventory (2q, -0.11)
+- **NVDA** (SIC 367x: Semiconductors & Related Devices) ← trade:imports:9001 (1q, -0.35), trade:exports:8418 (1q, -0.51), trade:imports:8411 (1q, -0.52), trade:exports:8544 (1q, -0.48), trade:exports:8415 (1q, -0.41), own:inventory (2q, -0.11)
+- **VRT** (SIC 367x: Semiconductors & Related Devices) ← trade:imports:9001 (1q, -0.35), trade:exports:8418 (1q, -0.51), trade:imports:8411 (1q, -0.52), trade:exports:8544 (1q, -0.48), trade:exports:8415 (1q, -0.41), own:inventory (2q, -0.11)
+- **LITE** (SIC 366x: Radio & Tv Broadcasting & Communications Equipment) ← trade:imports:8703 (1q, -0.34), SIC 354x: Metalworkg Machinery & Equipment (1q, -0.41), trade:imports:8537 (1q, -0.37), trade:imports:8708 (1q, -0.33), SIC 351x: Engines & Turbines (1q, -0.40)
+- **CEG** (SIC 491x: Electric Services) ← SIC 170x: Construction - Special Trade Contractors (2q, -0.23), SIC 493x: Electric & Other Services Combined (4q, -0.36), APU000072610 (2q, -0.31), trade:imports:2804 (4q, -0.32), TSIFRGHT (2q, -0.22)
+- **WDC** (SIC 357x: Computer Peripheral Equipment, NEC) ← trade:exports:8418 (2q, -0.55), trade:exports:8418 (1q, -0.42), trade:exports:8415 (1q, -0.36), SIC 506x: Wholesale-Electronic Parts & Equipment, NEC (2q, -0.35), trade:exports:8536 (2q, -0.46)
+- **AMD** (SIC 367x: Semiconductors & Related Devices) ← trade:imports:9001 (1q, -0.35), trade:exports:8418 (1q, -0.51), trade:imports:8411 (1q, -0.52), trade:exports:8544 (1q, -0.48), trade:exports:8415 (1q, -0.41), own:inventory (2q, -0.11)
+- **BE** (SIC 362x: Electrical Industrial Apparatus) ← trade:exports:8708 (1q, -0.24), trade:imports:8703 (1q, -0.23), trade:imports:8708 (1q, -0.24), trade:imports:8544 (1q, -0.24), trade:exports:8415 (1q, -0.34)

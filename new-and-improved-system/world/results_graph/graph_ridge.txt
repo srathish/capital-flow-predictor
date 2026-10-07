@@ -1,0 +1,50 @@
+# Node graph (amendment 2: BEA-linked, Newey-West, placebo, 139 outside nodes incl. 18 Taiwan, 70 trade) · test months 2019-01 → 2026-03
+
+Ridge version (amendment 3). Placebo: 2019–2022 mean IC of 20 timing-scrambled models — 95th pct -0.001 (all: -0.045 -0.020 -0.032 -0.055 -0.050 -0.029 -0.051 -0.018 -0.060 -0.071 -0.053 -0.026 -0.012 -0.029 -0.072 -0.037 -0.043 -0.071 -0.001 -0.046) vs real 0.155 → beats placebo
+
+Learned connections per year: 2019 38308 (126 industries) · 2020 40144 (134 industries) · 2021 40732 (136 industries) · 2022 41324 (140 industries) · 2023 41380 (146 industries) · 2024 41300 (148 industries) · 2025 41472 (150 industries) · 2026 42064 (152 industries)
+
+## 1. Does it forecast growth? (rank correlation of predicted vs actual next-quarter revenue acceleration)
+
+| | graph IC | persistence IC | industry-baseline IC (graph IC on same names) | months graph IC > 0 |
+|---|---|---|---|---|
+| 2019–2026 | **0.153** | 0.004 | 0.036 (0.154) | 100% of 87 |
+| 2019–2022 (clean) | **0.155** | -0.011 | 0.015 (0.160) | 100% of 48 |
+
+## 2–4. Buy & hold (top 20, hold while in top 60): average monthly return minus the typical stock
+
+| | 2019–2026 | 2019–2022 (clean) | 2023–2026 |
+|---|---|---|---|
+| **Node graph** | +0.69% | +0.41% | +1.03% |
+| Momentum | +1.51% | -0.12% | +3.56% |
+| v5 bottleneck (A) | +1.37% | +0.80% | +2.09% |
+| Random, 95th pct of 200 | +0.92% | | |
+| Node graph, $100M+/day names only | +0.73% | +0.54% | +0.96% |
+| Node graph, smaller names | +0.29% | +0.16% | +0.44% |
+| Momentum, $100M+/day / smaller | +2.00% / +0.31% | | |
+
+**Pass:** forecasts growth PASS · beats momentum FAIL · beats v5 FAIL · beats random FAIL → **FAIL**
+
+## Year by year (compounded)
+
+| Year | Node graph | Momentum | v5 | Typical stock | Most-held names |
+|---|---|---|---|---|---|
+| 2019 | **+5%** | +24% | +36% | +16% | OSK, TSLA, GM, FFIV, TXT, MAT, DAN, BWA |
+| 2020 | **+10%** | +137% | +66% | +17% | PAA, LRCX, HUBB, UAA, PAGP, RS, HSIC, ACMR |
+| 2021 | **+28%** | -48% | -14% | +4% | HP, LNG, POOL, PLCE, BC, ET, ADNT, F |
+| 2022 | **-2%** | -32% | -6% | -4% | ACI, UAA, MO, LMT, GNTX, HEI, AZO, CBOE |
+| 2023 | **+5%** | +18% | +12% | +4% | LH, VVV, SAM, TSLA, PGNY, DXCM, ROP, MELI |
+| 2024 | **+20%** | +73% | +45% | +8% | AYI, AMZN, DELL, CDW, RPM, CVNA, HELE, HAS |
+| 2025 | **+25%** | +53% | +54% | +4% | HAS, THO, EL, URBN, GE, LCII, LEA, TSLA |
+| 2026 | **+1%** | +7% | -10% | -7% | WST, AGCO, SONO, DAN, GGG, NUTX, IPGP, PLPC |
+
+## Learned connections, latest model (industry ← what it follows, lag in quarters, weight)
+
+- **MU** (SIC 367x: Semiconductors & Related Devices) ← CFNAI (4q, -0.002), TSIFRGHT (3q, -0.002), XTEXVA01JPM667S (2q, -0.002), TSIFRGHT (2q, -0.002), CAPUTLG3344S (2q, -0.001), IPG3344S (2q, -0.001)
+- **NVDA** (SIC 367x: Semiconductors & Related Devices) ← CFNAI (4q, -0.002), TSIFRGHT (3q, -0.002), XTEXVA01JPM667S (2q, -0.002), TSIFRGHT (2q, -0.002), CAPUTLG3344S (2q, -0.001), IPG3344S (2q, -0.001)
+- **VRT** (SIC 367x: Semiconductors & Related Devices) ← CFNAI (4q, -0.002), TSIFRGHT (3q, -0.002), XTEXVA01JPM667S (2q, -0.002), TSIFRGHT (2q, -0.002), CAPUTLG3344S (2q, -0.001), IPG3344S (2q, -0.001)
+- **LITE** (SIC 366x: Radio & Tv Broadcasting & Communications Equipment) ← ADEFNO (4q, -0.002), A34SNO (4q, -0.002), A33SNO (4q, -0.001), TLCOMCONS (1q, -0.001), TSIFRGHT (4q, -0.001), NEWORDER (4q, -0.001)
+- **CEG** (SIC 491x: Electric Services) ← SIC 170x: Construction - Special Trade Contractors (2q, -0.002), XTEXVA01CNM667S (4q, -0.002), XTEXVA01CNM667S (1q, -0.001), NOFDFSA066MSFRBPHI (3q, +0.001), IPG2211S (1q, -0.001), SIC 512x: Wholesale-Drugs, Proprietaries & Druggists' Sundries (3q, -0.001)
+- **WDC** (SIC 357x: Computer Peripheral Equipment, NEC) ← ADEFNO (1q, -0.001), trade:imports:8486 (1q, +0.001), CFNAI (3q, -0.001), SIC 874x: Services-Management Consulting Services (4q, -0.001), trade:exports:8535 (2q, -0.001), SIC 481x: Telephone Communications (No Radiotelephone) (1q, -0.001)
+- **AMD** (SIC 367x: Semiconductors & Related Devices) ← CFNAI (4q, -0.002), TSIFRGHT (3q, -0.002), XTEXVA01JPM667S (2q, -0.002), TSIFRGHT (2q, -0.002), CAPUTLG3344S (2q, -0.001), IPG3344S (2q, -0.001)
+- **BE** (SIC 362x: Electrical Industrial Apparatus) ← trade:imports:8486 (3q, -0.003), SIC 481x: Telephone Communications (No Radiotelephone) (4q, +0.003), trade:imports:8486 (2q, +0.003), NOFDFSA066MSFRBPHI (2q, +0.002), trade:exports:8535 (3q, -0.002), trade:imports:8471:KR (3q, +0.002)
