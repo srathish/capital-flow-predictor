@@ -1,0 +1,149 @@
+# Multi-engine mover catcher — results (DESIGN_engines.md)
+
+## Settings chosen on 2015–2022 only
+
+| engine | chosen setting | movers caught early 2015–22 | same-size random lists (mean / 95th) | lift | excess of flagged names | avg list size |
+|---|---|---|---|---|---|---|
+| E0 | {"n":20} | 64/400 | 74.1 / 88 | -10.1 | +2.5% | 20 |
+| E0b | none allowed | — | — | — | — | — |
+| E1 | {"k":2,"n":5} | 186/400 | 136.5 / 153 | 49.5 | +2.6% | 40 |
+| E2a | none allowed | — | — | — | — | — |
+| E2b | none allowed | — | — | — | — | — |
+| E3 | {"th":0.4,"n":10} | 20/400 | 21.5 / 27 | -1.5 | +8.3% | 6 |
+| E4 | {"gm":0.2,"g":1} | 0/400 | 1.5 / 4 | -1.5 | +3.8% | 0 |
+| E5 | none allowed | — | — | — | — | — |
+| E7 | {"q":0.05} | 68/400 | 29.1 / 35 | 38.9 | +3.9% | 7 |
+| E8 | {"neg":2,"g":0.3} | 16/400 | 20.4 / 26 | -4.4 | +1.5% | 6 |
+| E9 | {"mult":1} | 35/400 | 46.5 / 55 | -11.5 | +0.5% | 13 |
+| E10 | {"lo":6,"hi":12,"spin":true} | 0/400 | 4.6 / 10 | -4.6 | +2.2% | 1 |
+| E11 | none allowed | — | — | — | — | — |
+| E12 | {"x":5} | 6/400 | 3.0 / 7 | 3.0 | +9.4% | 1 |
+| **combined** | E0 + E12 + E3 + E7 + E4 + E1 + E10 + E8 + E9 | **252/400** | 233.9 / 247 | 18.1 | +2.3% | 85 |
+
+## Blind test: 2025 and 2026 YTD (frozen settings) — and 2023–24 (partly seen)
+
+| | 2025 early (random mean / 95th) | 2026 early (random mean / 95th) | 2025–26 caught at all | excess of flagged names (2024-07 → 2026-03) | avg list size | 2023–24 early (partly seen) |
+|---|---|---|---|---|---|---|
+| E0 bottleneck alone | 10/50 (7.0 / 11) | 9/50 (6.1 / 10) | 27/100 | +20.4% | 20 | 18/100 |
+| E12 | 0/50 (0.7 / 2) | 0/50 (0.3 / 1) | 1/100 | -12.5% | 1 | 3/100 |
+| E3 | 4/50 (4.1 / 7) | 3/50 (3.1 / 5) | 7/100 | +15.6% | 10 | 10/100 |
+| E7 | 14/50 (4.1 / 7) | 10/50 (3.8 / 8) | 66/100 | +6.4% | 11 | 35/100 |
+| E4 | 0/50 (0.3 / 1) | 0/50 (0.0 / 0) | 0/100 | -34.3% | 0 | 2/100 |
+| E1 | 27/50 (14.6 / 18) | 22/50 (10.3 / 14) | 64/100 | +13.5% | 40 | 57/100 |
+| E10 | 0/50 (0.4 / 1) | 1/50 (0.4 / 2) | 1/100 | +135.3% | 1 | 0/100 |
+| E8 | 7/50 (4.2 / 10) | 3/50 (3.4 / 7) | 13/100 | +17.4% | 12 | 2/100 |
+| E9 | 2/50 (5.6 / 10) | 2/50 (4.8 / 8) | 7/100 | +2.7% | 14 | 6/100 |
+| **combined watchlist** | 34/50 (27.4 / 32) | 30/50 (17.9 / 20) | 86/100 | +13.5% | 98 | 73/100 |
+
+**Success test** (combined catches ≥ 25/50 early in both years, beats the 95th percentile of same-size random lists, positive excess): **PASS**
+
+
+## 2025: every top-50 mover — which engine caught it, when, and why
+
+| stock | move | first flagged | move already done | engine and reason |
+|---|---|---|---|---|
+| LITE | +339.1% | 2024-08 | 0% | E1: theme spread: concept "advanced packaging" is lit (≥2 bottleneck leaders mention it); 3-month momentum +32% |
+| VSAT | +304.9% | 2025-08 | 92% | E1: theme spread: industry "Communications Services, NEC" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +270% |
+| BE | +291.2% | 2024-11 | 0% | E1: theme spread: industry "Electrical Industrial Apparatus" is lit (2 bottleneck leaders); 3-month momentum +130% |
+| IREN | +284.6% | 2024-07 | 0% | E1: theme spread: industry "Finance Services" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +132% |
+| AU | +269.5% | — | — | missed |
+| LEU | +264.4% | 2025-02 | 14% | E8: profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +46% |
+| ARWR | +253.1% | 2025-09 | 33% | E7: relative strength: 52-week high, 6-month +171% |
+| ASTS | +244.2% | 2024-07 | 0% | E7: relative strength: 52-week high, 6-month +608% |
+| MU | +239.1% | 2024-07 | 0% | E8: profitability turn: first operating profit after 3 loss quarters of the prior 4; revenue +82% |
+| GH | +234.3% | 2024-07 | 0% | E1: theme spread: concept "data center" is lit (≥2 bottleneck leaders mention it); 3-month momentum +95% |
+| GFI | +230.8% | 2025-08 | 67% | E7: relative strength: 52-week high, 6-month +86% |
+| MP | +223.8% | 2024-09 | 0% | E1: theme spread: concept "deposition" is lit (≥2 bottleneck leaders mention it); 3-month momentum +38% |
+| APLD | +220.9% | 2024-10 | 0% | E1: theme spread: concept "deposition" is lit (≥2 bottleneck leaders mention it); 3-month momentum +59% |
+| CLS | +220.3% | 2025-01 | 15% | E7: relative strength: 52-week high, 6-month +135% |
+| IAG | +219.6% | 2025-11 | 92% | E7: relative strength: 52-week high, 6-month +127% |
+| STX | +219.1% | 2024-08 | 0% | E0: bottleneck: revenue +18% YoY, growth +29 pts, gross margin 32% vs 19% a year ago |
+| CDE | +211.7% | 2025-08 | 61% | E7: relative strength: 52-week high, 6-month +155% |
+| QBTS | +211.3% | 2024-12 | 0% | E1: theme spread: industry "Services-Computer Processing & Data Preparation" is lit (9 bottleneck leaders); 3-month momentum +813% |
+| KGC | +203.8% | 2025-08 | 62% | E7: relative strength: 52-week high, 6-month +95% |
+| HOOD | +203.5% | 2024-11 | 0% | E1: theme spread: industry "Security Brokers, Dealers & Flotation Companies" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +87% |
+| PACS | +192.8% | 2025-11 | 80% | E7: relative strength: 52-week high, 6-month +237% |
+| WDC | +188.9% | 2024-07 | 0% | E0: bottleneck: revenue +23% YoY, growth +26 pts, gross margin 29% vs 10% a year ago |
+| KTOS | +187.8% | 2025-05 | 21% | E1: theme spread: concept "satellite" is lit (≥2 bottleneck leaders mention it); 3-month momentum +40% |
+| UUUU | +183.4% | 2025-07 | 42% | E1: theme spread: concept "deposition" is lit (≥2 bottleneck leaders mention it); 3-month momentum +101% |
+| EQX | +179.7% | — | — | missed |
+| BBIO | +178.8% | 2024-07 | 0% | E0: bottleneck: revenue +11462% YoY, growth +11469 pts, gross margin 100% vs 64% a year ago |
+| CIEN | +175.8% | 2025-09 | 41% | E7: relative strength: 52-week high, 6-month +141% |
+| RKLB | +173.9% | 2024-07 | 0% | E0: bottleneck: revenue +69% YoY, growth +53 pts, gross margin 26% vs 12% a year ago |
+| WBD | +172.7% | 2025-10 | 65% | E7: relative strength: 52-week high, 6-month +163% |
+| NEM | +168.3% | 2024-07 | 0% | E0: bottleneck: revenue +64% YoY, growth +14 pts, gross margin 51% vs 42% a year ago |
+| WOLF | +161.4% | 2025-09 | 204% | E7: relative strength: 52-week high, 6-month +835% |
+| ACMR | +161.3% | 2025-02 | 45% | E1: theme spread: concept "advanced packaging" is lit (≥2 bottleneck leaders mention it); 3-month momentum +41% |
+| PAAS | +156.2% | — | — | missed |
+| DAVE | +154.7% | 2024-11 | 0% | E7: relative strength: 52-week high, 6-month +119% |
+| INSM | +152.1% | 2024-07 | 0% | E1: theme spread: industry "Pharmaceutical Preparations" is lit (3 bottleneck leaders); 3-month momentum +194% |
+| SYM | +150.9% | 2024-12 | 0% | E8: profitability turn: first operating profit after 4 loss quarters of the prior 4; revenue +44% |
+| RNA | +148.0% | 2024-07 | 0% | E1: theme spread: industry "Pharmaceutical Preparations" is lit (3 bottleneck leaders); 3-month momentum +89% |
+| HBM | +145.1% | — | — | missed |
+| HMY | +142.4% | — | — | missed |
+| NXT | +138.5% | 2024-07 | 0% | E0: bottleneck: revenue +42% YoY, growth +4 pts, gross margin 46% vs 17% a year ago |
+| LRCX | +137.0% | — | — | missed |
+| SPHR | +135.8% | 2025-11 | 81% | E7: relative strength: 52-week high, 6-month +124% |
+| PLTR | +135.0% | 2024-08 | 0% | E3: backlog: order backlog (RPO) +45% YoY and accelerating; revenue +27% |
+| AGX | +128.6% | 2024-10 | 0% | E3: backlog: deferred revenue +118% YoY and accelerating; revenue +61% |
+| TSEM | +128.0% | 2025-09 | 32% | E1: theme spread: industry "Semiconductors & Related Devices" is lit (4 bottleneck leaders); 3-month momentum +70% |
+| W | +126.6% | 2025-07 | 38% | E1: theme spread: concept "cloud computing" is lit (≥2 bottleneck leaders mention it); 3-month momentum +118% |
+| IONS | +126.3% | 2025-07 | 18% | E8: profitability turn: first operating profit after 4 loss quarters of the prior 4; revenue +101% |
+| PTGX | +126.3% | 2024-08 | 0% | E1: theme spread: industry "Pharmaceutical Preparations" is lit (8 bottleneck leaders); 3-month momentum +52% |
+| DB | +126.2% | — | — | missed |
+| GLUE | +125.9% | 2024-11 | 0% | E7: relative strength: 52-week high, 6-month +151% |
+
+## 2026 YTD: every top-50 mover — which engine caught it, when, and why
+
+| stock | move | first flagged | move already done | engine and reason |
+|---|---|---|---|---|
+| SNDK | +633.0% | 2025-08 | 0% | E10: spin-off: trading 6 months, 3-month momentum +39% |
+| MRNA | +553.0% | 2026-01 | 9% | E1: theme spread: concept "server" is lit (≥2 bottleneck leaders mention it); 3-month momentum +78% |
+| TWST | +509.2% | 2026-06 | 44% | E7: relative strength: 52-week high, 6-month +211% |
+| TXG | +454.0% | 2026-01 | 5% | E1: theme spread: industry "Laboratory Analytical Instruments" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +57% |
+| MXL | +418.1% | 2025-10 | 0% | E0: bottleneck: revenue +56% YoY, growth +38 pts, gross margin 57% vs 54% a year ago |
+| AXTI | +373.5% | 2025-11 | 0% | E1: theme spread: industry "Semiconductors & Related Devices" is lit (8 bottleneck leaders); 3-month momentum +269% |
+| DELL | +327.4% | 2026-03 | 9% | E3: backlog: order backlog (RPO) +116% YoY and accelerating; revenue +39% |
+| MU | +273.2% | 2025-10 | 0% | E0: bottleneck: revenue +46% YoY, growth +9 pts, gross margin 45% vs 35% a year ago |
+| STX | +234.9% | 2025-07 | 0% | E7: relative strength: 52-week high, 6-month +58% |
+| CORT | +231.1% | 2026-07 | 99% | E1: theme spread: industry "Pharmaceutical Preparations" is lit (3 bottleneck leaders); 3-month momentum +146% |
+| IESC | +230.1% | 2025-09 | 0% | E7: relative strength: 52-week high, 6-month +141% |
+| INTC | +225.8% | 2025-10 | 0% | E1: theme spread: industry "Semiconductors & Related Devices" is lit (7 bottleneck leaders); 3-month momentum +105% |
+| BE | +218.8% | 2025-07 | 0% | E1: theme spread: concept "LNG" is lit (≥2 bottleneck leaders mention it); 3-month momentum +104% |
+| UMC | +211.6% | — | — | missed |
+| MRVL | +210.9% | 2025-07 | 0% | E0: bottleneck: revenue +63% YoY, growth +36 pts, gross margin 50% vs 45% a year ago |
+| SIMO | +202.0% | 2026-04 | 67% | E7: relative strength: 52-week high, 6-month +118% |
+| AMD | +185.7% | 2025-07 | 0% | E0: bottleneck: revenue +36% YoY, growth +12 pts, gross margin 50% vs 47% a year ago |
+| AAOI | +184.7% | 2025-07 | 0% | E0: bottleneck: revenue +146% YoY, growth +80 pts, gross margin 31% vs 19% a year ago |
+| PBF | +183.8% | 2026-07 | 91% | E1: theme spread: industry "Petroleum Refining" is lit (2 bottleneck leaders); 3-month momentum +67% |
+| NBIS | +181.8% | 2025-07 | 0% | E1: theme spread: industry "Services-Computer Programming, Data Processing, Etc." is lit (9 bottleneck leaders); 3-month momentum +139% |
+| TNGX | +181.6% | 2025-11 | 0% | E7: relative strength: 52-week high, 6-month +391% |
+| PENG | +179.6% | 2026-04 | 31% | E1: theme spread: concept "GPU" is lit (≥2 bottleneck leaders mention it); 3-month momentum +54% |
+| DOCN | +177.2% | 2026-03 | 44% | E1: theme spread: industry "Services-Computer Programming, Data Processing, Etc." is lit (4 bottleneck leaders); 3-month momentum +74% |
+| ASX | +176.1% | 2026-06 | 102% | E7: relative strength: 52-week high, 6-month +187% |
+| IRDM | +175.6% | 2026-03 | 34% | E1: theme spread: concept "aerospace" is lit (≥2 bottleneck leaders mention it); 3-month momentum +62% |
+| SYRE | +171.8% | 2026-03 | 31% | E7: relative strength: 52-week high, 6-month +208% |
+| FORM | +167.7% | 2025-11 | 0% | E1: theme spread: industry "Semiconductors & Related Devices" is lit (8 bottleneck leaders); 3-month momentum +88% |
+| HPE | +166.0% | 2026-07 | 60% | E1: theme spread: industry "Computer & office Equipment" is lit (3 bottleneck leaders); 3-month momentum +66% |
+| ARM | +165.0% | 2026-05 | 135% | E7: relative strength: 52-week high, 6-month +169% |
+| WDC | +163.8% | 2025-07 | 0% | E9: index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters |
+| VICR | +163.6% | 2026-06 | 151% | E7: relative strength: 52-week high, 6-month +242% |
+| LITE | +163.5% | 2025-08 | 0% | E0: bottleneck: revenue +56% YoY, growth +40 pts, gross margin 33% vs 17% a year ago |
+| RNG | +158.7% | 2026-04 | 25% | E1: theme spread: industry "Services-Computer Processing & Data Preparation" is lit (4 bottleneck leaders); 3-month momentum +57% |
+| RVMD | +157.7% | — | — | missed |
+| FSLY | +152.2% | 2026-02 | 58% | E7: relative strength: 52-week high, 6-month +155% |
+| MPC | +143.1% | — | — | missed |
+| SMTC | +142.0% | — | — | missed |
+| OKTA | +141.8% | 2026-07 | 45% | E1: theme spread: industry "Services-Prepackaged Software" is lit (2 bottleneck leaders); 3-month momentum +93% |
+| DK | +140.6% | 2026-07 | 92% | E7: relative strength: 52-week high, 6-month +135% |
+| VLO | +138.1% | 2026-07 | 67% | E0: bottleneck: revenue +49% YoY, growth +42 pts, gross margin 12% vs 4% a year ago |
+| VIAV | +135.2% | 2025-11 | 0% | E1: theme spread: concept "fiber optic" is lit (≥2 bottleneck leaders mention it); 3-month momentum +59% |
+| DINO | +132.9% | 2026-08 | 91% | E7: relative strength: 52-week high, 6-month +89% |
+| PARR | +132.3% | 2025-07 | 0% | E1: theme spread: industry "Crude Petroleum & Natural Gas" is lit (2 bottleneck leaders); 3-month momentum +119% |
+| INSW | +126.9% | — | — | missed |
+| CRWD | +125.9% | 2026-07 | 50% | E1: theme spread: concept "foundry" is lit (≥2 bottleneck leaders mention it); 3-month momentum +71% |
+| FRO | +125.8% | — | — | missed |
+| FTNT | +125.1% | 2026-07 | 83% | E1: theme spread: industry "Computer Peripheral Equipment, NEC" is lit (3 bottleneck leaders); 3-month momentum +92% |
+| VSH | +124.6% | — | — | missed |
+| FCEL | +124.6% | 2025-10 | 0% | E1: theme spread: industry "Electrical Industrial Apparatus" is lit (2 bottleneck leaders); 3-month momentum +88% |
+| PANW | +115.7% | 2026-07 | 69% | E1: theme spread: industry "Computer Peripheral Equipment, NEC" is lit (3 bottleneck leaders); 3-month momentum +85% |
