@@ -3,27 +3,27 @@
 **Filters chosen on data ≤ 2024-12-31 only:** F3 within 25% of 52w high
 
 ```
-no filter: build 3.97% (halves 4.03% / 3.91%)
-  try +F1 momentum > 0: build 5.08% (halves 3.98% / 6.10%)
-  try +F2 above 200-day: build 5.39% (halves 4.27% / 6.43%)
-  try +F3 within 25% of 52w high: build 5.70% (halves 4.60% / 6.70%)
-  try +F4 margin ≥ 0 a year ago: build 4.29% (halves 4.01% / 4.55%)
-  try +F5 margin ≥ 30%: build 4.12% (halves 4.12% / 4.12%)
-  try +F6 growth accelerating 2 qtrs: build 4.56% (halves 4.75% / 4.39%)
-  try +F7 revenue ≥ $250M/qtr: build 4.23% (halves 3.03% / 5.33%)
-  try +F8 growth ≤ 100%: build 4.52% (halves 3.78% / 5.21%)
-  try +F9 1-month return > 0: build 4.98% (halves 4.00% / 5.92%)
-  try +F10 $100M+/day volume: build 3.40% (halves 1.79% / 4.88%)
-→ add F3 within 25% of 52w high (build now 5.70%)
-  try +F1 momentum > 0: build 5.61% (halves 4.28% / 6.83%)
-  try +F2 above 200-day: build 5.59% (halves 4.22% / 6.85%)
-  try +F4 margin ≥ 0 a year ago: build 5.92% (halves 4.56% / 7.17%)
-  try +F5 margin ≥ 30%: build 5.49% (halves 4.63% / 6.28%)
-  try +F6 growth accelerating 2 qtrs: build 5.24% (halves 4.66% / 5.78%)
-  try +F7 revenue ≥ $250M/qtr: build 4.22% (halves 3.24% / 5.12%)
-  try +F8 growth ≤ 100%: build 5.91% (halves 4.48% / 7.23%)
-  try +F9 1-month return > 0: build 5.00% (halves 3.71% / 6.21%)
-  try +F10 $100M+/day volume: build 3.51% (halves 1.99% / 4.93%)
+no filter: build 4.06% (halves 4.03% / 4.10%)
+  try +F1 momentum > 0: build 4.97% (halves 3.79% / 6.07%)
+  try +F2 above 200-day: build 5.29% (halves 4.20% / 6.29%)
+  try +F3 within 25% of 52w high: build 5.68% (halves 4.61% / 6.66%)
+  try +F4 margin ≥ 0 a year ago: build 4.26% (halves 3.98% / 4.52%)
+  try +F5 margin ≥ 30%: build 4.14% (halves 4.05% / 4.23%)
+  try +F6 growth accelerating 2 qtrs: build 4.52% (halves 4.55% / 4.50%)
+  try +F7 revenue ≥ $250M/qtr: build 4.21% (halves 3.05% / 5.28%)
+  try +F8 growth ≤ 100%: build 4.44% (halves 3.64% / 5.18%)
+  try +F9 1-month return > 0: build 4.91% (halves 3.88% / 5.91%)
+  try +F10 $100M+/day volume: build 3.37% (halves 1.82% / 4.80%)
+→ add F3 within 25% of 52w high (build now 5.68%)
+  try +F1 momentum > 0: build 5.57% (halves 4.19% / 6.84%)
+  try +F2 above 200-day: build 5.48% (halves 4.14% / 6.73%)
+  try +F4 margin ≥ 0 a year ago: build 5.92% (halves 4.54% / 7.19%)
+  try +F5 margin ≥ 30%: build 5.48% (halves 4.60% / 6.29%)
+  try +F6 growth accelerating 2 qtrs: build 5.12% (halves 4.39% / 5.80%)
+  try +F7 revenue ≥ $250M/qtr: build 4.25% (halves 3.31% / 5.11%)
+  try +F8 growth ≤ 100%: build 5.86% (halves 4.47% / 7.14%)
+  try +F9 1-month return > 0: build 5.01% (halves 3.71% / 6.24%)
+  try +F10 $100M+/day volume: build 3.56% (halves 2.00% / 5.01%)
   → no filter improves both halves; stop
 ```
 
@@ -31,36 +31,36 @@ no filter: build 3.97% (halves 4.03% / 3.91%)
 
 | | mean | months positive |
 |---|---|---|
-| **Version D (blind)** | **+18.4%** | 14/15 |
-| Model A (blind, locked 2026-10-05) | +28.7% | 15/15 |
-| Version C (in-sample here — reference only) | +28.6% | 15/15 |
-| Momentum top 20 | +17.2% | 11/15 |
-| Random 20, 95th pct of 200 | +10.9% | |
+| **Version D (blind)** | **+18.3%** | 14/15 |
+| Model A (blind, locked 2026-10-05) | +28.6% | 15/15 |
+| Version C (in-sample here — reference only) | +28.5% | 15/15 |
+| Momentum top 20 | +23.3% | 12/15 |
+| Random 20, 95th pct of 200 | +11.4% | |
 
-**Pass:** beats momentum PASS · beats random 95th PASS · ≥60% months positive PASS → **PASS**
+**Pass:** beats momentum FAIL · beats random 95th PASS · ≥60% months positive PASS → **FAIL**
 
 ## What version D picked each month, and how each pick did (6-month return)
 
-- **2025-01** · typical stock -2.9%: NOG -30.2%, RUM -34.0%, PFE -10.3%, CALM +1.1%, RGLD +8.3%, HALO +4.9%, EQT +0.3%, CLX -23.0%, ZBRA -13.2%, RMBS +20.0%, CVNA +46.2%, GWRE +4.8%, COHR +17.5%, RDDT -6.8%, ACIW -23.7%, SMTC -21.0%, AMBA -15.4%, GRMN +1.5%, TXNM +17.2%, FOUR -14.5%
-- **2025-02** · typical stock +4.8%: PFE -5.7%, NI +2.5%, ARQT +21.0%, BE +126.0%, WGS +37.2%, CALM +27.8%, BWA +48.3%, SLAB +0.3%, CVNA +69.5%, GWRE +10.5%, UI +60.7%, WELL +7.3%, EQT +6.4%, LLY -21.2%, BROS -5.9%, POWI -22.8%, GLW +38.9%, IRTC +55.8%, ALKS -15.1%, PRGS -14.3%
+- **2025-01** · typical stock -2.8%: NOG -30.2%, RUM -34.0%, PFE -10.3%, CALM +1.1%, RGLD +8.3%, HALO +4.9%, EQT +0.3%, CLX -23.0%, ZBRA -13.2%, RMBS +20.0%, CVNA +46.2%, GWRE +4.8%, COHR +17.5%, RDDT -6.8%, ACIW -23.7%, SMTC -21.0%, AMBA -15.4%, GRMN +1.5%, TXNM +17.2%, FOUR -14.5%
+- **2025-02** · typical stock +4.9%: PFE -5.7%, NI +2.5%, ARQT +21.0%, BE +126.0%, WGS +37.2%, CALM +27.8%, BWA +48.3%, SLAB +0.3%, CVNA +69.5%, GWRE +10.5%, UI +60.7%, WELL +7.3%, EQT +6.4%, LLY -21.2%, BROS -5.9%, POWI -22.8%, GLW +38.9%, IRTC +55.8%, ALKS -15.1%, PRGS -14.3%
 - **2025-03** · typical stock +8.5%: PFE -2.8%, NI +7.0%, ARQT +24.3%, RYN -6.0%, WGS +34.7%, CALM +5.2%, TGTX -2.4%, BWA +53.5%, WELL +14.3%, EQT +1.1%, LLY -9.8%, GLW +76.2%, ALKS -10.7%, IRTC +58.6%, BRBR -51.1%, ISRG -11.5%, BR -2.9%, TGLS -5.4%, LII -7.8%, HSY +8.5%
-- **2025-04** · typical stock +8.2%: PFE +1.5%, NI +9.0%, CHE -18.9%, ARQT +72.6%, CALM -5.8%, RYN -4.3%, HL +129.1%, RIVN -0.4%, PEGA -31.2%, TGTX -25.5%, BWA +50.1%, CBZ -26.6%, CVNA +40.5%, ONC +23.2%, UI +131.0%, LLY +2.4%, IRTC +70.6%, GLW +101.6%, ALKS +2.8%, EQT +2.9%
+- **2025-04** · typical stock +8.5%: PFE +1.5%, NI +9.0%, CHE -18.9%, ARQT +72.6%, CALM -5.8%, RYN -4.3%, HL +129.1%, RIVN -0.4%, PEGA -31.2%, TGTX -25.5%, BWA +50.1%, CBZ -26.6%, CVNA +40.5%, ONC +23.2%, UI +131.0%, LLY +2.4%, IRTC +70.6%, GLW +101.6%, ALKS +2.8%, EQT +2.9%
 - **2025-05** · typical stock +6.6%: CHE -23.0%, LEU +108.1%, CALM -14.0%, SSRM +83.6%, PEGA -43.5%, CBZ -32.0%, ACIW +1.6%, ADI +23.2%, UI +47.2%, PODD +0.7%, HAS +26.0%, ROAD +5.2%, KLAC +54.2%, AEIS +82.7%, EQT +7.4%, TTWO +8.1%, CF -15.3%, HLI +0.6%, BRBR -51.0%, CWEN +20.6%
-- **2025-06** · typical stock +2.8%: CHE -10.2%, LEU +47.7%, CALM -19.4%, SSRM +72.2%, CBZ -26.9%, CRDO +65.2%, ACIW +5.8%, ADI +14.5%, UI +38.7%, AMD +58.4%, PODD -4.2%, HAS +7.6%, TRGP +7.0%, ROAD +6.6%, AEIS +62.6%, KLAC +40.2%, ARM -29.3%, RBRK -8.4%, TTWO +6.5%, OUST -1.2%
+- **2025-06** · typical stock +2.9%: CHE -10.2%, LEU +47.7%, CALM -19.4%, SSRM +72.2%, CBZ -26.9%, CRDO +65.2%, ACIW +5.8%, ADI +14.5%, UI +38.7%, AMD +58.4%, PODD -4.2%, HAS +7.6%, TRGP +7.0%, ROAD +6.6%, AEIS +62.6%, KLAC +40.2%, ARM -29.3%, RBRK -8.4%, TTWO +6.5%, OUST -1.2%
 - **2025-07** · typical stock +6.4%: EQT +7.6%, LEU +44.7%, SSRM +122.2%, AMSC -41.5%, ADI +43.7%, GH +166.7%, BA +5.5%, PTC -27.6%, WGS -3.4%, AMD +46.9%, UI +32.6%, PODD -10.5%, APH +43.4%, CRDO +20.4%, AEIS +99.0%, TRGP +23.7%, ROAD +18.8%, IONS +94.9%, KLAC +90.0%, TTWO +8.5%
-- **2025-08** · typical stock +4.3%: EQT +17.3%, BBIO +33.0%, GPOR +18.4%, MP -12.5%, SSRM +61.4%, LITE +428.8%, PRCH -53.7%, TRGP +41.4%, AMSC -33.2%, WDC +241.5%, UI +45.1%, ADPT +24.8%, ANIP -21.5%, ARQT +76.0%, DKNG -50.2%, AROC +44.6%, BA -4.1%, PTC -26.4%, GH +41.2%, WGS -37.8%
-- **2025-09** · typical stock -4.5%: BBIO +38.9%, EQT +13.3%, GPOR +11.1%, MP -28.6%, SSRM +23.1%, LITE +310.0%, CRDO -35.2%, PRCH -57.6%, TRGP +49.2%, AMSC -42.8%, WDC +107.1%, UI +17.2%, ADPT -4.7%, ANIP -14.7%, ARQT +19.2%, AROC +34.5%, TVTX +19.8%, BA -7.5%, PTC -29.6%, GH +47.4%
-- **2025-10** · typical stock +3.7%: GPOR -2.6%, SSRM +27.5%, LITE +376.0%, CRDO +2.1%, PRCH -32.8%, BE +104.1%, RIGL -4.1%, AMSC -13.4%, UI +31.7%, ADPT -17.7%, ANIP -14.5%, MU +131.0%, FIX +91.0%, TVTX +27.8%, INSM -28.4%, PTC -30.5%, WGS -52.7%, HUT +40.0%, LLY +7.5%, GH -11.4%
+- **2025-08** · typical stock +4.4%: EQT +17.3%, BBIO +33.0%, GPOR +18.4%, MP -12.5%, SSRM +61.4%, LITE +428.8%, PRCH -53.7%, TRGP +41.4%, AMSC -33.2%, WDC +241.5%, UI +45.1%, ADPT +24.8%, ANIP -21.5%, ARQT +76.0%, DKNG -50.2%, AROC +44.6%, BA -4.1%, PTC -26.4%, GH +41.2%, WGS -37.8%
+- **2025-09** · typical stock -4.3%: BBIO +38.9%, EQT +13.3%, GPOR +11.1%, MP -28.6%, SSRM +23.1%, LITE +310.0%, CRDO -35.2%, PRCH -57.6%, TRGP +49.2%, AMSC -42.8%, WDC +107.1%, UI +17.2%, ADPT -4.7%, ANIP -14.7%, ARQT +19.2%, AROC +34.5%, TVTX +19.8%, BA -7.5%, PTC -29.6%, GH +47.4%
+- **2025-10** · typical stock +3.9%: GPOR -2.6%, SSRM +27.5%, LITE +376.0%, CRDO +2.1%, PRCH -32.8%, BE +104.1%, RIGL -4.1%, AMSC -13.4%, UI +31.7%, ADPT -17.7%, ANIP -14.5%, MU +131.0%, FIX +91.0%, TVTX +27.8%, INSM -28.4%, PTC -30.5%, WGS -52.7%, HUT +40.0%, LLY +7.5%, GH -11.4%
 - **2025-11** · typical stock +3.9%: EOSE -38.0%, CIFR +20.1%, RIVN -5.0%, ADPT -19.6%, HL +3.9%, CRDO +37.9%, BE +188.1%, SEDG +131.9%, SHLS +59.0%, PTC -20.7%, ESTA +4.3%, MU +303.8%, PLTR -6.5%, TVTX +34.1%, TPC +7.6%, FIX +90.2%, WGS -68.2%, INSM -49.4%, ROAD +7.7%, HUT +186.5%
-- **2025-12** · typical stock +6.0%: RIVN -11.5%, ADPT +40.6%, NUTX +28.7%, HL -17.4%, MU +227.3%, SHLS +11.3%, RKLB +31.7%, PTC -29.6%, ESTA +29.6%, PLTR -25.1%, FIX +85.8%, TPC +14.7%, TVTX +42.6%, WGS -45.8%, INSM -39.6%, ROAD -2.7%, RGLD -10.1%, HUT +106.3%, LLY +10.3%, GH +67.8%
-- **2026-01** · typical stock +3.5%: EOSE -76.1%, ADPT +22.7%, NUTX -8.6%, SNDK +82.6%, CELH -43.1%, BA -7.2%, BE +31.8%, KNSA +66.4%, MU +88.0%, SHLS -6.2%, RKLB -12.4%, APLD -21.3%, ESTA +29.9%, TPC +4.5%, FIX +47.0%, TVTX +68.9%, ROAD -9.5%, RGLD -23.6%, HUT +91.6%, LLY +10.0%
-- **2026-02** · typical stock +3.0%: SEDG -22.6%, HUT +50.6%, NVAX -8.4%, LASR -36.6%, CELH -33.0%, SNDK +139.9%, PPG -4.2%, BA -8.7%, IP -8.3%, HL -17.3%, GPOR -15.7%, MU +126.1%, BCRX +13.8%, SITM +26.6%, SCCO -4.1%, TPC +20.8%, SSRM +16.8%, LITE +14.3%, HCC +32.0%, IMAX +19.9%
+- **2025-12** · typical stock +6.1%: RIVN -11.5%, ADPT +40.6%, NUTX +28.7%, HL -17.4%, MU +227.3%, SHLS +11.3%, RKLB +31.7%, PTC -29.6%, ESTA +29.6%, PLTR -25.1%, FIX +85.8%, TPC +14.7%, TVTX +42.6%, WGS -45.8%, INSM -39.6%, ROAD -2.7%, RGLD -10.1%, HUT +106.3%, LLY +10.3%, GH +67.8%
+- **2026-01** · typical stock +3.6%: EOSE -76.1%, ADPT +22.7%, NUTX -8.6%, SNDK +82.6%, CELH -43.1%, BA -7.2%, BE +31.8%, KNSA +66.4%, MU +88.0%, SHLS -6.2%, RKLB -12.4%, APLD -21.3%, ESTA +29.9%, TPC +4.5%, FIX +47.0%, TVTX +68.9%, ROAD -9.5%, RGLD -23.6%, HUT +91.6%, LLY +10.0%
+- **2026-02** · typical stock +3.1%: SEDG -22.6%, HUT +50.6%, NVAX -8.4%, LASR -36.6%, CELH -33.0%, SNDK +139.9%, PPG -4.2%, BA -8.7%, IP -8.3%, HL -17.3%, GPOR -15.7%, MU +126.1%, BCRX +13.8%, SITM +26.6%, SCCO -4.1%, TPC +20.8%, SSRM +16.8%, LITE +14.3%, HCC +32.0%, IMAX +19.9%
 - **2026-03** · typical stock +2.1%: SEDG -39.2%, INSM -29.9%, LASR -33.1%, SNDK +149.7%, PPG -0.4%, BA -9.5%, GPOR -27.4%, BCRX -11.8%, SITM +83.8%, SCCO +13.8%, TPC +7.2%, SSRM +7.7%, LITE +27.3%, HCC -4.2%, IMAX +45.8%, TRGP +11.7%, WELL +17.1%, KTB -9.3%, LSCC +31.3%, WWD -12.3%
 - **2026-04** (not graded yet): MU, HUT, SEDG, APLD, LASR, EQT, SNDK, FCEL, HCC, NEM, GPOR, STX, BCRX, BE, SITM, FIX, TPC, ARDX, SSRM, LITE
 - **2026-05** (not graded yet): SNDK, ONDS, MU, HUT, GPOR, APLD, STAA, EQT, LITE, CORZ, FCEL, SSRM, WDC, KLIC, RKLB, SITM, AMPX, HCC, MUX, NEM
 - **2026-06** (not graded yet): SNDK, MU, HUT, GPOR, APLD, STAA, EQT, LITE, CORZ, SSRM, WDC, KLIC, SITM, URGN, STX, NVDA, SUN, BE, MCHP, PRCH
 - **2026-07** (not graded yet): HUT, PBF, CVI, VLO, URGN, NVDA, DINO, STX, SUN, BFLY, TER, KALU, LYB, GPRE, ADI, KEYS, GKOS, NUE, CGNX, AVGO
-- **2026-08** (not graded yet): RUM, MU, SM, PARR, LITE, IOVA, URGN, PBF, ETON, CVI, HCC, VLO, CVX, DK, MPC, DINO, AMD, CLMT, BFLY, HNGE
+- **2026-08** (not graded yet): RUM, MU, SM, PARR, LITE, IOVA, URGN, PBF, ETON, CVI, HCC, VLO, DK, CVX, MPC, DINO, AMD, CLMT, BFLY, HNGE
 - **2026-09** (not graded yet): MU, SM, PARR, LITE, IOVA, URGN, PBF, HCC, CVI, ETON, VLO, DK, MPC, CVX, DINO, AMBQ, AMD, CLMT, BE, BFLY
 
 ## Most-picked names in the graded months

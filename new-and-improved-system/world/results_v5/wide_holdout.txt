@@ -2,36 +2,39 @@
 
 | | mean 6m excess vs median | months positive |
 |---|---|---|
-| A: top 20 by growth + acceleration + margin expansion | **+28.7%** | 15/15 |
-| B: same, positive momentum only | **+34.8%** | 15/15 |
-| momentum 12-1 top 20 | **+17.3%** | 11/15 |
-| random 20 (200 draws) | median +6.3% · 95th pct +10.4% | |
+| A: top 20 by growth + acceleration + margin expansion | **+28.6%** | 15/15 |
+| B: same, positive momentum only | **+34.7%** | 15/15 |
+| C: A + uptrend (momentum > 0, above 200-day) + margin was positive a year ago | **+30.3%** | 15/15 |
+| momentum 12-1 top 20 | **+21.1%** | 12/15 |
+| random 20 (200 draws) | median +6.7% · 95th pct +11.2% | |
 
 **A pass:** beats momentum PASS · beats random 95th PASS · ≥60% months positive PASS → **PASS**
 
 **B pass:** beats momentum PASS · beats random 95th PASS · ≥60% months positive PASS → **PASS**
 
+**C pass:** beats momentum PASS · beats random 95th PASS · ≥60% months positive PASS · beats A PASS → **PASS**
+
 | month | A excess | B excess | momentum | A top 8 |
 |---|---|---|---|---|
-| 2025-01 | +7.8% | +2.2% | +13.2% | RXRX HUT NOG RUM PFE CALM NEM RGLD |
-| 2025-02 | +23.5% | +36.8% | +39.9% | PFE NI HUT ARQT BE RUM WGS HL |
-| 2025-03 | +51.9% | +75.8% | +67.2% | SMR PFE NI ARQT BE RYN WGS RUM |
-| 2025-04 | +27.7% | +52.2% | +81.0% | SMR UEC PFE NI MBLY CHE ARQT CALM |
-| 2025-05 | +24.4% | +36.1% | +19.6% | UEC MBLY CHE AAOI LEU NOG CALM SSRM |
-| 2025-06 | +9.8% | +28.6% | +8.4% | MBLY CHE AAOI LEU CALM NOG SSRM MRVL |
-| 2025-07 | +27.2% | +32.2% | +12.4% | EQT AAOI LEU SSRM NOG MRVL AMSC ACIW |
-| 2025-08 | +37.1% | +37.1% | -15.6% | EQT BBIO GPOR MP SSRM LITE PRCH TRGP |
-| 2025-09 | +20.0% | +25.0% | -25.4% | BBIO EQT GPOR MP SSRM LITE CRDO PRCH |
-| 2025-10 | +51.8% | +55.3% | -0.7% | GPOR MP SSRM FCEL LITE CRDO PRCH BE |
-| 2025-11 | +73.9% | +66.4% | +24.0% | EOSE CIFR RIVN ADPT HL FCEL CELH CRDO |
-| 2025-12 | +46.7% | +31.6% | +29.2% | EOSE CIFR RIVN ADPT NUTX HL CELH LCID |
-| 2026-01 | +3.6% | +7.2% | +1.6% | EOSE CIFR RIVN ADPT NUTX HL SNDK CELH |
-| 2026-02 | +6.3% | +12.4% | -3.6% | SEDG HUT INSM NVAX LASR NUTX LCID CELH |
+| 2025-01 | +7.7% | +2.1% | +20.3% | RXRX HUT NOG RUM PFE CALM NEM RGLD |
+| 2025-02 | +23.4% | +36.8% | +48.9% | PFE NI HUT ARQT BE RUM WGS HL |
+| 2025-03 | +51.8% | +75.8% | +72.3% | SMR PFE NI ARQT BE RYN WGS RUM |
+| 2025-04 | +27.5% | +52.0% | +87.8% | SMR UEC PFE NI MBLY CHE ARQT CALM |
+| 2025-05 | +24.4% | +36.1% | +20.0% | UEC MBLY CHE AAOI LEU NOG CALM SSRM |
+| 2025-06 | +9.8% | +28.6% | +17.0% | MBLY CHE AAOI LEU CALM NOG SSRM MRVL |
+| 2025-07 | +27.1% | +32.1% | +7.7% | EQT AAOI LEU SSRM NOG MRVL AMSC ACIW |
+| 2025-08 | +37.0% | +37.0% | -14.6% | EQT BBIO GPOR MP SSRM LITE PRCH TRGP |
+| 2025-09 | +19.9% | +24.8% | -23.8% | BBIO EQT GPOR MP SSRM LITE CRDO PRCH |
+| 2025-10 | +51.6% | +55.1% | +5.7% | GPOR MP SSRM FCEL LITE CRDO PRCH BE |
+| 2025-11 | +73.9% | +66.4% | +36.6% | EOSE CIFR RIVN ADPT HL FCEL CELH CRDO |
+| 2025-12 | +46.7% | +31.6% | +30.1% | EOSE CIFR RIVN ADPT NUTX HL CELH LCID |
+| 2026-01 | +3.5% | +7.1% | +2.8% | EOSE CIFR RIVN ADPT NUTX HL SNDK CELH |
+| 2026-02 | +6.2% | +12.3% | -2.8% | SEDG HUT INSM NVAX LASR NUTX LCID CELH |
 | 2026-03 | +18.1% | +23.3% | +8.6% | MU SEDG HUT MUX ONDS OUST INSM NVAX |
 
 **Early flags (first month in top 20 / top 50):** MU 2024-03 / 2024-03 · SNDK 2026-01 / 2026-01 · WDC 2024-04 / 2024-04 · STX 2024-08 / 2024-08 · IREN never / never · LITE 2025-08 / 2025-05 · CLS never / 2025-10 · VRT 2023-04 / 2023-04 · NVDA 2023-08 / 2023-08 · APP 2023-05 / 2023-05 · PLTR 2025-11 / 2023-11 · CORZ 2024-06 / 2024-06 · COHR 2024-11 / 2024-08
 
 ## Live list (2026-09-30)
-**A:** RUM (rev +3987.8% YoY, GM +2669.5% pts) · BMNR (rev +2167.8% YoY, GM +63.8% pts) · UUUU (rev +496.1% YoY, GM +44.2% pts) · MU (rev +345.7% YoY, GM +46.8% pts) · SNDK (rev +371.6% YoY, GM +58.4% pts) · AXTI (rev +164.8% YoY, GM +36.9% pts) · CORZ (rev +108.8% YoY, GM +36.3% pts) · INSM (rev +296.1% YoY, GM +10.3% pts) · RDW (rev +89.6% YoY, GM +58.7% pts) · MP (rev +89.0% YoY, GM +21.2% pts) · AGIO (rev +259.3% YoY, GM +7.0% pts) · SITM (rev +126.5% YoY, GM +11.1% pts) · XE (rev +153.9% YoY, GM +9.3% pts) · SM (rev +215.3% YoY, GM +6.0% pts) · PARR (rev +56.8% YoY, GM +12.9% pts) · LITE (rev +109.3% YoY, GM +14.2% pts) · IOVA (rev +65.7% YoY, GM +50.6% pts) · URGN (rev +199.2% YoY, GM +5.6% pts) · PBF (rev +56.2% YoY, GM +10.6% pts) · HCC (rev +71.3% YoY, GM +9.4% pts)
+**A:** BMNR (rev +2167.8% YoY, GM +63.8% pts) · UUUU (rev +496.1% YoY, GM +44.2% pts) · MU (rev +345.7% YoY, GM +46.8% pts) · SNDK (rev +371.6% YoY, GM +58.4% pts) · AXTI (rev +164.8% YoY, GM +36.9% pts) · CORZ (rev +108.8% YoY, GM +36.3% pts) · INSM (rev +296.1% YoY, GM +10.3% pts) · MP (rev +89.0% YoY, GM +21.2% pts) · AGIO (rev +259.3% YoY, GM +7.0% pts) · SITM (rev +126.5% YoY, GM +11.1% pts) · SM (rev +215.3% YoY, GM +6.0% pts) · PARR (rev +56.8% YoY, GM +12.9% pts) · LITE (rev +109.3% YoY, GM +14.2% pts) · IOVA (rev +65.7% YoY, GM +50.6% pts) · URGN (rev +199.2% YoY, GM +5.6% pts) · HCC (rev +71.3% YoY, GM +9.4% pts) · ETON (rev +98.6% YoY, GM +4.6% pts) · KMT (rev +42.6% YoY, GM +30.7% pts) · VLO (rev +48.8% YoY, GM +8.1% pts) · DK (rev +47.8% YoY, GM +7.0% pts)
 
-**B (positive momentum):** RUM · MU · SNDK · AXTI · RDW · SITM · SM · PARR · LITE · IOVA · URGN · PBF · HCC · CVI · ETON · KMT · VLO · DK · MPC · CVX
+**B (positive momentum):** MU · SNDK · AXTI · SITM · SM · PARR · LITE · IOVA · URGN · HCC · ETON · KMT · VLO · DK · MPC · CVX · DINO · AMBQ · AMD · AA

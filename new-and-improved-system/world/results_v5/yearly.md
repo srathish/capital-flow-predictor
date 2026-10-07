@@ -4,7 +4,7 @@ Each month the model picks 20 stocks (fastest-growing revenue that is speeding u
 
 | Year | Avg pick, 6 months | Typical stock | SPY | Picks beat typical stock | Most-picked names |
 |---|---|---|---|---|---|
-| 2012 | **+14%** | +9% | +7% | 51% | URI, VRSN, EXP, ULTA, LPX, BHC |
+| 2012 | **+14%** | +9% | +7% | 52% | URI, VRSN, EXP, ULTA, LPX, BHC |
 | 2013 | **+16%** | +10% | +10% | 53% | BKNG, MU, SYNA, WY, LPX, META |
 | 2014 | **+10%** | +6% | +6% | 59% | DXCM, NDAQ, PODD, SWKS, ALKS, LRCX |
 | 2015 | **-7%** | -2% | -1% | 44% | AMZN, VMC, OPK, AXON, AMBA, SWKS |
@@ -14,10 +14,10 @@ Each month the model picks 20 stocks (fastest-growing revenue that is speeding u
 | 2019 | **+3%** | -2% | +3% | 53% | SNAP, TNDM, ENPH, PODD, CVS, SAIC |
 | 2020 | **+30%** | +20% | +17% | 47% | TSLA, FSLR, APPS, NTRA, WDC, SMG |
 | 2021 | **-2%** | -4% | +3% | 45% | FLGT, EQT, LPX, HLI, EBS, SM |
-| 2022 | **-7%** | -3% | -1% | 38% | MOS, CALM, ALB, SWX, S, CF |
-| 2023 | **+9%** | +5% | +11% | 45% | LW, FLNC, NVDA, APP, SHLS, VRT |
+| 2022 | **-6%** | -2% | -1% | 39% | MOS, CALM, ALB, SWX, S, CF |
+| 2023 | **+8%** | +5% | +11% | 45% | LW, FLNC, NVDA, APP, SHLS, VRT |
 | 2024 | **+13%** | +2% | +7% | 52% | NXT, NEM, MU, APP, LPX, WDC |
-| 2025 | **+37%** | +4% | +10% | 58% | CRDO, SSRM, UI, TRGP, CALM, BE |
+| 2025 | **+37%** | +4% | +10% | 57% | CRDO, SSRM, UI, TRGP, CALM, BE |
 | 2026 | **+12%** | +3% | +12% | 38% | MU, SNDK, BA, APLD, SEDG, HL |
 
 ## 2012
@@ -81,7 +81,7 @@ Avg pick **+10%** vs typical stock +6% · 69 different stocks · best: SWKS +84%
 | ALKS | 6 | 2014-07 | +35% |
 | LRCX | 6 | 2014-02 | +29% |
 | META | 6 | 2014-01 | +20% |
-| REGN | 6 | 2014-02 | +19% |
+| REGN | 6 | 2014-02 | +18% |
 | GWRE | 6 | 2014-06 | +16% |
 | FLEX | 6 | 2014-01 | +13% |
 | TRN | 6 | 2014-01 | +10% |
@@ -118,7 +118,7 @@ Avg pick **-7%** vs typical stock -2% · 73 different stocks · best: GOLD +175%
 
 ## 2016
 
-Avg pick **+14%** vs typical stock +8% · 79 different stocks · best: GOLD +117% (picked 2016-01), AMD +109% (picked 2016-09), TSLA +87% (picked 2016-11) · worst: BHC -77% (2016-01), SEDG -50% (2016-04), FSLR -40% (2016-05)
+Avg pick **+14%** vs typical stock +8% · 78 different stocks · best: GOLD +117% (picked 2016-01), AMD +109% (picked 2016-09), TSLA +87% (picked 2016-11) · worst: BHC -77% (2016-01), SEDG -50% (2016-04), FSLR -40% (2016-05)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
@@ -138,11 +138,11 @@ Avg pick **+14%** vs typical stock +8% · 79 different stocks · best: GOLD +117
 | VEEV | 4 | 2016-03 | +46% |
 | TMUS | 4 | 2016-04 | +32% |
 
-…and 64 more.
+…and 63 more.
 
 ## 2017
 
-Avg pick **+13%** vs typical stock +6% · 78 different stocks · best: TREE +99% (picked 2017-06), STX +71% (picked 2017-09), ON +69% (picked 2017-07) · worst: CWH -58% (2017-11), OLED -51% (2017-12), TREE -37% (2017-12)
+Avg pick **+13%** vs typical stock +6% · 77 different stocks · best: TREE +99% (picked 2017-06), STX +71% (picked 2017-09), ON +69% (picked 2017-07) · worst: CWH -58% (2017-11), OLED -51% (2017-12), TREE -37% (2017-12)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
@@ -162,11 +162,11 @@ Avg pick **+13%** vs typical stock +6% · 78 different stocks · best: TREE +99%
 | TSLA | 5 | 2017-01 | +11% |
 | MCHP | 5 | 2017-05 | +9% |
 
-…and 63 more.
+…and 62 more.
 
 ## 2018
 
-Avg pick **+3%** vs typical stock +0% · 90 different stocks · best: SNAP +148% (picked 2018-12), TNDM +92% (picked 2018-12), VEEV +87% (picked 2018-12) · worst: CWH -53% (2018-01), TSLA -48% (2018-11), MED -46% (2018-08)
+Avg pick **+3%** vs typical stock +0% · 89 different stocks · best: SNAP +148% (picked 2018-12), TNDM +92% (picked 2018-12), VEEV +87% (picked 2018-12) · worst: CWH -53% (2018-01), TSLA -48% (2018-11), MED -46% (2018-08)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
@@ -186,7 +186,7 @@ Avg pick **+3%** vs typical stock +0% · 90 different stocks · best: SNAP +148%
 | CLF | 4 | 2018-01 | +8% |
 | PAA | 4 | 2018-02 | +8% |
 
-…and 75 more.
+…and 74 more.
 
 ## 2019
 
@@ -201,7 +201,6 @@ Avg pick **+3%** vs typical stock -2% · 82 different stocks · best: ENPH +164%
 | CVS | 6 | 2019-04 | +16% |
 | SAIC | 6 | 2019-06 | -2% |
 | WPC | 6 | 2019-05 | -13% |
-| AMRN | 6 | 2019-07 | -32% |
 | ROKU | 5 | 2019-03 | +67% |
 | IRTC | 5 | 2019-01 | -1% |
 | ADSK | 5 | 2019-01 | -4% |
@@ -209,6 +208,7 @@ Avg pick **+3%** vs typical stock -2% · 82 different stocks · best: ENPH +164%
 | CNP | 5 | 2019-08 | -33% |
 | CCI | 4 | 2019-07 | +8% |
 | QCOM | 4 | 2019-07 | +3% |
+| CPRT | 4 | 2019-09 | -6% |
 
 …and 67 more.
 
@@ -238,7 +238,7 @@ Avg pick **+30%** vs typical stock +20% · 102 different stocks · best: APPN +3
 
 ## 2021
 
-Avg pick **-2%** vs typical stock -4% · 108 different stocks · best: EQT +160% (picked 2021-11), HP +137% (picked 2021-11), SM +108% (picked 2021-04) · worst: PACB -79% (2021-12), PLBY -77% (2021-12), ASAN -76% (2021-11)
+Avg pick **-2%** vs typical stock -4% · 109 different stocks · best: EQT +160% (picked 2021-11), HP +137% (picked 2021-11), SM +108% (picked 2021-04) · worst: PACB -79% (2021-12), PLBY -77% (2021-12), ASAN -76% (2021-11)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
@@ -258,11 +258,11 @@ Avg pick **-2%** vs typical stock -4% · 108 different stocks · best: EQT +160%
 | JEF | 3 | 2021-01 | +29% |
 | EXPE | 3 | 2021-08 | +16% |
 
-…and 93 more.
+…and 94 more.
 
 ## 2022
 
-Avg pick **-7%** vs typical stock -3% · 79 different stocks · best: SMCI +197% (picked 2022-12), DKNG +140% (picked 2022-12), PBF +124% (picked 2022-02) · worst: NCMI -97% (2022-06), AGEN -95% (2022-01), CENX -76% (2022-03)
+Avg pick **-6%** vs typical stock -2% · 80 different stocks · best: SMCI +197% (picked 2022-12), DKNG +140% (picked 2022-12), HUBG +128% (picked 2022-05) · worst: AGEN -95% (2022-01), CENX -76% (2022-03), CLSK -75% (2022-03)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
@@ -280,13 +280,13 @@ Avg pick **-7%** vs typical stock -3% · 79 different stocks · best: SMCI +197%
 | PBF | 5 | 2022-02 | +52% |
 | HP | 5 | 2022-01 | -7% |
 | RCL | 4 | 2022-07 | +64% |
-| BILL | 4 | 2022-01 | -31% |
+| STEM | 4 | 2022-01 | -46% |
 
-…and 64 more.
+…and 65 more.
 
 ## 2023
 
-Avg pick **+9%** vs typical stock +5% · 79 different stocks · best: NVDA +156% (picked 2023-12), VRT +146% (picked 2023-04), ANF +129% (picked 2023-11) · worst: VIR -60% (2023-03), SSRM -58% (2023-12), AAOI -56% (2023-12)
+Avg pick **+8%** vs typical stock +5% · 79 different stocks · best: NVDA +156% (picked 2023-12), VRT +146% (picked 2023-04), ANF +129% (picked 2023-11) · worst: VIR -60% (2023-03), SSRM -58% (2023-12), AAOI -56% (2023-12)
 
 | Stock | Months picked | First picked | Avg 6-month return |
 |---|---|---|---|
