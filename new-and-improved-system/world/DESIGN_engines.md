@@ -87,3 +87,16 @@ A data check found that companies such as IREN, NBIS and ARM file US-GAAP revenu
 so E0 (which needs gross margin) can never score them. **E0b:** for companies without gross-margin data only, score = mean
 percentile rank of revenue YoY growth and growth acceleration (the same freshness, window and $25M rules as v5), top {10, 20}.
 Budget 20. The losing-less rule can't apply (no gross margin); operating margin is not used, to keep it a pure revenue signal.
+
+## Amendment 3 (2026-10-06, before the real run; found by a smoke run on two build years) — random baseline for recall
+
+A 150-name monthly list over an 18-month flag window "catches" most movers by chance: a random 10% slice redrawn 18 times
+touches ~85% of stocks. Raw recall is therefore not evidence.
+
+- **Random baseline:** for every engine and setting, 30 random lists with the **same size each month**, drawn from that month's
+  eligible stocks, scored with the same recall rule. Reported as the random mean and 95th percentile.
+- **Selection** (2015–2022) now maximizes **lift** = movers caught early minus the random mean, still subject to positive
+  precision and the list-size budget.
+- **Success test** is now: in both 2025 and 2026 the combined watchlist catches ≥ 25/50 movers early **and** more than the
+  95th percentile of same-size random lists, with positive precision.
+- E6 (node-graph forecasts) is left out of this run (only 2019+ data); it will be tested as an add-on.
