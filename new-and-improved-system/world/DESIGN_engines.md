@@ -64,3 +64,19 @@ A per-stock table shows which engine caught each mover, when, and why.
 - **Concept co-mention history 2014–2021** via EDGAR full-text search, for E1. Until it exists, E1 uses SIC + input-output
   links only, and concepts enter from 2022.
 - **Commodity and crypto prices** (UW: GLD, SLV, CPER, URA, USO, UNG, LIT, REMX; FRED bitcoin).
+
+## Amendment 1 (2026-10-06, before any engine is built or run) — five more engines
+
+| | Engine | Catches | Rule (settings in braces chosen on 2015–2022) |
+|---|---|---|---|
+| E8 | **Profitability turn** | First real operating profit while growing | Operating income positive in the latest quarter after ≥ {2, 4} negative quarters in the prior four, with revenue growth ≥ {15%, 30%}. Budget 20 |
+| E9 | **Index-inclusion candidate** | Forced index buying | Not yet large: market cap (shares outstanding × price) crosses {≈$15B, ≈$20B} from below within the last 3 months, with the sum of the last 4 quarters' net income > 0 and the latest quarter's > 0. The bar is inflation-adjusted to the S&P 500 rule of each year, as published. Budget 20 |
+| E10 | **Spin-off / new listing, year 2** | Spin-offs after forced selling | Company first traded {3–6, 6–12} months ago and filed a Form 10 (spin-off registration), or (variant) any new listing; flag if its 3-month momentum is in the top half. Budget 20 |
+| E11 | **Quiet accumulation** | Volume footprints before a breakout | On-balance volume at a 6-month high while price is still ≥ {10%, 20%} below its 52-week high, and 50-day up-day volume / down-day volume ≥ {1.3, 1.6}. Budget 40 |
+| E12 | **Attention surge** | Retail story stocks | Wikipedia page views over the last 30 days ≥ {3×, 5×} the prior 180-day average (from 2015-07), price above its 50-day average. Budget 30 |
+
+Data: XBRL net income + shares outstanding (E8/E9 from companyfacts), EDGAR full-index Form 10-12B/10-12G list (E10), UW
+daily volume (E11, have), Wikipedia pageviews API with Wikidata ticker → article mapping (E12).
+
+Deferred: options flow and analyst revisions (both failed earlier tests), short squeeze (no free short-interest history),
+government contracts, FDA catalysts, Korea exports, job postings (from 2020 only).
