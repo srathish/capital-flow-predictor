@@ -12,8 +12,9 @@ import { sicToBea } from './sic_bea.mjs';
 import { cleanBars, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_engines');
-const SMOKE = process.argv.includes('--smoke'), DIAG = process.argv.includes('--diag'); // --diag: per-engine coverage + sample flags (no scoring)
-if (!SMOKE && !DIAG && !process.argv.includes('--live') && fs.existsSync(path.join(RES, 'engines.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_engines/engines.txt'); process.exit(1); }
+const SMOKE = process.argv.includes('--smoke'), DIAG = process.argv.includes('--diag'), CLEANC = process.argv.includes('--clean-concepts'); // --clean-concepts: DESIGN_v6 theme cleanup (seen re-run)
+const OUTN = CLEANC ? 'engines_clean' : 'engines'; // --diag: per-engine coverage + sample flags (no scoring)
+if (!SMOKE && !DIAG && !process.argv.includes('--live') && fs.existsSync(path.join(RES, OUTN + '.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_engines/engines.txt'); process.exit(1); }
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length, med = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[s.length >> 1] : null; };
@@ -49,7 +50,8 @@ const INS = new Map(); for (const line of fs.readFileSync(path.join(C, 'insider_
 const SPIN = rd(path.join(C, 'edgar', 'spinoffs.json'), {});
 const EXPO = [...(rd(path.join(C, 'edgar', 'exposure_hist.json'), []) || []), ...(rd(path.join(C, 'edgar', 'exposure.json'), []) || [])];
 // amendment 5: every 10-K/10-Q mention date kept; member at M = any mention in [M − 730, M]
-const CONCEPT = new Map(); for (const x of EXPO) { if (!x.t || !x.c || !x.d || !/^10-[KQ]/.test(x.f ?? '')) continue; const a = CONCEPT.get(x.c) ?? new Map(); (a.get(x.t) ?? a.set(x.t, []).get(x.t)).push(x.d); CONCEPT.set(x.c, a); }
+const AMBIG = new Set(['deposition', 'server', 'foundry', 'accelerator', 'oil', 'natural gas', 'digital assets', 'subscription', 'grid', 'wind', 'solar', 'construction', 'interest rate', 'advertising', 'travel', 'restaurant', 'housing', 'consumer spending', 'credit card', 'mortgage', 'steel', 'copper', 'automotive', 'tariff', 'freight', 'shipping', 'wafer', 'rack', 'inference', 'transformer']);
+const CONCEPT = new Map(); for (const x of EXPO) { if (CLEANC && AMBIG.has(x.c)) continue; if (!x.t || !x.c || !x.d || !/^10-[KQ]/.test(x.f ?? '')) continue; const a = CONCEPT.get(x.c) ?? new Map(); (a.get(x.t) ?? a.set(x.t, []).get(x.t)).push(x.d); CONCEPT.set(x.c, a); }
 for (const mp of CONCEPT.values()) for (const a of mp.values()) a.sort();
 const memberAt = (dates, M) => { const lo = addD(M, -730); let l = 0, h = dates.length - 1; while (l <= h) { const m = (l + h) >> 1; if (dates[m] <= M) { if (dates[m] >= lo) return true; l = m + 1; } else h = m - 1; } return false; };
 const conceptMembers = (c, M) => [...(CONCEPT.get(c) ?? [])].filter(([, ds]) => memberAt(ds, M)).map(([t]) => t);
@@ -182,7 +184,7 @@ function randomBase(P, MS, flagsBy, years, endOverride, draws = 30) { const r = 
 const runEngine = (MS, E, p) => new Map([...MS].map(([M, m]) => [M, new Map(ENGINES[E].run(m, p).map((x) => [x.t, `${E}: ${x.why}`]))]));
 
 if (process.argv.includes('--live')) { // today's radar with the FROZEN settings from results_engines/engines.json (no re-selection)
-  const J = rd(path.join(RES, 'engines.json')), Pl = loadPrices(null); P_ = Pl; const fc = new Map(); for (const p of Pl.values()) fc.set(p.d[0], (fc.get(p.d[0]) ?? 0) + 1); CLUSTER = new Set([...fc].filter(([, n]) => n > 20).map(([d]) => d));
+  const J = rd(path.join(RES, OUTN + '.json')), Pl = loadPrices(null); P_ = Pl; const fc = new Map(); for (const p of Pl.values()) fc.set(p.d[0], (fc.get(p.d[0]) ?? 0) + 1); CLUSTER = new Set([...fc].filter(([, n]) => n > 20).map(([d]) => d));
   let D = ''; for (const p of Pl.values()) if (p.d.at(-1) > D) D = p.d.at(-1); const m = month(Pl, D), out = new Map();
   for (const E of J.order) { if (!J.chosen[E]) continue; for (const x of ENGINES[E].run(m, J.chosen[E].p)) { if (out.size >= 150) break; const o = out.get(x.t); if (o) o.also.push(E); else out.set(x.t, { t: x.t, E, why: x.why, also: [], r3: m.px.get(x.t)?.r3, c: m.px.get(x.t)?.c }); } }
   const rows = [...out.values()]; fs.mkdirSync(path.join(ROOT, 'world', 'live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'live', `radar_${D}.json`), JSON.stringify({ asOf: D, rows }, null, 1));
@@ -223,4 +225,4 @@ const tc = T(comb, [2025, 2026]), rbc = randomBase(PF, MF, comb, [2025, 2026], E
 L.push(`\n**Success test** (combined catches ≥ 25/50 early in both years, beats the 95th percentile of same-size random lists, positive excess): **${succ ? 'PASS' : 'FAIL'}**\n`);
 for (const Y of [2025, 2026]) { L.push(`\n## ${Y === 2026 ? '2026 YTD' : Y}: every top-50 mover — which engine caught it, when, and why\n`, '| stock | move | first flagged | move already done | engine and reason |', '|---|---|---|---|---|');
   for (const x of tc.ev.detail[Y]) L.push(`| ${x.t} | ${pcs(x.r)} | ${x.first ? x.first.M.slice(0, 7) : '—'} | ${x.first ? `${Math.max(0, Math.round(x.first.share * 100))}%` : '—'} | ${x.first ? x.first.why : 'missed'} |`); }
-const txt = L.join('\n'); console.log(txt); fs.mkdirSync(RES, { recursive: true }); fs.writeFileSync(path.join(RES, 'engines.txt'), txt + '\n'); fs.writeFileSync(path.join(RES, 'engines.json'), JSON.stringify({ chosen, buildLog, order, combinedBuild: { ...evB, detail: undefined, ...prB } }, null, 1));
+const txt = L.join('\n'); console.log(txt); fs.mkdirSync(RES, { recursive: true }); fs.writeFileSync(path.join(RES, OUTN + '.txt'), txt + '\n'); fs.writeFileSync(path.join(RES, OUTN + '.json'), JSON.stringify({ chosen, buildLog, order, combinedBuild: { ...evB, detail: undefined, ...prB } }, null, 1));
