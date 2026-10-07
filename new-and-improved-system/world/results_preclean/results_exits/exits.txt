@@ -1,0 +1,92 @@
+# Selling rules for the bottleneck system (DESIGN_exits.md)
+
+**Chosen on 2012–2018 only (data cut at 2018-12-31): sell at 6 months + no stop** (W0+none)
+
+## 1. Build period 2012–2018 — all 44 rules (✓ = drawdown OK and beats today's rule in both halves)
+
+| rule | ✓ | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|---|
+|  | hold while top-60 + time stop 3m | +15.9% | +10.9% | **+4.9%** | -32% | 1.03 | 406 | 122d | 43% (29) | -24% (24) |
+|  | no time limit + no stop | +14.7% | +10.9% | **+3.8%** | -23% | 0.98 | 80 | 631d | 84% (2) | +20% (2) |
+|  | hold while top-60 + trail 40% | +13.8% | +10.9% | **+2.9%** | -32% | 0.92 | 385 | 130d | 44% (23) | -25% (24) |
+|  | sell at 6 months + time stop 3m | +13.7% | +10.9% | **+2.8%** | -33% | 0.90 | 311 | 158d | 44% (19) | -25% (24) |
+|  | hold while top-60 + numbers turn | +13.7% | +10.9% | **+2.8%** | -35% | 0.91 | 362 | 139d | 41% (21) | -28% (20) |
+|  | hold while top-60 + no stop | +13.5% | +10.9% | **+2.6%** | -34% | 0.91 | 363 | 139d | 41% (21) | -28% (20) |
+|  | hold while top-60 + trail 30% | +13.2% | +10.9% | **+2.3%** | -33% | 0.89 | 401 | 123d | 46% (24) | -23% (27) |
+|  | hold while top-60 + vol-trail 3× | +13.0% | +10.9% | **+2.1%** | -31% | 0.93 | 396 | 125d | 44% (22) | -25% (25) |
+|  | sell at 6 months + no stop | +12.9% | +10.9% | **+2.0%** | -27% | 0.87 | 240 | 210d | 53% (15) | -41% (13) |
+|  | hold while top-60 + vol-trail 2× | +12.5% | +10.9% | **+1.6%** | -35% | 0.84 | 469 | 103d | 44% (28) | -21% (29) |
+|  | sell at 6 months + numbers turn | +12.3% | +10.9% | **+1.4%** | -37% | 0.80 | 279 | 181d | 41% (18) | -40% (17) |
+|  | hold while top-60 + vol-trail 1.5× | +12.0% | +10.9% | **+1.1%** | -33% | 0.82 | 549 | 84d | 37% (33) | -16% (36) |
+|  | hold while top-60 + trail 20% | +11.2% | +10.9% | **+0.3%** | -33% | 0.77 | 477 | 101d | 37% (33) | -18% (35) |
+|  | no time limit + time stop 3m | +10.9% | +10.9% | **+0.0%** | -27% | 0.76 | 122 | 410d | 72% (4) | -26% (9) |
+|  | sell at 6 months + trail 40% | +10.6% | +10.9% | **-0.3%** | -33% | 0.71 | 258 | 194d | 53% (19) | -39% (17) |
+|  | hold while top-60 + below 200-day | +10.5% | +10.9% | **-0.4%** | -24% | 0.79 | 696 | 54d | 24% (37) | -5% (52) |
+|  | sell at 6 months + below 200-day | +10.2% | +10.9% | **-0.7%** | -27% | 0.72 | 539 | 75d | 33% (29) | -7% (48) |
+|  | sell at 12 months + no stop | +10.1% | +10.9% | **-0.8%** | -31% | 0.66 | 140 | 361d | 57% (4) | -40% (8) |
+|  | sell at 6 months + trail 30% | +9.7% | +10.9% | **-1.2%** | -34% | 0.66 | 278 | 177d | 49% (18) | -32% (24) |
+|  | no time limit + vol-trail 1.5× | +9.1% | +10.9% | **-1.8%** | -36% | 0.61 | 283 | 163d | 62% (18) | -23% (23) |
+|  | sell at 6 months + vol-trail 1.5× | +9.0% | +10.9% | **-1.9%** | -36% | 0.61 | 410 | 111d | 46% (23) | -21% (33) |
+|  | sell at 12 months + time stop 3m | +8.7% | +10.9% | **-2.2%** | -38% | 0.59 | 209 | 237d | 58% (10) | -29% (18) |
+|  | sell at 6 months + vol-trail 3× | +8.7% | +10.9% | **-2.2%** | -36% | 0.59 | 277 | 178d | 49% (19) | -37% (22) |
+|  | sell at 12 months + vol-trail 1.5× | +8.1% | +10.9% | **-2.8%** | -37% | 0.54 | 331 | 138d | 47% (21) | -23% (25) |
+|  | sell at 12 months + below 200-day | +8.0% | +10.9% | **-2.9%** | -27% | 0.55 | 436 | 93d | 37% (24) | -6% (38) |
+|  | sell at 6 months + vol-trail 2× | +8.0% | +10.9% | **-2.9%** | -39% | 0.56 | 336 | 142d | 55% (20) | -27% (30) |
+|  | no time limit + vol-trail 2× | +7.8% | +10.9% | **-3.1%** | -41% | 0.53 | 197 | 242d | 57% (12) | -24% (19) |
+|  | no time limit + trail 20% | +7.7% | +10.9% | **-3.2%** | -34% | 0.56 | 218 | 217d | 64% (12) | -23% (25) |
+|  | no time limit + vol-trail 3× | +7.6% | +10.9% | **-3.3%** | -34% | 0.53 | 125 | 394d | 64% (8) | -39% (12) |
+|  | sell at 6 months + trail 20% | +7.5% | +10.9% | **-3.4%** | -34% | 0.54 | 344 | 138d | 46% (20) | -20% (30) |
+|  | sell at 12 months + numbers turn | +7.2% | +10.9% | **-3.8%** | -38% | 0.48 | 174 | 290d | 34% (10) | -37% (12) |
+|  | no time limit + trail 30% | +6.9% | +10.9% | **-4.0%** | -33% | 0.52 | 129 | 382d | 93% (6) | -31% (14) |
+|  | sell at 6 months + below 50-day | +6.7% | +10.9% | **-4.2%** | -16% | 0.74 | 1065 | 24d | 8% (64) | -2% (69) |
+|  | no time limit + trail 40% | +6.6% | +10.9% | **-4.3%** | -34% | 0.51 | 104 | 476d | 108% (5) | -37% (9) |
+|  | sell at 12 months + trail 20% | +6.4% | +10.9% | **-4.5%** | -37% | 0.46 | 261 | 181d | 52% (14) | -22% (26) |
+|  | sell at 12 months + below 50-day | +6.1% | +10.9% | **-4.8%** | -16% | 0.68 | 1061 | 24d | 7% (63) | -2% (69) |
+|  | no time limit + below 50-day | +6.1% | +10.9% | **-4.8%** | -16% | 0.68 | 1061 | 24d | 7% (63) | -2% (69) |
+|  | sell at 12 months + vol-trail 2× | +5.9% | +10.9% | **-5.0%** | -43% | 0.42 | 247 | 192d | 55% (13) | -25% (23) |
+|  | hold while top-60 + below 50-day | +5.9% | +10.9% | **-5.0%** | -15% | 0.71 | 1177 | 21d | 5% (70) | -2% (71) |
+|  | no time limit + below 200-day | +5.8% | +10.9% | **-5.1%** | -29% | 0.42 | 415 | 98d | 31% (21) | -7% (40) |
+|  | sell at 12 months + trail 30% | +5.6% | +10.9% | **-5.3%** | -37% | 0.41 | 186 | 262d | 73% (11) | -32% (21) |
+|  | sell at 12 months + vol-trail 3× | +5.5% | +10.9% | **-5.4%** | -41% | 0.39 | 175 | 282d | 68% (11) | -37% (15) |
+|  | sell at 12 months + trail 40% | +5.0% | +10.9% | **-5.9%** | -34% | 0.38 | 153 | 325d | 71% (8) | -37% (13) |
+|  | no time limit + numbers turn | +4.9% | +10.9% | **-6.0%** | -33% | 0.37 | 121 | 417d | 46% (8) | -43% (11) |
+
+## 2. Check period 2019–2022 (never used for choosing) → **FAIL**
+
+| rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|
+| **chosen: sell at 6 months + no stop** | +7.0% | +5.6% | **+1.4%** | -41% | 0.39 | 140 | 204d | 45% (26) | -26% (21) |
+| today's rule (6 months, no stop) | +7.0% | +5.6% | **+1.4%** | -41% | 0.39 | 140 | 204d | 45% (26) | -26% (21) |
+
+## 3. Final period 2023 → 2026-09 (picks seen before, selling rules never tested here)
+
+| rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|
+| **chosen: sell at 6 months + no stop** | +29.9% | +5.5% | **+24.5%** | -31% | 0.94 | 140 | 191d | 35% (28) | -41% (20) |
+| today's rule (6 months, no stop) | +29.9% | +5.5% | **+24.5%** | -31% | 0.94 | 140 | 191d | 35% (28) | -41% (20) |
+
+## Biggest trades under the chosen rule, 2023–2026
+
+- MXL: bought 2026-01-02 → sold 2026-08-03 (W0) +263%
+- SMCI: bought 2023-02-01 → sold 2023-09-01 (W0) +254%
+- MU: bought 2026-01-02 → sold 2026-08-03 (W0) +163%
+- AAOI: bought 2025-06-02 → sold 2026-01-02 (W0) +155%
+- APP: bought 2024-04-01 → sold 2024-11-01 (W0) +137%
+- UEC: bought 2025-06-02 → sold 2026-01-02 (W0) +130%
+- CRDO: bought 2025-06-02 → sold 2026-01-02 (W0) +129%
+- BE: bought 2026-01-02 → sold 2026-08-03 (W0) +121%
+- LEU: bought 2025-06-02 → sold 2026-01-02 (W0) +119%
+- POWL: bought 2024-04-01 → sold 2024-11-01 (W0) +104%
+- AMD: bought 2025-06-02 → sold 2026-01-02 (W0) +95%
+- MOD: bought 2023-09-01 → sold 2024-04-01 (W0) +92%
+
+## Worst trades under the chosen rule, 2023–2026
+
+- ASPN: bought 2024-11-01 → sold 2025-06-02 (W0) -68%
+- EXTR: bought 2023-09-01 → sold 2024-04-01 (W0) -58%
+- PI: bought 2023-02-01 → sold 2023-09-01 (W0) -51%
+- WGS: bought 2026-01-02 → sold 2026-08-03 (W0) -49%
+- INTC: bought 2024-04-01 → sold 2024-11-01 (W0) -48%
+- ELF: bought 2024-04-01 → sold 2024-11-01 (W0) -46%
+- FSLY: bought 2023-09-01 → sold 2024-04-01 (W0) -46%
+- INSM: bought 2026-01-02 → sold 2026-08-03 (W0) -44%

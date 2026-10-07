@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TAGS } from './facts_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
+import { cleanBars, inBad } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache');
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
@@ -25,14 +26,14 @@ for (const t of universeV2(1e9).map((x) => x.t)) { const F = rd(path.join(C, 'ed
   for (const [e, r] of rev) { let g = null, f = r.f; const a = gp.get(e), c = cost.get(e); if (a) { g = a.v / r.v; f = [f, a.f].sort().at(-1); } else if (c) { g = (r.v - c.v) / r.v; f = [f, c.f].sort().at(-1); } rows.push({ e, rev: r.v, gm: g, f }); }
   RAWQ.set(t, rows.sort((x, y) => x.e.localeCompare(y.e))); }
 function load(cut) { const P = new Map(), Q = new Map();
-  for (const t of RAWQ.keys()) { let b = [...rd(path.join(C, 'wdaily_hist', `${t}.json`), []), ...rd(path.join(C, 'wdaily', `${t}.json`), [])]; if (cut) b = b.filter((x) => x.d <= cut);
-    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0) }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
+  for (const t of RAWQ.keys()) { const cb = cleanBars(t); let b = cb.bars; if (cut) b = b.filter((x) => x.d <= cut);
+    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
   let cal = rd(path.join(C, 'wdaily_hist', 'SPY_full.json')).filter((x) => !cut || x.d <= cut); return { P, Q, cal: cal.map((x) => x.d), spy: new Map(cal.map((x) => [x.d, x.c])) }; }
 const idx = (p, d) => { let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 
 // ---------- month-end ranking (core score + hard rule) ----------
 function monthData(D, M) { const { P, Q } = D;
-  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
+  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || inBad(p.bad, M)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
   const feat = (t) => { const rows = (Q.get(t) ?? []).filter((x) => x.f <= M), q0 = rows.at(-1); if (!q0 || days(q0.e, M) > 200 || q0.rev < 25e6) return null;
     const find = (ref, lo, hi) => ref && rows.filter((x) => { const d = days(x.e, ref.e); return d >= lo && d <= hi; }).at(-1);
     const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385), q5 = find(q1, 345, 385); if (!q1 || !q4 || !q5 || !(q4.rev > 0 && q5.rev > 0) || q0.gm == null || q4.gm == null) return null;

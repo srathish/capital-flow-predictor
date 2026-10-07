@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { UW_API_KEY } from '../feeds/env.js';
+import { cleanBars, inBad } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_v5');
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
@@ -13,7 +14,7 @@ const tags = process.argv.slice(2).length ? process.argv.slice(2) : ['hist', 'wi
 const months = tags.flatMap((t) => rd(path.join(RES, `${t}.json`), [])).sort((a, b) => a.mo.localeCompare(b.mo));
 if (!months.length) { console.error('no results yet for ' + tags.join(', ')); process.exit(1); }
 
-const P = new Map(); const bars = (t) => { if (!P.has(t)) P.set(t, [...rd(path.join(C, 'wdaily_hist', `${t}.json`), []), ...rd(path.join(C, 'wdaily', `${t}.json`), [])]); return P.get(t); };
+const P = new Map(), BAD = new Map(); const bars = (t) => { if (!P.has(t)) { const cb = cleanBars(t); P.set(t, cb.bars); BAD.set(t, cb.bad); } return P.get(t); };
 const spyF = path.join(C, 'wdaily_hist', 'SPY_full.json');
 if (!fs.existsSync(spyF)) { const m = new Map();
   for (let y = 2026; y >= 2010; y--) { const r = await fetch(`https://api.unusualwhales.com/api/stock/SPY/ohlc/1d?end_date=${y}-10-03&limit=2500`, { headers: { Authorization: `Bearer ${UW_API_KEY}` } }); const j = await r.json().catch(() => null);
@@ -21,7 +22,7 @@ if (!fs.existsSync(spyF)) { const m = new Map();
   fs.mkdirSync(path.dirname(spyF), { recursive: true }); fs.writeFileSync(spyF, JSON.stringify([...m.values()].sort((a, b) => a.d.localeCompare(b.d)))); }
 P.set('SPY', rd(spyF));
 const at = (b, d) => { let lo = 0, hi = b.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (b[m].d <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
-const fwd = (t, d) => { const b = bars(t), j = at(b, d) + 1, k = at(b, addD(d, 182)); return j > 0 && j < b.length && k > j && b[k].d >= addD(d, 172) ? b[k].c / b[j].c - 1 : null; };
+const fwd = (t, d) => { if (t !== 'SPY' && (bars(t), inBad(BAD.get(t) ?? [], d))) return null; const b = bars(t), j = at(b, d) + 1, k = at(b, addD(d, 182)); return j > 0 && j < b.length && k > j && b[k].d >= addD(d, 172) ? b[k].c / b[j].c - 1 : null; };
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length, pc = (x) => (x == null ? '—' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(0)}%`);
 
 const years = new Map();

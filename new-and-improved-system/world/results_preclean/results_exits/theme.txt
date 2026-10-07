@@ -1,0 +1,64 @@
+# Theme-aware selling rules (DESIGN_exits2.md)
+
+**Theme rule chosen on 2012–2018 only: theme exit + time stop 3m**
+
+## 1. Build period 2012–2018 (✓ = eligible theme rule; C1 shown for reference, its build numbers do not count)
+
+| rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|
+| sell at 6 months + no stop (halves +2.4% / +2.3%) | +12.9% | +10.9% | **+2.0%** | -27% | 0.87 | 240 | 210d | 53% (15) | -41% (13) |
+| hold while top-60 + time stop 3m (halves +5.1% / +6.2%) | +16.0% | +10.9% | **+5.1%** | -33% | 1.04 | 409 | 121d | 43% (29) | -24% (25) |
+| theme hold + no stop (halves +1.7% / +2.7%) | +12.6% | +10.9% | **+1.7%** | -37% | 0.81 | 310 | 162d | 54% (17) | -34% (17) |
+| theme hold + time stop 3m (halves +3.8% / +3.5%) | +14.1% | +10.9% | **+3.2%** | -34% | 0.91 | 360 | 137d | 56% (22) | -25% (24) |
+| theme exit + no stop (halves +1.1% / +5.5%) | +13.5% | +10.9% | **+2.6%** | -33% | 0.89 | 401 | 126d | 35% (22) | -24% (22) |
+| ✓ theme exit + time stop 3m (halves +4.1% / +8.1%) | +16.3% | +10.9% | **+5.4%** | -30% | 1.07 | 446 | 111d | 36% (30) | -21% (29) |
+
+## 2. Check period 2019–2022 → chosen theme rule: theme exit + time stop 3m: FAIL · C1 (second look): hold while top-60 + time stop 3m: PASS
+
+| rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|
+| today's rule (6 months) | +7.0% | +5.6% | **+1.4%** | -41% | 0.39 | 140 | 204d | 45% (26) | -26% (21) |
+| chosen theme rule: theme exit + time stop 3m | +12.5% | +5.6% | **+6.8%** | -49% | 0.58 | 321 | 86d | 26% (48) | -26% (61) |
+| C1 (second look): hold while top-60 + time stop 3m | +17.2% | +5.6% | **+11.6%** | -46% | 0.73 | 288 | 96d | 30% (44) | -28% (49) |
+
+## 3. Final period 2023 → 2026-09
+
+| rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
+|---|---|---|---|---|---|---|---|---|---|
+| today's rule (6 months) | +29.9% | +5.5% | **+24.5%** | -31% | 0.94 | 140 | 191d | 35% (28) | -41% (20) |
+| chosen theme rule: theme exit + time stop 3m | +38.6% | +5.5% | **+33.1%** | -33% | 1.23 | 278 | 90d | 20% (56) | -19% (41) |
+| C1 (second look): hold while top-60 + time stop 3m | +39.8% | +5.5% | **+34.4%** | -35% | 1.23 | 249 | 101d | 25% (52) | -23% (32) |
+
+### chosen theme rule: theme exit + time stop 3m: biggest and worst trades 2023–2026
+
+- LITE: 2025-09-02 → 2026-10-02 (end) +719%
+- RKLB: 2024-08-01 → 2024-12-02 (T2) +387%
+- MU: 2025-11-03 → 2026-10-02 (end) +358%
+- CRDO: 2025-04-01 → 2026-01-02 (T2) +243%
+- SNDK: 2026-02-02 → 2026-10-02 (end) +159%
+- GH: 2025-08-01 → 2025-11-03 (T2) +139%
+- NVDA: 2024-01-02 → 2024-06-03 (T2) +139%
+- APP: 2023-12-01 → 2024-09-03 (T2) +130%
+…
+- WGS: 2025-12-01 → 2026-03-02 (T2) -55%
+- RKLB: 2026-06-01 → 2026-08-31 (L5) -48%
+- AMSC: 2025-08-01 → 2025-12-01 (T2) -44%
+- CORZ: 2026-06-01 → 2026-08-31 (L5) -43%
+- ASPN: 2024-10-01 → 2024-12-02 (T2) -42%
+
+### C1 (second look): hold while top-60 + time stop 3m: biggest and worst trades 2023–2026
+
+- LITE: 2025-09-02 → 2026-10-02 (end) +719%
+- RKLB: 2024-08-01 → 2024-12-02 (W1) +387%
+- MU: 2025-11-03 → 2026-10-02 (end) +358%
+- CRDO: 2025-04-01 → 2026-01-02 (W1) +243%
+- VRT: 2023-05-01 → 2023-09-01 (W1) +169%
+- ELF: 2023-03-01 → 2024-06-03 (W1) +165%
+- SNDK: 2026-02-02 → 2026-10-02 (end) +159%
+- OUST: 2026-04-01 → 2026-06-01 (W1) +141%
+…
+- SSRM: 2024-01-02 → 2024-03-01 (W1) -60%
+- HUT: 2024-12-02 → 2025-03-06 (L5) -48%
+- RKLB: 2026-06-01 → 2026-08-31 (L5) -48%
+- PRCH: 2025-09-02 → 2025-12-01 (L5) -47%
+- NBR: 2023-03-01 → 2023-05-31 (L5) -46%

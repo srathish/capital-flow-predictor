@@ -9,9 +9,10 @@ import { TAGS } from './facts_collect.mjs';
 import { TAGS2 } from './facts2_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
 import { sicToBea } from './sic_bea.mjs';
+import { cleanBars, inBad } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_engines');
-const SMOKE = process.argv.includes('--smoke');
+const SMOKE = process.argv.includes('--smoke'), DIAG = process.argv.includes('--diag'); // --diag: per-engine coverage + sample flags (no scoring)
 if (!SMOKE && fs.existsSync(path.join(RES, 'engines.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_engines/engines.txt'); process.exit(1); }
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
@@ -56,16 +57,16 @@ const SP_BAR = { 2014: 5.3e9, 2015: 5.3e9, 2016: 5.3e9, 2017: 6.1e9, 2018: 6.1e9
 
 // ---------- prices (optionally truncated) ----------
 function loadPrices(cut) { const P = new Map();
-  for (const { t } of U) { if (isFund(t)) continue; let b = [...rd(path.join(C, 'wdaily_hist', `${t}.json`), []), ...rd(path.join(C, 'wdaily', `${t}.json`), [])]; if (cut) b = b.filter((x) => x.d <= cut); if (b.length < 70) continue;
+  for (const { t } of U) { if (isFund(t)) continue; const cb = cleanBars(t); let b = cb.bars; if (cut) b = b.filter((x) => x.d <= cut); if (b.length < 70) continue;
     const c = b.map((x) => x.c), v = b.map((x) => x.v || 0), obv = new Array(b.length).fill(0); for (let i = 1; i < b.length; i++) obv[i] = obv[i - 1] + (c[i] > c[i - 1] ? v[i] : c[i] < c[i - 1] ? -v[i] : 0);
-    P.set(t, { d: b.map((x) => x.d), c, v, obv }); } return P; }
+    P.set(t, { d: b.map((x) => x.d), c, v, obv, bad: cb.bad }); } return P; }
 const idx = (p, d) => { let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 const ser = (a, d) => { if (!a?.length) return null; let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (a[m].d <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r >= 0 ? a[r].c : null; };
 
 // ---------- per-month state ----------
 function month(P, M) {
   const elig = [], px = new Map();
-  for (const [t, p] of P) { const j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7)) continue; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; if (!(p.c[j] >= 5 && dv / 50 >= 2e7)) continue; elig.push(t);
+  for (const [t, p] of P) { const j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || inBad(p.bad, M)) continue; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; if (!(p.c[j] >= 5 && dv / 50 >= 2e7)) continue; elig.push(t);
     const c = (k) => p.c[Math.max(0, k)]; let hi = 0, obvHi = -Infinity, up = 0, dn = 0, ma = 0; for (let k = Math.max(0, j - 251); k < j; k++) hi = Math.max(hi, p.c[k]);
     for (let k = Math.max(0, j - 125); k < j; k++) obvHi = Math.max(obvHi, p.obv[k]); for (let k = j - 49; k <= j; k++) { if (p.c[k] > p.c[k - 1]) up += p.v[k]; else if (p.c[k] < p.c[k - 1]) dn += p.v[k]; ma += p.c[k]; }
     px.set(t, { j, c: p.c[j], r3: c(j) / c(j - 63) - 1, r6: c(j) / c(j - 126) - 1, r12: j >= 252 ? c(j - 21) / c(j - 252) - 1 : null, hi52: hi, newHigh: p.c[j] >= hi, offHi: p.c[j] / Math.max(hi, p.c[j]) - 1, obvNewHi: p.obv[j] >= obvHi, udv: dn > 0 ? up / dn : 9, aboveMA50: p.c[j] > ma / 50, dv: dv / 50, firstDay: p.d[0] }); }
@@ -102,8 +103,9 @@ const ENGINES = {
     const seen = new Set(); return out.filter((x) => !seen.has(x.t) && seen.add(x.t)).sort((a, b) => m.px.get(b.t).r3 - m.px.get(a.t).r3).slice(0, 40); } },
   E2a: { budget: 20, grid: [{ n: 10 }, { n: 20 }], run: (m, p) => { const S = [];
     for (const [t, rows0] of IFRS) { if (!m.px.has(t)) continue; const rows = rows0.filter((x) => x.f <= m.M), q0 = rows.at(-1); if (!q0 || days(q0.e, m.M) > 400) continue;
-      const prevY = rows.filter((x) => x.dur === q0.dur && days(x.e, q0.e) >= 345 && days(x.e, q0.e) <= 385).at(-1); if (!prevY || !(prevY.rev > 0)) continue;
-      const prev = rows.filter((x) => x.dur === q0.dur && x.e < q0.e).at(-1), prevPY = prev && rows.filter((x) => x.dur === q0.dur && days(x.e, prev.e) >= 345 && days(x.e, prev.e) <= 385).at(-1);
+      const bk = (x) => (x.dur < 120 ? 'Q' : x.dur < 250 ? 'H' : 'Y'), same = (x) => bk(x) === bk(q0); // period-length bucket (181 vs 184 days must match)
+      const prevY = rows.filter((x) => same(x) && days(x.e, q0.e) >= 345 && days(x.e, q0.e) <= 385).at(-1); if (!prevY || !(prevY.rev > 0)) continue;
+      const prev = rows.filter((x) => same(x) && x.e < q0.e).at(-1), prevPY = prev && rows.filter((x) => same(x) && days(x.e, prev.e) >= 345 && days(x.e, prev.e) <= 385).at(-1);
       const g0 = q0.rev / prevY.rev - 1, g1 = prevPY?.rev > 0 ? prev.rev / prevPY.rev - 1 : g0, dGM = q0.gm != null && prevY.gm != null ? q0.gm - prevY.gm : 0; S.push({ t, f: { g0, accel: g0 - g1, dGM } }); }
     const R = ['g0', 'accel', 'dGM'].map((k) => { const s = S.map((x) => x.f[k]).sort((a, b) => a - b); return (v) => s.findIndex((y) => y >= v) / (s.length - 1 || 1); });
     return S.map((x) => ({ ...x, s: mean(R.map((r, i) => r(x.f[['g0', 'accel', 'dGM'][i]]))) })).sort((a, b) => b.s - a.s).slice(0, p.n).map((x) => ({ t: x.t, why: `foreign filer bottleneck: revenue ${pct(x.f.g0)} YoY (IFRS)` })); } },
@@ -169,6 +171,10 @@ function randomBase(P, MS, flagsBy, years, endOverride, draws = 30) { const r = 
   const tot = r.map((x) => x.early).sort((a, b) => a - b); return { mean: mean(tot), p95: tot[Math.min(tot.length - 1, Math.floor(tot.length * 0.95))], per }; }
 const runEngine = (MS, E, p) => new Map([...MS].map(([M, m]) => [M, new Map(ENGINES[E].run(m, p).map((x) => [x.t, `${E}: ${x.why}`]))]));
 
+if (DIAG) { const Pd = loadPrices(null); P_ = Pd; console.log(`data coverage: priced ${Pd.size} · SIC ${SIC.size} · revenue facts ${RAWQ.size} · op income ${OPQ.size} · net income ${NIQ.size} · shares ${SHR.size} · backlog ${BACK.size} · IFRS ${IFRS.size} · insider tickers ${INS.size} · spin-offs ${Object.keys(SPIN).length} · concepts ${CONCEPT.size} (${EXPO.length} rows) · wiki ${fs.readdirSync(path.join(C, 'wiki', 'views')).length} · commodities ${Object.values(COMM).filter((a) => a.length).length}/8 · bitcoin ${BTC.length}`);
+  for (const M of ['2016-06-30', '2020-06-30', '2024-06-30']) { const m = month(Pd, M); console.log(`\n### ${M}: eligible ${m.elig.length} · E0 scored ${m.e0.length} · E0b scored ${m.e0b.length}`);
+    for (const [E, eng] of Object.entries(ENGINES)) { const fl = eng.run(m, eng.grid[eng.grid.length - 1]); console.log(`${E.padEnd(4)} ${String(fl.length).padStart(3)} flags · ${fl.slice(0, 3).map((x) => `${x.t} (${x.why})`).join(' | ').slice(0, 330)}`); } }
+  process.exit(0); }
 // ---------- 1. choose settings on 2015–2022 (data truncated at 2022-12-31) ----------
 const t0 = Date.now(), PB = loadPrices('2022-12-31'), MB = build(PB, '2014-06', '2022-12'); console.error(`build months ${MB.size} in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 const BUILD_Y = SMOKE ? [2016, 2020] : [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];

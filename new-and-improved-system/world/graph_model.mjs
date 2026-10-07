@@ -8,6 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { sicToBea, OUTSIDE_BEA, tradeBea } from './sic_bea.mjs';
+import { cleanBars, inBad } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), G = path.join(C, 'graph'), RES = path.join(ROOT, 'world', 'results_graph');
 const RIDGE = process.argv.includes('--ridge'), SMOKE = process.argv.includes('--smoke'), TAG = RIDGE ? 'graph_ridge' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
@@ -67,9 +68,9 @@ const TWN = new Map();
 
 // ---------- prices / eligibility ----------
 const P = new Map();
-for (const t of CO.keys()) { const b = [...rd(path.join(C, 'wdaily_hist', `${t}.json`), []), ...rd(path.join(C, 'wdaily', `${t}.json`), [])]; if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0) }); }
+for (const t of CO.keys()) { const cb = cleanBars(t), b = cb.bars; if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); }
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
-const eligible = (t, d) => { const p = P.get(t); if (!p) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; };
+const eligible = (t, d) => { const p = P.get(t); if (!p) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7) || inBad(p.bad, d)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; };
 const mom = (t, d) => { const p = P.get(t), i = at(t, addD(d, -365)), j = at(t, addD(d, -30)); return i >= 0 && j > i ? p.c[j] / p.c[i] - 1 : null; };
 const latestQ = (m, d) => { let best = null; for (const [k, x] of m) if (x.f <= d && (!best || k > best)) best = k; return best; };
 const known = (m, k, d) => { const x = m?.get(k); return x && x.f <= d ? x.v : null; };
