@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TAGS } from './facts_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
-import { cleanBars, inBad } from './prices_clean.mjs';
+import { cleanBars, inBad, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache');
 const rd = (f, d = null) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d);
@@ -27,13 +27,13 @@ for (const t of universeV2(1e9).map((x) => x.t)) { const F = rd(path.join(C, 'ed
   RAWQ.set(t, rows.sort((x, y) => x.e.localeCompare(y.e))); }
 function load(cut) { const P = new Map(), Q = new Map();
   for (const t of RAWQ.keys()) { const cb = cleanBars(t); let b = cb.bars; if (cut) b = b.filter((x) => x.d <= cut);
-    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
+    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad, gaps: gapsOf(b) }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
   let cal = rd(path.join(C, 'wdaily_hist', 'SPY_full.json')).filter((x) => !cut || x.d <= cut); return { P, Q, cal: cal.map((x) => x.d), spy: new Map(cal.map((x) => [x.d, x.c])) }; }
 const idx = (p, d) => { let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 
 // ---------- month-end ranking (core score + hard rule) ----------
 function monthData(D, M) { const { P, Q } = D;
-  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || inBad(p.bad, M)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
+  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || blockedAt(p.bad, p.gaps, M)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
   const feat = (t) => { const rows = (Q.get(t) ?? []).filter((x) => x.f <= M), q0 = rows.at(-1); if (!q0 || days(q0.e, M) > 200 || q0.rev < 25e6) return null;
     const find = (ref, lo, hi) => ref && rows.filter((x) => { const d = days(x.e, ref.e); return d >= lo && d <= hi; }).at(-1);
     const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385), q5 = find(q1, 345, 385); if (!q1 || !q4 || !q5 || !(q4.rev > 0 && q5.rev > 0) || q0.gm == null || q4.gm == null) return null;
@@ -50,7 +50,7 @@ function monthData(D, M) { const { P, Q } = D;
 const D = load(null), ME = []; for (let y = 2024, m = 7; `${y}-${String(m).padStart(2, '0')}` <= '2026-09'; m === 12 ? (y++, m = 1) : m++) ME.push(new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10));
 const MD = new Map(ME.map((M) => [M, monthData(D, M)]));
 const px = (t, d) => { const p = D.P.get(t); const j = idx(p, d); return j >= 0 ? p.c[j] : null; };
-function movers(a, b, n) { const elig = MD.get(a).elig; return elig.map((t) => { const p0 = px(t, a), p1 = px(t, b); return [t, p0 && p1 ? p1 / p0 - 1 : null]; }).filter(([, r]) => r != null).sort((x, y) => y[1] - x[1]).slice(0, n); }
+function movers(a, b, n) { const elig = MD.get(a).elig; return elig.map((t) => { const p0 = px(t, a), p1 = px(t, b), q = D.P.get(t); return [t, p0 && p1 && !crosses(q.bad, q.gaps, a, b) ? p1 / p0 - 1 : null]; }).filter(([, r]) => r != null).sort((x, y) => y[1] - x[1]).slice(0, n); }
 const out = [];
 for (const [yr, a, b] of [['2025', '2024-12-31', '2025-12-31'], ['2026 YTD', '2025-12-31', '2026-09-30']]) {
   const mv = movers(a, b, 50), rows = [];

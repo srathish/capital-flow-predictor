@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TAGS } from './facts_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
-import { cleanBars, inBad } from './prices_clean.mjs';
+import { cleanBars, inBad, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_exits');
 if (fs.existsSync(path.join(RES, 'exits.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_exits/exits.txt'); process.exit(1); }
@@ -28,13 +28,13 @@ for (const t of universeV2(1e9).map((x) => x.t)) { const F = rd(path.join(C, 'ed
   RAWQ.set(t, rows.sort((x, y) => x.e.localeCompare(y.e))); }
 function load(cut) { const P = new Map(), Q = new Map();
   for (const t of RAWQ.keys()) { const cb = cleanBars(t); let b = cb.bars; if (cut) b = b.filter((x) => x.d <= cut);
-    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
+    if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cut ? cb.bad.filter((w) => w.at <= cut) : cb.bad, gaps: gapsOf(b) }); Q.set(t, cut ? RAWQ.get(t).filter((x) => x.f <= cut) : RAWQ.get(t)); }
   let cal = rd(path.join(C, 'wdaily_hist', 'SPY_full.json')).filter((x) => !cut || x.d <= cut); return { P, Q, cal: cal.map((x) => x.d), spy: new Map(cal.map((x) => [x.d, x.c])) }; }
 const idx = (p, d) => { let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 
 // ---------- month-end ranking (core score + hard rule) ----------
 function monthData(D, M) { const { P, Q } = D;
-  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || inBad(p.bad, M)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
+  const elig = [...P.keys()].filter((t) => { const p = P.get(t), j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || blockedAt(p.bad, p.gaps, M)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; });
   const feat = (t) => { const rows = (Q.get(t) ?? []).filter((x) => x.f <= M), q0 = rows.at(-1); if (!q0 || days(q0.e, M) > 200 || q0.rev < 25e6) return null;
     const find = (ref, lo, hi) => ref && rows.filter((x) => { const d = days(x.e, ref.e); return d >= lo && d <= hi; }).at(-1);
     const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385), q5 = find(q1, 345, 385); if (!q1 || !q4 || !q5 || !(q4.rev > 0 && q5.rev > 0) || q0.gm == null || q4.gm == null) return null;
@@ -57,12 +57,13 @@ function sim(D, PR, cfg, start, end) { const days_ = D.cal.filter((d) => d >= st
   const close = (t, d) => { const p = D.P.get(t), j = idx(p, d); return j >= 0 ? { c: p.c[j], j, p } : null; };
   const mo = (a, b) => (+b.slice(0, 4) - +a.slice(0, 4)) * 12 + (+b.slice(5, 7) - +a.slice(5, 7));
   for (let i = 0; i < days_.length; i++) { const d = days_[i];
-    for (const x of pos.filter((q) => q.sell)) { const k = close(x.t, d); cash += x.u * k.c * (1 - COST); trades.push({ t: x.t, in: x.d0, out: d, r: k.c / x.px - 1, why: x.sell, px: x.px, exitPx: k.c }); }
+    for (const x of pos.filter((q) => q.sell)) { const k = close(x.t, d), px = x.sell === 'data' ? x.dataPx : k.c; cash += x.u * px * (1 - COST); trades.push({ t: x.t, in: x.d0, out: d, r: px / x.px - 1, why: x.sell, px: x.px, exitPx: px }); }
     pos = pos.filter((q) => !q.sell);
     for (const t of pend) { const k = close(t, d); if (!k || k.p.d[k.j] < addD(d, -7)) continue; const amt = Math.min(eq / SLOTS, cash); if (amt <= 0) break; cash -= amt;
       const lr = []; for (let j = Math.max(1, k.j - 59); j <= k.j; j++) lr.push(Math.log(k.p.c[j] / k.p.c[j - 1])); pos.push({ t, u: (amt * (1 - COST)) / k.c, px: k.c, d0: d, peak: k.c, vol: sd(lr) * Math.sqrt(21), n: 0 }); }
-    pend = []; eq = cash; for (const x of pos) { const k = close(x.t, d); x.last = k.c; eq += x.u * k.c; x.peak = Math.max(x.peak, k.c); x.n++;
-      const L = cfg.L, dd = 1 - k.c / x.peak; let why = null; if (inBad(k.p.bad, d)) { x.sell = 'data'; continue; } // quarantined price stretch ahead: exit before it
+    pend = []; eq = cash; for (const x of pos) { const k = close(x.t, d); if (!x.sell && crosses(k.p.bad, k.p.gaps, addD(d, -1), d)) { x.sell = 'data'; x.dataPx = x.prevC ?? x.px; } if (x.sell === 'data') { eq += x.u * x.dataPx; continue; } x.last = k.c; eq += x.u * k.c; x.peak = Math.max(x.peak, k.c); x.n++;
+      // a suspect jump/gap today (checked above): the position exits at the last good price
+      const L = cfg.L, dd = 1 - k.c / x.peak; let why = null; x.prevC = k.c;
       if (L.startsWith('L1') && dd >= +L.split('-')[1] / 100) why = L; if (L.startsWith('L2') && dd >= +L.split('-')[1] * x.vol) why = L;
       if (L === 'L3a' || L === 'L3b') { const w = L === 'L3a' ? 50 : 200; if (k.j >= w) { let s = 0; for (let j = k.j - w + 1; j <= k.j; j++) s += k.p.c[j]; if (k.c < s / w) why = L; } }
       if (L === 'L5' && x.n === 63 && k.c < x.px) why = L; if (why) x.sell = why; }

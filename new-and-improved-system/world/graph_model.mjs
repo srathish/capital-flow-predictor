@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { sicToBea, OUTSIDE_BEA, tradeBea } from './sic_bea.mjs';
-import { cleanBars, inBad } from './prices_clean.mjs';
+import { cleanBars, inBad, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), G = path.join(C, 'graph'), RES = path.join(ROOT, 'world', 'results_graph');
 const RIDGE = process.argv.includes('--ridge'), SMOKE = process.argv.includes('--smoke'), TAG = RIDGE ? 'graph_ridge' : 'graph'; // --smoke: bug check on 2018 (training years), writes nothing
@@ -68,9 +68,9 @@ const TWN = new Map();
 
 // ---------- prices / eligibility ----------
 const P = new Map();
-for (const t of CO.keys()) { const cb = cleanBars(t), b = cb.bars; if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); }
+for (const t of CO.keys()) { const cb = cleanBars(t), b = cb.bars; if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad, gaps: gapsOf(b) }); }
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
-const eligible = (t, d) => { const p = P.get(t); if (!p) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7) || inBad(p.bad, d)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; };
+const eligible = (t, d) => { const p = P.get(t); if (!p) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7) || blockedAt(p.bad, p.gaps, d)) return false; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / 50 >= 2e7; };
 const mom = (t, d) => { const p = P.get(t), i = at(t, addD(d, -365)), j = at(t, addD(d, -30)); return i >= 0 && j > i ? p.c[j] / p.c[i] - 1 : null; };
 const latestQ = (m, d) => { let best = null; for (const [k, x] of m) if (x.f <= d && (!best || k > best)) best = k; return best; };
 const known = (m, k, d) => { const x = m?.get(k); return x && x.f <= d ? x.v : null; };
@@ -190,7 +190,7 @@ for (const M of monthEnds) { const Y = M.slice(0, 4); if (!learned.has(Y)) { con
   console.error(`${M} elig ${elig.length} · forecasts ${fc.size} · IC ${ic?.toFixed(3)} (persistence ${icP?.toFixed(3)})`); }
 
 // ---------- portfolios (buy top 20, hold while in top 60) ----------
-const ret = (t, a, b) => { const p = P.get(t); if (!p) return null; const i = at(t, a) + 1, j = at(t, b) + 1; return i > 0 && j > i && j < p.c.length ? p.c[j] / p.c[i] - 1 : null; };
+const ret = (t, a, b) => { const p = P.get(t); if (!p || crosses(p.bad, p.gaps, a, b)) return null; const i = at(t, a) + 1, j = at(t, b) + 1; return i > 0 && j > i && j < p.c.length ? p.c[j] / p.c[i] - 1 : null; };
 const medRet = months.slice(0, -1).map((m, i) => { const nxt = months[i + 1].M, v = m.elig.map((t) => ret(t, m.M, nxt)).filter((x) => x != null).sort((a, b) => a - b); return v[v.length >> 1] ?? 0; });
 function run(rankOf, log = false, filt = null) { let hold = new Set(); const out = [], trades = [];
   for (let i = 0; i < months.length - 1; i++) { const m = months[i], r = rankOf(m, i); const order = [...r].filter(([t]) => !filt || filt(m, t)).sort((a, b) => b[1] - a[1]).map(([t]) => t), keep = new Set(order.slice(0, KEEP));

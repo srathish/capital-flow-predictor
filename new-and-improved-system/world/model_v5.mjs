@@ -8,7 +8,7 @@ import path from 'node:path';
 import { worldUniverse } from './collect.mjs';
 import { TAGS } from './facts_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
-import { cleanBars, inBad } from './prices_clean.mjs';
+import { cleanBars, inBad, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_v5');
 const HIST = process.argv.includes('--hist'), HOLD = HIST || process.argv.includes('--holdout'), WIDE = HIST || process.argv.includes('--wide');
@@ -23,12 +23,12 @@ const TOP = 20, FWD = 182, DRAWS = 200;
 // ---------- prices / eligibility (same rules as v1–v4) ----------
 const U = WIDE ? universeV2(1e9) : worldUniverse(), P = new Map();
 for (const { t } of U) { const cb = cleanBars(t, { hist: HIST }); let b = cb.bars; // clean layer: NYSE trading days only + split-quarantine windows if (!b.length) b = (rd(path.join(C, 'daily', `${t}.json`), []) || []).map((x) => ({ d: ymd(x.t), c: x.c, v: x.v }));
-  if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad }); }
+  if (b.length > 70) P.set(t, { d: b.map((x) => x.d), c: b.map((x) => x.c), v: b.map((x) => x.v || 0), bad: cb.bad, gaps: gapsOf(b) }); }
 const META = new Map([...P.keys()].map((t) => [t, WIDE ? { sic: !!rd(path.join(C, 'edgar', 'facts', `${t}.json`), {}).rev } : rd(path.join(C, 'edgar', 'meta', `${t}.json`), null)]));
 const at = (t, d) => { const p = P.get(t); let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 // audit fix #4: a stock is not eligible on a stale price (last bar more than 7 days before the date)
-const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7) || inBad(p.bad ?? [], d)) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
-const fwdFrom = (t, d) => { const p = P.get(t); if (!p) return null; const j = at(t, d) + 1, k = at(t, addD(d, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(d, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
+const eligibleAt = (t, d) => { const p = P.get(t); if (!p || !META.get(t)?.sic) return false; const j = at(t, d); if (j < 64 || p.d[j] < addD(d, -7) || blockedAt(p.bad ?? [], p.gaps, d)) return false; let dv = 0; for (let k = Math.max(0, j - 49); k <= j; k++) dv += p.c[k] * p.v[k]; return p.c[j] >= 5 && dv / Math.min(50, j + 1) >= 2e7; };
+const fwdFrom = (t, d) => { const p = P.get(t); if (!p || crosses(p.bad ?? [], p.gaps, d, addD(d, FWD))) return null; const j = at(t, d) + 1, k = at(t, addD(d, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(d, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
 const above200 = (t, d) => { const p = P.get(t), j = at(t, d); if (j < 199) return false; let s = 0; for (let k = j - 199; k <= j; k++) s += p.c[k]; return p.c[j] > s / 200; }; // Model C (addendum 3)
 const mom = (t, d) => { const p = P.get(t), i = at(t, addD(d, -365)), j = at(t, addD(d, -30)); return i >= 0 && j > i ? p.c[j] / p.c[i] - 1 : null; };
 

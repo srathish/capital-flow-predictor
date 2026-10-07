@@ -9,7 +9,7 @@ import { TAGS } from './facts_collect.mjs';
 import { TAGS2 } from './facts2_collect.mjs';
 import { universeV2 } from './universe_prices.mjs';
 import { sicToBea } from './sic_bea.mjs';
-import { cleanBars, inBad } from './prices_clean.mjs';
+import { cleanBars, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_engines');
 const SMOKE = process.argv.includes('--smoke'), DIAG = process.argv.includes('--diag'); // --diag: per-engine coverage + sample flags (no scoring)
@@ -39,7 +39,8 @@ for (const t of RAWQ.keys()) { const G = rd(path.join(C, 'edgar', 'facts2', `${t
   if (G.opinc) OPQ.set(t, [...series(G.opinc, TAGS2.opinc)].map(([e, x]) => ({ e, v: x.v, f: x.f })).sort((a, b) => a.e.localeCompare(b.e)));
   if (H.ni) NIQ.set(t, [...series(H.ni, ['NetIncomeLoss', 'ProfitLoss'])].map(([e, x]) => ({ e, v: x.v, f: x.f })).sort((a, b) => a.e.localeCompare(b.e)));
   if (H.sh) { const a = []; for (const tag of ['EntityCommonStockSharesOutstanding', 'CommonStockSharesOutstanding']) for (const x of H.sh[tag] ?? []) a.push({ d: x.f, v: x.v }); if (a.length) SHR.set(t, a.sort((x, y) => x.d.localeCompare(y.d))); }
-  const b = []; for (const [k, tags] of [['rpo', TAGS2.rpo], ['defrev', TAGS2.defrev]]) for (const tag of tags) for (const x of G[k]?.[tag] ?? []) b.push({ k, e: x.e, v: x.v, f: x.f }); if (b.length) BACK.set(t, b); }
+  const bm = new Map(); for (const [k, tags] of [['rpo', TAGS2.rpo], ['defrev', TAGS2.defrev]]) for (const [ti, tag] of tags.entries()) for (const x of G[k]?.[tag] ?? []) { const key = k + '|' + x.e, cur = bm.get(key); if (!cur || ti < cur.ti || (ti === cur.ti && x.f < cur.f)) bm.set(key, { k, e: x.e, v: x.v, f: x.f, ti }); } // amendment 5: one tag + earliest filing per period
+  if (bm.size) BACK.set(t, [...bm.values()]); }
 const IFRS = new Map(); for (const f of fs.existsSync(path.join(C, 'edgar', 'facts_ifrs')) ? fs.readdirSync(path.join(C, 'edgar', 'facts_ifrs')) : []) { const F = rd(path.join(C, 'edgar', 'facts_ifrs', f)); if (!F?.rev) continue;
   const rev = series(F.rev, Object.keys(F.rev), true), gp = series(F.gp ?? {}, Object.keys(F.gp ?? {}), true), rows = [];
   for (const [e, r] of rev) { const a = gp.get(e); rows.push({ e, rev: r.v, dur: r.dur, gm: a && a.dur === r.dur ? a.v / r.v : null, f: a ? [r.f, a.f].sort().at(-1) : r.f }); } IFRS.set(f.replace('.json', ''), rows.sort((x, y) => x.e.localeCompare(y.e))); }
@@ -47,11 +48,15 @@ const INS = new Map(); for (const line of fs.readFileSync(path.join(C, 'insider_
   if (!r.ticker || !r.filed || !r.tradeDate || r.tradeDate < '2014-01-01' || r.tradeDate > r.filed) continue; const a = INS.get(r.ticker) ?? []; a.push({ f: r.filed, d: r.tradeDate, o: r.ownerCik ?? r.owner, v: Math.min(r.value ?? 0, 5e7) }); INS.set(r.ticker, a); }
 const SPIN = rd(path.join(C, 'edgar', 'spinoffs.json'), {});
 const EXPO = [...(rd(path.join(C, 'edgar', 'exposure_hist.json'), []) || []), ...(rd(path.join(C, 'edgar', 'exposure.json'), []) || [])];
-const CONCEPT = new Map(); for (const x of EXPO) { if (!x.t || !x.c || !x.d) continue; const a = CONCEPT.get(x.c) ?? new Map(); if (!a.has(x.t) || x.d < a.get(x.t)) a.set(x.t, x.d); CONCEPT.set(x.c, a); }
-const COMM = Object.fromEntries(['GLD', 'SLV', 'CPER', 'URA', 'USO', 'UNG', 'LIT', 'REMX'].map((t) => [t, rd(path.join(C, 'commodity', `${t}.json`), [])]));
+// amendment 5: every 10-K/10-Q mention date kept; member at M = any mention in [M − 730, M]
+const CONCEPT = new Map(); for (const x of EXPO) { if (!x.t || !x.c || !x.d || !/^10-[KQ]/.test(x.f ?? '')) continue; const a = CONCEPT.get(x.c) ?? new Map(); (a.get(x.t) ?? a.set(x.t, []).get(x.t)).push(x.d); CONCEPT.set(x.c, a); }
+for (const mp of CONCEPT.values()) for (const a of mp.values()) a.sort();
+const memberAt = (dates, M) => { const lo = addD(M, -730); let l = 0, h = dates.length - 1; while (l <= h) { const m = (l + h) >> 1; if (dates[m] <= M) { if (dates[m] >= lo) return true; l = m + 1; } else h = m - 1; } return false; };
+const conceptMembers = (c, M) => [...(CONCEPT.get(c) ?? [])].filter(([, ds]) => memberAt(ds, M)).map(([t]) => t);
+const COMM = Object.fromEntries(['GLD', 'SLV', 'CPER', 'URA', 'USO', 'UNG', 'LIT', 'REMX', 'BDRY', 'BWET'].map((t) => [t, rd(path.join(C, 'commodity', `${t}.json`), [])]));
 const BTC = (rd(path.join(C, 'graph', 'fred.json'), {})?.CBBTCUSD?.obs ?? []).map((o) => ({ d: o.d, c: o.v }));
 const GROUPS = { GLD: { s4: ['1040'], c: [] }, SLV: { s4: ['1040', '1090'], c: [] }, CPER: { s4: ['1000', '3330', '3331'], c: [] }, URA: { s4: ['1090', '1094'], c: ['uranium', 'small modular reactor'] }, // amendment 4: SIC producers only, concepts only where no SIC home
-  USO: { s4: ['1311', '1381', '1389', '2911'], c: [] }, UNG: { s4: ['1311', '4922', '4923', '4924'], c: [] }, LIT: { s4: ['2819'], c: ['lithium'] }, REMX: { s4: [], c: ['rare earth'] }, BTC: { s4: [], c: ['bitcoin mining', 'hashrate'] } };
+  USO: { s4: ['1311', '1381', '1389', '2911'], c: [] }, UNG: { s4: ['1311', '4922', '4923', '4924'], c: [] }, LIT: { s4: ['2819'], c: ['lithium'] }, REMX: { s4: [], c: ['rare earth'] }, BTC: { s4: [], c: ['bitcoin mining', 'hashrate'] }, BDRY: { s4: ['4400', '4412', '4424'], c: [] }, BWET: { s4: ['4400', '4412', '4424'], c: [] } }; // amendment 5: freight group
 const WIKI = (t) => rd(path.join(C, 'wiki', 'views', `${t}.json`), null);
 const USE = rd(path.join(C, 'bea', 'use_summary.json'), {});
 const SP_BAR = { 2014: 5.3e9, 2015: 5.3e9, 2016: 5.3e9, 2017: 6.1e9, 2018: 6.1e9, 2019: 8.2e9, 2020: 8.2e9, 2021: 13.1e9, 2022: 14.6e9, 2023: 15.8e9, 2024: 18e9, 2025: 22.7e9, 2026: 22.7e9 }; // S&P 500 minimum market cap rule by year (as published)
@@ -60,18 +65,18 @@ const SP_BAR = { 2014: 5.3e9, 2015: 5.3e9, 2016: 5.3e9, 2017: 6.1e9, 2018: 6.1e9
 function loadPrices(cut) { const P = new Map();
   for (const { t } of U) { if (isFund(t)) continue; const cb = cleanBars(t); let b = cb.bars; if (cut) b = b.filter((x) => x.d <= cut); if (b.length < 70) continue;
     const c = b.map((x) => x.c), v = b.map((x) => x.v || 0), obv = new Array(b.length).fill(0); for (let i = 1; i < b.length; i++) obv[i] = obv[i - 1] + (c[i] > c[i - 1] ? v[i] : c[i] < c[i - 1] ? -v[i] : 0);
-    P.set(t, { d: b.map((x) => x.d), c, v, obv, bad: cb.bad }); } return P; }
+    P.set(t, { d: b.map((x) => x.d), c, v, obv, bad: cut ? cb.bad.filter((w) => w.at <= cut) : cb.bad, gaps: gapsOf(b) }); } return P; }
 const idx = (p, d) => { let lo = 0, hi = p.d.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (p.d[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 const ser = (a, d) => { if (!a?.length) return null; let lo = 0, hi = a.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (a[m].d <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r >= 0 ? a[r].c : null; };
 
 // ---------- per-month state ----------
 function month(P, M) {
   const elig = [], px = new Map();
-  for (const [t, p] of P) { const j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || inBad(p.bad, M)) continue; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; if (!(p.c[j] >= 5 && dv / 50 >= 2e7)) continue; elig.push(t);
+  for (const [t, p] of P) { const j = idx(p, M); if (j < 64 || p.d[j] < addD(M, -7) || blockedAt(p.bad, p.gaps, M)) continue; let dv = 0; for (let k = j - 49; k <= j; k++) dv += p.c[k] * p.v[k]; if (!(p.c[j] >= 5 && dv / 50 >= 2e7)) continue; elig.push(t);
     const c = (k) => p.c[Math.max(0, k)]; let hi = 0, obvHi = -Infinity, up = 0, dn = 0, ma = 0; for (let k = Math.max(0, j - 251); k < j; k++) hi = Math.max(hi, p.c[k]);
     for (let k = Math.max(0, j - 125); k < j; k++) obvHi = Math.max(obvHi, p.obv[k]); for (let k = j - 49; k <= j; k++) { if (p.c[k] > p.c[k - 1]) up += p.v[k]; else if (p.c[k] < p.c[k - 1]) dn += p.v[k]; ma += p.c[k]; }
     px.set(t, { j, c: p.c[j], r3: c(j) / c(j - 63) - 1, r6: c(j) / c(j - 126) - 1, r12: j >= 252 ? c(j - 21) / c(j - 252) - 1 : null, hi52: hi, newHigh: p.c[j] >= hi, offHi: p.c[j] / Math.max(hi, p.c[j]) - 1, obvNewHi: p.obv[j] >= obvHi, udv: dn > 0 ? up / dn : 9, aboveMA50: p.c[j] > ma / 50, dv: dv / 50, firstDay: p.d[0] }); }
-  const fwd = (t) => { const p = P.get(t), j = idx(p, M) + 1, k = idx(p, addD(M, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(M, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
+  const fwd = (t) => { const p = P.get(t); if (crosses(p.bad, p.gaps, M, addD(M, FWD))) return null; const j = idx(p, M) + 1, k = idx(p, addD(M, FWD)); return j > 0 && j < p.c.length && k > j && p.d[k] >= addD(M, FWD - 10) ? p.c[k] / p.c[j] - 1 : null; };
   // v5 features (E0 / E0b / E4)
   const F = new Map(), F0 = new Map();
   for (const t of elig) { const rows = (RAWQ.get(t) ?? []).filter((x) => x.frev <= M), q0 = rows.at(-1); if (!q0 || days(q0.e, M) > 200 || q0.rev < 25e6) continue;
@@ -98,9 +103,9 @@ const ENGINES = {
   E1: { budget: 40, grid: [{ k: 2, n: 3 }, { k: 2, n: 5 }, { k: 3, n: 3 }, { k: 3, n: 5 }], run: (m, p) => { const lead = m.e0.slice(0, 60).map((x) => x.t), leadSet = new Set(lead), out = [], yr = m.M.slice(0, 4);
     const cnt = new Map(); for (const t of lead) { const s = sic3(t); if (s) cnt.set(s, (cnt.get(s) ?? 0) + 1); } const lit = [...cnt].filter(([, n]) => n >= p.k).map(([s]) => s);
     const litLinked = new Set(lit); for (const s of IND3.keys()) if (!litLinked.has(s) && (cnt.get(s) ?? 0) >= 1 && lit.some((l) => beaLinked(BEA3.get(l), BEA3.get(s), yr))) litLinked.add(s); // amendment 4
-    const litC = []; for (const [c, mp] of CONCEPT) { let n = 0; for (const t of lead) if (mp.has(t) && mp.get(t) <= m.M && mp.get(t) >= addD(m.M, -730)) n++; if (n >= p.k) litC.push(c); }
+    const litC = []; for (const [c, mp] of CONCEPT) { let n = 0; for (const t of lead) if (mp.has(t) && memberAt(mp.get(t), m.M)) n++; if (n >= p.k) litC.push(c); }
     for (const s of litLinked) { const mem = (IND3.get(s) ?? []).filter((t) => !leadSet.has(t)); for (const t of byMom(m, mem, p.n)) out.push({ t, why: `theme spread: industry "${SIC.get(t)?.desc}" is ${lit.includes(s) ? 'lit' : 'linked to a lit industry'} (${cnt.get(s) ?? 0} bottleneck leaders); 3-month momentum ${pct(m.px.get(t).r3)}` }); }
-    for (const c of litC) { const mem = [...CONCEPT.get(c)].filter(([t, d]) => d <= m.M && !leadSet.has(t)).map(([t]) => t); for (const t of byMom(m, mem, p.n)) out.push({ t, why: `theme spread: concept "${c}" is lit (≥${p.k} bottleneck leaders mention it); 3-month momentum ${pct(m.px.get(t).r3)}` }); }
+    for (const c of litC) { const mem = conceptMembers(c, m.M).filter((t) => !leadSet.has(t)); for (const t of byMom(m, mem, p.n)) out.push({ t, why: `theme spread: concept "${c}" is lit (≥${p.k} bottleneck leaders mention it); 3-month momentum ${pct(m.px.get(t).r3)}` }); }
     const seen = new Set(); return out.filter((x) => !seen.has(x.t) && seen.add(x.t)).sort((a, b) => m.px.get(b.t).r3 - m.px.get(a.t).r3).slice(0, 40); } },
   E2a: { budget: 20, grid: [{ n: 10 }, { n: 20 }], run: (m, p) => { const S = [];
     for (const [t, rows0] of IFRS) { if (!m.px.has(t)) continue; const rows = rows0.filter((x) => x.f <= m.M), q0 = rows.at(-1); if (!q0 || days(q0.e, m.M) > 400) continue;
@@ -112,7 +117,7 @@ const ENGINES = {
     return S.map((x) => ({ ...x, s: mean(R.map((r, i) => r(x.f[['g0', 'accel', 'dGM'][i]]))) })).sort((a, b) => b.s - a.s).slice(0, p.n).map((x) => ({ t: x.t, why: `foreign filer bottleneck: revenue ${pct(x.f.g0)} YoY (IFRS)` })); } },
   E2b: { budget: 20, grid: [{ th: 0.15, n: 5 }, { th: 0.15, n: 10 }, { th: 0.25, n: 5 }, { th: 0.25, n: 10 }], run: (m, p) => { const out = [];
     for (const [k, g] of Object.entries(GROUPS)) { const a = k === 'BTC' ? BTC : COMM[k]; const c0 = ser(a, m.M), c6 = ser(a, addD(m.M, -182)); if (!c0 || !c6 || c0 / c6 - 1 < p.th) continue;
-      const mem = new Set([...m.px.keys()].filter((t) => g.s4.includes(SIC.get(t)?.s4))); for (const c of g.c) for (const [t, d] of CONCEPT.get(c) ?? []) if (d <= m.M && d >= addD(m.M, -730) && m.px.has(t)) mem.add(t);
+      const mem = new Set([...m.px.keys()].filter((t) => g.s4.includes(SIC.get(t)?.s4))); for (const c of g.c) for (const t of conceptMembers(c, m.M)) if (m.px.has(t)) mem.add(t);
       for (const t of byMom(m, [...mem], p.n)) out.push({ t, why: `commodity/crypto: ${k === 'BTC' ? 'bitcoin' : k} up ${pct(c0 / c6 - 1)} in 6 months; producer with 3-month momentum ${pct(m.px.get(t).r3)}` }); }
     const seen = new Set(); return out.filter((x) => !seen.has(x.t) && seen.add(x.t)); } },
   // E3 (amendment 4): the year-earlier backlog value must be ≥ $50M
@@ -137,32 +142,35 @@ const ENGINES = {
       const cap = sh * q.c, cap3 = sh * pp.c[j3]; if (!(cap >= bar && cap3 < bar)) continue; const ni = (NIQ.get(t) ?? []).filter((x) => x.f <= m.M).slice(-4); if (ni.length < 4 || ni.at(-1).v <= 0 || ni.reduce((s, x) => s + x.v, 0) <= 0) continue; S.push({ t, cap }); }
     return S.sort((a, b) => a.cap - b.cap).slice(0, 20).map((x) => ({ t: x.t, why: `index candidate: market cap crossed $${(bar / 1e9).toFixed(1)}B (S&P 500 bar) with 4 profitable quarters` })); } },
   E10: { budget: 20, grid: [{ lo: 3, hi: 6, spin: true }, { lo: 6, hi: 12, spin: true }, { lo: 3, hi: 6, spin: false }, { lo: 6, hi: 12, spin: false }], run: (m, p) => {
-    const cand = m.elig.filter((t) => { const fd = m.px.get(t).firstDay; if (fd <= '2010-02-01') return false; const age = days(fd, m.M) / 30.4; return age >= p.lo && age < p.hi && (!p.spin || (SPIN[t] && SPIN[t].firstForm10 <= m.M)); });
+    const cand = m.elig.filter((t) => { const fd = m.px.get(t).firstDay; if (fd <= '2010-02-01' || CLUSTER.has(fd)) return false; const fs0 = FIRSTSEC.get(t); if (!fs0 || Math.abs(days(fs0, fd)) > 400) return false; // amendment 5
+      const age = days(fd, m.M) / 30.4; if (!(age >= p.lo && age < p.hi)) return false; if (!p.spin) return true; const f10 = SPIN[t]?.firstForm10; return !!f10 && f10 <= m.M && days(f10, fd) <= 365 && days(f10, fd) >= -60; });
     const r3 = cand.map((t) => m.px.get(t).r3).sort((a, b) => a - b), mid = r3[r3.length >> 1];
     return cand.filter((t) => m.px.get(t).r3 >= mid).sort((a, b) => m.px.get(b).r3 - m.px.get(a).r3).slice(0, 20).map((t) => ({ t, why: `${p.spin ? 'spin-off' : 'new listing'}: trading ${Math.round(days(m.px.get(t).firstDay, m.M) / 30.4)} months, 3-month momentum ${pct(m.px.get(t).r3)}` })); } },
   E11: { budget: 40, grid: [{ off: 0.1, ud: 1.3 }, { off: 0.1, ud: 1.6 }, { off: 0.2, ud: 1.3 }, { off: 0.2, ud: 1.6 }], run: (m, p) => m.elig.filter((t) => { const x = m.px.get(t); return x.obvNewHi && x.offHi <= -p.off && x.udv >= p.ud; })
     .sort((a, b) => m.px.get(b).udv - m.px.get(a).udv).slice(0, 40).map((t) => ({ t, why: `quiet accumulation: volume on-balance at 6-month high while price ${pct(m.px.get(t).offHi)} from its high; up/down volume ${m.px.get(t).udv.toFixed(1)}×` })) },
   E12: { budget: 30, grid: [{ x: 3 }, { x: 5 }], run: (m, p) => { const S = [];
-    for (const t of m.elig) { const w = WCACHE.get(t) ?? (WCACHE.set(t, WIKI(t)), WCACHE.get(t)); if (!w?.length || !m.px.get(t).aboveMA50) continue; const key = m.M.replaceAll('-', ''), j = w.findLastIndex((x) => String(x[0]) <= key); if (j < 210) continue;
-      const v30 = w.slice(j - 29, j + 1).reduce((s, x) => s + x[1], 0), base = w.slice(j - 209, j - 29).reduce((s, x) => s + x[1], 0) / 180 * 30; if (base > 300 && v30 >= p.x * base) S.push({ t, r: v30 / base }); }
+    for (const t of m.elig) { const w = WCACHE.get(t) ?? (WCACHE.set(t, WIKI(t)), WCACHE.get(t)); if (!w?.length || !m.px.get(t).aboveMA50) continue; const k = (d) => +d.replaceAll('-', ''), kM = k(m.M), k30 = k(addD(m.M, -30)), k210 = k(addD(m.M, -210)); if (+w[0][0] > k210) continue; // amendment 5: calendar-day windows
+      let v30 = 0, vb = 0; for (const [dd, v] of w) { if (+dd > kM) break; if (+dd > k30) v30 += v; else if (+dd > k210) vb += v; } const base = (vb / 180) * 30; if (base >= 300 && v30 >= p.x * base) S.push({ t, r: v30 / base }); }
     return S.sort((a, b) => b.r - a.r).slice(0, 30).map((x) => ({ t: x.t, why: `attention surge: Wikipedia views ${x.r.toFixed(1)}× normal, price above 50-day average` })); } },
 };
-const WCACHE = new Map(); let P_ = null;
+const WCACHE = new Map(); let P_ = null, CLUSTER = new Set();
+const FIRSTSEC = new Map([...RAWQ].map(([t, rows]) => [t, rows.map((x) => x.frev).sort()[0]]).filter(([, d]) => d));
 
 // ---------- evaluation ----------
 const calME = (a, b) => { const o = []; for (let y = +a.slice(0, 4), mm = +a.slice(5, 7); `${y}-${String(mm).padStart(2, '0')}` <= b; mm === 12 ? (y++, mm = 1) : mm++) o.push(new Date(Date.UTC(y, mm, 0)).toISOString().slice(0, 10)); return o; };
-function build(P, a, b) { P_ = P; const out = new Map(); for (const M of calME(a, b)) { out.set(M, month(P, M)); } return out; }
+function build(P, a, b) { P_ = P; const fc = new Map(); for (const p of P.values()) fc.set(p.d[0], (fc.get(p.d[0]) ?? 0) + 1); CLUSTER = new Set([...fc].filter(([, n]) => n > 20).map(([d]) => d)); const out = new Map(); for (const M of calME(a, b)) { out.set(M, month(P, M)); } return out; }
 function moversOf(P, MS, Y, endOverride) { const a = `${Y - 1}-12-31`, b = endOverride ?? `${Y}-12-31`, m0 = MS.get(a); if (!m0) return [];
-  return m0.elig.map((t) => { const p = P.get(t), i0 = idx(p, a), i1 = idx(p, b); return [t, i0 >= 0 && i1 > i0 && p.d[i1] >= addD(b, -7) ? p.c[i1] / p.c[i0] - 1 : null]; }).filter(([, r]) => r != null).sort((x, y) => y[1] - x[1]).slice(0, 50); }
+  return m0.elig.map((t) => { const p = P.get(t), i0 = idx(p, a), i1 = idx(p, b); return [t, i0 >= 0 && i1 > i0 && p.d[i1] >= addD(b, -7) && !crosses(p.bad, p.gaps, a, b) ? p.c[i1] / p.c[i0] - 1 : null]; }).filter(([, r]) => r != null).sort((x, y) => y[1] - x[1]).slice(0, 50); }
 function evaluate(P, MS, flagsBy, years, endOverride) { const res = { early: 0, any: 0, n: 0, perYear: {}, detail: {} };
   for (const Y of years) { const mv = moversOf(P, MS, Y, Y === 2026 ? endOverride : null), start = `${Y - 1}-12-31`, end = Y === 2026 && endOverride ? endOverride : `${Y}-12-31`; let e = 0, an = 0; res.detail[Y] = [];
     for (const [t, r] of mv) { const p = P.get(t), p0 = p.c[idx(p, start)], p1 = p.c[idx(p, end)]; let first = null;
-      for (const M of [...MS.keys()].filter((M) => M >= addD(start, -184) && M <= end)) { const f = flagsBy.get(M)?.get(t); if (f) { const share = M <= start ? 0 : (p.c[idx(p, M)] / p0 - 1) / (p1 / p0 - 1); first = { M, share, why: f }; break; } }
+      for (const M of [...MS.keys()].filter((M) => M > addD(start, -184) && M <= end)) { const f = flagsBy.get(M)?.get(t); if (f) { const share = M <= start ? 0 : (p.c[idx(p, M)] / p0 - 1) / (p1 / p0 - 1); first = { M, share, why: f }; break; } }
       if (first) an++; if (first && first.share <= 0.5) e++; res.detail[Y].push({ t, r, first }); }
     res.perYear[Y] = { early: e, any: an, n: mv.length }; res.early += e; res.any += an; res.n += mv.length; }
   return res; }
 function precision(MS, flagsBy, a, b) { const ex = [], sizes = []; for (const [M, m] of MS) { if (M < a || M > b) continue; const fl = flagsBy.get(M); if (!fl) continue; sizes.push(fl.size); if (!fl.size) continue;
-    const all = m.elig.map(m.fwd).filter((x) => x != null), md = med(all), r = [...fl.keys()].map(m.fwd).filter((x) => x != null); if (r.length && md != null) ex.push(mean(r) - md); }
+    const all = m.elig.map(m.fwd).filter((x) => x != null), md = all.length ? mean(all) : null, // amendment 5: mean vs mean
+      r = [...fl.keys()].map(m.fwd).filter((x) => x != null); if (r.length && md != null) ex.push(mean(r) - md); }
   return { ex: ex.length ? mean(ex) : null, size: sizes.length ? mean(sizes) : 0 }; }
 let rseed = 7; const rnd = () => ((rseed = (rseed * 1103515245 + 12345) % 2147483648) / 2147483648);
 // amendment 3: random lists of the same size each month, scored with the same recall rule
@@ -178,6 +186,7 @@ if (DIAG) { const Pd = loadPrices(null); P_ = Pd; console.log(`data coverage: pr
     for (const [E, eng] of Object.entries(ENGINES)) { const fl = eng.run(m, eng.grid[eng.grid.length - 1]); console.log(`${E.padEnd(4)} ${String(fl.length).padStart(3)} flags · ${fl.slice(0, 3).map((x) => `${x.t} (${x.why})`).join(' | ').slice(0, 330)}`); } }
   process.exit(0); }
 // ---------- 1. choose settings on 2015–2022 (data truncated at 2022-12-31) ----------
+if (!SMOKE && !DIAG && !fs.existsSync(path.join(C, 'edgar', 'exposure_hist.json'))) { console.error('exposure_hist.json missing — the 2014–2021 concept history must finish first (amendment 5)'); process.exit(2); }
 const t0 = Date.now(), PB = loadPrices('2022-12-31'), MB = build(PB, '2014-06', '2022-12'); console.error(`build months ${MB.size} in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 const BUILD_Y = SMOKE ? [2016, 2020] : [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
 const chosen = {}, buildLog = [];

@@ -30,3 +30,10 @@ export function cleanBars(t, { hist = true } = {}) {
     if (SPLITQ.some((q) => Math.abs(r - q) / q < 0.04 || Math.abs(r * q - 1) < 0.04)) bad.push({ from: addD(bars[i].d, -200), to: addD(bars[i].d, 400), at: bars[i].d, r: +r.toFixed(3) }); }
   return { bars, bad }; }
 export const inBad = (bad, d) => bad.some((w) => d >= w.from && d <= w.to);
+
+// ---- point-in-time helpers (engines amendment 5, applied to every verdict script) ----
+// eligibility at d is blocked only by split-like jumps already seen (at in [d − 400, d]) or a price gap > 7 days in [d − 380, d];
+// a return from a to b is unusable if a jump or a gap falls in (a, b].
+export const gapsOf = (bars) => { const g = []; for (let i = 1; i < bars.length; i++) if ((Date.parse(bars[i].d) - Date.parse(bars[i - 1].d)) / 864e5 > 7) g.push(bars[i].d); return g; };
+export const blockedAt = (bad, gaps, d) => bad.some((w) => w.at <= d && w.at >= addD(d, -400)) || (gaps ?? []).some((g) => g <= d && g >= addD(d, -380));
+export const crosses = (bad, gaps, a, b) => bad.some((w) => w.at > a && w.at <= b) || (gaps ?? []).some((g) => g > a && g <= b);

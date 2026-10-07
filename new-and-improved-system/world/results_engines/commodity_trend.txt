@@ -1,0 +1,29 @@
+# E2c commodity / freight / crypto trend sleeve
+
+Rule: hold every asset whose 12-month return > 0 and price > 200-day average, equal weight, monthly; cash otherwise. Benchmark: equal-weight buy-and-hold of the same assets.
+
+| period | trend: yearly return | worst drawdown | Sharpe | buy & hold: yearly return | worst drawdown | Sharpe |
+|---|---|---|---|---|---|---|
+| 2011–2022 (build) | **+9.3%** | -47.9% | 0.48 | +1.4% | -61.9% | 0.17 |
+| 2023–2026-09 (partly seen) | **+25.8%** | -13.7% | 1.20 | +24.0% | -12.8% | 1.37 |
+
+## Year by year
+
+| year | trend | buy & hold | assets held most |
+|---|---|---|---|
+| 2011 | -0.5% | -11.9% | GLD (12m), SLV (9m), DBC (9m), DBA (7m), USO (6m), PPLT (6m) |
+| 2012 | -14.8% | -2.2% | GLD (3m), SLV (2m), PPLT (2m), DBC (2m), USO (1m), LIT (1m) |
+| 2013 | -15.8% | -12.0% | USO (4m), UNG (3m), DBC (2m), GLD (1m), PPLT (1m) |
+| 2014 | +7.8% | -18.3% | UNG (7m), DBA (6m), USO (5m), LIT (5m), DBC (3m), SLV (2m) |
+| 2015 | -5.9% | -25.2% | GLD (1m) |
+| 2016 | +26.3% | +18.8% | BTC (12m), GLD (9m), SLV (6m), LIT (6m), PPLT (3m), CPER (1m) |
+| 2017 | +127.2% | +44.1% | CPER (12m), LIT (12m), BTC (12m), DBC (8m), USO (5m), URA (5m) |
+| 2018 | -41.5% | -22.0% | USO (10m), DBC (10m), BNO (6m), GLD (5m), UGA (5m), CPER (3m) |
+| 2019 | +12.7% | +14.5% | GLD (7m), BTC (5m), SLV (5m), PPLT (5m), UGA (2m), SOYB (1m) |
+| 2020 | +64.2% | +19.9% | GLD (11m), SLV (9m), LIT (9m), BTC (8m), CPER (7m), PPLT (5m) |
+| 2021 | +43.5% | +50.5% | URA (12m), LIT (12m), REMX (12m), DBA (11m), DBC (11m), BDRY (11m) |
+| 2022 | -9.7% | -7.0% | CORN (11m), SOYB (11m), BNO (10m), USO (9m), UGA (9m), DBC (9m) |
+| 2023 | -6.7% | +5.3% | CANE (12m), SOYB (9m), GLD (9m), SLV (8m), URA (7m), DBA (6m) |
+| 2024 | +6.6% | +13.3% | GLD (12m), DBA (11m), BTC (10m), CPER (9m), URA (9m), SLV (9m) |
+| 2025 | +29.0% | +25.6% | GLD (12m), SLV (11m), BTC (10m), PPLT (10m), CPER (8m), DBA (7m) |
+| 2026 | +84.1% | +49.3% | CPER (9m), DBC (9m), BDRY (9m), BWET (9m), LIT (8m), USO (8m) |
