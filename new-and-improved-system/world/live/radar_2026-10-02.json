@@ -263,6 +263,14 @@
    "c": 339.34
   },
   {
+   "t": "RUM",
+   "E": "E4",
+   "why": "real turnaround: gross margin -2588% → 82%, revenue +3988%",
+   "also": [],
+   "r3": 0.16359447004608296,
+   "c": 7.575
+  },
+  {
    "t": "QMCO",
    "E": "E7",
    "why": "relative strength: 52-week high, 6-month +507%",
@@ -435,14 +443,6 @@
    "c": 36.63
   },
   {
-   "t": "RUM",
-   "E": "E4",
-   "why": "real turnaround: gross margin -2588% → 82%, revenue +3988%",
-   "also": [],
-   "r3": 0.16359447004608296,
-   "c": 7.575
-  },
-  {
    "t": "MRNA",
    "E": "E1",
    "why": "theme spread: industry \"Biological Products, (No Diagnostic Substances)\" is lit (5 bottleneck leaders); 3-month momentum +132%",
@@ -607,7 +607,7 @@
   {
    "t": "ZETA",
    "E": "E1",
-   "why": "theme spread: concept \"accelerator\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +50%",
+   "why": "theme spread: concept \"cloud computing\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +50%",
    "also": [
     "E8"
    ],
@@ -655,17 +655,9 @@
    "c": 198.9
   },
   {
-   "t": "ELF",
-   "E": "E1",
-   "why": "theme spread: concept \"oil\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
-   "also": [],
-   "r3": 0.4244114845557221,
-   "c": 104.68
-  },
-  {
    "t": "OKTA",
    "E": "E1",
-   "why": "theme spread: concept \"digital assets\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
+   "why": "theme spread: concept \"personal computer\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
    "also": [],
    "r3": 0.4232166890982505,
    "c": 211.49
@@ -699,7 +691,7 @@
   {
    "t": "FSLY",
    "E": "E1",
-   "why": "theme spread: concept \"accelerator\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +41%",
+   "why": "theme spread: concept \"colocation\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +41%",
    "also": [],
    "r3": 0.4142465753424658,
    "c": 25.81
@@ -711,6 +703,14 @@
    "also": [],
    "r3": 0.41009896990506967,
    "c": 349.07
+  },
+  {
+   "t": "ACVA",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Business Services, NEC\" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +41%",
+   "also": [],
+   "r3": 0.40646029609690437,
+   "c": 10.45
   },
   {
    "t": "VGNT",

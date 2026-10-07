@@ -1,0 +1,316 @@
+{
+ "start": "2026-10-02",
+ "cash": 0,
+ "pos": [
+  {
+   "t": "MU",
+   "u": 0.000046493129529533255,
+   "px": 1074.89,
+   "d0": "2026-10-02",
+   "last": 1074.89,
+   "lastRun": "2026-10-02",
+   "why": "revenue 346% YoY, growth 149 pts, gross margin +47 pts vs a year ago, price/sales 13.4"
+  },
+  {
+   "t": "SNDK",
+   "u": 0.000029055401484892358,
+   "px": 1719.99,
+   "d0": "2026-10-02",
+   "last": 1719.99,
+   "lastRun": "2026-10-02",
+   "why": "revenue 372% YoY, growth 121 pts, gross margin +58 pts vs a year ago, price/sales 12.4"
+  },
+  {
+   "t": "SM",
+   "u": 0.0014181328036322362,
+   "px": 35.24,
+   "d0": "2026-10-02",
+   "last": 35.24,
+   "lastRun": "2026-10-02",
+   "why": "revenue 215% YoY, growth 140 pts, gross margin +6 pts vs a year ago, price/sales 1.5"
+  },
+  {
+   "t": "PARR",
+   "u": 0.0005949404761904762,
+   "px": 84,
+   "d0": "2026-10-02",
+   "last": 84,
+   "lastRun": "2026-10-02",
+   "why": "revenue 57% YoY, growth 52 pts, gross margin +13 pts vs a year ago, price/sales 0.5"
+  },
+  {
+   "t": "URGN",
+   "u": 0.0012071256038647346,
+   "px": 41.4,
+   "d0": "2026-10-02",
+   "last": 41.4,
+   "lastRun": "2026-10-02",
+   "why": "revenue 199% YoY, growth 48 pts, gross margin +6 pts vs a year ago, price/sales 10.7"
+  },
+  {
+   "t": "ETON",
+   "u": 0.0009027276011560695,
+   "px": 55.36,
+   "d0": "2026-10-02",
+   "last": 55.36,
+   "lastRun": "2026-10-02",
+   "why": "revenue 99% YoY, growth 58 pts, gross margin +5 pts vs a year ago, price/sales 14.8"
+  },
+  {
+   "t": "VLO",
+   "u": 0.00012300024612355403,
+   "px": 406.3,
+   "d0": "2026-10-02",
+   "last": 406.3,
+   "lastRun": "2026-10-02",
+   "why": "revenue 49% YoY, growth 42 pts, gross margin +8 pts vs a year ago, price/sales 0.8"
+  },
+  {
+   "t": "DK",
+   "u": 0.000673608303005796,
+   "px": 74.19,
+   "d0": "2026-10-02",
+   "last": 74.19,
+   "lastRun": "2026-10-02",
+   "why": "revenue 48% YoY, growth 47 pts, gross margin +7 pts vs a year ago, price/sales 0.4"
+  },
+  {
+   "t": "MPC",
+   "u": 0.00011833163639807735,
+   "px": 422.33,
+   "d0": "2026-10-02",
+   "last": 422.33,
+   "lastRun": "2026-10-02",
+   "why": "revenue 54% YoY, growth 45 pts, gross margin +6 pts vs a year ago, price/sales 0.8"
+  },
+  {
+   "t": "CVX",
+   "u": 0.0002417872175722096,
+   "px": 206.69,
+   "d0": "2026-10-02",
+   "last": 206.69,
+   "lastRun": "2026-10-02",
+   "why": "revenue 51% YoY, growth 48 pts, gross margin +6 pts vs a year ago, price/sales 2.0"
+  },
+  {
+   "t": "DINO",
+   "u": 0.0004408521524347213,
+   "px": 113.36,
+   "d0": "2026-10-02",
+   "last": 113.36,
+   "lastRun": "2026-10-02",
+   "why": "revenue 53% YoY, growth 41 pts, gross margin +6 pts vs a year ago, price/sales 0.6"
+  },
+  {
+   "t": "BFLY",
+   "u": 0.005583798882681565,
+   "px": 8.95,
+   "d0": "2026-10-02",
+   "last": 8.95,
+   "lastRun": "2026-10-02",
+   "why": "revenue 39% YoY, growth 14 pts, gross margin +8 pts vs a year ago"
+  },
+  {
+   "t": "ONTO",
+   "u": 0.00015246971962046559,
+   "px": 327.77,
+   "d0": "2026-10-02",
+   "last": 327.77,
+   "lastRun": "2026-10-02",
+   "why": "revenue 35% YoY, growth 26 pts, gross margin +5 pts vs a year ago, price/sales 14.3"
+  },
+  {
+   "t": "HNGE",
+   "u": 0.0005116719565885124,
+   "px": 97.67,
+   "d0": "2026-10-02",
+   "last": 97.67,
+   "lastRun": "2026-10-02",
+   "why": "revenue 53% YoY, growth 6 pts, gross margin +16 pts vs a year ago"
+  },
+  {
+   "t": "INTC",
+   "u": 0.00041879661443057075,
+   "px": 119.33,
+   "d0": "2026-10-02",
+   "last": 119.33,
+   "lastRun": "2026-10-02",
+   "why": "revenue 25% YoY, growth 18 pts, gross margin +13 pts vs a year ago, price/sales 10.6"
+  },
+  {
+   "t": "COP",
+   "u": 0.00039428007889546357,
+   "px": 126.75,
+   "d0": "2026-10-02",
+   "last": 126.75,
+   "lastRun": "2026-10-02",
+   "why": "revenue 43% YoY, growth 50 pts, gross margin +3 pts vs a year ago, price/sales 2.7"
+  },
+  {
+   "t": "KALU",
+   "u": 0.00032872882749547777,
+   "px": 152.025,
+   "d0": "2026-10-02",
+   "last": 152.025,
+   "lastRun": "2026-10-02",
+   "why": "revenue 53% YoY, growth 10 pts, gross margin +4 pts vs a year ago, price/sales 0.6"
+  },
+  {
+   "t": "KLIC",
+   "u": 0.0004959313287684827,
+   "px": 100.77,
+   "d0": "2026-10-02",
+   "last": 100.77,
+   "lastRun": "2026-10-02",
+   "why": "revenue 123% YoY, growth 73 pts, gross margin +1 pts vs a year ago, price/sales 5.5"
+  },
+  {
+   "t": "OUST",
+   "u": 0.0011258166253660736,
+   "px": 44.39,
+   "d0": "2026-10-02",
+   "last": 44.39,
+   "lastRun": "2026-10-02",
+   "why": "revenue 56% YoY, growth 7 pts, gross margin +4 pts vs a year ago, price/sales 14.8"
+  },
+  {
+   "t": "PSX",
+   "u": 0.00018888426940811735,
+   "px": 264.58,
+   "d0": "2026-10-02",
+   "last": 264.58,
+   "lastRun": "2026-10-02",
+   "why": "revenue 53% YoY, growth 46 pts, gross margin +2 pts vs a year ago, price/sales 0.7"
+  }
+ ],
+ "trades": [
+  {
+   "side": "buy",
+   "t": "MU",
+   "d": "2026-10-02",
+   "px": 1074.89
+  },
+  {
+   "side": "buy",
+   "t": "SNDK",
+   "d": "2026-10-02",
+   "px": 1719.99
+  },
+  {
+   "side": "buy",
+   "t": "SM",
+   "d": "2026-10-02",
+   "px": 35.24
+  },
+  {
+   "side": "buy",
+   "t": "PARR",
+   "d": "2026-10-02",
+   "px": 84
+  },
+  {
+   "side": "buy",
+   "t": "URGN",
+   "d": "2026-10-02",
+   "px": 41.4
+  },
+  {
+   "side": "buy",
+   "t": "ETON",
+   "d": "2026-10-02",
+   "px": 55.36
+  },
+  {
+   "side": "buy",
+   "t": "VLO",
+   "d": "2026-10-02",
+   "px": 406.3
+  },
+  {
+   "side": "buy",
+   "t": "DK",
+   "d": "2026-10-02",
+   "px": 74.19
+  },
+  {
+   "side": "buy",
+   "t": "MPC",
+   "d": "2026-10-02",
+   "px": 422.33
+  },
+  {
+   "side": "buy",
+   "t": "CVX",
+   "d": "2026-10-02",
+   "px": 206.69
+  },
+  {
+   "side": "buy",
+   "t": "DINO",
+   "d": "2026-10-02",
+   "px": 113.36
+  },
+  {
+   "side": "buy",
+   "t": "BFLY",
+   "d": "2026-10-02",
+   "px": 8.95
+  },
+  {
+   "side": "buy",
+   "t": "ONTO",
+   "d": "2026-10-02",
+   "px": 327.77
+  },
+  {
+   "side": "buy",
+   "t": "HNGE",
+   "d": "2026-10-02",
+   "px": 97.67
+  },
+  {
+   "side": "buy",
+   "t": "INTC",
+   "d": "2026-10-02",
+   "px": 119.33
+  },
+  {
+   "side": "buy",
+   "t": "COP",
+   "d": "2026-10-02",
+   "px": 126.75
+  },
+  {
+   "side": "buy",
+   "t": "KALU",
+   "d": "2026-10-02",
+   "px": 152.025
+  },
+  {
+   "side": "buy",
+   "t": "KLIC",
+   "d": "2026-10-02",
+   "px": 100.77
+  },
+  {
+   "side": "buy",
+   "t": "OUST",
+   "d": "2026-10-02",
+   "px": 44.39
+  },
+  {
+   "side": "buy",
+   "t": "PSX",
+   "d": "2026-10-02",
+   "px": 264.58
+  }
+ ],
+ "marks": [
+  {
+   "d": "2026-10-02",
+   "eq": 0.9994999999999996,
+   "spy": 1
+  }
+ ],
+ "spy0": 769.64
+}
