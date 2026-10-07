@@ -23,6 +23,7 @@ const FWD = 182, FUNDS = new Set(['6221', '6722', '6726', '6798x']); // commodit
 const U = universeV2(1e9), CIK = new Map(U.map((x) => [x.t, x.cik]));
 const SIC = new Map(); for (const f of fs.readdirSync(path.join(C, 'edgar', 'sic'))) { const j = rd(path.join(C, 'edgar', 'sic', f)); if (j?.sic) SIC.set(f.replace('.json', ''), { s4: String(j.sic).padStart(4, '0'), desc: j.desc }); }
 const sic3 = (t) => SIC.get(t)?.s4.slice(0, 3), isFund = (t) => FUNDS.has(SIC.get(t)?.s4);
+const finEx = (t) => { const s = SIC.get(t)?.s4 ?? ''; return (s >= '6000' && s < '6500') || s === '6282' || s === '6798'; }; // amendment 4: E0b skips banks/insurers/asset managers/REITs (keeps 6199)
 function series(facts, tags, keepUnit = false) { const q = new Map(), ann = new Map();
   for (const tag of tags) for (const x of facts?.[tag] ?? []) { if (!x.s) continue; const dur = days(x.s, x.e), tgt = dur >= 80 && dur <= 100 ? q : dur >= 170 && dur <= 190 && keepUnit ? q : dur >= 350 && dur <= 380 ? ann : null; if (!tgt) continue;
     const cur = tgt.get(x.e); if (cur && (cur.tag !== tag ? true : cur.f <= x.f)) continue; tgt.set(x.e, { v: x.v, f: x.f, s: x.s, tag, dur, unit: x.unit }); }
@@ -49,8 +50,8 @@ const EXPO = [...(rd(path.join(C, 'edgar', 'exposure_hist.json'), []) || []), ..
 const CONCEPT = new Map(); for (const x of EXPO) { if (!x.t || !x.c || !x.d) continue; const a = CONCEPT.get(x.c) ?? new Map(); if (!a.has(x.t) || x.d < a.get(x.t)) a.set(x.t, x.d); CONCEPT.set(x.c, a); }
 const COMM = Object.fromEntries(['GLD', 'SLV', 'CPER', 'URA', 'USO', 'UNG', 'LIT', 'REMX'].map((t) => [t, rd(path.join(C, 'commodity', `${t}.json`), [])]));
 const BTC = (rd(path.join(C, 'graph', 'fred.json'), {})?.CBBTCUSD?.obs ?? []).map((o) => ({ d: o.d, c: o.v }));
-const GROUPS = { GLD: { s4: ['1040'], c: ['gold'] }, SLV: { s4: ['1040', '1090'], c: [] }, CPER: { s4: ['1000', '3330', '3331'], c: ['copper'] }, URA: { s4: ['1090', '1094'], c: ['uranium', 'nuclear power', 'small modular reactor'] },
-  USO: { s4: ['1311', '1381', '1389', '2911'], c: ['oil', 'refining'] }, UNG: { s4: ['1311', '4922', '4923', '4924'], c: ['natural gas', 'LNG'] }, LIT: { s4: [], c: ['lithium', 'battery storage'] }, REMX: { s4: [], c: ['rare earth'] }, BTC: { s4: [], c: ['bitcoin mining', 'hashrate', 'digital assets'] } };
+const GROUPS = { GLD: { s4: ['1040'], c: [] }, SLV: { s4: ['1040', '1090'], c: [] }, CPER: { s4: ['1000', '3330', '3331'], c: [] }, URA: { s4: ['1090', '1094'], c: ['uranium', 'small modular reactor'] }, // amendment 4: SIC producers only, concepts only where no SIC home
+  USO: { s4: ['1311', '1381', '1389', '2911'], c: [] }, UNG: { s4: ['1311', '4922', '4923', '4924'], c: [] }, LIT: { s4: ['2819'], c: ['lithium'] }, REMX: { s4: [], c: ['rare earth'] }, BTC: { s4: [], c: ['bitcoin mining', 'hashrate'] } };
 const WIKI = (t) => rd(path.join(C, 'wiki', 'views', `${t}.json`), null);
 const USE = rd(path.join(C, 'bea', 'use_summary.json'), {});
 const SP_BAR = { 2014: 5.3e9, 2015: 5.3e9, 2016: 5.3e9, 2017: 6.1e9, 2018: 6.1e9, 2019: 8.2e9, 2020: 8.2e9, 2021: 13.1e9, 2022: 14.6e9, 2023: 15.8e9, 2024: 18e9, 2025: 22.7e9, 2026: 22.7e9 }; // S&P 500 minimum market cap rule by year (as published)
@@ -77,7 +78,7 @@ function month(P, M) {
     const find = (ref, lo, hi) => ref && rows.filter((x) => { const d = days(x.e, ref.e); return d >= lo && d <= hi; }).at(-1);
     const q1 = find(q0, 80, 100), q4 = find(q0, 345, 385), q5 = find(q1, 345, 385); if (!q1 || !q4 || !q5 || !(q4.rev > 0 && q5.rev > 0)) continue;
     const g0 = q0.rev / q4.rev - 1, g1 = q1.rev / q5.rev - 1, gmOK = q0.gm != null && q4.gm != null && q0.f <= M && q4.f <= M;
-    if (gmOK) F.set(t, { g0, g1, accel: g0 - g1, dGM: q0.gm - q4.gm, gm: q0.gm, gm4: q4.gm, rev: q0.rev, e: q0.e }); else if (!rows.some((x) => x.gm != null)) F0.set(t, { g0, accel: g0 - g1, rev: q0.rev }); }
+    if (gmOK) F.set(t, { g0, g1, accel: g0 - g1, dGM: q0.gm - q4.gm, gm: q0.gm, gm4: q4.gm, rev: q0.rev, e: q0.e }); else if (!rows.some((x) => x.gm != null) && !finEx(t)) F0.set(t, { g0, accel: g0 - g1, rev: q0.rev }); }
   const rankBy = (Mp, keys) => { const R = keys.map((k) => { const s = [...Mp.values()].map((f) => f[k]).sort((a, b) => a - b); return (v) => { let lo = 0, hi = s.length; while (lo < hi) { const m = (lo + hi) >> 1; if (s[m] < v) lo = m + 1; else hi = m; } return lo / (s.length - 1 || 1); }; });
     return [...Mp].map(([t, f]) => ({ t, f, s: mean(R.map((r, i) => r(f[keys[i]]))) })).sort((a, b) => b.s - a.s); };
   const e0 = rankBy(F, ['g0', 'accel', 'dGM']).filter((x) => x.f.gm4 >= 0), e0b = F0.size ? rankBy(F0, ['g0', 'accel']) : [];
@@ -96,7 +97,7 @@ const ENGINES = {
   E0b: { budget: 20, grid: [{ n: 10 }, { n: 20 }], run: (m, p) => top(m.e0b, p.n, (x) => `revenue-only bottleneck: revenue ${pct(x.f.g0)} YoY, growth ${x.f.accel >= 0 ? '+' : ''}${(x.f.accel * 100).toFixed(0)} pts`) },
   E1: { budget: 40, grid: [{ k: 2, n: 3 }, { k: 2, n: 5 }, { k: 3, n: 3 }, { k: 3, n: 5 }], run: (m, p) => { const lead = m.e0.slice(0, 60).map((x) => x.t), leadSet = new Set(lead), out = [], yr = m.M.slice(0, 4);
     const cnt = new Map(); for (const t of lead) { const s = sic3(t); if (s) cnt.set(s, (cnt.get(s) ?? 0) + 1); } const lit = [...cnt].filter(([, n]) => n >= p.k).map(([s]) => s);
-    const litLinked = new Set(lit); for (const s of IND3.keys()) if (!litLinked.has(s) && lit.some((l) => beaLinked(BEA3.get(l), BEA3.get(s), yr))) litLinked.add(s);
+    const litLinked = new Set(lit); for (const s of IND3.keys()) if (!litLinked.has(s) && (cnt.get(s) ?? 0) >= 1 && lit.some((l) => beaLinked(BEA3.get(l), BEA3.get(s), yr))) litLinked.add(s); // amendment 4
     const litC = []; for (const [c, mp] of CONCEPT) { let n = 0; for (const t of lead) if (mp.has(t) && mp.get(t) <= m.M && mp.get(t) >= addD(m.M, -730)) n++; if (n >= p.k) litC.push(c); }
     for (const s of litLinked) { const mem = (IND3.get(s) ?? []).filter((t) => !leadSet.has(t)); for (const t of byMom(m, mem, p.n)) out.push({ t, why: `theme spread: industry "${SIC.get(t)?.desc}" is ${lit.includes(s) ? 'lit' : 'linked to a lit industry'} (${cnt.get(s) ?? 0} bottleneck leaders); 3-month momentum ${pct(m.px.get(t).r3)}` }); }
     for (const c of litC) { const mem = [...CONCEPT.get(c)].filter(([t, d]) => d <= m.M && !leadSet.has(t)).map(([t]) => t); for (const t of byMom(m, mem, p.n)) out.push({ t, why: `theme spread: concept "${c}" is lit (≥${p.k} bottleneck leaders mention it); 3-month momentum ${pct(m.px.get(t).r3)}` }); }
@@ -114,10 +115,11 @@ const ENGINES = {
       const mem = new Set([...m.px.keys()].filter((t) => g.s4.includes(SIC.get(t)?.s4))); for (const c of g.c) for (const [t, d] of CONCEPT.get(c) ?? []) if (d <= m.M && d >= addD(m.M, -730) && m.px.has(t)) mem.add(t);
       for (const t of byMom(m, [...mem], p.n)) out.push({ t, why: `commodity/crypto: ${k === 'BTC' ? 'bitcoin' : k} up ${pct(c0 / c6 - 1)} in 6 months; producer with 3-month momentum ${pct(m.px.get(t).r3)}` }); }
     const seen = new Set(); return out.filter((x) => !seen.has(x.t) && seen.add(x.t)); } },
+  // E3 (amendment 4): the year-earlier backlog value must be ≥ $50M
   E3: { budget: 20, grid: [{ th: 0.2, n: 10 }, { th: 0.2, n: 20 }, { th: 0.4, n: 10 }, { th: 0.4, n: 20 }], run: (m, p) => { const S = [];
     for (const t of m.elig) { const b = BACK.get(t), f = m.F.get(t) ?? null; if (!b || !f || f.g0 < 0.1) continue; for (const k of ['rpo', 'defrev']) { const a = b.filter((x) => x.k === k && x.f <= m.M).sort((x, y) => x.e.localeCompare(y.e)); const q0 = a.at(-1); if (!q0 || days(q0.e, m.M) > 200) continue;
       const py = a.filter((x) => days(x.e, q0.e) >= 345 && days(x.e, q0.e) <= 385).at(-1), q1 = a.filter((x) => days(x.e, q0.e) >= 80 && days(x.e, q0.e) <= 100).at(-1), py1 = q1 && a.filter((x) => days(x.e, q1.e) >= 345 && days(x.e, q1.e) <= 385).at(-1);
-      if (!(py?.v > 0) || !(py1?.v > 0)) continue; const g = q0.v / py.v - 1, gp = q1.v / py1.v - 1; if (g >= p.th && g > gp) { S.push({ t, g, k, rg: f.g0 }); break; } } }
+      if (!(py?.v >= 5e7) || !(py1?.v > 0)) continue; const g = q0.v / py.v - 1, gp = q1.v / py1.v - 1; if (g >= p.th && g > gp) { S.push({ t, g, k, rg: f.g0 }); break; } } }
     return S.sort((a, b) => b.g - a.g).slice(0, p.n).map((x) => ({ t: x.t, why: `backlog: ${x.k === 'rpo' ? 'order backlog (RPO)' : 'deferred revenue'} ${pct(x.g)} YoY and accelerating; revenue ${pct(x.rg)}` })); } },
   E4: { budget: 10, grid: [{ gm: 0.1, g: 0.5 }, { gm: 0.1, g: 1 }, { gm: 0.2, g: 0.5 }, { gm: 0.2, g: 1 }], run: (m, p) => [...m.F].filter(([, f]) => f.gm4 < 0 && f.gm >= p.gm && f.g0 >= p.g).sort((a, b) => b[1].g0 - a[1].g0).slice(0, 10)
     .map(([t, f]) => ({ t, why: `real turnaround: gross margin ${(f.gm4 * 100).toFixed(0)}% → ${(f.gm * 100).toFixed(0)}%, revenue ${pct(f.g0)}` })) },

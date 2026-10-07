@@ -100,3 +100,17 @@ touches ~85% of stocks. Raw recall is therefore not evidence.
 - **Success test** is now: in both 2025 and 2026 the combined watchlist catches ≥ 25/50 movers early **and** more than the
   95th percentile of same-size random lists, with positive precision.
 - E6 (node-graph forecasts) is left out of this run (only 2019+ data); it will be tested as an add-on.
+
+## Amendment 4 (2026-10-06, before the real run; from the per-engine diagnostic on sample months)
+
+Engines were wired and firing, but four definitions misfired on inspection:
+1. **E1 theme spread** — "linked by a ≥ 2% input-output flow" lit almost every industry (UONE radio, WKHS flagged with 0 leaders),
+   turning E1 into plain momentum. Now a linked industry counts only if it **also has ≥ 1 company in E0's top 60**.
+2. **E2b commodity/crypto** — concept co-mention was too loose (CHWY and ZETA flagged as natural-gas producers). Membership is
+   now **SIC producer codes only**, except groups with no SIC home: uranium/SMR (concepts "uranium", "small modular reactor"),
+   lithium (SIC 2819 + concept "lithium"), rare earths (concept "rare earth"), bitcoin ("bitcoin mining", "hashrate" only).
+3. **E0b revenue-only** — swamped by banks, insurers and asset managers whose revenue swings on accounting (BX, KKR, BHF, EQH).
+   Now excludes SIC 60xx–64xx, 6282, 6798 (keeps 6199, where crypto miners such as IREN and HUT are filed).
+4. **E3 backlog** — tiny bases produced "+3,157%". The year-earlier backlog value must now be ≥ $50M.
+
+Also: all prices now come from the clean layer (`DATA_FIX_2026-10-06.md`).
