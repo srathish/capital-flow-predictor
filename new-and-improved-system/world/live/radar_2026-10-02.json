@@ -1,0 +1,884 @@
+{
+ "asOf": "2026-10-02",
+ "rows": [
+  {
+   "t": "BMNR",
+   "E": "E0",
+   "why": "bottleneck: revenue +2168% YoY, growth +1540 pts, gross margin 88% vs 24% a year ago",
+   "also": [],
+   "r3": 0.6893890675241157,
+   "c": 26.27
+  },
+  {
+   "t": "UUUU",
+   "E": "E0",
+   "why": "bottleneck: revenue +496% YoY, growth +384 pts, gross margin 57% vs 13% a year ago",
+   "also": [],
+   "r3": -0.22076978939724035,
+   "c": 10.73
+  },
+  {
+   "t": "MU",
+   "E": "E0",
+   "why": "bottleneck: revenue +346% YoY, growth +149 pts, gross margin 85% vs 38% a year ago",
+   "also": [],
+   "r3": 0.09153592282305167,
+   "c": 1074.89
+  },
+  {
+   "t": "SNDK",
+   "E": "E0",
+   "why": "bottleneck: revenue +372% YoY, growth +121 pts, gross margin 85% vs 26% a year ago",
+   "also": [],
+   "r3": -0.014010307091714802,
+   "c": 1719.99
+  },
+  {
+   "t": "AXTI",
+   "E": "E0",
+   "why": "bottleneck: revenue +165% YoY, growth +126 pts, gross margin 45% vs 8% a year ago",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.35185768261964734,
+   "c": 85.87
+  },
+  {
+   "t": "CORZ",
+   "E": "E0",
+   "why": "bottleneck: revenue +109% YoY, growth +64 pts, gross margin 43% vs 6% a year ago",
+   "also": [],
+   "r3": -0.2785087719298246,
+   "c": 16.45
+  },
+  {
+   "t": "INSM",
+   "E": "E0",
+   "why": "bottleneck: revenue +296% YoY, growth +66 pts, gross margin 84% vs 74% a year ago",
+   "also": [],
+   "r3": -0.0037654653039268515,
+   "c": 111.12
+  },
+  {
+   "t": "AGIO",
+   "E": "E0",
+   "why": "bottleneck: revenue +259% YoY, growth +122 pts, gross margin 93% vs 86% a year ago",
+   "also": [],
+   "r3": -0.14950521529820804,
+   "c": 31.8
+  },
+  {
+   "t": "MP",
+   "E": "E0",
+   "why": "bottleneck: revenue +89% YoY, growth +40 pts, gross margin 33% vs 12% a year ago",
+   "also": [],
+   "r3": -0.11394076589322766,
+   "c": 46.97
+  },
+  {
+   "t": "SITM",
+   "E": "E0",
+   "why": "bottleneck: revenue +127% YoY, growth +38 pts, gross margin 63% vs 52% a year ago",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.1526987943976863,
+   "c": 709.44
+  },
+  {
+   "t": "SM",
+   "E": "E0",
+   "why": "bottleneck: revenue +215% YoY, growth +140 pts, gross margin 78% vs 72% a year ago",
+   "also": [],
+   "r3": 0.3373814041745731,
+   "c": 35.24
+  },
+  {
+   "t": "PARR",
+   "E": "E0",
+   "why": "bottleneck: revenue +57% YoY, growth +52 pts, gross margin 29% vs 16% a year ago",
+   "also": [],
+   "r3": 0.38294369443529797,
+   "c": 84
+  },
+  {
+   "t": "LITE",
+   "E": "E0",
+   "why": "bottleneck: revenue +109% YoY, growth +19 pts, gross margin 47% vs 33% a year ago",
+   "also": [],
+   "r3": 0.4843350427350428,
+   "c": 1085.42
+  },
+  {
+   "t": "IOVA",
+   "E": "E0",
+   "why": "bottleneck: revenue +66% YoY, growth +21 pts, gross margin 56% vs 5% a year ago",
+   "also": [],
+   "r3": 2.3926014319809066,
+   "c": 14.215
+  },
+  {
+   "t": "URGN",
+   "E": "E0",
+   "why": "bottleneck: revenue +199% YoY, growth +48 pts, gross margin 91% vs 85% a year ago",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.10665597433841234,
+   "c": 41.4
+  },
+  {
+   "t": "ETON",
+   "E": "E0",
+   "why": "bottleneck: revenue +99% YoY, growth +58 pts, gross margin 68% vs 63% a year ago",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.4560757496054706,
+   "c": 55.36
+  },
+  {
+   "t": "HCC",
+   "E": "E0",
+   "why": "bottleneck: revenue +71% YoY, growth +18 pts, gross margin 33% vs 24% a year ago",
+   "also": [],
+   "r3": 0.09996306783208153,
+   "c": 89.35
+  },
+  {
+   "t": "VLO",
+   "E": "E0",
+   "why": "bottleneck: revenue +49% YoY, growth +42 pts, gross margin 12% vs 4% a year ago",
+   "also": [],
+   "r3": 0.5030334418467002,
+   "c": 406.3
+  },
+  {
+   "t": "KMT",
+   "E": "E0",
+   "why": "bottleneck: revenue +43% YoY, growth +21 pts, gross margin 59% vs 28% a year ago",
+   "also": [],
+   "r3": -0.0473407364114552,
+   "c": 32.6
+  },
+  {
+   "t": "DK",
+   "E": "E0",
+   "why": "bottleneck: revenue +48% YoY, growth +47 pts, gross margin 9% vs 2% a year ago",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.4006041155370965,
+   "c": 74.19
+  },
+  {
+   "t": "MCK",
+   "E": "E12",
+   "why": "attention surge: Wikipedia views 11.8× normal, price above 50-day average",
+   "also": [],
+   "r3": 0.1505298190581843,
+   "c": 902.28
+  },
+  {
+   "t": "BW",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +522% YoY and accelerating; revenue +122%",
+   "also": [],
+   "r3": -0.49646643109540634,
+   "c": 5.7
+  },
+  {
+   "t": "SMCI",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +257% YoY and accelerating; revenue +93%",
+   "also": [
+    "E1",
+    "E9"
+   ],
+   "r3": 0.6068407502758366,
+   "c": 43.69
+  },
+  {
+   "t": "CECO",
+   "E": "E3",
+   "why": "backlog: deferred revenue +248% YoY and accelerating; revenue +54%",
+   "also": [],
+   "r3": -0.08701041150223121,
+   "c": 73.66
+  },
+  {
+   "t": "DELL",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +200% YoY and accelerating; revenue +58%",
+   "also": [],
+   "r3": 0.36600291403593976,
+   "c": 562.52
+  },
+  {
+   "t": "VRT",
+   "E": "E3",
+   "why": "backlog: deferred revenue +189% YoY and accelerating; revenue +24%",
+   "also": [],
+   "r3": -0.20815147423619185,
+   "c": 252.18
+  },
+  {
+   "t": "GLW",
+   "E": "E3",
+   "why": "backlog: deferred revenue +175% YoY and accelerating; revenue +17%",
+   "also": [],
+   "r3": -0.1571355236139631,
+   "c": 164.19
+  },
+  {
+   "t": "COUR",
+   "E": "E3",
+   "why": "backlog: deferred revenue +168% YoY and accelerating; revenue +60%",
+   "also": [],
+   "r3": -0.15345699831365944,
+   "c": 5.02
+  },
+  {
+   "t": "RKLB",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +137% YoY and accelerating; revenue +62%",
+   "also": [],
+   "r3": -0.20592974540767006,
+   "c": 73.92
+  },
+  {
+   "t": "CAT",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +124% YoY and accelerating; revenue +24%",
+   "also": [],
+   "r3": -0.12836110194655226,
+   "c": 845.42
+  },
+  {
+   "t": "IESC",
+   "E": "E3",
+   "why": "backlog: order backlog (RPO) +116% YoY and accelerating; revenue +40%",
+   "also": [],
+   "r3": 1.0234943351222423,
+   "c": 339.34
+  },
+  {
+   "t": "QMCO",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +507%",
+   "also": [
+    "E1"
+   ],
+   "r3": 2.2763532763532766,
+   "c": 34.5
+  },
+  {
+   "t": "TXG",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +319%",
+   "also": [
+    "E1"
+   ],
+   "r3": 1.3375,
+   "c": 93.5
+  },
+  {
+   "t": "SDEV",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +298%",
+   "also": [
+    "E1"
+   ],
+   "r3": 4.420289855072465,
+   "c": 7.48
+  },
+  {
+   "t": "CDNA",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +267%",
+   "also": [],
+   "r3": 1.3107364074328975,
+   "c": 67.15
+  },
+  {
+   "t": "AMD",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +191%",
+   "also": [],
+   "r3": 0.14828366995743147,
+   "c": 633.91
+  },
+  {
+   "t": "HPE",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +182%",
+   "also": [
+    "E1"
+   ],
+   "r3": 0.606720741599073,
+   "c": 69.33
+  },
+  {
+   "t": "CRWD",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +171%",
+   "also": [],
+   "r3": 0.3543986357708899,
+   "c": 270.04
+  },
+  {
+   "t": "GRAL",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +167%",
+   "also": [],
+   "r3": 1.0729272174793807,
+   "c": 143.26
+  },
+  {
+   "t": "PANW",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +147%",
+   "also": [],
+   "r3": 0.1278494112382178,
+   "c": 403.24
+  },
+  {
+   "t": "SMTC",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +136%",
+   "also": [],
+   "r3": 0.4031247750018001,
+   "c": 194.88
+  },
+  {
+   "t": "RBRK",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +131%",
+   "also": [],
+   "r3": 0.35737179487179493,
+   "c": 118.58
+  },
+  {
+   "t": "FTNT",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +119%",
+   "also": [],
+   "r3": 0.11456729288574063,
+   "c": 180.95
+  },
+  {
+   "t": "NTAP",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +119%",
+   "also": [],
+   "r3": 0.3834912870681748,
+   "c": 226.27
+  },
+  {
+   "t": "ASX",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +113%",
+   "also": [],
+   "r3": 0.09533702677747002,
+   "c": 47.45
+  },
+  {
+   "t": "AMPL",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +112%",
+   "also": [
+    "E1"
+   ],
+   "r3": 0.6296296296296295,
+   "c": 14.52
+  },
+  {
+   "t": "MTRN",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +109%",
+   "also": [],
+   "r3": 0.1923605805958748,
+   "c": 312.16
+  },
+  {
+   "t": "P",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +109%",
+   "also": [
+    "E1"
+   ],
+   "r3": 0.8029075003216259,
+   "c": 140.14
+  },
+  {
+   "t": "LIND",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +104%",
+   "also": [],
+   "r3": 0.3649921507064364,
+   "c": 34.78
+  },
+  {
+   "t": "CHEF",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +102%",
+   "also": [],
+   "r3": 0.22560269502052854,
+   "c": 116.42
+  },
+  {
+   "t": "AMN",
+   "E": "E7",
+   "why": "relative strength: 52-week high, 6-month +101%",
+   "also": [],
+   "r3": 0.024042493709812707,
+   "c": 36.63
+  },
+  {
+   "t": "RUM",
+   "E": "E4",
+   "why": "real turnaround: gross margin -2588% → 82%, revenue +3988%",
+   "also": [],
+   "r3": 0.16359447004608296,
+   "c": 7.575
+  },
+  {
+   "t": "MRNA",
+   "E": "E1",
+   "why": "theme spread: industry \"Biological Products, (No Diagnostic Substances)\" is lit (5 bottleneck leaders); 3-month momentum +132%",
+   "also": [],
+   "r3": 1.3228606356968213,
+   "c": 190.01
+  },
+  {
+   "t": "ASST",
+   "E": "E1",
+   "why": "theme spread: industry \"Finance Services\" is lit (2 bottleneck leaders); 3-month momentum +129%",
+   "also": [],
+   "r3": 1.290617848970252,
+   "c": 30.03
+  },
+  {
+   "t": "TEAM",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Prepackaged Software\" is lit (4 bottleneck leaders); 3-month momentum +120%",
+   "also": [],
+   "r3": 1.1975438596491226,
+   "c": 187.89
+  },
+  {
+   "t": "RNG",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Computer Processing & Data Preparation\" is lit (4 bottleneck leaders); 3-month momentum +99%",
+   "also": [],
+   "r3": 0.9949031600407747,
+   "c": 78.28
+  },
+  {
+   "t": "CVI",
+   "E": "E1",
+   "why": "theme spread: industry \"Petroleum Refining\" is lit (6 bottleneck leaders); 3-month momentum +90%",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.8985457063711912,
+   "c": 54.83
+  },
+  {
+   "t": "TWST",
+   "E": "E1",
+   "why": "theme spread: industry \"Biological Products, (No Diagnostic Substances)\" is lit (5 bottleneck leaders); 3-month momentum +89%",
+   "also": [],
+   "r3": 0.8880216151305911,
+   "c": 188.67
+  },
+  {
+   "t": "OMER",
+   "E": "E1",
+   "why": "theme spread: industry \"Pharmaceutical Preparations\" is lit (5 bottleneck leaders); 3-month momentum +80%",
+   "also": [],
+   "r3": 0.799806576402321,
+   "c": 18.61
+  },
+  {
+   "t": "SDGR",
+   "E": "E1",
+   "why": "theme spread: industry \"Pharmaceutical Preparations\" is lit (5 bottleneck leaders); 3-month momentum +78%",
+   "also": [],
+   "r3": 0.7829411764705883,
+   "c": 30.31
+  },
+  {
+   "t": "ABCL",
+   "E": "E1",
+   "why": "theme spread: industry \"Pharmaceutical Preparations\" is lit (5 bottleneck leaders); 3-month momentum +75%",
+   "also": [],
+   "r3": 0.7458703939008895,
+   "c": 13.74
+  },
+  {
+   "t": "ATRC",
+   "E": "E1",
+   "why": "theme spread: industry \"Surgical & Medical Instruments & Apparatus\" is lit (3 bottleneck leaders); 3-month momentum +70%",
+   "also": [],
+   "r3": 0.7023772769373264,
+   "c": 55.14
+  },
+  {
+   "t": "NIQ",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Computer Programming, Data Processing, Etc.\" is lit (4 bottleneck leaders); 3-month momentum +69%",
+   "also": [],
+   "r3": 0.6945010183299389,
+   "c": 16.64
+  },
+  {
+   "t": "SBET",
+   "E": "E1",
+   "why": "theme spread: industry \"Finance Services\" is lit (2 bottleneck leaders); 3-month momentum +65%",
+   "also": [],
+   "r3": 0.6490299823633157,
+   "c": 9.35
+  },
+  {
+   "t": "PLSE",
+   "E": "E1",
+   "why": "theme spread: industry \"Surgical & Medical Instruments & Apparatus\" is lit (3 bottleneck leaders); 3-month momentum +65%",
+   "also": [],
+   "r3": 0.6454826520096186,
+   "c": 47.9
+  },
+  {
+   "t": "PBF",
+   "E": "E1",
+   "why": "theme spread: industry \"Petroleum Refining\" is lit (6 bottleneck leaders); 3-month momentum +64%",
+   "also": [],
+   "r3": 0.6398700771416972,
+   "c": 80.78
+  },
+  {
+   "t": "ESTC",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Prepackaged Software\" is lit (4 bottleneck leaders); 3-month momentum +60%",
+   "also": [],
+   "r3": 0.6047147249743765,
+   "c": 93.94
+  },
+  {
+   "t": "MSTR",
+   "E": "E1",
+   "why": "theme spread: industry \"Finance Services\" is lit (2 bottleneck leaders); 3-month momentum +59%",
+   "also": [],
+   "r3": 0.5878733750124046,
+   "c": 160.01
+  },
+  {
+   "t": "CBZ",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Business Services, NEC\" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +55%",
+   "also": [],
+   "r3": 0.5466628959276019,
+   "c": 54.69
+  },
+  {
+   "t": "GTLB",
+   "E": "E1",
+   "why": "theme spread: concept \"cloud computing\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +52%",
+   "also": [],
+   "r3": 0.515372907153729,
+   "c": 49.78
+  },
+  {
+   "t": "ANDG",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Business Services, NEC\" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +51%",
+   "also": [],
+   "r3": 0.5072540226853075,
+   "c": 57.14
+  },
+  {
+   "t": "CLMT",
+   "E": "E1",
+   "why": "theme spread: industry \"Petroleum Refining\" is lit (6 bottleneck leaders); 3-month momentum +50%",
+   "also": [],
+   "r3": 0.49932194195823176,
+   "c": 55.28
+  },
+  {
+   "t": "ZETA",
+   "E": "E1",
+   "why": "theme spread: concept \"accelerator\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +50%",
+   "also": [
+    "E8"
+   ],
+   "r3": 0.49541704857928526,
+   "c": 32.63
+  },
+  {
+   "t": "AEHR",
+   "E": "E1",
+   "why": "theme spread: industry \"Instruments For Meas & Testing of  Electricity & Elec Signals\" is lit (3 bottleneck leaders); 3-month momentum +48%",
+   "also": [],
+   "r3": 0.48233667473211184,
+   "c": 107.21
+  },
+  {
+   "t": "AVTR",
+   "E": "E1",
+   "why": "theme spread: industry \"Laboratory Analytical Instruments\" is lit (3 bottleneck leaders); 3-month momentum +48%",
+   "also": [],
+   "r3": 0.4792671166827387,
+   "c": 15.34
+  },
+  {
+   "t": "DOCU",
+   "E": "E1",
+   "why": "theme spread: concept \"cloud computing\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +47%",
+   "also": [],
+   "r3": 0.47142857142857153,
+   "c": 69.01
+  },
+  {
+   "t": "CRGY",
+   "E": "E1",
+   "why": "theme spread: industry \"Crude Petroleum & Natural Gas\" is lit (2 bottleneck leaders); 3-month momentum +46%",
+   "also": [],
+   "r3": 0.46498905908096266,
+   "c": 13.39
+  },
+  {
+   "t": "ACN",
+   "E": "E1",
+   "why": "theme spread: industry \"Services-Business Services, NEC\" is linked to a lit industry (1 bottleneck leaders); 3-month momentum +45%",
+   "also": [],
+   "r3": 0.45224883177570097,
+   "c": 198.9
+  },
+  {
+   "t": "ELF",
+   "E": "E1",
+   "why": "theme spread: concept \"oil\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
+   "also": [],
+   "r3": 0.4244114845557221,
+   "c": 104.68
+  },
+  {
+   "t": "OKTA",
+   "E": "E1",
+   "why": "theme spread: concept \"digital assets\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
+   "also": [],
+   "r3": 0.4232166890982505,
+   "c": 211.49
+  },
+  {
+   "t": "HPQ",
+   "E": "E1",
+   "why": "theme spread: industry \"Computer & office Equipment\" is lit (2 bottleneck leaders); 3-month momentum +42%",
+   "also": [
+    "E9"
+   ],
+   "r3": 0.4212389380530972,
+   "c": 32.12
+  },
+  {
+   "t": "CRM",
+   "E": "E1",
+   "why": "theme spread: concept \"hyperscale\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +42%",
+   "also": [],
+   "r3": 0.4167823724720796,
+   "c": 234.69
+  },
+  {
+   "t": "INSP",
+   "E": "E1",
+   "why": "theme spread: industry \"Surgical & Medical Instruments & Apparatus\" is lit (3 bottleneck leaders); 3-month momentum +41%",
+   "also": [],
+   "r3": 0.4149646107178968,
+   "c": 69.97
+  },
+  {
+   "t": "FSLY",
+   "E": "E1",
+   "why": "theme spread: concept \"accelerator\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +41%",
+   "also": [],
+   "r3": 0.4142465753424658,
+   "c": 25.81
+  },
+  {
+   "t": "NET",
+   "E": "E1",
+   "why": "theme spread: concept \"hyperscale\" is lit (≥2 bottleneck leaders mention it); 3-month momentum +41%",
+   "also": [],
+   "r3": 0.41009896990506967,
+   "c": 349.07
+  },
+  {
+   "t": "VGNT",
+   "E": "E10",
+   "why": "spin-off: trading 6 months, 3-month momentum +9%",
+   "also": [],
+   "r3": 0.09195672624647222,
+   "c": 46.43
+  },
+  {
+   "t": "SUNB",
+   "E": "E10",
+   "why": "spin-off: trading 7 months, 3-month momentum +5%",
+   "also": [],
+   "r3": 0.053422598715671565,
+   "c": 77.1
+  },
+  {
+   "t": "Q",
+   "E": "E10",
+   "why": "spin-off: trading 11 months, 3-month momentum -10%",
+   "also": [],
+   "r3": -0.1036269430051815,
+   "c": 131.48
+  },
+  {
+   "t": "BE",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +134%",
+   "also": [],
+   "r3": -0.019996610743941767,
+   "c": 289.15
+  },
+  {
+   "t": "HNI",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +121%",
+   "also": [],
+   "r3": 0.13201160541586066,
+   "c": 46.82
+  },
+  {
+   "t": "STAA",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +111%",
+   "also": [],
+   "r3": -0.17812728602779815,
+   "c": 22.47
+  },
+  {
+   "t": "DNOW",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +108%",
+   "also": [],
+   "r3": 0.23028883684621393,
+   "c": 15.76
+  },
+  {
+   "t": "DCH",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +92%",
+   "also": [],
+   "r3": 0.016333938294010864,
+   "c": 5.6
+  },
+  {
+   "t": "ARQT",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +59%",
+   "also": [],
+   "r3": -0.03490602224779438,
+   "c": 25.16
+  },
+  {
+   "t": "HNGE",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +53%",
+   "also": [],
+   "r3": 0.10336647085404427,
+   "c": 97.67
+  },
+  {
+   "t": "WKC",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +50%",
+   "also": [],
+   "r3": 0.08079589990955682,
+   "c": 35.85
+  },
+  {
+   "t": "TVTX",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 3 loss quarters of the prior 4; revenue +48%",
+   "also": [],
+   "r3": -0.009568545581071675,
+   "c": 56.93
+  },
+  {
+   "t": "OMDA",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 3 loss quarters of the prior 4; revenue +43%",
+   "also": [],
+   "r3": -0.10853391684901537,
+   "c": 20.37
+  },
+  {
+   "t": "COHU",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 4 loss quarters of the prior 4; revenue +38%",
+   "also": [],
+   "r3": 0.2517887563884156,
+   "c": 73.48
+  },
+  {
+   "t": "DDOG",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 2 loss quarters of the prior 4; revenue +36%",
+   "also": [],
+   "r3": 0.08556212554332943,
+   "c": 277.22
+  },
+  {
+   "t": "AXON",
+   "E": "E8",
+   "why": "profitability turn: first operating profit after 3 loss quarters of the prior 4; revenue +35%",
+   "also": [],
+   "r3": -0.3358238933076243,
+   "c": 413.35
+  },
+  {
+   "t": "ULTA",
+   "E": "E9",
+   "why": "index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters",
+   "also": [],
+   "r3": 0.20155141550089506,
+   "c": 543.69
+  },
+  {
+   "t": "EXPD",
+   "E": "E9",
+   "why": "index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters",
+   "also": [],
+   "r3": 0.16155703077851546,
+   "c": 192.47
+  },
+  {
+   "t": "ENTG",
+   "E": "E9",
+   "why": "index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters",
+   "also": [],
+   "r3": 0.14672452986154183,
+   "c": 166.47
+  },
+  {
+   "t": "SN",
+   "E": "E9",
+   "why": "index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters",
+   "also": [],
+   "r3": 0.2259602471125437,
+   "c": 182.57
+  },
+  {
+   "t": "CTSH",
+   "E": "E9",
+   "why": "index candidate: market cap crossed $22.7B (S&P 500 bar) with 4 profitable quarters",
+   "also": [],
+   "r3": 0.4143098863911048,
+   "c": 58.51
+  }
+ ]
+}

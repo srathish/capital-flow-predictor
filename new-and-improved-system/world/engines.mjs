@@ -13,7 +13,7 @@ import { cleanBars, gapsOf, blockedAt, crosses } from './prices_clean.mjs';
 
 const ROOT = path.join(decodeURIComponent(new URL('.', import.meta.url).pathname), '..'), C = path.join(ROOT, '.cache'), RES = path.join(ROOT, 'world', 'results_engines');
 const SMOKE = process.argv.includes('--smoke'), DIAG = process.argv.includes('--diag'); // --diag: per-engine coverage + sample flags (no scoring)
-if (!SMOKE && fs.existsSync(path.join(RES, 'engines.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_engines/engines.txt'); process.exit(1); }
+if (!SMOKE && !DIAG && !process.argv.includes('--live') && fs.existsSync(path.join(RES, 'engines.txt')) && !process.argv.includes('--force')) { console.error('already run — see world/results_engines/engines.txt'); process.exit(1); }
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length, med = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[s.length >> 1] : null; };
@@ -181,6 +181,13 @@ function randomBase(P, MS, flagsBy, years, endOverride, draws = 30) { const r = 
   const tot = r.map((x) => x.early).sort((a, b) => a - b); return { mean: mean(tot), p95: tot[Math.min(tot.length - 1, Math.floor(tot.length * 0.95))], per }; }
 const runEngine = (MS, E, p) => new Map([...MS].map(([M, m]) => [M, new Map(ENGINES[E].run(m, p).map((x) => [x.t, `${E}: ${x.why}`]))]));
 
+if (process.argv.includes('--live')) { // today's radar with the FROZEN settings from results_engines/engines.json (no re-selection)
+  const J = rd(path.join(RES, 'engines.json')), Pl = loadPrices(null); P_ = Pl; const fc = new Map(); for (const p of Pl.values()) fc.set(p.d[0], (fc.get(p.d[0]) ?? 0) + 1); CLUSTER = new Set([...fc].filter(([, n]) => n > 20).map(([d]) => d));
+  let D = ''; for (const p of Pl.values()) if (p.d.at(-1) > D) D = p.d.at(-1); const m = month(Pl, D), out = new Map();
+  for (const E of J.order) { if (!J.chosen[E]) continue; for (const x of ENGINES[E].run(m, J.chosen[E].p)) { if (out.size >= 150) break; const o = out.get(x.t); if (o) o.also.push(E); else out.set(x.t, { t: x.t, E, why: x.why, also: [], r3: m.px.get(x.t)?.r3, c: m.px.get(x.t)?.c }); } }
+  const rows = [...out.values()]; fs.mkdirSync(path.join(ROOT, 'world', 'live'), { recursive: true }); fs.writeFileSync(path.join(ROOT, 'world', 'live', `radar_${D}.json`), JSON.stringify({ asOf: D, rows }, null, 1));
+  console.log(`# Mover radar as of ${D} (${rows.length} names, frozen settings)\n`); for (const E of J.order) { const g = rows.filter((r) => r.E === E); if (!g.length) continue; console.log(`## ${E} (${g.length})`); for (const r of g) console.log(`- ${r.t} $${r.c?.toFixed(2)} · 3m ${r.r3 >= 0 ? '+' : ''}${((r.r3 ?? 0) * 100).toFixed(0)}% · ${r.why}${r.also.length ? ` (also ${r.also.join(', ')})` : ''}`); console.log(''); }
+  process.exit(0); }
 if (DIAG) { const Pd = loadPrices(null); P_ = Pd; console.log(`data coverage: priced ${Pd.size} · SIC ${SIC.size} · revenue facts ${RAWQ.size} · op income ${OPQ.size} · net income ${NIQ.size} · shares ${SHR.size} · backlog ${BACK.size} · IFRS ${IFRS.size} · insider tickers ${INS.size} · spin-offs ${Object.keys(SPIN).length} · concepts ${CONCEPT.size} (${EXPO.length} rows) · wiki ${fs.readdirSync(path.join(C, 'wiki', 'views')).length} · commodities ${Object.values(COMM).filter((a) => a.length).length}/8 · bitcoin ${BTC.length}`);
   for (const M of ['2016-06-30', '2020-06-30', '2024-06-30']) { const m = month(Pd, M); console.log(`\n### ${M}: eligible ${m.elig.length} · E0 scored ${m.e0.length} · E0b scored ${m.e0b.length}`);
     for (const [E, eng] of Object.entries(ENGINES)) { const fl = eng.run(m, eng.grid[eng.grid.length - 1]); console.log(`${E.padEnd(4)} ${String(fl.length).padStart(3)} flags · ${fl.slice(0, 3).map((x) => `${x.t} (${x.why})`).join(' | ').slice(0, 330)}`); } }

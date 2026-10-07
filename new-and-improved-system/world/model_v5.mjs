@@ -71,7 +71,7 @@ let seed = 777; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483
 function noRecovery(x) { return x.gm4 >= 0; }
 if (process.argv.includes('--live')) { // node world/model_v5.mjs --wide --live → today's list with the hard rule applied
   const D = SPYLAST(), { scored } = rank(D), keep = scored.filter(noRecovery), dropped = scored.slice(0, TOP).filter((x) => !noRecovery(x));
-  const rows = keep.slice(0, TOP).map((x) => ({ t: x.t, score: +x.score.toFixed(3), revYoY: +x.g0.toFixed(2), gm: +x.gm.toFixed(3), gmYearAgo: +x.gm4.toFixed(3), uptrend: (mom(x.t, D) ?? -1) > 0 && above200(x.t, D) }));
+  const rows = keep.slice(0, +(process.env.LIVE_N ?? TOP)).map((x) => ({ t: x.t, score: +x.score.toFixed(3), revYoY: +x.g0.toFixed(2), gm: +x.gm.toFixed(3), gmYearAgo: +x.gm4.toFixed(3), uptrend: (mom(x.t, D) ?? -1) > 0 && above200(x.t, D) }));
   console.log(`# v5 live list as of ${D} (hard rule: margin must have been positive a year ago)\n`);
   for (const r of rows) console.log(`${r.uptrend ? '✓ uptrend ' : '✗ no trend'}  ${r.t.padEnd(6)} rev ${pcF(r.revYoY)} YoY · gross margin ${pcF(r.gm)} (a year ago ${pcF(r.gmYearAgo)})`);
   console.log(`\nRemoved by the rule (were losing money per sale a year ago): ${dropped.map((x) => x.t).join(', ') || 'none'}`);
