@@ -6,28 +6,28 @@
 
 | rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
 |---|---|---|---|---|---|---|---|---|---|
-| sell at 6 months + no stop (halves +2.5% / +2.2%) | +12.9% | +10.9% | **+2.0%** | -27% | 0.87 | 240 | 210d | 54% (14) | -41% (13) |
-| hold while top-60 + time stop 3m (halves +5.3% / +6.4%) | +16.2% | +10.9% | **+5.3%** | -32% | 1.06 | 409 | 121d | 44% (28) | -23% (26) |
-| theme hold + no stop (halves +1.9% / +2.6%) | +12.6% | +10.9% | **+1.7%** | -37% | 0.81 | 309 | 162d | 54% (17) | -34% (17) |
-| theme hold + time stop 3m (halves +3.5% / +4.4%) | +14.3% | +10.9% | **+3.4%** | -34% | 0.92 | 359 | 137d | 55% (23) | -25% (23) |
-| theme exit + no stop (halves +0.9% / +7.5%) | +14.2% | +10.9% | **+3.3%** | -31% | 0.94 | 398 | 126d | 36% (22) | -24% (22) |
-| ✓ theme exit + time stop 3m (halves +4.5% / +9.2%) | +17.1% | +10.9% | **+6.2%** | -30% | 1.12 | 446 | 111d | 37% (29) | -20% (29) |
+| sell at 6 months + no stop (halves +2.4% / +2.3%) | +12.9% | +10.9% | **+2.0%** | -27% | 0.87 | 240 | 210d | 54% (14) | -41% (13) |
+| hold while top-60 + time stop 3m (halves +5.3% / +4.2%) | +15.2% | +10.9% | **+4.3%** | -33% | 0.99 | 409 | 121d | 44% (28) | -23% (26) |
+| theme hold + no stop (halves +1.9% / +0.8%) | +11.9% | +10.9% | **+1.0%** | -37% | 0.76 | 309 | 162d | 54% (17) | -34% (17) |
+| theme hold + time stop 3m (halves +3.6% / +2.2%) | +13.4% | +10.9% | **+2.5%** | -34% | 0.86 | 359 | 137d | 56% (22) | -25% (23) |
+| theme exit + no stop (halves +1.0% / +3.6%) | +12.7% | +10.9% | **+1.8%** | -33% | 0.83 | 398 | 126d | 36% (21) | -24% (22) |
+| ✓ theme exit + time stop 3m (halves +4.4% / +7.1%) | +16.1% | +10.9% | **+5.2%** | -30% | 1.06 | 447 | 111d | 37% (29) | -20% (30) |
 
 ## 2. Check period 2019–2022 → chosen theme rule: theme exit + time stop 3m: FAIL · C1 (second look): hold while top-60 + time stop 3m: PASS
 
 | rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
 |---|---|---|---|---|---|---|---|---|---|
-| today's rule (6 months) | +7.3% | +5.9% | **+1.4%** | -41% | 0.40 | 140 | 202d | 42% (28) | -39% (20) |
-| chosen theme rule: theme exit + time stop 3m | +14.8% | +5.9% | **+8.9%** | -48% | 0.66 | 323 | 86d | 26% (49) | -24% (61) |
-| C1 (second look): hold while top-60 + time stop 3m | +18.7% | +5.9% | **+12.8%** | -46% | 0.78 | 292 | 96d | 30% (45) | -25% (49) |
+| today's rule (6 months) | +8.0% | +6.1% | **+1.9%** | -41% | 0.43 | 139 | 204d | 43% (27) | -26% (20) |
+| chosen theme rule: theme exit + time stop 3m | +15.2% | +6.1% | **+9.1%** | -48% | 0.67 | 320 | 87d | 26% (49) | -24% (58) |
+| C1 (second look): hold while top-60 + time stop 3m | +18.3% | +6.1% | **+12.2%** | -46% | 0.76 | 293 | 95d | 30% (45) | -26% (50) |
 
 ## 3. Final period 2023 → 2026-09
 
 | rule | yearly return | typical stock | excess | worst drawdown | Sharpe | trades | avg hold | winner gain kept | loss taken on −30% picks |
 |---|---|---|---|---|---|---|---|---|---|
-| today's rule (6 months) | +29.1% | +5.7% | **+23.4%** | -31% | 0.92 | 140 | 191d | 35% (28) | -41% (20) |
-| chosen theme rule: theme exit + time stop 3m | +37.7% | +5.7% | **+32.0%** | -33% | 1.20 | 279 | 91d | 21% (59) | -19% (41) |
-| C1 (second look): hold while top-60 + time stop 3m | +37.6% | +5.7% | **+32.0%** | -35% | 1.17 | 250 | 101d | 23% (51) | -23% (32) |
+| today's rule (6 months) | +29.7% | +5.7% | **+24.0%** | -31% | 0.94 | 140 | 191d | 36% (28) | -41% (20) |
+| chosen theme rule: theme exit + time stop 3m | +36.6% | +5.7% | **+30.9%** | -33% | 1.18 | 272 | 91d | 20% (58) | -20% (39) |
+| C1 (second look): hold while top-60 + time stop 3m | +37.4% | +5.7% | **+31.7%** | -35% | 1.17 | 249 | 101d | 23% (52) | -22% (33) |
 
 ### chosen theme rule: theme exit + time stop 3m: biggest and worst trades 2023–2026
 
