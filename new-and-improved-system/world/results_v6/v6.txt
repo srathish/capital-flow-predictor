@@ -1,0 +1,23 @@
+# Money list v6 — risk, valuation, speed, guidance (DESIGN_v6.md)
+
+Base = bottleneck C + selling rule C1. Build 2012–18: +15.5%/yr (SPY +10.1%), worst drop -31.7%, Sharpe 1.03 · Check 2019–22: +27.7%/yr (SPY +11.2%), worst drop -38.3%, Sharpe 1.20
+
+| add-on | setting | build: yearly / vs SPY / worst drop / Sharpe | passes build? | check 2019–22: yearly / worst drop / Sharpe | adopted? |
+|---|---|---|---|---|---|
+| R1 industry cap | {"cap":4} | +15.0% / +4.9% / -31.5% / 1.01 | ✗ | — | no |
+| R2 volatility sizing | {"vol":true} | +14.9% / +4.8% / -28.1% / 1.05 | ✓ | +21.3% / -38.6% / 1.02 | no |
+| R3 market brake | {"brake":"b"} | +15.5% / +5.4% / -29.9% / 1.10 | ✓ | +18.9% / -20.3% / 1.15 | no |
+| V1 run-up cap | {"runup":1.5} | +15.4% / +5.3% / -31.7% / 1.03 | ✗ | — | no |
+| V2 price-to-sales cap | {"ps":true} | +16.1% / +6.0% / -28.4% / 1.16 | ✓ | +34.0% / -39.3% / 1.38 | **yes** |
+| S1 weekly speed | {"weekly":true} | +16.0% / +5.9% / -30.5% / 0.96 | ✗ | — | no |
+| G1 guidance | {"guid":true} | +14.7% / +4.6% / -29.9% / 1.01 | ✗ | — | no |
+
+## Adopted together: {"ps":true}
+
+| period | base: yearly / worst drop / Sharpe | v6: yearly / worst drop / Sharpe | v6 with slippage | v6 with slippage + taxes | SPY |
+|---|---|---|---|---|---|
+| 2012–2018 (build) | +15.5% / -31.7% / 1.03 | **+16.1%** / -28.4% / 1.16 | +15.3% | +11.6% | +10.1% |
+| 2019–2022 (check) | +27.7% / -38.3% / 1.20 | **+34.0%** / -39.3% / 1.38 | +33.0% | +23.3% | +11.2% |
+| 2023–2026-09 (partly seen) | +37.5% / -34.5% / 1.20 | **+36.3%** / -29.7% / 1.24 | +35.4% | +27.0% | +20.7% |
+
+Survivorship: delisted companies are missing from the data, so every number above is a best case.
