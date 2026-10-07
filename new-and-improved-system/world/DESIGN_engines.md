@@ -80,3 +80,10 @@ daily volume (E11, have), Wikipedia pageviews API with Wikidata ticker → artic
 
 Deferred: options flow and analyst revisions (both failed earlier tests), short squeeze (no free short-interest history),
 government contracts, FDA catalysts, Korea exports, job postings (from 2020 only).
+
+## Amendment 2 (2026-10-06, before any engine is built or run) — E0b revenue-only bottleneck
+
+A data check found that companies such as IREN, NBIS and ARM file US-GAAP revenue but no gross-profit or cost-of-revenue line,
+so E0 (which needs gross margin) can never score them. **E0b:** for companies without gross-margin data only, score = mean
+percentile rank of revenue YoY growth and growth acceleration (the same freshness, window and $25M rules as v5), top {10, 20}.
+Budget 20. The losing-less rule can't apply (no gross margin); operating margin is not used, to keep it a pure revenue signal.
