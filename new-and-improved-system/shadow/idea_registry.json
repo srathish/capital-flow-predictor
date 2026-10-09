@@ -1,0 +1,5300 @@
+{
+ "created": "2026-10-09",
+ "n": 536,
+ "features": 67,
+ "hypotheses": [
+  {
+   "id": "G01xR1",
+   "feature": "G01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": true
+  },
+  {
+   "id": "G01xR2",
+   "feature": "G01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xS1",
+   "feature": "G01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xD1",
+   "feature": "G01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xD2",
+   "feature": "G01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xD3",
+   "feature": "G01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xD4",
+   "feature": "G01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G01xP1",
+   "feature": "G01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance Σg / Σ|g| (all strikes)",
+   "mechanism": "long gamma → dealers sell rips / buy dips → damped day",
+   "seen": false
+  },
+  {
+   "id": "G02xR1",
+   "feature": "G02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xR2",
+   "feature": "G02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xS1",
+   "feature": "G02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xD1",
+   "feature": "G02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xD2",
+   "feature": "G02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xD3",
+   "feature": "G02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xD4",
+   "feature": "G02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G02xP1",
+   "feature": "G02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance within ±1% of S",
+   "mechanism": "gamma nearest spot does the hedging",
+   "seen": false
+  },
+  {
+   "id": "G03xR1",
+   "feature": "G03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xR2",
+   "feature": "G03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xS1",
+   "feature": "G03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xD1",
+   "feature": "G03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xD2",
+   "feature": "G03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xD3",
+   "feature": "G03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xD4",
+   "feature": "G03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G03xP1",
+   "feature": "G03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance within ±2% of S",
+   "mechanism": "local gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xR1",
+   "feature": "G04",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xR2",
+   "feature": "G04",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xS1",
+   "feature": "G04",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xD1",
+   "feature": "G04",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xD2",
+   "feature": "G04",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xD3",
+   "feature": "G04",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xD4",
+   "feature": "G04",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G04xP1",
+   "feature": "G04",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance within ±5% of S",
+   "mechanism": "medium-range gamma regime",
+   "seen": false
+  },
+  {
+   "id": "G05xR1",
+   "feature": "G05",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xR2",
+   "feature": "G05",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xS1",
+   "feature": "G05",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xD1",
+   "feature": "G05",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xD2",
+   "feature": "G05",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xD3",
+   "feature": "G05",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xD4",
+   "feature": "G05",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G05xP1",
+   "feature": "G05",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → dealers chase",
+   "seen": false
+  },
+  {
+   "id": "G06xR1",
+   "feature": "G06",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xR2",
+   "feature": "G06",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xS1",
+   "feature": "G06",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xD1",
+   "feature": "G06",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xD2",
+   "feature": "G06",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xD3",
+   "feature": "G06",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xD4",
+   "feature": "G06",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G06xP1",
+   "feature": "G06",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "share of |gamma| below S",
+   "mechanism": "mass below spot = hedging support underneath (SPXW factor)",
+   "seen": false
+  },
+  {
+   "id": "G07xR1",
+   "feature": "G07",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xR2",
+   "feature": "G07",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xS1",
+   "feature": "G07",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xD1",
+   "feature": "G07",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xD2",
+   "feature": "G07",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xD3",
+   "feature": "G07",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xD4",
+   "feature": "G07",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G07xP1",
+   "feature": "G07",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance of strikes below S",
+   "mechanism": "long gamma below = buyers on dips",
+   "seen": false
+  },
+  {
+   "id": "G08xR1",
+   "feature": "G08",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xR2",
+   "feature": "G08",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xS1",
+   "feature": "G08",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xD1",
+   "feature": "G08",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xD2",
+   "feature": "G08",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xD3",
+   "feature": "G08",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xD4",
+   "feature": "G08",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G08xP1",
+   "feature": "G08",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma balance of strikes above S",
+   "mechanism": "long gamma above = sellers on rips",
+   "seen": false
+  },
+  {
+   "id": "G09xR1",
+   "feature": "G09",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xR2",
+   "feature": "G09",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xS1",
+   "feature": "G09",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xD1",
+   "feature": "G09",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xD2",
+   "feature": "G09",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xD3",
+   "feature": "G09",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xD4",
+   "feature": "G09",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G09xP1",
+   "feature": "G09",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king distance (K − S) / S, K = strike with largest |g|",
+   "mechanism": "price drifts toward the biggest hedging strike",
+   "seen": false
+  },
+  {
+   "id": "G10xR1",
+   "feature": "G10",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xR2",
+   "feature": "G10",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xS1",
+   "feature": "G10",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xD1",
+   "feature": "G10",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xD2",
+   "feature": "G10",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xD3",
+   "feature": "G10",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xD4",
+   "feature": "G10",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G10xP1",
+   "feature": "G10",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "|K − S| / S",
+   "mechanism": "king far away = no pin today",
+   "seen": false
+  },
+  {
+   "id": "G11xR1",
+   "feature": "G11",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xR2",
+   "feature": "G11",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xS1",
+   "feature": "G11",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xD1",
+   "feature": "G11",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xD2",
+   "feature": "G11",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xD3",
+   "feature": "G11",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xD4",
+   "feature": "G11",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G11xP1",
+   "feature": "G11",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "positive king pins, negative king repels",
+   "seen": false
+  },
+  {
+   "id": "G12xR1",
+   "feature": "G12",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xR2",
+   "feature": "G12",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xS1",
+   "feature": "G12",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xD1",
+   "feature": "G12",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xD2",
+   "feature": "G12",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xD3",
+   "feature": "G12",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xD4",
+   "feature": "G12",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G12xP1",
+   "feature": "G12",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king share |g_K| / Σ|g|",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xR1",
+   "feature": "G13",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xR2",
+   "feature": "G13",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xS1",
+   "feature": "G13",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xD1",
+   "feature": "G13",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xD2",
+   "feature": "G13",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xD3",
+   "feature": "G13",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xD4",
+   "feature": "G13",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G13xP1",
+   "feature": "G13",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "gamma concentration (Herfindahl of |g| shares)",
+   "mechanism": "concentrated gamma = stronger pin",
+   "seen": false
+  },
+  {
+   "id": "G14xR1",
+   "feature": "G14",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xR2",
+   "feature": "G14",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xS1",
+   "feature": "G14",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xD1",
+   "feature": "G14",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xD2",
+   "feature": "G14",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xD3",
+   "feature": "G14",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xD4",
+   "feature": "G14",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G14xP1",
+   "feature": "G14",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "distance to nearest strong node above S (≥ 50% of king) / S",
+   "mechanism": "more room above before a wall",
+   "seen": false
+  },
+  {
+   "id": "G15xR1",
+   "feature": "G15",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xR2",
+   "feature": "G15",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xS1",
+   "feature": "G15",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xD1",
+   "feature": "G15",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xD2",
+   "feature": "G15",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xD3",
+   "feature": "G15",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xD4",
+   "feature": "G15",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G15xP1",
+   "feature": "G15",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "distance to nearest strong node below S / S",
+   "mechanism": "more room below before a floor",
+   "seen": false
+  },
+  {
+   "id": "G16xR1",
+   "feature": "G16",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xR2",
+   "feature": "G16",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xS1",
+   "feature": "G16",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xD1",
+   "feature": "G16",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "-",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xD2",
+   "feature": "G16",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "-",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xD3",
+   "feature": "G16",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "-",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xD4",
+   "feature": "G16",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "-",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G16xP1",
+   "feature": "G16",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "corridor width = G14 + G15",
+   "mechanism": "wide corridor = room to move",
+   "seen": false
+  },
+  {
+   "id": "G17xR1",
+   "feature": "G17",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xR2",
+   "feature": "G17",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xS1",
+   "feature": "G17",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xD1",
+   "feature": "G17",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xD2",
+   "feature": "G17",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xD3",
+   "feature": "G17",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xD4",
+   "feature": "G17",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G17xP1",
+   "feature": "G17",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet location",
+   "seen": false
+  },
+  {
+   "id": "G18xR1",
+   "feature": "G18",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xR2",
+   "feature": "G18",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xS1",
+   "feature": "G18",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xD1",
+   "feature": "G18",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xD2",
+   "feature": "G18",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xD3",
+   "feature": "G18",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xD4",
+   "feature": "G18",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G18xP1",
+   "feature": "G18",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "largest negative-gamma strike − S, / S",
+   "mechanism": "negative (repelling / accelerating) strike location",
+   "seen": false
+  },
+  {
+   "id": "G19xR1",
+   "feature": "G19",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xR2",
+   "feature": "G19",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xS1",
+   "feature": "G19",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xD1",
+   "feature": "G19",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xD2",
+   "feature": "G19",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xD3",
+   "feature": "G19",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xD4",
+   "feature": "G19",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G19xP1",
+   "feature": "G19",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "call gamma share Σcall_g / (Σcall_g + |Σput_g|)",
+   "mechanism": "call-heavy gamma = dealers long gamma on top",
+   "seen": false
+  },
+  {
+   "id": "G20xR1",
+   "feature": "G20",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xR2",
+   "feature": "G20",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xS1",
+   "feature": "G20",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xD1",
+   "feature": "G20",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xD2",
+   "feature": "G20",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xD3",
+   "feature": "G20",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xD4",
+   "feature": "G20",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G20xP1",
+   "feature": "G20",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "ln(Σ|g| / its 20-day mean)",
+   "mechanism": "abnormal total gamma",
+   "seen": false
+  },
+  {
+   "id": "G21xR1",
+   "feature": "G21",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xR2",
+   "feature": "G21",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xS1",
+   "feature": "G21",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xD1",
+   "feature": "G21",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xD2",
+   "feature": "G21",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xD3",
+   "feature": "G21",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xD4",
+   "feature": "G21",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G21xP1",
+   "feature": "G21",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "net gamma in $ per 1% move ÷ 20-day $ volume",
+   "mechanism": "hedging flow relative to normal trading",
+   "seen": false
+  },
+  {
+   "id": "G22xR1",
+   "feature": "G22",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xR2",
+   "feature": "G22",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xS1",
+   "feature": "G22",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xD1",
+   "feature": "G22",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xD2",
+   "feature": "G22",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xD3",
+   "feature": "G22",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xD4",
+   "feature": "G22",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G22xP1",
+   "feature": "G22",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G01 z-score vs its own prior 60 days",
+   "mechanism": "regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xR1",
+   "feature": "G23",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xR2",
+   "feature": "G23",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xS1",
+   "feature": "G23",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xD1",
+   "feature": "G23",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xD2",
+   "feature": "G23",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xD3",
+   "feature": "G23",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xD4",
+   "feature": "G23",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "G23xP1",
+   "feature": "G23",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G03 z-score vs its own prior 60 days",
+   "mechanism": "local regime relative to recent normal",
+   "seen": false
+  },
+  {
+   "id": "V01xR1",
+   "feature": "V01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xR2",
+   "feature": "V01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xS1",
+   "feature": "V01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xD1",
+   "feature": "V01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xD2",
+   "feature": "V01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xD3",
+   "feature": "V01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xD4",
+   "feature": "V01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V01xP1",
+   "feature": "V01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "vanna balance Σv / Σ|v|",
+   "mechanism": "vol drift + vanna = forced hedging (vanna rally / unwind)",
+   "seen": false
+  },
+  {
+   "id": "V02xR1",
+   "feature": "V02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xR2",
+   "feature": "V02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xS1",
+   "feature": "V02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xD1",
+   "feature": "V02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xD2",
+   "feature": "V02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xD3",
+   "feature": "V02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xD4",
+   "feature": "V02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V02xP1",
+   "feature": "V02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "V03xR1",
+   "feature": "V03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xR2",
+   "feature": "V03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xS1",
+   "feature": "V03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xD1",
+   "feature": "V03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xD2",
+   "feature": "V03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xD3",
+   "feature": "V03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xD4",
+   "feature": "V03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V03xP1",
+   "feature": "V03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "(Σv above S − Σv below S) / Σ|v|",
+   "mechanism": "vanna skew around spot",
+   "seen": false
+  },
+  {
+   "id": "V04xR1",
+   "feature": "V04",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xR2",
+   "feature": "V04",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xS1",
+   "feature": "V04",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xD1",
+   "feature": "V04",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xD2",
+   "feature": "V04",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xD3",
+   "feature": "V04",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xD4",
+   "feature": "V04",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V04xP1",
+   "feature": "V04",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet location",
+   "seen": false
+  },
+  {
+   "id": "V05xR1",
+   "feature": "V05",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xR2",
+   "feature": "V05",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xS1",
+   "feature": "V05",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xD1",
+   "feature": "V05",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xD2",
+   "feature": "V05",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xD3",
+   "feature": "V05",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xD4",
+   "feature": "V05",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "V05xP1",
+   "feature": "V05",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "net vanna positive (1/0)",
+   "mechanism": "positive vanna + usual IV drift down → dealer buying",
+   "seen": false
+  },
+  {
+   "id": "C01xR1",
+   "feature": "C01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xR2",
+   "feature": "C01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xS1",
+   "feature": "C01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xD1",
+   "feature": "C01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xD2",
+   "feature": "C01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xD3",
+   "feature": "C01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xD4",
+   "feature": "C01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C01xP1",
+   "feature": "C01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "charm balance Σc / Σ|c|",
+   "mechanism": "time decay forces dealer re-hedging",
+   "seen": false
+  },
+  {
+   "id": "C02xR1",
+   "feature": "C02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xR2",
+   "feature": "C02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xS1",
+   "feature": "C02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xD1",
+   "feature": "C02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xD2",
+   "feature": "C02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xD3",
+   "feature": "C02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xD4",
+   "feature": "C02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C02xP1",
+   "feature": "C02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local charm",
+   "seen": false
+  },
+  {
+   "id": "C03xR1",
+   "feature": "C03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xR2",
+   "feature": "C03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xS1",
+   "feature": "C03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xD1",
+   "feature": "C03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xD2",
+   "feature": "C03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xD3",
+   "feature": "C03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xD4",
+   "feature": "C03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "C03xP1",
+   "feature": "C03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "Σc / Σ|δ| (charm relative to delta)",
+   "mechanism": "size of the overnight delta drift",
+   "seen": false
+  },
+  {
+   "id": "D01xR1",
+   "feature": "D01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xR2",
+   "feature": "D01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xS1",
+   "feature": "D01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xD1",
+   "feature": "D01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xD2",
+   "feature": "D01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xD3",
+   "feature": "D01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xD4",
+   "feature": "D01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D01xP1",
+   "feature": "D01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "customer net positioning",
+   "seen": false
+  },
+  {
+   "id": "D02xR1",
+   "feature": "D02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xR2",
+   "feature": "D02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xS1",
+   "feature": "D02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xD1",
+   "feature": "D02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xD2",
+   "feature": "D02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xD3",
+   "feature": "D02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xD4",
+   "feature": "D02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D02xP1",
+   "feature": "D02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowd bullishness (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "D03xR1",
+   "feature": "D03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xR2",
+   "feature": "D03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xS1",
+   "feature": "D03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xD1",
+   "feature": "D03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xD2",
+   "feature": "D03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xD3",
+   "feature": "D03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xD4",
+   "feature": "D03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "D03xP1",
+   "feature": "D03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "Y01xR1",
+   "feature": "Y01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xR2",
+   "feature": "Y01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xS1",
+   "feature": "Y01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xD1",
+   "feature": "Y01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xD2",
+   "feature": "Y01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xD3",
+   "feature": "Y01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xD4",
+   "feature": "Y01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y01xP1",
+   "feature": "Y01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G01 change over 1 day",
+   "mechanism": "gamma being added = more damping",
+   "seen": false
+  },
+  {
+   "id": "Y02xR1",
+   "feature": "Y02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xR2",
+   "feature": "Y02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xS1",
+   "feature": "Y02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xD1",
+   "feature": "Y02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xD2",
+   "feature": "Y02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xD3",
+   "feature": "Y02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xD4",
+   "feature": "Y02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y02xP1",
+   "feature": "Y02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G03 change over 1 day",
+   "mechanism": "local gamma being added",
+   "seen": false
+  },
+  {
+   "id": "Y03xR1",
+   "feature": "Y03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xR2",
+   "feature": "Y03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xS1",
+   "feature": "Y03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xD1",
+   "feature": "Y03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xD2",
+   "feature": "Y03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xD3",
+   "feature": "Y03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xD4",
+   "feature": "Y03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y03xP1",
+   "feature": "Y03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G01 change over 5 days",
+   "mechanism": "gamma build-up",
+   "seen": false
+  },
+  {
+   "id": "Y04xR1",
+   "feature": "Y04",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xR2",
+   "feature": "Y04",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xS1",
+   "feature": "Y04",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xD1",
+   "feature": "Y04",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xD2",
+   "feature": "Y04",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xD3",
+   "feature": "Y04",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xD4",
+   "feature": "Y04",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y04xP1",
+   "feature": "Y04",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king strike change over 1 day / S",
+   "mechanism": "king rolling up = escalator",
+   "seen": false
+  },
+  {
+   "id": "Y05xR1",
+   "feature": "Y05",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xR2",
+   "feature": "Y05",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xS1",
+   "feature": "Y05",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xD1",
+   "feature": "Y05",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xD2",
+   "feature": "Y05",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xD3",
+   "feature": "Y05",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xD4",
+   "feature": "Y05",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y05xP1",
+   "feature": "Y05",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "ln Σ|g| change over 1 day",
+   "mechanism": "gamma growing or shrinking",
+   "seen": false
+  },
+  {
+   "id": "Y06xR1",
+   "feature": "Y06",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xR2",
+   "feature": "Y06",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xS1",
+   "feature": "Y06",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xD1",
+   "feature": "Y06",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xD2",
+   "feature": "Y06",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xD3",
+   "feature": "Y06",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xD4",
+   "feature": "Y06",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y06xP1",
+   "feature": "Y06",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "V01 change over 1 day",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xR1",
+   "feature": "Y07",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xR2",
+   "feature": "Y07",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xS1",
+   "feature": "Y07",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xD1",
+   "feature": "Y07",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xD2",
+   "feature": "Y07",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xD3",
+   "feature": "Y07",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xD4",
+   "feature": "Y07",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y07xP1",
+   "feature": "Y07",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "C01 change over 1 day",
+   "mechanism": "charm shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xR1",
+   "feature": "Y08",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xR2",
+   "feature": "Y08",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xS1",
+   "feature": "Y08",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xD1",
+   "feature": "Y08",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xD2",
+   "feature": "Y08",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xD3",
+   "feature": "Y08",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xD4",
+   "feature": "Y08",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y08xP1",
+   "feature": "Y08",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "D01 change over 1 day",
+   "mechanism": "positioning shift",
+   "seen": false
+  },
+  {
+   "id": "Y09xR1",
+   "feature": "Y09",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xR2",
+   "feature": "Y09",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xS1",
+   "feature": "Y09",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xD1",
+   "feature": "Y09",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xD2",
+   "feature": "Y09",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xD3",
+   "feature": "Y09",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xD4",
+   "feature": "Y09",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "Y09xP1",
+   "feature": "Y09",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G17 change over 1 day",
+   "mechanism": "positive magnet moving",
+   "seen": false
+  },
+  {
+   "id": "N01xR1",
+   "feature": "N01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xR2",
+   "feature": "N01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xS1",
+   "feature": "N01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xD1",
+   "feature": "N01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xD2",
+   "feature": "N01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xD3",
+   "feature": "N01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xD4",
+   "feature": "N01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N01xP1",
+   "feature": "N01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "ln VIX",
+   "mechanism": "fear level",
+   "seen": false
+  },
+  {
+   "id": "N02xR1",
+   "feature": "N02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xR2",
+   "feature": "N02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xS1",
+   "feature": "N02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xD1",
+   "feature": "N02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xD2",
+   "feature": "N02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xD3",
+   "feature": "N02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xD4",
+   "feature": "N02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N02xP1",
+   "feature": "N02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "VIX 1-day change",
+   "mechanism": "fear shock (mean-reverts)",
+   "seen": false
+  },
+  {
+   "id": "N03xR1",
+   "feature": "N03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xR2",
+   "feature": "N03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xS1",
+   "feature": "N03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xD1",
+   "feature": "N03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xD2",
+   "feature": "N03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xD3",
+   "feature": "N03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xD4",
+   "feature": "N03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N03xP1",
+   "feature": "N03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "prior-day return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xR1",
+   "feature": "N04",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xR2",
+   "feature": "N04",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xS1",
+   "feature": "N04",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xD1",
+   "feature": "N04",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xD2",
+   "feature": "N04",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xD3",
+   "feature": "N04",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xD4",
+   "feature": "N04",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N04xP1",
+   "feature": "N04",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "5-day return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "N05xR1",
+   "feature": "N05",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xR2",
+   "feature": "N05",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xS1",
+   "feature": "N05",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xD1",
+   "feature": "N05",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xD2",
+   "feature": "N05",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xD3",
+   "feature": "N05",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xD4",
+   "feature": "N05",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N05xP1",
+   "feature": "N05",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "20-day return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "N06xR1",
+   "feature": "N06",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xR2",
+   "feature": "N06",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xS1",
+   "feature": "N06",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xD1",
+   "feature": "N06",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xD2",
+   "feature": "N06",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xD3",
+   "feature": "N06",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xD4",
+   "feature": "N06",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N06xP1",
+   "feature": "N06",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretch from the mean (reversion)",
+   "seen": false
+  },
+  {
+   "id": "N07xR1",
+   "feature": "N07",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xR2",
+   "feature": "N07",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xS1",
+   "feature": "N07",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xD1",
+   "feature": "N07",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xD2",
+   "feature": "N07",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xD3",
+   "feature": "N07",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xD4",
+   "feature": "N07",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N07xP1",
+   "feature": "N07",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide",
+   "seen": false
+  },
+  {
+   "id": "N08xR1",
+   "feature": "N08",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xR2",
+   "feature": "N08",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xS1",
+   "feature": "N08",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xD1",
+   "feature": "N08",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xD2",
+   "feature": "N08",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xD3",
+   "feature": "N08",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xD4",
+   "feature": "N08",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N08xP1",
+   "feature": "N08",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "prior-day close location (C − L)/(H − L)",
+   "mechanism": "strong close → follow-through",
+   "seen": false
+  },
+  {
+   "id": "N09xR1",
+   "feature": "N09",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xR2",
+   "feature": "N09",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xS1",
+   "feature": "N09",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xD1",
+   "feature": "N09",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xD2",
+   "feature": "N09",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xD3",
+   "feature": "N09",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xD4",
+   "feature": "N09",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N09xP1",
+   "feature": "N09",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "prior-day trendiness |C − O|/range",
+   "mechanism": "trend days cluster",
+   "seen": false
+  },
+  {
+   "id": "N10xR1",
+   "feature": "N10",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xR2",
+   "feature": "N10",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xS1",
+   "feature": "N10",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xD1",
+   "feature": "N10",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xD2",
+   "feature": "N10",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xD3",
+   "feature": "N10",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xD4",
+   "feature": "N10",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N10xP1",
+   "feature": "N10",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "ln(VIX ÷ 20-day realized vol of SPY)",
+   "mechanism": "rich implied vol → calmer than feared",
+   "seen": false
+  },
+  {
+   "id": "N11xR1",
+   "feature": "N11",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xR2",
+   "feature": "N11",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xS1",
+   "feature": "N11",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xD1",
+   "feature": "N11",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xD2",
+   "feature": "N11",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xD3",
+   "feature": "N11",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xD4",
+   "feature": "N11",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N11xP1",
+   "feature": "N11",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is Monday",
+   "mechanism": "weekend news → wider",
+   "seen": false
+  },
+  {
+   "id": "N12xR1",
+   "feature": "N12",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xR2",
+   "feature": "N12",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xS1",
+   "feature": "N12",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xD1",
+   "feature": "N12",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xD2",
+   "feature": "N12",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xD3",
+   "feature": "N12",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xD4",
+   "feature": "N12",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N12xP1",
+   "feature": "N12",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking",
+   "seen": false
+  },
+  {
+   "id": "N13xR1",
+   "feature": "N13",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xR2",
+   "feature": "N13",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xS1",
+   "feature": "N13",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xD1",
+   "feature": "N13",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xD2",
+   "feature": "N13",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xD3",
+   "feature": "N13",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xD4",
+   "feature": "N13",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N13xP1",
+   "feature": "N13",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is monthly OPEX (3rd Friday)",
+   "mechanism": "expiry pin",
+   "seen": false
+  },
+  {
+   "id": "N14xR1",
+   "feature": "N14",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xR2",
+   "feature": "N14",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xS1",
+   "feature": "N14",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xD1",
+   "feature": "N14",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xD2",
+   "feature": "N14",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xD3",
+   "feature": "N14",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xD4",
+   "feature": "N14",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N14xP1",
+   "feature": "N14",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released after expiry",
+   "seen": false
+  },
+  {
+   "id": "N15xR1",
+   "feature": "N15",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xR2",
+   "feature": "N15",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xS1",
+   "feature": "N15",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xD1",
+   "feature": "N15",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xD2",
+   "feature": "N15",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xD3",
+   "feature": "N15",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xD4",
+   "feature": "N15",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N15xP1",
+   "feature": "N15",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week",
+   "seen": false
+  },
+  {
+   "id": "N16xR1",
+   "feature": "N16",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xR2",
+   "feature": "N16",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xS1",
+   "feature": "N16",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xD1",
+   "feature": "N16",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xD2",
+   "feature": "N16",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xD3",
+   "feature": "N16",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xD4",
+   "feature": "N16",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N16xP1",
+   "feature": "N16",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is the last trading day of the month",
+   "mechanism": "month-end flows",
+   "seen": false
+  },
+  {
+   "id": "N17xR1",
+   "feature": "N17",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xR2",
+   "feature": "N17",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xS1",
+   "feature": "N17",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xD1",
+   "feature": "N17",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xD2",
+   "feature": "N17",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xD3",
+   "feature": "N17",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xD4",
+   "feature": "N17",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N17xP1",
+   "feature": "N17",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "new-month inflows",
+   "seen": false
+  },
+  {
+   "id": "N18xR1",
+   "feature": "N18",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xR2",
+   "feature": "N18",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xS1",
+   "feature": "N18",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xD1",
+   "feature": "N18",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xD2",
+   "feature": "N18",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xD3",
+   "feature": "N18",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xD4",
+   "feature": "N18",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "N18xP1",
+   "feature": "N18",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "day d is the day before a market holiday",
+   "mechanism": "pre-holiday drift",
+   "seen": false
+  },
+  {
+   "id": "I01xR1",
+   "feature": "I01",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xR2",
+   "feature": "I01",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "-",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xS1",
+   "feature": "I01",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xD1",
+   "feature": "I01",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xD2",
+   "feature": "I01",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xD3",
+   "feature": "I01",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xD4",
+   "feature": "I01",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I01xP1",
+   "feature": "I01",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G01 × (VIX > 20)",
+   "mechanism": "gamma matters more in stress",
+   "seen": false
+  },
+  {
+   "id": "I02xR1",
+   "feature": "I02",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xR2",
+   "feature": "I02",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xS1",
+   "feature": "I02",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xD1",
+   "feature": "I02",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xD2",
+   "feature": "I02",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xD3",
+   "feature": "I02",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xD4",
+   "feature": "I02",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I02xP1",
+   "feature": "I02",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G03 × (close above 20-day average)",
+   "mechanism": "local gamma in an uptrend",
+   "seen": false
+  },
+  {
+   "id": "I03xR1",
+   "feature": "I03",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xR2",
+   "feature": "I03",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xS1",
+   "feature": "I03",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xD1",
+   "feature": "I03",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xD2",
+   "feature": "I03",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xD3",
+   "feature": "I03",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xD4",
+   "feature": "I03",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I03xP1",
+   "feature": "I03",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king above S and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xR1",
+   "feature": "I04",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xR2",
+   "feature": "I04",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xS1",
+   "feature": "I04",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xD1",
+   "feature": "I04",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xD2",
+   "feature": "I04",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xD3",
+   "feature": "I04",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xD4",
+   "feature": "I04",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "+",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I04xP1",
+   "feature": "I04",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "king below S and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "I05xR1",
+   "feature": "I05",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "+",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xR2",
+   "feature": "I05",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "+",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xS1",
+   "feature": "I05",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "-",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xD1",
+   "feature": "I05",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xD2",
+   "feature": "I05",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xD3",
+   "feature": "I05",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xD4",
+   "feature": "I05",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "-",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I05xP1",
+   "feature": "I05",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "net gamma negative and close below 20-day average (1/0)",
+   "mechanism": "short gamma in a downtrend = air pocket",
+   "seen": false
+  },
+  {
+   "id": "I06xR1",
+   "feature": "I06",
+   "outcome": "R1",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xR2",
+   "feature": "I06",
+   "outcome": "R2",
+   "family": "vol",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xS1",
+   "feature": "I06",
+   "outcome": "S1",
+   "family": "trend",
+   "sign": "+",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xD1",
+   "feature": "I06",
+   "outcome": "D1",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xD2",
+   "feature": "I06",
+   "outcome": "D2",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xD3",
+   "feature": "I06",
+   "outcome": "D3",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xD4",
+   "feature": "I06",
+   "outcome": "D4",
+   "family": "dir",
+   "sign": "?",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  },
+  {
+   "id": "I06xP1",
+   "feature": "I06",
+   "outcome": "P1",
+   "family": "pull",
+   "definition": "G06 × net gamma positive",
+   "mechanism": "supported and damped",
+   "seen": false
+  }
+ ]
+}
