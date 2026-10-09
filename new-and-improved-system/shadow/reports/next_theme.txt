@@ -1,0 +1,99 @@
+NEXT-THEME DETECTORS · 20 themes · 48 month-ends · forward 3 months vs universe
+
+  FAIL N1 REVISION LEAD — analyst PT raises ≥2× normal while price ≤60th pct
+    all +4.8% (n 71) vs control +1.4% (n 803) · t 0.77
+    2022–24 +7.0% (n 44) vs +2.3% (n 360) · 2024–26 +1.3% (n 27) vs +0.7% (n 443)
+
+  FAIL N2 THEME MIGRATION — stock's correlation jumps into a hot theme, stock hasn't run
+    all -14.6% (n 1054) vs control -3.2% (n 1411) · t -5.55
+    2022–24 -7.2% (n 195) vs +0.5% (n 996) · 2024–26 -16.3% (n 859) vs -12.3% (n 415)
+
+N1 fires:
+  2023-04 cyber      raises 7 vs normal 1.7 · price pct 55 → next 3m +6.3%
+  2023-04 banks      raises 15 vs normal 1 · price pct 23 → next 3m -27.4%
+  2023-04 consumer   raises 7 vs normal 1 · price pct 53 → next 3m -31.7%
+  2023-05 optical    raises 8 vs normal 1.7 · price pct 34 → next 3m +68.7%
+  2023-05 cyber      raises 23 vs normal 2.2 · price pct 59 → next 3m -3.1%
+  2023-05 crypto     raises 9 vs normal 1.7 · price pct 47 → next 3m +8.0%
+  2023-05 ev         raises 4 vs normal 1.7 · price pct 22 → next 3m +9.0%
+  2023-05 banks      raises 21 vs normal 1.2 · price pct 4 → next 3m -12.3%
+  2023-05 oil        raises 19 vs normal 1.7 · price pct 10 → next 3m +1.4%
+  2023-05 consumer   raises 18 vs normal 1.3 · price pct 29 → next 3m -6.8%
+  2023-06 memory     raises 15 vs normal 1.3 · price pct 16 → next 3m +18.6%
+  2023-06 semiEquip  raises 9 vs normal 1.2 · price pct 45 → next 3m -1.7%
+  2023-06 cyber      raises 55 vs normal 2.8 · price pct 45 → next 3m +12.3%
+  2023-06 crypto     raises 9 vs normal 1.8 · price pct 49 → next 3m +6.6%
+  2023-06 ev         raises 6 vs normal 2.2 · price pct 49 → next 3m +14.7%
+  2023-06 banks      raises 10 vs normal 3.7 · price pct 18 → next 3m +2.9%
+  2023-06 pharma     raises 12 vs normal 3.2 · price pct 48 → next 3m -4.5%
+  2023-06 consumer   raises 22 vs normal 2.2 · price pct 18 → next 3m +3.9%
+  2023-07 memory     raises 16 vs normal 1.5 · price pct 29 → next 3m +19.1%
+  2023-07 semiEquip  raises 21 vs normal 2.3 · price pct 52 → next 3m +1.1%
+  2023-07 banks      raises 31 vs normal 4.7 · price pct 8 → next 3m +3.4%
+  2023-07 pharma     raises 19 vs normal 4.3 · price pct 5 → next 3m +11.8%
+  2023-07 consumer   raises 14 vs normal 4.3 · price pct 7 → next 3m +11.7%
+  2023-08 aiCompute  raises 60 vs normal 11.2 · price pct 36 → next 3m +1.7%
+  2023-08 memory     raises 8 vs normal 3.8 · price pct 58 → next 3m +9.3%
+  2023-08 semiEquip  raises 33 vs normal 2.7 · price pct 40 → next 3m -1.5%
+  2023-08 aiSoftware raises 68 vs normal 15.7 · price pct 22 → next 3m +21.9%
+  2023-08 cyber      raises 48 vs normal 12 · price pct 46 → next 3m +20.2%
+  2023-08 miners     raises 13 vs normal 1.3 · price pct 55 → next 3m +21.6%
+  2023-08 banks      raises 30 vs normal 5.7 · price pct 21 → next 3m +6.7%
+  2023-08 consumer   raises 51 vs normal 5.8 · price pct 46 → next 3m +1.8%
+  2023-09 aiCompute  raises 50 vs normal 14.7 · price pct 58 → next 3m +5.2%
+  2023-09 semiEquip  raises 15 vs normal 5.8 · price pct 47 → next 3m -1.1%
+  2023-09 miners     raises 8 vs normal 2.3 · price pct 0 → next 3m +227.6%
+  2023-11 semiEquip  raises 20 vs normal 8.3 · price pct 50 → next 3m -4.6%
+  2023-11 optical    raises 23 vs normal 10.2 · price pct 50 → next 3m -9.7%
+  2023-11 oil        raises 31 vs normal 11.2 · price pct 36 → next 3m -37.4%
+  2023-11 pharma     raises 22 vs normal 10.5 · price pct 19 → next 3m -18.2%
+  2023-12 consumer   raises 66 vs normal 18 · price pct 44 → next 3m -30.8%
+  2024-01 consumer   raises 53 vs normal 23.3 · price pct 42 → next 3m -18.5%
+  2024-02 consumer   raises 75 vs normal 29 · price pct 13 → next 3m +0.5%
+  2024-03 cyber      raises 125 vs normal 50 · price pct 56 → next 3m +2.9%
+  2024-03 miners     raises 13 vs normal 5.5 · price pct 25 → next 3m -0.6%
+  2024-03 consumer   raises 101 vs normal 32.2 · price pct 27 → next 3m -2.3%
+  2024-07 banks      raises 100 vs normal 42.5 · price pct 56 → next 3m -10.9%
+  2024-12 neocloud   raises 11 vs normal 4.5 · price pct 60 → next 3m -27.6%
+  2025-01 neocloud   raises 12 vs normal 4.7 · price pct 16 → next 3m -20.9%
+  2025-03 nuclear    raises 3 vs normal 1.3 · price pct 37 → next 3m +30.5%
+  2025-03 space      raises 8 vs normal 3.7 · price pct 5 → next 3m +41.3%
+  2025-03 quantum    raises 8 vs normal 2 · price pct 1 → next 3m +35.3%
+  2025-07 semiEquip  raises 28 vs normal 6 · price pct 42 → next 3m +18.9%
+  2025-07 foundry    raises 10 vs normal 2.3 · price pct 32 → next 3m +5.2%
+  2025-07 oil        raises 19 vs normal 4.2 · price pct 13 → next 3m -32.6%
+  2025-08 aiCompute  raises 70 vs normal 22.5 · price pct 50 → next 3m +5.7%
+  2025-08 semiEquip  raises 27 vs normal 5.3 · price pct 48 → next 3m +36.4%
+  2025-08 foundry    raises 7 vs normal 2 · price pct 37 → next 3m +15.6%
+  2025-08 servers    raises 25 vs normal 5.3 · price pct 44 → next 3m -21.2%
+  2025-08 crypto     raises 31 vs normal 13.2 · price pct 58 → next 3m -31.5%
+  2025-08 oil        raises 21 vs normal 4 · price pct 37 → next 3m -17.6%
+  2025-08 pharma     raises 11 vs normal 5.2 · price pct 9 → next 3m +0.3%
+  2025-09 aiCompute  raises 64 vs normal 25.8 · price pct 33 → next 3m +2.4%
+  2025-09 servers    raises 23 vs normal 7 · price pct 39 → next 3m -18.1%
+  2025-09 oil        raises 12 vs normal 4.8 · price pct 21 → next 3m +0.4%
+  2025-10 servers    raises 27 vs normal 9.3 · price pct 38 → next 3m -27.1%
+  2025-10 banks      raises 63 vs normal 23.2 · price pct 26 → next 3m +8.9%
+  2025-10 oil        raises 20 vs normal 6.2 · price pct 17 → next 3m +18.9%
+  2025-10 pharma     raises 18 vs normal 4.2 · price pct 26 → next 3m +23.5%
+  2025-11 servers    raises 22 vs normal 11 · price pct 25 → next 3m -5.2%
+  2025-11 oil        raises 25 vs normal 6.7 · price pct 20 → next 3m +22.8%
+  2026-02 pharma     raises 28 vs normal 11.2 · price pct 54 → next 3m -25.1%
+  2026-05 oil        raises 47 vs normal 21.3 · price pct 11 → next 3m +6.1%
+
+N2 biggest migrations:
+  2025-05 AAPL  → power      corr -0.26 → 0.68 · next 3m -10.8%
+  2025-06 UPS   → power      corr -0.31 → 0.62 · next 3m -74.5%
+  2025-04 ANET  → cyber      corr -0.1 → 0.81 · next 3m -8.4%
+  2025-06 CMCSA → power      corr -0.28 → 0.6 · next 3m -69.2%
+  2025-06 AAPL  → power      corr -0.12 → 0.75 · next 3m -33.1%
+  2025-05 UPS   → power      corr -0.32 → 0.51 · next 3m -36.8%
+  2024-05 RIOT  → neocloud   corr 0 → 0.83 · next 3m -30.2%
+  2024-05 CLSK  → neocloud   corr 0.01 → 0.83 · next 3m -40.9%
+  2025-05 CRM   → power      corr 0.03 → 0.85 · next 3m -29.9%
+  2024-05 MARA  → neocloud   corr 0 → 0.81 · next 3m -21.8%
+  2025-06 HON   → power      corr -0.13 → 0.68 · next 3m -66.8%
+  2025-06 UPS   → neocloud   corr -0.19 → 0.61 · next 3m -74.5%
+  2025-06 VLO   → power      corr -0.05 → 0.73 · next 3m -30.6%
+  2025-04 BE    → cyber      corr -0.14 → 0.62 · next 3m +46.4%
+  2024-05 HUT   → neocloud   corr 0.05 → 0.79 · next 3m +9.1%

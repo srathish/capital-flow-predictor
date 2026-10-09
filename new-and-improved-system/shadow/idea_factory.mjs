@@ -150,9 +150,16 @@ const surv = S1.filter((h) => h.stage1);
 for (const h of surv) { const r = fit(h.feature, h.outcome, holdRows); h.dir = Math.sign(h.b1) > 0 ? '+' : '-'; h.b2 = r.b; h.t2 = r.t; h.n2 = r.n; h.p2 = Number.isFinite(r.t) ? pval(r.t, h.dir) : 1;
   const ix = fit(h.feature, h.outcome, holdRows.filter((x) => INDEX.has(x.T))); h.bIdx = ix.b; h.tIdx = ix.t;
   let same = 0, tot = 0; for (const T of TICKERS) { const rr = holdRows.filter((x) => x.T === T); if (rr.length < 100) continue; const q = fit(h.feature, h.outcome, rr); if (!Number.isFinite(q.b)) continue; tot++; if (Math.sign(q.b) === Math.sign(h.b1)) same++; } h.tickSame = tot ? same / tot : NaN; }
-const keep2 = bh(surv.map((h) => h.p2), 0.10); surv.forEach((h, i) => { h.validated = keep2[i] && Math.sign(h.b2) === Math.sign(h.b1); });
+const keep2 = bh(surv.map((h) => h.p2), 0.10); surv.forEach((h, i) => { h.passBH = keep2[i] && Math.sign(h.b2) === Math.sign(h.b1); });
+// amendment 3: per-idea placebo — the real holdout t (in the build direction) must beat ≥ 19 of 20 holdout fits of the
+// SAME idea with that ticker's feature series circularly shifted K trading days within the holdout
+const KS = [13, 29, 43, 59, 71, 89, 101, 113, 131, 149, 163, 179, 191, 211, 227, 239, 251, 269, 283, 293];
+const holdShift = new Map(); for (const K of KS) { const m = new Map(); for (const T of TICKERS) { const rr = holdRows.filter((r) => r.T === T); rr.forEach((r, j) => m.set(r, rr[(j + K) % rr.length].f)); } holdShift.set(K, holdRows.map((r) => ({ ...r, f: m.get(r) }))); }
+for (const h of surv.filter((x) => x.passBH)) { const dir = Math.sign(h.b1), real = dir * h.t2, pl = KS.map((K) => dir * fit(h.feature, h.outcome, holdShift.get(K)).t).filter(Number.isFinite);
+  h.placeboBeat = pl.filter((x) => real > x).length; h.placeboN = pl.length; h.placeboMax = Math.max(...pl); }
+surv.forEach((h) => { h.validated = !!h.passBH && h.placeboBeat >= 19 && h.placeboN === 20; });
 // incremental vs the strongest validated idea in the same outcome
-const val = surv.filter((h) => h.validated), valNew = val.filter((h) => !h.seen);
+const val = surv.filter((h) => h.validated), valNew = val.filter((h) => !h.seen), passBHonly = surv.filter((h) => h.passBH && !h.validated);
 for (const o of new Set(val.map((h) => h.outcome))) { const grp = val.filter((h) => h.outcome === o).sort((a, b) => Math.abs(b.t2) - Math.abs(a.t2)), top = grp[0];
   for (const h of grp.slice(1)) { const r = fit(h.feature, h.outcome, holdRows, { fk: top.feature }); h.beyondTop = top.feature; h.tBeyond = r.t; } }
 
@@ -162,10 +169,11 @@ const L = ['# Idea factory — results', `\nRun ${new Date().toISOString()} · p
   `Build rows ${buildRows.length} (${buildRows[0]?.d} → ${buildRows.at(-1)?.d}) · holdout rows ${holdRows.length} (${holdRows[0]?.d} → ${holdRows.at(-1)?.d})\n`,
   `**Stage 1 (build, BH q = 0.10): ${surv.length} of ${REG.length} survive.** **Stage 2 (holdout, BH q = 0.10 across survivors, same sign): ${valNew.length} new ideas validated**${val.length > valNew.length ? ' (plus the already-seen gamma → range idea)' : ''}.`,
   `\nExpected false discoveries among validated at q = 0.10: about ${(val.length * 0.1).toFixed(1)}.\n`,
-  '## Validated ideas (holdout)\n', '| idea | feature | outcome | predicted | build β (t) | holdout β (t) | index ETFs β (t) | tickers same sign | beyond strongest in outcome (t) | mechanism |', '|---|---|---|---|---|---|---|---|---|---|',
-  ...val.sort((a, b) => a.outcome.localeCompare(b.outcome) || Math.abs(b.t2) - Math.abs(a.t2)).map((h) => `| ${h.id}${h.seen ? ' (seen)' : ''} | ${h.definition} | ${h.outcome} | ${h.sign} | ${fx(h.b1)} (${fx(h.t1, 2)}) | **${fx(h.b2)} (${fx(h.t2, 2)})** | ${fx(h.bIdx)} (${fx(h.tIdx, 2)}) | ${(h.tickSame * 100).toFixed(0)}% | ${h.beyondTop ? `${fx(h.tBeyond, 2)} beyond ${h.beyondTop}` : 'strongest'} | ${h.mechanism} |`),
+  '## Validated ideas (holdout + per-idea placebo)\n', '| idea | feature | outcome | predicted | build β (t) | holdout β (t) | beats own placebos | index ETFs β (t) | tickers same sign | beyond strongest in outcome (t) | mechanism |', '|---|---|---|---|---|---|---|---|---|---|---|',
+  ...val.sort((a, b) => a.outcome.localeCompare(b.outcome) || Math.abs(b.t2) - Math.abs(a.t2)).map((h) => `| ${h.id}${h.seen ? ' (seen)' : ''} | ${h.definition} | ${h.outcome} | ${h.sign} | ${fx(h.b1)} (${fx(h.t1, 2)}) | **${fx(h.b2)} (${fx(h.t2, 2)})** | ${h.placeboBeat}/${h.placeboN} | ${fx(h.bIdx)} (${fx(h.tIdx, 2)}) | ${(h.tickSame * 100).toFixed(0)}% | ${h.beyondTop ? `${fx(h.tBeyond, 2)} beyond ${h.beyondTop}` : 'strongest'} | ${h.mechanism} |`),
+  '\n## Passed the holdout test but NOT their own placebo (likely slow-drift artifacts)\n', '| idea | outcome | holdout t | beats own placebos | best placebo t |', '|---|---|---|---|---|', ...passBHonly.map((h) => `| ${h.id} ${h.definition} | ${h.outcome} | ${fx(h.t2, 2)} | ${h.placeboBeat}/${h.placeboN} | ${fx(h.placeboMax, 2)} |`),
   '\n## Survived stage 1 but failed the holdout\n', '| idea | outcome | build β (t) | holdout β (t) |', '|---|---|---|---|',
-  ...surv.filter((h) => !h.validated).map((h) => `| ${h.id} ${h.definition} | ${h.outcome} | ${fx(h.b1)} (${fx(h.t1, 2)}) | ${fx(h.b2)} (${fx(h.t2, 2)}) |`),
+  ...surv.filter((h) => !h.passBH).map((h) => `| ${h.id} ${h.definition} | ${h.outcome} | ${fx(h.b1)} (${fx(h.t1, 2)}) | ${fx(h.b2)} (${fx(h.t2, 2)}) |`),
   '\nOutcome units: R1/R2 = log range (β ≈ % change in range per 1 s.d. of the feature); S1 = trendiness share; D1–D4 and P1 = fractions of the 20-day average daily range per 1 s.d. of the feature.',
   '\nFull per-hypothesis table: results_idea_factory/all.json.'];
 fs.mkdirSync(OUT, { recursive: true });

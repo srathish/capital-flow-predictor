@@ -1,0 +1,25 @@
+THEME SNOWBALL ENGINE · 20 themes · 51 month-ends · 10,000 random baskets per theme-month · forward = next 3 months minus universe
+
+  FAIL S1 SNOWBALL — theme ≥ 95th percentile keeps rolling
+    all: +11.8% (n 109) vs control +2.5% · t 2.09
+    2022–24: +4.0% (n 49) vs control +4.7% (n 401) · 2024–26: +18.1% (n 60) vs control +0.8% (n 521)
+
+  FAIL S2 CAUSE → EFFECT — upstream hot (≥90th), downstream cold (≤60th) → downstream
+    all: +4.3% (n 31) vs control +4.3% · t 0.01
+    2022–24: +12.7% (n 14) vs control +8.7% (n 167) · 2024–26: -2.6% (n 17) vs control +1.7% (n 283)
+
+S2 events by edge (upstream hot & downstream cold):
+  neocloud→power           8 months · avg next-3m excess -3.3% · 2024-07 up 97/dn 52 → +26.7% · 2024-08 up 93/dn 53 → -7.2% · 2025-08 up 99/dn 29 → -11.0% · 2025-09 up 93/dn 20 → -2.1%
+  aiCompute→aiSoftware     4 months · avg next-3m excess +5.8% · 2023-01 up 92/dn 18 → +2.4% · 2024-02 up 96/dn 52 → -21.6% · 2024-03 up 94/dn 56 → -4.1% · 2026-04 up 94/dn 4 → +46.6%
+  aiCompute→optical        3 months · avg next-3m excess +21.5% · 2023-01 up 92/dn 45 → -13.3% · 2023-05 up 96/dn 35 → +68.7% · 2024-03 up 94/dn 55 → +9.1%
+  aiCompute→neocloud       3 months · avg next-3m excess +38.0% · 2023-01 up 92/dn 26 → +66.7% · 2024-01 up 95/dn 41 → -0.5% · 2024-03 up 94/dn 20 → +47.8%
+  memory→semiEquip         3 months · avg next-3m excess +1.4% · 2023-09 up 92/dn 44 → -1.1% · 2023-10 up 94/dn 54 → +8.6% · 2026-05 up 98/dn 48 → -3.2%
+  crypto→miners            3 months · avg next-3m excess -8.0% · 2024-05 up 95/dn 8 → -21.0% · 2025-01 up 92/dn 58 → -18.8% · 2025-05 up 93/dn 49 → +15.7%
+  aiCompute→power          2 months · avg next-3m excess -14.9% · 2026-05 up 98/dn 4 → -12.9% · 2026-06 up 99/dn 26 → -16.9%
+  aiCompute→servers        1 months · avg next-3m excess - · 2023-01 up 92/dn 50 → +17.3%
+  aiCompute→memory         1 months · avg next-3m excess - · 2023-05 up 96/dn 53 → -2.2%
+  miners→neocloud          1 months · avg next-3m excess - · 2024-01 up 100/dn 41 → -0.5%
+  aiCompute→semiEquip      1 months · avg next-3m excess - · 2026-05 up 98/dn 48 → -3.2%
+  foundry→semiEquip        1 months · avg next-3m excess - · 2026-05 up 93/dn 48 → -3.2%
+
+latest month in the test window (2026-06-30): memory 100 · aiCompute 99 · miners 97 · foundry 97 · neocloud 95 · optical 95 · servers 94 · semiEquip 94 · cyber 91 · quantum 86 · aiSoftware 62 · space 56 · pharma 44 · banks 39 · power 26 · crypto 17 · ev 16 · consumer 13 · nuclear 5 · oil 0

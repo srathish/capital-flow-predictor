@@ -85,3 +85,11 @@ run; fixes logged below. Output `shadow/results_idea_factory/`. Research only �
 - Guard changed to ≥ 5 strikes within ±8% of the raw price; the "king within 15%" rule is removed (with splits fixed it
   only dropped real far-away kings, e.g. META on 108 days). AVGO volume scaling covers every pre-split bar.
 - Ticker dummies are built from the rows that survive filtering.
+
+**Amendment 3 (2026-10-09, after the two whole-pipeline placebo runs, before the real run).**
+The whole-pipeline placebos gave 13 / 39 stage-1 survivors and 6 / 0 "validated" (shift 126: gamma balance → S1
+trendiness, six variants) — slow-drifting features can line up with slow drifts in an outcome by luck. So validation
+now also needs a **per-idea placebo**: the real holdout t (in the build direction) must exceed at least 19 of 20 holdout
+fits of the same idea with each ticker's feature series circularly shifted K ∈ {13, 29, 43, 59, 71, 89, 101, 113, 131,
+149, 163, 179, 191, 211, 227, 239, 251, 269, 283, 293} trading days within the holdout. Ideas that pass the holdout BH
+test but not their own placebo are reported separately as likely drift artifacts.

@@ -1,0 +1,25 @@
+NEXT-THEME DETECTORS · 20 themes · 48 month-ends · forward 3 months vs universe
+
+  FAIL N1 REVISION LEAD — analyst PT raises ≥2× normal while price ≤60th pct
+    all +12.8% (n 71) vs control +14.8% (n 803) · t -0.45
+    2022–24 +12.7% (n 44) vs +9.0% (n 360) · 2024–26 +13.0% (n 27) vs +19.6% (n 443)
+
+  FAIL N2 THEME MIGRATION — stock's correlation jumps into a hot theme, stock hasn't run
+    all +12.3% (n 99) vs control +21.8% (n 95) · t -1.21
+    2022–24 +1.1% (n 49) vs +14.3% (n 60) · 2024–26 +23.2% (n 50) vs +34.7% (n 35)
+N2 biggest migrations:
+  2024-05 RIOT  → neocloud   corr -0.01 → 0.81 · next 3m -25.6%
+  2024-05 CLSK  → neocloud   corr 0.01 → 0.81 · next 3m -36.3%
+  2024-05 MARA  → neocloud   corr 0 → 0.78 · next 3m -17.2%
+  2025-04 ANET  → cyber      corr -0.24 → 0.53 · next 3m +29.5%
+  2025-09 ULTA  → ev         corr -0.15 → 0.61 · next 3m +12.5%
+  2024-05 HUT   → neocloud   corr 0.05 → 0.76 · next 3m +13.7%
+  2024-02 RIOT  → quantum    corr -0.09 → 0.58 · next 3m -31.4%
+  2024-06 CLSK  → neocloud   corr 0.01 → 0.67 · next 3m -46.8%
+  2024-01 F     → optical    corr -0.12 → 0.53 · next 3m +4.7%
+  2024-06 RIOT  → neocloud   corr -0.01 → 0.64 · next 3m -24.0%
+  2025-10 ULTA  → ev         corr -0.06 → 0.58 · next 3m +30.4%
+  2024-06 COIN  → neocloud   corr -0.04 → 0.55 · next 3m -25.2%
+  2024-10 CLSK  → quantum    corr -0.07 → 0.52 · next 3m -10.2%
+  2024-06 MARA  → neocloud   corr 0 → 0.59 · next 3m -23.6%
+  2026-02 NBIS  → space      corr 0.09 → 0.66 · next 3m +144.7%
