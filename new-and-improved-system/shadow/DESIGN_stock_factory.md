@@ -47,4 +47,20 @@ Engines `stock_factory_long.mjs` and `stock_factory_short.mjs` audited independe
 logged below. Output `shadow/results_stock_factory/`. Research only — nothing live changes.
 
 ## Amendments
-(none yet)
+**Amendment 1 (2026-10-09, after the independent audit of the long engine, before its run).**
+- **Eligibility (long):** market cap ≥ $500M at M (split-adjusted SEC shares filed ≤ M × price) replaces price ≥ $5 and
+  $20M dollar volume. Those filters ran on split-adjusted prices and excluded future splitters (NVDA, AVGO, TSLA, NFLX …)
+  in early years — a look-ahead bias against later winners. (The same filter is in v5 / engines / paper_money; reported.)
+- **Fundamentals:** per period the EARLIEST-filed value across tags is kept (tag order only breaks ties). Before, ASC 606
+  restated comparatives filed in 2018 replaced original 2017 values, making 36% of 2017 quarters visible a year late.
+  (Also present in v5 / engines; reported.)
+- Insider and guidance features (L52–L56) are missing, not zero, before 2014-03 (their files start 2014).
+- Concept features (L48–L50) only for stocks with a concept mention filed ≤ M; concept returns exclude the stock itself;
+  L50 needs a mention history older than a year. Coverage note: 2014–2021 concept file covers ~3,200 tickers, the 2022+
+  file ~380, so holdout L48–L50 run on far fewer stocks. Guidance events roughly double from 2021.
+- **L57 (spin-off) dropped** — a spin-off cannot meet the 252-trading-day history rule within its first year. 500 studies.
+- Months with no spread in a feature (all stocks equal) are skipped instead of voiding the study. L59/L62 are missing when
+  an input is missing; L61 = 1 if any matching commodity group is in an uptrend.
+- Holdout uses every month whose forward window is complete (M1 to 2026-08, M3 to 2026-06, M6/MV to 2026-03).
+- Known limits: prices are also dividend-adjusted, so past market caps of later dividend payers are understated by
+  their later dividends (valuation and size features carry a small look-ahead); SIC codes are today's.
