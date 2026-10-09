@@ -113,7 +113,7 @@ function runDay(T, idx, twinK = null) { const { days, gi } = DATA[T], day = days
       if (rule.exit === 'T2') target = s.entry + s.dir * 2 * risk;
       else if (rule.exit === 'NXT') { const cand = ALL_LEVELS.filter((k) => k !== rule.level && k !== 'VWAP' && lv[k] != null && (STATIC.has(k) || (avail[k] ?? 1e9) <= s.i)).map((k) => lv[k]).filter((x) => s.dir * (x - s.entry) > 0).sort((a, b) => s.dir * (a - b));
         if (!cand.length) break; target = cand[0] * (1 - s.dir * P.FRONT); if (s.dir * (target - s.entry) < risk) break; }
-      const Rv = simulate(day.reg, s, target); if (Rv != null) res.push({ id: rule.id, d: day.d, T, R: Rv }); break; } } // first qualifying signal only
+      const Rv = simulate(day.reg, s, target); if (Rv != null) res.push({ id: rule.id, d: day.d, T, R: Rv, risk }); break; } } // first qualifying signal only
   return res; }
 for (const T of Object.keys(DATA)) { for (let i = 1; i < DATA[T].days.length; i++) for (const r of runDay(T, i)) TR.get(r.id).push(r); log(`${T} rules done`); }
 if (SMOKE) { const n = [...TR.values()].map((a) => a.length); console.log(JSON.stringify({ rulesWithTrades: n.filter((x) => x > 0).length, medianTrades: n.sort((a, b) => a - b)[n.length >> 1], sample: [...TR].slice(0, 6).map(([k, v]) => [k, v.length, +mean(v.map((x) => x.R)).toFixed(2)]).map(([k, n]) => `${k}:${n}`) })); process.exit(0); }
@@ -132,14 +132,14 @@ for (const r of surv.filter((x) => x.passBH)) twinsWanted.add(r.id);
 const TW = new Map([...twinsWanted].map((id) => [id, Array.from({ length: 20 }, () => [])]));
 if (twinsWanted.size) for (const T of Object.keys(DATA)) for (let i = 1; i < DATA[T].days.length; i++) { if (DATA[T].days[i].skip || DATA[T].days[i].d < HOLD_START) continue; for (let k = 0; k < 20; k++) for (const x of runDay(T, i, k)) TW.get(x.id)[k].push(x); }
 for (const r of surv.filter((x) => x.passBH)) { const tm = TW.get(r.id).map((a) => mean(a.map((x) => x.R))); r.twinBeat = tm.filter((m) => r.h.m > m).length; r.twinMed = tm.sort((a, b) => a - b)[10];
-  const hold = r.all.filter((x) => x.d >= HOLD_START); r.bySym = Object.fromEntries(SYMS.map((T) => [T, stats(hold.filter((x) => x.T === T))])); r.cost2 = stats(hold.map((x) => ({ ...x, R: x.R - (0.02) / 1 * 0 }))); }
+  const hold = r.all.filter((x) => x.d >= HOLD_START); r.bySym = Object.fromEntries(SYMS.map((T) => [T, stats(hold.filter((x) => x.T === T))])); r.cost2 = stats(hold.map((x) => ({ ...x, R: x.R - (2 * P.COST) / x.risk }))); } // $0.02/side = one more cent each way
 surv.forEach((r) => { r.validated = !!r.passBH && r.twinBeat >= 19; });
 // ---------- report ----------
 const fx = (x, d = 3) => (Number.isFinite(x) ? (x >= 0 ? '+' : '') + x.toFixed(d) : '—'), val = surv.filter((r) => r.validated);
 const L = ['# Trade-rule factory — results', `\nRun ${new Date().toISOString()} · design shadow/DESIGN_trade_factory.md · ${rules.length} rules · symbols ${Object.keys(DATA).join(' ')}`,
   `\n**Build (BH q = 0.10): ${surv.length} of ${rules.length} pass. Holdout (BH across survivors, mean R > 0): ${surv.filter((r) => r.passBH).length}. Beat ≥ 19/20 random-level twins: ${val.length} validated.**\n`,
-  '## Validated rules\n', '| rule | build: trades, mean R (t) | holdout: trades, win, mean R (t) | twins beaten (median twin R) | holdout by symbol (mean R) |', '|---|---|---|---|---|',
-  ...val.sort((a, b) => b.h.t - a.h.t).map((r) => `| ${r.id} — ${r.text} | ${r.b.n}, ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${r.h.n}, ${(r.h.win * 100).toFixed(0)}%, **${fx(r.h.m)} (${fx(r.h.t, 2)})** | ${r.twinBeat}/20 (${fx(r.twinMed)}) | ${SYMS.map((T) => `${T} ${fx(r.bySym[T].m, 2)}`).join(' · ')} |`),
+  '## Validated rules\n', '| rule | build: trades, mean R (t) | holdout: trades, win, mean R (t) | at $0.02/side | twins beaten (median twin R) | holdout by symbol (mean R) |', '|---|---|---|---|---|---|',
+  ...val.sort((a, b) => b.h.t - a.h.t).map((r) => `| ${r.id} — ${r.text} | ${r.b.n}, ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${r.h.n}, ${(r.h.win * 100).toFixed(0)}%, **${fx(r.h.m)} (${fx(r.h.t, 2)})** | ${fx(r.cost2.m)} | ${r.twinBeat}/20 (${fx(r.twinMed)}) | ${SYMS.map((T) => `${T} ${fx(r.bySym[T].m, 2)}`).join(' · ')} |`),
   '\n## Passed the holdout but not their random-level twins (the level did not matter)\n', '| rule | holdout mean R (t) | twins beaten |', '|---|---|---|', ...surv.filter((r) => r.passBH && !r.validated).map((r) => `| ${r.id} | ${fx(r.h.m)} (${fx(r.h.t, 2)}) | ${r.twinBeat}/20 |`),
   '\n## Passed build, failed holdout\n', '| rule | build mean R (t) | holdout mean R (t) |', '|---|---|---|', ...surv.filter((r) => !r.passBH).map((r) => `| ${r.id} | ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${fx(r.h?.m)} (${fx(r.h?.t, 2)}) |`)];
 fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'summary.md'), L.join('\n') + '\n'); fs.writeFileSync(path.join(OUT, 'rules.json'), JSON.stringify(rules.map(({ all, ...x }) => x), null, 1)); console.log(L.join('\n'));
