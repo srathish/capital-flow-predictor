@@ -1,0 +1,5046 @@
+{
+ "created": "2026-10-09",
+ "n": 504,
+ "rules": [
+  {
+   "id": "PDH-BRK-T2-ALL",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-BRK-T2-GAM",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-BRK-T2-VW",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-BRK-NXT-ALL",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-BRK-NXT-GAM",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-BRK-NXT-VW",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-BRK-EOD-ALL",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-BRK-EOD-GAM",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-BRK-EOD-VW",
+   "level": "PDH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-T2-ALL",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-T2-GAM",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RET-T2-VW",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-NXT-ALL",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-NXT-GAM",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RET-NXT-VW",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-EOD-ALL",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RET-EOD-GAM",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RET-EOD-VW",
+   "level": "PDH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-T2-ALL",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-T2-GAM",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RCL-T2-VW",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-NXT-ALL",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-NXT-GAM",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RCL-NXT-VW",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-EOD-ALL",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-RCL-EOD-GAM",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-RCL-EOD-VW",
+   "level": "PDH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-T2-ALL",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-T2-GAM",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-FAD-T2-VW",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-NXT-ALL",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-NXT-GAM",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-FAD-NXT-VW",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-EOD-ALL",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDH-FAD-EOD-GAM",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDH-FAD-EOD-VW",
+   "level": "PDH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day high · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-T2-ALL",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-T2-GAM",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-BRK-T2-VW",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-NXT-ALL",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-NXT-GAM",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-BRK-NXT-VW",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-EOD-ALL",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-BRK-EOD-GAM",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-BRK-EOD-VW",
+   "level": "PDL",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-T2-ALL",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-T2-GAM",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RET-T2-VW",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-NXT-ALL",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-NXT-GAM",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RET-NXT-VW",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-EOD-ALL",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RET-EOD-GAM",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RET-EOD-VW",
+   "level": "PDL",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-T2-ALL",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-T2-GAM",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RCL-T2-VW",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-NXT-ALL",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-NXT-GAM",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RCL-NXT-VW",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-EOD-ALL",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-RCL-EOD-GAM",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-RCL-EOD-VW",
+   "level": "PDL",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-T2-ALL",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-T2-GAM",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-FAD-T2-VW",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-NXT-ALL",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-NXT-GAM",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-FAD-NXT-VW",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-EOD-ALL",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PDL-FAD-EOD-GAM",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PDL-FAD-EOD-VW",
+   "level": "PDL",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day low · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-T2-ALL",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-T2-GAM",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-BRK-T2-VW",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-NXT-ALL",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-NXT-GAM",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-BRK-NXT-VW",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-EOD-ALL",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-BRK-EOD-GAM",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-BRK-EOD-VW",
+   "level": "PMH",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-T2-ALL",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-T2-GAM",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RET-T2-VW",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-NXT-ALL",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-NXT-GAM",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RET-NXT-VW",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-EOD-ALL",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RET-EOD-GAM",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RET-EOD-VW",
+   "level": "PMH",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-T2-ALL",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-T2-GAM",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RCL-T2-VW",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-NXT-ALL",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-NXT-GAM",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RCL-NXT-VW",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-EOD-ALL",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-RCL-EOD-GAM",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-RCL-EOD-VW",
+   "level": "PMH",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-T2-ALL",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-T2-GAM",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-FAD-T2-VW",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-NXT-ALL",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-NXT-GAM",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-FAD-NXT-VW",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-EOD-ALL",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PMH-FAD-EOD-GAM",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PMH-FAD-EOD-VW",
+   "level": "PMH",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket high · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-T2-ALL",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-T2-GAM",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-BRK-T2-VW",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-NXT-ALL",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-NXT-GAM",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-BRK-NXT-VW",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-EOD-ALL",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-BRK-EOD-GAM",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-BRK-EOD-VW",
+   "level": "PML",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-T2-ALL",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-T2-GAM",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RET-T2-VW",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-NXT-ALL",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-NXT-GAM",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RET-NXT-VW",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-EOD-ALL",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RET-EOD-GAM",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RET-EOD-VW",
+   "level": "PML",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-T2-ALL",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-T2-GAM",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RCL-T2-VW",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-NXT-ALL",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-NXT-GAM",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RCL-NXT-VW",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-EOD-ALL",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-RCL-EOD-GAM",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-RCL-EOD-VW",
+   "level": "PML",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-T2-ALL",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-T2-GAM",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-FAD-T2-VW",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-NXT-ALL",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-NXT-GAM",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-FAD-NXT-VW",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-EOD-ALL",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "PML-FAD-EOD-GAM",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PML-FAD-EOD-VW",
+   "level": "PML",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "premarket low · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-T2-ALL",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-T2-GAM",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-BRK-T2-VW",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-NXT-ALL",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-NXT-GAM",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-BRK-NXT-VW",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-EOD-ALL",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-BRK-EOD-GAM",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-BRK-EOD-VW",
+   "level": "OR5H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-T2-ALL",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-T2-GAM",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RET-T2-VW",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-NXT-ALL",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-NXT-GAM",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RET-NXT-VW",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-EOD-ALL",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RET-EOD-GAM",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RET-EOD-VW",
+   "level": "OR5H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-T2-ALL",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-T2-GAM",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RCL-T2-VW",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-NXT-ALL",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-NXT-GAM",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RCL-NXT-VW",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-EOD-ALL",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-RCL-EOD-GAM",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-RCL-EOD-VW",
+   "level": "OR5H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-T2-ALL",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-T2-GAM",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-FAD-T2-VW",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-NXT-ALL",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-NXT-GAM",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-FAD-NXT-VW",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-EOD-ALL",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5H-FAD-EOD-GAM",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5H-FAD-EOD-VW",
+   "level": "OR5H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range high · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-T2-ALL",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-T2-GAM",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-BRK-T2-VW",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-NXT-ALL",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-NXT-GAM",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-BRK-NXT-VW",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-EOD-ALL",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-BRK-EOD-GAM",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-BRK-EOD-VW",
+   "level": "OR5L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-T2-ALL",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-T2-GAM",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RET-T2-VW",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-NXT-ALL",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-NXT-GAM",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RET-NXT-VW",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-EOD-ALL",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RET-EOD-GAM",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RET-EOD-VW",
+   "level": "OR5L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-T2-ALL",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-T2-GAM",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RCL-T2-VW",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-NXT-ALL",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-NXT-GAM",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RCL-NXT-VW",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-EOD-ALL",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-RCL-EOD-GAM",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-RCL-EOD-VW",
+   "level": "OR5L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-T2-ALL",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-T2-GAM",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-FAD-T2-VW",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-NXT-ALL",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-NXT-GAM",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-FAD-NXT-VW",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-EOD-ALL",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR5L-FAD-EOD-GAM",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR5L-FAD-EOD-VW",
+   "level": "OR5L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "5-min opening-range low · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-T2-ALL",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-T2-GAM",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-BRK-T2-VW",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-NXT-ALL",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-NXT-GAM",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-BRK-NXT-VW",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-EOD-ALL",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-BRK-EOD-GAM",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-BRK-EOD-VW",
+   "level": "OR30H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-T2-ALL",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-T2-GAM",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RET-T2-VW",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-NXT-ALL",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-NXT-GAM",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RET-NXT-VW",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-EOD-ALL",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RET-EOD-GAM",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RET-EOD-VW",
+   "level": "OR30H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-T2-ALL",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-T2-GAM",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RCL-T2-VW",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-NXT-ALL",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-NXT-GAM",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RCL-NXT-VW",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-EOD-ALL",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-RCL-EOD-GAM",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-RCL-EOD-VW",
+   "level": "OR30H",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-T2-ALL",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-T2-GAM",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-FAD-T2-VW",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-NXT-ALL",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-NXT-GAM",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-FAD-NXT-VW",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-EOD-ALL",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30H-FAD-EOD-GAM",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30H-FAD-EOD-VW",
+   "level": "OR30H",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range high · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-T2-ALL",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-T2-GAM",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-BRK-T2-VW",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-NXT-ALL",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-NXT-GAM",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-BRK-NXT-VW",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-EOD-ALL",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-BRK-EOD-GAM",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-BRK-EOD-VW",
+   "level": "OR30L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-T2-ALL",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-T2-GAM",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RET-T2-VW",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-NXT-ALL",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-NXT-GAM",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RET-NXT-VW",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-EOD-ALL",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RET-EOD-GAM",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RET-EOD-VW",
+   "level": "OR30L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-T2-ALL",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-T2-GAM",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RCL-T2-VW",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-NXT-ALL",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-NXT-GAM",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RCL-NXT-VW",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-EOD-ALL",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-RCL-EOD-GAM",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-RCL-EOD-VW",
+   "level": "OR30L",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-T2-ALL",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-T2-GAM",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-FAD-T2-VW",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-NXT-ALL",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-NXT-GAM",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-FAD-NXT-VW",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-EOD-ALL",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR30L-FAD-EOD-GAM",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR30L-FAD-EOD-VW",
+   "level": "OR30L",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "30-min opening-range low · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-T2-ALL",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-T2-GAM",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-BRK-T2-VW",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-NXT-ALL",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-NXT-GAM",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-BRK-NXT-VW",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-EOD-ALL",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-BRK-EOD-GAM",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-BRK-EOD-VW",
+   "level": "VWAP",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-T2-ALL",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-T2-GAM",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RET-T2-VW",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-NXT-ALL",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-NXT-GAM",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RET-NXT-VW",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-EOD-ALL",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RET-EOD-GAM",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RET-EOD-VW",
+   "level": "VWAP",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-T2-ALL",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-T2-GAM",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RCL-T2-VW",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-NXT-ALL",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-NXT-GAM",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RCL-NXT-VW",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-EOD-ALL",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-RCL-EOD-GAM",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-RCL-EOD-VW",
+   "level": "VWAP",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-T2-ALL",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-T2-GAM",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-FAD-T2-VW",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-NXT-ALL",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-NXT-GAM",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-FAD-NXT-VW",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-EOD-ALL",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "VWAP-FAD-EOD-GAM",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "VWAP-FAD-EOD-VW",
+   "level": "VWAP",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "session VWAP · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "KING-BRK-T2-ALL",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-T2-GAM",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-T2-VW",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-NXT-ALL",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-NXT-GAM",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-NXT-VW",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-EOD-ALL",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-EOD-GAM",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-BRK-EOD-VW",
+   "level": "KING",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-T2-ALL",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-T2-GAM",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-T2-VW",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-NXT-ALL",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-NXT-GAM",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-NXT-VW",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-EOD-ALL",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-EOD-GAM",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RET-EOD-VW",
+   "level": "KING",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-T2-ALL",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-T2-GAM",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-T2-VW",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-NXT-ALL",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-NXT-GAM",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-NXT-VW",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-EOD-ALL",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-EOD-GAM",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-RCL-EOD-VW",
+   "level": "KING",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-T2-ALL",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-T2-GAM",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-T2-VW",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-NXT-ALL",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-NXT-GAM",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-NXT-VW",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-EOD-ALL",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-EOD-GAM",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "KING-FAD-EOD-VW",
+   "level": "KING",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "prior-day gamma king · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-T2-ALL",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-T2-GAM",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-T2-VW",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-NXT-ALL",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-NXT-GAM",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-NXT-VW",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-EOD-ALL",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-EOD-GAM",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-BRK-EOD-VW",
+   "level": "CALLW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-T2-ALL",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-T2-GAM",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-T2-VW",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-NXT-ALL",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-NXT-GAM",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-NXT-VW",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-EOD-ALL",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-EOD-GAM",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RET-EOD-VW",
+   "level": "CALLW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-T2-ALL",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-T2-GAM",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-T2-VW",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-NXT-ALL",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-NXT-GAM",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-NXT-VW",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-EOD-ALL",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-EOD-GAM",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-RCL-EOD-VW",
+   "level": "CALLW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-T2-ALL",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-T2-GAM",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-T2-VW",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-NXT-ALL",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-NXT-GAM",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-NXT-VW",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-EOD-ALL",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-EOD-GAM",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "CALLW-FAD-EOD-VW",
+   "level": "CALLW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "call wall (largest call gamma above) · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-T2-ALL",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-T2-GAM",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-T2-VW",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-NXT-ALL",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-NXT-GAM",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-NXT-VW",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-EOD-ALL",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-EOD-GAM",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-BRK-EOD-VW",
+   "level": "PUTW",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-T2-ALL",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-T2-GAM",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-T2-VW",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-NXT-ALL",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-NXT-GAM",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-NXT-VW",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-EOD-ALL",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-EOD-GAM",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RET-EOD-VW",
+   "level": "PUTW",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-T2-ALL",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-T2-GAM",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-T2-VW",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-NXT-ALL",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-NXT-GAM",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-NXT-VW",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-EOD-ALL",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-EOD-GAM",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-RCL-EOD-VW",
+   "level": "PUTW",
+   "trigger": "RCL",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · sweep and 3-min reclaim (Timmy hunt) · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-T2-ALL",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · fixed 2R target · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-T2-GAM",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-T2-VW",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-NXT-ALL",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · next level of the day · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-NXT-GAM",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-NXT-VW",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-EOD-ALL",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · hold to 15:55 · every day",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-EOD-GAM",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "PUTW-FAD-EOD-VW",
+   "level": "PUTW",
+   "trigger": "FAD",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "put wall (largest put gamma below) · first-touch fade at the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-BRK-T2-ALL",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-BRK-T2-GAM",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-BRK-T2-VW",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-BRK-NXT-ALL",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-BRK-NXT-GAM",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-BRK-NXT-VW",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-BRK-EOD-ALL",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-BRK-EOD-GAM",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-BRK-EOD-VW",
+   "level": "OR15H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-T2-ALL",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-T2-GAM",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-RET-T2-VW",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-NXT-ALL",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-NXT-GAM",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-RET-NXT-VW",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-EOD-ALL",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15H-RET-EOD-GAM",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15H-RET-EOD-VW",
+   "level": "OR15H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-T2-ALL",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-T2-GAM",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-BRK-T2-VW",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-NXT-ALL",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-NXT-GAM",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-BRK-NXT-VW",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-EOD-ALL",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-BRK-EOD-GAM",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-BRK-EOD-VW",
+   "level": "OR15L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-T2-ALL",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-T2-GAM",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-RET-T2-VW",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-NXT-ALL",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-NXT-GAM",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-RET-NXT-VW",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-EOD-ALL",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR15L-RET-EOD-GAM",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR15L-RET-EOD-VW",
+   "level": "OR15L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "15-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-T2-ALL",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-T2-GAM",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-BRK-T2-VW",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-NXT-ALL",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-NXT-GAM",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-BRK-NXT-VW",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-EOD-ALL",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-BRK-EOD-GAM",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-BRK-EOD-VW",
+   "level": "OR60H",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-T2-ALL",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-T2-GAM",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-RET-T2-VW",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-NXT-ALL",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-NXT-GAM",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-RET-NXT-VW",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-EOD-ALL",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60H-RET-EOD-GAM",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60H-RET-EOD-VW",
+   "level": "OR60H",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range high · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-T2-ALL",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-T2-GAM",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-BRK-T2-VW",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-NXT-ALL",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-NXT-GAM",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-BRK-NXT-VW",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-EOD-ALL",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-BRK-EOD-GAM",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-BRK-EOD-VW",
+   "level": "OR60L",
+   "trigger": "BRK",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · breakout close beyond the level · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-T2-ALL",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · fixed 2R target · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-T2-GAM",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · fixed 2R target · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-RET-T2-VW",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "T2",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · fixed 2R target · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-NXT-ALL",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · next level of the day · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-NXT-GAM",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · next level of the day · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-RET-NXT-VW",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "NXT",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · next level of the day · only on the VWAP side of the trade",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-EOD-ALL",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "ALL",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · every day",
+   "gammaStart": false
+  },
+  {
+   "id": "OR60L-RET-EOD-GAM",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "GAM",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · gamma regime matches the trigger (breakouts on low local gamma, fades on high)",
+   "gammaStart": true
+  },
+  {
+   "id": "OR60L-RET-EOD-VW",
+   "level": "OR60L",
+   "trigger": "RET",
+   "exit": "EOD",
+   "filter": "VW",
+   "sign": "+",
+   "text": "60-min opening-range low · break, retest within 60 min, hold · hold to 15:55 · only on the VWAP side of the trade",
+   "gammaStart": false
+  }
+ ]
+}
