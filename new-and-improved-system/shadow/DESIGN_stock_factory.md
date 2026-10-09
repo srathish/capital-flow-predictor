@@ -64,3 +64,20 @@ logged below. Output `shadow/results_stock_factory/`. Research only — nothing 
 - Holdout uses every month whose forward window is complete (M1 to 2026-08, M3 to 2026-06, M6/MV to 2026-03).
 - Known limits: prices are also dividend-adjusted, so past market caps of later dividend payers are understated by
   their later dividends (valuation and size features carry a small look-ahead); SIC codes are today's.
+
+**Amendment 2 (2026-10-09, after the independent audit of the short engine, before its run).**
+- **Universe rebuilt** (`weekly_universe.mjs`): 300 highest 50-day RAW dollar volume as of 2023-10-31 (raw price =
+  adjusted × later split factor; volume on its raw basis — UW volume is unadjusted for some tickers, e.g. AVGO, which the
+  first list wrongly excluded); commodity/fund trusts (SIC 6221/6722/6726: SLV, USO, IAU) excluded. Known limit: the SEC
+  list is today's companies, so 2023 names later acquired/delisted (PXD, SPLK, HES, DFS, ANSS, JNPR, MRO, X) are missing.
+- **Split basis** (`weekly_basis.mjs`): UW daily bars are split-adjusted for some tickers and not others (KLAC, ODFL,
+  CELH, MNST, NVO, AZN, AMC). A price break is a split/corporate action only if the option-chain centre moved with the
+  price (strikes follow a split; a crash leaves them behind) or it matches an SEC-confirmed split; such breaks are
+  back-adjusted. Week factors come only from confirmed events (the collector's 1.5 snaps after crashes — INTC, MU, RIVN,
+  KVUE, SMCI, PYPL, SHOP — are gone; BKNG's 25:1 is handled). Snapshots within 7 days of a break, or ambiguous inside an
+  SEC filing bracket, are unused. Rows whose 252-day lookback crosses an unexplained break (e.g. AMC 2023-08) are dropped.
+- The collector keeps strikes within ±30% of every candidate raw price and re-fetches snapshots stored with a wrong
+  window; XYZ before 2025-01-21 is fetched as SQ.
+- UW exposures are per share: S15 and S53–S56 now use dollar units (delta, vanna × price; gamma × price² × 0.01).
+- AVGO-type raw volume is put on the split-adjusted basis. **S43 dropped** (identical ranks to S37): 220 short studies.
+- Noted: outcomes are price-only (no dividends); GOLD (Barrick → B, 2025) has a price gap.

@@ -9,11 +9,12 @@ import { TAGS } from '../world/facts_collect.mjs';
 import { loadW } from '../world/universe_prices.mjs';
 import { isTradingDay } from '../world/prices_clean.mjs';
 import { sharesAdjusted } from './split_shares.mjs';
+import { splitEvents, adjustedBars, factorAt, nearEvent } from './weekly_basis.mjs';
 
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache'), GW = path.join(C, 'uwgreeks_w');
 const OUT = path.join(SH, 'results_stock_factory'), SMOKE = process.argv.includes('--smoke');
 if (!SMOKE && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
-const REG = JSON.parse(fs.readFileSync(path.join(SH, 'stock_registry.json'), 'utf8')).hypotheses.filter((h) => h.horizon === 'short');
+const REG = JSON.parse(fs.readFileSync(path.join(SH, 'stock_registry.json'), 'utf8')).hypotheses.filter((h) => h.horizon === 'short' && h.feature !== 'S43'); // amendment 2: S43 duplicated S37's ranks
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN), median = (a) => { const s = a.filter(Number.isFinite).sort((x, y) => x - y); return s.length ? s[s.length >> 1] : NaN; };
@@ -62,16 +63,21 @@ function summarize(s, S) {
 // ---------- per-ticker weekly rows ----------
 const RAW = new Map(); // t → { weeks: [{d, sum}], bars, bi }
 let nT = 0;
+const MEDV = (a) => { const z = [...a].sort((x, y) => x - y); return z[z.length >> 1]; };
 for (const t of TICKERS) { const f = path.join(GW, `${t}.jsonl`); if (!fs.existsSync(f)) continue;
-  const bars = loadW(t).filter((b) => isTradingDay(b.d) && b.c > 0), bi = new Map(bars.map((b, i) => [b.d, i])); if (bars.length < 300) continue;
+  const raw = loadW(t).filter((b) => isTradingDay(b.d) && b.c > 0), rawC = new Map(raw.map((b) => [b.d, b.c]));
   const snaps = fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).sort((a, b) => a.d.localeCompare(b.d));
-  const weeks = [];
-  for (let i = 0; i < snaps.length; i++) { const x = snaps[i], j = bi.get(x.d); if (j == null) continue;
-    // a snapshot whose split factor differs from a neighbour's, or whose chain centre is ambiguous, is transitional → unused
-    const clean = x.ratio != null && Math.abs(Math.log(x.ratio / x.factor)) < Math.log(1.25) && (!snaps[i - 1] || snaps[i - 1].factor === x.factor) && (!snaps[i + 1] || snaps[i + 1].factor === x.factor);
-    let sm = null; if (clean) { const fct = x.factor; const s = fct === 1 ? x.s : x.s.map((r) => [r[0], r[1] * fct * fct, r[2] * fct * fct, r[3] * fct, r[4] * fct, r[5] * fct, r[6] * fct, r[7] * fct, r[8] * fct]); sm = summarize(s, bars[j].c * fct); }
+  // amendment 2: confirmed split events (price breaks checked against the option chain, SEC restatements) → continuous prices
+  const { ev, unexplained } = splitEvents(C, t, raw, snaps.map((x) => ({ d: x.d, ratio: x.ratio })));
+  const bars = adjustedBars(raw, ev);
+  for (const e of ev.filter((x) => x.kind === 'sec')) { const pre = bars.filter((b) => b.d < e.after).slice(-60).map((b) => b.v), post = bars.filter((b) => b.d > e.at).slice(0, 60).map((b) => b.v); // volume basis (AVGO's is raw)
+    if (pre.length > 20 && post.length > 20) { const r = MEDV(post) / MEDV(pre); if (Math.abs(Math.log(r / e.q)) < Math.abs(Math.log(r))) for (const b of bars) if (b.d < e.at && (factorAt(ev, b.d) ?? e.q) !== 1) b.v *= e.q; } }
+  const bi = new Map(bars.map((b, i) => [b.d, i])), weeks = [];
+  for (const x of snaps) { const j = bi.get(x.d); if (j == null) continue;
+    const ratioAdj = x.ratio == null ? null : x.ratio * rawC.get(x.d) / bars[j].c, fct = nearEvent(ev, x.d) ? null : factorAt(ev, x.d, ratioAdj);
+    let sm = null; if (fct != null && x.s.length) { const s = fct === 1 ? x.s : x.s.map((r) => [r[0], r[1] * fct * fct, r[2] * fct * fct, r[3] * fct, r[4] * fct, r[5] * fct, r[6] * fct, r[7] * fct, r[8] * fct]); sm = summarize(s, bars[j].c * fct); }
     weeks.push({ d: x.d, j, sum: sm }); }
-  RAW.set(t, { weeks, bars, bi }); if (++nT >= (SMOKE ? 40 : 1e9)) break; }
+  RAW.set(t, { weeks, bars, bi, unexplained }); if (++nT >= (SMOKE ? 40 : 1e9)) break; }
 log(`${RAW.size} tickers with weekly greeks`);
 const WEEKS = [...new Set([...RAW.values()].flatMap((r) => r.weeks.map((w) => w.d)))].sort();
 const DATA_END = [...RAW.values()].reduce((m, r) => (r.bars.at(-1).d > m ? r.bars.at(-1).d : m), '');
@@ -81,13 +87,13 @@ const H = { W1: 1, W2: 2, W4: 4, WV: 4 };
 const PANEL = [];
 for (let wi = 0; wi < WEEKS.length; wi++) { const d = WEEKS[wi], R = new Map(), raw4 = [];
   for (const [t, X] of RAW) { const k = X.weeks.findIndex((w) => w.d === d); if (k < 0) continue; const w = X.weeks[k], s0 = w.sum; if (!s0) continue; const { bars } = X, j = w.j, c = bars.map((b) => b.c);
-    if (j < 252) continue;
+    if (j < 252 || X.unexplained.some((u) => u > bars[j - 252].d && u <= d)) continue; // amendment 2: lookback crosses an unexplained price break
     const f = new Float64Array(FEATS.length).fill(NaN), set = (key, v) => { if (FI.has(key)) f[FI.get(key)] = Number.isFinite(v) ? v : NaN; };
     for (const key of Object.keys(s0)) if (/^S\d\d$/.test(key)) set(key, s0[key]);
     const prevW = (n) => { const p = X.weeks[k - n]; return p && p.sum && days(p.d, d) <= 7 * n + 4 ? p : null; };
     const p1 = prevW(1), p4 = prevW(4);
     const hist8 = X.weeks.slice(Math.max(0, k - 8), k).filter((x) => x.sum).map((x) => x.sum.absG); set('S14', hist8.length >= 6 ? s0.absG / mean(hist8) : NaN);
-    let dv20 = 0; for (let q = j - 19; q <= j; q++) dv20 += bars[q].c * bars[q].v; dv20 /= 20; set('S15', dv20 > 0 ? s0.netG / dv20 : NaN);
+    let dv20 = 0; for (let q = j - 19; q <= j; q++) dv20 += bars[q].c * bars[q].v; dv20 /= 20; set('S15', dv20 > 0 ? (s0.netG * c[j] * c[j] * 0.01) / dv20 : NaN); /* amendment 2: $ gamma per 1% move */
     const h12 = X.weeks.slice(Math.max(0, k - 12), k).filter((x) => x.sum && Number.isFinite(x.sum.S02)).map((x) => x.sum.S02); set('S16', h12.length >= 8 && sdv(h12) > 0 ? (s0.S02 - mean(h12)) / sdv(h12) : NaN);
     if (p1) { const a = p1.sum; set('S26', s0.S23 - a.S23); set('S27', a.cd > 0 && s0.cd > 0 ? Math.log(s0.cd / a.cd) : NaN); set('S28', Math.abs(a.pd) > 0 && Math.abs(s0.pd) > 0 ? Math.log(Math.abs(s0.pd) / Math.abs(a.pd)) : NaN);
       set('S29', s0.S01 - a.S01); set('S30', s0.S02 - a.S02); set('S31', s0.Kr - a.Kr * (c[p1.j] / c[j])); set('S32', Math.log(s0.absG / a.absG)); set('S33', s0.S17 - a.S17); set('S34', a.absD > 0 ? Math.log(s0.absD / a.absD) : NaN);
@@ -101,7 +107,7 @@ for (let wi = 0; wi < WEEKS.length; wi++) { const d = WEEKS[wi], R = new Map(), 
     set('S46', +(s0.S04 === 1 && c[j] < ma50)); set('S47', +(s0.Kr > 1 && s0.gK > 0)); set('S48', +(s0.Kr < 1 && s0.gK > 0));
     // size-normalized options (split-adjusted shares filed ≤ d × adjusted price)
     let shr = null; for (const x of FUND.get(t).sh) { if (x.d <= d) shr = x; else break; } const mcap = shr && days(shr.d, d) <= 400 ? shr.v * c[j] : NaN;
-    set('S53', s0.absD / mcap); set('S54', s0.netG / mcap); set('S55', s0.netV / mcap); set('S56', s0.cd / mcap);
+    set('S53', (s0.absD * c[j]) / mcap); set('S54', (s0.netG * c[j] * c[j] * 0.01) / mcap); set('S55', (s0.netV * c[j]) / mcap); set('S56', (s0.cd * c[j]) / mcap); /* amendment 2: dollar units */
     const v5 = v5raw(t, d); set('S51', v5?.accel);
     // outcomes: entry = close of the first trading day after d, exit = close on the rebalance date h weeks later
     const o = {}; for (const [name, h] of Object.entries(H)) { const ed = WEEKS[wi + h]; if (!ed || ed > DATA_END) { o[name] = NaN; continue; } const e = X.bi.get(ed); o[name] = e != null && e > j + 1 ? c[e] / c[j + 1] - 1 : NaN; }
@@ -130,8 +136,8 @@ const bh = (ps, q) => { const o = ps.map((p, i) => [p, i]).sort((a, b) => a[0] -
 const endOf = (m, o) => WEEKS[m.wi + H[o]] ?? '9999';
 const inBuild = (m, o) => m.fwd[o] && endOf(m, o) <= BUILD_END, inHold = (m, o) => m.fwd[o] && m.M >= HOLD_START;
 function icSeries(fk, o, sel, { perm = null, half = null } = {}) { const fi = FI.get(fk), out = [], q5 = [];
-  for (const m of PANEL) { if (!sel(m, o)) continue; const xs = [], ys = [], sz = [];
-    for (const [t, y] of m.fwd[o]) { const src = perm ? m.R.get(perm.get(t)) : m.R.get(t); if (!src) continue; const v = src.f[fi]; if (!Number.isFinite(v)) continue; xs.push(v); ys.push(y); sz.push(m.R.get(t).f[FI.get('S53')]); }
+  for (const m of PANEL) { if (!sel(m, o)) continue; const xs = [], ys = [];
+    for (const [t, y] of m.fwd[o]) { const src = perm ? m.R.get(perm.get(t)) : m.R.get(t); if (!src) continue; const v = src.f[fi]; if (!Number.isFinite(v)) continue; xs.push(v); ys.push(y); }
     if (xs.length < 30) continue; let X = rankArr(xs), Y = rankArr(ys);
     const icv = corr(X, Y); if (!Number.isFinite(icv)) continue; out.push(icv);
     if (!perm) { const ord = xs.map((v, i) => [v, ys[i]]).sort((a, b) => a[0] - b[0]), n5 = Math.floor(ord.length / 5); q5.push(mean(ord.slice(-n5).map((z) => z[1])) - mean(ord.slice(0, n5).map((z) => z[1]))); } }
