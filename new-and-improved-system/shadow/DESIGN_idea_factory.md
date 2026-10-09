@@ -57,4 +57,31 @@ Registry + this file committed before download. Engine `idea_factory.mjs` audite
 run; fixes logged below. Output `shadow/results_idea_factory/`. Research only — nothing live changes.
 
 ## Amendments
-(none yet)
+**Amendment 1 (2026-10-09, after the independent audit, before any run).**
+- **Splits:** UW daily OHLC is split-adjusted, greek strikes are raw. `uw_splits_detect.mjs` infers each ticker's
+  split factor per day from the unfiltered chain (|gamma|-weighted median strike ÷ adjusted close, snapped to a
+  standard split ratio; monthly samples + binary search), writes `.cache/uwgreeks/splits.json`, and re-fetches the
+  affected days with the ±30% filter around the raw price. Features use the raw price (adjusted close × factor);
+  king-based price levels are converted back to adjusted prices. Guard: a day's greeks are unused if fewer than 5
+  strikes lie within ±3% of the raw price or the king is more than 15% away.
+- **Over-optimistic p-values:** a null simulation (persistent feature, common shocks) gave 8% rejections at a 5% bar for
+  1-day outcomes and ~20% for overlapping 5-day outcomes. So (a) R2 and D4 use non-overlapping dates only (every 5th
+  trading day), and (b) a **placebo** is run through the identical pipeline twice, with each ticker's feature series
+  shifted 126 and 189 trading days (circular, within each period), which keeps every feature's persistence and
+  cross-ticker structure but destroys any real link to outcomes. The headline reports real validated count next to the
+  placebo counts; real minus placebo ≈ genuine discoveries.
+- **Registry:** features identical to a control for an outcome are not tested there (N01×S1, N09×S1, N03×D1–D4):
+  530 hypotheses (was 536).
+- Ticker fixed effects drop the first ticker present in each fit (single-ticker fits now work); rows start at the
+  first day with greeks (not day 62); the already-seen G01×R1 is excluded from the count of new validations.
+- Notes: put_gex is negative (net g = call + put assumes dealers short puts / long calls in UW's convention); UW's gex
+  scale is its own, so G21 is "net gamma ÷ 20-day dollar volume" in UW units; G14/G15 = 0.3 when no strong node exists.
+
+**Amendment 2 (2026-10-09, after a targeted re-audit of amendment 1, before any run).**
+- UW gamma exposure scales ~factor² across a split (delta/charm/vanna ~factor): pre-split days are rescaled onto the
+  post-split scale so totals, G20, G21 and Y05 do not jump at a split.
+- Greek data for the trading day on either side of each split boundary is not used (the chain is transitional, e.g.
+  XLK 2025-12-05 mixes old and new strikes).
+- Guard changed to ≥ 5 strikes within ±8% of the raw price; the "king within 15%" rule is removed (with splits fixed it
+  only dropped real far-away kings, e.g. META on 108 days). AVGO volume scaling covers every pre-split bar.
+- Ticker dummies are built from the rows that survive filtering.

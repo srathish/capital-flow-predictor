@@ -85,7 +85,9 @@ const F = [
 ];
 const O = [['R1', 'vol', 4], ['R2', 'vol', 4], ['S1', 'trend', 5], ['D1', 'dir', 6], ['D2', 'dir', 6], ['D3', 'dir', 6], ['D4', 'dir', 6], ['P1', 'pull', 7]];
 const H = [];
-for (const f of F) for (const [o, fam, col] of O) { const sign = f[col]; if (sign === 'x') continue; // 'x' = that feature is already a control for this outcome
+// amendment 1: features that duplicate a control for an outcome are not tested there (audit 2026-10-09)
+const DUP = new Set(['N01xS1', 'N09xS1', 'N03xD1', 'N03xD2', 'N03xD3', 'N03xD4']);
+for (const f of F) for (const [o, fam, col] of O) { const sign = f[col]; if (sign === 'x' || DUP.has(`${f[0]}x${o}`)) continue; // 'x' = that feature is already a control for this outcome
   H.push({ id: `${f[0]}x${o}`, feature: f[0], outcome: o, family: fam, sign, definition: f[1], mechanism: f[2], seen: f[0] === 'G01' && o === 'R1' }); }
 fs.writeFileSync(path.join(SH, 'idea_registry.json'), JSON.stringify({ created: '2026-10-09', n: H.length, features: F.length, hypotheses: H }, null, 1));
 console.log(`${F.length} features × ${O.length} outcomes → ${H.length} hypotheses (signed ${H.filter((h) => h.sign !== '?').length}, two-sided ${H.filter((h) => h.sign === '?').length})`);

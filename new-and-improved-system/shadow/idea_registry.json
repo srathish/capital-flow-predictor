@@ -1,6 +1,6 @@
 {
  "created": "2026-10-09",
- "n": 536,
+ "n": 530,
  "features": 67,
  "hypotheses": [
   {
@@ -3421,16 +3421,6 @@
    "seen": false
   },
   {
-   "id": "N01xS1",
-   "feature": "N01",
-   "outcome": "S1",
-   "family": "trend",
-   "sign": "?",
-   "definition": "ln VIX",
-   "mechanism": "fear level",
-   "seen": false
-  },
-  {
    "id": "N01xD1",
    "feature": "N01",
    "outcome": "D1",
@@ -3584,46 +3574,6 @@
    "outcome": "S1",
    "family": "trend",
    "sign": "-",
-   "definition": "prior-day return",
-   "mechanism": "short-term reversal",
-   "seen": false
-  },
-  {
-   "id": "N03xD1",
-   "feature": "N03",
-   "outcome": "D1",
-   "family": "dir",
-   "sign": "?",
-   "definition": "prior-day return",
-   "mechanism": "short-term reversal",
-   "seen": false
-  },
-  {
-   "id": "N03xD2",
-   "feature": "N03",
-   "outcome": "D2",
-   "family": "dir",
-   "sign": "?",
-   "definition": "prior-day return",
-   "mechanism": "short-term reversal",
-   "seen": false
-  },
-  {
-   "id": "N03xD3",
-   "feature": "N03",
-   "outcome": "D3",
-   "family": "dir",
-   "sign": "?",
-   "definition": "prior-day return",
-   "mechanism": "short-term reversal",
-   "seen": false
-  },
-  {
-   "id": "N03xD4",
-   "feature": "N03",
-   "outcome": "D4",
-   "family": "dir",
-   "sign": "?",
    "definition": "prior-day return",
    "mechanism": "short-term reversal",
    "seen": false
@@ -4048,16 +3998,6 @@
    "outcome": "R2",
    "family": "vol",
    "sign": "+",
-   "definition": "prior-day trendiness |C − O|/range",
-   "mechanism": "trend days cluster",
-   "seen": false
-  },
-  {
-   "id": "N09xS1",
-   "feature": "N09",
-   "outcome": "S1",
-   "family": "trend",
-   "sign": "?",
    "definition": "prior-day trendiness |C − O|/range",
    "mechanism": "trend days cluster",
    "seen": false
