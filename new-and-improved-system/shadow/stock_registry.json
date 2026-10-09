@@ -1,0 +1,5046 @@
+{
+ "created": "2026-10-09",
+ "n": 504,
+ "hypotheses": [
+  {
+   "id": "L01xM1",
+   "feature": "L01",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth YoY (latest quarter)",
+   "mechanism": "demand",
+   "seen": false
+  },
+  {
+   "id": "L01xM3",
+   "feature": "L01",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth YoY (latest quarter)",
+   "mechanism": "demand",
+   "seen": false
+  },
+  {
+   "id": "L01xM6",
+   "feature": "L01",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth YoY (latest quarter)",
+   "mechanism": "demand",
+   "seen": false
+  },
+  {
+   "id": "L01xMV",
+   "feature": "L01",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth YoY (latest quarter)",
+   "mechanism": "demand",
+   "seen": false
+  },
+  {
+   "id": "L02xM1",
+   "feature": "L02",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth acceleration (YoY now − YoY last quarter)",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "L02xM3",
+   "feature": "L02",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth acceleration (YoY now − YoY last quarter)",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "L02xM6",
+   "feature": "L02",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth acceleration (YoY now − YoY last quarter)",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "L02xMV",
+   "feature": "L02",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth acceleration (YoY now − YoY last quarter)",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "L03xM1",
+   "feature": "L03",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin (latest quarter)",
+   "mechanism": "pricing power",
+   "seen": false
+  },
+  {
+   "id": "L03xM3",
+   "feature": "L03",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin (latest quarter)",
+   "mechanism": "pricing power",
+   "seen": false
+  },
+  {
+   "id": "L03xM6",
+   "feature": "L03",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin (latest quarter)",
+   "mechanism": "pricing power",
+   "seen": false
+  },
+  {
+   "id": "L03xMV",
+   "feature": "L03",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "gross margin (latest quarter)",
+   "mechanism": "pricing power",
+   "seen": false
+  },
+  {
+   "id": "L04xM1",
+   "feature": "L04",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin change YoY",
+   "mechanism": "pricing power rising",
+   "seen": false
+  },
+  {
+   "id": "L04xM3",
+   "feature": "L04",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin change YoY",
+   "mechanism": "pricing power rising",
+   "seen": false
+  },
+  {
+   "id": "L04xM6",
+   "feature": "L04",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin change YoY",
+   "mechanism": "pricing power rising",
+   "seen": false
+  },
+  {
+   "id": "L04xMV",
+   "feature": "L04",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin change YoY",
+   "mechanism": "pricing power rising",
+   "seen": false
+  },
+  {
+   "id": "L05xM1",
+   "feature": "L05",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 bottleneck score (mean pct-rank of L01, L02, L04)",
+   "mechanism": "bottleneck (seen)",
+   "seen": true
+  },
+  {
+   "id": "L05xM3",
+   "feature": "L05",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 bottleneck score (mean pct-rank of L01, L02, L04)",
+   "mechanism": "bottleneck (seen)",
+   "seen": true
+  },
+  {
+   "id": "L05xM6",
+   "feature": "L05",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 bottleneck score (mean pct-rank of L01, L02, L04)",
+   "mechanism": "bottleneck (seen)",
+   "seen": true
+  },
+  {
+   "id": "L05xMV",
+   "feature": "L05",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 bottleneck score (mean pct-rank of L01, L02, L04)",
+   "mechanism": "bottleneck (seen)",
+   "seen": true
+  },
+  {
+   "id": "L06xM1",
+   "feature": "L06",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth QoQ",
+   "mechanism": "near-term demand",
+   "seen": false
+  },
+  {
+   "id": "L06xM3",
+   "feature": "L06",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth QoQ",
+   "mechanism": "near-term demand",
+   "seen": false
+  },
+  {
+   "id": "L06xM6",
+   "feature": "L06",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth QoQ",
+   "mechanism": "near-term demand",
+   "seen": false
+  },
+  {
+   "id": "L06xMV",
+   "feature": "L06",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth QoQ",
+   "mechanism": "near-term demand",
+   "seen": false
+  },
+  {
+   "id": "L07xM1",
+   "feature": "L07",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "2-year revenue growth (latest vs 8 quarters earlier)",
+   "mechanism": "durable growth",
+   "seen": false
+  },
+  {
+   "id": "L07xM3",
+   "feature": "L07",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "2-year revenue growth (latest vs 8 quarters earlier)",
+   "mechanism": "durable growth",
+   "seen": false
+  },
+  {
+   "id": "L07xM6",
+   "feature": "L07",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "2-year revenue growth (latest vs 8 quarters earlier)",
+   "mechanism": "durable growth",
+   "seen": false
+  },
+  {
+   "id": "L07xMV",
+   "feature": "L07",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "2-year revenue growth (latest vs 8 quarters earlier)",
+   "mechanism": "durable growth",
+   "seen": false
+  },
+  {
+   "id": "L08xM1",
+   "feature": "L08",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "stability of YoY growth (−s.d. over last 6 quarters)",
+   "mechanism": "quality growth",
+   "seen": false
+  },
+  {
+   "id": "L08xM3",
+   "feature": "L08",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "stability of YoY growth (−s.d. over last 6 quarters)",
+   "mechanism": "quality growth",
+   "seen": false
+  },
+  {
+   "id": "L08xM6",
+   "feature": "L08",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "stability of YoY growth (−s.d. over last 6 quarters)",
+   "mechanism": "quality growth",
+   "seen": false
+  },
+  {
+   "id": "L08xMV",
+   "feature": "L08",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "stability of YoY growth (−s.d. over last 6 quarters)",
+   "mechanism": "quality growth",
+   "seen": false
+  },
+  {
+   "id": "L09xM1",
+   "feature": "L09",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin",
+   "mechanism": "profitability",
+   "seen": false
+  },
+  {
+   "id": "L09xM3",
+   "feature": "L09",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin",
+   "mechanism": "profitability",
+   "seen": false
+  },
+  {
+   "id": "L09xM6",
+   "feature": "L09",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin",
+   "mechanism": "profitability",
+   "seen": false
+  },
+  {
+   "id": "L09xMV",
+   "feature": "L09",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "operating margin",
+   "mechanism": "profitability",
+   "seen": false
+  },
+  {
+   "id": "L10xM1",
+   "feature": "L10",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin change YoY",
+   "mechanism": "operating leverage",
+   "seen": false
+  },
+  {
+   "id": "L10xM3",
+   "feature": "L10",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin change YoY",
+   "mechanism": "operating leverage",
+   "seen": false
+  },
+  {
+   "id": "L10xM6",
+   "feature": "L10",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin change YoY",
+   "mechanism": "operating leverage",
+   "seen": false
+  },
+  {
+   "id": "L10xMV",
+   "feature": "L10",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin change YoY",
+   "mechanism": "operating leverage",
+   "seen": false
+  },
+  {
+   "id": "L11xM1",
+   "feature": "L11",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating income growth YoY (sign-safe)",
+   "mechanism": "profit growth",
+   "seen": false
+  },
+  {
+   "id": "L11xM3",
+   "feature": "L11",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating income growth YoY (sign-safe)",
+   "mechanism": "profit growth",
+   "seen": false
+  },
+  {
+   "id": "L11xM6",
+   "feature": "L11",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating income growth YoY (sign-safe)",
+   "mechanism": "profit growth",
+   "seen": false
+  },
+  {
+   "id": "L11xMV",
+   "feature": "L11",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating income growth YoY (sign-safe)",
+   "mechanism": "profit growth",
+   "seen": false
+  },
+  {
+   "id": "L12xM1",
+   "feature": "L12",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net income positive (1/0)",
+   "mechanism": "profitable",
+   "seen": false
+  },
+  {
+   "id": "L12xM3",
+   "feature": "L12",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net income positive (1/0)",
+   "mechanism": "profitable",
+   "seen": false
+  },
+  {
+   "id": "L12xM6",
+   "feature": "L12",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net income positive (1/0)",
+   "mechanism": "profitable",
+   "seen": false
+  },
+  {
+   "id": "L12xMV",
+   "feature": "L12",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "net income positive (1/0)",
+   "mechanism": "profitable",
+   "seen": false
+  },
+  {
+   "id": "L13xM1",
+   "feature": "L13",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net margin change YoY",
+   "mechanism": "margin trend",
+   "seen": false
+  },
+  {
+   "id": "L13xM3",
+   "feature": "L13",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net margin change YoY",
+   "mechanism": "margin trend",
+   "seen": false
+  },
+  {
+   "id": "L13xM6",
+   "feature": "L13",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net margin change YoY",
+   "mechanism": "margin trend",
+   "seen": false
+  },
+  {
+   "id": "L13xMV",
+   "feature": "L13",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "net margin change YoY",
+   "mechanism": "margin trend",
+   "seen": false
+  },
+  {
+   "id": "L14xM1",
+   "feature": "L14",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "growth surprise vs own trend (YoY now − mean YoY of prior 4 quarters)",
+   "mechanism": "news",
+   "seen": false
+  },
+  {
+   "id": "L14xM3",
+   "feature": "L14",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "growth surprise vs own trend (YoY now − mean YoY of prior 4 quarters)",
+   "mechanism": "news",
+   "seen": false
+  },
+  {
+   "id": "L14xM6",
+   "feature": "L14",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "growth surprise vs own trend (YoY now − mean YoY of prior 4 quarters)",
+   "mechanism": "news",
+   "seen": false
+  },
+  {
+   "id": "L14xMV",
+   "feature": "L14",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "growth surprise vs own trend (YoY now − mean YoY of prior 4 quarters)",
+   "mechanism": "news",
+   "seen": false
+  },
+  {
+   "id": "L15xM1",
+   "feature": "L15",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin negative a year ago (1/0)",
+   "mechanism": "losing less ≠ pricing power (seen rule)",
+   "seen": true
+  },
+  {
+   "id": "L15xM3",
+   "feature": "L15",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin negative a year ago (1/0)",
+   "mechanism": "losing less ≠ pricing power (seen rule)",
+   "seen": true
+  },
+  {
+   "id": "L15xM6",
+   "feature": "L15",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin negative a year ago (1/0)",
+   "mechanism": "losing less ≠ pricing power (seen rule)",
+   "seen": true
+  },
+  {
+   "id": "L15xMV",
+   "feature": "L15",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "gross margin negative a year ago (1/0)",
+   "mechanism": "losing less ≠ pricing power (seen rule)",
+   "seen": true
+  },
+  {
+   "id": "L16xM1",
+   "feature": "L16",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin recovering from negative (1/0)",
+   "mechanism": "turnaround",
+   "seen": false
+  },
+  {
+   "id": "L16xM3",
+   "feature": "L16",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin recovering from negative (1/0)",
+   "mechanism": "turnaround",
+   "seen": false
+  },
+  {
+   "id": "L16xM6",
+   "feature": "L16",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin recovering from negative (1/0)",
+   "mechanism": "turnaround",
+   "seen": false
+  },
+  {
+   "id": "L16xMV",
+   "feature": "L16",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin recovering from negative (1/0)",
+   "mechanism": "turnaround",
+   "seen": false
+  },
+  {
+   "id": "L17xM1",
+   "feature": "L17",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex growth YoY",
+   "mechanism": "over-investment",
+   "seen": false
+  },
+  {
+   "id": "L17xM3",
+   "feature": "L17",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex growth YoY",
+   "mechanism": "over-investment",
+   "seen": false
+  },
+  {
+   "id": "L17xM6",
+   "feature": "L17",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex growth YoY",
+   "mechanism": "over-investment",
+   "seen": false
+  },
+  {
+   "id": "L17xMV",
+   "feature": "L17",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "capex growth YoY",
+   "mechanism": "over-investment",
+   "seen": false
+  },
+  {
+   "id": "L18xM1",
+   "feature": "L18",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex ÷ revenue (TTM)",
+   "mechanism": "capital intensity",
+   "seen": false
+  },
+  {
+   "id": "L18xM3",
+   "feature": "L18",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex ÷ revenue (TTM)",
+   "mechanism": "capital intensity",
+   "seen": false
+  },
+  {
+   "id": "L18xM6",
+   "feature": "L18",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "capex ÷ revenue (TTM)",
+   "mechanism": "capital intensity",
+   "seen": false
+  },
+  {
+   "id": "L18xMV",
+   "feature": "L18",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "capex ÷ revenue (TTM)",
+   "mechanism": "capital intensity",
+   "seen": false
+  },
+  {
+   "id": "L19xM1",
+   "feature": "L19",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "inventory growth − revenue growth (YoY)",
+   "mechanism": "demand slowing / build-up",
+   "seen": false
+  },
+  {
+   "id": "L19xM3",
+   "feature": "L19",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "inventory growth − revenue growth (YoY)",
+   "mechanism": "demand slowing / build-up",
+   "seen": false
+  },
+  {
+   "id": "L19xM6",
+   "feature": "L19",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "inventory growth − revenue growth (YoY)",
+   "mechanism": "demand slowing / build-up",
+   "seen": false
+  },
+  {
+   "id": "L19xMV",
+   "feature": "L19",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "inventory growth − revenue growth (YoY)",
+   "mechanism": "demand slowing / build-up",
+   "seen": false
+  },
+  {
+   "id": "L20xM1",
+   "feature": "L20",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY",
+   "mechanism": "future revenue",
+   "seen": false
+  },
+  {
+   "id": "L20xM3",
+   "feature": "L20",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY",
+   "mechanism": "future revenue",
+   "seen": false
+  },
+  {
+   "id": "L20xM6",
+   "feature": "L20",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY",
+   "mechanism": "future revenue",
+   "seen": false
+  },
+  {
+   "id": "L20xMV",
+   "feature": "L20",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY",
+   "mechanism": "future revenue",
+   "seen": false
+  },
+  {
+   "id": "L21xM1",
+   "feature": "L21",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "deferred revenue growth YoY",
+   "mechanism": "prepaid demand",
+   "seen": false
+  },
+  {
+   "id": "L21xM3",
+   "feature": "L21",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "deferred revenue growth YoY",
+   "mechanism": "prepaid demand",
+   "seen": false
+  },
+  {
+   "id": "L21xM6",
+   "feature": "L21",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "deferred revenue growth YoY",
+   "mechanism": "prepaid demand",
+   "seen": false
+  },
+  {
+   "id": "L21xMV",
+   "feature": "L21",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "deferred revenue growth YoY",
+   "mechanism": "prepaid demand",
+   "seen": false
+  },
+  {
+   "id": "L22xM1",
+   "feature": "L22",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D ÷ revenue",
+   "mechanism": "innovation",
+   "seen": false
+  },
+  {
+   "id": "L22xM3",
+   "feature": "L22",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D ÷ revenue",
+   "mechanism": "innovation",
+   "seen": false
+  },
+  {
+   "id": "L22xM6",
+   "feature": "L22",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D ÷ revenue",
+   "mechanism": "innovation",
+   "seen": false
+  },
+  {
+   "id": "L22xMV",
+   "feature": "L22",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D ÷ revenue",
+   "mechanism": "innovation",
+   "seen": false
+  },
+  {
+   "id": "L23xM1",
+   "feature": "L23",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D growth YoY",
+   "mechanism": "innovation push",
+   "seen": false
+  },
+  {
+   "id": "L23xM3",
+   "feature": "L23",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D growth YoY",
+   "mechanism": "innovation push",
+   "seen": false
+  },
+  {
+   "id": "L23xM6",
+   "feature": "L23",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D growth YoY",
+   "mechanism": "innovation push",
+   "seen": false
+  },
+  {
+   "id": "L23xMV",
+   "feature": "L23",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "R&D growth YoY",
+   "mechanism": "innovation push",
+   "seen": false
+  },
+  {
+   "id": "L24xM1",
+   "feature": "L24",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "share count change over 1 year (split-adjusted)",
+   "mechanism": "dilution",
+   "seen": false
+  },
+  {
+   "id": "L24xM3",
+   "feature": "L24",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "share count change over 1 year (split-adjusted)",
+   "mechanism": "dilution",
+   "seen": false
+  },
+  {
+   "id": "L24xM6",
+   "feature": "L24",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "share count change over 1 year (split-adjusted)",
+   "mechanism": "dilution",
+   "seen": false
+  },
+  {
+   "id": "L24xMV",
+   "feature": "L24",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "share count change over 1 year (split-adjusted)",
+   "mechanism": "dilution",
+   "seen": false
+  },
+  {
+   "id": "L25xM1",
+   "feature": "L25",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "buyback: share count down > 2% in a year (1/0)",
+   "mechanism": "capital return",
+   "seen": false
+  },
+  {
+   "id": "L25xM3",
+   "feature": "L25",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "buyback: share count down > 2% in a year (1/0)",
+   "mechanism": "capital return",
+   "seen": false
+  },
+  {
+   "id": "L25xM6",
+   "feature": "L25",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "buyback: share count down > 2% in a year (1/0)",
+   "mechanism": "capital return",
+   "seen": false
+  },
+  {
+   "id": "L25xMV",
+   "feature": "L25",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "buyback: share count down > 2% in a year (1/0)",
+   "mechanism": "capital return",
+   "seen": false
+  },
+  {
+   "id": "L26xM1",
+   "feature": "L26",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ sales (TTM)",
+   "mechanism": "expensive → lower returns",
+   "seen": false
+  },
+  {
+   "id": "L26xM3",
+   "feature": "L26",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ sales (TTM)",
+   "mechanism": "expensive → lower returns",
+   "seen": false
+  },
+  {
+   "id": "L26xM6",
+   "feature": "L26",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ sales (TTM)",
+   "mechanism": "expensive → lower returns",
+   "seen": false
+  },
+  {
+   "id": "L26xMV",
+   "feature": "L26",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ sales (TTM)",
+   "mechanism": "expensive → lower returns",
+   "seen": false
+  },
+  {
+   "id": "L27xM1",
+   "feature": "L27",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield (TTM net income ÷ market cap)",
+   "mechanism": "value",
+   "seen": false
+  },
+  {
+   "id": "L27xM3",
+   "feature": "L27",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield (TTM net income ÷ market cap)",
+   "mechanism": "value",
+   "seen": false
+  },
+  {
+   "id": "L27xM6",
+   "feature": "L27",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield (TTM net income ÷ market cap)",
+   "mechanism": "value",
+   "seen": false
+  },
+  {
+   "id": "L27xMV",
+   "feature": "L27",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "earnings yield (TTM net income ÷ market cap)",
+   "mechanism": "value",
+   "seen": false
+  },
+  {
+   "id": "L28xM1",
+   "feature": "L28",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "P/S ÷ industry median P/S",
+   "mechanism": "relative value",
+   "seen": false
+  },
+  {
+   "id": "L28xM3",
+   "feature": "L28",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "P/S ÷ industry median P/S",
+   "mechanism": "relative value",
+   "seen": false
+  },
+  {
+   "id": "L28xM6",
+   "feature": "L28",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "P/S ÷ industry median P/S",
+   "mechanism": "relative value",
+   "seen": false
+  },
+  {
+   "id": "L28xMV",
+   "feature": "L28",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "P/S ÷ industry median P/S",
+   "mechanism": "relative value",
+   "seen": false
+  },
+  {
+   "id": "L29xM1",
+   "feature": "L29",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "P/S change over 1 year",
+   "mechanism": "multiple expansion",
+   "seen": false
+  },
+  {
+   "id": "L29xM3",
+   "feature": "L29",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "P/S change over 1 year",
+   "mechanism": "multiple expansion",
+   "seen": false
+  },
+  {
+   "id": "L29xM6",
+   "feature": "L29",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "P/S change over 1 year",
+   "mechanism": "multiple expansion",
+   "seen": false
+  },
+  {
+   "id": "L29xMV",
+   "feature": "L29",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "P/S change over 1 year",
+   "mechanism": "multiple expansion",
+   "seen": false
+  },
+  {
+   "id": "L30xM1",
+   "feature": "L30",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 month momentum",
+   "mechanism": "momentum (seen)",
+   "seen": true
+  },
+  {
+   "id": "L30xM3",
+   "feature": "L30",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 month momentum",
+   "mechanism": "momentum (seen)",
+   "seen": true
+  },
+  {
+   "id": "L30xM6",
+   "feature": "L30",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 month momentum",
+   "mechanism": "momentum (seen)",
+   "seen": true
+  },
+  {
+   "id": "L30xMV",
+   "feature": "L30",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 month momentum",
+   "mechanism": "momentum (seen)",
+   "seen": true
+  },
+  {
+   "id": "L31xM1",
+   "feature": "L31",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "6-1 month momentum",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "L31xM3",
+   "feature": "L31",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "6-1 month momentum",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "L31xM6",
+   "feature": "L31",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "6-1 month momentum",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "L31xMV",
+   "feature": "L31",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "6-1 month momentum",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "L32xM1",
+   "feature": "L32",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "1-month return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "L32xM3",
+   "feature": "L32",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "1-month return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "L32xM6",
+   "feature": "L32",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "1-month return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "L32xMV",
+   "feature": "L32",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "1-month return",
+   "mechanism": "short-term reversal",
+   "seen": false
+  },
+  {
+   "id": "L33xM1",
+   "feature": "L33",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "L33xM3",
+   "feature": "L33",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "L33xM6",
+   "feature": "L33",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "L33xMV",
+   "feature": "L33",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "L34xM1",
+   "feature": "L34",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "above 200-day average (1/0)",
+   "mechanism": "trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L34xM3",
+   "feature": "L34",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "above 200-day average (1/0)",
+   "mechanism": "trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L34xM6",
+   "feature": "L34",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "above 200-day average (1/0)",
+   "mechanism": "trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L34xMV",
+   "feature": "L34",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "above 200-day average (1/0)",
+   "mechanism": "trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L35xM1",
+   "feature": "L35",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "200-day average slope (3 months)",
+   "mechanism": "trend strength",
+   "seen": false
+  },
+  {
+   "id": "L35xM3",
+   "feature": "L35",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "200-day average slope (3 months)",
+   "mechanism": "trend strength",
+   "seen": false
+  },
+  {
+   "id": "L35xM6",
+   "feature": "L35",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "200-day average slope (3 months)",
+   "mechanism": "trend strength",
+   "seen": false
+  },
+  {
+   "id": "L35xMV",
+   "feature": "L35",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "200-day average slope (3 months)",
+   "mechanism": "trend strength",
+   "seen": false
+  },
+  {
+   "id": "L36xM1",
+   "feature": "L36",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "realized volatility (3 months)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "L36xM3",
+   "feature": "L36",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "realized volatility (3 months)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "L36xM6",
+   "feature": "L36",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "realized volatility (3 months)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "L36xMV",
+   "feature": "L36",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "realized volatility (3 months)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "L37xM1",
+   "feature": "L37",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "max daily return last month",
+   "mechanism": "lottery stocks underperform",
+   "seen": false
+  },
+  {
+   "id": "L37xM3",
+   "feature": "L37",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "max daily return last month",
+   "mechanism": "lottery stocks underperform",
+   "seen": false
+  },
+  {
+   "id": "L37xM6",
+   "feature": "L37",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "max daily return last month",
+   "mechanism": "lottery stocks underperform",
+   "seen": false
+  },
+  {
+   "id": "L37xMV",
+   "feature": "L37",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "max daily return last month",
+   "mechanism": "lottery stocks underperform",
+   "seen": false
+  },
+  {
+   "id": "L38xM1",
+   "feature": "L38",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "beta to SPY (1 year)",
+   "mechanism": "betting-against-beta",
+   "seen": false
+  },
+  {
+   "id": "L38xM3",
+   "feature": "L38",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "beta to SPY (1 year)",
+   "mechanism": "betting-against-beta",
+   "seen": false
+  },
+  {
+   "id": "L38xM6",
+   "feature": "L38",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "beta to SPY (1 year)",
+   "mechanism": "betting-against-beta",
+   "seen": false
+  },
+  {
+   "id": "L38xMV",
+   "feature": "L38",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "beta to SPY (1 year)",
+   "mechanism": "betting-against-beta",
+   "seen": false
+  },
+  {
+   "id": "L39xM1",
+   "feature": "L39",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "dollar volume 3 months ÷ 12 months",
+   "mechanism": "rising attention",
+   "seen": false
+  },
+  {
+   "id": "L39xM3",
+   "feature": "L39",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "dollar volume 3 months ÷ 12 months",
+   "mechanism": "rising attention",
+   "seen": false
+  },
+  {
+   "id": "L39xM6",
+   "feature": "L39",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "dollar volume 3 months ÷ 12 months",
+   "mechanism": "rising attention",
+   "seen": false
+  },
+  {
+   "id": "L39xMV",
+   "feature": "L39",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "dollar volume 3 months ÷ 12 months",
+   "mechanism": "rising attention",
+   "seen": false
+  },
+  {
+   "id": "L40xM1",
+   "feature": "L40",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "turnover (dollar volume ÷ market cap)",
+   "mechanism": "over-trading",
+   "seen": false
+  },
+  {
+   "id": "L40xM3",
+   "feature": "L40",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "turnover (dollar volume ÷ market cap)",
+   "mechanism": "over-trading",
+   "seen": false
+  },
+  {
+   "id": "L40xM6",
+   "feature": "L40",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "turnover (dollar volume ÷ market cap)",
+   "mechanism": "over-trading",
+   "seen": false
+  },
+  {
+   "id": "L40xMV",
+   "feature": "L40",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "turnover (dollar volume ÷ market cap)",
+   "mechanism": "over-trading",
+   "seen": false
+  },
+  {
+   "id": "L41xM1",
+   "feature": "L41",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "size (ln market cap)",
+   "mechanism": "small-cap effect",
+   "seen": false
+  },
+  {
+   "id": "L41xM3",
+   "feature": "L41",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "size (ln market cap)",
+   "mechanism": "small-cap effect",
+   "seen": false
+  },
+  {
+   "id": "L41xM6",
+   "feature": "L41",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "size (ln market cap)",
+   "mechanism": "small-cap effect",
+   "seen": false
+  },
+  {
+   "id": "L41xMV",
+   "feature": "L41",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "size (ln market cap)",
+   "mechanism": "small-cap effect",
+   "seen": false
+  },
+  {
+   "id": "L42xM1",
+   "feature": "L42",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "3-month momentum",
+   "mechanism": "intermediate momentum",
+   "seen": false
+  },
+  {
+   "id": "L42xM3",
+   "feature": "L42",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "3-month momentum",
+   "mechanism": "intermediate momentum",
+   "seen": false
+  },
+  {
+   "id": "L42xM6",
+   "feature": "L42",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "3-month momentum",
+   "mechanism": "intermediate momentum",
+   "seen": false
+  },
+  {
+   "id": "L42xMV",
+   "feature": "L42",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "3-month momentum",
+   "mechanism": "intermediate momentum",
+   "seen": false
+  },
+  {
+   "id": "L43xM1",
+   "feature": "L43",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 momentum minus industry 12-1 momentum",
+   "mechanism": "stock-specific momentum",
+   "seen": false
+  },
+  {
+   "id": "L43xM3",
+   "feature": "L43",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 momentum minus industry 12-1 momentum",
+   "mechanism": "stock-specific momentum",
+   "seen": false
+  },
+  {
+   "id": "L43xM6",
+   "feature": "L43",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 momentum minus industry 12-1 momentum",
+   "mechanism": "stock-specific momentum",
+   "seen": false
+  },
+  {
+   "id": "L43xMV",
+   "feature": "L43",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "12-1 momentum minus industry 12-1 momentum",
+   "mechanism": "stock-specific momentum",
+   "seen": false
+  },
+  {
+   "id": "L44xM1",
+   "feature": "L44",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "L44xM3",
+   "feature": "L44",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "L44xM6",
+   "feature": "L44",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "L44xMV",
+   "feature": "L44",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "L45xM1",
+   "feature": "L45",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry (SIC3) 6-month return",
+   "mechanism": "industry momentum",
+   "seen": false
+  },
+  {
+   "id": "L45xM3",
+   "feature": "L45",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry (SIC3) 6-month return",
+   "mechanism": "industry momentum",
+   "seen": false
+  },
+  {
+   "id": "L45xM6",
+   "feature": "L45",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry (SIC3) 6-month return",
+   "mechanism": "industry momentum",
+   "seen": false
+  },
+  {
+   "id": "L45xMV",
+   "feature": "L45",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry (SIC3) 6-month return",
+   "mechanism": "industry momentum",
+   "seen": false
+  },
+  {
+   "id": "L46xM1",
+   "feature": "L46",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry median revenue growth",
+   "mechanism": "industry demand",
+   "seen": false
+  },
+  {
+   "id": "L46xM3",
+   "feature": "L46",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry median revenue growth",
+   "mechanism": "industry demand",
+   "seen": false
+  },
+  {
+   "id": "L46xM6",
+   "feature": "L46",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry median revenue growth",
+   "mechanism": "industry demand",
+   "seen": false
+  },
+  {
+   "id": "L46xMV",
+   "feature": "L46",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry median revenue growth",
+   "mechanism": "industry demand",
+   "seen": false
+  },
+  {
+   "id": "L47xM1",
+   "feature": "L47",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "share of industry above 200-day average",
+   "mechanism": "industry breadth",
+   "seen": false
+  },
+  {
+   "id": "L47xM3",
+   "feature": "L47",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "share of industry above 200-day average",
+   "mechanism": "industry breadth",
+   "seen": false
+  },
+  {
+   "id": "L47xM6",
+   "feature": "L47",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "share of industry above 200-day average",
+   "mechanism": "industry breadth",
+   "seen": false
+  },
+  {
+   "id": "L47xMV",
+   "feature": "L47",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "share of industry above 200-day average",
+   "mechanism": "industry breadth",
+   "seen": false
+  },
+  {
+   "id": "L48xM1",
+   "feature": "L48",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "best 6-month return among the stock's filing concepts",
+   "mechanism": "theme momentum (E1, seen)",
+   "seen": true
+  },
+  {
+   "id": "L48xM3",
+   "feature": "L48",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "best 6-month return among the stock's filing concepts",
+   "mechanism": "theme momentum (E1, seen)",
+   "seen": true
+  },
+  {
+   "id": "L48xM6",
+   "feature": "L48",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "best 6-month return among the stock's filing concepts",
+   "mechanism": "theme momentum (E1, seen)",
+   "seen": true
+  },
+  {
+   "id": "L48xMV",
+   "feature": "L48",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "best 6-month return among the stock's filing concepts",
+   "mechanism": "theme momentum (E1, seen)",
+   "seen": true
+  },
+  {
+   "id": "L49xM1",
+   "feature": "L49",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "number of filing concepts with 6-month return in the top quartile",
+   "mechanism": "theme exposure",
+   "seen": false
+  },
+  {
+   "id": "L49xM3",
+   "feature": "L49",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "number of filing concepts with 6-month return in the top quartile",
+   "mechanism": "theme exposure",
+   "seen": false
+  },
+  {
+   "id": "L49xM6",
+   "feature": "L49",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "number of filing concepts with 6-month return in the top quartile",
+   "mechanism": "theme exposure",
+   "seen": false
+  },
+  {
+   "id": "L49xMV",
+   "feature": "L49",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "number of filing concepts with 6-month return in the top quartile",
+   "mechanism": "theme exposure",
+   "seen": false
+  },
+  {
+   "id": "L50xM1",
+   "feature": "L50",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "new concept mentioned in the last 6 months (1/0)",
+   "mechanism": "new theme",
+   "seen": false
+  },
+  {
+   "id": "L50xM3",
+   "feature": "L50",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "new concept mentioned in the last 6 months (1/0)",
+   "mechanism": "new theme",
+   "seen": false
+  },
+  {
+   "id": "L50xM6",
+   "feature": "L50",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "new concept mentioned in the last 6 months (1/0)",
+   "mechanism": "new theme",
+   "seen": false
+  },
+  {
+   "id": "L50xMV",
+   "feature": "L50",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "new concept mentioned in the last 6 months (1/0)",
+   "mechanism": "new theme",
+   "seen": false
+  },
+  {
+   "id": "L51xM1",
+   "feature": "L51",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry 3-month relative strength rank",
+   "mechanism": "rotation",
+   "seen": false
+  },
+  {
+   "id": "L51xM3",
+   "feature": "L51",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry 3-month relative strength rank",
+   "mechanism": "rotation",
+   "seen": false
+  },
+  {
+   "id": "L51xM6",
+   "feature": "L51",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry 3-month relative strength rank",
+   "mechanism": "rotation",
+   "seen": false
+  },
+  {
+   "id": "L51xMV",
+   "feature": "L51",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "industry 3-month relative strength rank",
+   "mechanism": "rotation",
+   "seen": false
+  },
+  {
+   "id": "L52xM1",
+   "feature": "L52",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider purchases (count, 90 days)",
+   "mechanism": "insiders know",
+   "seen": false
+  },
+  {
+   "id": "L52xM3",
+   "feature": "L52",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider purchases (count, 90 days)",
+   "mechanism": "insiders know",
+   "seen": false
+  },
+  {
+   "id": "L52xM6",
+   "feature": "L52",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider purchases (count, 90 days)",
+   "mechanism": "insiders know",
+   "seen": false
+  },
+  {
+   "id": "L52xMV",
+   "feature": "L52",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider purchases (count, 90 days)",
+   "mechanism": "insiders know",
+   "seen": false
+  },
+  {
+   "id": "L53xM1",
+   "feature": "L53",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider cluster: ≥ 3 distinct buyers in 90 days (1/0)",
+   "mechanism": "conviction",
+   "seen": false
+  },
+  {
+   "id": "L53xM3",
+   "feature": "L53",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider cluster: ≥ 3 distinct buyers in 90 days (1/0)",
+   "mechanism": "conviction",
+   "seen": false
+  },
+  {
+   "id": "L53xM6",
+   "feature": "L53",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider cluster: ≥ 3 distinct buyers in 90 days (1/0)",
+   "mechanism": "conviction",
+   "seen": false
+  },
+  {
+   "id": "L53xMV",
+   "feature": "L53",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider cluster: ≥ 3 distinct buyers in 90 days (1/0)",
+   "mechanism": "conviction",
+   "seen": false
+  },
+  {
+   "id": "L54xM1",
+   "feature": "L54",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider $ bought ÷ market cap (90 days)",
+   "mechanism": "insider conviction size",
+   "seen": false
+  },
+  {
+   "id": "L54xM3",
+   "feature": "L54",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider $ bought ÷ market cap (90 days)",
+   "mechanism": "insider conviction size",
+   "seen": false
+  },
+  {
+   "id": "L54xM6",
+   "feature": "L54",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider $ bought ÷ market cap (90 days)",
+   "mechanism": "insider conviction size",
+   "seen": false
+  },
+  {
+   "id": "L54xMV",
+   "feature": "L54",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "insider $ bought ÷ market cap (90 days)",
+   "mechanism": "insider conviction size",
+   "seen": false
+  },
+  {
+   "id": "L55xM1",
+   "feature": "L55",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "guidance raise in last 120 days (1/0)",
+   "mechanism": "management confidence",
+   "seen": false
+  },
+  {
+   "id": "L55xM3",
+   "feature": "L55",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "guidance raise in last 120 days (1/0)",
+   "mechanism": "management confidence",
+   "seen": false
+  },
+  {
+   "id": "L55xM6",
+   "feature": "L55",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "guidance raise in last 120 days (1/0)",
+   "mechanism": "management confidence",
+   "seen": false
+  },
+  {
+   "id": "L55xMV",
+   "feature": "L55",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "guidance raise in last 120 days (1/0)",
+   "mechanism": "management confidence",
+   "seen": false
+  },
+  {
+   "id": "L56xM1",
+   "feature": "L56",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "guidance cut in last 120 days (1/0)",
+   "mechanism": "bad news drift",
+   "seen": false
+  },
+  {
+   "id": "L56xM3",
+   "feature": "L56",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "guidance cut in last 120 days (1/0)",
+   "mechanism": "bad news drift",
+   "seen": false
+  },
+  {
+   "id": "L56xM6",
+   "feature": "L56",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "guidance cut in last 120 days (1/0)",
+   "mechanism": "bad news drift",
+   "seen": false
+  },
+  {
+   "id": "L56xMV",
+   "feature": "L56",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "guidance cut in last 120 days (1/0)",
+   "mechanism": "bad news drift",
+   "seen": false
+  },
+  {
+   "id": "L57xM1",
+   "feature": "L57",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "spin-off in last 12 months (1/0)",
+   "mechanism": "spin-off effect",
+   "seen": false
+  },
+  {
+   "id": "L57xM3",
+   "feature": "L57",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "spin-off in last 12 months (1/0)",
+   "mechanism": "spin-off effect",
+   "seen": false
+  },
+  {
+   "id": "L57xM6",
+   "feature": "L57",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "spin-off in last 12 months (1/0)",
+   "mechanism": "spin-off effect",
+   "seen": false
+  },
+  {
+   "id": "L57xMV",
+   "feature": "L57",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "spin-off in last 12 months (1/0)",
+   "mechanism": "spin-off effect",
+   "seen": false
+  },
+  {
+   "id": "L58xM1",
+   "feature": "L58",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "days since latest 10-Q/10-K",
+   "mechanism": "news staleness",
+   "seen": false
+  },
+  {
+   "id": "L58xM3",
+   "feature": "L58",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "days since latest 10-Q/10-K",
+   "mechanism": "news staleness",
+   "seen": false
+  },
+  {
+   "id": "L58xM6",
+   "feature": "L58",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "days since latest 10-Q/10-K",
+   "mechanism": "news staleness",
+   "seen": false
+  },
+  {
+   "id": "L58xMV",
+   "feature": "L58",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "days since latest 10-Q/10-K",
+   "mechanism": "news staleness",
+   "seen": false
+  },
+  {
+   "id": "L59xM1",
+   "feature": "L59",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "fresh filing (≤ 30 days) with accelerating revenue (1/0)",
+   "mechanism": "post-earnings drift",
+   "seen": false
+  },
+  {
+   "id": "L59xM3",
+   "feature": "L59",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "fresh filing (≤ 30 days) with accelerating revenue (1/0)",
+   "mechanism": "post-earnings drift",
+   "seen": false
+  },
+  {
+   "id": "L59xM6",
+   "feature": "L59",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "fresh filing (≤ 30 days) with accelerating revenue (1/0)",
+   "mechanism": "post-earnings drift",
+   "seen": false
+  },
+  {
+   "id": "L59xMV",
+   "feature": "L59",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "fresh filing (≤ 30 days) with accelerating revenue (1/0)",
+   "mechanism": "post-earnings drift",
+   "seen": false
+  },
+  {
+   "id": "L60xM1",
+   "feature": "L60",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth rank change over 3 months",
+   "mechanism": "improving fundamentals",
+   "seen": false
+  },
+  {
+   "id": "L60xM3",
+   "feature": "L60",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth rank change over 3 months",
+   "mechanism": "improving fundamentals",
+   "seen": false
+  },
+  {
+   "id": "L60xM6",
+   "feature": "L60",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth rank change over 3 months",
+   "mechanism": "improving fundamentals",
+   "seen": false
+  },
+  {
+   "id": "L60xMV",
+   "feature": "L60",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth rank change over 3 months",
+   "mechanism": "improving fundamentals",
+   "seen": false
+  },
+  {
+   "id": "L61xM1",
+   "feature": "L61",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "commodity-linked industry and its commodity in an uptrend (1/0)",
+   "mechanism": "commodity cycle (E2, seen)",
+   "seen": true
+  },
+  {
+   "id": "L61xM3",
+   "feature": "L61",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "commodity-linked industry and its commodity in an uptrend (1/0)",
+   "mechanism": "commodity cycle (E2, seen)",
+   "seen": true
+  },
+  {
+   "id": "L61xM6",
+   "feature": "L61",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "commodity-linked industry and its commodity in an uptrend (1/0)",
+   "mechanism": "commodity cycle (E2, seen)",
+   "seen": true
+  },
+  {
+   "id": "L61xMV",
+   "feature": "L61",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "commodity-linked industry and its commodity in an uptrend (1/0)",
+   "mechanism": "commodity cycle (E2, seen)",
+   "seen": true
+  },
+  {
+   "id": "L62xM1",
+   "feature": "L62",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 Model C conditions met (bottleneck top 20% + momentum + above 200-day)",
+   "mechanism": "growth + trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L62xM3",
+   "feature": "L62",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 Model C conditions met (bottleneck top 20% + momentum + above 200-day)",
+   "mechanism": "growth + trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L62xM6",
+   "feature": "L62",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 Model C conditions met (bottleneck top 20% + momentum + above 200-day)",
+   "mechanism": "growth + trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L62xMV",
+   "feature": "L62",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "v5 Model C conditions met (bottleneck top 20% + momentum + above 200-day)",
+   "mechanism": "growth + trend (seen)",
+   "seen": true
+  },
+  {
+   "id": "L63xM1",
+   "feature": "L63",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "high gross margin and low P/S (both in better half)",
+   "mechanism": "quality at a fair price",
+   "seen": false
+  },
+  {
+   "id": "L63xM3",
+   "feature": "L63",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "high gross margin and low P/S (both in better half)",
+   "mechanism": "quality at a fair price",
+   "seen": false
+  },
+  {
+   "id": "L63xM6",
+   "feature": "L63",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "high gross margin and low P/S (both in better half)",
+   "mechanism": "quality at a fair price",
+   "seen": false
+  },
+  {
+   "id": "L63xMV",
+   "feature": "L63",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "high gross margin and low P/S (both in better half)",
+   "mechanism": "quality at a fair price",
+   "seen": false
+  },
+  {
+   "id": "L64xM1",
+   "feature": "L64",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue accelerating and industry momentum positive (1/0)",
+   "mechanism": "theme + inflection",
+   "seen": false
+  },
+  {
+   "id": "L64xM3",
+   "feature": "L64",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue accelerating and industry momentum positive (1/0)",
+   "mechanism": "theme + inflection",
+   "seen": false
+  },
+  {
+   "id": "L64xM6",
+   "feature": "L64",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue accelerating and industry momentum positive (1/0)",
+   "mechanism": "theme + inflection",
+   "seen": false
+  },
+  {
+   "id": "L64xMV",
+   "feature": "L64",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue accelerating and industry momentum positive (1/0)",
+   "mechanism": "theme + inflection",
+   "seen": false
+  },
+  {
+   "id": "L65xM1",
+   "feature": "L65",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "low volatility and positive 12-1 momentum (1/0)",
+   "mechanism": "quality momentum",
+   "seen": false
+  },
+  {
+   "id": "L65xM3",
+   "feature": "L65",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "low volatility and positive 12-1 momentum (1/0)",
+   "mechanism": "quality momentum",
+   "seen": false
+  },
+  {
+   "id": "L65xM6",
+   "feature": "L65",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "low volatility and positive 12-1 momentum (1/0)",
+   "mechanism": "quality momentum",
+   "seen": false
+  },
+  {
+   "id": "L65xMV",
+   "feature": "L65",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "low volatility and positive 12-1 momentum (1/0)",
+   "mechanism": "quality momentum",
+   "seen": false
+  },
+  {
+   "id": "L66xM1",
+   "feature": "L66",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth top 30% and P/S below median (1/0)",
+   "mechanism": "growth at a reasonable price",
+   "seen": false
+  },
+  {
+   "id": "L66xM3",
+   "feature": "L66",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth top 30% and P/S below median (1/0)",
+   "mechanism": "growth at a reasonable price",
+   "seen": false
+  },
+  {
+   "id": "L66xM6",
+   "feature": "L66",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth top 30% and P/S below median (1/0)",
+   "mechanism": "growth at a reasonable price",
+   "seen": false
+  },
+  {
+   "id": "L66xMV",
+   "feature": "L66",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "revenue growth top 30% and P/S below median (1/0)",
+   "mechanism": "growth at a reasonable price",
+   "seen": false
+  },
+  {
+   "id": "L67xM1",
+   "feature": "L67",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin stability (−s.d. over 6 quarters)",
+   "mechanism": "durable economics",
+   "seen": false
+  },
+  {
+   "id": "L67xM3",
+   "feature": "L67",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin stability (−s.d. over 6 quarters)",
+   "mechanism": "durable economics",
+   "seen": false
+  },
+  {
+   "id": "L67xM6",
+   "feature": "L67",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "gross margin stability (−s.d. over 6 quarters)",
+   "mechanism": "durable economics",
+   "seen": false
+  },
+  {
+   "id": "L67xMV",
+   "feature": "L67",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "gross margin stability (−s.d. over 6 quarters)",
+   "mechanism": "durable economics",
+   "seen": false
+  },
+  {
+   "id": "L68xM1",
+   "feature": "L68",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 52-week low",
+   "mechanism": "distance from lows",
+   "seen": false
+  },
+  {
+   "id": "L68xM3",
+   "feature": "L68",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 52-week low",
+   "mechanism": "distance from lows",
+   "seen": false
+  },
+  {
+   "id": "L68xM6",
+   "feature": "L68",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 52-week low",
+   "mechanism": "distance from lows",
+   "seen": false
+  },
+  {
+   "id": "L68xMV",
+   "feature": "L68",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "price ÷ 52-week low",
+   "mechanism": "distance from lows",
+   "seen": false
+  },
+  {
+   "id": "L69xM1",
+   "feature": "L69",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield change over 1 year",
+   "mechanism": "cheapening vs earnings",
+   "seen": false
+  },
+  {
+   "id": "L69xM3",
+   "feature": "L69",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield change over 1 year",
+   "mechanism": "cheapening vs earnings",
+   "seen": false
+  },
+  {
+   "id": "L69xM6",
+   "feature": "L69",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "earnings yield change over 1 year",
+   "mechanism": "cheapening vs earnings",
+   "seen": false
+  },
+  {
+   "id": "L69xMV",
+   "feature": "L69",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "?",
+   "definition": "earnings yield change over 1 year",
+   "mechanism": "cheapening vs earnings",
+   "seen": false
+  },
+  {
+   "id": "L70xM1",
+   "feature": "L70",
+   "outcome": "M1",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin positive (1/0)",
+   "mechanism": "operating profit",
+   "seen": false
+  },
+  {
+   "id": "L70xM3",
+   "feature": "L70",
+   "outcome": "M3",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin positive (1/0)",
+   "mechanism": "operating profit",
+   "seen": false
+  },
+  {
+   "id": "L70xM6",
+   "feature": "L70",
+   "outcome": "M6",
+   "horizon": "long",
+   "sign": "+",
+   "definition": "operating margin positive (1/0)",
+   "mechanism": "operating profit",
+   "seen": false
+  },
+  {
+   "id": "L70xMV",
+   "feature": "L70",
+   "outcome": "MV",
+   "horizon": "long",
+   "sign": "-",
+   "definition": "operating margin positive (1/0)",
+   "mechanism": "operating profit",
+   "seen": false
+  },
+  {
+   "id": "S01xW1",
+   "feature": "S01",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance Σg / Σ|g|",
+   "mechanism": "long gamma damps moves",
+   "seen": false
+  },
+  {
+   "id": "S01xW2",
+   "feature": "S01",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance Σg / Σ|g|",
+   "mechanism": "long gamma damps moves",
+   "seen": false
+  },
+  {
+   "id": "S01xW4",
+   "feature": "S01",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance Σg / Σ|g|",
+   "mechanism": "long gamma damps moves",
+   "seen": false
+  },
+  {
+   "id": "S01xWV",
+   "feature": "S01",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "gamma balance Σg / Σ|g|",
+   "mechanism": "long gamma damps moves",
+   "seen": false
+  },
+  {
+   "id": "S02xW1",
+   "feature": "S02",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±2%",
+   "mechanism": "local regime",
+   "seen": false
+  },
+  {
+   "id": "S02xW2",
+   "feature": "S02",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±2%",
+   "mechanism": "local regime",
+   "seen": false
+  },
+  {
+   "id": "S02xW4",
+   "feature": "S02",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±2%",
+   "mechanism": "local regime",
+   "seen": false
+  },
+  {
+   "id": "S02xWV",
+   "feature": "S02",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "gamma balance within ±2%",
+   "mechanism": "local regime",
+   "seen": false
+  },
+  {
+   "id": "S03xW1",
+   "feature": "S03",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±5%",
+   "mechanism": "medium regime",
+   "seen": false
+  },
+  {
+   "id": "S03xW2",
+   "feature": "S03",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±5%",
+   "mechanism": "medium regime",
+   "seen": false
+  },
+  {
+   "id": "S03xW4",
+   "feature": "S03",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "gamma balance within ±5%",
+   "mechanism": "medium regime",
+   "seen": false
+  },
+  {
+   "id": "S03xWV",
+   "feature": "S03",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "gamma balance within ±5%",
+   "mechanism": "medium regime",
+   "seen": false
+  },
+  {
+   "id": "S04xW1",
+   "feature": "S04",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → bigger moves",
+   "seen": false
+  },
+  {
+   "id": "S04xW2",
+   "feature": "S04",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → bigger moves",
+   "seen": false
+  },
+  {
+   "id": "S04xW4",
+   "feature": "S04",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → bigger moves",
+   "seen": false
+  },
+  {
+   "id": "S04xWV",
+   "feature": "S04",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "short gamma → bigger moves",
+   "seen": false
+  },
+  {
+   "id": "S05xW1",
+   "feature": "S05",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "share of |gamma| below spot",
+   "mechanism": "support underneath",
+   "seen": false
+  },
+  {
+   "id": "S05xW2",
+   "feature": "S05",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "share of |gamma| below spot",
+   "mechanism": "support underneath",
+   "seen": false
+  },
+  {
+   "id": "S05xW4",
+   "feature": "S05",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "share of |gamma| below spot",
+   "mechanism": "support underneath",
+   "seen": false
+  },
+  {
+   "id": "S05xWV",
+   "feature": "S05",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "share of |gamma| below spot",
+   "mechanism": "support underneath",
+   "seen": false
+  },
+  {
+   "id": "S06xW1",
+   "feature": "S06",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king distance (K − S)/S",
+   "mechanism": "drift toward the biggest strike",
+   "seen": false
+  },
+  {
+   "id": "S06xW2",
+   "feature": "S06",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king distance (K − S)/S",
+   "mechanism": "drift toward the biggest strike",
+   "seen": false
+  },
+  {
+   "id": "S06xW4",
+   "feature": "S06",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king distance (K − S)/S",
+   "mechanism": "drift toward the biggest strike",
+   "seen": false
+  },
+  {
+   "id": "S06xWV",
+   "feature": "S06",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king distance (K − S)/S",
+   "mechanism": "drift toward the biggest strike",
+   "seen": false
+  },
+  {
+   "id": "S07xW1",
+   "feature": "S07",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "|K − S|/S",
+   "mechanism": "no pin → room to run",
+   "seen": false
+  },
+  {
+   "id": "S07xW2",
+   "feature": "S07",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "|K − S|/S",
+   "mechanism": "no pin → room to run",
+   "seen": false
+  },
+  {
+   "id": "S07xW4",
+   "feature": "S07",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "|K − S|/S",
+   "mechanism": "no pin → room to run",
+   "seen": false
+  },
+  {
+   "id": "S07xWV",
+   "feature": "S07",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "|K − S|/S",
+   "mechanism": "no pin → room to run",
+   "seen": false
+  },
+  {
+   "id": "S08xW1",
+   "feature": "S08",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "pinned",
+   "seen": false
+  },
+  {
+   "id": "S08xW2",
+   "feature": "S08",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "pinned",
+   "seen": false
+  },
+  {
+   "id": "S08xW4",
+   "feature": "S08",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "pinned",
+   "seen": false
+  },
+  {
+   "id": "S08xWV",
+   "feature": "S08",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "king gamma positive (1/0)",
+   "mechanism": "pinned",
+   "seen": false
+  },
+  {
+   "id": "S09xW1",
+   "feature": "S09",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentration pins",
+   "seen": false
+  },
+  {
+   "id": "S09xW2",
+   "feature": "S09",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentration pins",
+   "seen": false
+  },
+  {
+   "id": "S09xW4",
+   "feature": "S09",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentration pins",
+   "seen": false
+  },
+  {
+   "id": "S09xWV",
+   "feature": "S09",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentration pins",
+   "seen": false
+  },
+  {
+   "id": "S10xW1",
+   "feature": "S10",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "distance to nearest strong node above",
+   "mechanism": "room above",
+   "seen": false
+  },
+  {
+   "id": "S10xW2",
+   "feature": "S10",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "distance to nearest strong node above",
+   "mechanism": "room above",
+   "seen": false
+  },
+  {
+   "id": "S10xW4",
+   "feature": "S10",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "distance to nearest strong node above",
+   "mechanism": "room above",
+   "seen": false
+  },
+  {
+   "id": "S10xWV",
+   "feature": "S10",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "distance to nearest strong node above",
+   "mechanism": "room above",
+   "seen": false
+  },
+  {
+   "id": "S11xW1",
+   "feature": "S11",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "distance to nearest strong node below",
+   "mechanism": "room below",
+   "seen": false
+  },
+  {
+   "id": "S11xW2",
+   "feature": "S11",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "distance to nearest strong node below",
+   "mechanism": "room below",
+   "seen": false
+  },
+  {
+   "id": "S11xW4",
+   "feature": "S11",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "distance to nearest strong node below",
+   "mechanism": "room below",
+   "seen": false
+  },
+  {
+   "id": "S11xWV",
+   "feature": "S11",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "distance to nearest strong node below",
+   "mechanism": "room below",
+   "seen": false
+  },
+  {
+   "id": "S12xW1",
+   "feature": "S12",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet",
+   "seen": false
+  },
+  {
+   "id": "S12xW2",
+   "feature": "S12",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet",
+   "seen": false
+  },
+  {
+   "id": "S12xW4",
+   "feature": "S12",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet",
+   "seen": false
+  },
+  {
+   "id": "S12xWV",
+   "feature": "S12",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − S, / S",
+   "mechanism": "positive magnet",
+   "seen": false
+  },
+  {
+   "id": "S13xW1",
+   "feature": "S13",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call gamma share",
+   "mechanism": "call-heavy positioning",
+   "seen": false
+  },
+  {
+   "id": "S13xW2",
+   "feature": "S13",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call gamma share",
+   "mechanism": "call-heavy positioning",
+   "seen": false
+  },
+  {
+   "id": "S13xW4",
+   "feature": "S13",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call gamma share",
+   "mechanism": "call-heavy positioning",
+   "seen": false
+  },
+  {
+   "id": "S13xWV",
+   "feature": "S13",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call gamma share",
+   "mechanism": "call-heavy positioning",
+   "seen": false
+  },
+  {
+   "id": "S14xW1",
+   "feature": "S14",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |gamma| ÷ its 8-week mean",
+   "mechanism": "options interest surging",
+   "seen": false
+  },
+  {
+   "id": "S14xW2",
+   "feature": "S14",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |gamma| ÷ its 8-week mean",
+   "mechanism": "options interest surging",
+   "seen": false
+  },
+  {
+   "id": "S14xW4",
+   "feature": "S14",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |gamma| ÷ its 8-week mean",
+   "mechanism": "options interest surging",
+   "seen": false
+  },
+  {
+   "id": "S14xWV",
+   "feature": "S14",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "total |gamma| ÷ its 8-week mean",
+   "mechanism": "options interest surging",
+   "seen": false
+  },
+  {
+   "id": "S15xW1",
+   "feature": "S15",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ 20-day dollar volume",
+   "mechanism": "hedging vs trading",
+   "seen": false
+  },
+  {
+   "id": "S15xW2",
+   "feature": "S15",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ 20-day dollar volume",
+   "mechanism": "hedging vs trading",
+   "seen": false
+  },
+  {
+   "id": "S15xW4",
+   "feature": "S15",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ 20-day dollar volume",
+   "mechanism": "hedging vs trading",
+   "seen": false
+  },
+  {
+   "id": "S15xWV",
+   "feature": "S15",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "net gamma ÷ 20-day dollar volume",
+   "mechanism": "hedging vs trading",
+   "seen": false
+  },
+  {
+   "id": "S16xW1",
+   "feature": "S16",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 z-score vs prior 12 weeks",
+   "mechanism": "regime vs normal",
+   "seen": false
+  },
+  {
+   "id": "S16xW2",
+   "feature": "S16",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 z-score vs prior 12 weeks",
+   "mechanism": "regime vs normal",
+   "seen": false
+  },
+  {
+   "id": "S16xW4",
+   "feature": "S16",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 z-score vs prior 12 weeks",
+   "mechanism": "regime vs normal",
+   "seen": false
+  },
+  {
+   "id": "S16xWV",
+   "feature": "S16",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "S02 z-score vs prior 12 weeks",
+   "mechanism": "regime vs normal",
+   "seen": false
+  },
+  {
+   "id": "S17xW1",
+   "feature": "S17",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows",
+   "seen": false
+  },
+  {
+   "id": "S17xW2",
+   "feature": "S17",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows",
+   "seen": false
+  },
+  {
+   "id": "S17xW4",
+   "feature": "S17",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows",
+   "seen": false
+  },
+  {
+   "id": "S17xWV",
+   "feature": "S17",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows",
+   "seen": false
+  },
+  {
+   "id": "S18xW1",
+   "feature": "S18",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "S18xW2",
+   "feature": "S18",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "S18xW4",
+   "feature": "S18",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "S18xWV",
+   "feature": "S18",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance within ±2%",
+   "mechanism": "local vanna",
+   "seen": false
+  },
+  {
+   "id": "S19xW1",
+   "feature": "S19",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "(vanna above − below) / Σ|vanna|",
+   "mechanism": "vanna skew",
+   "seen": false
+  },
+  {
+   "id": "S19xW2",
+   "feature": "S19",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "(vanna above − below) / Σ|vanna|",
+   "mechanism": "vanna skew",
+   "seen": false
+  },
+  {
+   "id": "S19xW4",
+   "feature": "S19",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "(vanna above − below) / Σ|vanna|",
+   "mechanism": "vanna skew",
+   "seen": false
+  },
+  {
+   "id": "S19xWV",
+   "feature": "S19",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "(vanna above − below) / Σ|vanna|",
+   "mechanism": "vanna skew",
+   "seen": false
+  },
+  {
+   "id": "S20xW1",
+   "feature": "S20",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet",
+   "seen": false
+  },
+  {
+   "id": "S20xW2",
+   "feature": "S20",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet",
+   "seen": false
+  },
+  {
+   "id": "S20xW4",
+   "feature": "S20",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet",
+   "seen": false
+  },
+  {
+   "id": "S20xWV",
+   "feature": "S20",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike − S, / S",
+   "mechanism": "vanna magnet",
+   "seen": false
+  },
+  {
+   "id": "S21xW1",
+   "feature": "S21",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows",
+   "seen": false
+  },
+  {
+   "id": "S21xW2",
+   "feature": "S21",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows",
+   "seen": false
+  },
+  {
+   "id": "S21xW4",
+   "feature": "S21",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows",
+   "seen": false
+  },
+  {
+   "id": "S21xWV",
+   "feature": "S21",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows",
+   "seen": false
+  },
+  {
+   "id": "S22xW1",
+   "feature": "S22",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local decay",
+   "seen": false
+  },
+  {
+   "id": "S22xW2",
+   "feature": "S22",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local decay",
+   "seen": false
+  },
+  {
+   "id": "S22xW4",
+   "feature": "S22",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local decay",
+   "seen": false
+  },
+  {
+   "id": "S22xWV",
+   "feature": "S22",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "charm balance within ±2%",
+   "mechanism": "local decay",
+   "seen": false
+  },
+  {
+   "id": "S23xW1",
+   "feature": "S23",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "net bullish positioning",
+   "seen": false
+  },
+  {
+   "id": "S23xW2",
+   "feature": "S23",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "net bullish positioning",
+   "seen": false
+  },
+  {
+   "id": "S23xW4",
+   "feature": "S23",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "net bullish positioning",
+   "seen": false
+  },
+  {
+   "id": "S23xWV",
+   "feature": "S23",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance Σδ / Σ|δ|",
+   "mechanism": "net bullish positioning",
+   "seen": false
+  },
+  {
+   "id": "S24xW1",
+   "feature": "S24",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowded calls (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "S24xW2",
+   "feature": "S24",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowded calls (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "S24xW4",
+   "feature": "S24",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowded calls (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "S24xWV",
+   "feature": "S24",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta ÷ |put delta|",
+   "mechanism": "crowded calls (contrarian)",
+   "seen": false
+  },
+  {
+   "id": "S25xW1",
+   "feature": "S25",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "S25xW2",
+   "feature": "S25",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "S25xW4",
+   "feature": "S25",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "S25xWV",
+   "feature": "S25",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "local positioning",
+   "seen": false
+  },
+  {
+   "id": "S26xW1",
+   "feature": "S26",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance change over 1 week",
+   "mechanism": "positioning shifting bullish",
+   "seen": false
+  },
+  {
+   "id": "S26xW2",
+   "feature": "S26",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance change over 1 week",
+   "mechanism": "positioning shifting bullish",
+   "seen": false
+  },
+  {
+   "id": "S26xW4",
+   "feature": "S26",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance change over 1 week",
+   "mechanism": "positioning shifting bullish",
+   "seen": false
+  },
+  {
+   "id": "S26xWV",
+   "feature": "S26",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "delta balance change over 1 week",
+   "mechanism": "positioning shifting bullish",
+   "seen": false
+  },
+  {
+   "id": "S27xW1",
+   "feature": "S27",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta growth over 1 week",
+   "mechanism": "call buying",
+   "seen": false
+  },
+  {
+   "id": "S27xW2",
+   "feature": "S27",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta growth over 1 week",
+   "mechanism": "call buying",
+   "seen": false
+  },
+  {
+   "id": "S27xW4",
+   "feature": "S27",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta growth over 1 week",
+   "mechanism": "call buying",
+   "seen": false
+  },
+  {
+   "id": "S27xWV",
+   "feature": "S27",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta growth over 1 week",
+   "mechanism": "call buying",
+   "seen": false
+  },
+  {
+   "id": "S28xW1",
+   "feature": "S28",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "put delta growth over 1 week",
+   "mechanism": "put buying / hedging",
+   "seen": false
+  },
+  {
+   "id": "S28xW2",
+   "feature": "S28",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "put delta growth over 1 week",
+   "mechanism": "put buying / hedging",
+   "seen": false
+  },
+  {
+   "id": "S28xW4",
+   "feature": "S28",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "put delta growth over 1 week",
+   "mechanism": "put buying / hedging",
+   "seen": false
+  },
+  {
+   "id": "S28xWV",
+   "feature": "S28",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "put delta growth over 1 week",
+   "mechanism": "put buying / hedging",
+   "seen": false
+  },
+  {
+   "id": "S29xW1",
+   "feature": "S29",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S01 change over 1 week",
+   "mechanism": "gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S29xW2",
+   "feature": "S29",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S01 change over 1 week",
+   "mechanism": "gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S29xW4",
+   "feature": "S29",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S01 change over 1 week",
+   "mechanism": "gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S29xWV",
+   "feature": "S29",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S01 change over 1 week",
+   "mechanism": "gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S30xW1",
+   "feature": "S30",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 change over 1 week",
+   "mechanism": "local gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S30xW2",
+   "feature": "S30",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 change over 1 week",
+   "mechanism": "local gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S30xW4",
+   "feature": "S30",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 change over 1 week",
+   "mechanism": "local gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S30xWV",
+   "feature": "S30",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "S02 change over 1 week",
+   "mechanism": "local gamma shift",
+   "seen": false
+  },
+  {
+   "id": "S31xW1",
+   "feature": "S31",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king strike moved up over 1 week (/ S)",
+   "mechanism": "escalator",
+   "seen": false
+  },
+  {
+   "id": "S31xW2",
+   "feature": "S31",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king strike moved up over 1 week (/ S)",
+   "mechanism": "escalator",
+   "seen": false
+  },
+  {
+   "id": "S31xW4",
+   "feature": "S31",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king strike moved up over 1 week (/ S)",
+   "mechanism": "escalator",
+   "seen": false
+  },
+  {
+   "id": "S31xWV",
+   "feature": "S31",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king strike moved up over 1 week (/ S)",
+   "mechanism": "escalator",
+   "seen": false
+  },
+  {
+   "id": "S32xW1",
+   "feature": "S32",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |gamma| change over 1 week",
+   "mechanism": "options interest change",
+   "seen": false
+  },
+  {
+   "id": "S32xW2",
+   "feature": "S32",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |gamma| change over 1 week",
+   "mechanism": "options interest change",
+   "seen": false
+  },
+  {
+   "id": "S32xW4",
+   "feature": "S32",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |gamma| change over 1 week",
+   "mechanism": "options interest change",
+   "seen": false
+  },
+  {
+   "id": "S32xWV",
+   "feature": "S32",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "ln total |gamma| change over 1 week",
+   "mechanism": "options interest change",
+   "seen": false
+  },
+  {
+   "id": "S33xW1",
+   "feature": "S33",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance change over 1 week",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "S33xW2",
+   "feature": "S33",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance change over 1 week",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "S33xW4",
+   "feature": "S33",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance change over 1 week",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "S33xWV",
+   "feature": "S33",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "vanna balance change over 1 week",
+   "mechanism": "vanna shift",
+   "seen": false
+  },
+  {
+   "id": "S34xW1",
+   "feature": "S34",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |delta| change over 1 week",
+   "mechanism": "positioning growth",
+   "seen": false
+  },
+  {
+   "id": "S34xW2",
+   "feature": "S34",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |delta| change over 1 week",
+   "mechanism": "positioning growth",
+   "seen": false
+  },
+  {
+   "id": "S34xW4",
+   "feature": "S34",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "ln total |delta| change over 1 week",
+   "mechanism": "positioning growth",
+   "seen": false
+  },
+  {
+   "id": "S34xWV",
+   "feature": "S34",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "ln total |delta| change over 1 week",
+   "mechanism": "positioning growth",
+   "seen": false
+  },
+  {
+   "id": "S35xW1",
+   "feature": "S35",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta change over 4 weeks",
+   "mechanism": "sustained call accumulation",
+   "seen": false
+  },
+  {
+   "id": "S35xW2",
+   "feature": "S35",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta change over 4 weeks",
+   "mechanism": "sustained call accumulation",
+   "seen": false
+  },
+  {
+   "id": "S35xW4",
+   "feature": "S35",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta change over 4 weeks",
+   "mechanism": "sustained call accumulation",
+   "seen": false
+  },
+  {
+   "id": "S35xWV",
+   "feature": "S35",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta change over 4 weeks",
+   "mechanism": "sustained call accumulation",
+   "seen": false
+  },
+  {
+   "id": "S36xW1",
+   "feature": "S36",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "1-week return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "S36xW2",
+   "feature": "S36",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "1-week return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "S36xW4",
+   "feature": "S36",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "1-week return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "S36xWV",
+   "feature": "S36",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "1-week return",
+   "mechanism": "weekly reversal",
+   "seen": false
+  },
+  {
+   "id": "S37xW1",
+   "feature": "S37",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "4-week return",
+   "mechanism": "short momentum",
+   "seen": false
+  },
+  {
+   "id": "S37xW2",
+   "feature": "S37",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "4-week return",
+   "mechanism": "short momentum",
+   "seen": false
+  },
+  {
+   "id": "S37xW4",
+   "feature": "S37",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "4-week return",
+   "mechanism": "short momentum",
+   "seen": false
+  },
+  {
+   "id": "S37xWV",
+   "feature": "S37",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "4-week return",
+   "mechanism": "short momentum",
+   "seen": false
+  },
+  {
+   "id": "S38xW1",
+   "feature": "S38",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "12-week return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "S38xW2",
+   "feature": "S38",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "12-week return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "S38xW4",
+   "feature": "S38",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "12-week return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "S38xWV",
+   "feature": "S38",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "12-week return",
+   "mechanism": "momentum",
+   "seen": false
+  },
+  {
+   "id": "S39xW1",
+   "feature": "S39",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "S39xW2",
+   "feature": "S39",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "S39xW4",
+   "feature": "S39",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "S39xWV",
+   "feature": "S39",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "price ÷ 20-day average − 1",
+   "mechanism": "stretch",
+   "seen": false
+  },
+  {
+   "id": "S40xW1",
+   "feature": "S40",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "last week dollar volume ÷ 12-week average",
+   "mechanism": "attention spike",
+   "seen": false
+  },
+  {
+   "id": "S40xW2",
+   "feature": "S40",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "last week dollar volume ÷ 12-week average",
+   "mechanism": "attention spike",
+   "seen": false
+  },
+  {
+   "id": "S40xW4",
+   "feature": "S40",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "last week dollar volume ÷ 12-week average",
+   "mechanism": "attention spike",
+   "seen": false
+  },
+  {
+   "id": "S40xWV",
+   "feature": "S40",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "last week dollar volume ÷ 12-week average",
+   "mechanism": "attention spike",
+   "seen": false
+  },
+  {
+   "id": "S41xW1",
+   "feature": "S41",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "realized volatility (4 weeks)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "S41xW2",
+   "feature": "S41",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "realized volatility (4 weeks)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "S41xW4",
+   "feature": "S41",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "realized volatility (4 weeks)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "S41xWV",
+   "feature": "S41",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "realized volatility (4 weeks)",
+   "mechanism": "low-volatility anomaly",
+   "seen": false
+  },
+  {
+   "id": "S42xW1",
+   "feature": "S42",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "S42xW2",
+   "feature": "S42",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "S42xW4",
+   "feature": "S42",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "S42xWV",
+   "feature": "S42",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "price ÷ 52-week high",
+   "mechanism": "52-week-high effect",
+   "seen": false
+  },
+  {
+   "id": "S43xW1",
+   "feature": "S43",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "4-week return minus the 300-stock average",
+   "mechanism": "relative strength",
+   "seen": false
+  },
+  {
+   "id": "S43xW2",
+   "feature": "S43",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "4-week return minus the 300-stock average",
+   "mechanism": "relative strength",
+   "seen": false
+  },
+  {
+   "id": "S43xW4",
+   "feature": "S43",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "4-week return minus the 300-stock average",
+   "mechanism": "relative strength",
+   "seen": false
+  },
+  {
+   "id": "S43xWV",
+   "feature": "S43",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "4-week return minus the 300-stock average",
+   "mechanism": "relative strength",
+   "seen": false
+  },
+  {
+   "id": "S44xW1",
+   "feature": "S44",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "max daily return (4 weeks)",
+   "mechanism": "lottery",
+   "seen": false
+  },
+  {
+   "id": "S44xW2",
+   "feature": "S44",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "max daily return (4 weeks)",
+   "mechanism": "lottery",
+   "seen": false
+  },
+  {
+   "id": "S44xW4",
+   "feature": "S44",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "max daily return (4 weeks)",
+   "mechanism": "lottery",
+   "seen": false
+  },
+  {
+   "id": "S44xWV",
+   "feature": "S44",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "max daily return (4 weeks)",
+   "mechanism": "lottery",
+   "seen": false
+  },
+  {
+   "id": "S45xW1",
+   "feature": "S45",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call-heavy delta and uptrend (both 1/0)",
+   "mechanism": "chasing confirmed",
+   "seen": false
+  },
+  {
+   "id": "S45xW2",
+   "feature": "S45",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call-heavy delta and uptrend (both 1/0)",
+   "mechanism": "chasing confirmed",
+   "seen": false
+  },
+  {
+   "id": "S45xW4",
+   "feature": "S45",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call-heavy delta and uptrend (both 1/0)",
+   "mechanism": "chasing confirmed",
+   "seen": false
+  },
+  {
+   "id": "S45xWV",
+   "feature": "S45",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call-heavy delta and uptrend (both 1/0)",
+   "mechanism": "chasing confirmed",
+   "seen": false
+  },
+  {
+   "id": "S46xW1",
+   "feature": "S46",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "short gamma and downtrend (1/0)",
+   "mechanism": "air pocket",
+   "seen": false
+  },
+  {
+   "id": "S46xW2",
+   "feature": "S46",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "short gamma and downtrend (1/0)",
+   "mechanism": "air pocket",
+   "seen": false
+  },
+  {
+   "id": "S46xW4",
+   "feature": "S46",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "short gamma and downtrend (1/0)",
+   "mechanism": "air pocket",
+   "seen": false
+  },
+  {
+   "id": "S46xWV",
+   "feature": "S46",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "short gamma and downtrend (1/0)",
+   "mechanism": "air pocket",
+   "seen": false
+  },
+  {
+   "id": "S47xW1",
+   "feature": "S47",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king above spot and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "S47xW2",
+   "feature": "S47",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king above spot and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "S47xW4",
+   "feature": "S47",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king above spot and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "S47xWV",
+   "feature": "S47",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "king above spot and positive (1/0)",
+   "mechanism": "upside magnet",
+   "seen": false
+  },
+  {
+   "id": "S48xW1",
+   "feature": "S48",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "king below spot and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "S48xW2",
+   "feature": "S48",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "king below spot and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "S48xW4",
+   "feature": "S48",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "king below spot and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "S48xWV",
+   "feature": "S48",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "king below spot and positive (1/0)",
+   "mechanism": "downside magnet",
+   "seen": false
+  },
+  {
+   "id": "S49xW1",
+   "feature": "S49",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike above spot (1/0)",
+   "mechanism": "vanna pull up",
+   "seen": false
+  },
+  {
+   "id": "S49xW2",
+   "feature": "S49",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike above spot (1/0)",
+   "mechanism": "vanna pull up",
+   "seen": false
+  },
+  {
+   "id": "S49xW4",
+   "feature": "S49",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike above spot (1/0)",
+   "mechanism": "vanna pull up",
+   "seen": false
+  },
+  {
+   "id": "S49xWV",
+   "feature": "S49",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "largest |vanna| strike above spot (1/0)",
+   "mechanism": "vanna pull up",
+   "seen": false
+  },
+  {
+   "id": "S50xW1",
+   "feature": "S50",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "v5 bottleneck score",
+   "mechanism": "fundamental demand (seen)",
+   "seen": true
+  },
+  {
+   "id": "S50xW2",
+   "feature": "S50",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "v5 bottleneck score",
+   "mechanism": "fundamental demand (seen)",
+   "seen": true
+  },
+  {
+   "id": "S50xW4",
+   "feature": "S50",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "v5 bottleneck score",
+   "mechanism": "fundamental demand (seen)",
+   "seen": true
+  },
+  {
+   "id": "S50xWV",
+   "feature": "S50",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "v5 bottleneck score",
+   "mechanism": "fundamental demand (seen)",
+   "seen": true
+  },
+  {
+   "id": "S51xW1",
+   "feature": "S51",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "revenue acceleration",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "S51xW2",
+   "feature": "S51",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "revenue acceleration",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "S51xW4",
+   "feature": "S51",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "revenue acceleration",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "S51xWV",
+   "feature": "S51",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "revenue acceleration",
+   "mechanism": "inflection",
+   "seen": false
+  },
+  {
+   "id": "S52xW1",
+   "feature": "S52",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "put/call gamma ratio change over 1 week",
+   "mechanism": "hedging demand shift",
+   "seen": false
+  },
+  {
+   "id": "S52xW2",
+   "feature": "S52",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "put/call gamma ratio change over 1 week",
+   "mechanism": "hedging demand shift",
+   "seen": false
+  },
+  {
+   "id": "S52xW4",
+   "feature": "S52",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "put/call gamma ratio change over 1 week",
+   "mechanism": "hedging demand shift",
+   "seen": false
+  },
+  {
+   "id": "S52xWV",
+   "feature": "S52",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "put/call gamma ratio change over 1 week",
+   "mechanism": "hedging demand shift",
+   "seen": false
+  },
+  {
+   "id": "S53xW1",
+   "feature": "S53",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |delta| ÷ market cap",
+   "mechanism": "options footprint",
+   "seen": false
+  },
+  {
+   "id": "S53xW2",
+   "feature": "S53",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |delta| ÷ market cap",
+   "mechanism": "options footprint",
+   "seen": false
+  },
+  {
+   "id": "S53xW4",
+   "feature": "S53",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "total |delta| ÷ market cap",
+   "mechanism": "options footprint",
+   "seen": false
+  },
+  {
+   "id": "S53xWV",
+   "feature": "S53",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "total |delta| ÷ market cap",
+   "mechanism": "options footprint",
+   "seen": false
+  },
+  {
+   "id": "S54xW1",
+   "feature": "S54",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ market cap",
+   "mechanism": "hedging relative to size",
+   "seen": false
+  },
+  {
+   "id": "S54xW2",
+   "feature": "S54",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ market cap",
+   "mechanism": "hedging relative to size",
+   "seen": false
+  },
+  {
+   "id": "S54xW4",
+   "feature": "S54",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net gamma ÷ market cap",
+   "mechanism": "hedging relative to size",
+   "seen": false
+  },
+  {
+   "id": "S54xWV",
+   "feature": "S54",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "-",
+   "definition": "net gamma ÷ market cap",
+   "mechanism": "hedging relative to size",
+   "seen": false
+  },
+  {
+   "id": "S55xW1",
+   "feature": "S55",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net vanna ÷ market cap",
+   "mechanism": "vanna relative to size",
+   "seen": false
+  },
+  {
+   "id": "S55xW2",
+   "feature": "S55",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net vanna ÷ market cap",
+   "mechanism": "vanna relative to size",
+   "seen": false
+  },
+  {
+   "id": "S55xW4",
+   "feature": "S55",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net vanna ÷ market cap",
+   "mechanism": "vanna relative to size",
+   "seen": false
+  },
+  {
+   "id": "S55xWV",
+   "feature": "S55",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "net vanna ÷ market cap",
+   "mechanism": "vanna relative to size",
+   "seen": false
+  },
+  {
+   "id": "S56xW1",
+   "feature": "S56",
+   "outcome": "W1",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call delta ÷ market cap",
+   "mechanism": "call footprint",
+   "seen": false
+  },
+  {
+   "id": "S56xW2",
+   "feature": "S56",
+   "outcome": "W2",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call delta ÷ market cap",
+   "mechanism": "call footprint",
+   "seen": false
+  },
+  {
+   "id": "S56xW4",
+   "feature": "S56",
+   "outcome": "W4",
+   "horizon": "short",
+   "sign": "?",
+   "definition": "call delta ÷ market cap",
+   "mechanism": "call footprint",
+   "seen": false
+  },
+  {
+   "id": "S56xWV",
+   "feature": "S56",
+   "outcome": "WV",
+   "horizon": "short",
+   "sign": "+",
+   "definition": "call delta ÷ market cap",
+   "mechanism": "call footprint",
+   "seen": false
+  }
+ ]
+}
