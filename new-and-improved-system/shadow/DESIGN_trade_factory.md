@@ -62,8 +62,8 @@ Engine `trade_factory.mjs` independently audited before its single run; amendmen
   prior-day / premarket highs and lows); premarket levels use bars with volume only.
 - No entries before 09:35 for FAD and RCL. Intrabar triggers (FAD, RCL) and their VWAP filter read VWAP through the
   previous bar. FAD signals whose fill is already beyond the stop are skipped. RCL re-arm is checked before any skip.
-- VW = "the first signal that is on the VWAP side of the trade". The 9 VWAP × VW rules are dropped (BRK/RET identical to
-  ALL by construction; FAD impossible): **495 rules**.
+- VW = "the first signal that is on the VWAP side of the trade". All 12 VWAP × VW rules are dropped (BRK/RET identical to
+  ALL by construction; FAD impossible; RCL dropped with them by the same filter): **492 rules**.
 - RET = any breakout of the level that day (not only the first) with a retest within 60 minutes; a close back through
   between break and retest does not cancel it. NXT with no valid target skips that rule's day.
 - Half days are kept (EOD exit at their last bar). GAM's z-score needs 40 prior days, so GAM rules start 2024-01-09.
