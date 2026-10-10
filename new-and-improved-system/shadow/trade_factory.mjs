@@ -9,7 +9,7 @@ import path from 'node:path';
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache');
 const OUT = path.join(SH, 'results_trade_factory'), SMOKE = process.argv.includes('--smoke');
 if (!SMOKE && fs.existsSync(path.join(OUT, 'summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
-const REG = JSON.parse(fs.readFileSync(path.join(SH, 'trade_registry.json'), 'utf8')).rules;
+const REG = JSON.parse(fs.readFileSync(path.join(SH, 'trade_registry.json'), 'utf8')).rules.filter((r) => !(r.level === 'VWAP' && r.filter === 'VW')); // amendment 1: 9 degenerate rules dropped
 const SYMS = ['SPY', 'QQQ', 'IWM', 'DIA'], BUILD_END = '2025-03-31', HOLD_START = '2025-04-01', GAMMA_START = '2023-11-09';
 const P = { STOP: 0.001, SWEEP: 0.0001, PAD: 0.000033, MINSTOP: 0.000165, MAXRISK: 0.00165, FRONT: 0.000033, COST: 0.01, LAST_ENTRY: 930, EOD: 955, FIRST: 575 };
 const log = (s) => console.error(`${new Date().toISOString().slice(11, 19)} ${s}`);
@@ -36,13 +36,20 @@ function gammaInfo(G, days, closeOf) { const bal = new Map(), lv = new Map();
 function loadDays(T) {
   const { dir, files } = dayFiles(T); const out = [];
   for (const f of files) { const d = f.slice(0, 10), raw = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-    const reg = raw.filter((b) => b.m === 'r').map((b) => ({ ...b, etm: etMin(b.t, d) })).filter((b) => b.etm >= 570 && b.etm < 960);
-    const pre = raw.filter((b) => b.m === 'pr').map((b) => ({ ...b, etm: etMin(b.t, d) })).filter((b) => b.etm < 570);
-    if (reg.length < 300) { out.push({ d, skip: true }); continue; } out.push({ d, reg, pre }); }
+    let reg = raw.filter((b) => b.m === 'r').map((b) => ({ ...b, etm: etMin(b.t, d) })).filter((b) => b.etm >= 570 && b.etm < 960);
+    let pre = raw.filter((b) => b.m === 'pr' && b.v > 0).map((b) => ({ ...b, etm: etMin(b.t, d) })).filter((b) => b.etm < 570);
+    if (reg.length < 200) { out.push({ d, skip: true }); continue; } // amendment 1: half days kept (≥ 200 bars)
+    // amendment 1: one bar per minute — fill missing regular minutes with flat bars at the previous close (v = 0)
+    const filled = [reg[0]]; for (let i = 1; i < reg.length; i++) { for (let m = filled.at(-1).etm + 1; m < reg[i].etm; m++) { const c0 = filled.at(-1).c; filled.push({ t: filled.at(-1).t + 60, o: c0, h: c0, l: c0, c: c0, v: 0, m: 'r', etm: m }); } filled.push(reg[i]); } reg = filled;
+    // amendment 1: clip isolated bad-print wicks to 0.2% beyond the bar's own and neighbours' open/close
+    const clip = (a) => a.map((b, i) => { const ref = [b.o, b.c, a[i - 1]?.c, a[i + 1]?.c].filter(Number.isFinite), hi = Math.max(...ref) * 1.002, lo = Math.min(...ref) * 0.998; return { ...b, h: Math.min(b.h, hi), l: Math.max(b.l, lo) }; });
+    reg = clip(reg); pre = clip(pre);
+    out.push({ d, reg, pre }); }
   return out; }
 
 // ---------- signal detection for one (day, level, trigger); levels object: name → number | Float64Array (per-bar VWAP) ----------
 const lvlAt = (L, i) => (typeof L === 'number' ? L : L[i]);
+const lvlPrev = (L, i) => (typeof L === 'number' ? L : L[Math.max(0, i - 1)]); // amendment 1: intrabar triggers use VWAP through the previous bar
 function signals(day, L, trig, avail) { // avail = first bar index at which the level exists
   const B = day.reg, out = [];
   if (trig === 'BRK' || trig === 'RET') {
@@ -54,17 +61,17 @@ function signals(day, L, trig, avail) { // avail = first bar index at which the 
         if ((dir > 0 ? lo <= lk && B[k].c > lk : hi >= lk && B[k].c < lk) && B[k].etm + 1 <= P.LAST_ENTRY) { out.push({ i: k, dir, entry: B[k].c, stop: lk * (1 - dir * P.STOP), lvl: lk }); break; } }
       if (trig === 'RET' && out.length) break; } }
   else if (trig === 'RCL') { let armed = true, W = null;
-    for (let i = Math.max(avail, 1); i < B.length; i++) { const b = B[i], lv = lvlAt(L, i); if (!Number.isFinite(lv)) continue;
-      if (!W && armed) { let side = 0; if (B[i - 1].c > lv && b.l <= lv) side = 1; else if (B[i - 1].c < lv && b.h >= lv) side = -1; if (side) { W = { side, tap: b.etm, ext: side > 0 ? b.l : b.h, lv }; armed = false; } }
+    for (let i = Math.max(avail, 1); i < B.length; i++) { const b = B[i], lv = lvlPrev(L, i); if (!Number.isFinite(lv)) continue;
+      if (!armed && !W && Math.abs(B[i - 1].c - lv) / lv >= 0.001) armed = true; // amendment 1: re-arm checked before any continue
+      if (!W && armed && b.etm >= P.FIRST - 3) { let side = 0; if (B[i - 1].c > lv && b.l <= lv) side = 1; else if (B[i - 1].c < lv && b.h >= lv) side = -1; if (side) { W = { side, tap: b.etm, ext: side > 0 ? b.l : b.h, lv }; armed = false; } }
       if (W) { W.ext = W.side > 0 ? Math.min(W.ext, b.l) : Math.max(W.ext, b.h); const swept = W.side * (W.lv - W.ext) / W.lv >= P.SWEEP, end = b.etm + 1;
         if (end > W.tap + 15 || end > P.LAST_ENTRY) { W = null; continue; }
-        if ((end - 570) % 3 === 0 && swept && W.side * (b.c - W.lv) > 0) { const stop = W.side > 0 ? Math.min(W.ext * (1 - P.PAD), W.lv * (1 - P.MINSTOP)) : Math.max(W.ext * (1 + P.PAD), W.lv * (1 + P.MINSTOP));
-          if (Math.abs(b.c - stop) / b.c <= P.MAXRISK) out.push({ i, dir: W.side, entry: b.c, stop, lvl: W.lv }); W = null; } }
-      if (!armed && !W && Math.abs(b.c - lv) / lv >= 0.001) armed = true; } }
+        if ((end - 570) % 3 === 0 && swept && W.side * (b.c - W.lv) > 0 && b.etm + 1 >= P.FIRST) { const stop = W.side > 0 ? Math.min(W.ext * (1 - P.PAD), W.lv * (1 - P.MINSTOP)) : Math.max(W.ext * (1 + P.PAD), W.lv * (1 + P.MINSTOP));
+          if (Math.abs(b.c - stop) / b.c <= P.MAXRISK) out.push({ i, dir: W.side, entry: b.c, stop, lvl: W.lv }); W = null; } } } }
   else if (trig === 'FAD') { const seen = { 1: false, '-1': false };
-    for (let i = Math.max(avail, 1); i < B.length; i++) { const b = B[i], lv = lvlAt(L, i); if (!Number.isFinite(lv) || b.etm > P.LAST_ENTRY) continue;
+    for (let i = Math.max(avail, 1); i < B.length; i++) { const b = B[i], lv = lvlPrev(L, i); if (!Number.isFinite(lv) || b.etm > P.LAST_ENTRY || b.etm < P.FIRST) continue;
       for (const side of [1, -1]) { if (seen[side]) continue; const prev = B[i - 1].c; if (side > 0 ? prev > lv && b.l <= lv : prev < lv && b.h >= lv) { seen[side] = true;
-        const fill = side > 0 ? Math.min(lv, b.o) : Math.max(lv, b.o), stop = lv * (1 - side * P.STOP); out.push({ i, dir: side, entry: fill, stop, lvl: lv, fillBar: true }); } } } }
+        const fill = side > 0 ? Math.min(lv, b.o) : Math.max(lv, b.o), stop = lv * (1 - side * P.STOP); if (side * (fill - stop) > 0) out.push({ i, dir: side, entry: fill, stop, lvl: lv, fillBar: true }); } } } }
   return out.sort((a, b) => a.i - b.i); }
 
 // ---------- exit simulation (1-minute path after entry) ----------
@@ -101,14 +108,14 @@ if (SMOKE) for (const T of Object.keys(DATA)) DATA[T].days = DATA[T].days.slice(
 function runDay(T, idx, twinK = null) { const { days, gi } = DATA[T], day = days[idx]; if (day.skip) return []; const prev = days[idx - 1]?.skip ? null : days[idx - 1];
   const dPrev = prev?.d, glv = dPrev ? gi.lv.get(dPrev) : null, z = dPrev ? gi.z.get(dPrev) : undefined;
   const { lv, avail } = dayLevels(day, prev, glv);
-  if (twinK != null) { for (const k of Object.keys(lv)) { const r = rng(`${T}|${day.d}|${k}|${twinK}`), u = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); lv[k] = shift(lv[k], u); } }
+  const realVW = lv.VWAP; if (twinK != null) { for (const k of Object.keys(lv)) { const r = rng(`${T}|${day.d}|${k}|${twinK}`), u = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); lv[k] = shift(lv[k], u); } }
   const res = [], cache = new Map();
   for (const rule of REG) { if (twinK != null && !twinsWanted.has(rule.id)) continue; const L = lv[rule.level]; if (L == null) continue;
     if (rule.gammaStart && day.d < GAMMA_START) continue;
     if (rule.filter === 'GAM') { if (!Number.isFinite(z) || !Number.isFinite(gammaMedian[T])) continue; const brk = rule.trigger === 'BRK' || rule.trigger === 'RET'; if (brk ? !(z < gammaMedian[T]) : !(z > gammaMedian[T])) continue; }
     const key = rule.level + '|' + rule.trigger; if (!cache.has(key)) cache.set(key, signals(day, L, rule.trigger, avail[rule.level] ?? 1));
     for (const s of cache.get(key)) {
-      if (rule.filter === 'VW') { const vw = lv.VWAP ? lv.VWAP[s.i] : NaN; if (!Number.isFinite(vw) || s.dir * (s.entry - vw) <= 0) continue; }
+      if (rule.filter === 'VW') { const vw = realVW ? realVW[s.fillBar || rule.trigger === 'RCL' ? Math.max(0, s.i - 1) : s.i] : NaN; if (!Number.isFinite(vw) || s.dir * (s.entry - vw) <= 0) continue; }
       let target = null; const risk = Math.abs(s.entry - s.stop);
       if (rule.exit === 'T2') target = s.entry + s.dir * 2 * risk;
       else if (rule.exit === 'NXT') { const cand = ALL_LEVELS.filter((k) => k !== rule.level && k !== 'VWAP' && lv[k] != null && (STATIC.has(k) || (avail[k] ?? 1e9) <= s.i)).map((k) => lv[k]).filter((x) => s.dir * (x - s.entry) > 0).sort((a, b) => s.dir * (a - b));
@@ -131,7 +138,7 @@ const k2 = bh(surv.map((r) => r.p2), 0.10); surv.forEach((r, i) => { r.passBH = 
 for (const r of surv.filter((x) => x.passBH)) twinsWanted.add(r.id);
 const TW = new Map([...twinsWanted].map((id) => [id, Array.from({ length: 20 }, () => [])]));
 if (twinsWanted.size) for (const T of Object.keys(DATA)) for (let i = 1; i < DATA[T].days.length; i++) { if (DATA[T].days[i].skip || DATA[T].days[i].d < HOLD_START) continue; for (let k = 0; k < 20; k++) for (const x of runDay(T, i, k)) TW.get(x.id)[k].push(x); }
-for (const r of surv.filter((x) => x.passBH)) { const tm = TW.get(r.id).map((a) => mean(a.map((x) => x.R))); r.twinBeat = tm.filter((m) => r.h.m > m).length; r.twinMed = tm.sort((a, b) => a - b)[10];
+for (const r of surv.filter((x) => x.passBH)) { const tm = TW.get(r.id).map((a) => mean(a.map((x) => x.R))); r.twinBeat = tm.filter((m) => Number.isFinite(m) && r.h.m > m).length; const tf = tm.filter(Number.isFinite).sort((a, b) => a - b); r.twinMed = tf[tf.length >> 1];
   const hold = r.all.filter((x) => x.d >= HOLD_START); r.bySym = Object.fromEntries(SYMS.map((T) => [T, stats(hold.filter((x) => x.T === T))])); r.cost2 = stats(hold.map((x) => ({ ...x, R: x.R - (2 * P.COST) / x.risk }))); } // $0.02/side = one more cent each way
 surv.forEach((r) => { r.validated = !!r.passBH && r.twinBeat >= 19; });
 // ---------- report ----------
