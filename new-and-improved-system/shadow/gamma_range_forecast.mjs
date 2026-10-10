@@ -41,7 +41,7 @@ for (const sym of already || sessionOpen ? [] : ['SPY', 'QQQ']) {
   let vix = VIXF[asOf], vixSrc = 'FRED'; if (vix == null) { // Cboe's free daily file (same values as FRED, published sooner); UW needs a Cboe licence for VIX
     const t = await (await fetch('https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv', { headers: { 'User-Agent': 'Mozilla/5.0' } })).text();
     const [m, d, y] = [asOf.slice(5, 7), asOf.slice(8, 10), asOf.slice(0, 4)], row = t.split('\n').find((l) => l.startsWith(`${m}/${d}/${y},`)); if (row) { vix = +row.split(',')[4]; vixSrc = 'Cboe'; } }
-  if (vix == null) throw new Error(`no VIX close for ${asOf}`);
+  if (vix == null) { console.error(`no VIX close for ${asOf} yet — forecast skipped, grading only (re-run later)`); L.length = 0; break; }
   const x = [1, sym === 'QQQ' ? 1 : 0, B, Math.log(rp(i)), Math.log(m20), Math.log(vix)], yhat = x.reduce((s, v, a) => s + v * beta[a], 0);
   const mid = Math.exp(yhat), lo = Math.exp(yhat - sd), hi = Math.exp(yhat + sd), pctB = P[sym].filter((r) => r.B <= B).length / P[sym].length;
   L.push({ sym, asOf, close: c, B, pctB, vix, vixSrc, m20, prev: rp(i), mid, lo, hi });
