@@ -13,7 +13,7 @@ import { splitEvents, adjustedBars, factorAt, nearEvent } from './weekly_basis.m
 
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache'), GW = path.join(C, 'uwgreeks_w');
 const OUT = path.join(SH, 'results_stock_factory'), SMOKE = process.argv.includes('--smoke');
-if (!SMOKE && !process.argv.includes('--beyond') && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+if (!SMOKE && !process.argv.includes('--beyond') && !process.argv.includes('--asym') && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
 const REG = JSON.parse(fs.readFileSync(path.join(SH, 'stock_registry.json'), 'utf8')).hypotheses.filter((h) => h.horizon === 'short' && h.feature !== 'S43'); // amendment 2: S43 duplicated S37's ranks
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
@@ -127,6 +127,14 @@ log(`${PANEL.length} weekly cross-sections, median ${median(PANEL.map((p) => p.R
 if (SMOKE) { const m = PANEL.at(-30); console.log(JSON.stringify({ weeks: PANEL.length, stocks: PANEL.map((p) => p.R.size).filter((_, i) => i % 20 === 0), coverage: Object.fromEntries(FEATS.map((k) => [k, +([...m.R.values()].filter((x) => Number.isFinite(x.f[FI.get(k)])).length / m.R.size).toFixed(2)])), fwd: Object.fromEntries(Object.entries(m.fwd).map(([k, v]) => [k, v ? v.size : null])) })); process.exit(0); }
 
 
+if (process.argv.includes('--asym')) { // exploratory (not pre-registered): vanna vs top-10% and bottom-10% 4-week returns, by fifth of the feature
+  for (const fk of ['S17', 'S55', 'S19', 'S41']) { for (const [name, set] of [['build', (m) => WEEKS[m.wi + 4] && WEEKS[m.wi + 4] <= BUILD_END], ['holdout', (m) => m.M >= HOLD_START]]) {
+    const q = [0, 1, 2, 3, 4].map(() => ({ up: 0, dn: 0, n: 0, r: [] }));
+    for (const m of PANEL) { if (!set(m)) continue; const v = [...m.R].filter(([, x]) => Number.isFinite(x.o.W4) && Number.isFinite(x.f[FI.get(fk)])); if (v.length < 50) continue;
+      const rs = v.map(([, x]) => x.o.W4).sort((a, b) => a - b), hi = rs[Math.floor(0.9 * (rs.length - 1))], lo = rs[Math.floor(0.1 * (rs.length - 1))], mu = mean(rs);
+      const ord = v.sort((a, b) => a[1].f[FI.get(fk)] - b[1].f[FI.get(fk)]); ord.forEach(([, x], k) => { const b = Math.min(4, Math.floor((5 * k) / ord.length)); q[b].n++; if (x.o.W4 >= hi) q[b].up++; if (x.o.W4 <= lo) q[b].dn++; q[b].r.push(x.o.W4 - mu); }); }
+    console.log(`${fk} ${name}: ` + q.map((b, k) => `Q${k + 1} up ${(100 * b.up / b.n).toFixed(1)}% / down ${(100 * b.dn / b.n).toFixed(1)}% / excess ${(100 * mean(b.r)).toFixed(2)}%`).join(' | ')); } }
+  process.exit(0); }
 if (process.argv.includes('--beyond')) { // exploratory (not pre-registered): S17 beyond S41 + S44 + S53, holdout weeks
   const rankArr = (a) => { const o = a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]), r = new Array(a.length); for (let i = 0; i < o.length;) { let k = i; while (k + 1 < o.length && o[k + 1][0] === o[i][0]) k++; for (let q = i; q <= k; q++) r[o[q][1]] = (i + k) / 2; i = k + 1; } return r; };
   const solveL = (A, b) => { const n = A.length, M = A.map((r, i) => [...r, b[i]]); for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]]; for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; } } return M.map((r, i) => r[n] / r[i]); };

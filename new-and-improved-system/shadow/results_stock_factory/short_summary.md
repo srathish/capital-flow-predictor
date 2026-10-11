@@ -44,3 +44,4 @@ Run 2026-10-11T00:44:17.797Z · design shadow/DESIGN_stock_factory.md · 220 stu
 
 ## Exploratory follow-up (not pre-registered, 2026-10-11)
 Vanna balance (S17) beyond realized vol (S41), max daily return (S44) and options footprint (S53), weekly cross-sectional rank regression on WV: build t 2.05 (82 weeks), holdout t 6.86 (62 weeks). Vanna is not just a volatility proxy. Run: `node shadow/stock_factory_short.mjs --beyond`.
+- Exploratory (2026-10-11): vanna does NOT predict direction. Top fifth by vanna balance (S17): 17.0% big winners vs 17.0% big losers on the holdout (bottom fifth 4.1% / 5.2%); average excess +0.1%. It is a big-move-either-way signal (fits long straddles, not calls). `--asym` flag.
