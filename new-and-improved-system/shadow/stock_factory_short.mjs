@@ -13,7 +13,7 @@ import { splitEvents, adjustedBars, factorAt, nearEvent } from './weekly_basis.m
 
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache'), GW = path.join(C, 'uwgreeks_w');
 const OUT = path.join(SH, 'results_stock_factory'), SMOKE = process.argv.includes('--smoke');
-if (!SMOKE && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+if (!SMOKE && !process.argv.includes('--beyond') && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
 const REG = JSON.parse(fs.readFileSync(path.join(SH, 'stock_registry.json'), 'utf8')).hypotheses.filter((h) => h.horizon === 'short' && h.feature !== 'S43'); // amendment 2: S43 duplicated S37's ranks
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
@@ -126,6 +126,17 @@ for (let wi = 0; wi < WEEKS.length; wi++) { const d = WEEKS[wi], R = new Map(), 
 log(`${PANEL.length} weekly cross-sections, median ${median(PANEL.map((p) => p.R.size))} stocks`);
 if (SMOKE) { const m = PANEL.at(-30); console.log(JSON.stringify({ weeks: PANEL.length, stocks: PANEL.map((p) => p.R.size).filter((_, i) => i % 20 === 0), coverage: Object.fromEntries(FEATS.map((k) => [k, +([...m.R.values()].filter((x) => Number.isFinite(x.f[FI.get(k)])).length / m.R.size).toFixed(2)])), fwd: Object.fromEntries(Object.entries(m.fwd).map(([k, v]) => [k, v ? v.size : null])) })); process.exit(0); }
 
+
+if (process.argv.includes('--beyond')) { // exploratory (not pre-registered): S17 beyond S41 + S44 + S53, holdout weeks
+  const rankArr = (a) => { const o = a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]), r = new Array(a.length); for (let i = 0; i < o.length;) { let k = i; while (k + 1 < o.length && o[k + 1][0] === o[i][0]) k++; for (let q = i; q <= k; q++) r[o[q][1]] = (i + k) / 2; i = k + 1; } return r; };
+  const solveL = (A, b) => { const n = A.length, M = A.map((r, i) => [...r, b[i]]); for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]]; for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; } } return M.map((r, i) => r[n] / r[i]); };
+  const nwT = (s, lag) => { const n = s.length, m = mean(s), e = s.map((x) => x - m); let v = e.reduce((q, x) => q + x * x, 0) / n; for (let L = 1; L <= lag; L++) { let g = 0; for (let t = L; t < n; t++) g += e[t] * e[t - L]; v += 2 * (1 - L / (lag + 1)) * g / n; } return m / Math.sqrt(v / n); };
+  for (const [name, set] of [['build', (m) => WEEKS[m.wi + 4] && WEEKS[m.wi + 4] <= BUILD_END], ['holdout', (m) => m.M >= HOLD_START]]) { const coef = [];
+    for (const m of PANEL) { if (!m.fwd.WV || !set(m)) continue; const rows = []; for (const [t, y] of m.fwd.WV) { const x = m.R.get(t); const v = ['S17', 'S41', 'S44', 'S53'].map((k) => x.f[FI.get(k)]); if (v.every(Number.isFinite)) rows.push([...v, y]); }
+      if (rows.length < 50) continue; const cols = [0, 1, 2, 3, 4].map((k) => rankArr(rows.map((r) => r[k]))), n = rows.length, X = rows.map((_, i) => [1, cols[0][i], cols[1][i], cols[2][i], cols[3][i]]), Y = cols[4];
+      const XtX = [0, 1, 2, 3, 4].map((a) => [0, 1, 2, 3, 4].map((b) => X.reduce((s, r) => s + r[a] * r[b], 0))), Xty = [0, 1, 2, 3, 4].map((a) => X.reduce((s, r, i) => s + r[a] * Y[i], 0)); coef.push(solveL(XtX, Xty)[1] / n); }
+    console.log(`${name}: S17 vanna balance beyond vol + lottery + options footprint — mean coef ${mean(coef).toExponential(2)}, NW t ${nwT(coef, 4).toFixed(2)} over ${coef.length} weeks`); }
+  process.exit(0); }
 // ---------- statistics (same as the long engine, audited 2026-10-09) ----------
 const rankArr = (a) => { const o = a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]), r = new Array(a.length); for (let i = 0; i < o.length;) { let k = i; while (k + 1 < o.length && o[k + 1][0] === o[i][0]) k++; const avg = (i + k) / 2; for (let q = i; q <= k; q++) r[o[q][1]] = avg; i = k + 1; } return r; };
 const corr = (x, y) => { const mx = mean(x), my = mean(y); let a = 0, b = 0, c = 0; for (let i = 0; i < x.length; i++) { a += (x[i] - mx) * (y[i] - my); b += (x[i] - mx) ** 2; c += (y[i] - my) ** 2; } return b > 0 && c > 0 ? a / Math.sqrt(b * c) : NaN; };
