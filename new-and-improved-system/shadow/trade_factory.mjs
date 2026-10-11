@@ -7,9 +7,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache');
-const OUT = path.join(SH, 'results_trade_factory'), SMOKE = process.argv.includes('--smoke');
-if (!SMOKE && fs.existsSync(path.join(OUT, 'summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
-const REG = JSON.parse(fs.readFileSync(path.join(SH, 'trade_registry.json'), 'utf8')).rules.filter((r) => !(r.level === 'VWAP' && r.filter === 'VW')); // amendment 1: 9 degenerate rules dropped
+const OUT = path.join(SH, 'results_trade_factory'), SMOKE = process.argv.includes('--smoke'), CONFIRM = process.argv.includes('--confirm');
+if (!SMOKE && fs.existsSync(path.join(OUT, CONFIRM ? 'confirm_retest.md' : 'summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+const FAMILY = new Set(['OR5H', 'OR15H', 'OR30H', 'OR60H', 'PMH', 'PDH'].map((l) => `${l}-RET-T2-ALL`)); // amendment 2
+const REG = JSON.parse(fs.readFileSync(path.join(SH, 'trade_registry.json'), 'utf8')).rules.filter((r) => !(r.level === 'VWAP' && r.filter === 'VW')).filter((r) => !CONFIRM || FAMILY.has(r.id)); // amendment 1: degenerate VWAP×VW rules dropped
 const SYMS = ['SPY', 'QQQ', 'IWM', 'DIA'], BUILD_END = '2025-03-31', HOLD_START = '2025-04-01', GAMMA_START = '2023-11-09';
 const P = { STOP: 0.001, SWEEP: 0.0001, PAD: 0.000033, MINSTOP: 0.000165, MAXRISK: 0.00165, FRONT: 0.000033, COST: 0.01, LAST_ENTRY: 930, EOD: 955, FIRST: 575 };
 const log = (s) => console.error(`${new Date().toISOString().slice(11, 19)} ${s}`);
@@ -120,7 +121,7 @@ function runDay(T, idx, twinK = null) { const { days, gi } = DATA[T], day = days
       if (rule.exit === 'T2') target = s.entry + s.dir * 2 * risk;
       else if (rule.exit === 'NXT') { const cand = ALL_LEVELS.filter((k) => k !== rule.level && k !== 'VWAP' && lv[k] != null && (STATIC.has(k) || (avail[k] ?? 1e9) <= s.i)).map((k) => lv[k]).filter((x) => s.dir * (x - s.entry) > 0).sort((a, b) => s.dir * (a - b));
         if (!cand.length) break; target = cand[0] * (1 - s.dir * P.FRONT); if (s.dir * (target - s.entry) < risk) break; }
-      const Rv = simulate(day.reg, s, target); if (Rv != null) res.push({ id: rule.id, d: day.d, T, R: Rv, risk }); break; } } // first qualifying signal only
+      const Rv = simulate(day.reg, s, target); if (Rv != null) res.push({ id: rule.id, d: day.d, T, R: Rv, risk, dir: s.dir }); break; } } // first qualifying signal only
   return res; }
 for (const T of Object.keys(DATA)) { for (let i = 1; i < DATA[T].days.length; i++) for (const r of runDay(T, i)) TR.get(r.id).push(r); log(`${T} rules done`); }
 if (SMOKE) { const n = [...TR.values()].map((a) => a.length); console.log(JSON.stringify({ rulesWithTrades: n.filter((x) => x > 0).length, medianTrades: n.sort((a, b) => a - b)[n.length >> 1], sample: [...TR].slice(0, 6).map(([k, v]) => [k, v.length, +mean(v.map((x) => x.R)).toFixed(2)]).map(([k, n]) => `${k}:${n}`) })); process.exit(0); }
@@ -131,7 +132,7 @@ const bh = (ps, q) => { const o = ps.map((p, i) => [p, i]).sort((a, b) => a[0] -
 function stats(tr) { const n = tr.length; if (n < 30) return { n, m: NaN, t: NaN }; const m = mean(tr.map((x) => x.R)), by = new Map(); for (const x of tr) by.set(x.d, (by.get(x.d) ?? 0) + (x.R - m));
   const G = by.size, se = Math.sqrt(([...by.values()].reduce((s, v) => s + v * v, 0) * G) / Math.max(1, G - 1)) / n; return { n, m, t: se > 0 ? m / se : NaN, win: tr.filter((x) => x.R > 0).length / n }; }
 const rules = REG.map((r) => { const all = TR.get(r.id), b = stats(all.filter((x) => x.d <= BUILD_END)); return { ...r, b, p1: Number.isFinite(b.t) ? 1 - Phi(b.t) : 1, all }; });
-const k1 = bh(rules.map((r) => r.p1), 0.10); rules.forEach((r, i) => { r.stage1 = k1[i]; }); const surv = rules.filter((r) => r.stage1); log(`stage 1: ${surv.length} of ${rules.length}`);
+const k1 = CONFIRM ? rules.map(() => true) : bh(rules.map((r) => r.p1), 0.10); rules.forEach((r, i) => { r.stage1 = k1[i]; }); // amendment 2: the confirmation family goes straight to the holdout const surv = rules.filter((r) => r.stage1); log(`stage 1: ${surv.length} of ${rules.length}`);
 for (const r of surv) { r.h = stats(r.all.filter((x) => x.d >= HOLD_START)); r.p2 = Number.isFinite(r.h.t) ? 1 - Phi(r.h.t) : 1; }
 const k2 = bh(surv.map((r) => r.p2), 0.10); surv.forEach((r, i) => { r.passBH = k2[i] && r.h.m > 0; });
 // twins for rules passing stage 2
@@ -149,4 +150,10 @@ const L = ['# Trade-rule factory — results', `\nRun ${new Date().toISOString()
   ...val.sort((a, b) => b.h.t - a.h.t).map((r) => `| ${r.id} — ${r.text} | ${r.b.n}, ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${r.h.n}, ${(r.h.win * 100).toFixed(0)}%, **${fx(r.h.m)} (${fx(r.h.t, 2)})** | ${fx(r.cost2.m)} | ${r.twinBeat}/20 (${fx(r.twinMed)}) | ${SYMS.map((T) => `${T} ${fx(r.bySym[T].m, 2)}`).join(' · ')} |`),
   '\n## Passed the holdout but not their random-level twins (the level did not matter)\n', '| rule | holdout mean R (t) | twins beaten |', '|---|---|---|', ...surv.filter((r) => r.passBH && !r.validated).map((r) => `| ${r.id} | ${fx(r.h.m)} (${fx(r.h.t, 2)}) | ${r.twinBeat}/20 |`),
   '\n## Passed build, failed holdout\n', '| rule | build mean R (t) | holdout mean R (t) |', '|---|---|---|', ...surv.filter((r) => !r.passBH).map((r) => `| ${r.id} | ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${fx(r.h?.m)} (${fx(r.h?.t, 2)}) |`)];
-fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'summary.md'), L.join('\n') + '\n'); fs.writeFileSync(path.join(OUT, 'rules.json'), JSON.stringify(rules.map(({ all, ...x }) => x), null, 1)); console.log(L.join('\n'));
+if (CONFIRM) { const spy = DATA.SPY.days.filter((x) => !x.skip && x.d >= HOLD_START); const spyRet = spy.at(-1).reg.at(-1).c / spy[0].reg[0].o - 1;
+  L.length = 0; L.push('# Confirmation — upside break-and-retest family on the untouched holdout', `\nRun ${new Date().toISOString()} · DESIGN_trade_factory amendment 2 · holdout ${HOLD_START} → 2026-10-02 · SPY over the holdout ${fx(spyRet * 100, 1)}%\n`,
+    `**Validated: ${rules.filter((r) => r.validated).length} of ${rules.length}** (holdout BH q = 0.10 across the 6, then ≥ 19/20 random-level twins)\n`,
+    '| rule | build: n, mean R (t) | holdout: n, win, mean R (t) | at $0.02/side | twins beaten | long / short (holdout mean R, n) | by symbol | 2025-H2 / 2026 |', '|---|---|---|---|---|---|---|---|',
+    ...rules.map((r) => { const h = r.all.filter((x) => x.d >= HOLD_START), lg = stats(h.filter((x) => x.dir > 0)), sh = stats(h.filter((x) => x.dir < 0)), a = stats(h.filter((x) => x.d < '2026-01-01')), b = stats(h.filter((x) => x.d >= '2026-01-01'));
+      return `| ${r.id}${r.validated ? ' ✓' : ''} | ${r.b.n}, ${fx(r.b.m)} (${fx(r.b.t, 2)}) | ${r.h.n}, ${(r.h.win * 100).toFixed(0)}%, **${fx(r.h.m)} (${fx(r.h.t, 2)})** | ${fx(r.cost2?.m)} | ${r.twinBeat ?? '—'}/20 | ${fx(lg.m, 2)} (${lg.n}) / ${fx(sh.m, 2)} (${sh.n}) | ${SYMS.map((T) => `${T} ${fx(stats(h.filter((x) => x.T === T)).m, 2)}`).join(' · ')} | ${fx(a.m, 2)} / ${fx(b.m, 2)} |`; })); }
+fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, CONFIRM ? 'confirm_retest.md' : 'summary.md'), L.join('\n') + '\n'); if (!CONFIRM) fs.writeFileSync(path.join(OUT, 'rules.json'), JSON.stringify(rules.map(({ all, ...x }) => x), null, 1)); console.log(L.join('\n'));

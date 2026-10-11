@@ -68,3 +68,11 @@ Engine `trade_factory.mjs` independently audited before its single run; amendmen
   between break and retest does not cancel it. NXT with no valid target skips that rule's day.
 - Half days are kept (EOD exit at their last bar). GAM's z-score needs 40 prior days, so GAM rules start 2024-01-09.
 - Twins keep the real VWAP for the VW filter; a twin with no trades counts as not beaten.
+
+**Amendment 2 — confirmation of the one leaning family (2026-10-10, after the build run, before ANY holdout look).**
+The build run validated nothing (0 / 492). The only family with a positive median was break-and-retest of upside
+levels. Registered now, chosen from build results only, tested ONCE on the untouched holdout (2025-04-01 → 2026-10-02):
+the 6 rules `{OR5H, OR15H, OR30H, OR60H, PMH, PDH} × RET × T2 × ALL`. Validated if: holdout Benjamini–Hochberg q = 0.10
+across these 6 (one-sided, mean R > 0, ≥ 30 trades) AND beats ≥ 19/20 random-level twins. Also reported: long vs short
+trades, per symbol, per half-year, and SPY's own return over the holdout (a bull tape helps long breakouts).
+`node shadow/trade_factory.mjs --confirm` → `results_trade_factory/confirm_retest.md` (run once).
