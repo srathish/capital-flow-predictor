@@ -132,7 +132,7 @@ const bh = (ps, q) => { const o = ps.map((p, i) => [p, i]).sort((a, b) => a[0] -
 function stats(tr) { const n = tr.length; if (n < 30) return { n, m: NaN, t: NaN }; const m = mean(tr.map((x) => x.R)), by = new Map(); for (const x of tr) by.set(x.d, (by.get(x.d) ?? 0) + (x.R - m));
   const G = by.size, se = Math.sqrt(([...by.values()].reduce((s, v) => s + v * v, 0) * G) / Math.max(1, G - 1)) / n; return { n, m, t: se > 0 ? m / se : NaN, win: tr.filter((x) => x.R > 0).length / n }; }
 const rules = REG.map((r) => { const all = TR.get(r.id), b = stats(all.filter((x) => x.d <= BUILD_END)); return { ...r, b, p1: Number.isFinite(b.t) ? 1 - Phi(b.t) : 1, all }; });
-const k1 = CONFIRM ? rules.map(() => true) : bh(rules.map((r) => r.p1), 0.10); rules.forEach((r, i) => { r.stage1 = k1[i]; }); // amendment 2: the confirmation family goes straight to the holdout const surv = rules.filter((r) => r.stage1); log(`stage 1: ${surv.length} of ${rules.length}`);
+const k1 = CONFIRM ? rules.map(() => true) : bh(rules.map((r) => r.p1), 0.10); rules.forEach((r, i) => { r.stage1 = k1[i]; }); /* amendment 2: the confirmation family goes straight to the holdout */ const surv = rules.filter((r) => r.stage1); log(`stage 1: ${surv.length} of ${rules.length}`);
 for (const r of surv) { r.h = stats(r.all.filter((x) => x.d >= HOLD_START)); r.p2 = Number.isFinite(r.h.t) ? 1 - Phi(r.h.t) : 1; }
 const k2 = bh(surv.map((r) => r.p2), 0.10); surv.forEach((r, i) => { r.passBH = k2[i] && r.h.m > 0; });
 // twins for rules passing stage 2
