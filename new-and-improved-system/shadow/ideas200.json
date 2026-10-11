@@ -1,0 +1,1754 @@
+{
+ "created": "2026-10-11",
+ "n": 200,
+ "ideas": [
+  {
+   "part": "A",
+   "id": "A-1s-short-VW-STRONG",
+   "k": 1,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-VW-KING",
+   "k": 1,
+   "side": "short",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-VW-WALL",
+   "k": 1,
+   "side": "short",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-VW-STRONG-GAM",
+   "k": 1,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, short, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-T2-STRONG",
+   "k": 1,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-T2-KING",
+   "k": 1,
+   "side": "short",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-T2-WALL",
+   "k": 1,
+   "side": "short",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, short, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-short-T2-STRONG-GAM",
+   "k": 1,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, short, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-VW-STRONG",
+   "k": 1,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-VW-KING",
+   "k": 1,
+   "side": "long",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-VW-WALL",
+   "k": 1,
+   "side": "long",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-VW-STRONG-GAM",
+   "k": 1,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, long, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-T2-STRONG",
+   "k": 1,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-T2-KING",
+   "k": 1,
+   "side": "long",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-T2-WALL",
+   "k": 1,
+   "side": "long",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, long, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-long-T2-STRONG-GAM",
+   "k": 1,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, long, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-VW-STRONG",
+   "k": 1,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-VW-KING",
+   "k": 1,
+   "side": "both",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-VW-WALL",
+   "k": 1,
+   "side": "both",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-VW-STRONG-GAM",
+   "k": 1,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, both, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-T2-STRONG",
+   "k": 1,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-T2-KING",
+   "k": 1,
+   "side": "both",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-T2-WALL",
+   "k": 1,
+   "side": "both",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1σ VWAP band rejection, both, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1s-both-T2-STRONG-GAM",
+   "k": 1,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1σ band rejection, both, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-VW-STRONG",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-VW-KING",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-VW-WALL",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-VW-STRONG-GAM",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, short, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-T2-STRONG",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-T2-KING",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-T2-WALL",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, short, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-short-T2-STRONG-GAM",
+   "k": 1.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, short, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-VW-STRONG",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-VW-KING",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-VW-WALL",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-VW-STRONG-GAM",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, long, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-T2-STRONG",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-T2-KING",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-T2-WALL",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, long, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-long-T2-STRONG-GAM",
+   "k": 1.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, long, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-VW-STRONG",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-VW-KING",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-VW-WALL",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-VW-STRONG-GAM",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, both, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-T2-STRONG",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-T2-KING",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-T2-WALL",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "1.5σ VWAP band rejection, both, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-1.5s-both-T2-STRONG-GAM",
+   "k": 1.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "1.5σ band rejection, both, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-VW-STRONG",
+   "k": 2,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-VW-KING",
+   "k": 2,
+   "side": "short",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-VW-WALL",
+   "k": 2,
+   "side": "short",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-VW-STRONG-GAM",
+   "k": 2,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, short, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-T2-STRONG",
+   "k": 2,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-T2-KING",
+   "k": 2,
+   "side": "short",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-T2-WALL",
+   "k": 2,
+   "side": "short",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, short, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-short-T2-STRONG-GAM",
+   "k": 2,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, short, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-VW-STRONG",
+   "k": 2,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-VW-KING",
+   "k": 2,
+   "side": "long",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-VW-WALL",
+   "k": 2,
+   "side": "long",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-VW-STRONG-GAM",
+   "k": 2,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, long, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-T2-STRONG",
+   "k": 2,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-T2-KING",
+   "k": 2,
+   "side": "long",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-T2-WALL",
+   "k": 2,
+   "side": "long",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, long, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-long-T2-STRONG-GAM",
+   "k": 2,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, long, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-VW-STRONG",
+   "k": 2,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-VW-KING",
+   "k": 2,
+   "side": "both",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-VW-WALL",
+   "k": 2,
+   "side": "both",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-VW-STRONG-GAM",
+   "k": 2,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, both, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-T2-STRONG",
+   "k": 2,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-T2-KING",
+   "k": 2,
+   "side": "both",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-T2-WALL",
+   "k": 2,
+   "side": "both",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2σ VWAP band rejection, both, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2s-both-T2-STRONG-GAM",
+   "k": 2,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2σ band rejection, both, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-VW-STRONG",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-VW-KING",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-VW-WALL",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-VW-STRONG-GAM",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, short, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-T2-STRONG",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-T2-KING",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-T2-WALL",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, short, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-short-T2-STRONG-GAM",
+   "k": 2.5,
+   "side": "short",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, short, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-VW-STRONG",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-VW-KING",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-VW-WALL",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-VW-STRONG-GAM",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, long, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-T2-STRONG",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-T2-KING",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-T2-WALL",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, long, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-long-T2-STRONG-GAM",
+   "k": 2.5,
+   "side": "long",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, long, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-VW-STRONG",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target VWAP, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-VW-KING",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target VWAP, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-VW-WALL",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target VWAP, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-VW-STRONG-GAM",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "VW",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, both, VW, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-T2-STRONG",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target 2R, any strong gamma node on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-T2-KING",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "KING",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target 2R, gamma king on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-T2-WALL",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "WALL",
+   "gam": false,
+   "text": "2.5σ VWAP band rejection, both, target 2R, call wall (upper) / put wall (lower) on the band"
+  },
+  {
+   "part": "A",
+   "id": "A-2.5s-both-T2-STRONG-GAM",
+   "k": 2.5,
+   "side": "both",
+   "tgt": "T2",
+   "node": "STRONG",
+   "gam": true,
+   "text": "2.5σ band rejection, both, T2, strong node, only on long-local-gamma days (G23 above its build median)"
+  },
+  {
+   "part": "B",
+   "id": "B-S17-STRADDLE-10d",
+   "sig": "S17",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by vanna balance, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S17-STRADDLE-20d",
+   "sig": "S17",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by vanna balance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S17-CALL-20d",
+   "sig": "S17",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by vanna balance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S17-PUT-20d",
+   "sig": "S17",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by vanna balance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S55-STRADDLE-10d",
+   "sig": "S55",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by net vanna ÷ market cap, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S55-STRADDLE-20d",
+   "sig": "S55",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by net vanna ÷ market cap, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S55-CALL-20d",
+   "sig": "S55",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by net vanna ÷ market cap, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S55-PUT-20d",
+   "sig": "S55",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by net vanna ÷ market cap, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S19neg-STRADDLE-10d",
+   "sig": "S19neg",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by vanna skew (low), hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S19neg-STRADDLE-20d",
+   "sig": "S19neg",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by vanna skew (low), hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S19neg-CALL-20d",
+   "sig": "S19neg",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by vanna skew (low), hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S19neg-PUT-20d",
+   "sig": "S19neg",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by vanna skew (low), hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S41-STRADDLE-10d",
+   "sig": "S41",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by realized volatility, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S41-STRADDLE-20d",
+   "sig": "S41",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by realized volatility, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S41-CALL-20d",
+   "sig": "S41",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by realized volatility, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S41-PUT-20d",
+   "sig": "S41",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by realized volatility, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S53-STRADDLE-10d",
+   "sig": "S53",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by options footprint, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S53-STRADDLE-20d",
+   "sig": "S53",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by options footprint, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S53-CALL-20d",
+   "sig": "S53",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by options footprint, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S53-PUT-20d",
+   "sig": "S53",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by options footprint, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S44-STRADDLE-10d",
+   "sig": "S44",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by max daily return, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S44-STRADDLE-20d",
+   "sig": "S44",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by max daily return, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S44-CALL-20d",
+   "sig": "S44",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by max daily return, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S44-PUT-20d",
+   "sig": "S44",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by max daily return, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S07-STRADDLE-10d",
+   "sig": "S07",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by king distance, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S07-STRADDLE-20d",
+   "sig": "S07",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by king distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S07-CALL-20d",
+   "sig": "S07",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by king distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S07-PUT-20d",
+   "sig": "S07",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by king distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S20-STRADDLE-10d",
+   "sig": "S20",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by vanna magnet distance, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S20-STRADDLE-20d",
+   "sig": "S20",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by vanna magnet distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S20-CALL-20d",
+   "sig": "S20",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by vanna magnet distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S20-PUT-20d",
+   "sig": "S20",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by vanna magnet distance, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S50-STRADDLE-10d",
+   "sig": "S50",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by v5 bottleneck score, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S50-STRADDLE-20d",
+   "sig": "S50",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by v5 bottleneck score, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S50-CALL-20d",
+   "sig": "S50",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by v5 bottleneck score, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S50-PUT-20d",
+   "sig": "S50",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by v5 bottleneck score, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S42neg-STRADDLE-10d",
+   "sig": "S42neg",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by near the 52-week low, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S42neg-STRADDLE-20d",
+   "sig": "S42neg",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by near the 52-week low, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S42neg-CALL-20d",
+   "sig": "S42neg",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by near the 52-week low, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S42neg-PUT-20d",
+   "sig": "S42neg",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by near the 52-week low, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36up-STRADDLE-10d",
+   "sig": "S36up",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by up > 10% last week, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36up-STRADDLE-20d",
+   "sig": "S36up",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by up > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36up-CALL-20d",
+   "sig": "S36up",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by up > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36up-PUT-20d",
+   "sig": "S36up",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by up > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36dn-STRADDLE-10d",
+   "sig": "S36dn",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by down > 10% last week, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36dn-STRADDLE-20d",
+   "sig": "S36dn",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by down > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36dn-CALL-20d",
+   "sig": "S36dn",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by down > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S36dn-PUT-20d",
+   "sig": "S36dn",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by down > 10% last week, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S14-STRADDLE-10d",
+   "sig": "S14",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by options interest surging, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S14-STRADDLE-20d",
+   "sig": "S14",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by options interest surging, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S14-CALL-20d",
+   "sig": "S14",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by options interest surging, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S14-PUT-20d",
+   "sig": "S14",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by options interest surging, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S40-STRADDLE-10d",
+   "sig": "S40",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by dollar-volume spike, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S40-STRADDLE-20d",
+   "sig": "S40",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by dollar-volume spike, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S40-CALL-20d",
+   "sig": "S40",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by dollar-volume spike, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-S40-PUT-20d",
+   "sig": "S40",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by dollar-volume spike, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-COMBO-STRADDLE-10d",
+   "sig": "COMBO",
+   "structure": "straddle",
+   "hold": 10,
+   "text": "buy ATM monthly straddle on the top 10 by mean rank of S17, S41, S53, hold 10 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-COMBO-STRADDLE-20d",
+   "sig": "COMBO",
+   "structure": "straddle",
+   "hold": 20,
+   "text": "buy ATM monthly straddle on the top 10 by mean rank of S17, S41, S53, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-COMBO-CALL-20d",
+   "sig": "COMBO",
+   "structure": "CALL",
+   "hold": 20,
+   "text": "buy ATM monthly call on the top 10 by mean rank of S17, S41, S53, hold 20 trading days"
+  },
+  {
+   "part": "B",
+   "id": "B-COMBO-PUT-20d",
+   "sig": "COMBO",
+   "structure": "PUT",
+   "hold": 20,
+   "text": "buy ATM monthly put on the top 10 by mean rank of S17, S41, S53, hold 20 trading days"
+  },
+  {
+   "part": "C",
+   "id": "C-G1-T1",
+   "filter": "G1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with ±1% gamma balance top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G1-T2",
+   "filter": "G1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with ±1% gamma balance top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G2-T1",
+   "filter": "G2",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G23 z top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G2-T2",
+   "filter": "G2",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G23 z top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G3-T1",
+   "filter": "G3",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with all-strike balance top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G3-T2",
+   "filter": "G3",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with all-strike balance top third"
+  },
+  {
+   "part": "C",
+   "id": "C-G4-T1",
+   "filter": "G4",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with net gamma ≥ 0"
+  },
+  {
+   "part": "C",
+   "id": "C-G4-T2",
+   "filter": "G4",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with net gamma ≥ 0"
+  },
+  {
+   "part": "C",
+   "id": "C-G5-T1",
+   "filter": "G5",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with king within 0.5% of price"
+  },
+  {
+   "part": "C",
+   "id": "C-G5-T2",
+   "filter": "G5",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with king within 0.5% of price"
+  },
+  {
+   "part": "C",
+   "id": "C-E1-T1",
+   "filter": "E1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with VIX1D ÷ VIX9D below build median"
+  },
+  {
+   "part": "C",
+   "id": "C-E1-T2",
+   "filter": "E1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with VIX1D ÷ VIX9D below build median"
+  },
+  {
+   "part": "C",
+   "id": "C-E2-T1",
+   "filter": "E2",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with VIX below VIX3M (contango)"
+  },
+  {
+   "part": "C",
+   "id": "C-E2-T2",
+   "filter": "E2",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with VIX below VIX3M (contango)"
+  },
+  {
+   "part": "C",
+   "id": "C-V1-T1",
+   "filter": "V1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with variance premium top third"
+  },
+  {
+   "part": "C",
+   "id": "C-V1-T2",
+   "filter": "V1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with variance premium top third"
+  },
+  {
+   "part": "C",
+   "id": "C-P1-T1",
+   "filter": "P1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with close above 20-day average"
+  },
+  {
+   "part": "C",
+   "id": "C-P1-T2",
+   "filter": "P1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with close above 20-day average"
+  },
+  {
+   "part": "C",
+   "id": "C-P2-T1",
+   "filter": "P2",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with 5-day return > 0"
+  },
+  {
+   "part": "C",
+   "id": "C-P2-T2",
+   "filter": "P2",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with 5-day return > 0"
+  },
+  {
+   "part": "C",
+   "id": "C-K1-T1",
+   "filter": "K1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with not Monday"
+  },
+  {
+   "part": "C",
+   "id": "C-K1-T2",
+   "filter": "K1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with not Monday"
+  },
+  {
+   "part": "C",
+   "id": "C-K2-T1",
+   "filter": "K2",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with monthly OPEX day"
+  },
+  {
+   "part": "C",
+   "id": "C-K2-T2",
+   "filter": "K2",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with monthly OPEX day"
+  },
+  {
+   "part": "C",
+   "id": "C-K3-T1",
+   "filter": "K3",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with not first trading day of month"
+  },
+  {
+   "part": "C",
+   "id": "C-K3-T2",
+   "filter": "K3",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with not first trading day of month"
+  },
+  {
+   "part": "C",
+   "id": "C-K4-T1",
+   "filter": "K4",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with Friday"
+  },
+  {
+   "part": "C",
+   "id": "C-K4-T2",
+   "filter": "K4",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with Friday"
+  },
+  {
+   "part": "C",
+   "id": "C-C1-T1",
+   "filter": "C1",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G1 + P1"
+  },
+  {
+   "part": "C",
+   "id": "C-C1-T2",
+   "filter": "C1",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G1 + P1"
+  },
+  {
+   "part": "C",
+   "id": "C-C2-T1",
+   "filter": "C2",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G1 + E1"
+  },
+  {
+   "part": "C",
+   "id": "C-C2-T2",
+   "filter": "C2",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G1 + E1"
+  },
+  {
+   "part": "C",
+   "id": "C-C3-T1",
+   "filter": "C3",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G1 + V1"
+  },
+  {
+   "part": "C",
+   "id": "C-C3-T2",
+   "filter": "C3",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G1 + V1"
+  },
+  {
+   "part": "C",
+   "id": "C-C4-T1",
+   "filter": "C4",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G1 + E2"
+  },
+  {
+   "part": "C",
+   "id": "C-C4-T2",
+   "filter": "C4",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G1 + E2"
+  },
+  {
+   "part": "C",
+   "id": "C-C5-T1",
+   "filter": "C5",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G1 + P1 + E1 (= the earlier filter)"
+  },
+  {
+   "part": "C",
+   "id": "C-C5-T2",
+   "filter": "C5",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G1 + P1 + E1 (= the earlier filter)"
+  },
+  {
+   "part": "C",
+   "id": "C-C6-T1",
+   "filter": "C6",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with V1 + E2"
+  },
+  {
+   "part": "C",
+   "id": "C-C6-T2",
+   "filter": "C6",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with V1 + E2"
+  },
+  {
+   "part": "C",
+   "id": "C-C7-T1",
+   "filter": "C7",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with P1 + E1"
+  },
+  {
+   "part": "C",
+   "id": "C-C7-T2",
+   "filter": "C7",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with P1 + E1"
+  },
+  {
+   "part": "C",
+   "id": "C-C8-T1",
+   "filter": "C8",
+   "trade": "T1",
+   "text": "sell 1-day ATM straddle only on days with G2 + E2 + P1"
+  },
+  {
+   "part": "C",
+   "id": "C-C8-T2",
+   "filter": "C8",
+   "trade": "T2",
+   "text": "sell 0DTE ATM straddle only on days with G2 + E2 + P1"
+  }
+ ]
+}
