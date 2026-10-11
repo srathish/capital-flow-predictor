@@ -1,0 +1,1351 @@
+{
+ "created": "2026-10-11",
+ "n": 168,
+ "events": 42,
+ "hypotheses": [
+  {
+   "id": "F01xA5",
+   "event": "F01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "quarter revenue growth YoY > 30%",
+   "mechanism": "strong demand, under-reacted"
+  },
+  {
+   "id": "F01xA20",
+   "event": "F01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "quarter revenue growth YoY > 30%",
+   "mechanism": "strong demand, under-reacted"
+  },
+  {
+   "id": "F01xA60",
+   "event": "F01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "quarter revenue growth YoY > 30%",
+   "mechanism": "strong demand, under-reacted"
+  },
+  {
+   "id": "F01xMV60",
+   "event": "F01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "quarter revenue growth YoY > 30%",
+   "mechanism": "strong demand, under-reacted"
+  },
+  {
+   "id": "F02xA5",
+   "event": "F02",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "revenue growth accelerates by > 10 pts",
+   "mechanism": "inflection"
+  },
+  {
+   "id": "F02xA20",
+   "event": "F02",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "revenue growth accelerates by > 10 pts",
+   "mechanism": "inflection"
+  },
+  {
+   "id": "F02xA60",
+   "event": "F02",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "revenue growth accelerates by > 10 pts",
+   "mechanism": "inflection"
+  },
+  {
+   "id": "F02xMV60",
+   "event": "F02",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "revenue growth accelerates by > 10 pts",
+   "mechanism": "inflection"
+  },
+  {
+   "id": "F03xA5",
+   "event": "F03",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+   "mechanism": "pricing power"
+  },
+  {
+   "id": "F03xA20",
+   "event": "F03",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+   "mechanism": "pricing power"
+  },
+  {
+   "id": "F03xA60",
+   "event": "F03",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+   "mechanism": "pricing power"
+  },
+  {
+   "id": "F03xMV60",
+   "event": "F03",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+   "mechanism": "pricing power"
+  },
+  {
+   "id": "F04xA5",
+   "event": "F04",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "revenue declines YoY",
+   "mechanism": "demand loss"
+  },
+  {
+   "id": "F04xA20",
+   "event": "F04",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "revenue declines YoY",
+   "mechanism": "demand loss"
+  },
+  {
+   "id": "F04xA60",
+   "event": "F04",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "revenue declines YoY",
+   "mechanism": "demand loss"
+  },
+  {
+   "id": "F04xMV60",
+   "event": "F04",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "revenue declines YoY",
+   "mechanism": "demand loss"
+  },
+  {
+   "id": "F05xA5",
+   "event": "F05",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "gross margin down > 3 pts YoY",
+   "mechanism": "pricing pressure"
+  },
+  {
+   "id": "F05xA20",
+   "event": "F05",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "gross margin down > 3 pts YoY",
+   "mechanism": "pricing pressure"
+  },
+  {
+   "id": "F05xA60",
+   "event": "F05",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "gross margin down > 3 pts YoY",
+   "mechanism": "pricing pressure"
+  },
+  {
+   "id": "F05xMV60",
+   "event": "F05",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "gross margin down > 3 pts YoY",
+   "mechanism": "pricing pressure"
+  },
+  {
+   "id": "F06xA5",
+   "event": "F06",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "first profitable quarter after ≥ 4 losing quarters",
+   "mechanism": "turn to profit"
+  },
+  {
+   "id": "F06xA20",
+   "event": "F06",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "first profitable quarter after ≥ 4 losing quarters",
+   "mechanism": "turn to profit"
+  },
+  {
+   "id": "F06xA60",
+   "event": "F06",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "first profitable quarter after ≥ 4 losing quarters",
+   "mechanism": "turn to profit"
+  },
+  {
+   "id": "F06xMV60",
+   "event": "F06",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "first profitable quarter after ≥ 4 losing quarters",
+   "mechanism": "turn to profit"
+  },
+  {
+   "id": "F07xA5",
+   "event": "F07",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "first positive operating income after ≥ 4 negative",
+   "mechanism": "operating turn"
+  },
+  {
+   "id": "F07xA20",
+   "event": "F07",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "first positive operating income after ≥ 4 negative",
+   "mechanism": "operating turn"
+  },
+  {
+   "id": "F07xA60",
+   "event": "F07",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "first positive operating income after ≥ 4 negative",
+   "mechanism": "operating turn"
+  },
+  {
+   "id": "F07xMV60",
+   "event": "F07",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "first positive operating income after ≥ 4 negative",
+   "mechanism": "operating turn"
+  },
+  {
+   "id": "F08xA5",
+   "event": "F08",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+   "mechanism": "breakout fundamentals"
+  },
+  {
+   "id": "F08xA20",
+   "event": "F08",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+   "mechanism": "breakout fundamentals"
+  },
+  {
+   "id": "F08xA60",
+   "event": "F08",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+   "mechanism": "breakout fundamentals"
+  },
+  {
+   "id": "F08xMV60",
+   "event": "F08",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+   "mechanism": "breakout fundamentals"
+  },
+  {
+   "id": "F09xA5",
+   "event": "F09",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY > 30%",
+   "mechanism": "future revenue"
+  },
+  {
+   "id": "F09xA20",
+   "event": "F09",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY > 30%",
+   "mechanism": "future revenue"
+  },
+  {
+   "id": "F09xA60",
+   "event": "F09",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY > 30%",
+   "mechanism": "future revenue"
+  },
+  {
+   "id": "F09xMV60",
+   "event": "F09",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "backlog (RPO) growth YoY > 30%",
+   "mechanism": "future revenue"
+  },
+  {
+   "id": "F10xA5",
+   "event": "F10",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "inventory growth exceeds revenue growth by > 20 pts",
+   "mechanism": "demand slowing"
+  },
+  {
+   "id": "F10xA20",
+   "event": "F10",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "inventory growth exceeds revenue growth by > 20 pts",
+   "mechanism": "demand slowing"
+  },
+  {
+   "id": "F10xA60",
+   "event": "F10",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "inventory growth exceeds revenue growth by > 20 pts",
+   "mechanism": "demand slowing"
+  },
+  {
+   "id": "F10xMV60",
+   "event": "F10",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "inventory growth exceeds revenue growth by > 20 pts",
+   "mechanism": "demand slowing"
+  },
+  {
+   "id": "F11xA5",
+   "event": "F11",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "annual capex up > 50%",
+   "mechanism": "over-investment"
+  },
+  {
+   "id": "F11xA20",
+   "event": "F11",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "annual capex up > 50%",
+   "mechanism": "over-investment"
+  },
+  {
+   "id": "F11xA60",
+   "event": "F11",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "annual capex up > 50%",
+   "mechanism": "over-investment"
+  },
+  {
+   "id": "F11xMV60",
+   "event": "F11",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "annual capex up > 50%",
+   "mechanism": "over-investment"
+  },
+  {
+   "id": "F12xA5",
+   "event": "F12",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "share count up > 10% YoY (split-adjusted)",
+   "mechanism": "dilution"
+  },
+  {
+   "id": "F12xA20",
+   "event": "F12",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "share count up > 10% YoY (split-adjusted)",
+   "mechanism": "dilution"
+  },
+  {
+   "id": "F12xA60",
+   "event": "F12",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "share count up > 10% YoY (split-adjusted)",
+   "mechanism": "dilution"
+  },
+  {
+   "id": "F12xMV60",
+   "event": "F12",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "share count up > 10% YoY (split-adjusted)",
+   "mechanism": "dilution"
+  },
+  {
+   "id": "F13xA5",
+   "event": "F13",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "share count down > 3% YoY",
+   "mechanism": "buyback"
+  },
+  {
+   "id": "F13xA20",
+   "event": "F13",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "share count down > 3% YoY",
+   "mechanism": "buyback"
+  },
+  {
+   "id": "F13xA60",
+   "event": "F13",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "share count down > 3% YoY",
+   "mechanism": "buyback"
+  },
+  {
+   "id": "F13xMV60",
+   "event": "F13",
+   "outcome": "MV60",
+   "sign": "-",
+   "definition": "share count down > 3% YoY",
+   "mechanism": "buyback"
+  },
+  {
+   "id": "F14xA5",
+   "event": "F14",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "revenue growth YoY > 30% AND accelerating",
+   "mechanism": "bottleneck inflection"
+  },
+  {
+   "id": "F14xA20",
+   "event": "F14",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "revenue growth YoY > 30% AND accelerating",
+   "mechanism": "bottleneck inflection"
+  },
+  {
+   "id": "F14xA60",
+   "event": "F14",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "revenue growth YoY > 30% AND accelerating",
+   "mechanism": "bottleneck inflection"
+  },
+  {
+   "id": "F14xMV60",
+   "event": "F14",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "revenue growth YoY > 30% AND accelerating",
+   "mechanism": "bottleneck inflection"
+  },
+  {
+   "id": "F15xA5",
+   "event": "F15",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "net margin down > 5 pts YoY",
+   "mechanism": "profit squeeze"
+  },
+  {
+   "id": "F15xA20",
+   "event": "F15",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "net margin down > 5 pts YoY",
+   "mechanism": "profit squeeze"
+  },
+  {
+   "id": "F15xA60",
+   "event": "F15",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "net margin down > 5 pts YoY",
+   "mechanism": "profit squeeze"
+  },
+  {
+   "id": "F15xMV60",
+   "event": "F15",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "net margin down > 5 pts YoY",
+   "mechanism": "profit squeeze"
+  },
+  {
+   "id": "I01xA5",
+   "event": "I01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "first insider purchase in 12 months",
+   "mechanism": "insider sees value"
+  },
+  {
+   "id": "I01xA20",
+   "event": "I01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "first insider purchase in 12 months",
+   "mechanism": "insider sees value"
+  },
+  {
+   "id": "I01xA60",
+   "event": "I01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "first insider purchase in 12 months",
+   "mechanism": "insider sees value"
+  },
+  {
+   "id": "I01xMV60",
+   "event": "I01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "first insider purchase in 12 months",
+   "mechanism": "insider sees value"
+  },
+  {
+   "id": "I02xA5",
+   "event": "I02",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+   "mechanism": "conviction"
+  },
+  {
+   "id": "I02xA20",
+   "event": "I02",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+   "mechanism": "conviction"
+  },
+  {
+   "id": "I02xA60",
+   "event": "I02",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+   "mechanism": "conviction"
+  },
+  {
+   "id": "I02xMV60",
+   "event": "I02",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+   "mechanism": "conviction"
+  },
+  {
+   "id": "I03xA5",
+   "event": "I03",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "insider purchase > $1M",
+   "mechanism": "size of conviction"
+  },
+  {
+   "id": "I03xA20",
+   "event": "I03",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "insider purchase > $1M",
+   "mechanism": "size of conviction"
+  },
+  {
+   "id": "I03xA60",
+   "event": "I03",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "insider purchase > $1M",
+   "mechanism": "size of conviction"
+  },
+  {
+   "id": "I03xMV60",
+   "event": "I03",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "insider purchase > $1M",
+   "mechanism": "size of conviction"
+  },
+  {
+   "id": "I04xA5",
+   "event": "I04",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "insider purchase after a 20% drop in 3 months",
+   "mechanism": "buying the dip"
+  },
+  {
+   "id": "I04xA20",
+   "event": "I04",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "insider purchase after a 20% drop in 3 months",
+   "mechanism": "buying the dip"
+  },
+  {
+   "id": "I04xA60",
+   "event": "I04",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "insider purchase after a 20% drop in 3 months",
+   "mechanism": "buying the dip"
+  },
+  {
+   "id": "I04xMV60",
+   "event": "I04",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "insider purchase after a 20% drop in 3 months",
+   "mechanism": "buying the dip"
+  },
+  {
+   "id": "I05xA5",
+   "event": "I05",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "insider purchase while the stock is above its 200-day average",
+   "mechanism": "confirmation"
+  },
+  {
+   "id": "I05xA20",
+   "event": "I05",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "insider purchase while the stock is above its 200-day average",
+   "mechanism": "confirmation"
+  },
+  {
+   "id": "I05xA60",
+   "event": "I05",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "insider purchase while the stock is above its 200-day average",
+   "mechanism": "confirmation"
+  },
+  {
+   "id": "I05xMV60",
+   "event": "I05",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "insider purchase while the stock is above its 200-day average",
+   "mechanism": "confirmation"
+  },
+  {
+   "id": "G01xA5",
+   "event": "G01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "guidance raise",
+   "mechanism": "management confidence"
+  },
+  {
+   "id": "G01xA20",
+   "event": "G01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "guidance raise",
+   "mechanism": "management confidence"
+  },
+  {
+   "id": "G01xA60",
+   "event": "G01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "guidance raise",
+   "mechanism": "management confidence"
+  },
+  {
+   "id": "G01xMV60",
+   "event": "G01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "guidance raise",
+   "mechanism": "management confidence"
+  },
+  {
+   "id": "G02xA5",
+   "event": "G02",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "guidance cut",
+   "mechanism": "bad news drift"
+  },
+  {
+   "id": "G02xA20",
+   "event": "G02",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "guidance cut",
+   "mechanism": "bad news drift"
+  },
+  {
+   "id": "G02xA60",
+   "event": "G02",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "guidance cut",
+   "mechanism": "bad news drift"
+  },
+  {
+   "id": "G02xMV60",
+   "event": "G02",
+   "outcome": "MV60",
+   "sign": "-",
+   "definition": "guidance cut",
+   "mechanism": "bad news drift"
+  },
+  {
+   "id": "G03xA5",
+   "event": "G03",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "guidance raise while SPY is down over 20 days",
+   "mechanism": "strength in weakness"
+  },
+  {
+   "id": "G03xA20",
+   "event": "G03",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "guidance raise while SPY is down over 20 days",
+   "mechanism": "strength in weakness"
+  },
+  {
+   "id": "G03xA60",
+   "event": "G03",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "guidance raise while SPY is down over 20 days",
+   "mechanism": "strength in weakness"
+  },
+  {
+   "id": "G03xMV60",
+   "event": "G03",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "guidance raise while SPY is down over 20 days",
+   "mechanism": "strength in weakness"
+  },
+  {
+   "id": "G04xA5",
+   "event": "G04",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "second guidance raise within 12 months",
+   "mechanism": "repeat raiser"
+  },
+  {
+   "id": "G04xA20",
+   "event": "G04",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "second guidance raise within 12 months",
+   "mechanism": "repeat raiser"
+  },
+  {
+   "id": "G04xA60",
+   "event": "G04",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "second guidance raise within 12 months",
+   "mechanism": "repeat raiser"
+  },
+  {
+   "id": "G04xMV60",
+   "event": "G04",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "second guidance raise within 12 months",
+   "mechanism": "repeat raiser"
+  },
+  {
+   "id": "P01xA5",
+   "event": "P01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "new 52-week closing high",
+   "mechanism": "52-week-high momentum"
+  },
+  {
+   "id": "P01xA20",
+   "event": "P01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "new 52-week closing high",
+   "mechanism": "52-week-high momentum"
+  },
+  {
+   "id": "P01xA60",
+   "event": "P01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "new 52-week closing high",
+   "mechanism": "52-week-high momentum"
+  },
+  {
+   "id": "P01xMV60",
+   "event": "P01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "new 52-week closing high",
+   "mechanism": "52-week-high momentum"
+  },
+  {
+   "id": "P02xA5",
+   "event": "P02",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "new 52-week high after 6 months without one",
+   "mechanism": "base breakout"
+  },
+  {
+   "id": "P02xA20",
+   "event": "P02",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "new 52-week high after 6 months without one",
+   "mechanism": "base breakout"
+  },
+  {
+   "id": "P02xA60",
+   "event": "P02",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "new 52-week high after 6 months without one",
+   "mechanism": "base breakout"
+  },
+  {
+   "id": "P02xMV60",
+   "event": "P02",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "new 52-week high after 6 months without one",
+   "mechanism": "base breakout"
+  },
+  {
+   "id": "P03xA5",
+   "event": "P03",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "gap up > 5% on > 3× average volume",
+   "mechanism": "news gap continuation"
+  },
+  {
+   "id": "P03xA20",
+   "event": "P03",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "gap up > 5% on > 3× average volume",
+   "mechanism": "news gap continuation"
+  },
+  {
+   "id": "P03xA60",
+   "event": "P03",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "gap up > 5% on > 3× average volume",
+   "mechanism": "news gap continuation"
+  },
+  {
+   "id": "P03xMV60",
+   "event": "P03",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "gap up > 5% on > 3× average volume",
+   "mechanism": "news gap continuation"
+  },
+  {
+   "id": "P04xA5",
+   "event": "P04",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "gap down > 5% on > 3× average volume",
+   "mechanism": "news gap continuation down"
+  },
+  {
+   "id": "P04xA20",
+   "event": "P04",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "gap down > 5% on > 3× average volume",
+   "mechanism": "news gap continuation down"
+  },
+  {
+   "id": "P04xA60",
+   "event": "P04",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "gap down > 5% on > 3× average volume",
+   "mechanism": "news gap continuation down"
+  },
+  {
+   "id": "P04xMV60",
+   "event": "P04",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "gap down > 5% on > 3× average volume",
+   "mechanism": "news gap continuation down"
+  },
+  {
+   "id": "P05xA5",
+   "event": "P05",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "3-day drop > 15%",
+   "mechanism": "overreaction (reversal)"
+  },
+  {
+   "id": "P05xA20",
+   "event": "P05",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "3-day drop > 15%",
+   "mechanism": "overreaction (reversal)"
+  },
+  {
+   "id": "P05xA60",
+   "event": "P05",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "3-day drop > 15%",
+   "mechanism": "overreaction (reversal)"
+  },
+  {
+   "id": "P05xMV60",
+   "event": "P05",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "3-day drop > 15%",
+   "mechanism": "overreaction (reversal)"
+  },
+  {
+   "id": "P06xA5",
+   "event": "P06",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "50-day average crosses above 200-day average",
+   "mechanism": "golden cross"
+  },
+  {
+   "id": "P06xA20",
+   "event": "P06",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "50-day average crosses above 200-day average",
+   "mechanism": "golden cross"
+  },
+  {
+   "id": "P06xA60",
+   "event": "P06",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "50-day average crosses above 200-day average",
+   "mechanism": "golden cross"
+  },
+  {
+   "id": "P06xMV60",
+   "event": "P06",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "50-day average crosses above 200-day average",
+   "mechanism": "golden cross"
+  },
+  {
+   "id": "P07xA5",
+   "event": "P07",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "close above 200-day average after ≥ 6 months below",
+   "mechanism": "trend change"
+  },
+  {
+   "id": "P07xA20",
+   "event": "P07",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "close above 200-day average after ≥ 6 months below",
+   "mechanism": "trend change"
+  },
+  {
+   "id": "P07xA60",
+   "event": "P07",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "close above 200-day average after ≥ 6 months below",
+   "mechanism": "trend change"
+  },
+  {
+   "id": "P07xMV60",
+   "event": "P07",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "close above 200-day average after ≥ 6 months below",
+   "mechanism": "trend change"
+  },
+  {
+   "id": "P08xA5",
+   "event": "P08",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "up day on > 5× average volume",
+   "mechanism": "accumulation"
+  },
+  {
+   "id": "P08xA20",
+   "event": "P08",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "up day on > 5× average volume",
+   "mechanism": "accumulation"
+  },
+  {
+   "id": "P08xA60",
+   "event": "P08",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "up day on > 5× average volume",
+   "mechanism": "accumulation"
+  },
+  {
+   "id": "P08xMV60",
+   "event": "P08",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "up day on > 5× average volume",
+   "mechanism": "accumulation"
+  },
+  {
+   "id": "P09xA5",
+   "event": "P09",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "new all-time closing high (since 2009 data start)",
+   "mechanism": "blue sky"
+  },
+  {
+   "id": "P09xA20",
+   "event": "P09",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "new all-time closing high (since 2009 data start)",
+   "mechanism": "blue sky"
+  },
+  {
+   "id": "P09xA60",
+   "event": "P09",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "new all-time closing high (since 2009 data start)",
+   "mechanism": "blue sky"
+  },
+  {
+   "id": "P09xMV60",
+   "event": "P09",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "new all-time closing high (since 2009 data start)",
+   "mechanism": "blue sky"
+  },
+  {
+   "id": "P10xA5",
+   "event": "P10",
+   "outcome": "A5",
+   "sign": "-",
+   "definition": "new 52-week closing low",
+   "mechanism": "52-week-low"
+  },
+  {
+   "id": "P10xA20",
+   "event": "P10",
+   "outcome": "A20",
+   "sign": "-",
+   "definition": "new 52-week closing low",
+   "mechanism": "52-week-low"
+  },
+  {
+   "id": "P10xA60",
+   "event": "P10",
+   "outcome": "A60",
+   "sign": "-",
+   "definition": "new 52-week closing low",
+   "mechanism": "52-week-low"
+  },
+  {
+   "id": "P10xMV60",
+   "event": "P10",
+   "outcome": "MV60",
+   "sign": "?",
+   "definition": "new 52-week closing low",
+   "mechanism": "52-week-low"
+  },
+  {
+   "id": "P11xA5",
+   "event": "P11",
+   "outcome": "A5",
+   "sign": "?",
+   "definition": "one-day rise > 10% (no gap requirement)",
+   "mechanism": "large up move"
+  },
+  {
+   "id": "P11xA20",
+   "event": "P11",
+   "outcome": "A20",
+   "sign": "?",
+   "definition": "one-day rise > 10% (no gap requirement)",
+   "mechanism": "large up move"
+  },
+  {
+   "id": "P11xA60",
+   "event": "P11",
+   "outcome": "A60",
+   "sign": "?",
+   "definition": "one-day rise > 10% (no gap requirement)",
+   "mechanism": "large up move"
+  },
+  {
+   "id": "P11xMV60",
+   "event": "P11",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "one-day rise > 10% (no gap requirement)",
+   "mechanism": "large up move"
+  },
+  {
+   "id": "P12xA5",
+   "event": "P12",
+   "outcome": "A5",
+   "sign": "?",
+   "definition": "20-day return > 30%",
+   "mechanism": "short-term overextension"
+  },
+  {
+   "id": "P12xA20",
+   "event": "P12",
+   "outcome": "A20",
+   "sign": "?",
+   "definition": "20-day return > 30%",
+   "mechanism": "short-term overextension"
+  },
+  {
+   "id": "P12xA60",
+   "event": "P12",
+   "outcome": "A60",
+   "sign": "?",
+   "definition": "20-day return > 30%",
+   "mechanism": "short-term overextension"
+  },
+  {
+   "id": "P12xMV60",
+   "event": "P12",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "20-day return > 30%",
+   "mechanism": "short-term overextension"
+  },
+  {
+   "id": "T01xA5",
+   "event": "T01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+   "mechanism": "joining a hot theme"
+  },
+  {
+   "id": "T01xA20",
+   "event": "T01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+   "mechanism": "joining a hot theme"
+  },
+  {
+   "id": "T01xA60",
+   "event": "T01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+   "mechanism": "joining a hot theme"
+  },
+  {
+   "id": "T01xMV60",
+   "event": "T01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+   "mechanism": "joining a hot theme"
+  },
+  {
+   "id": "T02xA5",
+   "event": "T02",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+   "mechanism": "industry turn"
+  },
+  {
+   "id": "T02xA20",
+   "event": "T02",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+   "mechanism": "industry turn"
+  },
+  {
+   "id": "T02xA60",
+   "event": "T02",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+   "mechanism": "industry turn"
+  },
+  {
+   "id": "T02xMV60",
+   "event": "T02",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+   "mechanism": "industry turn"
+  },
+  {
+   "id": "X01xA5",
+   "event": "X01",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "F14 filed within 20 trading days of a new 52-week high",
+   "mechanism": "fundamentals + price confirm"
+  },
+  {
+   "id": "X01xA20",
+   "event": "X01",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "F14 filed within 20 trading days of a new 52-week high",
+   "mechanism": "fundamentals + price confirm"
+  },
+  {
+   "id": "X01xA60",
+   "event": "X01",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "F14 filed within 20 trading days of a new 52-week high",
+   "mechanism": "fundamentals + price confirm"
+  },
+  {
+   "id": "X01xMV60",
+   "event": "X01",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "F14 filed within 20 trading days of a new 52-week high",
+   "mechanism": "fundamentals + price confirm"
+  },
+  {
+   "id": "X02xA5",
+   "event": "X02",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "insider cluster (I02) while above the 200-day average",
+   "mechanism": "insiders + trend"
+  },
+  {
+   "id": "X02xA20",
+   "event": "X02",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "insider cluster (I02) while above the 200-day average",
+   "mechanism": "insiders + trend"
+  },
+  {
+   "id": "X02xA60",
+   "event": "X02",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "insider cluster (I02) while above the 200-day average",
+   "mechanism": "insiders + trend"
+  },
+  {
+   "id": "X02xMV60",
+   "event": "X02",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "insider cluster (I02) while above the 200-day average",
+   "mechanism": "insiders + trend"
+  },
+  {
+   "id": "X03xA5",
+   "event": "X03",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "guidance raise (G01) with a gap up > 3% that day",
+   "mechanism": "raise + market agrees"
+  },
+  {
+   "id": "X03xA20",
+   "event": "X03",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "guidance raise (G01) with a gap up > 3% that day",
+   "mechanism": "raise + market agrees"
+  },
+  {
+   "id": "X03xA60",
+   "event": "X03",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "guidance raise (G01) with a gap up > 3% that day",
+   "mechanism": "raise + market agrees"
+  },
+  {
+   "id": "X03xMV60",
+   "event": "X03",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "guidance raise (G01) with a gap up > 3% that day",
+   "mechanism": "raise + market agrees"
+  },
+  {
+   "id": "X04xA5",
+   "event": "X04",
+   "outcome": "A5",
+   "sign": "+",
+   "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+   "mechanism": "earnings gap (PEAD)"
+  },
+  {
+   "id": "X04xA20",
+   "event": "X04",
+   "outcome": "A20",
+   "sign": "+",
+   "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+   "mechanism": "earnings gap (PEAD)"
+  },
+  {
+   "id": "X04xA60",
+   "event": "X04",
+   "outcome": "A60",
+   "sign": "+",
+   "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+   "mechanism": "earnings gap (PEAD)"
+  },
+  {
+   "id": "X04xMV60",
+   "event": "X04",
+   "outcome": "MV60",
+   "sign": "+",
+   "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+   "mechanism": "earnings gap (PEAD)"
+  }
+ ]
+}
