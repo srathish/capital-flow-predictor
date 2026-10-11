@@ -48,7 +48,7 @@ const SPY = rd(path.join(C, 'wdaily_hist', 'SPY_full.json'), []), SPYI = new Map
 // ---------- prices ----------
 const P = new Map();
 for (const { t } of U) { if (!FUND.has(t) || FUNDS.has(SIC.get(t))) continue; const cb = cleanBars(t); const b = cb.bars; if (b.length < 260) continue;
-  P.set(t, { d: b.map((x) => x.d), c: Float64Array.from(b.map((x) => x.c)), v: Float64Array.from(b.map((x) => x.v || 0)), bad: cb.bad, gaps: gapsOf(b) }); }
+  P.set(t, { d: b.map((x) => x.d), o: Float64Array.from(b.map((x) => x.o ?? NaN)), c: Float64Array.from(b.map((x) => x.c)), v: Float64Array.from(b.map((x) => x.v || 0)), bad: cb.bad, gaps: gapsOf(b) }); }
 log(`prices for ${P.size} companies`);
 const idx = (arr, d) => { let lo = 0, hi = arr.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (arr[m] <= d) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
 const lastBy = (arr, d, key = 'f') => { let r = null; for (const x of arr) { if (x[key] <= d) r = x; else if (key === 'f') continue; } return r; };

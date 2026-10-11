@@ -31,4 +31,13 @@ Engine `event_factory.mjs` audited independently before its single run; amendmen
 `shadow/results_event_factory/`. Research only.
 
 ## Amendments
-(none yet)
+**Amendment 1 (2026-10-11, after the independent audit, before the run).**
+- Gap events (P03, P04, X03, X04) use opens from the same merged adjusted bars as the closes (wdaily_hist + wdaily);
+  before, opens existed only from 2022-10, so these 16 studies had no build events.
+- A60 and MV60 are clustered by entry QUARTER (60-day windows overlap neighbouring months); A20 by month, A5 by day.
+- X01 tests against every 52-week-high day (not the thinned P01 list). G03 is built from all guidance raises.
+- I01 starts 2015-01-02 and G04 2015-03-01 (12-month look-backs need a year of insider/guidance history). T01 requires
+  the ticker to have concept history at least 365 days before the mention.
+- SEC events only for quarters ending ≤ 120 days before the filing; F12 skips share jumps of ~3:2, 5:4, 4:3 (unadjusted
+  small splits). Outcomes are checked per horizon (A5/A20 no longer need 61 days of future data).
+- Placebo random numbers from mulberry32 (the old generator cycled).
