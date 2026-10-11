@@ -38,3 +38,7 @@ Collector `real_straddle_collect.mjs` (prices only) then `real_straddle.mjs` (si
 **Amendment 1 (2026-10-11, while collecting, before any P&L is computed).** UW's intraday option history starts
 2025-04-01, so T2 (0DTE) prices exist only in the holdout. H3, H4 and H6 are judged on the holdout alone (their build
 rows are empty); the H6 filter thresholds still come from build-period FEATURE values (no option prices needed).
+**Amendment 2 (2026-10-11, before any P&L is computed).** P&L ÷ premium has a long left tail (a big move against a
+small premium), so for H1–H6 it is winsorized at the 1st / 99th percentiles of each trade type's full sample; unwinsorized
+dollar results are reported alongside. H5/H6 are tested as the filter-dummy coefficient in the same pooled regression
+(ticker effect, Driscoll–Kraay lag 5).
