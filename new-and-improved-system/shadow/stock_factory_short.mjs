@@ -13,7 +13,7 @@ import { splitEvents, adjustedBars, factorAt, nearEvent } from './weekly_basis.m
 
 const SH = decodeURIComponent(new URL('.', import.meta.url).pathname), NIS = path.join(SH, '..'), C = path.join(NIS, '.cache'), GW = path.join(C, 'uwgreeks_w');
 const OUT = path.join(SH, 'results_stock_factory'), SMOKE = process.argv.includes('--smoke');
-if (!SMOKE && !process.argv.includes('--beyond') && !process.argv.includes('--asym') && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+if (!SMOKE && !process.argv.includes('--beyond') && !process.argv.includes('--asym') && !process.argv.includes('--picks') && fs.existsSync(path.join(OUT, 'short_summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
 const REG = JSON.parse(fs.readFileSync(path.join(SH, 'stock_registry.json'), 'utf8')).hypotheses.filter((h) => h.horizon === 'short' && h.feature !== 'S43'); // amendment 2: S43 duplicated S37's ranks
 const rd = (f, d = null) => { try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : d; } catch { return d; } };
 const addD = (d, n) => new Date(Date.parse(d + 'T12:00:00Z') + n * 864e5).toISOString().slice(0, 10), days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
@@ -76,7 +76,7 @@ for (const t of TICKERS) { const f = path.join(GW, `${t}.jsonl`); if (!fs.exists
   for (const x of snaps) { const j = bi.get(x.d); if (j == null) continue;
     const ratioAdj = x.ratio == null ? null : x.ratio * rawC.get(x.d) / bars[j].c, fct = nearEvent(ev, x.d) ? null : factorAt(ev, x.d, ratioAdj);
     let sm = null; if (fct != null && x.s.length) { const s = fct === 1 ? x.s : x.s.map((r) => [r[0], r[1] * fct * fct, r[2] * fct * fct, r[3] * fct, r[4] * fct, r[5] * fct, r[6] * fct, r[7] * fct, r[8] * fct]); sm = summarize(s, bars[j].c * fct); }
-    weeks.push({ d: x.d, j, sum: sm }); }
+    weeks.push({ d: x.d, j, sum: sm, raw: fct != null ? bars[j].c * fct : null, strikes: fct != null && x.s.length ? x.s.map((r) => r[0]) : null }); }
   RAW.set(t, { weeks, bars, bi, unexplained }); if (++nT >= (SMOKE ? 1e9 : 1e9)) break; }
 log(`${RAW.size} tickers with weekly greeks`);
 const WEEKS = [...new Set([...RAW.values()].flatMap((r) => r.weeks.map((w) => w.d)))].sort();
@@ -127,6 +127,22 @@ log(`${PANEL.length} weekly cross-sections, median ${median(PANEL.map((p) => p.R
 if (SMOKE) { const m = PANEL.at(-30); console.log(JSON.stringify({ weeks: PANEL.length, stocks: PANEL.map((p) => p.R.size).filter((_, i) => i % 20 === 0), coverage: Object.fromEntries(FEATS.map((k) => [k, +([...m.R.values()].filter((x) => Number.isFinite(x.f[FI.get(k)])).length / m.R.size).toFixed(2)])), fwd: Object.fromEntries(Object.entries(m.fwd).map(([k, v]) => [k, v ? v.size : null])) })); process.exit(0); }
 
 
+if (process.argv.includes('--picks')) { // ideas200 part B: weekly top-10 per signal + 10 random controls (features known at each close)
+  const SIGS = { S17: ['S17', 1], S55: ['S55', 1], S19neg: ['S19', -1], S41: ['S41', 1], S53: ['S53', 1], S44: ['S44', 1], S07: ['S07', 1], S20: ['S20', 1], S50: ['S50', 1], S42neg: ['S42', -1], S14: ['S14', 1], S40: ['S40', 1] };
+  let seed = 7; const rnd = () => { seed = (seed + 0x6d2b79f5) | 0; let x = Math.imul(seed ^ (seed >>> 15), 1 | seed); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
+  const out = [];
+  for (const m of PANEL) { const info = (t) => { const X = RAW.get(t), w = X.weeks.find((q) => q.d === m.M); return w?.raw && w.strikes ? { raw: w.raw, strikes: w.strikes } : null; };
+    const pool = [...m.R.keys()].filter((t) => info(t)), picks = new Map(), add = (t, tag) => { if (!picks.has(t)) picks.set(t, { t, ...info(t), tags: [] }); picks.get(t).tags.push(tag); };
+    for (const [name, [fk, dir]] of Object.entries(SIGS)) pool.filter((t) => Number.isFinite(m.R.get(t).f[FI.get(fk)])).sort((a, b) => dir * (m.R.get(b).f[FI.get(fk)] - m.R.get(a).f[FI.get(fk)])).slice(0, 10).forEach((t) => add(t, name));
+    const w1 = (t) => m.R.get(t).f[FI.get('S36')];
+    pool.filter((t) => w1(t) > 0.10).sort((a, b) => w1(b) - w1(a)).slice(0, 10).forEach((t) => add(t, 'S36up'));
+    pool.filter((t) => w1(t) < -0.10).sort((a, b) => w1(a) - w1(b)).slice(0, 10).forEach((t) => add(t, 'S36dn'));
+    const rk = (fk) => { const v = pool.map((t) => [t, m.R.get(t).f[FI.get(fk)]]).filter(([, x]) => Number.isFinite(x)).sort((a, b) => a[1] - b[1]); return new Map(v.map(([t], i) => [t, i / Math.max(1, v.length - 1)])); };
+    const r1 = rk('S17'), r2 = rk('S41'), r3 = rk('S53'); pool.filter((t) => r1.has(t) && r2.has(t) && r3.has(t)).sort((a, b) => (r1.get(b) + r2.get(b) + r3.get(b)) - (r1.get(a) + r2.get(a) + r3.get(a))).slice(0, 10).forEach((t) => add(t, 'COMBO'));
+    const ctl = [...pool]; for (let i = ctl.length - 1; i > 0; i--) { const k = Math.floor(rnd() * (i + 1)); [ctl[i], ctl[k]] = [ctl[k], ctl[i]]; } ctl.slice(0, 10).forEach((t) => add(t, 'CONTROL'));
+    out.push({ d: m.M, picks: [...picks.values()] }); }
+  fs.mkdirSync(path.join(C, 'bigmover'), { recursive: true }); fs.writeFileSync(path.join(C, 'bigmover', 'picks.json'), JSON.stringify(out));
+  console.log(`weeks ${out.length}, stock-weeks ${out.reduce((s, w) => s + w.picks.length, 0)}`); process.exit(0); }
 if (process.argv.includes('--asym')) { // exploratory (not pre-registered): vanna vs top-10% and bottom-10% 4-week returns, by fifth of the feature
   for (const fk of ['S17', 'S55', 'S19', 'S41']) { for (const [name, set] of [['build', (m) => WEEKS[m.wi + 4] && WEEKS[m.wi + 4] <= BUILD_END], ['holdout', (m) => m.M >= HOLD_START]]) {
     const q = [0, 1, 2, 3, 4].map(() => ({ up: 0, dn: 0, n: 0, r: [] }));
