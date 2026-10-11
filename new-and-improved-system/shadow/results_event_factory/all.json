@@ -1,0 +1,2707 @@
+[
+ {
+  "id": "F01xA5",
+  "event": "F01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "quarter revenue growth YoY > 30%",
+  "mechanism": "strong demand, under-reacted",
+  "b": {
+   "n": 2327,
+   "m": 0.0011737749752378822,
+   "t": 1.1486211638398482
+  },
+  "p1": 0.12535614222836033,
+  "stage1": false
+ },
+ {
+  "id": "F01xA20",
+  "event": "F01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "quarter revenue growth YoY > 30%",
+  "mechanism": "strong demand, under-reacted",
+  "b": {
+   "n": 2317,
+   "m": 0.0015649013201533704,
+   "t": 0.5528564453140319
+  },
+  "p1": 0.29018075360572815,
+  "stage1": false
+ },
+ {
+  "id": "F01xA60",
+  "event": "F01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "quarter revenue growth YoY > 30%",
+  "mechanism": "strong demand, under-reacted",
+  "b": {
+   "n": 2201,
+   "m": 0.004668373124886298,
+   "t": 0.8801210153326569
+  },
+  "p1": 0.1893967968663277,
+  "stage1": false
+ },
+ {
+  "id": "F01xMV60",
+  "event": "F01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "quarter revenue growth YoY > 30%",
+  "mechanism": "strong demand, under-reacted",
+  "b": {
+   "n": 2201,
+   "m": 0.0313039527487503,
+   "t": 3.2106182344996523
+  },
+  "p1": 0.0006623123878553017,
+  "stage1": true,
+  "h": {
+   "n": 4631,
+   "m": 0.04597279205355641,
+   "t": 5.758914144112573
+  },
+  "p2": 4.24560020473308e-9,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F02xA5",
+  "event": "F02",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "revenue growth accelerates by > 10 pts",
+  "mechanism": "inflection",
+  "b": {
+   "n": 2842,
+   "m": -0.00017467153368056648,
+   "t": -0.21906056696574863
+  },
+  "p1": 0.5866986448490449,
+  "stage1": false
+ },
+ {
+  "id": "F02xA20",
+  "event": "F02",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "revenue growth accelerates by > 10 pts",
+  "mechanism": "inflection",
+  "b": {
+   "n": 2833,
+   "m": 0.00020261568481612575,
+   "t": 0.11001074034920813
+  },
+  "p1": 0.4562002454629248,
+  "stage1": false
+ },
+ {
+  "id": "F02xA60",
+  "event": "F02",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "revenue growth accelerates by > 10 pts",
+  "mechanism": "inflection",
+  "b": {
+   "n": 2709,
+   "m": 0.0069152366727402515,
+   "t": 1.7757524616535338
+  },
+  "p1": 0.03788680866012906,
+  "stage1": false
+ },
+ {
+  "id": "F02xMV60",
+  "event": "F02",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "revenue growth accelerates by > 10 pts",
+  "mechanism": "inflection",
+  "b": {
+   "n": 2709,
+   "m": 0.010003691399040204,
+   "t": 1.599606784654268
+  },
+  "p1": 0.054842910389092725,
+  "stage1": false
+ },
+ {
+  "id": "F03xA5",
+  "event": "F03",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+  "mechanism": "pricing power",
+  "b": {
+   "n": 1837,
+   "m": 0.0012968934138641451,
+   "t": 1.3108776380845215
+  },
+  "p1": 0.09494960086289372,
+  "stage1": false
+ },
+ {
+  "id": "F03xA20",
+  "event": "F03",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+  "mechanism": "pricing power",
+  "b": {
+   "n": 1833,
+   "m": 0.0002948206348074724,
+   "t": 0.12531845489987478
+  },
+  "p1": 0.45013555229872626,
+  "stage1": false
+ },
+ {
+  "id": "F03xA60",
+  "event": "F03",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+  "mechanism": "pricing power",
+  "b": {
+   "n": 1747,
+   "m": -0.00032240933533805367,
+   "t": -0.057561358012529644
+  },
+  "p1": 0.5229511945350906,
+  "stage1": false
+ },
+ {
+  "id": "F03xMV60",
+  "event": "F03",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "gross margin up > 3 pts YoY (and positive a year ago)",
+  "mechanism": "pricing power",
+  "b": {
+   "n": 1747,
+   "m": 0.012192329708070859,
+   "t": 1.381866961200931
+  },
+  "p1": 0.08350631801965624,
+  "stage1": false
+ },
+ {
+  "id": "F04xA5",
+  "event": "F04",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "revenue declines YoY",
+  "mechanism": "demand loss",
+  "b": {
+   "n": 6368,
+   "m": 0.000620880069776808,
+   "t": 1.0422408246528225
+  },
+  "p1": 0.8513499877205459,
+  "stage1": false
+ },
+ {
+  "id": "F04xA20",
+  "event": "F04",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "revenue declines YoY",
+  "mechanism": "demand loss",
+  "b": {
+   "n": 6345,
+   "m": -0.002661369843044685,
+   "t": -1.332989233356148
+  },
+  "p1": 0.09126771476384142,
+  "stage1": false
+ },
+ {
+  "id": "F04xA60",
+  "event": "F04",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "revenue declines YoY",
+  "mechanism": "demand loss",
+  "b": {
+   "n": 5985,
+   "m": -0.0005710364930870438,
+   "t": -0.1533237553383203
+  },
+  "p1": 0.4390713434734316,
+  "stage1": false
+ },
+ {
+  "id": "F04xMV60",
+  "event": "F04",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "revenue declines YoY",
+  "mechanism": "demand loss",
+  "b": {
+   "n": 5985,
+   "m": -0.013283208020046398,
+   "t": -2.4162386437242933
+  },
+  "p1": 0.015681770892242985,
+  "stage1": false
+ },
+ {
+  "id": "F05xA5",
+  "event": "F05",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "gross margin down > 3 pts YoY",
+  "mechanism": "pricing pressure",
+  "b": {
+   "n": 1677,
+   "m": -0.0010408310310468698,
+   "t": -0.8553184501830557
+  },
+  "p1": 0.19618734678407806,
+  "stage1": false
+ },
+ {
+  "id": "F05xA20",
+  "event": "F05",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "gross margin down > 3 pts YoY",
+  "mechanism": "pricing pressure",
+  "b": {
+   "n": 1670,
+   "m": -0.005912402104524399,
+   "t": -2.5279502546781405
+  },
+  "p1": 0.005736549901825953,
+  "stage1": true,
+  "h": {
+   "n": 3445,
+   "m": 0.004384535184881692,
+   "t": 1.6037467860385204
+  },
+  "p2": 0.9456150727025727,
+  "passBH": false,
+  "validated": false
+ },
+ {
+  "id": "F05xA60",
+  "event": "F05",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "gross margin down > 3 pts YoY",
+  "mechanism": "pricing pressure",
+  "b": {
+   "n": 1585,
+   "m": -0.0026125161049315496,
+   "t": -0.5044690852672145
+  },
+  "p1": 0.3069658064639405,
+  "stage1": false
+ },
+ {
+  "id": "F05xMV60",
+  "event": "F05",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "gross margin down > 3 pts YoY",
+  "mechanism": "pricing pressure",
+  "b": {
+   "n": 1585,
+   "m": 0.011041009463722287,
+   "t": 1.2176907889914472
+  },
+  "p1": 0.22334158429570938,
+  "stage1": false
+ },
+ {
+  "id": "F06xA5",
+  "event": "F06",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "first profitable quarter after ≥ 4 losing quarters",
+  "mechanism": "turn to profit",
+  "b": {
+   "n": 140,
+   "m": -0.0029580036818161294,
+   "t": -0.7934590694868402
+  },
+  "p1": 0.786244909243192,
+  "stage1": false
+ },
+ {
+  "id": "F06xA20",
+  "event": "F06",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "first profitable quarter after ≥ 4 losing quarters",
+  "mechanism": "turn to profit",
+  "b": {
+   "n": 140,
+   "m": -0.00343516352646729,
+   "t": -0.41936018171845774
+  },
+  "p1": 0.6625235897358616,
+  "stage1": false
+ },
+ {
+  "id": "F06xA60",
+  "event": "F06",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "first profitable quarter after ≥ 4 losing quarters",
+  "mechanism": "turn to profit",
+  "b": {
+   "n": 129,
+   "m": 0.0012362926165609752,
+   "t": 0.07215944328732696
+  },
+  "p1": 0.47123730303439326,
+  "stage1": false
+ },
+ {
+  "id": "F06xMV60",
+  "event": "F06",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "first profitable quarter after ≥ 4 losing quarters",
+  "mechanism": "turn to profit",
+  "b": {
+   "n": 129,
+   "m": 0.06279069767441872,
+   "t": 2.7930805625220905
+  },
+  "p1": 0.002610493798734792,
+  "stage1": true,
+  "h": {
+   "n": 449,
+   "m": 0.07149220489977628,
+   "t": 4.037165158191552
+  },
+  "p2": 0.00002706386030348895,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F07xA5",
+  "event": "F07",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "first positive operating income after ≥ 4 negative",
+  "mechanism": "operating turn",
+  "b": {
+   "n": 109,
+   "m": -0.0028928198307640973,
+   "t": -0.5307038321707356
+  },
+  "p1": 0.7021880798433171,
+  "stage1": false
+ },
+ {
+  "id": "F07xA20",
+  "event": "F07",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "first positive operating income after ≥ 4 negative",
+  "mechanism": "operating turn",
+  "b": {
+   "n": 109,
+   "m": 0.004730260072285562,
+   "t": 0.39122422669083967
+  },
+  "p1": 0.34781570999585587,
+  "stage1": false
+ },
+ {
+  "id": "F07xA60",
+  "event": "F07",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "first positive operating income after ≥ 4 negative",
+  "mechanism": "operating turn",
+  "b": {
+   "n": 103,
+   "m": -0.0029217181585024614,
+   "t": -0.12287175126390604
+  },
+  "p1": 0.5488958436295646,
+  "stage1": false
+ },
+ {
+  "id": "F07xMV60",
+  "event": "F07",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "first positive operating income after ≥ 4 negative",
+  "mechanism": "operating turn",
+  "b": {
+   "n": 103,
+   "m": 0.06504854368932066,
+   "t": 1.537702911966582
+  },
+  "p1": 0.062060642168125235,
+  "stage1": false
+ },
+ {
+  "id": "F08xA5",
+  "event": "F08",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+  "mechanism": "breakout fundamentals",
+  "b": {
+   "n": 3139,
+   "m": 0.0012171350678330318,
+   "t": 1.562000034002621
+  },
+  "p1": 0.05914399019395988,
+  "stage1": false
+ },
+ {
+  "id": "F08xA20",
+  "event": "F08",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+  "mechanism": "breakout fundamentals",
+  "b": {
+   "n": 3131,
+   "m": 0.0033220578518110425,
+   "t": 1.321752528306179
+  },
+  "p1": 0.09312533230396047,
+  "stage1": false
+ },
+ {
+  "id": "F08xA60",
+  "event": "F08",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+  "mechanism": "breakout fundamentals",
+  "b": {
+   "n": 3004,
+   "m": 0.01033598641102467,
+   "t": 2.032436084934814
+  },
+  "p1": 0.02105469252324843,
+  "stage1": false
+ },
+ {
+  "id": "F08xMV60",
+  "event": "F08",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "record quarterly revenue (above every earlier quarter) with YoY > 15%",
+  "mechanism": "breakout fundamentals",
+  "b": {
+   "n": 3004,
+   "m": 0.02083888149134393,
+   "t": 2.3327212445111374
+  },
+  "p1": 0.009831367125740842,
+  "stage1": true,
+  "h": {
+   "n": 5084,
+   "m": 0.023721479150277752,
+   "t": 3.5028795374878996
+  },
+  "p2": 0.0002301728458559138,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F09xA5",
+  "event": "F09",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "backlog (RPO) growth YoY > 30%",
+  "mechanism": "future revenue",
+  "b": {
+   "n": 153,
+   "m": 0.005939511665784886,
+   "t": 1.3037047189367574
+  },
+  "p1": 0.0961671875125728,
+  "stage1": false
+ },
+ {
+  "id": "F09xA20",
+  "event": "F09",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "backlog (RPO) growth YoY > 30%",
+  "mechanism": "future revenue",
+  "b": {
+   "n": 144,
+   "m": 0.008284572786600247,
+   "t": 1.454286481037244
+  },
+  "p1": 0.07293347602971256,
+  "stage1": false
+ },
+ {
+  "id": "F09xA60",
+  "event": "F09",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "backlog (RPO) growth YoY > 30%",
+  "mechanism": "future revenue",
+  "b": {
+   "n": 100,
+   "m": 0.00045420251652782183,
+   "t": 0.020728118334355103
+  },
+  "p1": 0.4917310816100595,
+  "stage1": false
+ },
+ {
+  "id": "F09xMV60",
+  "event": "F09",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "backlog (RPO) growth YoY > 30%",
+  "mechanism": "future revenue",
+  "b": {
+   "n": 100,
+   "m": -0.020000000000000018,
+   "t": -1.2374948760083895
+  },
+  "p1": 0.892048247150857,
+  "stage1": false
+ },
+ {
+  "id": "F10xA5",
+  "event": "F10",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "inventory growth exceeds revenue growth by > 20 pts",
+  "mechanism": "demand slowing",
+  "b": {
+   "n": 1779,
+   "m": -0.0016173319503235137,
+   "t": -1.2993727536776358
+  },
+  "p1": 0.09690806639643643,
+  "stage1": false
+ },
+ {
+  "id": "F10xA20",
+  "event": "F10",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "inventory growth exceeds revenue growth by > 20 pts",
+  "mechanism": "demand slowing",
+  "b": {
+   "n": 1774,
+   "m": -0.003750391391524157,
+   "t": -1.6812831322621666
+  },
+  "p1": 0.0463539332832246,
+  "stage1": false
+ },
+ {
+  "id": "F10xA60",
+  "event": "F10",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "inventory growth exceeds revenue growth by > 20 pts",
+  "mechanism": "demand slowing",
+  "b": {
+   "n": 1693,
+   "m": -0.0028139360469647814,
+   "t": -0.4721913834696644
+  },
+  "p1": 0.3183950242677293,
+  "stage1": false
+ },
+ {
+  "id": "F10xMV60",
+  "event": "F10",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "inventory growth exceeds revenue growth by > 20 pts",
+  "mechanism": "demand slowing",
+  "b": {
+   "n": 1693,
+   "m": 0.011636148848198549,
+   "t": 1.288164267471546
+  },
+  "p1": 0.19768888302815246,
+  "stage1": false
+ },
+ {
+  "id": "F11xA5",
+  "event": "F11",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "annual capex up > 50%",
+  "mechanism": "over-investment",
+  "b": {
+   "n": 1589,
+   "m": -0.0009228208686383058,
+   "t": -0.6227437565131843
+  },
+  "p1": 0.26672633886162084,
+  "stage1": false
+ },
+ {
+  "id": "F11xA20",
+  "event": "F11",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "annual capex up > 50%",
+  "mechanism": "over-investment",
+  "b": {
+   "n": 1583,
+   "m": -0.004865307805686683,
+   "t": -1.801487114125013
+  },
+  "p1": 0.03581300914589187,
+  "stage1": false
+ },
+ {
+  "id": "F11xA60",
+  "event": "F11",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "annual capex up > 50%",
+  "mechanism": "over-investment",
+  "b": {
+   "n": 1566,
+   "m": -0.00256151201624355,
+   "t": -0.45196207071926864
+  },
+  "p1": 0.32564809147300045,
+  "stage1": false
+ },
+ {
+  "id": "F11xMV60",
+  "event": "F11",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "annual capex up > 50%",
+  "mechanism": "over-investment",
+  "b": {
+   "n": 1566,
+   "m": 0.035376756066410484,
+   "t": 3.946855505177814
+  },
+  "p1": 0.00007921834371504843,
+  "stage1": true,
+  "h": {
+   "n": 1909,
+   "m": 0.02310110005238243,
+   "t": 1.8248284933682766
+  },
+  "p2": 0.03401339451918939,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F12xA5",
+  "event": "F12",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "share count up > 10% YoY (split-adjusted)",
+  "mechanism": "dilution",
+  "b": {
+   "n": 1268,
+   "m": -0.0015886702780171275,
+   "t": -1.2171002585474988
+  },
+  "p1": 0.11178307891511118,
+  "stage1": false
+ },
+ {
+  "id": "F12xA20",
+  "event": "F12",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "share count up > 10% YoY (split-adjusted)",
+  "mechanism": "dilution",
+  "b": {
+   "n": 1264,
+   "m": -0.005266021700619813,
+   "t": -2.17670455567707
+  },
+  "p1": 0.014751254658042195,
+  "stage1": false
+ },
+ {
+  "id": "F12xA60",
+  "event": "F12",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "share count up > 10% YoY (split-adjusted)",
+  "mechanism": "dilution",
+  "b": {
+   "n": 1193,
+   "m": 0.003420306492152133,
+   "t": 0.7856295447911522
+  },
+  "p1": 0.7839578398788223,
+  "stage1": false
+ },
+ {
+  "id": "F12xMV60",
+  "event": "F12",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "share count up > 10% YoY (split-adjusted)",
+  "mechanism": "dilution",
+  "b": {
+   "n": 1193,
+   "m": 0.009807208717519061,
+   "t": 0.9290721077570865
+  },
+  "p1": 0.35285160036219887,
+  "stage1": false
+ },
+ {
+  "id": "F13xA5",
+  "event": "F13",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "share count down > 3% YoY",
+  "mechanism": "buyback",
+  "b": {
+   "n": 4789,
+   "m": 0.0012058075071051807,
+   "t": 2.374507260057765
+  },
+  "p1": 0.008786181568208429,
+  "stage1": true,
+  "h": {
+   "n": 5936,
+   "m": 0.002106184987362366,
+   "t": 2.3677968780764043
+  },
+  "p2": 0.008947163295403127,
+  "passBH": true,
+  "placeboBeat": 17,
+  "validated": false
+ },
+ {
+  "id": "F13xA20",
+  "event": "F13",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "share count down > 3% YoY",
+  "mechanism": "buyback",
+  "b": {
+   "n": 4761,
+   "m": 0.0001288134479883072,
+   "t": 0.10468650902410274
+  },
+  "p1": 0.4583120961318006,
+  "stage1": false
+ },
+ {
+  "id": "F13xA60",
+  "event": "F13",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "share count down > 3% YoY",
+  "mechanism": "buyback",
+  "b": {
+   "n": 4502,
+   "m": 0.0052965104197160735,
+   "t": 1.8918104647147203
+  },
+  "p1": 0.029258048868600617,
+  "stage1": false
+ },
+ {
+  "id": "F13xMV60",
+  "event": "F13",
+  "outcome": "MV60",
+  "sign": "-",
+  "definition": "share count down > 3% YoY",
+  "mechanism": "buyback",
+  "b": {
+   "n": 4502,
+   "m": -0.026032874278094944,
+   "t": -6.8994850223676485
+  },
+  "p1": 2.625653969633841e-12,
+  "stage1": true,
+  "h": {
+   "n": 5585,
+   "m": -0.01674127126230685,
+   "t": -2.5648982894810137
+  },
+  "p2": 0.005160329474409509,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F14xA5",
+  "event": "F14",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "revenue growth YoY > 30% AND accelerating",
+  "mechanism": "bottleneck inflection",
+  "b": {
+   "n": 1528,
+   "m": 0.0023118730490883275,
+   "t": 1.956014784858752
+  },
+  "p1": 0.025231632861528408,
+  "stage1": false
+ },
+ {
+  "id": "F14xA20",
+  "event": "F14",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "revenue growth YoY > 30% AND accelerating",
+  "mechanism": "bottleneck inflection",
+  "b": {
+   "n": 1521,
+   "m": 0.004107465745621062,
+   "t": 1.2339274376465639
+  },
+  "p1": 0.10861501694271625,
+  "stage1": false
+ },
+ {
+  "id": "F14xA60",
+  "event": "F14",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "revenue growth YoY > 30% AND accelerating",
+  "mechanism": "bottleneck inflection",
+  "b": {
+   "n": 1459,
+   "m": 0.011178568057984707,
+   "t": 1.7477793545991611
+  },
+  "p1": 0.04025107198942324,
+  "stage1": false
+ },
+ {
+  "id": "F14xMV60",
+  "event": "F14",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "revenue growth YoY > 30% AND accelerating",
+  "mechanism": "bottleneck inflection",
+  "b": {
+   "n": 1459,
+   "m": 0.03776559287182896,
+   "t": 3.230528456396486
+  },
+  "p1": 0.0006178705115262861,
+  "stage1": true,
+  "h": {
+   "n": 3101,
+   "m": 0.05091905836827139,
+   "t": 5.7418126102115234
+  },
+  "p2": 4.6973649414638885e-9,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "F15xA5",
+  "event": "F15",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "net margin down > 5 pts YoY",
+  "mechanism": "profit squeeze",
+  "b": {
+   "n": 3708,
+   "m": -0.0003884805261988641,
+   "t": -0.42866796546256947
+  },
+  "p1": 0.33408238527875533,
+  "stage1": false
+ },
+ {
+  "id": "F15xA20",
+  "event": "F15",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "net margin down > 5 pts YoY",
+  "mechanism": "profit squeeze",
+  "b": {
+   "n": 3695,
+   "m": -0.00211267268333528,
+   "t": -1.103851770128654
+  },
+  "p1": 0.13482873728493994,
+  "stage1": false
+ },
+ {
+  "id": "F15xA60",
+  "event": "F15",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "net margin down > 5 pts YoY",
+  "mechanism": "profit squeeze",
+  "b": {
+   "n": 3464,
+   "m": 0.0005885144120866983,
+   "t": 0.14643292302333125
+  },
+  "p1": 0.5582103283807702,
+  "stage1": false
+ },
+ {
+  "id": "F15xMV60",
+  "event": "F15",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "net margin down > 5 pts YoY",
+  "mechanism": "profit squeeze",
+  "b": {
+   "n": 3464,
+   "m": 0.005369515011547428,
+   "t": 0.7963506001715095
+  },
+  "p1": 0.4258280585285332,
+  "stage1": false
+ },
+ {
+  "id": "I01xA5",
+  "event": "I01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "first insider purchase in 12 months",
+  "mechanism": "insider sees value",
+  "b": {
+   "n": 1473,
+   "m": 0.0019125907006355904,
+   "t": 1.816533724043997
+  },
+  "p1": 0.034644208252141095,
+  "stage1": false
+ },
+ {
+  "id": "I01xA20",
+  "event": "I01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "first insider purchase in 12 months",
+  "mechanism": "insider sees value",
+  "b": {
+   "n": 1460,
+   "m": 0.0011609084662555316,
+   "t": 0.4609682209163682
+  },
+  "p1": 0.32241063682841387,
+  "stage1": false
+ },
+ {
+  "id": "I01xA60",
+  "event": "I01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "first insider purchase in 12 months",
+  "mechanism": "insider sees value",
+  "b": {
+   "n": 1417,
+   "m": 0.0028215761897252005,
+   "t": 0.7228458380042856
+  },
+  "p1": 0.2348871739567604,
+  "stage1": false
+ },
+ {
+  "id": "I01xMV60",
+  "event": "I01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "first insider purchase in 12 months",
+  "mechanism": "insider sees value",
+  "b": {
+   "n": 1417,
+   "m": -0.004728299223711837,
+   "t": -0.5488882549560535
+  },
+  "p1": 0.708459032370631,
+  "stage1": false
+ },
+ {
+  "id": "I02xA5",
+  "event": "I02",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+  "mechanism": "conviction",
+  "b": {
+   "n": 757,
+   "m": 0.0025916587946571445,
+   "t": 1.3312282822994363
+  },
+  "p1": 0.09155700036224035,
+  "stage1": false
+ },
+ {
+  "id": "I02xA20",
+  "event": "I02",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+  "mechanism": "conviction",
+  "b": {
+   "n": 744,
+   "m": -0.002185009859703766,
+   "t": -0.4670870428945627
+  },
+  "p1": 0.6797812663038083,
+  "stage1": false
+ },
+ {
+  "id": "I02xA60",
+  "event": "I02",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+  "mechanism": "conviction",
+  "b": {
+   "n": 721,
+   "m": -0.016930771941719845,
+   "t": -1.4258287108984231
+  },
+  "p1": 0.9230410708586884,
+  "stage1": false
+ },
+ {
+  "id": "I02xMV60",
+  "event": "I02",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "cluster: ≥ 3 different insiders buy within 30 days",
+  "mechanism": "conviction",
+  "b": {
+   "n": 721,
+   "m": -0.00013869625520098743,
+   "t": -0.008435795835306034
+  },
+  "p1": 0.5033655237207336,
+  "stage1": false
+ },
+ {
+  "id": "I03xA5",
+  "event": "I03",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "insider purchase > $1M",
+  "mechanism": "size of conviction",
+  "b": {
+   "n": 690,
+   "m": 0.0006246706767697953,
+   "t": 0.3394075920210534
+  },
+  "p1": 0.36715131655659017,
+  "stage1": false
+ },
+ {
+  "id": "I03xA20",
+  "event": "I03",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "insider purchase > $1M",
+  "mechanism": "size of conviction",
+  "b": {
+   "n": 678,
+   "m": 0.0014725547673555353,
+   "t": 0.3531732149616582
+  },
+  "p1": 0.36197925926815233,
+  "stage1": false
+ },
+ {
+  "id": "I03xA60",
+  "event": "I03",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "insider purchase > $1M",
+  "mechanism": "size of conviction",
+  "b": {
+   "n": 651,
+   "m": -0.006276601992979966,
+   "t": -0.9617216297335174
+  },
+  "p1": 0.8319053166245471,
+  "stage1": false
+ },
+ {
+  "id": "I03xMV60",
+  "event": "I03",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "insider purchase > $1M",
+  "mechanism": "size of conviction",
+  "b": {
+   "n": 651,
+   "m": -0.012442396313363751,
+   "t": -1.2593305253491347
+  },
+  "p1": 0.8960444672063894,
+  "stage1": false
+ },
+ {
+  "id": "I04xA5",
+  "event": "I04",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "insider purchase after a 20% drop in 3 months",
+  "mechanism": "buying the dip",
+  "b": {
+   "n": 862,
+   "m": 0.0027892645242333634,
+   "t": 1.0732020333977876
+  },
+  "p1": 0.14159024393264485,
+  "stage1": false
+ },
+ {
+  "id": "I04xA20",
+  "event": "I04",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "insider purchase after a 20% drop in 3 months",
+  "mechanism": "buying the dip",
+  "b": {
+   "n": 851,
+   "m": 0.0052161868131801814,
+   "t": 0.7233333593705024
+  },
+  "p1": 0.23473742415019616,
+  "stage1": false
+ },
+ {
+  "id": "I04xA60",
+  "event": "I04",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "insider purchase after a 20% drop in 3 months",
+  "mechanism": "buying the dip",
+  "b": {
+   "n": 826,
+   "m": 0.027780176031560903,
+   "t": 0.9608966853002183
+  },
+  "p1": 0.16830201467449424,
+  "stage1": false
+ },
+ {
+  "id": "I04xMV60",
+  "event": "I04",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "insider purchase after a 20% drop in 3 months",
+  "mechanism": "buying the dip",
+  "b": {
+   "n": 826,
+   "m": 0.06949152542372788,
+   "t": 7.428096449232573
+  },
+  "p1": 5.551115123125783e-14,
+  "stage1": true,
+  "h": {
+   "n": 1920,
+   "m": 0.02499999999999913,
+   "t": 2.371057104250773
+  },
+  "p2": 0.008868630689296109,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "I05xA5",
+  "event": "I05",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "insider purchase while the stock is above its 200-day average",
+  "mechanism": "confirmation",
+  "b": {
+   "n": 2071,
+   "m": 0.0004949525199424674,
+   "t": 0.5804228231558248
+  },
+  "p1": 0.2808146465052691,
+  "stage1": false
+ },
+ {
+  "id": "I05xA20",
+  "event": "I05",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "insider purchase while the stock is above its 200-day average",
+  "mechanism": "confirmation",
+  "b": {
+   "n": 2041,
+   "m": 0.0015597918883322774,
+   "t": 0.8358979783808964
+  },
+  "p1": 0.2016060511260367,
+  "stage1": false
+ },
+ {
+  "id": "I05xA60",
+  "event": "I05",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "insider purchase while the stock is above its 200-day average",
+  "mechanism": "confirmation",
+  "b": {
+   "n": 1979,
+   "m": 0.005321101848023925,
+   "t": 1.021027672835549
+  },
+  "p1": 0.1536206472617938,
+  "stage1": false
+ },
+ {
+  "id": "I05xMV60",
+  "event": "I05",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "insider purchase while the stock is above its 200-day average",
+  "mechanism": "confirmation",
+  "b": {
+   "n": 1979,
+   "m": -0.020161697827186544,
+   "t": -3.538223335988802
+  },
+  "p1": 0.9997985439070657,
+  "stage1": false
+ },
+ {
+  "id": "G01xA5",
+  "event": "G01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "guidance raise",
+  "mechanism": "management confidence",
+  "b": {
+   "n": 364,
+   "m": 0.002153096434226694,
+   "t": 1.1395915792907851
+  },
+  "p1": 0.12722827421065186,
+  "stage1": false
+ },
+ {
+  "id": "G01xA20",
+  "event": "G01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "guidance raise",
+  "mechanism": "management confidence",
+  "b": {
+   "n": 362,
+   "m": 0.008173247999602541,
+   "t": 2.090715401907387
+  },
+  "p1": 0.018276725211069822,
+  "stage1": false
+ },
+ {
+  "id": "G01xA60",
+  "event": "G01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "guidance raise",
+  "mechanism": "management confidence",
+  "b": {
+   "n": 341,
+   "m": 0.020594041949924032,
+   "t": 4.400879913588322
+  },
+  "p1": 0.000005395034911037655,
+  "stage1": true,
+  "h": {
+   "n": 746,
+   "m": -0.0033325391748936194,
+   "t": -0.34989280604682754
+  },
+  "p2": 0.6367904608963668,
+  "passBH": false,
+  "validated": false
+ },
+ {
+  "id": "G01xMV60",
+  "event": "G01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "guidance raise",
+  "mechanism": "management confidence",
+  "b": {
+   "n": 341,
+   "m": -0.026686217008797346,
+   "t": -2.4717175898591615
+  },
+  "p1": 0.9932767074967934,
+  "stage1": false
+ },
+ {
+  "id": "G02xA5",
+  "event": "G02",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "guidance cut",
+  "mechanism": "bad news drift",
+  "b": {
+   "n": 16,
+   "m": null,
+   "t": null
+  },
+  "p1": 1,
+  "stage1": false
+ },
+ {
+  "id": "G02xA20",
+  "event": "G02",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "guidance cut",
+  "mechanism": "bad news drift",
+  "b": {
+   "n": 16,
+   "m": null,
+   "t": null
+  },
+  "p1": 1,
+  "stage1": false
+ },
+ {
+  "id": "G02xA60",
+  "event": "G02",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "guidance cut",
+  "mechanism": "bad news drift",
+  "b": {
+   "n": 15,
+   "m": null,
+   "t": null
+  },
+  "p1": 1,
+  "stage1": false
+ },
+ {
+  "id": "G02xMV60",
+  "event": "G02",
+  "outcome": "MV60",
+  "sign": "-",
+  "definition": "guidance cut",
+  "mechanism": "bad news drift",
+  "b": {
+   "n": 15,
+   "m": null,
+   "t": null
+  },
+  "p1": 1,
+  "stage1": false
+ },
+ {
+  "id": "G03xA5",
+  "event": "G03",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "guidance raise while SPY is down over 20 days",
+  "mechanism": "strength in weakness",
+  "b": {
+   "n": 95,
+   "m": 0.0020150100899675723,
+   "t": 0.4955390879170912
+  },
+  "p1": 0.31010973840900913,
+  "stage1": false
+ },
+ {
+  "id": "G03xA20",
+  "event": "G03",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "guidance raise while SPY is down over 20 days",
+  "mechanism": "strength in weakness",
+  "b": {
+   "n": 95,
+   "m": 0.004459442278858561,
+   "t": 0.5753558829963862
+  },
+  "p1": 0.2825252063818504,
+  "stage1": false
+ },
+ {
+  "id": "G03xA60",
+  "event": "G03",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "guidance raise while SPY is down over 20 days",
+  "mechanism": "strength in weakness",
+  "b": {
+   "n": 95,
+   "m": 0.003659680800000832,
+   "t": 0.34301226255840067
+  },
+  "p1": 0.3657945839255716,
+  "stage1": false
+ },
+ {
+  "id": "G03xMV60",
+  "event": "G03",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "guidance raise while SPY is down over 20 days",
+  "mechanism": "strength in weakness",
+  "b": {
+   "n": 95,
+   "m": -0.02631578947368415,
+   "t": -1.102314013544171
+  },
+  "p1": 0.8648373953271988,
+  "stage1": false
+ },
+ {
+  "id": "G04xA5",
+  "event": "G04",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "second guidance raise within 12 months",
+  "mechanism": "repeat raiser",
+  "b": {
+   "n": 137,
+   "m": 0.0022787443758431674,
+   "t": 0.7556822814299039
+  },
+  "p1": 0.22491973283886502,
+  "stage1": false
+ },
+ {
+  "id": "G04xA20",
+  "event": "G04",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "second guidance raise within 12 months",
+  "mechanism": "repeat raiser",
+  "b": {
+   "n": 137,
+   "m": 0.008678300995804652,
+   "t": 1.5105171914481845
+  },
+  "p1": 0.0654557668376391,
+  "stage1": false
+ },
+ {
+  "id": "G04xA60",
+  "event": "G04",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "second guidance raise within 12 months",
+  "mechanism": "repeat raiser",
+  "b": {
+   "n": 126,
+   "m": 0.008757557198464773,
+   "t": 1.1490137877293674
+  },
+  "p1": 0.12527517685826883,
+  "stage1": false
+ },
+ {
+  "id": "G04xMV60",
+  "event": "G04",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "second guidance raise within 12 months",
+  "mechanism": "repeat raiser",
+  "b": {
+   "n": 126,
+   "m": -0.07619047619047596,
+   "t": -6.143476224808376
+  },
+  "p1": 0.9999999995947336,
+  "stage1": false
+ },
+ {
+  "id": "P01xA5",
+  "event": "P01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "new 52-week closing high",
+  "mechanism": "52-week-high momentum",
+  "b": {
+   "n": 14496,
+   "m": 0.00018623409031254202,
+   "t": 0.44800360539703415
+  },
+  "p1": 0.3270752368251977,
+  "stage1": false
+ },
+ {
+  "id": "P01xA20",
+  "event": "P01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "new 52-week closing high",
+  "mechanism": "52-week-high momentum",
+  "b": {
+   "n": 14316,
+   "m": 0.0004532359410218458,
+   "t": 0.3521253174759448
+  },
+  "p1": 0.3623721069481629,
+  "stage1": false
+ },
+ {
+  "id": "P01xA60",
+  "event": "P01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "new 52-week closing high",
+  "mechanism": "52-week-high momentum",
+  "b": {
+   "n": 13858,
+   "m": 0.004389730160651055,
+   "t": 1.6960206966999405
+  },
+  "p1": 0.044940943521950105,
+  "stage1": false
+ },
+ {
+  "id": "P01xMV60",
+  "event": "P01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "new 52-week closing high",
+  "mechanism": "52-week-high momentum",
+  "b": {
+   "n": 13858,
+   "m": -0.01311877615817102,
+   "t": -4.156485288478507
+  },
+  "p1": 0.9999838314425653,
+  "stage1": false
+ },
+ {
+  "id": "P02xA5",
+  "event": "P02",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "new 52-week high after 6 months without one",
+  "mechanism": "base breakout",
+  "b": {
+   "n": 4669,
+   "m": 0.000436224580083746,
+   "t": 0.5730305611638513
+  },
+  "p1": 0.2833118907043749,
+  "stage1": false
+ },
+ {
+  "id": "P02xA20",
+  "event": "P02",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "new 52-week high after 6 months without one",
+  "mechanism": "base breakout",
+  "b": {
+   "n": 4582,
+   "m": 0.001510723733888015,
+   "t": 0.7960507774560937
+  },
+  "p1": 0.2130011490512329,
+  "stage1": false
+ },
+ {
+  "id": "P02xA60",
+  "event": "P02",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "new 52-week high after 6 months without one",
+  "mechanism": "base breakout",
+  "b": {
+   "n": 4348,
+   "m": 0.0077950897243716346,
+   "t": 2.433444034589187
+  },
+  "p1": 0.007477973082753886,
+  "stage1": true,
+  "h": {
+   "n": 5202,
+   "m": 0.010221720931774128,
+   "t": 1.4371969336879649
+  },
+  "p2": 0.0753310532498207,
+  "passBH": true,
+  "placeboBeat": 6,
+  "validated": false
+ },
+ {
+  "id": "P02xMV60",
+  "event": "P02",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "new 52-week high after 6 months without one",
+  "mechanism": "base breakout",
+  "b": {
+   "n": 4348,
+   "m": -0.009383624655014805,
+   "t": -1.7258887288063842
+  },
+  "p1": 0.9578163275160766,
+  "stage1": false
+ },
+ {
+  "id": "P03xA5",
+  "event": "P03",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "gap up > 5% on > 3× average volume",
+  "mechanism": "news gap continuation",
+  "b": {
+   "n": 3771,
+   "m": -0.0028450706216918576,
+   "t": -2.1450355781769344
+  },
+  "p1": 0.984025058227246,
+  "stage1": false
+ },
+ {
+  "id": "P03xA20",
+  "event": "P03",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "gap up > 5% on > 3× average volume",
+  "mechanism": "news gap continuation",
+  "b": {
+   "n": 3725,
+   "m": 0.3976285261557827,
+   "t": 0.9894309582426196
+  },
+  "p1": 0.16122613606941572,
+  "stage1": false
+ },
+ {
+  "id": "P03xA60",
+  "event": "P03",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "gap up > 5% on > 3× average volume",
+  "mechanism": "news gap continuation",
+  "b": {
+   "n": 3561,
+   "m": 601.7978686328383,
+   "t": 1.0064095405117386
+  },
+  "p1": 0.15710927984594036,
+  "stage1": false
+ },
+ {
+  "id": "P03xMV60",
+  "event": "P03",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "gap up > 5% on > 3× average volume",
+  "mechanism": "news gap continuation",
+  "b": {
+   "n": 3561,
+   "m": 0.03423195731536249,
+   "t": 4.996856312758738
+  },
+  "p1": 2.918217210101659e-7,
+  "stage1": true,
+  "h": {
+   "n": 5988,
+   "m": 0.030093520374084977,
+   "t": 3.8387621455371796
+  },
+  "p2": 0.00006185033814032348,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "P04xA5",
+  "event": "P04",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "gap down > 5% on > 3× average volume",
+  "mechanism": "news gap continuation down",
+  "b": {
+   "n": 3916,
+   "m": 1.372660168057262,
+   "t": 1.0080032787940898
+  },
+  "p1": 0.8432735784311577,
+  "stage1": false
+ },
+ {
+  "id": "P04xA20",
+  "event": "P04",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "gap down > 5% on > 3× average volume",
+  "mechanism": "news gap continuation down",
+  "b": {
+   "n": 3886,
+   "m": 0.9553985668195357,
+   "t": 1.0248683026633916
+  },
+  "p1": 0.8472873487729226,
+  "stage1": false
+ },
+ {
+  "id": "P04xA60",
+  "event": "P04",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "gap down > 5% on > 3× average volume",
+  "mechanism": "news gap continuation down",
+  "b": {
+   "n": 3746,
+   "m": 1012.5268770709913,
+   "t": 0.9921194565298753
+  },
+  "p1": 0.8394304014831299,
+  "stage1": false
+ },
+ {
+  "id": "P04xMV60",
+  "event": "P04",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "gap down > 5% on > 3× average volume",
+  "mechanism": "news gap continuation down",
+  "b": {
+   "n": 3746,
+   "m": 0.02733582487987203,
+   "t": 3.8588041621945828
+  },
+  "p1": 0.00011398563133879769,
+  "stage1": true,
+  "h": {
+   "n": 5867,
+   "m": 0.03226521220385511,
+   "t": 4.088999022805941
+  },
+  "p2": 0.000021673498418639525,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "P05xA5",
+  "event": "P05",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "3-day drop > 15%",
+  "mechanism": "overreaction (reversal)",
+  "b": {
+   "n": 2998,
+   "m": 0.013484651102733336,
+   "t": 0.7927049729070378
+  },
+  "p1": 0.21397475305801705,
+  "stage1": false
+ },
+ {
+  "id": "P05xA20",
+  "event": "P05",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "3-day drop > 15%",
+  "mechanism": "overreaction (reversal)",
+  "b": {
+   "n": 2973,
+   "m": 443.2846997076071,
+   "t": 1.007803422981252
+  },
+  "p1": 0.1567743985431438,
+  "stage1": false
+ },
+ {
+  "id": "P05xA60",
+  "event": "P05",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "3-day drop > 15%",
+  "mechanism": "overreaction (reversal)",
+  "b": {
+   "n": 2858,
+   "m": 2366.01947482734,
+   "t": 1.482468235823106
+  },
+  "p1": 0.0691078956273119,
+  "stage1": false
+ },
+ {
+  "id": "P05xMV60",
+  "event": "P05",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "3-day drop > 15%",
+  "mechanism": "overreaction (reversal)",
+  "b": {
+   "n": 2858,
+   "m": 0.07984604618614839,
+   "t": 7.786121440732989
+  },
+  "p1": 6.8833827526759706e-15,
+  "stage1": true,
+  "h": {
+   "n": 8985,
+   "m": 0.05559265442402965,
+   "t": 4.504283134090158
+  },
+  "p2": 0.000003332951424517283,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "P06xA5",
+  "event": "P06",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "50-day average crosses above 200-day average",
+  "mechanism": "golden cross",
+  "b": {
+   "n": 6861,
+   "m": -0.00034470679841150424,
+   "t": -0.6410230864593125
+  },
+  "p1": 0.7392462841060539,
+  "stage1": false
+ },
+ {
+  "id": "P06xA20",
+  "event": "P06",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "50-day average crosses above 200-day average",
+  "mechanism": "golden cross",
+  "b": {
+   "n": 6748,
+   "m": -0.002073290051184245,
+   "t": -1.403910018330666
+  },
+  "p1": 0.9198271394522783,
+  "stage1": false
+ },
+ {
+  "id": "P06xA60",
+  "event": "P06",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "50-day average crosses above 200-day average",
+  "mechanism": "golden cross",
+  "b": {
+   "n": 6523,
+   "m": 0.0011612137114948272,
+   "t": 0.33461141541340245
+  },
+  "p1": 0.3689590828417244,
+  "stage1": false
+ },
+ {
+  "id": "P06xMV60",
+  "event": "P06",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "50-day average crosses above 200-day average",
+  "mechanism": "golden cross",
+  "b": {
+   "n": 6523,
+   "m": -0.0008125095814819544,
+   "t": -0.134750061819071
+  },
+  "p1": 0.5535954143476995,
+  "stage1": false
+ },
+ {
+  "id": "P07xA5",
+  "event": "P07",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "close above 200-day average after ≥ 6 months below",
+  "mechanism": "trend change",
+  "b": {
+   "n": 1673,
+   "m": 0.008755249869913228,
+   "t": 0.7829981848553142
+  },
+  "p1": 0.2168139732035167,
+  "stage1": false
+ },
+ {
+  "id": "P07xA20",
+  "event": "P07",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "close above 200-day average after ≥ 6 months below",
+  "mechanism": "trend change",
+  "b": {
+   "n": 1647,
+   "m": 0.007002276231856876,
+   "t": 0.5749596826213164
+  },
+  "p1": 0.28265917147059305,
+  "stage1": false
+ },
+ {
+  "id": "P07xA60",
+  "event": "P07",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "close above 200-day average after ≥ 6 months below",
+  "mechanism": "trend change",
+  "b": {
+   "n": 1565,
+   "m": 0.0030463983682057954,
+   "t": 0.22233659110454576
+  },
+  "p1": 0.4120258584739038,
+  "stage1": false
+ },
+ {
+  "id": "P07xMV60",
+  "event": "P07",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "close above 200-day average after ≥ 6 months below",
+  "mechanism": "trend change",
+  "b": {
+   "n": 1565,
+   "m": 0.009904153354632775,
+   "t": 1.4166756790552593
+  },
+  "p1": 0.07828892071921845,
+  "stage1": false
+ },
+ {
+  "id": "P08xA5",
+  "event": "P08",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "up day on > 5× average volume",
+  "mechanism": "accumulation",
+  "b": {
+   "n": 4245,
+   "m": 1.1750393109964226,
+   "t": 0.9971315482118757
+  },
+  "p1": 0.15935030333800637,
+  "stage1": false
+ },
+ {
+  "id": "P08xA20",
+  "event": "P08",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "up day on > 5× average volume",
+  "mechanism": "accumulation",
+  "b": {
+   "n": 4149,
+   "m": 413.99868556464185,
+   "t": 1.0029232661011895
+  },
+  "p1": 0.15794891819057555,
+  "stage1": false
+ },
+ {
+  "id": "P08xA60",
+  "event": "P08",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "up day on > 5× average volume",
+  "mechanism": "accumulation",
+  "b": {
+   "n": 4007,
+   "m": 1876.3223269853877,
+   "t": 1.5212787729219
+  },
+  "p1": 0.06409495834837109,
+  "stage1": false
+ },
+ {
+  "id": "P08xMV60",
+  "event": "P08",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "up day on > 5× average volume",
+  "mechanism": "accumulation",
+  "b": {
+   "n": 4007,
+   "m": 0.02577988520089912,
+   "t": 4.166835297362555
+  },
+  "p1": 0.000015452095315726666,
+  "stage1": true,
+  "h": {
+   "n": 5103,
+   "m": 0.026592200666277786,
+   "t": 4.0134897369397455
+  },
+  "p2": 0.000029928064311346425,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "P09xA5",
+  "event": "P09",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "new all-time closing high (since 2009 data start)",
+  "mechanism": "blue sky",
+  "b": {
+   "n": 9463,
+   "m": 0.00044833046472801766,
+   "t": 0.9911671455859326
+  },
+  "p1": 0.16080195505165307,
+  "stage1": false
+ },
+ {
+  "id": "P09xA20",
+  "event": "P09",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "new all-time closing high (since 2009 data start)",
+  "mechanism": "blue sky",
+  "b": {
+   "n": 9373,
+   "m": 0.0007250086986439001,
+   "t": 0.5012693429010208
+  },
+  "p1": 0.30809070621047074,
+  "stage1": false
+ },
+ {
+  "id": "P09xA60",
+  "event": "P09",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "new all-time closing high (since 2009 data start)",
+  "mechanism": "blue sky",
+  "b": {
+   "n": 9154,
+   "m": 0.004440318003152049,
+   "t": 1.3184772874234207
+  },
+  "p1": 0.09367200874226334,
+  "stage1": false
+ },
+ {
+  "id": "P09xMV60",
+  "event": "P09",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "new all-time closing high (since 2009 data start)",
+  "mechanism": "blue sky",
+  "b": {
+   "n": 9154,
+   "m": -0.026480227223067778,
+   "t": -6.626659203091497
+  },
+  "p1": 0.9999999999827405,
+  "stage1": false
+ },
+ {
+  "id": "P10xA5",
+  "event": "P10",
+  "outcome": "A5",
+  "sign": "-",
+  "definition": "new 52-week closing low",
+  "mechanism": "52-week-low",
+  "b": {
+   "n": 5490,
+   "m": 797.8764372719545,
+   "t": 1.0003246631192069
+  },
+  "p1": 0.8414233182595153,
+  "stage1": false
+ },
+ {
+  "id": "P10xA20",
+  "event": "P10",
+  "outcome": "A20",
+  "sign": "-",
+  "definition": "new 52-week closing low",
+  "mechanism": "52-week-low",
+  "b": {
+   "n": 5474,
+   "m": 0.6691553055820829,
+   "t": 1.009537658907832
+  },
+  "p1": 0.8436415966417807,
+  "stage1": false
+ },
+ {
+  "id": "P10xA60",
+  "event": "P10",
+  "outcome": "A60",
+  "sign": "-",
+  "definition": "new 52-week closing low",
+  "mechanism": "52-week-low",
+  "b": {
+   "n": 5356,
+   "m": 1058.1896117096926,
+   "t": 1.3180857638022296
+  },
+  "p1": 0.9062624831113768,
+  "stage1": false
+ },
+ {
+  "id": "P10xMV60",
+  "event": "P10",
+  "outcome": "MV60",
+  "sign": "?",
+  "definition": "new 52-week closing low",
+  "mechanism": "52-week-low",
+  "b": {
+   "n": 5356,
+   "m": 0.023599701269604888,
+   "t": 3.0909640191269623
+  },
+  "p1": 0.001995214395449585,
+  "stage1": true,
+  "h": {
+   "n": 9736,
+   "m": 0.006820049301560633,
+   "t": 1.0818296711789288
+  },
+  "p2": 0.13966411774315246,
+  "passBH": false,
+  "validated": false
+ },
+ {
+  "id": "P11xA5",
+  "event": "P11",
+  "outcome": "A5",
+  "sign": "?",
+  "definition": "one-day rise > 10% (no gap requirement)",
+  "mechanism": "large up move",
+  "b": {
+   "n": 4294,
+   "m": 0.009092119121655638,
+   "t": 0.6719622481817757
+  },
+  "p1": 0.5016074726667308,
+  "stage1": false
+ },
+ {
+  "id": "P11xA20",
+  "event": "P11",
+  "outcome": "A20",
+  "sign": "?",
+  "definition": "one-day rise > 10% (no gap requirement)",
+  "mechanism": "large up move",
+  "b": {
+   "n": 4249,
+   "m": 335.1580786657467,
+   "t": 0.9977517361197181
+  },
+  "p1": 0.31839970475358714,
+  "stage1": false
+ },
+ {
+  "id": "P11xA60",
+  "event": "P11",
+  "outcome": "A60",
+  "sign": "?",
+  "definition": "one-day rise > 10% (no gap requirement)",
+  "mechanism": "large up move",
+  "b": {
+   "n": 4062,
+   "m": 732.5179554129387,
+   "t": 1.30792370180293
+  },
+  "p1": 0.19089928437864767,
+  "stage1": false
+ },
+ {
+  "id": "P11xMV60",
+  "event": "P11",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "one-day rise > 10% (no gap requirement)",
+  "mechanism": "large up move",
+  "b": {
+   "n": 4062,
+   "m": 0.0632200886262963,
+   "t": 8.563204517283035
+  },
+  "p1": 0,
+  "stage1": true,
+  "h": {
+   "n": 11067,
+   "m": 0.04999548206378004,
+   "t": 5.907028723513747
+  },
+  "p2": 1.7475122460197667e-9,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "P12xA5",
+  "event": "P12",
+  "outcome": "A5",
+  "sign": "?",
+  "definition": "20-day return > 30%",
+  "mechanism": "short-term overextension",
+  "b": {
+   "n": 2749,
+   "m": 2.414251629614157,
+   "t": 1.061121725559574
+  },
+  "p1": 0.28863458563717703,
+  "stage1": false
+ },
+ {
+  "id": "P12xA20",
+  "event": "P12",
+  "outcome": "A20",
+  "sign": "?",
+  "definition": "20-day return > 30%",
+  "mechanism": "short-term overextension",
+  "b": {
+   "n": 2704,
+   "m": 0.1050930796435238,
+   "t": 0.9835080665666764
+  },
+  "p1": 0.32535737987311286,
+  "stage1": false
+ },
+ {
+  "id": "P12xA60",
+  "event": "P12",
+  "outcome": "A60",
+  "sign": "?",
+  "definition": "20-day return > 30%",
+  "mechanism": "short-term overextension",
+  "b": {
+   "n": 2578,
+   "m": 832.6105976006696,
+   "t": 1.0039464413404557
+  },
+  "p1": 0.31540438117846614,
+  "stage1": false
+ },
+ {
+  "id": "P12xMV60",
+  "event": "P12",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "20-day return > 30%",
+  "mechanism": "short-term overextension",
+  "b": {
+   "n": 2578,
+   "m": 0.09860356865787864,
+   "t": 8.434249821228045
+  },
+  "p1": 0,
+  "stage1": true,
+  "h": {
+   "n": 8428,
+   "m": 0.06397721879448252,
+   "t": 7.089970637074078
+  },
+  "p2": 6.752376435770202e-13,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "T01xA5",
+  "event": "T01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+  "mechanism": "joining a hot theme",
+  "b": {
+   "n": 620,
+   "m": 0.10645927213830243,
+   "t": 1.0141150454106422
+  },
+  "p1": 0.15526391002181172,
+  "stage1": false
+ },
+ {
+  "id": "T01xA20",
+  "event": "T01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+  "mechanism": "joining a hot theme",
+  "b": {
+   "n": 616,
+   "m": 0.11737679937542518,
+   "t": 1.0226311688529348
+  },
+  "p1": 0.15324111732384504,
+  "stage1": false
+ },
+ {
+  "id": "T01xA60",
+  "event": "T01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+  "mechanism": "joining a hot theme",
+  "b": {
+   "n": 604,
+   "m": 0.07100225363755226,
+   "t": 1.1744670886016977
+  },
+  "p1": 0.1201040287121018,
+  "stage1": false
+ },
+ {
+  "id": "T01xMV60",
+  "event": "T01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "first-ever 10-K/10-Q mention of a concept whose members are in the top quartile of 6-month returns",
+  "mechanism": "joining a hot theme",
+  "b": {
+   "n": 604,
+   "m": -0.013907284768211707,
+   "t": -1.0503353466788312
+  },
+  "p1": 0.8532180246309758,
+  "stage1": false
+ },
+ {
+  "id": "T02xA5",
+  "event": "T02",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+  "mechanism": "industry turn",
+  "b": {
+   "n": 833,
+   "m": -0.003976052495504831,
+   "t": -1.061426349626286
+  },
+  "p1": 0.8557519062141424,
+  "stage1": false
+ },
+ {
+  "id": "T02xA20",
+  "event": "T02",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+  "mechanism": "industry turn",
+  "b": {
+   "n": 833,
+   "m": -0.01364941626318528,
+   "t": -1.2746661831085306
+  },
+  "p1": 0.8987862419579978,
+  "stage1": false
+ },
+ {
+  "id": "T02xA60",
+  "event": "T02",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+  "mechanism": "industry turn",
+  "b": {
+   "n": 791,
+   "m": -0.013565889285479844,
+   "t": -0.7826942214552135
+  },
+  "p1": 0.7830967676609517,
+  "stage1": false
+ },
+ {
+  "id": "T02xMV60",
+  "event": "T02",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "industry (SIC3) 3-month return turns positive after ≥ 6 negative months",
+  "mechanism": "industry turn",
+  "b": {
+   "n": 791,
+   "m": -0.008975979772439692,
+   "t": -0.4009726009903958
+  },
+  "p1": 0.6557798956076888,
+  "stage1": false
+ },
+ {
+  "id": "X01xA5",
+  "event": "X01",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "F14 filed within 20 trading days of a new 52-week high",
+  "mechanism": "fundamentals + price confirm",
+  "b": {
+   "n": 711,
+   "m": 0.0024304949050041645,
+   "t": 1.4828528018596043
+  },
+  "p1": 0.0690567826851618,
+  "stage1": false
+ },
+ {
+  "id": "X01xA20",
+  "event": "X01",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "F14 filed within 20 trading days of a new 52-week high",
+  "mechanism": "fundamentals + price confirm",
+  "b": {
+   "n": 707,
+   "m": 0.009533389554549588,
+   "t": 1.9571973455396792
+  },
+  "p1": 0.025162062012701103,
+  "stage1": false
+ },
+ {
+  "id": "X01xA60",
+  "event": "X01",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "F14 filed within 20 trading days of a new 52-week high",
+  "mechanism": "fundamentals + price confirm",
+  "b": {
+   "n": 685,
+   "m": 0.021959727685850302,
+   "t": 1.961340462859909
+  },
+  "p1": 0.024919586648594394,
+  "stage1": false
+ },
+ {
+  "id": "X01xMV60",
+  "event": "X01",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "F14 filed within 20 trading days of a new 52-week high",
+  "mechanism": "fundamentals + price confirm",
+  "b": {
+   "n": 685,
+   "m": 0.059124087591240236,
+   "t": 2.8614429451573735
+  },
+  "p1": 0.002108651636898773,
+  "stage1": true,
+  "h": {
+   "n": 1291,
+   "m": 0.041750580945002884,
+   "t": 2.653070437347144
+  },
+  "p2": 0.003988203274589153,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ },
+ {
+  "id": "X02xA5",
+  "event": "X02",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "insider cluster (I02) while above the 200-day average",
+  "mechanism": "insiders + trend",
+  "b": {
+   "n": 214,
+   "m": 0.004536157455227644,
+   "t": 1.2720792933496645
+  },
+  "p1": 0.1016725211460986,
+  "stage1": false
+ },
+ {
+  "id": "X02xA20",
+  "event": "X02",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "insider cluster (I02) while above the 200-day average",
+  "mechanism": "insiders + trend",
+  "b": {
+   "n": 210,
+   "m": -0.0057278258263594,
+   "t": -1.104808718542253
+  },
+  "p1": 0.8653787430928033,
+  "stage1": false
+ },
+ {
+  "id": "X02xA60",
+  "event": "X02",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "insider cluster (I02) while above the 200-day average",
+  "mechanism": "insiders + trend",
+  "b": {
+   "n": 201,
+   "m": -0.02520287886832462,
+   "t": -3.0880969863520815
+  },
+  "p1": 0.998992718192851,
+  "stage1": false
+ },
+ {
+  "id": "X02xMV60",
+  "event": "X02",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "insider cluster (I02) while above the 200-day average",
+  "mechanism": "insiders + trend",
+  "b": {
+   "n": 201,
+   "m": -0.0502487562189053,
+   "t": -4.439980420622677
+  },
+  "p1": 0.9999954977954926,
+  "stage1": false
+ },
+ {
+  "id": "X03xA5",
+  "event": "X03",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "guidance raise (G01) with a gap up > 3% that day",
+  "mechanism": "raise + market agrees",
+  "b": {
+   "n": 68,
+   "m": 0.010115827798088927,
+   "t": 3.040753509748144
+  },
+  "p1": 0.0011800036632587663,
+  "stage1": true,
+  "h": {
+   "n": 178,
+   "m": 0.002254800631386682,
+   "t": 0.4930585585188558
+  },
+  "p2": 0.3109855264459117,
+  "passBH": false,
+  "validated": false
+ },
+ {
+  "id": "X03xA20",
+  "event": "X03",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "guidance raise (G01) with a gap up > 3% that day",
+  "mechanism": "raise + market agrees",
+  "b": {
+   "n": 67,
+   "m": 0.011031057282738906,
+   "t": 1.6216545205693251
+  },
+  "p1": 0.0524386539328191,
+  "stage1": false
+ },
+ {
+  "id": "X03xA60",
+  "event": "X03",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "guidance raise (G01) with a gap up > 3% that day",
+  "mechanism": "raise + market agrees",
+  "b": {
+   "n": 62,
+   "m": 0.01839468334562612,
+   "t": 1.688360870819386
+  },
+  "p1": 0.04567095361950957,
+  "stage1": false
+ },
+ {
+  "id": "X03xMV60",
+  "event": "X03",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "guidance raise (G01) with a gap up > 3% that day",
+  "mechanism": "raise + market agrees",
+  "b": {
+   "n": 62,
+   "m": 0.045161290322580594,
+   "t": 1.2158305716695175
+  },
+  "p1": 0.11202477771468633,
+  "stage1": false
+ },
+ {
+  "id": "X04xA5",
+  "event": "X04",
+  "outcome": "A5",
+  "sign": "+",
+  "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+  "mechanism": "earnings gap (PEAD)",
+  "b": {
+   "n": 932,
+   "m": 0.001271339293145384,
+   "t": 0.7401374892680458
+  },
+  "p1": 0.22960816165598374,
+  "stage1": false
+ },
+ {
+  "id": "X04xA20",
+  "event": "X04",
+  "outcome": "A20",
+  "sign": "+",
+  "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+  "mechanism": "earnings gap (PEAD)",
+  "b": {
+   "n": 924,
+   "m": 0.003017863129475364,
+   "t": 0.8024394158343419
+  },
+  "p1": 0.211149300032494,
+  "stage1": false
+ },
+ {
+  "id": "X04xA60",
+  "event": "X04",
+  "outcome": "A60",
+  "sign": "+",
+  "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+  "mechanism": "earnings gap (PEAD)",
+  "b": {
+   "n": 862,
+   "m": 0.020375160166603342,
+   "t": 0.9366993436413972
+  },
+  "p1": 0.17445656156960132,
+  "stage1": false
+ },
+ {
+  "id": "X04xMV60",
+  "event": "X04",
+  "outcome": "MV60",
+  "sign": "+",
+  "definition": "gap up > 5% on volume (P03) on a 10-Q/10-K filing day",
+  "mechanism": "earnings gap (PEAD)",
+  "b": {
+   "n": 862,
+   "m": 0.03225058004640339,
+   "t": 2.4540240423012523
+  },
+  "p1": 0.0070633807814314276,
+  "stage1": true,
+  "h": {
+   "n": 2167,
+   "m": 0.01628980156898851,
+   "t": 1.8241822805333738
+  },
+  "p2": 0.03406219706177216,
+  "passBH": true,
+  "placeboBeat": 20,
+  "validated": true
+ }
+]
