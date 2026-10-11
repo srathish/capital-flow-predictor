@@ -77,7 +77,7 @@ for (const t of TICKERS) { const f = path.join(GW, `${t}.jsonl`); if (!fs.exists
     const ratioAdj = x.ratio == null ? null : x.ratio * rawC.get(x.d) / bars[j].c, fct = nearEvent(ev, x.d) ? null : factorAt(ev, x.d, ratioAdj);
     let sm = null; if (fct != null && x.s.length) { const s = fct === 1 ? x.s : x.s.map((r) => [r[0], r[1] * fct * fct, r[2] * fct * fct, r[3] * fct, r[4] * fct, r[5] * fct, r[6] * fct, r[7] * fct, r[8] * fct]); sm = summarize(s, bars[j].c * fct); }
     weeks.push({ d: x.d, j, sum: sm }); }
-  RAW.set(t, { weeks, bars, bi, unexplained }); if (++nT >= (SMOKE ? 40 : 1e9)) break; }
+  RAW.set(t, { weeks, bars, bi, unexplained }); if (++nT >= (SMOKE ? 1e9 : 1e9)) break; }
 log(`${RAW.size} tickers with weekly greeks`);
 const WEEKS = [...new Set([...RAW.values()].flatMap((r) => r.weeks.map((w) => w.d)))].sort();
 const DATA_END = [...RAW.values()].reduce((m, r) => (r.bars.at(-1).d > m ? r.bars.at(-1).d : m), '');
