@@ -35,4 +35,6 @@ modelled beyond intrinsic at the close; taxes and commissions ignored.
 Collector `real_straddle_collect.mjs` (prices only) then `real_straddle.mjs` (single run). Research only.
 
 ## Amendments
-(none yet)
+**Amendment 1 (2026-10-11, while collecting, before any P&L is computed).** UW's intraday option history starts
+2025-04-01, so T2 (0DTE) prices exist only in the holdout. H3, H4 and H6 are judged on the holdout alone (their build
+rows are empty); the H6 filter thresholds still come from build-period FEATURE values (no option prices needed).
