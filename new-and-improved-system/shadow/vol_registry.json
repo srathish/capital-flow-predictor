@@ -1,0 +1,1558 @@
+{
+ "created": "2026-10-10",
+ "n": 194,
+ "hypotheses": [
+  {
+   "id": "A01xV1",
+   "feature": "A01",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A01xV2",
+   "feature": "A01",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A01xV3",
+   "feature": "A01",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A01xV4",
+   "feature": "A01",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A01xV5",
+   "feature": "A01",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A01xV6",
+   "feature": "A01",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "gamma balance within ±1% (d−1)",
+   "mechanism": "long local gamma damps the day → straddle seller wins"
+  },
+  {
+   "id": "A02xV1",
+   "feature": "A02",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A02xV2",
+   "feature": "A02",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A02xV3",
+   "feature": "A02",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A02xV4",
+   "feature": "A02",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A02xV5",
+   "feature": "A02",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A02xV6",
+   "feature": "A02",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "gamma balance within ±2% (d−1)",
+   "mechanism": "local regime (validated for range)"
+  },
+  {
+   "id": "A03xV1",
+   "feature": "A03",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A03xV2",
+   "feature": "A03",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A03xV3",
+   "feature": "A03",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A03xV4",
+   "feature": "A03",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A03xV5",
+   "feature": "A03",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A03xV6",
+   "feature": "A03",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "gamma balance within ±5% (d−1)",
+   "mechanism": "medium regime"
+  },
+  {
+   "id": "A04xV1",
+   "feature": "A04",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A04xV2",
+   "feature": "A04",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A04xV3",
+   "feature": "A04",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A04xV4",
+   "feature": "A04",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A04xV5",
+   "feature": "A04",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A04xV6",
+   "feature": "A04",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "gamma balance, all strikes (d−1)",
+   "mechanism": "total regime"
+  },
+  {
+   "id": "A05xV1",
+   "feature": "A05",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A05xV2",
+   "feature": "A05",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A05xV3",
+   "feature": "A05",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A05xV4",
+   "feature": "A05",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A05xV5",
+   "feature": "A05",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A05xV6",
+   "feature": "A05",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "±2% gamma balance z-score vs prior 60 days (G23, strongest validated)",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV1",
+   "feature": "A06",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV2",
+   "feature": "A06",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV3",
+   "feature": "A06",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV4",
+   "feature": "A06",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV5",
+   "feature": "A06",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A06xV6",
+   "feature": "A06",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "all-strike balance z-score vs prior 60 days",
+   "mechanism": "regime vs normal"
+  },
+  {
+   "id": "A07xV1",
+   "feature": "A07",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A07xV2",
+   "feature": "A07",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A07xV3",
+   "feature": "A07",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A07xV4",
+   "feature": "A07",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A07xV5",
+   "feature": "A07",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A07xV6",
+   "feature": "A07",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "net gamma negative (1/0)",
+   "mechanism": "dealers chase → bigger move"
+  },
+  {
+   "id": "A08xV1",
+   "feature": "A08",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A08xV2",
+   "feature": "A08",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A08xV3",
+   "feature": "A08",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A08xV4",
+   "feature": "A08",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A08xV5",
+   "feature": "A08",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A08xV6",
+   "feature": "A08",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "|king − close| ÷ close",
+   "mechanism": "no pin when the king is far"
+  },
+  {
+   "id": "A09xV1",
+   "feature": "A09",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A09xV2",
+   "feature": "A09",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A09xV3",
+   "feature": "A09",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A09xV4",
+   "feature": "A09",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A09xV5",
+   "feature": "A09",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A09xV6",
+   "feature": "A09",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "largest positive-gamma strike − close, ÷ close",
+   "mechanism": "validated range feature (positive magnet far above → wider)"
+  },
+  {
+   "id": "A10xV1",
+   "feature": "A10",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A10xV2",
+   "feature": "A10",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A10xV3",
+   "feature": "A10",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A10xV4",
+   "feature": "A10",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A10xV5",
+   "feature": "A10",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A10xV6",
+   "feature": "A10",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "king share of |gamma|",
+   "mechanism": "concentrated pin"
+  },
+  {
+   "id": "A11xV1",
+   "feature": "A11",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A11xV2",
+   "feature": "A11",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A11xV3",
+   "feature": "A11",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A11xV4",
+   "feature": "A11",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A11xV5",
+   "feature": "A11",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A11xV6",
+   "feature": "A11",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "vanna balance",
+   "mechanism": "vanna flows"
+  },
+  {
+   "id": "A12xV1",
+   "feature": "A12",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A12xV2",
+   "feature": "A12",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A12xV3",
+   "feature": "A12",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A12xV4",
+   "feature": "A12",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A12xV5",
+   "feature": "A12",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A12xV6",
+   "feature": "A12",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "charm balance",
+   "mechanism": "decay flows"
+  },
+  {
+   "id": "A13xV1",
+   "feature": "A13",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A13xV2",
+   "feature": "A13",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A13xV3",
+   "feature": "A13",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A13xV4",
+   "feature": "A13",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A13xV5",
+   "feature": "A13",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A13xV6",
+   "feature": "A13",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "delta balance within ±2%",
+   "mechanism": "positioning"
+  },
+  {
+   "id": "A14xV1",
+   "feature": "A14",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "A14xV2",
+   "feature": "A14",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "A14xV3",
+   "feature": "A14",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "A14xV4",
+   "feature": "A14",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "A14xV5",
+   "feature": "A14",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "A14xV6",
+   "feature": "A14",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "local gamma balance 1-day change",
+   "mechanism": "gamma being added"
+  },
+  {
+   "id": "B01xV1",
+   "feature": "B01",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B01xV2",
+   "feature": "B01",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B01xV3",
+   "feature": "B01",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B01xV4",
+   "feature": "B01",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B01xV5",
+   "feature": "B01",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B01xV6",
+   "feature": "B01",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "variance premium: ln(implied ÷ 20-day realized)",
+   "mechanism": "rich options → seller wins"
+  },
+  {
+   "id": "B02xV1",
+   "feature": "B02",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B02xV2",
+   "feature": "B02",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B02xV3",
+   "feature": "B02",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B02xV4",
+   "feature": "B02",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B02xV5",
+   "feature": "B02",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B02xV6",
+   "feature": "B02",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "ln implied vol (index level)",
+   "mechanism": "high-vol regimes pay more"
+  },
+  {
+   "id": "B03xV1",
+   "feature": "B03",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B03xV2",
+   "feature": "B03",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B03xV3",
+   "feature": "B03",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B03xV4",
+   "feature": "B03",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B03xV5",
+   "feature": "B03",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B03xV6",
+   "feature": "B03",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "implied vol 1-day change",
+   "mechanism": "fresh fear spike"
+  },
+  {
+   "id": "B04xV1",
+   "feature": "B04",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B04xV2",
+   "feature": "B04",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B04xV3",
+   "feature": "B04",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B04xV4",
+   "feature": "B04",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B04xV5",
+   "feature": "B04",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B04xV6",
+   "feature": "B04",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "VIX term slope ln(VIX ÷ VIX3M) (market-wide)",
+   "mechanism": "inverted curve = stress"
+  },
+  {
+   "id": "B05xV1",
+   "feature": "B05",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B05xV2",
+   "feature": "B05",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B05xV3",
+   "feature": "B05",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B05xV4",
+   "feature": "B05",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B05xV5",
+   "feature": "B05",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B05xV6",
+   "feature": "B05",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "ln(VIX9D ÷ VIX) (market-wide)",
+   "mechanism": "near-term event priced"
+  },
+  {
+   "id": "B06xV1",
+   "feature": "B06",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B06xV2",
+   "feature": "B06",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B06xV3",
+   "feature": "B06",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B06xV4",
+   "feature": "B06",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B06xV5",
+   "feature": "B06",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B06xV6",
+   "feature": "B06",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "ln(VIX1D ÷ VIX9D) at the prior close (market-wide)",
+   "mechanism": "next-day event priced"
+  },
+  {
+   "id": "B07xV1",
+   "feature": "B07",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "B07xV2",
+   "feature": "B07",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "B07xV3",
+   "feature": "B07",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "B07xV4",
+   "feature": "B07",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "B07xV5",
+   "feature": "B07",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "B07xV6",
+   "feature": "B07",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "implied ÷ its own 20-day average",
+   "mechanism": "vol elevated vs recent"
+  },
+  {
+   "id": "C01xV1",
+   "feature": "C01",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C01xV2",
+   "feature": "C01",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C01xV3",
+   "feature": "C01",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C01xV4",
+   "feature": "C01",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C01xV5",
+   "feature": "C01",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C01xV6",
+   "feature": "C01",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "|prior-day return| ÷ implied move",
+   "mechanism": "big yesterday → big today (clustering beyond implied)"
+  },
+  {
+   "id": "C02xV1",
+   "feature": "C02",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C02xV2",
+   "feature": "C02",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C02xV3",
+   "feature": "C02",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C02xV4",
+   "feature": "C02",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C02xV5",
+   "feature": "C02",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C02xV6",
+   "feature": "C02",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "prior-day range ÷ 20-day mean range",
+   "mechanism": "yesterday unusually wide"
+  },
+  {
+   "id": "C03xV1",
+   "feature": "C03",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C03xV2",
+   "feature": "C03",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C03xV3",
+   "feature": "C03",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C03xV4",
+   "feature": "C03",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C03xV5",
+   "feature": "C03",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C03xV6",
+   "feature": "C03",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "5-day return",
+   "mechanism": "down weeks are jumpier"
+  },
+  {
+   "id": "C04xV1",
+   "feature": "C04",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C04xV2",
+   "feature": "C04",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C04xV3",
+   "feature": "C04",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C04xV4",
+   "feature": "C04",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C04xV5",
+   "feature": "C04",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C04xV6",
+   "feature": "C04",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "close ÷ 20-day average − 1",
+   "mechanism": "stretched up = calm; stretched down = jumpy"
+  },
+  {
+   "id": "C05xV2",
+   "feature": "C05",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "opening gap |O_d ÷ C_{d−1} − 1| ÷ implied move (V2/V6 only)",
+   "mechanism": "a big gap already used the move"
+  },
+  {
+   "id": "C05xV6",
+   "feature": "C05",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "opening gap |O_d ÷ C_{d−1} − 1| ÷ implied move (V2/V6 only)",
+   "mechanism": "a big gap already used the move"
+  },
+  {
+   "id": "D01xV1",
+   "feature": "D01",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D01xV2",
+   "feature": "D01",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D01xV3",
+   "feature": "D01",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D01xV4",
+   "feature": "D01",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D01xV5",
+   "feature": "D01",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D01xV6",
+   "feature": "D01",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "day d is Monday",
+   "mechanism": "weekend risk in close-to-close"
+  },
+  {
+   "id": "D02xV1",
+   "feature": "D02",
+   "outcome": "V1",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D02xV2",
+   "feature": "D02",
+   "outcome": "V2",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D02xV3",
+   "feature": "D02",
+   "outcome": "V3",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D02xV4",
+   "feature": "D02",
+   "outcome": "V4",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D02xV5",
+   "feature": "D02",
+   "outcome": "V5",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D02xV6",
+   "feature": "D02",
+   "outcome": "V6",
+   "sign": "?",
+   "definition": "day d is Friday",
+   "mechanism": "weekend de-risking"
+  },
+  {
+   "id": "D03xV1",
+   "feature": "D03",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D03xV2",
+   "feature": "D03",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D03xV3",
+   "feature": "D03",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D03xV4",
+   "feature": "D03",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D03xV5",
+   "feature": "D03",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D03xV6",
+   "feature": "D03",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "day d is monthly OPEX",
+   "mechanism": "expiry pin"
+  },
+  {
+   "id": "D04xV1",
+   "feature": "D04",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D04xV2",
+   "feature": "D04",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D04xV3",
+   "feature": "D04",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D04xV4",
+   "feature": "D04",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D04xV5",
+   "feature": "D04",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D04xV6",
+   "feature": "D04",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "day d is the day after monthly OPEX",
+   "mechanism": "gamma released"
+  },
+  {
+   "id": "D05xV1",
+   "feature": "D05",
+   "outcome": "V1",
+   "sign": "-",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D05xV2",
+   "feature": "D05",
+   "outcome": "V2",
+   "sign": "-",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D05xV3",
+   "feature": "D05",
+   "outcome": "V3",
+   "sign": "+",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D05xV4",
+   "feature": "D05",
+   "outcome": "V4",
+   "sign": "-",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D05xV5",
+   "feature": "D05",
+   "outcome": "V5",
+   "sign": "+",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D05xV6",
+   "feature": "D05",
+   "outcome": "V6",
+   "sign": "-",
+   "definition": "day d is the first trading day of the month",
+   "mechanism": "validated wider day"
+  },
+  {
+   "id": "D06xV1",
+   "feature": "D06",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "D06xV2",
+   "feature": "D06",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "D06xV3",
+   "feature": "D06",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "D06xV4",
+   "feature": "D06",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "D06xV5",
+   "feature": "D06",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "D06xV6",
+   "feature": "D06",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "day d is in OPEX week",
+   "mechanism": "pin week"
+  },
+  {
+   "id": "E01xV1",
+   "feature": "E01",
+   "outcome": "V1",
+   "sign": "+",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  },
+  {
+   "id": "E01xV2",
+   "feature": "E01",
+   "outcome": "V2",
+   "sign": "+",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  },
+  {
+   "id": "E01xV3",
+   "feature": "E01",
+   "outcome": "V3",
+   "sign": "-",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  },
+  {
+   "id": "E01xV4",
+   "feature": "E01",
+   "outcome": "V4",
+   "sign": "+",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  },
+  {
+   "id": "E01xV5",
+   "feature": "E01",
+   "outcome": "V5",
+   "sign": "-",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  },
+  {
+   "id": "E01xV6",
+   "feature": "E01",
+   "outcome": "V6",
+   "sign": "+",
+   "definition": "A05 × (variance premium above its build median)",
+   "mechanism": "long gamma AND rich options"
+  }
+ ]
+}
