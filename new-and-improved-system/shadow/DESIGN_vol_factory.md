@@ -42,4 +42,9 @@ Engine `vol_factory.mjs` audited independently before its single run; amendments
 `shadow/results_vol_factory/`. Research only — nothing live changes.
 
 ## Amendments
-(none yet)
+**Amendment 1 (2026-10-10, after the independent audit, before the run).**
+- B01 (variance premium), B02 (implied level) and B07 (implied vs its 20-day average) are fitted WITHOUT the ln σ
+  control: B02 equals the control, and with the control B01 would test −ln(realized) rather than "rich options".
+- Flat Cboe index days (o = h = l = c, e.g. VXD 2024-02-12 → 02-16) are treated as missing.
+- C03 fixed to a true 5-day return. The sample starts 2024-01-08 (62-bar history and 40-of-60-day greek history needed).
+- Noted: Cboe opens are live values; VXD reacts less at the open than the others, so DIA's V2 premium partly lags.
