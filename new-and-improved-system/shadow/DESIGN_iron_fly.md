@@ -52,3 +52,13 @@ Collector `iron_fly_collect.mjs` (wing prices only, UW `/historic` for T1, `/int
 a given expiry (e.g. SPY C501/C504 in early 2024: UW has no such contract). When the exact strike has no contract, the
 collector uses the nearest listed strike further out (up to $5); payout and max risk use the strike actually priced. If
 the contract exists but has no price on the entry date, the day stays missing (no substitution).
+
+**Amendment 2 (2026-10-13, after the independent audit, before any P&L is computed).** Fixes, no change of intent:
+(a) width tie rule = the widest width within 0.01 of the true best score (the first version could drift in steps); the
+run stops if the choice pool has < 30 days; (b) longest drawdown no longer counts flat days at the account high;
+(c) sizing runs use the same all-wings-priced days as the tables; (d) the straddle row is shown both on all body days
+(as line 18 says) and on the all-wings days; (e) the collector substitutes a further-out strike only when the exact
+contract does not exist (a failed request or an existing contract without a price leaves the day missing), and a retry
+pass re-checks failed legs and every substitution; (f) the report adds missing counts by width, the payout on dropped vs
+kept days, legs with max risk ≤ 0, and the minute gap between T2 leg prices; "worst 20 days" is labelled as the worst
+20-day return.
