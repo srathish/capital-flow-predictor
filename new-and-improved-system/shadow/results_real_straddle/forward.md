@@ -2,15 +2,17 @@
 
 Holdout reference: filter days +$0.56 / straddle (+17% of premium, win 68%, worst −$6.89); other days +$0.18 (+6%, worst −$38.36).
 
-| sample | days | mean $ / straddle | mean % of premium | win | worst $ |
-|---|---|---|---|---|---|
-| filter days | 1 | 1.14 | 55.9% | 100% | 1.14 |
-| other days | 3 | 1.05 | 44.9% | 67% | -0.19 |
-| all | 4 | 1.07 | 47.6% | 75% | -0.19 |
+Iron fly holdout reference (results_iron_fly, 0DTE, filter days): ±0.5% +$0.05 / +2.6% of max risk; ±1% +$0.28 / +7.6%. ±0.5% is the locked choice (from 1-day build days); ±1% is secondary.
 
-| date | symbol | filter | premium | close vs strike | P&L $ |
-|---|---|---|---|---|---|
-| 2026-10-13 | QQQ | no | 3.44 | 3.63 | -0.19 |
-| 2026-10-13 | SPY | no | 2 | 0.01 | 1.99 |
-| 2026-10-12 | QQQ | no | 3.3 | -1.96 | 1.34 |
-| 2026-10-12 | SPY | yes | 2.04 | -0.90 | 1.14 |
+| sample | days | mean $ / straddle | mean % of premium | win | worst $ | fly ±0.5% $ / return on risk | fly ±1% $ / return on risk |
+|---|---|---|---|---|---|---|---|
+| filter days | 1 | 1.14 | 55.9% | 100% | 1.14 | 0.88 / 39.6% | 1.06 / 17.5% |
+| other days | 3 | 1.05 | 44.9% | 67% | -0.19 | 0.32 / 7.0% | 0.85 / 14.7% |
+| all | 4 | 1.07 | 47.6% | 75% | -0.19 | 0.46 / 15.1% | 0.90 / 15.4% |
+
+| date | symbol | filter | premium | close vs strike | P&L $ | fly ±0.5% $ | fly ±1% $ |
+|---|---|---|---|---|---|---|---|
+| 2026-10-13 | QQQ | no | 3.44 | 3.63 | -0.19 | -1.11 | -0.47 |
+| 2026-10-13 | SPY | no | 2 | 0.01 | 1.99 | 1.74 | 1.91 |
+| 2026-10-12 | QQQ | no | 3.3 | -1.96 | 1.34 | 0.32 | 1.1 |
+| 2026-10-12 | SPY | yes | 2.04 | -0.90 | 1.14 | 0.88 | 1.06 |

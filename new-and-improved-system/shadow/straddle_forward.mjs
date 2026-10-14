@@ -5,6 +5,8 @@
 //   ln(VIX1D ÷ VIX9D) < build median;  trade: sell the ATM 0DTE straddle at the 09:35 one-minute close − $0.01/leg, settle
 //   at d's close. Appends one row per symbol-day to results_real_straddle/forward.jsonl and rewrites forward.md.
 // Thresholds frozen from the build period: SPY a01 ≥ 0.6560, QQQ a01 ≥ 0.7562, event < −0.1530 (both).
+// Iron fly columns (DESIGN_iron_fly.md, added 2026-10-14): same body + wings bought at the 09:35 close + $0.01 at
+// round(px × (1 ± w)), w = 0.5% (locked choice) and 1% (secondary); P&L and return on max risk. Rows missing them are backfilled.
 import fs from 'node:fs';
 import path from 'node:path';
 import { UW_API_KEY } from '../feeds/env.js';
@@ -26,10 +28,21 @@ for (const T of ['SPY', 'QQQ']) {
   const px = m1.find((b) => b.m >= 574)?.c; if (!px) continue; const k = Math.round(px), legs = {};
   for (const cp of ['C', 'P']) { const rows = ((await uw(`/option-contract/${occ(T, d, cp, k)}/intraday?date=${d}`)).data ?? []).map((r) => ({ m: etMin(r.start_time, d), c: +r.close })).filter((r) => r.m >= 574 && r.m <= 579).sort((a, b) => a.m - b.m); legs[cp] = rows[0]?.c; }
   if (!(legs.C > 0.02 && legs.P > 0.02)) continue; const prem = legs.C + legs.P - 0.02, close = bars.at(-1).c, pnl = prem - Math.abs(close - k);
-  fs.appendFileSync(F, JSON.stringify({ T, d, filter: filt, a01: +a01.toFixed(3), aboveMA20: p.c > ma20, event: +ev.toFixed(3), strike: k, premium: +prem.toFixed(2), close, pnl: +pnl.toFixed(2), ratio: +(pnl / prem).toFixed(3) }) + '\n'); }
+  fs.appendFileSync(F, JSON.stringify({ T, d, filter: filt, a01: +a01.toFixed(3), aboveMA20: p.c > ma20, event: +ev.toFixed(3), strike: k, px935: px, premium: +prem.toFixed(2), close, pnl: +pnl.toFixed(2), ratio: +(pnl / prem).toFixed(3) }) + '\n'); }
+// iron fly columns: price the wings for every row that lacks them
+const at935 = async (T, d, cp, k) => ((await uw(`/option-contract/${occ(T, d, cp, k)}/intraday?date=${d}`).catch(() => null))?.data ?? []).map((r) => ({ m: etMin(r.start_time, d), c: +r.close })).filter((r) => r.m >= 574 && r.m <= 579).sort((a, b) => a.m - b.m)[0]?.c;
+{ const all = fs.existsSync(F) ? fs.readFileSync(F, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []; let ch = false;
+  for (const x of all) { if (x.fly05 !== undefined) continue; let px = x.px935;
+    if (!px) px = ((await uw(`/stock/${x.T}/ohlc/1m?date=${x.d}&limit=1000`)).data.filter((b) => b.market_time === 'r').map((b) => ({ m: etMin(b.start_time, x.d), c: +b.close })).sort((a, b) => a.m - b.m)).find((b) => b.m >= 574)?.c;
+    for (const [key, w] of [['fly05', 0.005], ['fly10', 0.01]]) { const kc = Math.round(px * (1 + w)), kp = Math.round(px * (1 - w)), a = await at935(x.T, x.d, 'C', kc), b = await at935(x.T, x.d, 'P', kp);
+      if (!(a > 0 && b > 0)) { x[key] = null; continue; } const credit = x.premium - (a + b + 0.02), fp = credit - Math.abs(x.close - x.strike) + Math.max(0, x.close - kc) + Math.max(0, kp - x.close), risk = Math.max(kc - x.strike, x.strike - kp) - credit;
+      x[key] = risk > 0 ? { pnl: +fp.toFixed(2), ror: +(fp / risk).toFixed(3), risk: +risk.toFixed(2) } : null; }
+    ch = true; }
+  if (ch) fs.writeFileSync(F, all.map((x) => JSON.stringify(x)).join('\n') + '\n'); }
 const rows = fs.existsSync(F) ? fs.readFileSync(F, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [], mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
-const line = (name, a) => `| ${name} | ${a.length} | ${a.length ? mean(a.map((x) => x.pnl)).toFixed(2) : '—'} | ${a.length ? (mean(a.map((x) => x.ratio)) * 100).toFixed(1) + '%' : '—'} | ${a.length ? Math.round(100 * a.filter((x) => x.pnl > 0).length / a.length) + '%' : '—'} | ${a.length ? Math.min(...a.map((x) => x.pnl)).toFixed(2) : '—'} |`;
-fs.writeFileSync(path.join(R, 'forward.md'), ['# Forward paper test — 0DTE straddle selling filter (frozen 2026-10-11, started 2026-10-12)\n', 'Holdout reference: filter days +$0.56 / straddle (+17% of premium, win 68%, worst −$6.89); other days +$0.18 (+6%, worst −$38.36).\n',
-  '| sample | days | mean $ / straddle | mean % of premium | win | worst $ |', '|---|---|---|---|---|---|', line('filter days', rows.filter((x) => x.filter === 1)), line('other days', rows.filter((x) => x.filter === 0)), line('all', rows),
-  '\n| date | symbol | filter | premium | close vs strike | P&L $ |', '|---|---|---|---|---|---|', ...rows.slice().reverse().slice(0, 60).map((x) => `| ${x.d} | ${x.T} | ${x.filter ? 'yes' : 'no'} | ${x.premium} | ${(x.close - x.strike).toFixed(2)} | ${x.pnl} |`)].join('\n') + '\n');
+const fl = (a, key) => { const v = a.map((x) => x[key]).filter(Boolean); return v.length ? `${mean(v.map((y) => y.pnl)).toFixed(2)} / ${(mean(v.map((y) => y.ror)) * 100).toFixed(1)}%` : '—'; };
+const line = (name, a) => `| ${name} | ${a.length} | ${a.length ? mean(a.map((x) => x.pnl)).toFixed(2) : '—'} | ${a.length ? (mean(a.map((x) => x.ratio)) * 100).toFixed(1) + '%' : '—'} | ${a.length ? Math.round(100 * a.filter((x) => x.pnl > 0).length / a.length) + '%' : '—'} | ${a.length ? Math.min(...a.map((x) => x.pnl)).toFixed(2) : '—'} | ${fl(a, 'fly05')} | ${fl(a, 'fly10')} |`;
+fs.writeFileSync(path.join(R, 'forward.md'), ['# Forward paper test — 0DTE straddle selling filter (frozen 2026-10-11, started 2026-10-12)\n', 'Holdout reference: filter days +$0.56 / straddle (+17% of premium, win 68%, worst −$6.89); other days +$0.18 (+6%, worst −$38.36).\n', 'Iron fly holdout reference (results_iron_fly, 0DTE, filter days): ±0.5% +$0.05 / +2.6% of max risk; ±1% +$0.28 / +7.6%. ±0.5% is the locked choice (from 1-day build days); ±1% is secondary.\n',
+  '| sample | days | mean $ / straddle | mean % of premium | win | worst $ | fly ±0.5% $ / return on risk | fly ±1% $ / return on risk |', '|---|---|---|---|---|---|---|---|', line('filter days', rows.filter((x) => x.filter === 1)), line('other days', rows.filter((x) => x.filter === 0)), line('all', rows),
+  '\n| date | symbol | filter | premium | close vs strike | P&L $ | fly ±0.5% $ | fly ±1% $ |', '|---|---|---|---|---|---|---|---|', ...rows.slice().reverse().slice(0, 60).map((x) => `| ${x.d} | ${x.T} | ${x.filter ? 'yes' : 'no'} | ${x.premium} | ${(x.close - x.strike).toFixed(2)} | ${x.pnl} | ${x.fly05?.pnl ?? '—'} | ${x.fly10?.pnl ?? '—'} |`)].join('\n') + '\n');
 console.error(`forward rows: ${rows.length}`);
