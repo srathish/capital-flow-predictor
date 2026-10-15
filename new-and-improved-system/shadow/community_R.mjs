@@ -28,11 +28,11 @@ function path3(B, s) { const R = Math.abs(s.entry - s.stop), t3p = s.entry + s.d
   return { R, j3, t3: j3 != null ? B[j3].etm - B[s.i].etm : null, r6, stopped, eodR, cost: (2 * COST) / R }; }
 const ev = [];
 const spyDays = fs.readdirSync(path.join(C, 'uw', 'm1', 'SPY')).map((f) => f.slice(0, 10)).filter((d) => d >= START && d <= '2026-10-02');
-let days = spyDays; if (SMOKE) days = days.slice(-80);
+let days = spyDays.sort(); if (SMOKE) days = days.slice(0, 80);
 for (const d of days) { const D = { SPY: loadDay('SPY', d), QQQ: loadDay('QQQ', d) }; if (!D.SPY || !D.QQQ) continue; const idx = { SPY: new Map(D.SPY.map((b, i) => [b.etm, i])), QQQ: new Map(D.QQQ.map((b, i) => [b.etm, i])) };
   for (const [T, O] of [['SPY', 'QQQ'], ['QQQ', 'SPY']]) for (const k of [1, 2]) for (const s of signals(D[T], k)) { const p = path3(D[T], s); let conf = null;
-    if (p.j3 != null) { const B = D[T], m0 = B[s.i].etm, m3 = B[p.j3].etm, o0 = idx[O].get(m0), o3 = idx[O].get(m3);
-      if (o0 != null && o3 != null) { const own = s.dir * (B[p.j3].c / B[s.i].c - 1), oth = s.dir * (D[O][o3].c / D[O][o0].c - 1); conf = +(oth >= own); } }
+    if (p.j3 != null) { const B = D[T], jc = p.j3 - 1, m0 = B[s.i].etm, m3 = B[jc].etm, o0 = idx[O].get(m0), o3 = idx[O].get(m3); /* amendment 2: closes of the minute BEFORE the 3R minute */
+      if (jc > s.i && o0 != null && o3 != null) { const own = s.dir * (B[jc].c / B[s.i].c - 1), oth = s.dir * (D[O][o3].c / D[O][o0].c - 1); conf = +(oth >= own); } }
     ev.push({ d, T, k, dir: s.dir, ...p, conf }); } }
 if (SMOKE) { const r3 = ev.filter((x) => x.j3 != null); console.log(JSON.stringify({ events: ev.length, reach3: r3.length, reach6: r3.filter((x) => x.r6).length, fast: r3.filter((x) => x.t3 <= 20).length, slow60: r3.filter((x) => x.t3 > 60).length, conf: r3.filter((x) => x.conf === 1).length })); process.exit(0); }
 // difference in proportions, day-clustered (OLS of y on [1, g], cluster-robust by day)

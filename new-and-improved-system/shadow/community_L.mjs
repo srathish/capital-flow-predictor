@@ -19,7 +19,7 @@ for (const T of ['SPY', 'QQQ', 'IWM', 'DIA']) { let days = fs.readdirSync(path.j
     const mv = e / r0 - 1; if (mv === 0) continue; const dir = -Math.sign(mv); tr.push({ T, d, mv, ret: dir * (x / e - 1) - 0.02 / e }); } }
 function st(a) { const n = a.length; if (n < 30) return { n, m: NaN, t: NaN }; const m = mean(a.map((x) => x.ret)), by = new Map(); for (const x of a) by.set(x.d, (by.get(x.d) ?? 0) + (x.ret - m)); const G = by.size; const se = Math.sqrt(([...by.values()].reduce((s, v) => s + v * v, 0) * G) / Math.max(1, G - 1)) / n;
   return { n, m, t: m / se, win: a.filter((x) => x.ret > 0).length / n }; }
-if (SMOKE) { console.log(JSON.stringify({ n: tr.length, all: st(tr) })); process.exit(0); }
+if (SMOKE) { console.log(JSON.stringify({ n: tr.length })); process.exit(0); }
 const B = (x) => x.d <= BUILD_END, Hd = (x) => x.d >= HOLD_START;
 const H = [['L1', 0], ['L2', 0.0025], ['L3', 0.005]].map(([id, th]) => { const f = (x) => Math.abs(x.mv) >= th; return { id, th, build: st(tr.filter((x) => B(x) && f(x))), hold: st(tr.filter((x) => Hd(x) && f(x))), perT: Object.fromEntries(['SPY', 'QQQ', 'IWM', 'DIA'].map((T) => [T, { build: st(tr.filter((x) => x.T === T && B(x) && f(x))), hold: st(tr.filter((x) => x.T === T && Hd(x) && f(x))) }])) }; });
 const months = {}; for (const x of tr) (months[x.d.slice(0, 7)] ??= []).push(x.ret);

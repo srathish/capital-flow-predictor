@@ -82,3 +82,12 @@ audit against this file, then one run each.
 L1 mean for the last 60 days (inside the holdout: +0.06% per trade, t 2.1, 239 trades). Nothing was changed because
 of it; it is disclosed here. Later smoke tests print counts only. (b) ESB_q: the ratchet ladder and the 2.5U target
 are measured from `zero` (the spec's wording) rather than from the fill price; they differ only on gap entries.
+**Amendment 2 (2026-10-15, after the independent audit, before any full run).** (a) ESB_q entry requires a **cross**:
+long only if the previous minute's close (the prior session's last close for 09:30) is below zero and the minute's high
+reaches zero (mirror for shorts); the literal "high ≥ zero" fired with price already far past zero on about half of the
+build trades. Gap entries at the open remain. Amendment 1(b)'s "only on gap entries" now holds. (b) ESB_q days sorted;
+a pivot cannot pair with an opposite pivot on the same bar. (c) Runner confirmation (R3/R4) uses the closes of the
+minute BEFORE the 3R minute (no intrabar look-ahead); events whose 3R came in the first minute after entry have no
+confirmation value. (d) Part P: the condor no longer requires the ATM quote; drop counts fixed; 16 days before the
+70-bar history requirement are reported as dropped. (e) Smoke tests print counts only (lunch fade) or build-period
+dates only (runners).

@@ -12,24 +12,23 @@ const BUILD_END = '2025-03-31', HOLD_START = '2025-04-01', VOL = { SPY: 'VIX', Q
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length;
 const CB = Object.fromEntries(['VIX', 'VXN'].map((x) => [x, JSON.parse(fs.readFileSync(path.join(C, 'cboe', `${x}.json`), 'utf8'))]));
 function bal1(s, S, p) { let A = 0, N = 0; for (const r of s) { const g = r[1] + r[2]; if (Math.abs(r[0] / S - 1) <= p) { A += Math.abs(g); N += g; } } return A > 0 ? N / A : NaN; }
-const rows = [], drop = { S: 0, F: 0, K: 0 };
+const rows = [], drop = { S: 0, F: 0, K: 0, early: 0 };
 for (const T of ['SPY', 'QQQ']) { const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
   const GR = new Map(fs.readFileSync(path.join(C, 'uwgreeks', `${T}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => { const j = JSON.parse(l); return [j.d, j.s]; }));
   // Wilder ATR14 per bar index (through that bar)
   const atr = new Array(bars.length).fill(NaN); { let a = NaN, s = 0; for (let i = 1; i < bars.length; i++) { const b = bars[i], pc = bars[i - 1].c, tr = Math.max(b.h - b.l, Math.abs(b.h - pc), Math.abs(b.l - pc));
     if (i <= 14) { s += tr; if (i === 14) a = s / 14; } else a = (a * 13 + tr) / 14; atr[i] = a; } }
   const dir = path.join(C, 'straddle', T);
-  for (const fn of fs.readdirSync(dir).sort()) { const S = JSON.parse(fs.readFileSync(path.join(dir, fn), 'utf8')), i = bi.get(S.d); if (i == null || i < 70) continue; const p = bars[i - 1], p2 = bars[i - 2];
+  for (const fn of fs.readdirSync(dir).sort()) { const S = JSON.parse(fs.readFileSync(path.join(dir, fn), 'utf8')), i = bi.get(S.d); if (i == null || i < 70) { drop.early++; continue; } const p = bars[i - 1], p2 = bars[i - 2];
     const WG = JSON.parse(fs.readFileSync(path.join(C, 'straddle_wings', T, fn), 'utf8'));
     const iv = CB[VOL[T]][p2.d]?.c, sig = iv ? iv / 100 / Math.sqrt(252) : NaN;
     let vm = 0; for (let q = i - 21; q <= i - 2; q++) vm += bars[q].v / 20;
     const B1 = Number.isFinite(sig) ? +(Math.abs(Math.log(p.c / p2.c)) >= 2 * sig) : NaN, B2 = Number.isFinite(atr[i - 2]) ? +(p.h - p.l >= atr[i - 2] && p.v >= vm) : NaN;
     const gs = GR.get(p.d), A01 = gs ? bal1(gs, p.c, 0.01) : NaN;
-    const cr = S.t1?.call?.find((r) => r.date === p.d), pr = S.t1?.put?.find((r) => r.date === p.d); if (!(cr && pr && cr.bid > 0 && pr.bid > 0)) { drop.S++; continue; }
-    const K = S.t1.strike, prem = cr.bid + pr.bid, pay = Math.abs(S.close - K), base = { T, d: S.d, B1, B2, A01, lp: Math.log(prem / p.c) };
-    rows.push({ ...base, st: 'S', r: (prem - pay) / prem });
+    const cr = S.t1?.call?.find((r) => r.date === p.d), pr = S.t1?.put?.find((r) => r.date === p.d); const atm = !!(cr && pr && cr.bid > 0 && pr.bid > 0), K = S.t1.strike, prem = atm ? cr.bid + pr.bid : NaN, pay = Math.abs(S.close - K), base = { T, d: S.d, B1, B2, A01 };
+    if (atm) rows.push({ ...base, st: 'S', r: (prem - pay) / prem }); else drop.S++;
     const ws = Object.fromEntries(wingStrikes(S.prevClose).map((s) => [s.w, s])), leg = (cp, k) => WG.t1?.[cp + k];
-    { const s = ws[0.01], c = leg('C', s.C), q = leg('P', s.P); if (c?.ask > 0 && q?.ask > 0) { const kc = c.strike ?? s.C, kp = q.strike ?? s.P, credit = prem - c.ask - q.ask, risk = Math.max(kc - K, K - kp) - credit, pnl = credit - pay + Math.max(0, S.close - kc) + Math.max(0, kp - S.close);
+    { const s = ws[0.01], c = leg('C', s.C), q = leg('P', s.P); if (atm && c?.ask > 0 && q?.ask > 0) { const kc = c.strike ?? s.C, kp = q.strike ?? s.P, credit = prem - c.ask - q.ask, risk = Math.max(kc - K, K - kp) - credit, pnl = credit - pay + Math.max(0, S.close - kc) + Math.max(0, kp - S.close);
       if (risk > 0) rows.push({ ...base, st: 'F', r: pnl / risk }); else drop.F++; } else drop.F++; }
     { const a = ws[0.01], b = ws[0.02], c1 = leg('C', a.C), p1 = leg('P', a.P), c2 = leg('C', b.C), p2b = leg('P', b.P);
       if (c1?.bid > 0 && p1?.bid > 0 && c2?.ask > 0 && p2b?.ask > 0) { const k1c = c1.strike ?? a.C, k1p = p1.strike ?? a.P, k2c = c2.strike ?? b.C, k2p = p2b.strike ?? b.P;
