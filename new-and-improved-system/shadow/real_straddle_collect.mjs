@@ -15,7 +15,7 @@ async function uw(p) { for (let k = 0; k < 5 && !LIMIT; k++) { await sleep(130);
   if (r?.status === 404 || r?.status === 422) return null; if (!r?.ok) { await sleep(1500); continue; } return r.json().catch(() => null); } return null; }
 const occ = (T, d, cp, k) => `${T}${d.slice(2, 4)}${d.slice(5, 7)}${d.slice(8, 10)}${cp}${String(Math.round(k * 1000)).padStart(8, '0')}`;
 const etMin = (iso, d) => { const off = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' }).format(new Date(d + 'T16:00:00Z')) - 16; const t = new Date(iso); return ((t.getUTCHours() + off + 24) % 24) * 60 + t.getUTCMinutes(); };
-for (const T of ['SPY', 'QQQ']) { fs.mkdirSync(path.join(OUT, T), { recursive: true });
+for (const T of (process.argv.find((a) => a.startsWith('--T='))?.slice(4).split(',') ?? ['SPY', 'QQQ'])) { fs.mkdirSync(path.join(OUT, T), { recursive: true }); /* --T=IWM,DIA */
   const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')).filter((b) => b.d >= '2024-01-05' && b.d <= '2026-10-02');
   for (let i = 1; i < bars.length && !LIMIT; i++) { const d = bars[i].d, prev = bars[i - 1], f = path.join(OUT, T, `${d}.json`); if (fs.existsSync(f)) continue;
     const out = { d, prevClose: prev.c, close: bars[i].c };

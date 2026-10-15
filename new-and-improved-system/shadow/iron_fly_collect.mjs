@@ -31,7 +31,7 @@ async function t2Leg(T, d, cp, k) { for (let x = 0; x <= 5 && !LIMIT; x++) { con
 
 if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const dry = process.argv.includes('--dry'), retry = process.argv.includes('--retry'); /* --retry: revisit v2 files' null / empty legs (failed requests) */
-  for (const T of ['SPY', 'QQQ']) { fs.mkdirSync(path.join(OUT, T), { recursive: true }); const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
+  for (const T of (process.argv.find((a) => a.startsWith('--T='))?.slice(4).split(',') ?? ['SPY', 'QQQ'])) { fs.mkdirSync(path.join(OUT, T), { recursive: true }); const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
     for (const fn of fs.readdirSync(path.join(IN, T)).sort()) { if (LIMIT) break; const f = path.join(OUT, T, fn), prev = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; const subd = (o) => Object.entries(o?.t1 ?? {}).some(([q, x]) => x?.strike != null && x.strike !== +q.slice(1)) || Object.entries(o?.t2k ?? {}).some(([q, x]) => x !== +q.slice(1));
       if (prev?.v === 2 && !(retry && (Object.values(prev.t1).some((x) => !x) || Object.values(prev.t2).some((x) => !x.length) || subd(prev)))) continue;
       if (retry && prev) { for (const [q, x] of Object.entries(prev.t1)) if (x?.strike != null && x.strike !== +q.slice(1)) prev.t1[q] = null; for (const [q, x] of Object.entries(prev.t2k ?? {})) if (x !== +q.slice(1)) prev.t2[q] = []; } /* re-check substitutions under the fixed logic */

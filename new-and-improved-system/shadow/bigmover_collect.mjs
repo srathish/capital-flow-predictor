@@ -19,7 +19,7 @@ export function monthlyExpiry(d) { for (let k = 0; k < 4; k++) { const x = new D
 export const occ = (T, e, cp, k) => `${T.replace(/[.\-]/g, '')}${e.slice(2, 4)}${e.slice(5, 7)}${e.slice(8, 10)}${cp}${String(Math.round(k * 1000)).padStart(8, '0')}`;
 export const atmStrike = (raw, strikes) => strikes.reduce((b, k) => (Math.abs(k - raw) < Math.abs(b - raw) ? k : b), strikes[0]);
 if (process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]))) {
-  const weeks = JSON.parse(fs.readFileSync(path.join(D, 'picks.json'), 'utf8')), want = new Set();
+  const weeks = JSON.parse(fs.readFileSync(path.join(D, process.argv.find((a) => a.startsWith('--picks='))?.slice(8) ?? 'picks.json'), 'utf8')), want = new Set(); /* --picks=picks_quiet.json */
   for (const w of weeks) { const e = monthlyExpiry(w.d); if (!e) continue; for (const p of w.picks) { const k = atmStrike(p.raw, p.strikes); for (const cp of ['C', 'P']) want.add(occ(p.t, e, cp, k)); } }
   const todo = [...want].filter((id) => !fs.existsSync(path.join(CC, `${id}.json`))); log(`${want.size} contracts, ${todo.length} to fetch (cap ${MAX})`);
   let n = 0; for (const id of todo) { if (LIMIT || calls >= MAX) break; const j = await uw(`/option-contract/${id}/historic`); if (!j) continue;
