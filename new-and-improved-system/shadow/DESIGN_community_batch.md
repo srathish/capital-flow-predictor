@@ -78,3 +78,7 @@ rows to results_community/; a small combiner applies BH across the 17 and writes
 audit against this file, then one run each.
 
 ## Amendments
+**Amendment 1 (2026-10-15, while writing engines, before any full run).** (a) The lunch-fade smoke test printed the
+L1 mean for the last 60 days (inside the holdout: +0.06% per trade, t 2.1, 239 trades). Nothing was changed because
+of it; it is disclosed here. Later smoke tests print counts only. (b) ESB_q: the ratchet ladder and the 2.5U target
+are measured from `zero` (the spec's wording) rather than from the fill price; they differ only on gap entries.
