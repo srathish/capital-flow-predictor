@@ -9,7 +9,7 @@ const TIMES = [630, 720, 840], rows = [];
 for (const T of ['SPY', 'QQQ']) { const { rows: R } = loadRows(T), F = new Map(); for (const x of R) if (!F.has(x.d)) F.set(x.d, x);
   const dir = path.join(C, 'straddle_times', T); if (!fs.existsSync(dir)) continue;
   for (const fn of fs.readdirSync(dir).sort()) { const S = JSON.parse(fs.readFileSync(path.join(dir, fn), 'utf8')), base = F.get(S.d); if (!base) continue;
-    for (const tm of TIMES) { const L = S.legs?.[tm]; if (!L) continue; const c = L.C?.[0], p = L.P?.[0]; if (!(c?.c > 0.02 && p?.c > 0.02)) continue;
+    for (const tm of TIMES) { const L = S.legs?.[tm]; if (!L) continue; const pm = new Map((L.P ?? []).map((r) => [r.m, r])), c = (L.C ?? []).find((r) => pm.has(r.m)), p = c ? pm.get(c.m) : null; if (!(c?.c > 0.02 && p?.c > 0.02)) continue; /* amendment 1: first minute where BOTH legs print */
       const prem = c.c + p.c - 0.02, pnl = prem - Math.abs(base.close - L.strike); rows.push({ T, d: S.d, tm, f: base.f, k: 'T2', r: pnl / prem, pnl }); } } }
 for (const tm of TIMES) { const a = rows.filter((x) => x.tm === tm).map((x) => x.r).sort((x, y) => x - y); if (!a.length) continue; const lo = a[Math.floor(0.01 * (a.length - 1))], hi = a[Math.floor(0.99 * (a.length - 1))]; for (const x of rows) if (x.tm === tm) x.rw = Math.min(hi, Math.max(lo, x.r)); }
 if (SMOKE) { console.log(JSON.stringify(Object.fromEntries(TIMES.map((tm) => [tm, rows.filter((x) => x.tm === tm).length])))); process.exit(0); }

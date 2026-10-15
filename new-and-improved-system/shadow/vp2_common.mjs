@@ -29,7 +29,7 @@ export function loadRows(T) { const { bars, bi } = loadBars(T), GR = greeks(T), 
     const cr = S.t1?.call?.find((r) => r.date === p.d), pr = S.t1?.put?.find((r) => r.date === p.d);
     if (cr && pr && cr.bid > 0 && pr.bid > 0) { const prem = cr.bid + pr.bid, pay = Math.abs(S.close - S.t1.strike); rows.push({ ...base, k: 'T1', prem, px: p.c, strike: S.t1.strike, pnl: prem - pay, r: (prem - pay) / prem }); }
     const pick = (a) => (a ?? []).find((r) => r.m >= 574 && r.m <= 579), c2 = pick(S.t2?.call), p2 = pick(S.t2?.put);
-    if (c2 && p2 && c2.c > 0.02 && p2.c > 0.02) { const prem = c2.c + p2.c - 0.02, K = S.t2.strike, pay = Math.abs(S.close - K), cP = c2.c - 0.01, pP = p2.c - 0.01;
+    if (S.d >= '2025-04-01' && c2 && p2 && c2.c > 0.02 && p2.c > 0.02) { /* amendment 1: T2 sample starts 2025-04-01 */ const prem = c2.c + p2.c - 0.02, K = S.t2.strike, pay = Math.abs(S.close - K), cP = c2.c - 0.01, pP = p2.c - 0.01;
       rows.push({ ...base, k: 'T2', prem, px: S.t2.px935, strike: K, pnl: prem - pay, r: (prem - pay) / prem, rc: (cP - Math.max(0, S.close - K)) / cP, rp: (pP - Math.max(0, K - S.close)) / pP }); } }
   // F2 thresholds: build top third of A01 on T1 build days
   const b = rows.filter((x) => x.k === 'T1' && x.d <= T1_BUILD_END).map((x) => x.f.A01).filter(Number.isFinite).sort((x, y) => x - y), th = b[Math.floor((2 / 3) * (b.length - 1))];

@@ -20,11 +20,11 @@ const etMinU = (t, d) => etMin(new Date(t * 1000).toISOString(), d);
 for (const T of ['SPY', 'QQQ']) { fs.mkdirSync(path.join(OUT, T), { recursive: true });
   for (const fn of fs.readdirSync(path.join(C, 'straddle', T)).sort()) { const d = fn.slice(0, 10); if (d < '2025-04-01' || LIMIT) continue; const f = path.join(OUT, T, fn); if (fs.existsSync(f)) continue;
     const m1f = path.join(C, 'uw', 'm1', T, fn); if (!fs.existsSync(m1f)) continue; const m = JSON.parse(fs.readFileSync(m1f, 'utf8')).filter((b) => b.m === 'r').map((b) => ({ m: etMinU(b.t, d), c: b.c }));
-    const out = { d, px: {}, legs: {} }, cache = new Map();
+    const out = { d, px: {}, legs: {} }, cache = new Map(); let fail = false;
     for (const tm of TIMES) { const b = m.filter((x) => x.m <= tm - 1).at(-1); if (!b || b.m < tm - 5) continue; const px = b.c, k = Math.round(px); out.px[tm] = px; const leg = { strike: k };
-      for (const cp of ['C', 'P']) { const id = occ(T, d, cp, k); if (!cache.has(id)) { const j = await uw(`/option-contract/${id}/intraday?date=${d}`); if (!j) break; cache.set(id, (j.data ?? []).map((r) => ({ m: etMin(r.start_time, d), c: +r.close }))); }
+      for (const cp of ['C', 'P']) { const id = occ(T, d, cp, k); if (!cache.has(id)) { const j = await uw(`/option-contract/${id}/intraday?date=${d}`); if (!j) { fail = true; break; } cache.set(id, (j.data ?? []).map((r) => ({ m: etMin(r.start_time, d), c: +r.close }))); }
         leg[cp] = cache.get(id).filter((r) => r.m >= tm && r.m <= tm + 5).sort((a, b) => a.m - b.m); }
       out.legs[tm] = leg; }
-    if (LIMIT) break; fs.writeFileSync(f, JSON.stringify(out)); if (calls % 200 < 6) log(`${T} ${d} (${calls} calls)`); }
+    if (LIMIT) break; if (fail) continue; /* failed request: leave the day for a re-run */ fs.writeFileSync(f, JSON.stringify(out)); if (calls % 200 < 6) log(`${T} ${d} (${calls} calls)`); }
   log(`${T} done`); }
 log(`run done: ${calls} calls${LIMIT ? ' (daily limit — re-run after 8pm ET)' : ''}`);

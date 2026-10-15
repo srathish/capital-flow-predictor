@@ -84,3 +84,14 @@ Engines vp2_A.mjs … vp2_F.mjs (shared T1/T2 loader), a combiner applying BH ac
 counts only, an independent audit against this file, then one run each.
 
 ## Amendments
+**Amendment 1 (2026-10-15, after the independent audit, before any full run; collection still in progress).**
+(a) T2 rows start 2025-04-01 (4–5 per ticker from the earlier collection were dated before it). (b) Part C: the entry is
+the first minute in [t, t+5] where BOTH legs print (legs from different minutes otherwise); the entry-time collector no
+longer writes a day after a failed request (it is retried on re-run). (c) Part E: UW's contract history has rows only on
+days the contract trades, so many ATM monthlies have no quote on the rebalance day; the entry is the first session in
+[rebalance, +2 trading days] with bid and ask on both legs, and the 10/20-day exit counts from that entry. The exit is
+the closing ask h sessions later (next quoted session within 4, not past expiry); on expiry the expiry-day closing ask,
+else the trade is skipped (no intrinsic — conservative for the seller, since an OTM leg's ask is > 0). Coverage by group
+(picks, no contract file, no entry quote, entered, exit skipped) is reported; uneven coverage between picks and control
+is a stated limit. (d) Caveats to report: the event dummies (A4–A6) rest on ~10–15 build event days shared by SPY/QQQ;
+E and F returns are not winsorized (worst trade and the share losing > 100% of premium are reported for E).
