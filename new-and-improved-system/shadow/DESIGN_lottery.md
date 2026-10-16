@@ -45,3 +45,12 @@ day-over-day close ratios within 3% of a split ratio (½, ⅓, ¼, ⅕, ⅒, ⅔
 close of the week's FIRST session (usually Monday) using data known then; buy legs on the first listed expiry 2–6
 calendar days later (that week's Friday); hold to expiry. Run as a separate family (results_lottery/summary_mon.md),
 same 12 hypotheses (L1m–L12m), its own BH; the two timings are compared side by side.
+**Amendment 3 (2026-10-16, after the Friday BUYER result, registered before computing the seller side).** The buyer
+baskets lost 25–90% of premium per week; that loss is the seller's gain before spreads. Seller test on the SAME legs:
+per stock-week and side, a defined-risk credit spread — SELL the 5%-OTM leg at the closing **bid**, BUY the 10%-OTM leg
+(same side, same expiry) at the closing **ask**; skip if credit ≤ 0 or the long strike is not further OTM. Payoff at
+expiry intrinsic; return = P&L ÷ max risk (width − credit). Iron condor = call spread + put spread on the same name
+(P&L summed ÷ the larger side's max risk). Baskets: S1, S4, CTL (random) and ALL picked names; equal max-risk per trade.
+Hypotheses (one-sided, holdout 2026, BH q = 0.10 across 8, both entry timings run as separate families):
+K1–K4 condor return > 0 for S1 / S4 / CTL / ALL; K5–K8 the same for put spreads alone. Also reported: win rate, worst
+week, worst 8 weeks, share of trades at max loss, and whether the radar names (S1) beat random (CTL) for the seller.
