@@ -14,9 +14,10 @@ const parse = (s) => { const m = s.match(/^(.+?)(\d{6})([CP])(\d{8})$/); return 
 const wk = (d) => { const x = new Date(d + 'T12:00:00Z'), day = (x.getUTCDay() + 6) % 7; return new Date(x.getTime() - day * 864e5).toISOString().slice(0, 10); };
 for (const T of TICK) { const f = path.join(OUT, `${T}.json`), out = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
   const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')).filter((b) => b.d >= '2023-11-10' && b.d <= '2026-10-15'), raw = (b) => (SPLIT[T] && b.d < SPLIT[T][0] ? b.c * SPLIT[T][1] : b.c);
-  const entries = []; for (let i = 0; i < bars.length - 1; i++) { const d = bars[i].d, nx = bars[i + 1].d; if (wk(nx) !== wk(d)) entries.push([d, 'W']); entries.push([d, 'D', nx]); }
+  const entries = []; for (let i = 0; i < bars.length - 1; i++) { const d = bars[i].d, nx = bars[i + 1].d; if (wk(nx) !== wk(d)) entries.push([d, 'W']); const dow = new Date(nx + 'T12:00:00Z').getUTCDay(); if (dow === 1 || dow === 3 || dow === 5) entries.push([d, 'D', nx]); } /* expiries only on Mon/Wed/Fri */
+  const chains = new Map();
   for (const [t0, kind, nx] of entries) { if (LIMIT) break; const key = `${t0}|${kind}`; if (key in out) continue; const S = raw(bars.find((b) => b.d === t0));
-    const chKey = `${t0}|chain`; let L = out[chKey]; if (!L) { const ch = await uw(`/stock/${T}/option-chains?date=${t0}`); if (!ch) continue; L = (ch.data ?? []).map(parse).filter(Boolean); }
+    let L = chains.get(t0); if (!L) { const ch = await uw(`/stock/${T}/option-chains?date=${t0}`); if (!ch) continue; L = (ch.data ?? []).map(parse).filter(Boolean); chains.set(t0, L); }
     const e = kind === 'W' ? [...new Set(L.map((x) => x.e))].filter((x) => { const g = (Date.parse(x) - Date.parse(t0)) / 864e5; return g >= 3 && g <= 9; }).sort()[0] : L.some((x) => x.e === nx) ? nx : null;
     if (!e) { out[key] = null; continue; } const ks = [...new Set(L.filter((x) => x.e === e).map((x) => x.k))].sort((a, b) => a - b); const near = (tgt) => ks.reduce((a, k) => (Math.abs(k - tgt) < Math.abs(a - tgt) ? k : a), ks[0]);
     const atm = near(S), w = kind === 'W' ? [0.03, 0.06] : [0.02, 0.04], want = { C: ['C', atm], P: ['P', atm], WC1: ['C', near(S * (1 + w[0]))], WP1: ['P', near(S * (1 - w[0]))], WC2: ['C', near(S * (1 + w[1]))], WP2: ['P', near(S * (1 - w[1]))] }, legs = {};
