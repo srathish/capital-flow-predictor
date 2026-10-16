@@ -58,3 +58,13 @@ call-volume surge (day-1 call volume ÷ 30-day mean) × sign of day-1 directiona
 restricted to names whose peer group moved the same way (R2 sign = R1 sign); R6 R2 with the day-1 move ≥ 1 peer-sd
 (strong theme days only). Long = top 10, short = bottom 10. Same tests (build / holdout 2026 / last month / this week),
 BH q = 0.10 across these 12. Also reported: the second-session entry variant (enter at day-2 close) for R4.
+**Amendment 3 (2026-10-15, registered before computing).** Direction-free capture: "bracket the likely big movers".
+At each week's last close t, pick 10 stocks by a big-move score; for each, an OCO bracket for the next week: buy-stop at
+close × (1 + X), sell-stop at close × (1 − X); the first side touched is entered (at the trigger, or the open if it gaps
+through); protective stop at t's close; exit at the next week's last close. A session touching both triggers counts as
+the losing outcome (−X − cost). On the trigger session, if the stop is also inside that session's range and the open
+was not already beyond the trigger, the trade counts as stopped (conservative). Cost 0.10% per round trip.
+Scores (known at t): B1 20-day realized volatility; B2 call-volume surge (W4); B3 |5-day directional flow| (|W1|);
+B4 mean rank of B1 and B2; control = 10 random stocks (fixed seed). X ∈ {3%, 5%}. Tests: mean return per trade minus the
+random control's (week-level series), build / holdout 2026 / last month / this week; BH q = 0.10 across the 8
+(B1–B4 × X). Also reported: share of the week's top/bottom-10% movers that the picks contained, and trigger rates.
