@@ -25,3 +25,12 @@ minutes, close on the break side) mean R > 0.
 Universe: SPY, QQQ, IWM, DIA (2023-11-09 → 2026-10-02); the 10 random Skylit stocks of DESIGN_air_pocket.md amendment 1
 run as a separate family once their data is collected. **Caveat:** the 2025–26 holdout was already used for classic
 ladder rules (trade factory) and air pockets; the CONFLUENCE split is new.
+
+## Amendment 1 (2026-10-16, registered before computing) — condition on the predicted day range (trend days)
+User: the big winners come on trend days; use the prior-day range forecast. Forecast (fit per symbol on BUILD days
+only, as DESIGN_vol_program2 part B): OLS of ln(day range ÷ prior close) on ln(implied vol index at d−1: VIX for SPY,
+VXN for QQQ, RVX for IWM, VXD for DIA), ±1% gamma balance A01 at d−1, ln(5-day mean range ÷ close). HIGH / LOW = the
+forecast's top / bottom third, thresholds from build days per symbol. Same ladder trades (target = next ladder level).
+T1 breaks on HIGH days mean R > 0 · T2 HIGH minus LOW (all breaks) · T3 CONF breaks on HIGH days mean R > 0 · T4 CONF
+HIGH minus LOW · T5 HIGH-day longs only > 0 · T6 HIGH-day shorts only > 0. BH q = 0.10 across 6; build/holdout as above.
+Reported, not tested: the ORACLE split by the day's ACTUAL range tercile (what a perfect forecast would capture).
