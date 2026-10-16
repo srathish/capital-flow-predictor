@@ -54,3 +54,13 @@ expiry intrinsic; return = P&L ÷ max risk (width − credit). Iron condor = cal
 Hypotheses (one-sided, holdout 2026, BH q = 0.10 across 8, both entry timings run as separate families):
 K1–K4 condor return > 0 for S1 / S4 / CTL / ALL; K5–K8 the same for put spreads alone. Also reported: win rate, worst
 week, worst 8 weeks, share of trades at max loss, and whether the radar names (S1) beat random (CTL) for the seller.
+**Amendment 4 (2026-10-16, registered before fetching earnings dates or computing).** Two new splits on the SAME legs
+(both entry timings): (a) **earnings week** = the stock's scheduled report (UW /earnings/{t}) falls inside the holding
+window: before-open reports dated after entry through expiry day; after-close reports dated entry day through the
+day before expiry (dates are scheduled in advance → known at entry); (b) **mid fills**: entry and exit at the mid of
+bid and ask instead of crossing the spread (sensitivity: what a patient limit-order trader could get at best; exit at
+expiry is intrinsic either way, so only the entry price changes). Hypotheses (one-sided, holdout 2026, BH q = 0.10 across
+12 per timing): E1 radar 5% legs bought on earnings weeks > 0; E2 radar 10% same; E3 ALL picks 5% bought on earnings
+weeks > 0; E4–E6 the same three on NON-earnings weeks; E7 put credit spread (ALL) on earnings weeks > 0; E8 condor (ALL)
+on earnings weeks > 0; E9 radar 5% bought at mid > 0; E10 ALL 5% bought at mid > 0; E11 put credit spread (ALL) at mid
+> 0; E12 condor (ALL) at mid > 0.
