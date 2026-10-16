@@ -4,8 +4,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const SH = path.dirname(fileURLToPath(import.meta.url)), C = path.join(SH, '..', '.cache'), OUT = path.join(SH, 'results_ladder'), SMOKE = process.argv.includes('--smoke'), STOCKS = process.argv.includes('--stocks'), SUMF = STOCKS ? 'summary_stocks.md' : 'summary.md';
-if (!SMOKE && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+if (!SMOKE && !process.argv.includes('--mfe') && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
 const SYMS = STOCKS ? JSON.parse(fs.readFileSync(path.join(SH, 'data', 'air_pocket_stocks.json'), 'utf8')).picks : ['SPY', 'QQQ', 'IWM', 'DIA'], BEND = '2025-03-31', HST = '2025-04-01', COST = 0.01;
+const MFE = process.argv.includes('--mfe');
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
 const offC = new Map(), etMin = (t, d) => { if (!offC.has(d)) { const h = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' }).format(new Date(d + 'T16:00:00Z')); offC.set(d, (h - 16) * 60); } return (((Math.floor(t / 60) + offC.get(d)) % 1440) + 1440) % 1440; };
 function rng(seed) { let h = 1779033703; for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 3432918353), h = (h << 13) | (h >>> 19); let a = h >>> 0; return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -24,7 +25,8 @@ function trades(B, ladder, gN, vN) { const out = [], first = new Set();
       const TGT = [...gN, ...vN].some((k) => Math.abs(k / tgtL - 1) <= 0.0015), AIR = !gN.some((k) => (dir > 0 ? k > L && k < tgtL : k < L && k > tgtL));
       const stop = L * (1 - dir * 0.0005), tgt = tgtL * (1 - dir * 0.0002), im = sim(B, i, dir, c, stop, tgt); let rt = null;
       for (let j = i + 1; j < B.length && B[j].etm <= Math.min(B[i].etm + 30, 900); j++) { const b = B[j]; if (dir > 0 ? b.l <= L && b.c > L : b.h >= L && b.c < L) { rt = sim(B, j, dir, b.c, stop, tgt); break; } if (dir > 0 ? b.c < L : b.c > L) break; }
-      if (im || rt) out.push({ dir, TGT, AIR, CONF: TGT && AIR, im, rt }); } } return out; }
+      const tp = {}; if (MFE) { const R0 = Math.abs(c - stop); if (R0 > 0) for (const k of [0.5, 1, 1.5, 2]) { let r = null; for (let j = i + 1; j < B.length && B[j].etm < 955; j++) { const b = B[j]; if (dir > 0 ? b.l <= stop : b.h >= stop) { r = -1 - 2 * COST / R0; break; } if (dir * ((dir > 0 ? b.h : b.l) - c) >= k * R0) { r = k - 2 * COST / R0; break; } } if (r == null) { let q = B.length - 1; while (q > i && B[q].etm >= 955) q--; r = dir * (B[q].c - c) / R0 - 2 * COST / R0; } tp[k] = r; } }
+      if (im || rt) out.push({ dir, TGT, AIR, CONF: TGT && AIR, im, rt, tp }); } } return out; }
 const rows = [];
 for (const T of SYMS) { const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
   const GR = new Map(fs.readFileSync(path.join(C, 'uwgreeks', `${T}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => { const j = JSON.parse(l); return [j.d, j.s]; }));
@@ -35,8 +37,10 @@ for (const T of SYMS) { const bars = JSON.parse(fs.readFileSync(path.join(C, 'uw
     const or = B.filter((b) => b.etm < 600), raw = [p.h, p.l, p.c, D.pmh, D.pml, Math.max(...or.map((b) => b.h)), Math.min(...or.map((b) => b.l))].filter(Number.isFinite).sort((a, b) => a - b), ladder = [];
     for (const x of raw) if (!ladder.length || x / ladder.at(-1) - 1 > 0.0005) ladder.push(x);
     for (const t of trades(B, ladder, gN, vN)) rows.push({ d, T, tw: -1, ...t });
-    if (!SMOKE) for (let tw = 0; tw < 20; tw++) { const r = rng(`${T}|${d}|${tw}`), sh = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); for (const t of trades(B, ladder, gN.map((k) => k * (1 + sh)), vN.map((k) => k * (1 + sh)))) if (t.CONF) rows.push({ d, T, tw, ...t }); } }
+    if (!SMOKE && !MFE) for (let tw = 0; tw < 20; tw++) { const r = rng(`${T}|${d}|${tw}`), sh = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); for (const t of trades(B, ladder, gN.map((k) => k * (1 + sh)), vN.map((k) => k * (1 + sh)))) if (t.CONF) rows.push({ d, T, tw, ...t }); } }
   console.error(`${T} done`); }
+if (MFE) { /* exploratory (not registered): quick-profit exits, stop 1R */ const r0 = rows.filter((x) => x.tw < 0); const out = []; for (const [lab, f] of [['all ladder breaks', () => true], ['CONF breaks', (x) => x.CONF], ['non-CONF breaks', (x) => !x.CONF]]) for (const [pl, pf] of [['2024–Mar 2025', (d) => d <= BEND], ['Apr 2025–Oct 2026', (d) => d >= HST]]) { const a = r0.filter((x) => f(x) && pf(x.d)); out.push(`| ${lab} | ${pl} | ${a.length} | ` + [0.5, 1, 1.5, 2].map((k) => { const v = a.map((x) => x.tp[k]).filter(Number.isFinite); return `${(mean(v) >= 0 ? '+' : '') + mean(v).toFixed(3)}R · ${Math.round(100 * v.filter((y) => y > 0).length / v.length)}%`; }).join(' | ') + ' |'); }
+  console.log(['| breaks | period | n | take +0.5R | take +1R | take +1.5R | take +2R |', '|---|---|---|---|---|---|---|', ...out].join('\n')); process.exit(0); }
 if (SMOKE) { const r = rows.filter((x) => x.tw < 0); console.log(JSON.stringify({ breaks: r.length, CONF: r.filter((x) => x.CONF).length, TGT: r.filter((x) => x.TGT).length, AIR: r.filter((x) => x.AIR).length })); process.exit(0); }
 const st = (a, k = 'im') => { const v = a.filter((x) => x[k]).map((x) => ({ d: x.d, R: x[k].R, hit: x[k].hit })); if (v.length < 30) return { n: v.length, m: NaN, t: NaN, se: NaN }; const m = mean(v.map((x) => x.R)), by = new Map(); for (const x of v) by.set(x.d, (by.get(x.d) ?? 0) + x.R - m); const G = by.size, se = Math.sqrt([...by.values()].reduce((s, q) => s + q * q, 0) * G / Math.max(1, G - 1)) / v.length; return { n: v.length, m, t: m / se, se, hit: mean(v.map((x) => x.hit)) }; };
 const diff = (a, b) => ({ m: a.m - b.m, t: (a.m - b.m) / Math.sqrt(a.se ** 2 + b.se ** 2), n: a.n, a: a.m, b: b.m });
