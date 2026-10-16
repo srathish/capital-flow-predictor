@@ -41,3 +41,7 @@ entry and the expiry week. Collection restarted from scratch.
 **Amendment 1b (same session, before any outcome).** Correction: a >25% move between entry and expiry is often a REAL
 move (the winners this study is about), so excluding it would bias against the hypothesis. The guard now excludes only
 day-over-day close ratios within 3% of a split ratio (½, ⅓, ¼, ⅕, ⅒, ⅔, 2, 3, 4, 5, 10, 1.5, 1/20, 20). Restarted.
+**Amendment 2 (2026-10-16, user request, before any outcome).** Second entry timing, same everything else: pick at the
+close of the week's FIRST session (usually Monday) using data known then; buy legs on the first listed expiry 2–6
+calendar days later (that week's Friday); hold to expiry. Run as a separate family (results_lottery/summary_mon.md),
+same 12 hypotheses (L1m–L12m), its own BH; the two timings are compared side by side.
