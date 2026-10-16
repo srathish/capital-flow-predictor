@@ -76,3 +76,9 @@ bottom 10 from the 10:30 close to the last RTH close; also the 11:00 entry for I
 the universe's 10:30→close mean; day-level t. Build = 2026-07-01 → 2026-08-31; holdout = 2026-09-01 → 2026-10-15 (the
 "last month" view). Validated: holdout excess with the predicted sign (long > 0, short < 0) AND long-minus-short spread
 t ≥ 2 AND BH q = 0.10 across the 8 (I1–I3 long/short + I1@11:00 long/short).
+**Amendment 5 (2026-10-16, registered before computing).** Direction INSIDE the radar. Each week, the top 20 stocks by
+20-day realized volatility at t's close (the radar pool). Within the pool, go long the half with the higher direction
+score and short the other half, held to the next week's last close; week-level long−short spread. Scores: D1 5-day
+directional flow (W1); D2 1-day directional flow (W2); D3 bullish − bearish premium (W3); D4 1-week return; D5 peer
+(theme) 1-week return (W9); D6 mean rank of D1, D3, D5. Build / holdout 2026 / last month as before; validated: holdout
+spread > 0 with t ≥ 2 and BH q = 0.10 across the 6.
