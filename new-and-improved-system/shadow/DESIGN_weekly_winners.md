@@ -68,3 +68,11 @@ Scores (known at t): B1 20-day realized volatility; B2 call-volume surge (W4); B
 B4 mean rank of B1 and B2; control = 10 random stocks (fixed seed). X ∈ {3%, 5%}. Tests: mean return per trade minus the
 random control's (week-level series), build / holdout 2026 / last month / this week; BH q = 0.10 across the 8
 (B1–B4 × X). Also reported: share of the week's top/bottom-10% movers that the picks contained, and trigger rates.
+**Amendment 4 (2026-10-15, registered before any intraday data is downloaded).** Same-day theme capture. Each session
+2026-07-01 → 2026-10-15, UW 5-minute RTH bars per stock. At 10:30 ET (close of the 10:25 bar) compute m = own
+09:30-open → 10:30 return and p = mean m of the stock's 10 peers (60-day daily-return correlation as of the prior close).
+I1 = rank(m) + rank(p); I2 = p only (theme); I3 = I1 among names where m and p have the same sign. Long top 10 / short
+bottom 10 from the 10:30 close to the last RTH close; also the 11:00 entry for I1. Cost 0.05% per side. Per-day excess vs
+the universe's 10:30→close mean; day-level t. Build = 2026-07-01 → 2026-08-31; holdout = 2026-09-01 → 2026-10-15 (the
+"last month" view). Validated: holdout excess with the predicted sign (long > 0, short < 0) AND long-minus-short spread
+t ≥ 2 AND BH q = 0.10 across the 8 (I1–I3 long/short + I1@11:00 long/short).
