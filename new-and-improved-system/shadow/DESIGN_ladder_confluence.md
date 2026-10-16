@@ -34,3 +34,12 @@ forecast's top / bottom third, thresholds from build days per symbol. Same ladde
 T1 breaks on HIGH days mean R > 0 · T2 HIGH minus LOW (all breaks) · T3 CONF breaks on HIGH days mean R > 0 · T4 CONF
 HIGH minus LOW · T5 HIGH-day longs only > 0 · T6 HIGH-day shorts only > 0. BH q = 0.10 across 6; build/holdout as above.
 Reported, not tested: the ORACLE split by the day's ACTUAL range tercile (what a perfect forecast would capture).
+
+## Amendment 2 (2026-10-16, registered before computing) — detect the trend day INTRADAY (by 10:30) + GEX/VEX
+User: recognize the trend day as it develops, then press the breaks. Ladder gains the 09:30–10:30 initial-balance (IB)
+high/low. Only breaks at or after 10:30. **TD(k)** = first-hour range ÷ the night-before forecast day range (amendment 1
+model, build-fit) ≥ k. **Aligned** = an up-break while the last close is above the IB high, or a down-break below the IB
+low ("holding outside the opening range"). Short gamma = ±1% gamma balance A01 at the prior close < 0.
+U1 TD(0.75) breaks mean R > 0 · U2 TD(0.75) minus non-TD breaks · U3 TD(0.75) aligned > 0 · U4 TD(0.75) aligned + CONF
+> 0 · U5 TD(0.75) aligned + short gamma > 0 · U6 TD(0.75) aligned + AIR > 0 · U7 TD(0.5) aligned > 0 · U8 TD(1.0)
+aligned > 0. BH q = 0.10 across 8; build ≤ 2025-03-31, holdout ≥ 2025-04-01 (same caveat on the reused holdout).
