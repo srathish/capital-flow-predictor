@@ -34,3 +34,7 @@ A positive mean driven by one or two 50× legs is flagged (also reported: mean w
 Research only.
 
 ## Amendments
+**Amendment 1 (2026-10-16, during collection, before any outcome).** UW daily closes contain unadjusted split jumps
+(ETR ranked "most volatile" from its split), which mis-states volatility and puts strikes on the wrong price basis.
+A name is excluded for the week if any daily close-to-close move exceeds 25% in the 20-day volatility window or between
+entry and the expiry week. Collection restarted from scratch.
