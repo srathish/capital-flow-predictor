@@ -38,3 +38,6 @@ Research only.
 (ETR ranked "most volatile" from its split), which mis-states volatility and puts strikes on the wrong price basis.
 A name is excluded for the week if any daily close-to-close move exceeds 25% in the 20-day volatility window or between
 entry and the expiry week. Collection restarted from scratch.
+**Amendment 1b (same session, before any outcome).** Correction: a >25% move between entry and expiry is often a REAL
+move (the winners this study is about), so excluding it would bias against the hypothesis. The guard now excludes only
+day-over-day close ratios within 3% of a split ratio (½, ⅓, ¼, ⅕, ⅒, ⅔, 2, 3, 4, 5, 10, 1.5, 1/20, 20). Restarted.
