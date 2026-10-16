@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+// DESIGN_ladder_confluence.md engine. node --max-old-space-size=8000 shadow/ladder_confluence.mjs [--stocks] [--smoke]
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const SH = path.dirname(fileURLToPath(import.meta.url)), C = path.join(SH, '..', '.cache'), OUT = path.join(SH, 'results_ladder'), SMOKE = process.argv.includes('--smoke'), STOCKS = process.argv.includes('--stocks'), SUMF = STOCKS ? 'summary_stocks.md' : 'summary.md';
+if (!SMOKE && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+const SYMS = STOCKS ? JSON.parse(fs.readFileSync(path.join(SH, 'data', 'air_pocket_stocks.json'), 'utf8')).picks : ['SPY', 'QQQ', 'IWM', 'DIA'], BEND = '2025-03-31', HST = '2025-04-01', COST = 0.01;
+const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
+const offC = new Map(), etMin = (t, d) => { if (!offC.has(d)) { const h = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' }).format(new Date(d + 'T16:00:00Z')); offC.set(d, (h - 16) * 60); } return (((Math.floor(t / 60) + offC.get(d)) % 1440) + 1440) % 1440; };
+function rng(seed) { let h = 1779033703; for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 3432918353), h = (h << 13) | (h >>> 19); let a = h >>> 0; return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function loadDay(T, d) { const f = path.join(C, 'uw', 'm1', T, `${d}.json`); if (!fs.existsSync(f)) return null; const raw = JSON.parse(fs.readFileSync(f, 'utf8'));
+  const pre = raw.filter((b) => b.m === 'pr' && (b.v ?? 0) > 0); let reg = raw.filter((b) => b.m === 'r').map((b) => ({ ...b, etm: etMin(b.t, d) })).filter((b) => b.etm >= 570 && b.etm < 960); if (reg.length < 200) return null;
+  const filled = [reg[0]]; for (let i = 1; i < reg.length; i++) { for (let m = filled.at(-1).etm + 1; m < reg[i].etm; m++) { const c0 = filled.at(-1).c; filled.push({ t: filled.at(-1).t + 60, o: c0, h: c0, l: c0, c: c0, v: 0, etm: m }); } filled.push(reg[i]); }
+  const B = filled.map((b, i, a) => { const ref = [b.o, b.c, a[i - 1]?.c, a[i + 1]?.c].filter(Number.isFinite); return { ...b, h: Math.min(b.h, Math.max(...ref) * 1.002), l: Math.max(b.l, Math.min(...ref) * 0.998) }; });
+  return { B, pmh: pre.length ? Math.max(...pre.map((b) => b.h)) : NaN, pml: pre.length ? Math.min(...pre.map((b) => b.l)) : NaN }; }
+function sim(B, i, dir, entry, stop, tgt) { const R = Math.abs(entry - stop); if (!(R > 0) || dir * (tgt - entry) < R) return null; const cost = 2 * COST / R;
+  for (let j = i + 1; j < B.length && B[j].etm < 955; j++) { const b = B[j]; if (dir > 0 ? b.l <= stop : b.h >= stop) { const f = dir > 0 ? Math.min(stop, b.o) : Math.max(stop, b.o); return { R: dir * (f - entry) / R - cost, hit: 0 }; } if (dir > 0 ? b.h >= tgt : b.l <= tgt) return { R: dir * (tgt - entry) / R - cost, hit: 1 }; }
+  let k = B.length - 1; while (k > i && B[k].etm >= 955) k--; return { R: dir * (B[k].c - entry) / R - cost, hit: 0 }; }
+function trades(B, ladder, gN, vN) { const out = [], first = new Set();
+  for (let i = 1; i < B.length; i++) { if (B[i].etm < 600 || B[i].etm > 900) continue; const p = B[i - 1].c, c = B[i].c;
+    for (const L of ladder) { const up = p <= L && c > L, dn = p >= L && c < L; if (!up && !dn) continue; const key = L + (up ? 'u' : 'd'); if (first.has(key)) continue; first.add(key); const dir = up ? 1 : -1;
+      const tgtL = ladder.filter((x) => dir * (x - L) >= 0.0015 * L).sort((a, b) => dir * (a - b))[0]; if (tgtL == null) continue;
+      const TGT = [...gN, ...vN].some((k) => Math.abs(k / tgtL - 1) <= 0.0015), AIR = !gN.some((k) => (dir > 0 ? k > L && k < tgtL : k < L && k > tgtL));
+      const stop = L * (1 - dir * 0.0005), tgt = tgtL * (1 - dir * 0.0002), im = sim(B, i, dir, c, stop, tgt); let rt = null;
+      for (let j = i + 1; j < B.length && B[j].etm <= Math.min(B[i].etm + 30, 900); j++) { const b = B[j]; if (dir > 0 ? b.l <= L && b.c > L : b.h >= L && b.c < L) { rt = sim(B, j, dir, b.c, stop, tgt); break; } if (dir > 0 ? b.c < L : b.c > L) break; }
+      if (im || rt) out.push({ dir, TGT, AIR, CONF: TGT && AIR, im, rt }); } } return out; }
+const rows = [];
+for (const T of SYMS) { const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
+  const GR = new Map(fs.readFileSync(path.join(C, 'uwgreeks', `${T}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => { const j = JSON.parse(l); return [j.d, j.s]; }));
+  let days = bars.filter((b) => b.d >= (STOCKS ? '2023-11-17' : '2023-11-09') && b.d <= '2026-10-02').map((b) => b.d); if (SMOKE) days = days.slice(0, 40);
+  for (const d of days) { const i = bi.get(d); if (i == null || i < 1) continue; const p = bars[i - 1], s = GR.get(p.d); if (!s) continue; const D = loadDay(T, d); if (!D) continue; const B = D.B;
+    const near = s.filter((r) => Math.abs(r[0] / p.c - 1) <= 0.03); if (near.length < 5) continue; if (STOCKS && (B[0].c < Math.min(...near.map((r) => r[0])) || B[0].c > Math.max(...near.map((r) => r[0])))) continue;
+    const gk = Math.max(...near.map((r) => Math.abs(r[1] + r[2]))), vk = Math.max(...near.map((r) => Math.abs(r[7] + r[8]))); const gN = near.filter((r) => Math.abs(r[1] + r[2]) >= 0.3 * gk).map((r) => r[0]), vN = vk > 0 ? near.filter((r) => Math.abs(r[7] + r[8]) >= 0.3 * vk).map((r) => r[0]) : [];
+    const or = B.filter((b) => b.etm < 600), raw = [p.h, p.l, p.c, D.pmh, D.pml, Math.max(...or.map((b) => b.h)), Math.min(...or.map((b) => b.l))].filter(Number.isFinite).sort((a, b) => a - b), ladder = [];
+    for (const x of raw) if (!ladder.length || x / ladder.at(-1) - 1 > 0.0005) ladder.push(x);
+    for (const t of trades(B, ladder, gN, vN)) rows.push({ d, T, tw: -1, ...t });
+    if (!SMOKE) for (let tw = 0; tw < 20; tw++) { const r = rng(`${T}|${d}|${tw}`), sh = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); for (const t of trades(B, ladder, gN.map((k) => k * (1 + sh)), vN.map((k) => k * (1 + sh)))) if (t.CONF) rows.push({ d, T, tw, ...t }); } }
+  console.error(`${T} done`); }
+if (SMOKE) { const r = rows.filter((x) => x.tw < 0); console.log(JSON.stringify({ breaks: r.length, CONF: r.filter((x) => x.CONF).length, TGT: r.filter((x) => x.TGT).length, AIR: r.filter((x) => x.AIR).length })); process.exit(0); }
+const st = (a, k = 'im') => { const v = a.filter((x) => x[k]).map((x) => ({ d: x.d, R: x[k].R, hit: x[k].hit })); if (v.length < 30) return { n: v.length, m: NaN, t: NaN, se: NaN }; const m = mean(v.map((x) => x.R)), by = new Map(); for (const x of v) by.set(x.d, (by.get(x.d) ?? 0) + x.R - m); const G = by.size, se = Math.sqrt([...by.values()].reduce((s, q) => s + q * q, 0) * G / Math.max(1, G - 1)) / v.length; return { n: v.length, m, t: m / se, se, hit: mean(v.map((x) => x.hit)) }; };
+const diff = (a, b) => ({ m: a.m - b.m, t: (a.m - b.m) / Math.sqrt(a.se ** 2 + b.se ** 2), n: a.n, a: a.m, b: b.m });
+const R0 = rows.filter((x) => x.tw < 0), per = (lo, hi) => R0.filter((x) => x.d >= lo && x.d <= hi), Bp = per('0', BEND), Hp = per(HST, '9');
+const twins = Array.from({ length: 20 }, (_, tw) => st(rows.filter((x) => x.tw === tw && x.d >= HST)).m), confH = st(Hp.filter((x) => x.CONF));
+const H = [['C1', 'all ladder breaks', (P) => st(P)], ['C2', 'CONF breaks (target on a node + air pocket)', (P) => st(P.filter((x) => x.CONF))], ['C3', 'CONF minus non-CONF', (P) => diff(st(P.filter((x) => x.CONF)), st(P.filter((x) => !x.CONF)))],
+  ['C5', 'AIR minus non-AIR', (P) => diff(st(P.filter((x) => x.AIR)), st(P.filter((x) => !x.AIR)))], ['C6', 'TGT minus non-TGT', (P) => diff(st(P.filter((x) => x.TGT)), st(P.filter((x) => !x.TGT)))], ['C7', 'CONF longs only', (P) => st(P.filter((x) => x.CONF && x.dir > 0))], ['C8', 'CONF retest entry', (P) => st(P.filter((x) => x.CONF), 'rt')]]
+  .map(([id, label, f]) => ({ id, label, build: f(Bp), hold: f(Hp) }));
+H.splice(3, 0, { id: 'C4', label: 'CONF vs 20 map-shifted twins (holdout)', build: { m: NaN, t: NaN }, hold: { m: confH.m - twins.filter(Number.isFinite).sort((a, b) => a - b)[10], beaten: twins.filter((t) => Number.isFinite(t) && confH.m > t).length } });
+const Phi = (x) => { const t = 1 / (1 + 0.2316419 * Math.abs(x)), d = 0.3989423 * Math.exp(-x * x / 2), p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return x > 0 ? 1 - p : p; };
+H.forEach((h) => (h.p = h.id === 'C4' ? (h.hold.beaten >= 19 ? 0 : 1) : Number.isFinite(h.hold.t) ? 1 - Phi(h.hold.t) : 1)); const o = H.map((h, i) => [h.p, i]).sort((a, b) => a[0] - b[0]); let km = -1; o.forEach(([p], q) => { if (p <= ((q + 1) / o.length) * 0.1) km = q; }); const ps = new Set(o.slice(0, km + 1).map(([, i]) => i)); H.forEach((h, i) => (h.ok = ps.has(i) && h.hold.m > 0));
+const f3 = (x) => (Number.isFinite(x) ? (x >= 0 ? '+' : '') + x.toFixed(3) : '—'), f2 = (x) => (Number.isFinite(x) ? x.toFixed(2) : '—'), pc = (x) => (Number.isFinite(x) ? (x * 100).toFixed(0) + '%' : '—');
+const cell = (s) => (s.beaten != null ? `${f3(s.m)} (beat ${s.beaten}/20 twins)` : `${f3(s.m)} (t ${f2(s.t)}, n ${s.n ?? ''}${s.hit != null ? ', hit ' + pc(s.hit) : ''})`);
+const L = [`# Rapid-style ladder + GEX/VEX confluence — results${STOCKS ? ' (10 random Skylit stocks)' : ' (SPY/QQQ/IWM/DIA)'}`, `\nRun ${new Date().toISOString()} · R per trade, target = next ladder level, stop behind the broken level\n`, `**Validated (BH q = 0.10 across 8): ${H.filter((h) => h.ok).map((h) => h.id).join(', ') || 'none'}**\n`,
+  '| id | test | build | holdout |', '|---|---|---|---|', ...H.map((h) => `| ${h.id} | ${h.label} | ${cell(h.build)} | **${cell(h.hold)}** |`), `\nHoldout CONF by symbol: ${SYMS.map((T) => `${T} ${f3(st(Hp.filter((x) => x.CONF && x.T === T)).m)}`).join(' · ')}`];
+fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, SUMF), L.join('\n') + '\n'); console.log(L.join('\n'));
