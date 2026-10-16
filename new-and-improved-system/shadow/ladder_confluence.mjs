@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const SH = path.dirname(fileURLToPath(import.meta.url)), C = path.join(SH, '..', '.cache'), OUT = path.join(SH, 'results_ladder'), SMOKE = process.argv.includes('--smoke'), STOCKS = process.argv.includes('--stocks'), SUMF = STOCKS ? 'summary_stocks.md' : 'summary.md';
-if (!SMOKE && !process.argv.includes('--mfe') && !process.argv.includes('--range') && !TREND && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+if (!SMOKE && !process.argv.includes('--mfe') && !process.argv.includes('--range') && !process.argv.includes('--trend') && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
 const SYMS = STOCKS ? JSON.parse(fs.readFileSync(path.join(SH, 'data', 'air_pocket_stocks.json'), 'utf8')).picks : ['SPY', 'QQQ', 'IWM', 'DIA'], BEND = '2025-03-31', HST = '2025-04-01', COST = 0.01;
 const MFE = process.argv.includes('--mfe'), TREND = process.argv.includes('--trend');
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
