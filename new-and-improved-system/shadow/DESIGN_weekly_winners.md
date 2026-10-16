@@ -50,3 +50,11 @@ information we have does not catch winners in advance, and the report says so.
 focus. Primary view: the 5 weeks with rebalances 2026-09-11 → 2026-10-09 (outcomes through 10-15), per feature: picks,
 hit rate, excess return, and this week's picks named. The full-history build/holdout test above is kept as the check
 that a rule which worked last month is not luck (one month = 5 observations).
+**Amendment 2 (2026-10-15, after the pre-week result was null; new question, registered before computing it).**
+"Catch the winners once the week has started": enter at the close of the week's FIRST session, exit at the week's last
+close (rest-of-week return). Features known at the first session's close: R1 own day-1 return; R2 peer-group day-1
+return (mean of the 10 most-correlated peers, 60-day correlation as of the prior week end — theme breadth); R3 day-1
+call-volume surge (day-1 call volume ÷ 30-day mean) × sign of day-1 directional flow; R4 mean rank of R2 and R1; R5 R4
+restricted to names whose peer group moved the same way (R2 sign = R1 sign); R6 R2 with the day-1 move ≥ 1 peer-sd
+(strong theme days only). Long = top 10, short = bottom 10. Same tests (build / holdout 2026 / last month / this week),
+BH q = 0.10 across these 12. Also reported: the second-session entry variant (enter at day-2 close) for R4.
