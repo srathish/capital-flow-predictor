@@ -26,3 +26,12 @@ AIR = A ≥ 0.40% · CROWD = A < 0.20% · NEG = AIR breaks where the summed net 
 G1 AIR mean R > 0 · G2 AIR beats CROWD · G3 NEG beats POS · G4 AIR beats ≥ 19/20 random-level twins (all node levels
 shifted by a common random ±0.15–0.60% per day/twin; same rules) · G5–G8 the same four for the retest entry.
 Reported: hit rate of reaching N2, mean R by symbol, long vs short, and the share of the day's range captured.
+
+## Amendment 1 (2026-10-16, registered before any stock data is downloaded) — 10 random Skylit-universe stocks
+User request: run the same test on individual stocks picked at random. Picks (shadow/data/air_pocket_stocks.json, seed
+20261016, shuffle of the sorted 330-symbol Skylit universe, first 10 common stocks with UW gamma on 2024-01-05):
+**GE, BROS, RH, STX, CVX, CCJ, ZS, UAMY, ALGN, CMCSA**. Data: UW daily net gamma by strike + 1-minute RTH bars,
+2023-11-16 → 2026-10-02 (UW's rolling 730-day window). Same rules, groups, twins and splits (build ≤ 2025-03-31,
+holdout ≥ 2025-04-01); stock nodes use the same ≥ 30%-of-king and ±3% definitions. Days where the first-minute price
+lies outside the node strike span are skipped (price/strike basis guard). Separate BH family (G1s–G8s), separate
+summary (results_air_pocket/summary_stocks.md); per-stock results reported.

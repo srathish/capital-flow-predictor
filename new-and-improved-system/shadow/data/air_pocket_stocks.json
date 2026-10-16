@@ -1,0 +1,20 @@
+{
+ "seed": 20261016,
+ "source": "apps/gex/research/stock-gex/universe-structures.json (330 symbols, 2026-08-26); shuffle of sorted list, first 10 common stocks with UW gamma on 2024-01-05",
+ "picks": [
+  "GE",
+  "BROS",
+  "RH",
+  "STX",
+  "CVX",
+  "CCJ",
+  "ZS",
+  "UAMY",
+  "ALGN",
+  "CMCSA"
+ ],
+ "skipped": [
+  "SE:ADR",
+  "ASML:ADR"
+ ]
+}

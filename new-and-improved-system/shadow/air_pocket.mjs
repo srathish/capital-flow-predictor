@@ -3,9 +3,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const SH = path.dirname(fileURLToPath(import.meta.url)), C = path.join(SH, '..', '.cache'), OUT = path.join(SH, 'results_air_pocket'), SMOKE = process.argv.includes('--smoke');
-if (!SMOKE && fs.existsSync(path.join(OUT, 'summary.md')) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
-const SYMS = ['SPY', 'QQQ', 'IWM', 'DIA'], BEND = '2025-03-31', HST = '2025-04-01', COST = 0.01;
+const SH = path.dirname(fileURLToPath(import.meta.url)), C = path.join(SH, '..', '.cache'), OUT = path.join(SH, 'results_air_pocket'), SMOKE = process.argv.includes('--smoke'), STOCKS = process.argv.includes('--stocks'), SUMF = STOCKS ? 'summary_stocks.md' : 'summary.md';
+if (!SMOKE && fs.existsSync(path.join(OUT, SUMF)) && !process.argv.includes('--force')) { console.error('already run'); process.exit(1); }
+const SYMS = STOCKS ? JSON.parse(fs.readFileSync(path.join(SH, 'data', 'air_pocket_stocks.json'), 'utf8')).picks : ['SPY', 'QQQ', 'IWM', 'DIA'], BEND = '2025-03-31', HST = '2025-04-01', COST = 0.01;
 const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : NaN);
 const offC = new Map(), etMin = (t, d) => { if (!offC.has(d)) { const h = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hourCycle: 'h23' }).format(new Date(d + 'T16:00:00Z')); offC.set(d, (h - 16) * 60); } return (((Math.floor(t / 60) + offC.get(d)) % 1440) + 1440) % 1440; };
 function rng(seed) { let h = 1779033703; for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 3432918353), h = (h << 13) | (h >>> 19); let a = h >>> 0; return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -28,10 +28,10 @@ function events(B, nodes, gam) { const out = []; const first = new Set();
 const rows = []; // {d, T, dir, A, neg, im, rt, twin}
 for (const T of SYMS) { const bars = JSON.parse(fs.readFileSync(path.join(C, 'uwgreeks', `${T}_ohlc.json`), 'utf8')), bi = new Map(bars.map((b, i) => [b.d, i]));
   const GR = new Map(fs.readFileSync(path.join(C, 'uwgreeks', `${T}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => { const j = JSON.parse(l); return [j.d, j.s]; }));
-  let days = bars.filter((b) => b.d >= '2023-11-09' && b.d <= '2026-10-02').map((b) => b.d); if (SMOKE) days = days.slice(0, 40);
+  let days = bars.filter((b) => b.d >= (STOCKS ? '2023-11-17' : '2023-11-09') && b.d <= '2026-10-02').map((b) => b.d); if (SMOKE) days = days.slice(0, 40);
   for (const d of days) { const i = bi.get(d); if (i == null || i < 1) continue; const p = bars[i - 1], s = GR.get(p.d); if (!s) continue; const B = loadDay(T, d); if (!B) continue;
     const gam = s.map((r) => ({ k: r[0], g: r[1] + r[2] })).filter((x) => Math.abs(x.k / p.c - 1) <= 0.03); if (gam.length < 5) continue; const king = Math.max(...gam.map((x) => Math.abs(x.g))); if (!(king > 0)) continue;
-    const nodes = gam.filter((x) => Math.abs(x.g) >= 0.3 * king).map((x) => x.k);
+    const nodes = gam.filter((x) => Math.abs(x.g) >= 0.3 * king).map((x) => x.k); if (STOCKS) { const ks = gam.map((x) => x.k), p0 = B[0].c; if (p0 < Math.min(...ks) || p0 > Math.max(...ks)) continue; } /* amendment 1 basis guard */
     for (const e of events(B, nodes, gam)) rows.push({ d, T, twin: -1, ...e });
     for (let tw = 0; tw < 20; tw++) { const r = rng(`${T}|${d}|${tw}`), sh = (0.0015 + r() * 0.0045) * (r() < 0.5 ? -1 : 1); const tn = nodes.map((k) => k * (1 + sh)), tg = gam.map((x) => ({ k: x.k * (1 + sh), g: x.g }));
       for (const e of events(B, tn, tg)) rows.push({ d, T, twin: tw, ...e }); } }
@@ -48,8 +48,8 @@ for (const [k, off] of [['im', 0], ['rt', 4]]) { const P = (per) => rows.filter(
     { id: `G${4 + off}`, label: `${k} AIR vs 20 random-level twins (holdout)`, build: { m: NaN, t: NaN }, hold: { m: ah.m - twins.filter(Number.isFinite).sort((a, b) => a - b)[10], t: NaN, beaten: twins.filter((t) => Number.isFinite(t) && ah.m > t).length } }); }
 H.forEach((h) => (h.p = h.id.endsWith('4') || h.id.endsWith('8') ? (h.hold.beaten >= 19 ? 0 : 1) : Number.isFinite(h.hold.t) ? 1 - Phi(h.hold.t) : 1)); const o = H.map((h, i) => [h.p, i]).sort((a, b) => a[0] - b[0]); let km = -1; o.forEach(([p], q) => { if (p <= ((q + 1) / o.length) * 0.1) km = q; }); const ps = new Set(o.slice(0, km + 1).map(([, i]) => i)); H.forEach((h, i) => (h.ok = ps.has(i) && h.hold.m > 0));
 const f3 = (x) => (Number.isFinite(x) ? (x >= 0 ? '+' : '') + x.toFixed(3) : '—'), f2 = (x) => (Number.isFinite(x) ? x.toFixed(2) : '—'), pc = (x) => (Number.isFinite(x) ? (x * 100).toFixed(0) + '%' : '—');
-const L = ['# GEX map: node breaks into air pockets — results', `\nRun ${new Date().toISOString()} · SPY/QQQ/IWM/DIA · target = next node, stop behind the broken node · R units\n`, `**Validated (BH q = 0.10 across 8): ${H.filter((h) => h.ok).map((h) => h.id).join(', ') || 'none'}**\n`,
+const L = [`# GEX map: node breaks into air pockets — results${STOCKS ? ' (10 random Skylit stocks)' : ''}`, `\nRun ${new Date().toISOString()} · ${SYMS.join('/')} · target = next node, stop behind the broken node · R units\n`, `**Validated (BH q = 0.10 across 8): ${H.filter((h) => h.ok).map((h) => h.id).join(', ') || 'none'}**\n`,
   '| id | test | build (t, n, hit) | holdout (t, n, hit) |', '|---|---|---|---|', ...H.map((h) => `| ${h.id} | ${h.label} | ${f3(h.build.m)} (${f2(h.build.t)}, ${h.build.n ?? ''}${h.build.hit != null ? ', ' + pc(h.build.hit) : ''}) | **${f3(h.hold.m)}** (${h.hold.beaten != null ? 'beat ' + h.hold.beaten + '/20 twins' : f2(h.hold.t) + ', ' + (h.hold.n ?? '') + (h.hold.hit != null ? ', ' + pc(h.hold.hit) : '')}) |`)];
 const byS = SYMS.map((T) => `${T} ${f3(st(rows.filter((x) => x.twin < 0 && x.T === T && x.d >= HST && x.A >= 0.004), 'im').m)}`).join(' · '), byD = [1, -1].map((dd) => `${dd > 0 ? 'long' : 'short'} ${f3(st(rows.filter((x) => x.twin < 0 && x.dir === dd && x.d >= HST && x.A >= 0.004), 'im').m)}`).join(' · ');
 L.push(`\nHoldout AIR immediate entry by symbol: ${byS}; by side: ${byD}.`);
-fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'summary.md'), L.join('\n') + '\n'); console.log(L.join('\n'));
+fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, SUMF), L.join('\n') + '\n'); console.log(L.join('\n'));
