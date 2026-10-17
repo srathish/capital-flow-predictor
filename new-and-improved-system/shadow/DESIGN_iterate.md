@@ -86,3 +86,21 @@ The Skylit replay archive has only 3 days after March: 04-02, 04-30 and 05-05. N
     baseline made +24–29% at t 1.56.
 - **Holdout pass:** mean > 0, plus one-sided day-clustered t passing BH q = 0.10 across the 2 rules. The every-day
   baseline is reported as a reference only.
+
+## Amendment 3 (2026-10-17): independent audit before the holdout. G1/G2 withdrawn; March stays sealed.
+
+- **Audit** (fresh agent, build data only): no look-ahead, no payoff bug, and the stale-leg fallback was never used. But
+  the result depends on the cost assumption ($0.02/leg at last-trade prices):
+
+  | Cost | G1 | G2 |
+  |---|---|---|
+  | $0.03/leg | t 1.91 | t 1.73 |
+  | $0.05/leg | t 1.53, months fail | t 1.12, months fail |
+
+  - Commissions (about $0.65 × 4 legs) add another 2.6–5% of risk per trade.
+  - Dropping the best day (01-28) gives t 1.79 / 1.70.
+- **Cost model from now on:** $0.03/leg plus $0.65/contract commission. Under it, neither G rule clears the build gate.
+  Both are withdrawn and **not** sent to the March holdout.
+- **The March gate now also requires beating the same-month every-day baseline.** Otherwise a pass could be plain
+  short-premium drift.
+- **Total tries: 1,022 variants. Surviving candidates under realistic costs: 0.**
