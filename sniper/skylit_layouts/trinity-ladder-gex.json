@@ -1,0 +1,1527 @@
+{
+  "kind": "skylit-atlas-layout",
+  "exportVersion": 1,
+  "exportedAt": "2026-10-17T01:00:00.000Z",
+  "name": "trinity-ladder-gex",
+  "values": {
+    "version": 1,
+    "arrangement": "triple-h",
+    "paneSync": {
+      "symbol": false,
+      "interval": true,
+      "crosshair": false,
+      "time": true,
+      "settings": true,
+      "price": false
+    },
+    "toggles": {
+      "trinityEnabled": true,
+      "heatmapEnabled": false,
+      "sniperEnabled": false,
+      "alertsPanelEnabled": false,
+      "tradingDeskEnabled": false,
+      "futuresSidecarEnabled": false,
+      "tradePanelEnabled": false,
+      "watchlistPanelEnabled": false,
+      "watchlistShowFavorites": true,
+      "watchlistColumns": {
+        "default": {
+          "columns": [
+            "symbol",
+            "price",
+            "chgpct",
+            "gexDistPct"
+          ],
+          "sort": null
+        }
+      },
+      "arcPanelsVisible": false,
+      "plugins": {
+        "TempestCones:__row__:__visible__": true,
+        "TheQuietCalf:gapfill": true,
+        "TheQuietCalf:legs": false,
+        "TheQuietCalf:orb": true,
+        "TheQuietCalf:pdhpdl": true
+      }
+    },
+    "chrome": {
+      "timezone": "America/New_York",
+      "extendedHours": false,
+      "sidebarDocks": {
+        "trinity": "right",
+        "heatmap": "right",
+        "sniper": "right",
+        "watchlist": "right",
+        "alerts": "right",
+        "trade": "right"
+      },
+      "drawingToolbarOpen": false,
+      "drawingsLocked": false,
+      "drawingMagnet": false,
+      "drawingLabelsOnHover": false,
+      "drawingStayArmed": true,
+      "heatmapDisplay": {
+        "nodePercent": {
+          "format": "percent",
+          "sign": "signed",
+          "decimals": 1,
+          "fontSizeDelta": 0,
+          "dynamicWeight": false,
+          "filterEffects": [
+            "hide",
+            "dim"
+          ],
+          "filterPct": 20,
+          "dimOpacity": 15,
+          "rawOnHover": true,
+          "velocitySelectedOnly": false
+        },
+        "colorScale": "viridis"
+      }
+    },
+    "sidebars": {
+      "trinity": {
+        "symbols": [
+          "SPXW",
+          "SPY",
+          "QQQ"
+        ],
+        "dataType": "netGamma",
+        "strikeCount": 100,
+        "velocityEnabled": true,
+        "velocityTimeframe": "1min",
+        "velocityFilterTrend": "all"
+      },
+      "heatmap": {
+        "strikeCount": 100,
+        "expirationCount": 5,
+        "zoomPreset": "normal",
+        "velocityEnabled": true,
+        "velocityTimeframe": "1min",
+        "velocityFilterTrend": "all"
+      }
+    },
+    "panes": [
+      {
+        "symbol": "SPX",
+        "interval": 5,
+        "settings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "darkPoolEnabled": false,
+          "sweepsEnabled": false,
+          "sidedVolumeEnabled": false,
+          "expirationMode": "current",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7,
+          "overlayOpacity": 1,
+          "dotColorScheme": "default",
+          "overlayMode": "orbsv2",
+          "orbV2MaxHeightPct": 15,
+          "orbV2MinChartHeightPct": 0.75,
+          "orbV2MaxChartHeightPct": 0.75,
+          "orbV2MaxOpacity": 0.65,
+          "orbV2MinOpacity": 0.35,
+          "orbV2KingOpacity": 1,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2RealtimeValues": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "includeDerived": false,
+          "showCrosshairTooltip": true,
+          "flowSubgraphFilters": {
+            "askEnabled": true,
+            "atmEnabled": true,
+            "bidEnabled": false,
+            "itmEnabled": true,
+            "maxDte": null,
+            "midEnabled": false,
+            "minDte": null,
+            "minFlowScore": null,
+            "multiLegEnabled": false,
+            "nonSweepEnabled": false,
+            "otmEnabled": true,
+            "singleLegEnabled": true,
+            "sweepEnabled": true
+          },
+          "flowSweepCpRatioEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "flowVwapEnabled": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": true,
+              "config": {
+                "topN": 10,
+                "lookbackDays": 30,
+                "labelMode": "hover"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeMode": "stacked",
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "indicatorsEnabled": true
+        },
+        "candleScheme": "classic",
+        "visibleIntervals": [
+          1,
+          3,
+          5,
+          15,
+          60,
+          240,
+          1440,
+          10080
+        ],
+        "individualSettings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "includeDerived": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "flowVwapEnabled": false,
+          "darkPoolEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsEnabled": false,
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": false,
+              "config": {
+                "topN": 5,
+                "lookbackDays": 45,
+                "labelMode": "always"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeEnabled": false,
+          "sidedVolumeMode": "stacked",
+          "showCrosshairTooltip": true,
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "overlayOpacity": 1,
+          "orbV2MaxHeightPct": 20,
+          "orbV2MinChartHeightPct": 1,
+          "orbV2MaxChartHeightPct": 2,
+          "orbV2MinOpacity": 0.1,
+          "orbV2MaxOpacity": 0.6,
+          "orbV2KingOpacity": 0.8,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "dotColorScheme": "cool",
+          "expirationMode": "next_n",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7
+        }
+      },
+      {
+        "symbol": "SPY",
+        "interval": 5,
+        "settings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "darkPoolEnabled": false,
+          "sweepsEnabled": false,
+          "sidedVolumeEnabled": false,
+          "expirationMode": "current",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7,
+          "overlayOpacity": 1,
+          "dotColorScheme": "default",
+          "overlayMode": "orbsv2",
+          "orbV2MaxHeightPct": 15,
+          "orbV2MinChartHeightPct": 0.75,
+          "orbV2MaxChartHeightPct": 0.75,
+          "orbV2MaxOpacity": 0.65,
+          "orbV2MinOpacity": 0.35,
+          "orbV2KingOpacity": 1,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2RealtimeValues": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "includeDerived": false,
+          "showCrosshairTooltip": true,
+          "flowSubgraphFilters": {
+            "askEnabled": true,
+            "atmEnabled": true,
+            "bidEnabled": false,
+            "itmEnabled": true,
+            "maxDte": null,
+            "midEnabled": false,
+            "minDte": null,
+            "minFlowScore": null,
+            "multiLegEnabled": false,
+            "nonSweepEnabled": false,
+            "otmEnabled": true,
+            "singleLegEnabled": true,
+            "sweepEnabled": true
+          },
+          "flowSweepCpRatioEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "flowVwapEnabled": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": true,
+              "config": {
+                "topN": 10,
+                "lookbackDays": 30,
+                "labelMode": "hover"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeMode": "stacked",
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "indicatorsEnabled": true
+        },
+        "candleScheme": "classic",
+        "visibleIntervals": [
+          1,
+          3,
+          5,
+          15,
+          60,
+          240,
+          1440,
+          10080
+        ],
+        "individualSettings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "includeDerived": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "flowVwapEnabled": false,
+          "darkPoolEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsEnabled": false,
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": false,
+              "config": {
+                "topN": 5,
+                "lookbackDays": 45,
+                "labelMode": "always"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeEnabled": false,
+          "sidedVolumeMode": "stacked",
+          "showCrosshairTooltip": true,
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "overlayOpacity": 1,
+          "orbV2MaxHeightPct": 20,
+          "orbV2MinChartHeightPct": 1,
+          "orbV2MaxChartHeightPct": 2,
+          "orbV2MinOpacity": 0.1,
+          "orbV2MaxOpacity": 0.6,
+          "orbV2KingOpacity": 0.8,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "dotColorScheme": "cool",
+          "expirationMode": "next_n",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7
+        }
+      },
+      {
+        "symbol": "QQQ",
+        "interval": 5,
+        "settings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "darkPoolEnabled": false,
+          "sweepsEnabled": false,
+          "sidedVolumeEnabled": false,
+          "expirationMode": "current",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7,
+          "overlayOpacity": 1,
+          "dotColorScheme": "default",
+          "overlayMode": "orbsv2",
+          "orbV2MaxHeightPct": 15,
+          "orbV2MinChartHeightPct": 0.75,
+          "orbV2MaxChartHeightPct": 0.75,
+          "orbV2MaxOpacity": 0.65,
+          "orbV2MinOpacity": 0.35,
+          "orbV2KingOpacity": 1,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2RealtimeValues": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "includeDerived": false,
+          "showCrosshairTooltip": true,
+          "flowSubgraphFilters": {
+            "askEnabled": true,
+            "atmEnabled": true,
+            "bidEnabled": false,
+            "itmEnabled": true,
+            "maxDte": null,
+            "midEnabled": false,
+            "minDte": null,
+            "minFlowScore": null,
+            "multiLegEnabled": false,
+            "nonSweepEnabled": false,
+            "otmEnabled": true,
+            "singleLegEnabled": true,
+            "sweepEnabled": true
+          },
+          "flowSweepCpRatioEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "flowVwapEnabled": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": true,
+              "config": {
+                "topN": 10,
+                "lookbackDays": 30,
+                "labelMode": "hover"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeMode": "stacked",
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "indicatorsEnabled": true
+        },
+        "candleScheme": "classic",
+        "visibleIntervals": [
+          1,
+          3,
+          5,
+          15,
+          60,
+          240,
+          1440,
+          10080
+        ],
+        "individualSettings": {
+          "enabled": true,
+          "dataType": "gamma",
+          "extendedHours": false,
+          "extendedHoursPriceLine": false,
+          "includeDerived": false,
+          "projectionEnabled": true,
+          "arcReferencePathVisible": true,
+          "arcHeatseekerNodesVisible": true,
+          "arcNodeStyle": "zones",
+          "arcPathStyle": "glow",
+          "arcModel": "v2",
+          "arcBeamColorDark": null,
+          "arcBeamColorLight": null,
+          "arcBeamOpacityDark": 1,
+          "arcBeamOpacityLight": 1,
+          "arcBeamExpirations": "auto",
+          "arcElliottDisplay": {
+            "maxDepth": 1,
+            "path": true,
+            "targets": true
+          },
+          "projectionHorizon": "auto",
+          "projectionHorizonCustom": null,
+          "chartPositionsEnabled": true,
+          "chartPositionsScope": "following",
+          "futuresQuickTradeEnabled": true,
+          "futuresFillMarksEnabled": true,
+          "futuresTagStyle": "full",
+          "flowSubgraphEnabled": false,
+          "flowVwapEnabled": false,
+          "darkPoolEnabled": false,
+          "darkPoolTopN": 5,
+          "darkPoolLookbackDays": 45,
+          "darkPoolLabelMode": "always",
+          "sweepsEnabled": false,
+          "sweepsTopN": 8,
+          "sweepsLookbackDays": 5,
+          "sweepsMultiVenueOnly": false,
+          "indicators": [
+            {
+              "id": "07787b86-5b95-4d34-aa48-8929c1de7133",
+              "type": "flow",
+              "enabled": false,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "95543021-dd70-4860-bf28-b4d123a236d6",
+              "type": "volume",
+              "enabled": false,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "265ab818-cb74-4a51-877a-57c60dada181",
+              "type": "darkpool",
+              "enabled": false,
+              "config": {
+                "topN": 5,
+                "lookbackDays": 45,
+                "labelMode": "always"
+              }
+            },
+            {
+              "id": "2ccfcfbe-8875-4ea7-9087-6f3533b269ab",
+              "type": "flow",
+              "enabled": true,
+              "config": {
+                "filters": {
+                  "singleLegEnabled": true,
+                  "multiLegEnabled": false,
+                  "itmEnabled": true,
+                  "atmEnabled": true,
+                  "otmEnabled": true,
+                  "bidEnabled": false,
+                  "midEnabled": false,
+                  "askEnabled": true,
+                  "sweepEnabled": true,
+                  "nonSweepEnabled": false,
+                  "minDte": null,
+                  "maxDte": null,
+                  "minPremium": null,
+                  "maxPremium": null,
+                  "minFlowScore": null
+                },
+                "sweepCpRatio": false
+              }
+            },
+            {
+              "id": "8612b5e1-2387-4ae5-9b64-699e4d21c983",
+              "type": "volume",
+              "enabled": true,
+              "config": {
+                "mode": "stacked",
+                "sides": {
+                  "buy": true,
+                  "sell": true,
+                  "unknown": true
+                }
+              }
+            },
+            {
+              "id": "db39c595-440d-4be8-879a-e56c716feb9d",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#2dd4bf",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 9
+              }
+            },
+            {
+              "id": "9e6dd39a-4cee-4284-a330-574fbebdfe28",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#f83857",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 5
+              }
+            },
+            {
+              "id": "ebe11da9-c44a-44f9-aa4d-786963fde740",
+              "type": "ema",
+              "enabled": true,
+              "config": {
+                "line": {
+                  "color": "#818cf8",
+                  "width": 1,
+                  "dash": "solid"
+                },
+                "period": 20
+              }
+            },
+            {
+              "id": "380e5685-9c97-4018-8d58-026ce6d0cb24",
+              "type": "cvd",
+              "enabled": true,
+              "config": {
+                "anchor": "session",
+                "maColor": "#f59e0b",
+                "maOn": true,
+                "maOpacity": 1,
+                "maPeriod": 20,
+                "maType": "sma"
+              }
+            },
+            {
+              "id": "f4a3b264-a484-46c6-8d26-e77f9f3a9f12",
+              "type": "flowvwap",
+              "enabled": true,
+              "config": {}
+            }
+          ],
+          "sidedVolumeEnabled": false,
+          "sidedVolumeMode": "stacked",
+          "showCrosshairTooltip": true,
+          "alertLinesEnabled": true,
+          "alertLineColor": "#f59e0b",
+          "alertLineStyle": "dashed",
+          "alertLineOpacity": 0.85,
+          "alertLineLabelMode": "always",
+          "overlayOpacity": 1,
+          "orbV2MaxHeightPct": 20,
+          "orbV2MinChartHeightPct": 1,
+          "orbV2MaxChartHeightPct": 2,
+          "orbV2MinOpacity": 0.1,
+          "orbV2MaxOpacity": 0.6,
+          "orbV2KingOpacity": 0.8,
+          "orbV2ScrollReplay": true,
+          "orbV2CallPutFill": false,
+          "orbV2DerivedShapes": true,
+          "orbV2DerivedLatestRatio": false,
+          "orbV2HeatmapPalette": false,
+          "orbV2NodeLabels": true,
+          "orbV2NodeLabelPosition": "left",
+          "orbV2NodeLabelMatchColor": false,
+          "orbV2NodeLabelMatchSize": false,
+          "orbV2NodeLabelMatchOpacity": false,
+          "orbV2DerivedNodeLabels": false,
+          "dotColorScheme": "cool",
+          "expirationMode": "next_n",
+          "expirationCount": 10,
+          "nodeCount": 7,
+          "nodeFilterMode": "top_n",
+          "nodeFilterValue": 7
+        }
+      }
+    ],
+    "paneSizes": {
+      "columns": [
+        27.77,
+        35.98,
+        36.25
+      ],
+      "rows": [
+        100
+      ]
+    }
+  }
+}
