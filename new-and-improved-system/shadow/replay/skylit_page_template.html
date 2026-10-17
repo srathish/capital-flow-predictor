@@ -152,14 +152,15 @@ function mapAt(s,m){let best=null;for(const x of s.maps){if(x[0]<=m)best=x;else 
 function draw(){const s=S[si];if(!s)return;const r=box.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
   const W=r.width,H=r.height,pad={l:10,r:92,t:14,b:26},L=lay(),tf=+$('tf').value,M=570+cur;
   $('sub').textContent=`${T} · ${s.d} · Skylit board every minute`;
-  const lo=Math.min(...s.bars.map(b=>b[3])),hi=Math.max(...s.bars.map(b=>b[2])),sp=hi-lo,yMin=lo-sp*0.2,yMax=hi+sp*0.2,X=m=>pad.l+(m-570)/390*(W-pad.l-pad.r),Y=p=>pad.t+(yMax-p)/(yMax-yMin)*(H-pad.t-pad.b);
+  const plo=Math.min(...s.bars.map(b=>b[3])),phi=Math.max(...s.bars.map(b=>b[2])),kings=s.maps.map(x=>x[1]).filter(k=>k!=null&&k>=plo*0.985&&k<=phi*1.015),lo=Math.min(plo,...kings),hi=Math.max(phi,...kings),sp=hi-lo,yMin=lo-sp*0.12,yMax=hi+sp*0.12,X=m=>pad.l+(m-570)/390*(W-pad.l-pad.r),Y=p=>pad.t+(yMax-p)/(yMax-yMin)*(H-pad.t-pad.b);
   ctx.fillStyle=C.ground;ctx.fillRect(0,0,W,H);ctx.font='11px "IBM Plex Mono",monospace';ctx.textBaseline='middle';
   const step=[0.25,0.5,1,2,2.5,5,10].find(x=>(yMax-yMin)/x<=8)||10;
   for(let p=Math.ceil(yMin/step)*step;p<=yMax;p+=step){ctx.strokeStyle=C.line;ctx.beginPath();ctx.moveTo(pad.l,Y(p));ctx.lineTo(W-pad.r,Y(p));ctx.stroke();ctx.fillStyle=C.dim;ctx.fillText(p.toFixed(step<1?2:0),W-pad.r+6,Y(p));}
   for(const m of [600,660,720,780,840,900]){ctx.strokeStyle=C.line;ctx.beginPath();ctx.moveTo(X(m),pad.t);ctx.lineTo(X(m),H-pad.b);ctx.stroke();ctx.fillStyle=C.dim;ctx.textBaseline='top';ctx.fillText(hm(m),X(m)-16,H-pad.b+6);ctx.textBaseline='middle';}
-  const mp=mapAt(s,M);
+  const mp=mapAt(s,M),last0=s.bars.filter(b=>b[0]<=M).at(-1);
   if(L.nodes&&mp)for(const [k,rel,d] of mp[2]){if(k<yMin||k>yMax)continue;const y=Y(k),th=2+Math.abs(rel)*10,isK=k===mp[1],col=isK?C.king:(rel>0?C.pos:C.neg);const gr=ctx.createLinearGradient(pad.l,0,W-pad.r,0);gr.addColorStop(0,hexA(col,0.03));gr.addColorStop(1,hexA(col,isK?0.6:0.42));ctx.fillStyle=gr;ctx.fillRect(pad.l,y-th/2,W-pad.l-pad.r,th);ctx.fillStyle=col;ctx.fillRect(W-pad.r,y-th/2,4,th);
     if(Math.abs(rel)>=0.3||isK){ctx.font=(isK?'600 ':'')+'11px "IBM Plex Mono",monospace';ctx.fillStyle=col;ctx.fillText((isK?'K ':'')+k,W-pad.r+6,y-th/2-6);if(d!=null){ctx.fillStyle=d>=20?C.win:d<=-20?C.neg:C.dim;ctx.fillText((d>=0?'▲':'▼')+Math.abs(d)+'%',W-pad.r+44,y-th/2-6);}}}
+  if(L.nodes&&mp&&mp[1]!=null&&(mp[1]<yMin||mp[1]>yMax)){const up=mp[1]>yMax,y=up?pad.t+10:H-pad.b-10,lp=last0?last0[4]:null;ctx.fillStyle=C.king;ctx.font='600 11px "IBM Plex Mono",monospace';ctx.fillText(`KING ${mp[1]} ${up?'↑':'↓'}${lp?' '+((mp[1]/lp-1)*100).toFixed(1)+'%':''}`,pad.l+6,y);}
   if(L.king){ctx.strokeStyle=hexA(C.king,0.75);ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();let first=true,prev=null;for(const x of s.maps){if(x[0]>M||x[1]==null)continue;if(x[1]<yMin||x[1]>yMax){first=true;continue;}const xx=X(x[0]),yy=Y(x[1]);if(first){ctx.moveTo(xx,yy);first=false;}else{ctx.lineTo(xx,Y(prev));ctx.lineTo(xx,yy);}prev=x[1];}ctx.stroke();ctx.setLineDash([]);
     for(const g of s.migrations){if(g.m>M)continue;const yy=Y(g.to);if(g.to<yMin||g.to>yMax)continue;ctx.fillStyle=C.king;ctx.beginPath();ctx.arc(X(g.m),yy,3,0,7);ctx.fill();}}
   const bars=agg(s.bars,tf,cur),bw=Math.max(1,(W-pad.l-pad.r)/390*tf*0.7);
