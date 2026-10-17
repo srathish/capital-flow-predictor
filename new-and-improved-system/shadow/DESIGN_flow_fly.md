@@ -43,3 +43,16 @@ The T1 iron fly from DESIGN_iron_fly / long_fly, unchanged:
 Also reported: the build period, per ticker, and terciles of z.
 
 **A pass needs the build period to agree in sign.** Then come the audit, the cost check and the forward ledger.
+
+## Result (2026-10-17): FAIL, 0 of 4
+
+| Test | Holdout |
+|---|---|
+| Q1 (±1%, customers net sold) | −0.3%, t −0.07 |
+| Q2 (sold minus bought) | +4.0%, Welch t 0.69 |
+| Q3 (±0.5%, customers net sold) | −13.1% |
+| Q4 (sold minus bought) | +2.4%, t 0.34 |
+
+- In the build period the filter pointed the wrong way at ±1% (−6.3% vs −4.2%).
+- Per ticker the results are inconsistent.
+- Flow-built positioning on the options being sold does not make the overnight fly profitable.

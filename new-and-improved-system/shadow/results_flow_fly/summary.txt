@@ -1,0 +1,29 @@
+±1% build: customers net SOLD (z<0) n 397 mean -6.3% t -1.35 | net BOUGHT n 535 mean -4.2% t -0.87 | difference Welch t -0.32
+    SPY: sold n 142 -5.0% | bought n 154 -8.5%
+    QQQ: sold n 110 5.9% | bought n 187 -5.3%
+    IWM: sold n 102 -19.9% | bought n 173 -4.7%
+    DIA: sold n 43 -25.7% | bought n 21 2.6%
+    terciles of z (low = most net selling): -10.9%/311  -1.3%/311  -7.8%/310
+
+±1% holdout: customers net SOLD (z<0) n 608 mean -0.3% t -0.07 | net BOUGHT n 605 mean -4.3% t -1.04 | difference Welch t 0.69
+    SPY: sold n 199 -0.1% | bought n 179 6.3%
+    QQQ: sold n 202 -4.2% | bought n 171 -6.7%
+    IWM: sold n 166 -5.7% | bought n 213 -13.9%
+    DIA: sold n 41 -17.6% | bought n 42 -9.6%
+    terciles of z (low = most net selling): -0.3%/405  -8.5%/404  -5.9%/404
+±0.5% build: customers net SOLD (z<0) n 398 mean -14.9% t -2.55 | net BOUGHT n 537 mean -16.8% t -3.16 | difference Welch t 0.24
+    SPY: sold n 143 -10.2% | bought n 155 -12.0%
+    QQQ: sold n 110 8.1% | bought n 188 -10.5%
+    IWM: sold n 102 -46.8% | bought n 173 -33.1%
+    DIA: sold n 43 -34.5% | bought n 21 -19.3%
+    terciles of z (low = most net selling): -24.2%/312  -6.2%/312  -23.5%/311
+
+±0.5% holdout: customers net SOLD (z<0) n 612 mean -13.1% t -2.59 | net BOUGHT n 608 mean -15.5% t -3.13 | difference Welch t 0.34
+    SPY: sold n 200 -4.3% | bought n 179 1.1%
+    QQQ: sold n 205 -19.0% | bought n 173 -12.6%
+    IWM: sold n 166 -30.6% | bought n 213 -38.9%
+    DIA: sold n 41 -38.2% | bought n 43 -33.2%
+    terciles of z (low = most net selling): -16.3%/407  -20.4%/407  -20.1%/406
+
+Tests (holdout): Q1 -0.3% t -0.07 | Q2 4.0% t 0.69 | Q3 -13.1% t -2.59 | Q4 2.4% t 0.34
+rows without the feature: 0
