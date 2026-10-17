@@ -17,3 +17,11 @@ so both flies are about equally far from price) — tests whether the KING strik
 ## Hypotheses (one-sided; build = 2025-12-15 → 2026-02-27; holdout = 2026-03-02 → 2026-05-05; day-clustered)
 P1 king fly mean return > 0 · P2 king fly minus control fly > 0 (paired). Both must pass on the holdout at p < 0.05
 (BH across the two). Reported: trades, win rate, average return, median, account result at $200 per fly.
+
+## Amendment 1 (2026-10-17, after the build look, before the holdout split by regime is computed)
+Build (Dec–Feb) king flies split by the prior-close UW ±1% gamma balance (our validated range predictor; pins should
+hold when dealers are long gamma): balance ≥ 0 → +15% per fly (32), < 0 → −27% (29). Registered rule: take the king
+fly ONLY when the prior-close ±1% gamma balance ≥ 0. Test on the holdout (Mar–May): **Q1** mean return > 0 and **Q2**
+beats the paired control fly, both one-sided p < 0.05. Caveat: the holdout's unfiltered result was already seen
+(+104% per fly, 19 trades), so this is weaker than a fresh test; the forward ledger is the real test.
+(The before/after-noon split, −24% after noon, is NOT adopted: no prior reason, would be fitting.)
