@@ -78,7 +78,13 @@ for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
                     if (bb[3] <= stop) if dr > 0 else (bb[2] >= stop): res = (bm, stop, 'stop'); break
                     if (bb[2] >= tgt) if dr > 0 else (bb[3] <= tgt): res = (bm, tgt, 'target'); break
                 if res is None: lastb = max(k for k in BAR if k <= 955); res = (lastb, BAR[lastb][4], 'close')
-                brks.append(dict(m=m, dir=dr, level=N, next=N2, entry=round(s, 2), stop=round(stop, 2), target=round(tgt, 2), exitM=res[0], exit=round(res[1], 2), how=res[2], R=round(dr * (res[1] - s) / R0, 2), d15=d15f(i, N)))
+                g0n, g0t = abs(ser[i][2].get(N, 0)) or None, abs(ser[i][2].get(N2, 0)) or None
+                path = []
+                for t in range(i + 1, len(ser)):
+                    mt, st_, gt = ser[t]
+                    if mt > 955: break
+                    path.append([mt, round(abs(gt.get(N2, 0)) / g0t, 3) if g0t else None, round(abs(gt.get(N, 0)) / g0n, 3) if g0n else None, round(st_, 2)])
+                brks.append(dict(path=path, m=m, dir=dr, level=N, next=N2, entry=round(s, 2), stop=round(stop, 2), target=round(tgt, 2), exitM=res[0], exit=round(res[1], 2), how=res[2], R=round(dr * (res[1] - s) / R0, 2), d15=d15f(i, N)))
         for i in range(1, len(ser) - 35):
             m = ser[i][0]; k0, k1 = kings[i - 1], kings[i]
             if m < 585 or m > 900 or k1 is None or k0 is None or k1 == k0 or any(kings[t] != k1 for t in range(i, i + 5)): continue
