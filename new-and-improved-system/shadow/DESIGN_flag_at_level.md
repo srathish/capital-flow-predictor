@@ -59,3 +59,14 @@ All four conditions must hold at the close of 5-minute bar t.
 - the Skylit-map version (exploratory).
 
 **If F1 and F2 pass:** price it with real 0DTE/1DTE options and send it to the audit and forward ledger.
+
+## Result (2026-10-17): FAIL
+
+| | Holdout |
+|---|---|
+| F1, full pattern | 34 trades, −0.25R, t −1.22 |
+| F2, full minus shifted-map twins | −0.09R |
+| F3, volume adds value | −0.04R |
+
+Every variant is ≤ 0 in the holdout. The pattern on shifted maps does about the same (−0.11R), so neither the level nor
+volume confirmation adds anything.
