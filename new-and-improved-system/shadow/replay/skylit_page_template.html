@@ -87,6 +87,7 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
   <div class="grid">
     <div class="chartbox" id="box"><canvas id="cv" aria-label="Price with the live Skylit map"></canvas><div class="tip" id="tip" hidden></div></div>
     <aside class="rail">
+      <section class="card"><h2>Data checks</h2><dl class="kv" id="chk"></dl></section>
       <section class="card"><h2>Engine this day</h2><dl class="kv" id="day"></dl></section>
       <section class="card"><h2>Map at the cursor</h2><dl class="kv" id="now"></dl></section>
       <section class="card"><h2>Trades so far</h2><div id="sigs"></div></section>
@@ -119,12 +120,13 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
     </div>
     <p class="note">Whole contracts only (contracts = amount ÷ (option price × 100), rounded down; a trade too small for one contract is skipped). Bought and sold at UW's 1-minute option prices for that contract, minus commissions. Take-profit exits fill at exactly the target when the option's 1-minute high reached it while the trade was open, which is optimistic. One month of data; this shows what March would have done, not a forecast.</p>
   </section>
+  <p class="note">Data checks (per date, ✓/! on each date chip): Skylit board price vs UW candles (Skylit frames are stamped one minute after the candle they reflect; aligned they agree within about 0.3–2 basis points), missing minutes, king distance from price, and every trade re-scored on UW 1-minute highs and lows. Trade outcomes use the candles (stop first when stop and target fall in the same minute), so intrabar wicks count. A spot-check of two boards against Skylit's live API is scheduled after midnight ET (daily credit cap).</p>
   <p class="note">Data: Skylit Trinity replay, one board per minute (gamma summed over the five listed expirations), March 2026; candles and option prices from Unusual Whales. Nodes are strikes within ±2% of price with at least 12% of the king's size (thicker = bigger; cyan positive, magenta negative, white = king). ▲/▼ is the node's change over the last 15 minutes. Engine trades: a 1-minute move through a node (30%+ of king) into a gap of 0.4%+ to the next node on the CURRENT board; buy the at-the-money 0DTE call (up) or put (down), stop 0.15% behind the node, target the next node. Touch markers turn green if the node held for 15 minutes and red if price broke through. March is one month inside the test's holdout period: 52 trades averaged +7.7% per option (+0.50R), 17 winners; the full Dec–May test has not validated any reactive rule yet.</p>
 </div>
 <script type="application/json" id="data">__DATA__</script>
 <script>
 (()=>{
-const D=JSON.parse(document.getElementById('data').textContent),ALL=D.sessions;
+const D=JSON.parse(document.getElementById('data').textContent),ALL=D.sessions,VAL=Object.fromEntries((D.validation||[]).map(v=>[v.d+v.T,v]));
 const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),box=$('box');
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const C={ground:css('--panel'),line:css('--line'),ink:css('--ink'),dim:css('--dim'),faint:css('--faint'),pos:css('--pos'),neg:css('--neg'),king:css('--king'),win:css('--win'),loss:css('--loss'),ladder:css('--ladder')};
@@ -133,7 +135,7 @@ const hexA=(h,a)=>{const v=parseInt(h.replace('#',''),16);return `rgba(${v>>16&2
 let T='SPY',S=[],si=0,cur=0,playing=false,timer=null,hover=null;
 function setT(t){T=t;S=ALL.filter(s=>s.T===t);si=Math.min(si,S.length-1);document.querySelectorAll('.tick button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));chips();draw();}
 function chips(){const days=$('days');days.innerHTML='';S.forEach((s,i)=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed',i===si);const o=s.breaks.filter(x=>x.opt),tot=o.reduce((a,x)=>a+x.opt.pct,0);
-  b.innerHTML=`${new Date(s.d+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})}<span class="pnl ${o.length?(tot>=0?'w':'l'):'o'}">${o.length?pc(tot)+' · '+o.length+' trades':'no trades'}</span>`;b.onclick=()=>{si=i;cur=0;chips();draw();};days.appendChild(b);});}
+  const v=VAL[s.d+s.T];b.innerHTML=`${new Date(s.d+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})} <span title="Data checks" class="${v&&v.status==='ok'?'w':'l'}">${v&&v.status==='ok'?'✓':'!'}</span><span class="pnl ${o.length?(tot>=0?'w':'l'):'o'}">${o.length?pc(tot)+' · '+o.length+' trades':'no trades'}</span>`;b.onclick=()=>{si=i;cur=0;chips();draw();};days.appendChild(b);});}
 document.querySelectorAll('.tick button').forEach(b=>b.onclick=()=>setT(b.dataset.t));
 const lay=()=>({nodes:$('L-nodes').checked,king:$('L-king').checked,touch:$('L-touch').checked,brk:$('L-brk').checked});
 function agg(bars,tf,upto){const out=[];for(const b of bars){if(b[0]-570>upto)break;const k=Math.floor((b[0]-570)/tf);const o=out[out.length-1];if(o&&o.k===k){o.h=Math.max(o.h,b[2]);o.l=Math.min(o.l,b[3]);o.c=b[4];}else out.push({k,m:570+k*tf,o:b[1],h:b[2],l:b[3],c:b[4]});}return out;}
@@ -162,7 +164,8 @@ function draw(){const s=S[si];if(!s)return;const r=box.getBoundingClientRect(),d
     if(done){const xx=X(x.exitM),yy=Y(x.exit);ctx.fillStyle=(x.opt?x.opt.pct:x.R)>=0?C.win:C.loss;ctx.beginPath();ctx.arc(xx,yy,4,0,7);ctx.fill();ctx.font='500 11px "IBM Plex Mono",monospace';ctx.fillText(x.opt?pc(x.opt.pct):fR(x.R),xx+6,yy-x.dir*10);}}
   if(hover&&hover.x>pad.l&&hover.x<W-pad.r){ctx.strokeStyle=C.faint;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(hover.x,pad.t);ctx.lineTo(hover.x,H-pad.b);ctx.moveTo(pad.l,hover.y);ctx.lineTo(W-pad.r,hover.y);ctx.stroke();const p=yMax-(hover.y-pad.t)/(H-pad.t-pad.b)*(yMax-yMin),m=Math.round(570+(hover.x-pad.l)/(W-pad.l-pad.r)*390),tip=$('tip');tip.hidden=false;tip.textContent=`${hm(m)}  ${p.toFixed(2)}`;tip.style.left=Math.min(hover.x+10,W-110)+'px';tip.style.top=Math.max(hover.y-26,0)+'px';}else $('tip').hidden=true;
   $('clock').textContent=hm(M);$('scrub').value=cur;side(s,mp,last,vis,M);}
-function side(s,mp,last,vis,M){const row=(k,v)=>`<dt>${k}</dt><dd>${v}</dd>`,p=last?last[4]:null;
+function side(s,mp,last,vis,M){const row=(k,v)=>`<dt>${k}</dt><dd>${v}</dd>`,p=last?last[4]:null,v=VAL[s.d+s.T];
+  $('chk').innerHTML=v?row('Status',v.status==='ok'?'<span class="w">✓ clean</span>':'<span class="l">! see note</span>')+row('Skylit vs UW price',`${v.medBp} bp median · ${v.p95Bp} bp 95th`)+row('Missing minutes',`Skylit ${v.missSky} · candles ${v.missBar}`)+row('King distance (median)',v.kingDistMed+'%')+row('Trades rechecked on candles',v.trades?`${v.trades-v.tradeIssues.length} of ${v.trades} match`:'no trades')+(v.flags.length?row('Note',v.flags.join('; ')):''):row('Status','not checked');
   const ts=s.touches.filter(t=>t.m+15<=M),sh=ts.filter(t=>t.d15!=null&&t.d15<=-20),gr=ts.filter(t=>t.d15!=null&&t.d15>=20),mg=s.migrations.filter(g=>g.m+30<=M),dn=vis.filter(x=>x.exitM<=M&&x.opt);
   $('day').innerHTML=row('Node touches',ts.length?`${ts.filter(t=>!t.broke).length} held · ${ts.filter(t=>t.broke).length} broke`:'none yet')+row('Shrinking nodes touched',sh.length?`${sh.filter(t=>t.broke).length} of ${sh.length} broke`:'—')+row('Growing nodes touched',gr.length?`${gr.filter(t=>t.broke).length} of ${gr.length} broke`:'—')+row('King moves',mg.length?`${mg.filter(g=>g.toward).length} of ${mg.length} followed`:'none yet')+row('Trades closed',dn.length?`${dn.filter(x=>x.opt.pct>0).length} won · total ${pc(dn.reduce((a,x)=>a+x.opt.pct,0))}`:'none yet');
   if(!mp||p==null){$('now').innerHTML=row('Map','—');}else{const nodes=mp[2].filter(n=>Math.abs(n[1])>=0.3),ab=nodes.filter(n=>n[0]>p).sort((a,b)=>a[0]-b[0])[0],be=nodes.filter(n=>n[0]<p).sort((a,b)=>b[0]-a[0])[0],kn=mp[2].find(n=>n[0]===mp[1]);const dd=d=>d==null?'':` · <span class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'}${Math.abs(d)}%</span>`;

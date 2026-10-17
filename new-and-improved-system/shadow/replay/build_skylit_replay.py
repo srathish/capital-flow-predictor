@@ -26,7 +26,7 @@ for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
             m = emin(fr['timestamp'])
             if 570 <= m <= 959: ser.append((m, float(x['spotPrice']), {float(k): sum(v or 0 for v in row) for k, row in zip(x['strikes'], x['gammaValues'])}))
         if len(ser) < 300 or len(bars) < 300: continue
-        ser.sort(key=lambda r: r[0]); idx = {r[0]: i for i, r in enumerate(ser)}
+        ser.sort(key=lambda r: r[0]); idx = {r[0]: i for i, r in enumerate(ser)}; BAR = {r[0]: r for r in bars}
         maps, kings, NOD = [], [], []
         for i, (m, s, g) in enumerate(ser):
             near = {k: v for k, v in g.items() if abs(k / s - 1) <= 0.02}
@@ -69,11 +69,15 @@ for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
                 seen.add((N, dr)); beyond = sorted([k for k in NOD[i] if dr * (k - N) > 0], key=lambda k: dr * (k - N))
                 if not beyond or abs(beyond[0] - N) / N < 0.004: continue
                 N2 = beyond[0]; stop = N * (1 - dr * 0.0015); tgt = N2 * (1 - dr * 0.0002); R0 = abs(s - stop); res = None
-                for t in range(i + 1, end + 1):
-                    q = ser[t][1]
-                    if dr * (q - stop) <= 0: res = (ser[t][0], stop, 'stop'); break
-                    if dr * (q - tgt) >= 0: res = (ser[t][0], tgt, 'target'); break
-                if res is None: res = (ser[end][0], ser[end][1], 'close')
+                # outcome scored on UW 1-minute candles (highs/lows; stop first if both in one candle). Skylit frame m ≈ candle m-1 close,
+                # so the trade is live from candle m onward (validation 2026-10-17: Skylit 1/min spot missed intrabar stops)
+                if R0 <= 0: continue
+                for bm in range(m, 956):
+                    bb = BAR.get(bm)
+                    if not bb: continue
+                    if (bb[3] <= stop) if dr > 0 else (bb[2] >= stop): res = (bm, stop, 'stop'); break
+                    if (bb[2] >= tgt) if dr > 0 else (bb[3] <= tgt): res = (bm, tgt, 'target'); break
+                if res is None: lastb = max(k for k in BAR if k <= 955); res = (lastb, BAR[lastb][4], 'close')
                 brks.append(dict(m=m, dir=dr, level=N, next=N2, entry=round(s, 2), stop=round(stop, 2), target=round(tgt, 2), exitM=res[0], exit=round(res[1], 2), how=res[2], R=round(dr * (res[1] - s) / R0, 2), d15=d15f(i, N)))
         for i in range(1, len(ser) - 35):
             m = ser[i][0]; k0, k1 = kings[i - 1], kings[i]
