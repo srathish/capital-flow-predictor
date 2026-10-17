@@ -8,10 +8,12 @@ import os from 'node:os';
 import { UW_API_KEY } from '../../feeds/env.js';
 const CACHE = new URL('../../.cache/skylit_formula/', import.meta.url); fs.mkdirSync(CACHE, { recursive: true });
 const TIMES = [600, 690, 780, 870, 930];
+const VEX = process.env.METRIC === 'vanna', VSCALE = process.env.VSCALE ?? 'S';
 const uw = async (u, key) => { const f = new URL(key + '.json', CACHE); if (fs.existsSync(f)) return JSON.parse(fs.readFileSync(f, 'utf8'));
   for (let a = 0; a < 3; a++) { await new Promise((r) => setTimeout(r, 130)); const r = await fetch('https://api.unusualwhales.com/api' + u, { headers: { Authorization: `Bearer ${UW_API_KEY}` } }).catch(() => null); if (r?.ok) { const j = await r.json(); fs.writeFileSync(f, JSON.stringify(j)); return j; } await new Promise((x) => setTimeout(x, 1500)); } return null; };
 const et = (iso) => { const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date(iso)); return +p.find((x) => x.type === 'hour').value * 60 + +p.find((x) => x.type === 'minute').value; };
 const phi = (x) => Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+const bsVanna = (S, K, T, v) => { const d1 = (Math.log(S / K) + 0.5 * v * v * T) / (v * Math.sqrt(T)), d2 = d1 - v * Math.sqrt(T); return -phi(d1) * d2 / v; };
 const bsGamma = (S, K, T, v) => { const d1 = (Math.log(S / K) + 0.5 * v * v * T) / (v * Math.sqrt(T)); return phi(d1) / (S * v * Math.sqrt(T)); };
 const occ = (T, exp, cp, K) => `${T}${exp.slice(2, 4)}${exp.slice(5, 7)}${exp.slice(8, 10)}${cp}${String(Math.round(K * 1000)).padStart(8, '0')}`;
 // features per (strike, expiry, time): unit = gamma·100·S²·0.01 (dollar gamma per 1% move)
@@ -40,18 +42,19 @@ for (const arg of process.argv.slice(2)) {
     const fr = at(m); if (!fr) continue; const S = fr.x.spotPrice;
     fr.x.strikes.forEach((K, si) => { if (!strikes.includes(K)) return;
       exps.forEach((exp, ei) => {
-        const y = fr.x.gammaValues[si]?.[ei]; if (y == null) return;
+        const y = fr.x[VEX ? 'vannaValues' : 'gammaValues'][si]?.[ei]; if (y == null) return;
         const Tyr = Math.max(1e-5, ((Date.parse(exp + 'T00:00:00Z') - Date.parse(d + 'T00:00:00Z')) / 864e5 + (960 - m) / 1440) / 365);
         const f = {};
         for (const cp of ['C', 'P']) { const c = C.get(occ(T, exp, cp, K)); if (!c) return;
           const upto = c.mins.filter((q) => q.m <= m - 1), lastIv = upto.filter((q) => q.iv > 0).at(-1)?.iv;
-          const v = Math.min(3, Math.max(0.05, lastIv || c.iv || 0.2)), unit = bsGamma(S, K, Tyr, v) * 100 * S * S * 0.01;
+          const v = Math.min(3, Math.max(0.05, lastIv || c.iv || 0.2)), unit = VEX ? bsVanna(S, K, Tyr, v) * 100 * (VSCALE === 'S2' ? S * S : S) * 0.01 : bsGamma(S, K, Tyr, v) * 100 * S * S * 0.01;
           f['oi' + cp] = c.oi * unit; f['netAsk' + cp] = upto.reduce((s, q) => s + q.a - q.b, 0) * unit; f['vol' + cp] = upto.reduce((s, q) => s + q.v, 0) * unit; f['cum' + cp] = c.cum * unit; }
         rows.push({ T, d, m, K, exp, dte: Math.round((Date.parse(exp) - Date.parse(d)) / 864e5), y, f });
       }); });
   }
 }
-fs.writeFileSync(new URL('./rows.json', import.meta.url), JSON.stringify(rows));
+fs.writeFileSync(new URL(VEX ? './rows_vex.json' : './rows.json', import.meta.url), JSON.stringify(rows));
+console.log(VEX ? `\n##### VEX (vanna, scale ${VSCALE}) #####` : '\n##### GEX #####');
 // least squares (no intercept)
 function fit(cols, sel = () => true) {
   const R = rows.filter(sel), sc = 1e8, X = R.map((r) => cols.map((c) => r.f[c] / sc)), y = R.map((r) => r.y / sc), k = cols.length;
@@ -84,7 +87,7 @@ console.log(`Skylit (10:00) vs UW's own greek-exposure GEX, same strike+expiry: 
 const chg = []; const key = (r) => `${r.T}${r.d}${r.exp}${r.K}`, first = new Map(rows.filter((r) => r.m === TIMES[0]).map((r) => [key(r), r]));
 for (const r of rows.filter((r) => r.m === TIMES.at(-1))) { const a = first.get(key(r)); if (a) chg.push({ dy: r.y - a.y, dOI: (r.f.oiC - r.f.oiP) - (a.f.oiC - a.f.oiP), dFlow: (r.f.netAskC + r.f.netAskP) - (a.f.netAskC + a.f.netAskP), dVol: (r.f.volC + r.f.volP) - (a.f.volC + a.f.volP) }); }
 console.log(`Change 10:00→15:30 in Skylit vs: open-interest gamma change corr ${corr(chg.map((c) => c.dy), chg.map((c) => c.dOI)).toFixed(3)} | net buyer flow corr ${corr(chg.map((c) => c.dy), chg.map((c) => c.dFlow)).toFixed(3)} | total volume corr ${corr(chg.map((c) => c.dy), chg.map((c) => c.dVol)).toFixed(3)} (n ${chg.length})`);
-fs.writeFileSync(new URL('./results.txt', import.meta.url), out.join('\n') + '\n');
+fs.writeFileSync(new URL(VEX ? './results_vex.txt' : './results.txt', import.meta.url), out.join('\n') + '\n');
 // out-of-sample: fit the flow-only recipe on every other ticker-day, predict this one with those fixed weights
 const DAYS = [...new Set(rows.map((r) => r.T + ':' + r.d))], M5 = ['cumC', 'cumP', 'netAskC', 'netAskP'];
 if (DAYS.length > 1) { console.log('\n== Out of sample (weights fit on the OTHER days) ==');

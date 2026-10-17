@@ -1,0 +1,18 @@
+M1 open interest, calls + / puts − (fixed weights)         n 3175  R² 0.080  coefs oiC -0.013, oiP 0.041
+M2 + today's buyer-minus-seller volume                     n 3175  R² 0.457  coefs oiC -0.011, oiP 0.011, netAskC -0.140, netAskP -0.274
+M3 + today's total volume                                  n 3175  R² 0.217  coefs oiC -0.017, oiP 0.027, volC 0.001, volP 0.011
+M4 all six                                                 n 3175  R² 0.460  coefs oiC -0.015, oiP 0.013, netAskC -0.139, netAskP -0.287, volC 0.001, volP -0.002
+M5 flow only: prior days + today, buyer minus seller       n 3175  R² 0.816  coefs cumC 0.006, cumP -0.141, netAskC -0.143, netAskP -0.219
+M6 everything                                              n 3175  R² 0.821  coefs oiC 0.017, oiP -0.009, netAskC -0.141, netAskP -0.227, volC 0.001, volP -0.001, cumC 0.005, cumP -0.144
+M1                                                         n 635  R² 0.467  coefs oiC -0.007, oiP 0.203
+M2                                                         n 635  R² 0.656  coefs oiC -0.033, oiP 0.132, netAskC -0.113, netAskP -0.232
+M3                                                         n 635  R² 0.493  coefs oiC -0.026, oiP 0.177, volC 0.001, volP 0.005
+M4                                                         n 635  R² 0.701  coefs oiC -0.034, oiP 0.147, netAskC -0.142, netAskP -0.359, volC 0.001, volP -0.010
+M5 flow only                                               n 635  R² 0.930  coefs cumC -0.097, cumP -0.171, netAskC -0.120, netAskP -0.204
+M6                                                         n 635  R² 0.936  coefs oiC 0.015, oiP 0.001, netAskC -0.104, netAskP -0.167, volC 0.001, volP 0.002, cumC -0.095, cumP -0.174
+M1                                                         n 2540  R² 0.013  coefs oiC 0.006, oiP 0.007
+M2                                                         n 2540  R² 0.386  coefs oiC 0.007, oiP -0.007, netAskC -0.149, netAskP -0.142
+M3                                                         n 2540  R² 0.079  coefs oiC -0.022, oiP 0.007, volC 0.016, volP 0.003
+M4                                                         n 2540  R² 0.400  coefs oiC -0.008, oiP -0.005, netAskC -0.142, netAskP -0.140, volC 0.008, volP -0.001
+M5 flow only                                               n 2540  R² 0.603  coefs cumC 0.015, cumP -0.096, netAskC -0.152, netAskP -0.181
+M6                                                         n 2540  R² 0.635  coefs oiC 0.000, oiP -0.009, netAskC -0.147, netAskP -0.216, volC 0.009, volP -0.007, cumC -0.001, cumP -0.099

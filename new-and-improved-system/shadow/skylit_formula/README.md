@@ -51,3 +51,23 @@ Skylit value(strike, expiry) ≈ −k × gamma$ × Σ (customer buyer-initiated 
 - QQQ 03-13 fits worse, so Skylit may use a different classifier, start date or multi-leg handling.
 - The call-side prior-days weight is unstable for later expirations.
 - VEX was not fitted. It presumably uses the same positions × vanna; this is untested.
+
+## VEX (same method, `METRIC=vanna node fit.mjs …`; output in results_vex.txt)
+
+The same flow-built positions × Black-Scholes vanna (×100×S×1%) give:
+
+| Fit | R² |
+|---|---|
+| 0DTE, in sample | 0.93 |
+| Later expirations, in sample | 0.60 |
+| Open-interest recipe, 0DTE | 0.46 |
+| Open-interest recipe, later expirations | 0.01 |
+| SPY 03-13, out of sample | 0.89 |
+| SPY 03-04, out of sample | 0.72 |
+| QQQ 03-19, out of sample | 0.59 |
+| SPY 03-19, out of sample | 0.17 |
+| QQQ 03-13, out of sample | 0.17 |
+
+- The positions are the same as for GEX.
+- Skylit's vanna math differs from plain Black-Scholes, through its IV input or a units convention, so VEX is only
+  approximately reproduced.
