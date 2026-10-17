@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import { UW_API_KEY } from '../../feeds/env.js';
+const g = async (u) => { await new Promise((r) => setTimeout(r, 150)); const r = await fetch('https://api.unusualwhales.com/api' + u, { headers: { Authorization: `Bearer ${UW_API_KEY}` } }).catch(() => null); return r?.ok ? r.json() : { err: r?.status }; };
+const out = {};
+const T = 'IREN';
+for (const [k, u] of Object.entries({ info: `/stock/${T}/info`, ohlc: `/stock/${T}/ohlc/1d?limit=500&end_date=2026-10-16`, earnings: `/earnings/${T}`, fin: `/stock/${T}/financials`, news: `/news/headlines?ticker=${T}&limit=60`, short: `/shorts/${T}/interest-float/v2`, insiders: `/stock/${T}/insider-buy-sells`, analysts: `/screener/analysts?ticker=${T}&limit=30`, ivrank: `/stock/${T}/iv-rank`, optvol: `/stock/${T}/options-volume?limit=60`, alerts: `/stock/${T}/flow-alerts?limit=60`, maxpain: `/stock/${T}/max-pain` })) out[k] = await g(u);
+out.peers = {};
+for (const p of ['CIFR', 'WULF', 'CORZ', 'HUT', 'APLD', 'NBIS', 'CRWV', 'MARA', 'RIOT', 'CLSK', 'IBIT', 'QQQ']) out.peers[p] = await g(`/stock/${p}/ohlc/1d?limit=300&end_date=2026-10-16`);
+fs.writeFileSync('iren_research.json', JSON.stringify(out));
+for (const [k, v] of Object.entries(out)) if (k !== 'peers') console.log(k, JSON.stringify(v).length, JSON.stringify(v).slice(0, 160));
