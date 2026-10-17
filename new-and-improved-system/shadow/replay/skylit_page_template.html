@@ -77,7 +77,7 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
 </style>
 <div class="wrap">
   <header><h1>Skylit Map Replay</h1><span class="sub" id="sub"></span></header>
-  <div class="controls"><div class="tick" role="group" aria-label="Ticker"><button type="button" data-t="SPY" aria-pressed="true">SPY</button><button type="button" data-t="QQQ" aria-pressed="false">QQQ</button></div></div>
+  <div class="controls"><div class="tick" role="group" aria-label="Month" id="months"></div><div class="tick" role="group" aria-label="Ticker"><button type="button" data-t="SPY" aria-pressed="true">SPY</button><button type="button" data-t="QQQ" aria-pressed="false">QQQ</button></div></div>
   <nav class="days" id="days" aria-label="Sessions"></nav>
   <div class="layers" role="group" aria-label="Layers">
     <label><input type="checkbox" id="L-nodes" checked><span class="sw" style="background:var(--pos)"></span>Skylit nodes, live each minute</label>
@@ -103,7 +103,7 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
     <select id="speed" aria-label="Replay speed"><option value="8">Slow</option><option value="25" selected>Normal</option><option value="70">Fast</option></select>
     <select id="tf" aria-label="Candle size"><option value="1">1-min</option><option value="3">3-min</option><option value="5" selected>5-min</option></select>
   </div>
-  <section class="card"><h2>Account simulator — all March trades</h2>
+  <section class="card"><h2>Account simulator — <span id="a-scope-lab">trades in the selected month</span></h2>
     <div class="acct">
       <div class="form">
         <label for="a-start">Starting balance ($)<input id="a-start" type="number" min="100" step="100" value="10000"></label>
@@ -112,7 +112,7 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
         <label for="a-scope">Tickers<select id="a-scope"><option value="both" selected>SPY + QQQ</option><option value="SPY">SPY only</option><option value="QQQ">QQQ only</option></select></label>
         <label for="a-sl">Option stop-loss % (0 = off)<input id="a-sl" type="number" min="0" max="100" step="5" value="0"></label>
         <label for="a-tp">Take profit % (0 = off)<input id="a-tp" type="number" min="0" step="10" value="0"></label>
-        <label for="a-tgt">Exit if target node shrinks by % (0 = off)<input id="a-tgt" type="number" min="0" max="100" step="5" value="0"></label>
+        <label for="a-tgt">Exit if target node shrinks by % (0 = off)<input id="a-tgt" type="number" min="0" max="100" step="5" value="25"></label>
         <label for="a-brk">Exit if broken node grows by % (0 = off)<input id="a-brk" type="number" min="0" step="5" value="0"></label>
         <label class="chk" for="a-back"><span><input id="a-back" type="checkbox"> Exit if price closes back through the broken level</span></label>
         <label class="chk" for="a-eng"><span><input id="a-eng" type="checkbox" checked> Use the engine's stock stop and target</span></label>
@@ -125,10 +125,10 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
         <canvas class="eq" id="a-eq" aria-label="Account balance after each trade"></canvas>
       </div>
     </div>
-    <p class="note">Whole contracts only (contracts = amount ÷ (option price × 100), rounded down; a trade too small for one contract is skipped). Bought and sold at UW's 1-minute option prices for that contract, minus commissions and the slippage you set (UW minute data has trade prices, not bid/ask quotes, so slippage stands in for the spread: you pay that much above the trade price to buy and get that much below it to sell). Exits are checked minute by minute in this order: option stop-loss, the engine's stock stop/target, take-profit, node exits (target node shrinking or broken node growing versus the moment of entry, on Skylit's board), price closing back through the broken level, then 15:55. Stop-loss and take-profit fill exactly at their level when the option's 1-minute low or high reaches it, which is optimistic in fast markets; node exits fill at that minute's option close. One month of data; this shows what March would have done, not a forecast.</p>
+    <p class="note">Whole contracts only (contracts = amount ÷ (option price × 100), rounded down; a trade too small for one contract is skipped). Bought and sold at UW's 1-minute option prices for that contract, minus commissions and the slippage you set (UW minute data has trade prices, not bid/ask quotes, so slippage stands in for the spread: you pay that much above the trade price to buy and get that much below it to sell). Exits are checked minute by minute in this order: option stop-loss, the engine's stock stop/target, take-profit, node exits (target node shrinking or broken node growing versus the moment of entry, on Skylit's board), price closing back through the broken level, then 15:55. Stop-loss and take-profit fill exactly at their level when the option's 1-minute low or high reaches it, which is optimistic in fast markets; node exits fill at that minute's option close. The "target node shrinks 25%" exit is on by default because it looked best in March (+9.9% vs +6.8%). Its fair test on Dec–Feb, fixed in advance, failed: −17.0% per trade vs −14.0% with the engine's own exits (113 trades). The engine itself lost money in Dec (−44% per trade) and Feb (−25%) and made money in Jan (+9%) and Mar (+7%), so switch months to see both. These are results on past data, not a forecast.</p>
   </section>
   <p class="note">Data checks (per date, ✓/! on each date chip): Skylit board price vs UW candles (Skylit frames are stamped one minute after the candle they reflect; aligned they agree within about 0.3–2 basis points), missing minutes, king distance from price, and every trade re-scored on UW 1-minute highs and lows. Trade outcomes use the candles (stop first when stop and target fall in the same minute), so intrabar wicks count. Option prices: every trade's option traded in the signal minute and the exit minute (no stale prices). A spot-check of two boards against Skylit's live API is scheduled after midnight ET (daily credit cap).</p>
-  <p class="note">Data: Skylit Trinity replay, one board per minute (gamma summed over the five listed expirations), March 2026; candles and option prices from Unusual Whales. Nodes are strikes within ±2% of price with at least 12% of the king's size (thicker = bigger; cyan positive, magenta negative, white = king). ▲/▼ is the node's change over the last 15 minutes. Engine trades: a 1-minute move through a node (30%+ of king) into a gap of 0.4%+ to the next node on the CURRENT board; buy the at-the-money 0DTE call (up) or put (down), stop 0.15% behind the node, target the next node. Touch markers turn green if the node held for 15 minutes and red if price broke through. March is one month inside the test's holdout period: 52 trades averaged +7.7% per option (+0.50R), 17 winners; the full Dec–May test has not validated any reactive rule yet.</p>
+  <p class="note">Data: Skylit Trinity replay, one board per minute (gamma summed over the five listed expirations), Dec 2025 – Mar 2026 (128 ticker-days, each validated); candles and option prices from Unusual Whales. Nodes are strikes within ±2% of price with at least 12% of the king's size (thicker = bigger; cyan positive, magenta negative, white = king). ▲/▼ is the node's change over the last 15 minutes. Engine trades: a 1-minute move through a node (30%+ of king) into a gap of 0.4%+ to the next node on the CURRENT board; buy the at-the-money 0DTE call (up) or put (down), stop 0.15% behind the node, target the next node. Touch markers turn green if the node held for 15 minutes and red if price broke through. March is one month inside the test's holdout period: 52 trades averaged +7.7% per option (+0.50R), 17 winners; the full Dec–May test has not validated any reactive rule yet.</p>
 </div>
 <script type="application/json" id="data">__DATA__</script>
 <script>
@@ -139,11 +139,13 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 const C={ground:css('--panel'),line:css('--line'),ink:css('--ink'),dim:css('--dim'),faint:css('--faint'),pos:css('--pos'),neg:css('--neg'),king:css('--king'),win:css('--win'),loss:css('--loss'),ladder:css('--ladder')};
 const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'),fR=r=>(r>=0?'+':'')+r.toFixed(2)+'R',pc=v=>(v>=0?'+':'')+v+'%';
 const hexA=(h,a)=>{const v=parseInt(h.replace('#',''),16);return `rgba(${v>>16&255},${v>>8&255},${v&255},${a})`;};
-let T='SPY',S=[],si=0,cur=0,playing=false,timer=null,hover=null;
-function setT(t){T=t;S=ALL.filter(s=>s.T===t);si=Math.min(si,S.length-1);document.querySelectorAll('.tick button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));chips();draw();}
+let MO='2026-03',T='SPY',S=[],si=0,cur=0,playing=false,timer=null,hover=null;
+function setT(t){T=t;S=ALL.filter(s=>s.T===t&&(MO==='all'||s.d.startsWith(MO)));si=Math.min(si,S.length-1);document.querySelectorAll('.tick button[data-t]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));document.querySelectorAll('#months button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mo===MO));chips();draw();}
 function chips(){const days=$('days');days.innerHTML='';S.forEach((s,i)=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed',i===si);const o=s.breaks.filter(x=>x.opt),tot=o.reduce((a,x)=>a+x.opt.pct,0);
   const v=VAL[s.d+s.T];b.innerHTML=`${new Date(s.d+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})} <span title="Data checks" class="${v&&v.status==='ok'?'w':'l'}">${v&&v.status==='ok'?'✓':'!'}</span><span class="pnl ${o.length?(tot>=0?'w':'l'):'o'}">${o.length?pc(tot)+' · '+o.length+' trades':'no trades'}</span>`;b.onclick=()=>{si=i;cur=0;chips();draw();};days.appendChild(b);});}
-document.querySelectorAll('.tick button').forEach(b=>b.onclick=()=>setT(b.dataset.t));
+const MONTHS=[...new Set(ALL.map(s=>s.d.slice(0,7)))].sort();$('months').innerHTML=MONTHS.map(m=>`<button type="button" data-mo="${m}">${new Date(m+'-15T12:00:00Z').toLocaleDateString('en-US',{month:'short',year:'2-digit',timeZone:'UTC'})}</button>`).join('')+'<button type="button" data-mo="all">All</button>';
+document.querySelectorAll('#months button').forEach(b=>b.onclick=()=>{MO=b.dataset.mo;si=0;cur=0;setT(T);account();});
+document.querySelectorAll('.tick button[data-t]').forEach(b=>b.onclick=()=>setT(b.dataset.t));
 const lay=()=>({nodes:$('L-nodes').checked,king:$('L-king').checked,touch:$('L-touch').checked,brk:$('L-brk').checked});
 function agg(bars,tf,upto){const out=[];for(const b of bars){if(b[0]-570>upto)break;const k=Math.floor((b[0]-570)/tf);const o=out[out.length-1];if(o&&o.k===k){o.h=Math.max(o.h,b[2]);o.l=Math.min(o.l,b[3]);o.c=b[4];}else out.push({k,m:570+k*tf,o:b[1],h:b[2],l:b[3],c:b[4]});}return out;}
 function mapAt(s,m){let best=null;for(const x of s.maps){if(x[0]<=m)best=x;else break;}return best;}
@@ -197,7 +199,7 @@ function exitFor(x,opt){const o=x.opt,P=x.optPath||[],e=o.entryPx,np=new Map((x.
     if(m>=955)return{px:c,why:'15:55',m};}
   const l=P.at(-1);return{px:l[3],why:'15:55',m:l[0]};}
 function account(){const start=+$('a-start').value||0,mode=$('a-mode').value,size=+$('a-size').value||0,scope=$('a-scope').value,fee=+$('a-fee').value||0,slip=+$('a-slip').value||0,opt={sl:+$('a-sl').value||0,tp:+$('a-tp').value||0,tgt:+$('a-tgt').value||0,brk:+$('a-brk').value||0,back:$('a-back').checked,eng:$('a-eng').checked},why={};
-  const trades=ALL.filter(s=>scope==='both'||s.T===scope).flatMap(s=>s.breaks.filter(x=>x.opt).map(x=>({...x,d:s.d,T:s.T}))).sort((a,b)=>a.d.localeCompare(b.d)||a.m-b.m);
+  $('a-scope-lab').textContent=MO==='all'?'all months (Dec–Mar)':'trades in '+new Date(MO+'-15T12:00:00Z').toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'});const trades=ALL.filter(s=>(scope==='both'||s.T===scope)&&(MO==='all'||s.d.startsWith(MO))).flatMap(s=>s.breaks.filter(x=>x.opt).map(x=>({...x,d:s.d,T:s.T}))).sort((a,b)=>a.d.localeCompare(b.d)||a.m-b.m);
   let bal=start,peak=start,dd=0,n=0,w=0,skipped=0,best=null,worst=null;const curve=[start];
   for(const x of trades){const o=x.opt,amt=mode==='usd'?size:bal*size/100,qty=Math.floor(amt/(o.entryPx*100));if(qty<1||bal<o.entryPx*100+2*fee){skipped++;continue;}
     const xr=exitFor(x,opt),exitPx=xr.px;why[xr.why]=(why[xr.why]||0)+1;const pnl=qty*100*((exitPx-slip)-(o.entryPx+slip))-2*fee*qty;bal+=pnl;n++;if(pnl>0)w++;const r=pnl/(qty*100*o.entryPx);
@@ -212,6 +214,6 @@ function account(){const start=+$('a-start').value||0,mode=$('a-mode').value,siz
 ['a-start','a-mode','a-size','a-scope','a-fee','a-slip','a-sl','a-tp','a-tgt','a-brk','a-back','a-eng'].forEach(id=>{$(id).addEventListener('input',account);$(id).addEventListener('change',()=>{if(id==='a-mode'){$('a-size').value=$('a-mode').value==='pct'?5:500;}account();});});
 new ResizeObserver(()=>{draw();account();}).observe(box);
 account();
-cur=150;setT('SPY');
+cur=150;setT('SPY');account();
 })();
 </script>

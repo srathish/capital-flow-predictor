@@ -4,7 +4,9 @@ import json, os, statistics as stt
 from datetime import datetime
 from zoneinfo import ZoneInfo
 HERE = os.path.dirname(os.path.abspath(__file__)); DATA = os.path.expanduser('~/gex-data-replay-reader/data'); ET = ZoneInfo('America/New_York')
-D = json.load(open(os.path.join(HERE, 'skylit_replay_data.json')))
+import sys
+SRC = sys.argv[1] if len(sys.argv) > 1 else 'skylit_replay_data.json'
+D = json.load(open(os.path.join(HERE, SRC)))
 def emin(ts): d = datetime.fromisoformat(ts.replace('Z', '+00:00')).astimezone(ET); return d.hour * 60 + d.minute
 rep = []
 for s in D['sessions']:
