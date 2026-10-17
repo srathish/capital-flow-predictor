@@ -2,7 +2,7 @@
 // Adds the real ATM 0DTE option leg (UW minute prices) to every break in skylit_replay_data.json: entry, exit, peak while held, peak by close.
 import fs from 'node:fs';
 import { UW_API_KEY } from '../../feeds/env.js';
-const F = new URL('./skylit_replay_data.json', import.meta.url), D = JSON.parse(fs.readFileSync(F, 'utf8'));
+const F = new URL('./' + (process.argv[2] ?? 'skylit_replay_data.json'), import.meta.url), D = JSON.parse(fs.readFileSync(F, 'utf8'));
 const et = (iso) => { const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date(iso)); return +p.find((x) => x.type === 'hour').value * 60 + +p.find((x) => x.type === 'minute').value; };
 let n = 0, ok = 0;
 for (const s of D.sessions) for (const x of s.breaks) { n++; const K = Math.round(x.entry), cp = x.dir > 0 ? 'C' : 'P', d = s.d, id = `${s.T}${d.slice(2, 4)}${d.slice(5, 7)}${d.slice(8, 10)}${cp}${String(K * 1000).padStart(8, '0')}`;

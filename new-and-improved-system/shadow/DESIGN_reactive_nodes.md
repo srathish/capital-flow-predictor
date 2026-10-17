@@ -27,3 +27,12 @@ the next 30 minutes, does spot move toward the new king (closer at t+30 than at 
 **D — sanity.** **H5** the static prior-close-style rule (B without the Δ filter) has mean R > 0 on this sample
 (expected to fail — the comparison baseline).
 Reported for every hypothesis: build, holdout, per ticker, n, and the 0DTE-only sensitivity.
+
+## Amendment 1 (2026-10-17, registered before computing Dec–Feb trades) — the "target node fading" exit
+Found by trying exits on March 2026 (52 trades, several exit rules tried → selection risk): exiting when the TARGET node's
+|γ| (Skylit aggregate board) falls to ≤ 75% of its value at entry improved March from +6.8% to +9.9% ($10,000, $500 per
+trade, real 0DTE option prices, $0.02/share slippage each side, $0.65/contract commission). Test it on sessions it was
+NOT chosen from: 2025-12-15 → 2026-02-27 (Skylit 1-minute frames), same engine (reactive breaks, DESIGN B, outcome on UW
+1-minute candles), same costs. **E1**: mean option return per trade with the fade exit > mean with engine exits only
+(paired by trade, day-clustered t). **E2**: mean option return per trade with the fade exit > 0. Both one-sided; both must
+pass at p < 0.05 to call it confirmed. Reported: account result for both, trades, winners, how trades ended.

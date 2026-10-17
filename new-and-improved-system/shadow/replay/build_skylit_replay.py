@@ -8,7 +8,10 @@ ET = ZoneInfo('America/New_York'); DATA = os.path.expanduser('~/gex-data-replay-
 def emin(ts): d = datetime.fromisoformat(ts.replace('Z', '+00:00')).astimezone(ET); return d.hour * 60 + d.minute
 def sig3(x): return float(f'{x:.3g}')
 out = []
-for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
+import sys
+PAT = sys.argv[1] if len(sys.argv) > 1 else '2026-03-*'
+OUTF = sys.argv[2] if len(sys.argv) > 2 else 'skylit_replay_data.json'
+for f in sorted(glob.glob(os.path.join(DATA, f'gex-replay-{PAT}.json'))):
     day = os.path.basename(f)[11:21]; j = json.load(open(f))
     for T in ['SPY', 'QQQ']:
         mf = os.path.join(C, 'uw', 'm1', T, day + '.json')
@@ -16,7 +19,7 @@ for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
         bars = []
         for b in json.load(open(mf)):
             if b.get('m') != 'r': continue
-            m = emin(datetime.utcfromtimestamp(b['t']).isoformat() + 'Z')
+            m = emin(datetime.fromtimestamp(b['t'], tz=ZoneInfo('UTC')).isoformat())
             if 570 <= m < 960: bars.append([m, b['o'], b['h'], b['l'], b['c']])
         bars.sort()
         ser = []
@@ -93,4 +96,4 @@ for f in sorted(glob.glob(os.path.join(DATA, 'gex-replay-2026-03-*.json'))):
             migs.append(dict(m=ser[te][0], frm=k0, to=k1, toward=int(abs(s30 - k1) < abs(s0 - k1))))
         out.append(dict(d=day, T=T, bars=[[r[0], round(r[1], 2), round(r[2], 2), round(r[3], 2), round(r[4], 2)] for r in bars], maps=maps, touches=touches, breaks=brks, migrations=migs))
         print(day, T, 'touches', len(touches), 'breaks', len(brks), 'migrations', len(migs))
-json.dump(dict(built=datetime.now().isoformat(), source='Skylit Trinity 1-minute replay frames (aggregate of 5 expirations); UW 1-minute candles', sessions=out), open(os.path.join(HERE, 'skylit_replay_data.json'), 'w'), separators=(',', ':'))
+json.dump(dict(built=datetime.now().isoformat(), source='Skylit Trinity 1-minute replay frames (aggregate of 5 expirations); UW 1-minute candles', sessions=out), open(os.path.join(HERE, OUTF), 'w'), separators=(',', ':'))
