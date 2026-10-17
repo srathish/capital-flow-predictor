@@ -63,3 +63,26 @@ The Skylit replay archive has only 3 days after March: 04-02, 04-30 and 05-05. N
   No search parameter will be chosen on March numbers. March runs once, on at most 3 frozen rules.
 - **Real exam:** any rule that passes March goes to the live forward paper ledger. It uses Skylit heatmapLive under the
   existing credit guard, and runs before anything is called "working".
+
+## Amendment 2 (2026-10-17): build search results and the frozen holdout rules
+
+- **Tries so far:** 1,022 variants over families A–G, all logged in results_iterate/log.tsv.
+  - A–E: 806 variants, including the plain-strike control and the debit-spread versions. Buying options: 0 candidates.
+    Scored on the stock itself, every family is about 0 bps per trade, so these rules carry no directional skill.
+  - F: sell a fly centered on a pinned king. 108 variants, 0 candidates. It averaged −17.5% of risk vs +9.8% for the
+    far-king control.
+  - G: sell the ATM fly when the king is ≥ X from price, against an every-day ATM-fly baseline. 108 variants,
+    2 candidates.
+- **Frozen for the March holdout:** results_iterate/holdout_rules.json, the two G candidates.
+  - Each sells the ATM 0DTE iron butterfly (short S = round(price), long S ± w) at the first frame ≥ 11:00 and ≤ 14:30
+    where all of these hold:
+    - the king has held ≥ 30 frames;
+    - the king changed ≤ 3 times in the last 60 frames;
+    - |king − price| / price ≥ 0.4%.
+  - Hold to the 15:59 candle close; P&L is intrinsic at that close.
+  - Return on max risk, $0.02/leg entry slippage, one trade per ticker-day.
+  - G1 uses w = $3 and G2 uses w = $2.
+  - **Build:** G1 t 2.10, +33.8%; G2 t 2.02, +41.0%; 49 trades each, carried by February. The every-day 11:00 fly
+    baseline made +24–29% at t 1.56.
+- **Holdout pass:** mean > 0, plus one-sided day-clustered t passing BH q = 0.10 across the 2 rules. The every-day
+  baseline is reported as a reference only.
