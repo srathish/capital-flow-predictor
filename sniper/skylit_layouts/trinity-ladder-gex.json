@@ -38,10 +38,10 @@
       "arcPanelsVisible": false,
       "plugins": {
         "TempestCones:__row__:__visible__": true,
-        "TheQuietCalf:gapfill": true,
+        "TheQuietCalf:gapfill": false,
         "TheQuietCalf:legs": false,
-        "TheQuietCalf:orb": true,
-        "TheQuietCalf:pdhpdl": true
+        "TheQuietCalf:orb": false,
+        "TheQuietCalf:pdhpdl": false
       }
     },
     "chrome": {

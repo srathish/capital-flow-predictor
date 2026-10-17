@@ -3,7 +3,7 @@
 Import `trinity-ladder-gex.json` in Skylit Atlas (layouts → import). Edited 2026-10-17 from the user's `trinity` layout.
 
 Changes and the test behind each:
-- TheQuietCalf **pdhpdl / orb / gapfill ON** — the Rapid-style ladder levels (prior-day high/low, opening range, prior
+- TheQuietCalf pdhpdl / orb / gapfill left OFF (paid add-on the user does not have) — the Rapid-style ladder levels (prior-day high/low, opening range, prior
   close). Ladder breaks alone lose; with GEX/VEX confluence they beat 20/20 map-shifted twins on SPY/QQQ/IWM/DIA
   (shadow/results_ladder/summary.md) — still ≈ break-even, so use as a FILTER, not a system.
 - **nodeCount 5 → 7** — shows the next node beyond the king (the air-pocket target).
