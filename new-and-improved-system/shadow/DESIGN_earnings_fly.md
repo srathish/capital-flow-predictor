@@ -52,3 +52,31 @@
 - **Also reported:** win rate, worst trade, the distribution, the account path at 1% risk per event, and the top-decile
   loss share (fat tails).
 - **After a pass:** an independent audit, then a forward ledger on upcoming earnings.
+
+## Result (2026-10-17): FAIL, 0 of 3
+
+2,897 events across 299 stocks.
+
+| Test | Holdout | Build |
+|---|---|---|
+| S1, all events | −25.6% per event, t −10.6 | −26.4% |
+| S2, rich events | −24.9% | |
+| S3, rich minus not rich | +5.6%, t 1.03 | |
+
+Implied ÷ historical terciles are flat.
+
+**Diagnostic (post-hoc, earnings_fly_diag.mjs).** At mid prices:
+
+| | Build | Holdout |
+|---|---|---|
+| Raw edge, exit at reaction-day mid | −0.3% | +4.7% |
+| Moves that beat the implied move | 36% | 31% |
+| Entry spread, as a share of the mid credit | 14% | 20% |
+
+- Exit spreads on the reaction day are worse still, and some legs' summed quotes exceed the fly's maximum value.
+- Hold-to-expiry events (the options expire on the reaction day, so there is no exit spread): −31.6% build, −8.5%
+  holdout.
+
+**Verdict:**
+- The implied earnings move is roughly fairly priced (small gross edge, if any).
+- Single-stock option spreads make selling it a loser.
