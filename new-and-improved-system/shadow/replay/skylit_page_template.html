@@ -1,0 +1,157 @@
+<title>Skylit Map Replay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a terminal-style replay deck. Chart on the left, a live readout rail on the right, transport controls under the chart. Single dark look by choice (trading screen). */
+:root{
+  --ground:#0b0e12; --panel:#11161c; --line:#1d252e; --ink:#d9e1e8; --dim:#7d8b98; --faint:#3a4652;
+  --pos:#33c4d8; --neg:#d0559a; --king:#f2f5f7; --ladder:#e8a93a; --band:#5b7fa6;
+  --win:#3fbf7f; --loss:#e05757;
+  --f-ui:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif; --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--f-ui);font-size:14px}
+.wrap{display:flex;flex-direction:column;gap:12px;padding-block:14px;padding-inline:16px;max-width:1500px;margin:0 auto;min-height:100%;box-sizing:border-box}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px}
+h1{font-size:20px;font-weight:600;letter-spacing:.02em;margin:0}
+.sub{color:var(--dim);font-size:13px}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.day{flex:0 0 auto;font-family:var(--f-num);font-size:12px;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:5px 8px;cursor:pointer}
+.day:hover{color:var(--ink)}
+.day[aria-pressed="true"]{color:var(--ground);background:var(--ink);border-color:var(--ink)}
+.day .pnl{display:block;font-size:10px;margin-top:1px}
+.day[aria-pressed="true"] .pnl{color:var(--ground)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.chartbox{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:6px;min-height:420px;height:62vh;min-width:0}
+canvas{display:block;width:100%;height:100%}
+.tip{position:absolute;pointer-events:none;font-family:var(--f-num);font-size:11px;background:#000c;border:1px solid var(--line);padding:4px 6px;border-radius:3px;white-space:nowrap}
+.rail{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px}
+.card h2{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:0 0 8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--f-num);font-size:12.5px;font-variant-numeric:tabular-nums}
+.kv dt{color:var(--dim);font-family:var(--f-ui);font-size:13px}
+.kv dd{margin:0;text-align:right}
+.sig{display:grid;grid-template-columns:44px 1fr auto;gap:2px 8px;font-family:var(--f-num);font-size:12px;padding:6px 0;border-top:1px solid var(--line);cursor:pointer}
+.sig:first-of-type{border-top:0}
+.sig .what{font-family:var(--f-ui);font-size:13px}
+.sig .r{text-align:right;font-weight:500}
+.sig small{grid-column:2/4;color:var(--dim);font-family:var(--f-ui);font-size:12px}
+.w{color:var(--win)} .l{color:var(--loss)} .o{color:var(--dim)}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+button.ctl{font-family:var(--f-ui);font-size:13px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 12px;cursor:pointer}
+button.ctl:hover{border-color:var(--dim)}
+button:focus-visible,input:focus-visible,.day:focus-visible{outline:2px solid var(--pos);outline-offset:2px}
+input[type=range]{flex:1 1 220px;accent-color:var(--pos)}
+.clock{font-family:var(--f-num);font-size:15px;min-width:52px}
+select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:5px}
+.layers{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--dim)}
+.layers label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.sw{display:inline-block;width:14px;height:3px;border-radius:2px}
+.note{color:var(--dim);font-size:12.5px;line-height:1.5;max-width:75ch}
+.empty{color:var(--dim);font-size:13px}
+.badge{font-size:10px;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 5px;border:1px solid currentColor}
+.b-ok{color:var(--win)} .b-part{color:var(--ladder)}
+.regime{display:flex;flex-direction:column;gap:6px}
+.peak{font-weight:500;color:var(--ink)}
+.tick{display:flex;gap:6px}
+.tick button{font-family:var(--f-ui);font-size:13px;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:5px 12px;cursor:pointer}
+.tick button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.up{color:var(--win)} .dn{color:var(--neg)}
+.pill{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+.pill.long{background:rgba(63,191,127,.15);color:var(--win)} .pill.short{background:rgba(208,85,154,.15);color:var(--neg)}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--band)}
+.day .lg{color:var(--win);font-size:10px;margin-left:4px}
+</style>
+<div class="wrap">
+  <header><h1>Skylit Map Replay</h1><span class="sub" id="sub"></span></header>
+  <div class="controls"><div class="tick" role="group" aria-label="Ticker"><button type="button" data-t="SPY" aria-pressed="true">SPY</button><button type="button" data-t="QQQ" aria-pressed="false">QQQ</button></div></div>
+  <nav class="days" id="days" aria-label="Sessions"></nav>
+  <div class="layers" role="group" aria-label="Layers">
+    <label><input type="checkbox" id="L-nodes" checked><span class="sw" style="background:var(--pos)"></span>Skylit nodes, live each minute</label>
+    <label><input type="checkbox" id="L-king" checked><span class="sw" style="background:var(--king)"></span>King path</label>
+    <label><input type="checkbox" id="L-touch" checked><span class="sw" style="background:var(--dim)"></span>Node touches (growing ▲ / shrinking ▼)</label>
+    <label><input type="checkbox" id="L-brk" checked><span class="sw" style="background:var(--pos)"></span>Engine trades (0DTE options)</label>
+  </div>
+  <div class="grid">
+    <div class="chartbox" id="box"><canvas id="cv" aria-label="Price with the live Skylit map"></canvas><div class="tip" id="tip" hidden></div></div>
+    <aside class="rail">
+      <section class="card"><h2>Engine this day</h2><dl class="kv" id="day"></dl></section>
+      <section class="card"><h2>Map at the cursor</h2><dl class="kv" id="now"></dl></section>
+      <section class="card"><h2>Trades so far</h2><div id="sigs"></div></section>
+    </aside>
+  </div>
+  <div class="controls">
+    <button class="ctl" id="play" type="button">Play</button>
+    <button class="ctl" id="back" type="button" aria-label="Back 5 minutes">−5m</button>
+    <button class="ctl" id="fwd" type="button" aria-label="Forward 5 minutes">+5m</button>
+    <span class="clock" id="clock">09:30</span>
+    <input type="range" id="scrub" min="0" max="389" value="0" aria-label="Replay time">
+    <select id="speed" aria-label="Replay speed"><option value="8">Slow</option><option value="25" selected>Normal</option><option value="70">Fast</option></select>
+    <select id="tf" aria-label="Candle size"><option value="1">1-min</option><option value="3">3-min</option><option value="5" selected>5-min</option></select>
+  </div>
+  <p class="note">Data: Skylit Trinity replay, one board per minute (gamma summed over the five listed expirations), March 2026; candles and option prices from Unusual Whales. Nodes are strikes within ±2% of price with at least 12% of the king's size (thicker = bigger; cyan positive, magenta negative, white = king). ▲/▼ is the node's change over the last 15 minutes. Engine trades: a 1-minute move through a node (30%+ of king) into a gap of 0.4%+ to the next node on the CURRENT board; buy the at-the-money 0DTE call (up) or put (down), stop 0.15% behind the node, target the next node. Touch markers turn green if the node held for 15 minutes and red if price broke through. March is one month inside the test's holdout period: 52 trades averaged +7.7% per option (+0.50R), 17 winners; the full Dec–May test has not validated any reactive rule yet.</p>
+</div>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(()=>{
+const D=JSON.parse(document.getElementById('data').textContent),ALL=D.sessions;
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),box=$('box');
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C={ground:css('--panel'),line:css('--line'),ink:css('--ink'),dim:css('--dim'),faint:css('--faint'),pos:css('--pos'),neg:css('--neg'),king:css('--king'),win:css('--win'),loss:css('--loss'),ladder:css('--ladder')};
+const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'),fR=r=>(r>=0?'+':'')+r.toFixed(2)+'R',pc=v=>(v>=0?'+':'')+v+'%';
+const hexA=(h,a)=>{const v=parseInt(h.replace('#',''),16);return `rgba(${v>>16&255},${v>>8&255},${v&255},${a})`;};
+let T='SPY',S=[],si=0,cur=0,playing=false,timer=null,hover=null;
+function setT(t){T=t;S=ALL.filter(s=>s.T===t);si=Math.min(si,S.length-1);document.querySelectorAll('.tick button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));chips();draw();}
+function chips(){const days=$('days');days.innerHTML='';S.forEach((s,i)=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed',i===si);const o=s.breaks.filter(x=>x.opt),tot=o.reduce((a,x)=>a+x.opt.pct,0);
+  b.innerHTML=`${new Date(s.d+'T12:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})}<span class="pnl ${o.length?(tot>=0?'w':'l'):'o'}">${o.length?pc(tot)+' · '+o.length+' trades':'no trades'}</span>`;b.onclick=()=>{si=i;cur=0;chips();draw();};days.appendChild(b);});}
+document.querySelectorAll('.tick button').forEach(b=>b.onclick=()=>setT(b.dataset.t));
+const lay=()=>({nodes:$('L-nodes').checked,king:$('L-king').checked,touch:$('L-touch').checked,brk:$('L-brk').checked});
+function agg(bars,tf,upto){const out=[];for(const b of bars){if(b[0]-570>upto)break;const k=Math.floor((b[0]-570)/tf);const o=out[out.length-1];if(o&&o.k===k){o.h=Math.max(o.h,b[2]);o.l=Math.min(o.l,b[3]);o.c=b[4];}else out.push({k,m:570+k*tf,o:b[1],h:b[2],l:b[3],c:b[4]});}return out;}
+function mapAt(s,m){let best=null;for(const x of s.maps){if(x[0]<=m)best=x;else break;}return best;}
+function draw(){const s=S[si];if(!s)return;const r=box.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=r.width,H=r.height,pad={l:10,r:92,t:14,b:26},L=lay(),tf=+$('tf').value,M=570+cur;
+  $('sub').textContent=`${T} · ${s.d} · Skylit board every minute`;
+  const lo=Math.min(...s.bars.map(b=>b[3])),hi=Math.max(...s.bars.map(b=>b[2])),sp=hi-lo,yMin=lo-sp*0.2,yMax=hi+sp*0.2,X=m=>pad.l+(m-570)/390*(W-pad.l-pad.r),Y=p=>pad.t+(yMax-p)/(yMax-yMin)*(H-pad.t-pad.b);
+  ctx.fillStyle=C.ground;ctx.fillRect(0,0,W,H);ctx.font='11px "IBM Plex Mono",monospace';ctx.textBaseline='middle';
+  const step=[0.25,0.5,1,2,2.5,5,10].find(x=>(yMax-yMin)/x<=8)||10;
+  for(let p=Math.ceil(yMin/step)*step;p<=yMax;p+=step){ctx.strokeStyle=C.line;ctx.beginPath();ctx.moveTo(pad.l,Y(p));ctx.lineTo(W-pad.r,Y(p));ctx.stroke();ctx.fillStyle=C.dim;ctx.fillText(p.toFixed(step<1?2:0),W-pad.r+6,Y(p));}
+  for(const m of [600,660,720,780,840,900]){ctx.strokeStyle=C.line;ctx.beginPath();ctx.moveTo(X(m),pad.t);ctx.lineTo(X(m),H-pad.b);ctx.stroke();ctx.fillStyle=C.dim;ctx.textBaseline='top';ctx.fillText(hm(m),X(m)-16,H-pad.b+6);ctx.textBaseline='middle';}
+  const mp=mapAt(s,M);
+  if(L.nodes&&mp)for(const [k,rel,d] of mp[2]){if(k<yMin||k>yMax)continue;const y=Y(k),th=2+Math.abs(rel)*10,isK=k===mp[1],col=isK?C.king:(rel>0?C.pos:C.neg);const gr=ctx.createLinearGradient(pad.l,0,W-pad.r,0);gr.addColorStop(0,hexA(col,0.03));gr.addColorStop(1,hexA(col,isK?0.6:0.42));ctx.fillStyle=gr;ctx.fillRect(pad.l,y-th/2,W-pad.l-pad.r,th);ctx.fillStyle=col;ctx.fillRect(W-pad.r,y-th/2,4,th);
+    if(Math.abs(rel)>=0.3||isK){ctx.font=(isK?'600 ':'')+'11px "IBM Plex Mono",monospace';ctx.fillStyle=col;ctx.fillText((isK?'K ':'')+k,W-pad.r+6,y-th/2-6);if(d!=null){ctx.fillStyle=d>=20?C.win:d<=-20?C.neg:C.dim;ctx.fillText((d>=0?'▲':'▼')+Math.abs(d)+'%',W-pad.r+44,y-th/2-6);}}}
+  if(L.king){ctx.strokeStyle=hexA(C.king,0.75);ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();let first=true,prev=null;for(const x of s.maps){if(x[0]>M||x[1]==null)continue;if(x[1]<yMin||x[1]>yMax){first=true;continue;}const xx=X(x[0]),yy=Y(x[1]);if(first){ctx.moveTo(xx,yy);first=false;}else{ctx.lineTo(xx,Y(prev));ctx.lineTo(xx,yy);}prev=x[1];}ctx.stroke();ctx.setLineDash([]);
+    for(const g of s.migrations){if(g.m>M)continue;const yy=Y(g.to);if(g.to<yMin||g.to>yMax)continue;ctx.fillStyle=C.king;ctx.beginPath();ctx.arc(X(g.m),yy,3,0,7);ctx.fill();}}
+  const bars=agg(s.bars,tf,cur),bw=Math.max(1,(W-pad.l-pad.r)/390*tf*0.7);
+  for(const b of bars){const x=X(b.m+tf/2),col=b.c>=b.o?C.win:C.loss;ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,Y(b.h));ctx.lineTo(x,Y(b.l));ctx.stroke();const y1=Y(Math.max(b.o,b.c)),y2=Y(Math.min(b.o,b.c));ctx.fillRect(x-bw/2,y1,bw,Math.max(1,y2-y1));}
+  const last=s.bars.filter(b=>b[0]<=M).at(-1);if(last){ctx.fillStyle=C.ink;ctx.fillRect(W-pad.r,Y(last[4])-8,pad.r,16);ctx.fillStyle=C.ground;ctx.font='500 11px "IBM Plex Mono",monospace';ctx.fillText(last[4].toFixed(2),W-pad.r+6,Y(last[4]));}
+  if(L.touch)for(const t of s.touches){if(t.m>M||t.level<yMin||t.level>yMax)continue;const x=X(t.m),y=Y(t.level),res=t.m+15<=M;ctx.fillStyle=t.d15!=null&&t.d15<=-20?C.neg:t.d15!=null&&t.d15>=20?C.pos:C.dim;ctx.beginPath();ctx.arc(x,y,3,0,7);ctx.fill();if(res){ctx.strokeStyle=t.broke?C.loss:C.win;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,6,0,7);ctx.stroke();}}
+  const vis=s.breaks.filter(x=>x.m<=M);
+  if(L.brk)for(const x of vis){const col=x.dir>0?C.pos:C.neg,done=x.exitM<=M,end=done?x.exitM:M;ctx.globalAlpha=0.7;ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.strokeStyle=C.win;ctx.beginPath();ctx.moveTo(X(x.m),Y(x.target));ctx.lineTo(X(end),Y(x.target));ctx.stroke();ctx.strokeStyle=C.loss;ctx.beginPath();ctx.moveTo(X(x.m),Y(x.stop));ctx.lineTo(X(end),Y(x.stop));ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+    const xe=X(x.m),ye=Y(x.entry);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(xe,ye);ctx.lineTo(xe-7,ye+x.dir*10);ctx.lineTo(xe+7,ye+x.dir*10);ctx.closePath();ctx.fill();
+    if(x.opt){ctx.font='10px "IBM Plex Mono",monospace';ctx.fillText(`BUY ${x.opt.strike}${x.opt.type==='put'?'P':'C'} @${x.opt.entryPx}`,xe+9,ye+x.dir*16);}
+    if(done){const xx=X(x.exitM),yy=Y(x.exit);ctx.fillStyle=(x.opt?x.opt.pct:x.R)>=0?C.win:C.loss;ctx.beginPath();ctx.arc(xx,yy,4,0,7);ctx.fill();ctx.font='500 11px "IBM Plex Mono",monospace';ctx.fillText(x.opt?pc(x.opt.pct):fR(x.R),xx+6,yy-x.dir*10);}}
+  if(hover&&hover.x>pad.l&&hover.x<W-pad.r){ctx.strokeStyle=C.faint;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(hover.x,pad.t);ctx.lineTo(hover.x,H-pad.b);ctx.moveTo(pad.l,hover.y);ctx.lineTo(W-pad.r,hover.y);ctx.stroke();const p=yMax-(hover.y-pad.t)/(H-pad.t-pad.b)*(yMax-yMin),m=Math.round(570+(hover.x-pad.l)/(W-pad.l-pad.r)*390),tip=$('tip');tip.hidden=false;tip.textContent=`${hm(m)}  ${p.toFixed(2)}`;tip.style.left=Math.min(hover.x+10,W-110)+'px';tip.style.top=Math.max(hover.y-26,0)+'px';}else $('tip').hidden=true;
+  $('clock').textContent=hm(M);$('scrub').value=cur;side(s,mp,last,vis,M);}
+function side(s,mp,last,vis,M){const row=(k,v)=>`<dt>${k}</dt><dd>${v}</dd>`,p=last?last[4]:null;
+  const ts=s.touches.filter(t=>t.m+15<=M),sh=ts.filter(t=>t.d15!=null&&t.d15<=-20),gr=ts.filter(t=>t.d15!=null&&t.d15>=20),mg=s.migrations.filter(g=>g.m+30<=M),dn=vis.filter(x=>x.exitM<=M&&x.opt);
+  $('day').innerHTML=row('Node touches',ts.length?`${ts.filter(t=>!t.broke).length} held · ${ts.filter(t=>t.broke).length} broke`:'none yet')+row('Shrinking nodes touched',sh.length?`${sh.filter(t=>t.broke).length} of ${sh.length} broke`:'—')+row('Growing nodes touched',gr.length?`${gr.filter(t=>t.broke).length} of ${gr.length} broke`:'—')+row('King moves',mg.length?`${mg.filter(g=>g.toward).length} of ${mg.length} followed`:'none yet')+row('Trades closed',dn.length?`${dn.filter(x=>x.opt.pct>0).length} won · total ${pc(dn.reduce((a,x)=>a+x.opt.pct,0))}`:'none yet');
+  if(!mp||p==null){$('now').innerHTML=row('Map','—');}else{const nodes=mp[2].filter(n=>Math.abs(n[1])>=0.3),ab=nodes.filter(n=>n[0]>p).sort((a,b)=>a[0]-b[0])[0],be=nodes.filter(n=>n[0]<p).sort((a,b)=>b[0]-a[0])[0],kn=mp[2].find(n=>n[0]===mp[1]);const dd=d=>d==null?'':` · <span class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'}${Math.abs(d)}%</span>`;
+    $('now').innerHTML=row(T,p.toFixed(2))+row('King',`${mp[1]}${kn?dd(kn[2]):''}`)+row('Node above',ab?`${ab[0]} · gap ${((ab[0]/p-1)*100).toFixed(2)}%${dd(ab[2])}`:'none within 2%')+row('Node below',be?`${be[0]} · gap ${((1-be[0]/p)*100).toFixed(2)}%${dd(be[2])}`:'none within 2%');}
+  const el=$('sigs');if(!vis.length){el.innerHTML='<p class="empty">No trade yet at this time.</p>';return;}
+  el.innerHTML=vis.map(x=>{const done=x.exitM<=M,o=x.opt;return `<div class="sig" data-m="${x.m}"><span>${hm(x.m)}</span><span class="what">${o?`Bought ${o.contract} ${o.type}`:(x.dir>0?'Long':'Short')}</span><span class="r ${done?((o?o.pct:x.R)>=0?'w':'l'):'o'}">${done?(o?pc(o.pct):fR(x.R)):'open'}</span><small>${o?`@ $${o.entryPx}${done?` → $${o.exitPx}`:''} · `:''}${x.dir>0?'up':'down'} through ${x.level} (node ${x.d15==null?'change n/a':(x.d15>=0?'▲':'▼')+Math.abs(x.d15)+'% in 15m'}) · target ${x.target}, stop ${x.stop}${done?' · '+x.how+' '+hm(x.exitM)+' ('+fR(x.R)+')':''}${o&&done&&o.peakHeld?`<br><b class="peak">Peak while held: $${o.peakHeld.px} (${pc(o.peakHeld.pct)}) at ${hm(o.peakHeld.m)}</b>`:''}${o&&o.peakDay&&o.peakDay.m<=M?`<br><b class="peak">Peak by close: $${o.peakDay.px} (${pc(o.peakDay.pct)}) at ${hm(o.peakDay.m)}</b>`:''}</small></div>`;}).join('');
+  el.querySelectorAll('.sig').forEach(d=>d.onclick=()=>{cur=Math.min(389,+d.dataset.m-570+15);draw();});}
+function tick(){cur=Math.min(389,cur+1);draw();if(cur>=389)stop();}
+function play(){if(cur>=389)cur=0;playing=true;$('play').textContent='Pause';timer=setInterval(tick,1000/+$('speed').value);}
+function stop(){playing=false;$('play').textContent='Play';clearInterval(timer);}
+$('play').onclick=()=>playing?stop():play();$('speed').onchange=()=>{if(playing){stop();play();}};
+$('back').onclick=()=>{cur=Math.max(0,cur-5);draw();};$('fwd').onclick=()=>{cur=Math.min(389,cur+5);draw();};
+$('scrub').oninput=e=>{cur=+e.target.value;draw();};$('tf').onchange=draw;document.querySelectorAll('.layers input').forEach(i=>i.onchange=draw);
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();hover={x:e.clientX-r.left,y:e.clientY-r.top};draw();});cv.addEventListener('mouseleave',()=>{hover=null;draw();});
+document.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();playing?stop():play();}if(e.key==='ArrowRight'){cur=Math.min(389,cur+1);draw();}if(e.key==='ArrowLeft'){cur=Math.max(0,cur-1);draw();}});
+new ResizeObserver(draw).observe(box);
+cur=150;setT('SPY');
+})();
+</script>
