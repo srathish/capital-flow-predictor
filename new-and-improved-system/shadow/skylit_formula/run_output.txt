@@ -1,0 +1,40 @@
+SPY:2026-03-13 expirations 2026-03-13 2026-03-16 2026-03-17 2026-03-18 2026-03-19 strikes 26
+SPY:2026-03-04 expirations 2026-03-04 2026-03-05 2026-03-06 2026-03-09 2026-03-10 strikes 27
+SPY:2026-03-19 expirations 2026-03-19 2026-03-20 2026-03-23 2026-03-24 2026-03-25 strikes 26
+QQQ:2026-03-13 expirations 2026-03-13 2026-03-16 2026-03-17 2026-03-18 2026-03-19 strikes 24
+QQQ:2026-03-19 expirations 2026-03-19 2026-03-20 2026-03-23 2026-03-24 2026-03-25 strikes 24
+
+== All expirations ==
+M1 open interest, calls + / puts − (fixed weights)         n 3175  R² 0.246  coefs oiC 0.069, oiP 0.106
+M2 + today's buyer-minus-seller volume                     n 3175  R² 0.693  coefs oiC -0.039, oiP 0.061, netAskC -0.103, netAskP -0.252
+M3 + today's total volume                                  n 3175  R² 0.446  coefs oiC -0.024, oiP 0.080, volC 0.001, volP 0.007
+M4 all six                                                 n 3175  R² 0.721  coefs oiC -0.077, oiP 0.070, netAskC -0.111, netAskP -0.322, volC 0.003, volP -0.006
+M5 flow only: prior days + today, buyer minus seller       n 3175  R² 0.907  coefs cumC -0.081, cumP -0.156, netAskC -0.131, netAskP -0.177
+M6 everything                                              n 3175  R² 0.918  coefs oiC -0.008, oiP 0.013, netAskC -0.115, netAskP -0.159, volC 0.002, volP -0.000, cumC -0.101, cumP -0.153
+
+== 0DTE only ==
+M1                                                         n 635  R² 0.318  coefs oiC 0.107, oiP 0.180
+M2                                                         n 635  R² 0.736  coefs oiC -0.041, oiP 0.089, netAskC -0.112, netAskP -0.232
+M3                                                         n 635  R² 0.454  coefs oiC 0.001, oiP 0.119, volC 0.001, volP 0.006
+M4                                                         n 635  R² 0.777  coefs oiC -0.084, oiP 0.107, netAskC -0.130, netAskP -0.313, volC 0.003, volP -0.007
+M5 flow only                                               n 635  R² 0.935  coefs cumC -0.133, cumP -0.153, netAskC -0.124, netAskP -0.178
+M6                                                         n 635  R² 0.951  coefs oiC -0.012, oiP -0.018, netAskC -0.099, netAskP -0.146, volC 0.002, volP 0.001, cumC -0.184, cumP -0.167
+
+== later expirations ==
+M1                                                         n 2540  R² 0.281  coefs oiC -0.033, oiP 0.065
+M2                                                         n 2540  R² 0.320  coefs oiC -0.030, oiP 0.052, netAskC -0.050, netAskP -0.210
+M3                                                         n 2540  R² 0.306  coefs oiC -0.046, oiP 0.053, volC 0.007, volP 0.012
+M4                                                         n 2540  R² 0.328  coefs oiC -0.043, oiP 0.049, netAskC -0.031, netAskP -0.180, volC 0.007, volP 0.004
+M5 flow only                                               n 2540  R² 0.756  coefs cumC 0.029, cumP -0.185, netAskC -0.236, netAskP -0.264
+M6                                                         n 2540  R² 0.779  coefs oiC -0.026, oiP 0.028, netAskC -0.174, netAskP -0.224, volC 0.003, volP -0.005, cumC 0.068, cumP -0.171
+
+Textbook (calls +, puts −, open interest, no fitting): corr with Skylit -0.413; sign agreement 45%
+Skylit (10:00) vs UW's own greek-exposure GEX, same strike+expiry: n 631 corr -0.320 | |size| corr 0.600 | sign agreement 49%
+Change 10:00→15:30 in Skylit vs: open-interest gamma change corr -0.451 | net buyer flow corr -0.903 | total volume corr 0.647 (n 635)
+
+== Out of sample (weights fit on the OTHER days) ==
+SPY:2026-03-13   R² 0.850 | corr 0.993 | same king (summed over 5 expirations) at 5/5 of the 5 times
+SPY:2026-03-04   R² 0.952 | corr 0.985 | same king (summed over 5 expirations) at 4/5 of the 5 times
+SPY:2026-03-19   R² 0.855 | corr 0.926 | same king (summed over 5 expirations) at 4/5 of the 5 times
+QQQ:2026-03-13   R² 0.315 | corr 0.578 | same king (summed over 5 expirations) at 1/5 of the 5 times
+QQQ:2026-03-19   R² 0.679 | corr 0.896 | same king (summed over 5 expirations) at 5/5 of the 5 times
