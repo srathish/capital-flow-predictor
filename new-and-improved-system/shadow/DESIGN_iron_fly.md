@@ -62,3 +62,19 @@ contract does not exist (a failed request or an existing contract without a pric
 pass re-checks failed legs and every substitution; (f) the report adds missing counts by width, the payout on dropped vs
 kept days, legs with max risk ≤ 0, and the minute gap between T2 leg prices; "worst 20 days" is labelled as the worst
 20-day return.
+
+## Post-study diagnostic (2026-10-17): commissions and a day-clustered t
+
+iron_fly_costcheck.mjs uses the same rows and the frozen F1/F2. Commission is $0.65 × 4 legs.
+
+| Rows | Commission | Mean return on risk | t | 2025 | 2026 |
+|---|---|---|---|---|---|
+| T1 F1 holdout ±0.5% | none | +9.5% | 0.84 | +18.8% | −5.2% |
+| T1 F1 holdout ±0.5% | included | +7.0% | 0.58 | | |
+| T1 F2 holdout ±1% | none | +12.1% | 2.08 | | |
+| T1 F2 holdout ±1% | included | +11.2% | 1.92 | +16.8% | +3.0% |
+| Not-F1 holdout ±0.5% | included | −13.5% | −2.33 | | |
+
+- The filter reliably marks days NOT to sell.
+- Selling on filter days has a positive mean, but it is not significant, and it is weaker in 2026.
+- Forward ledger (straddle_forward fly columns) is the deciding test.
