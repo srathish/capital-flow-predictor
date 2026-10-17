@@ -49,3 +49,15 @@
 - win rate and worst trade;
 - the account path at 2% risk per trade, with max drawdown;
 - annualized return of that path vs SPY buy-and-hold over the same holdout.
+
+## Result (2026-10-17): FAIL, none pass
+
+99 trades (59 weeks had no monthly expiry within 28–49 DTE; 33 had no chain).
+
+| | Build | Holdout |
+|---|---|---|
+| P1 (no filter) | +6.8%, all 39 wins | +2.7%, t 0.85, 90% wins, worst −100% |
+| Filters | do not beat P1 | do not beat P1 |
+
+- At 2% risk per trade, the holdout account path is +3.3%. SPY buy-and-hold over the same window is +30.4%.
+- The VRP and contango filters add nothing.
