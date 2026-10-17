@@ -59,6 +59,15 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
 .tick button{font-family:var(--f-ui);font-size:13px;background:var(--panel);color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:5px 12px;cursor:pointer}
 .tick button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
 .up{color:var(--win)} .dn{color:var(--neg)}
+.acct{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+@media (max-width:860px){.acct{grid-template-columns:minmax(0,1fr)}}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--dim)}
+.form input,.form select{font-family:var(--f-num);font-size:13px;background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%;box-sizing:border-box}
+.big{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;margin-bottom:8px}
+.big b{font-family:var(--f-num);font-size:28px;font-weight:500}
+.big span{font-family:var(--f-num);font-size:15px;color:var(--dim)}
+.eq{width:100%;height:120px;display:block}
 .pill{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
 .pill.long{background:rgba(63,191,127,.15);color:var(--win)} .pill.short{background:rgba(208,85,154,.15);color:var(--neg)}
 .meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
@@ -92,6 +101,24 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
     <select id="speed" aria-label="Replay speed"><option value="8">Slow</option><option value="25" selected>Normal</option><option value="70">Fast</option></select>
     <select id="tf" aria-label="Candle size"><option value="1">1-min</option><option value="3">3-min</option><option value="5" selected>5-min</option></select>
   </div>
+  <section class="card"><h2>Account simulator — all March trades</h2>
+    <div class="acct">
+      <div class="form">
+        <label for="a-start">Starting balance ($)<input id="a-start" type="number" min="100" step="100" value="10000"></label>
+        <label for="a-mode">Size each trade by<select id="a-mode"><option value="usd" selected>Fixed $ per trade</option><option value="pct">% of current account</option></select></label>
+        <label for="a-size">Amount per trade ($ or %)<input id="a-size" type="number" min="1" step="1" value="500"></label>
+        <label for="a-scope">Tickers<select id="a-scope"><option value="both" selected>SPY + QQQ</option><option value="SPY">SPY only</option><option value="QQQ">QQQ only</option></select></label>
+        <label for="a-exit">Exit<select id="a-exit"><option value="rule" selected>Engine exit (stop / target / 15:55)</option><option value="tp30">Take profit at +30% if reached</option><option value="tp50">Take profit at +50% if reached</option><option value="tp100">Take profit at +100% if reached</option></select></label>
+        <label for="a-fee">Commission per contract, each side ($)<input id="a-fee" type="number" min="0" step="0.05" value="0.65"></label>
+      </div>
+      <div>
+        <div class="big"><b id="a-pct">—</b><span id="a-bal"></span></div>
+        <dl class="kv" id="a-stats"></dl>
+        <canvas class="eq" id="a-eq" aria-label="Account balance after each trade"></canvas>
+      </div>
+    </div>
+    <p class="note">Whole contracts only (contracts = amount ÷ (option price × 100), rounded down; a trade too small for one contract is skipped). Bought and sold at UW's 1-minute option prices for that contract, minus commissions. Take-profit exits fill at exactly the target when the option's 1-minute high reached it while the trade was open, which is optimistic. One month of data; this shows what March would have done, not a forecast.</p>
+  </section>
   <p class="note">Data: Skylit Trinity replay, one board per minute (gamma summed over the five listed expirations), March 2026; candles and option prices from Unusual Whales. Nodes are strikes within ±2% of price with at least 12% of the king's size (thicker = bigger; cyan positive, magenta negative, white = king). ▲/▼ is the node's change over the last 15 minutes. Engine trades: a 1-minute move through a node (30%+ of king) into a gap of 0.4%+ to the next node on the CURRENT board; buy the at-the-money 0DTE call (up) or put (down), stop 0.15% behind the node, target the next node. Touch markers turn green if the node held for 15 minutes and red if price broke through. March is one month inside the test's holdout period: 52 trades averaged +7.7% per option (+0.50R), 17 winners; the full Dec–May test has not validated any reactive rule yet.</p>
 </div>
 <script type="application/json" id="data">__DATA__</script>
@@ -151,7 +178,22 @@ $('back').onclick=()=>{cur=Math.max(0,cur-5);draw();};$('fwd').onclick=()=>{cur=
 $('scrub').oninput=e=>{cur=+e.target.value;draw();};$('tf').onchange=draw;document.querySelectorAll('.layers input').forEach(i=>i.onchange=draw);
 cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();hover={x:e.clientX-r.left,y:e.clientY-r.top};draw();});cv.addEventListener('mouseleave',()=>{hover=null;draw();});
 document.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();playing?stop():play();}if(e.key==='ArrowRight'){cur=Math.min(389,cur+1);draw();}if(e.key==='ArrowLeft'){cur=Math.max(0,cur-1);draw();}});
-new ResizeObserver(draw).observe(box);
+function account(){const start=+$('a-start').value||0,mode=$('a-mode').value,size=+$('a-size').value||0,scope=$('a-scope').value,ex=$('a-exit').value,fee=+$('a-fee').value||0,tp={tp30:30,tp50:50,tp100:100}[ex];
+  const trades=ALL.filter(s=>scope==='both'||s.T===scope).flatMap(s=>s.breaks.filter(x=>x.opt).map(x=>({...x,d:s.d,T:s.T}))).sort((a,b)=>a.d.localeCompare(b.d)||a.m-b.m);
+  let bal=start,peak=start,dd=0,n=0,w=0,skipped=0,best=null,worst=null;const curve=[start];
+  for(const x of trades){const o=x.opt,amt=mode==='usd'?size:bal*size/100,qty=Math.floor(amt/(o.entryPx*100));if(qty<1||bal<o.entryPx*100+2*fee){skipped++;continue;}
+    let exitPx=o.exitPx;if(tp&&o.peakHeld&&o.peakHeld.pct>=tp)exitPx=o.entryPx*(1+tp/100);const pnl=qty*100*(exitPx-o.entryPx)-2*fee*qty;bal+=pnl;n++;if(pnl>0)w++;const r=pnl/(qty*100*o.entryPx);
+    if(!best||r>best.r)best={r,x};if(!worst||r<worst.r)worst={r,x};peak=Math.max(peak,bal);dd=Math.min(dd,bal/peak-1);curve.push(bal);}
+  const pct=start?(bal/start-1)*100:0,f$=v=>(v<0?'−$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0});
+  $('a-pct').textContent=(pct>=0?'+':'')+pct.toFixed(1)+'%';$('a-pct').className=pct>=0?'w':'l';$('a-bal').textContent=`${f$(start)} → ${f$(bal)}`;
+  const row=(k,v)=>`<dt>${k}</dt><dd>${v}</dd>`;$('a-stats').innerHTML=row('Trades taken',`${n}${skipped?` (${skipped} skipped, too small)`:''}`)+row('Winners',n?`${w} (${Math.round(w/n*100)}%)`:'—')+row('Profit / loss',f$(bal-start))+row('Max drawdown',(dd*100).toFixed(1)+'%')+row('Best trade',best?`${best.x.d.slice(5)} ${best.x.opt.contract} ${(best.r*100>=0?'+':'')+(best.r*100).toFixed(0)}%`:'—')+row('Worst trade',worst?`${worst.x.d.slice(5)} ${worst.x.opt.contract} ${(worst.r*100).toFixed(0)}%`:'—');
+  const c=$('a-eq'),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);const W=r.width,H=r.height,lo=Math.min(...curve),hi=Math.max(...curve),Y=v=>6+(hi-v)/((hi-lo)||1)*(H-12),X=i=>i/Math.max(1,curve.length-1)*W;
+  g.clearRect(0,0,W,H);g.strokeStyle=C.line;g.beginPath();g.moveTo(0,Y(start));g.lineTo(W,Y(start));g.stroke();g.fillStyle=C.dim;g.font='10px "IBM Plex Mono",monospace';g.fillText('start',4,Y(start)-4);
+  g.beginPath();curve.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.strokeStyle=bal>=start?C.win:C.loss;g.lineWidth=2;g.stroke();g.lineTo(W,H);g.lineTo(0,H);g.closePath();g.fillStyle=hexA(bal>=start?C.win:C.loss,0.08);g.fill();
+  g.fillStyle=bal>=start?C.win:C.loss;g.beginPath();g.arc(X(curve.length-1),Y(bal),3.5,0,7);g.fill();}
+['a-start','a-mode','a-size','a-scope','a-exit','a-fee'].forEach(id=>{$(id).addEventListener('input',account);$(id).addEventListener('change',()=>{if(id==='a-mode'){$('a-size').value=$('a-mode').value==='pct'?5:500;}account();});});
+new ResizeObserver(()=>{draw();account();}).observe(box);
+account();
 cur=150;setT('SPY');
 })();
 </script>
