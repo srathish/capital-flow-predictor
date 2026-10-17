@@ -51,6 +51,14 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
 .sw{display:inline-block;width:14px;height:3px;border-radius:2px}
 .note{color:var(--dim);font-size:12.5px;line-height:1.5;max-width:75ch}
 .empty{color:var(--dim);font-size:13px}
+.badge{font-size:10px;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 5px;border:1px solid currentColor}
+.b-ok{color:var(--win)} .b-part{color:var(--ladder)}
+.regime{display:flex;flex-direction:column;gap:6px}
+.pill{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+.pill.long{background:rgba(63,191,127,.15);color:var(--win)} .pill.short{background:rgba(208,85,154,.15);color:var(--neg)}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--band)}
+.day .lg{color:var(--win);font-size:10px;margin-left:4px}
 </style>
 <div class="wrap">
   <header>
@@ -59,17 +67,19 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
   </header>
   <nav class="days" id="days" aria-label="Sessions"></nav>
   <div class="layers" role="group" aria-label="Layers">
+    <label><input type="checkbox" id="L-pin" checked><span class="sw" style="background:var(--king)"></span>King pin zone <span class="badge b-ok">validated</span></label>
     <label><input type="checkbox" id="L-nodes" checked><span class="sw" style="background:var(--pos)"></span>Gamma nodes (prior close)</label>
     <label><input type="checkbox" id="L-ladder" checked><span class="sw" style="background:var(--ladder)"></span>Ladder levels</label>
-    <label><input type="checkbox" id="L-band" checked><span class="sw" style="background:var(--band)"></span>±1σ / ±2σ expected range</label>
-    <label><input type="checkbox" id="L-air" checked><span class="sw" style="background:var(--pos)"></span>Air-pocket signals</label>
-    <label><input type="checkbox" id="L-lad" checked><span class="sw" style="background:var(--ladder)"></span>Ladder + GEX signals</label>
+    <label><input type="checkbox" id="L-band" checked><span class="sw" style="background:var(--band)"></span>±1σ / ±2σ expected range <span class="badge b-ok">validated</span></label>
+    <label><input type="checkbox" id="L-air" checked><span class="sw" style="background:var(--pos)"></span>Air-pocket trades <span class="badge b-part">partial</span></label>
+    <label><input type="checkbox" id="L-lad" checked><span class="sw" style="background:var(--ladder)"></span>Ladder + GEX trades <span class="badge b-part">partial</span></label>
   </div>
   <div class="grid">
     <div class="chartbox" id="box"><canvas id="cv" aria-label="SPY price with gamma map replay"></canvas><div class="tip" id="tip" hidden></div></div>
     <aside class="rail">
+      <section class="card"><h2>Day type</h2><div class="regime" id="regime"></div></section>
       <section class="card"><h2>At the cursor</h2><dl class="kv" id="now"></dl></section>
-      <section class="card"><h2>Signals so far</h2><div id="sigs"></div></section>
+      <section class="card"><h2>Trades so far</h2><div id="sigs"></div></section>
     </aside>
   </div>
   <div class="controls">
@@ -81,7 +91,7 @@ select{font-family:var(--f-ui);background:var(--panel);color:var(--ink);border:1
     <select id="speed" aria-label="Replay speed"><option value="8">Slow</option><option value="25" selected>Normal</option><option value="70">Fast</option></select>
     <select id="tf" aria-label="Candle size"><option value="1">1-min</option><option value="3">3-min</option><option value="5" selected>5-min</option></select>
   </div>
-  <p class="note">Map = UW net gamma by strike at the prior close (the map known before the open); bands are strikes with at least 30% of the king's size, thicker = bigger, cyan = positive, magenta = negative, white = king. Ladder = prior-day high/low/close, premarket high/low, 9:30–10:00 opening range. Air-pocket signal: a 1-minute close through a node into a gap of 0.4%+, stop 0.15% behind the node, target the next node. Ladder + GEX signal: a ladder break whose next ladder level sits on a gamma/vanna node with no node in between, stop 0.05% behind. R = result in units of the risk. Space plays and pauses; arrow keys step.</p>
+  <p class="note">Data: Unusual Whales (prices, gamma map) and Cboe (VIX). Skylit maps are not on this page yet. King pin zone: within $0.50 of the king; a dot marks each entry into the zone, green if price was still inside 30 minutes later (tested on Skylit data: about 50–60% stay vs 20–33% normally). Map = UW net gamma by strike at the prior close (the map known before the open); bands are strikes with at least 30% of the king's size, thicker = bigger, cyan = positive, magenta = negative, white = king. Ladder = prior-day high/low/close, premarket high/low, 9:30–10:00 opening range. Air-pocket signal: a 1-minute close through a node into a gap of 0.4%+, stop 0.15% behind the node, target the next node. Ladder + GEX signal: a ladder break whose next ladder level sits on a gamma/vanna node with no node in between, stop 0.05% behind. Each trade buys the at-the-money 0DTE SPY option (call for up-breaks, put for down-breaks) at the signal minute and sells when the rule exits, using UW's real minute prices for that contract; % is the option's return. Across all 16 sessions: 44 trades, 9 winners, average −11.9% per trade. Space plays and pauses; arrow keys step.</p>
 </div>
 <script type="application/json" id="data">__DATA__</script>
 <script>
@@ -93,11 +103,11 @@ const C={ground:css('--panel'),line:css('--line'),ink:css('--ink'),dim:css('--di
 const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
 const fR=r=>(r>=0?'+':'')+r.toFixed(2)+'R';
 let si=S.length-1, cur=389, playing=false, timer=null, hover=null;
-const L=()=>({nodes:$('L-nodes').checked,ladder:$('L-ladder').checked,band:$('L-band').checked,air:$('L-air').checked,lad:$('L-lad').checked});
+const L=()=>({pin:$('L-pin').checked,nodes:$('L-nodes').checked,ladder:$('L-ladder').checked,band:$('L-band').checked,air:$('L-air').checked,lad:$('L-lad').checked});
 // day chips
 const days=$('days');
-S.forEach((s,i)=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed',i===si);const tot=s.signals.reduce((a,x)=>a+x.R,0);const dd=new Date(s.d+'T12:00:00Z');
-  b.innerHTML=`${dd.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})}<span class="pnl ${s.signals.length?(tot>=0?'w':'l'):'o'}">${s.signals.length?fR(tot)+' · '+s.signals.length:'no signals'}</span>`;
+S.forEach((s,i)=>{const b=document.createElement('button');b.className='day';b.type='button';b.setAttribute('aria-pressed',i===si);const tot=s.signals.reduce((a,x)=>a+(x.opt&&x.opt.pct!=null?x.opt.pct:0),0);const dd=new Date(s.d+'T12:00:00Z');
+  b.innerHTML=`${dd.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'})}${s.longGamma?'<span class="lg" title="Dealers long gamma near price">Lγ</span>':''}<span class="pnl ${s.signals.length?(tot>=0?'w':'l'):'o'}">${s.signals.length?(tot>=0?'+':'')+tot.toFixed(0)+'% · '+s.signals.length+' trades':'no trades'}</span>`;
   b.onclick=()=>{si=i;cur=0;[...days.children].forEach((c,j)=>c.setAttribute('aria-pressed',j===si));draw();};days.appendChild(b);});
 days.lastChild?.scrollIntoView({inline:'end',block:'nearest'});
 function agg(bars,tf,upto){const out=[];for(const b of bars){if(b[0]-570>upto)break;const k=Math.floor((b[0]-570)/tf);const o=out[out.length-1];if(o&&o.k===k){o.h=Math.max(o.h,b[2]);o.l=Math.min(o.l,b[3]);o.c=b[4];}else out.push({k,m:570+k*tf,o:b[1],h:b[2],l:b[3],c:b[4]});}return out;}
@@ -127,21 +137,36 @@ function draw(){
   for(const b of bars){const x=X(b.m+tf/2),up=b.c>=b.o,col=up?C.win:C.loss;ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,Y(b.h));ctx.lineTo(x,Y(b.l));ctx.stroke();const y1=Y(Math.max(b.o,b.c)),y2=Y(Math.min(b.o,b.c));ctx.fillRect(x-bw/2,y1,bw,Math.max(1,y2-y1));}
   const last=s.bars.filter(b=>b[0]-570<=cur).at(-1);
   if(last){ctx.strokeStyle=C.ink;ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(pad.l,Y(last[4]));ctx.lineTo(W-pad.r,Y(last[4]));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=C.ink;ctx.fillRect(W-pad.r,Y(last[4])-8,pad.r,16);ctx.fillStyle=C.ground;ctx.font='500 11px "IBM Plex Mono",monospace';ctx.fillText(last[4].toFixed(2),W-pad.r+6,Y(last[4]));}
+  // king pin zone (validated: near the king, price stays near it ~2-3x more often than baseline)
+  const king=s.nodes.find(n=>n.king), PIN=0.5, pins=pinChecks(s,king,PIN);
+  if(lay.pin&&king&&king.k>yMin&&king.k<yMax){ctx.fillStyle=hexA(C.king,0.07);ctx.fillRect(pad.l,Y(king.k+PIN),W-pad.l-pad.r,Y(king.k-PIN)-Y(king.k+PIN));
+    for(const b of s.bars){if(b[0]-570>cur)break;if(Math.abs(b[4]-king.k)<=PIN){ctx.fillStyle=hexA(C.king,0.35);ctx.fillRect(X(b[0]),Y(king.k+PIN),Math.max(1,(W-pad.l-pad.r)/390),2);}}
+    for(const c of pins){if(c.m+30-570>cur)continue;ctx.fillStyle=c.held?C.win:C.loss;ctx.beginPath();ctx.arc(X(c.m),Y(king.k),3.5,0,7);ctx.fill();}}
   // signals
   const vis=s.signals.filter(x=>x.m-570<=cur&&((x.rule==='air'&&lay.air)||(x.rule==='ladder'&&lay.lad)));
   for(const x of vis){const col=x.rule==='air'?C.pos:C.ladder,done=x.exitM-570<=cur,end=done?x.exitM:570+cur;
     ctx.globalAlpha=0.7;ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.strokeStyle=C.win;ctx.beginPath();ctx.moveTo(X(x.m),Y(x.target));ctx.lineTo(X(end),Y(x.target));ctx.stroke();ctx.strokeStyle=C.loss;ctx.beginPath();ctx.moveTo(X(x.m),Y(x.stop));ctx.lineTo(X(end),Y(x.stop));ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
     const xe=X(x.m),ye=Y(x.entry);ctx.fillStyle=col;ctx.beginPath();if(x.rule==='air'){const d=x.dir;ctx.moveTo(xe,ye-d*0);ctx.lineTo(xe-6,ye+d*9);ctx.lineTo(xe+6,ye+d*9);}else{ctx.moveTo(xe,ye-6);ctx.lineTo(xe+6,ye);ctx.lineTo(xe,ye+6);ctx.lineTo(xe-6,ye);}ctx.closePath();ctx.fill();
-    if(done){const xx=X(x.exitM),yy=Y(x.exit);ctx.fillStyle=x.R>=0?C.win:C.loss;ctx.beginPath();ctx.arc(xx,yy,4,0,7);ctx.fill();ctx.font='500 11px "IBM Plex Mono",monospace';ctx.fillText(fR(x.R),xx+6,yy-(x.dir>0?-10:10));}}
+    if(x.opt){ctx.fillStyle=col;ctx.font='10px "IBM Plex Mono",monospace';ctx.fillText(`${x.dir>0?'BUY':'BUY'} ${x.opt.strike}${x.opt.type==='put'?'P':'C'} @${x.opt.entryPx}`,xe+8,ye+(x.dir>0?14:-14));}
+    if(done){const xx=X(x.exitM),yy=Y(x.exit);ctx.fillStyle=x.R>=0?C.win:C.loss;ctx.beginPath();ctx.arc(xx,yy,4,0,7);ctx.fill();ctx.font='500 11px "IBM Plex Mono",monospace';const lab=x.opt&&x.opt.pct!=null?`${x.opt.strike}${x.opt.type==='put'?'P':'C'} ${x.opt.pct>=0?'+':''}${x.opt.pct}%`:fR(x.R);ctx.fillText(lab,xx+6,yy-(x.dir>0?-10:10));}}
   // hover crosshair
   if(hover&&hover.x>pad.l&&hover.x<W-pad.r){ctx.strokeStyle=C.faint;ctx.beginPath();ctx.moveTo(hover.x,pad.t);ctx.lineTo(hover.x,H-pad.b);ctx.moveTo(pad.l,hover.y);ctx.lineTo(W-pad.r,hover.y);ctx.stroke();
     const p=yMax-(hover.y-pad.t)/(H-pad.t-pad.b)*(yMax-yMin),m=Math.round(570+(hover.x-pad.l)/(W-pad.l-pad.r)*390);const tip=$('tip');tip.hidden=false;tip.textContent=`${hm(m)}  ${p.toFixed(2)}`;tip.style.left=Math.min(hover.x+10,W-110)+'px';tip.style.top=Math.max(hover.y-26,0)+'px';}else $('tip').hidden=true;
   $('clock').textContent=hm(570+cur);$('scrub').value=cur;readout(s,last,vis);}
+function pinChecks(s,king,PIN){if(!king)return[];const out=[];let inside=false,lastCheck=-99;for(let i=0;i<s.bars.length;i++){const b=s.bars[i],near=Math.abs(b[4]-king.k)<=PIN;if(near&&!inside&&b[0]-lastCheck>=30){const later=s.bars.find(x=>x[0]===b[0]+30);if(later){out.push({m:b[0],held:Math.abs(later[4]-king.k)<=PIN});lastCheck=b[0];}}inside=near;}return out;}
 function readout(s,last,vis){const p=last?last[4]:s.prevClose,king=s.nodes.find(n=>n.king),above=s.nodes.filter(n=>n.k>p).sort((a,b)=>a.k-b.k)[0],below=s.nodes.filter(n=>n.k<p).sort((a,b)=>b.k-a.k)[0],z=s.sigma?(p-s.prevClose)/s.sigma:null;
   const row=(k,v)=>`<dt>${k}</dt><dd>${v}</dd>`;
-  $('now').innerHTML=row('SPY',p.toFixed(2))+row('King',king?`${king.k} (${king.g>0?'+':'−'}) · ${(p-king.k>=0?'+':'')+(p-king.k).toFixed(2)}`:'—')+row('Node above',above?`${above.k} · gap ${((above.k/p-1)*100).toFixed(2)}%`:'none within 3%')+row('Node below',below?`${below.k} · gap ${((1-below.k/p)*100).toFixed(2)}%`:'none within 3%')+row('vs prior close',z!=null?`${z>=0?'+':''}${z.toFixed(2)}σ`:'—');
+  const pins=pinChecks(s,king,0.5).filter(c=>c.m+30-570<=cur), held=pins.filter(c=>c.held).length, nearNow=king&&Math.abs(p-king.k)<=0.5;
+  const lo=Math.min(...s.bars.filter(b=>b[0]-570<=cur).map(b=>b[3])), hi=Math.max(...s.bars.filter(b=>b[0]-570<=cur).map(b=>b[2])), exp=s.sigma?2*s.sigma:null;
+  $('regime').innerHTML=`<span class="pill ${s.longGamma?'long':'short'}">${s.longGamma?'Long gamma · premium day':'Not long gamma · wider range risk'}</span>`+
+    `<dl class="kv">${row('±1% gamma balance',s.a01==null?'—':(s.a01>=0?'+':'')+s.a01.toFixed(2)+' (filter ≥ 0.66)')}${row('Expected day range','$'+(exp?exp.toFixed(2):'—'))}${row('Range so far','$'+(hi-lo).toFixed(2))}</dl>`+
+    (exp?`<div class="meter" title="Range so far vs expected"><i style="width:${Math.min(100,(hi-lo)/exp*100).toFixed(0)}%"></i></div>`:'')+
+    `<p class="empty">${s.longGamma?'Long-gamma days tend to be smaller and pinned. The tested trade is selling defined-risk premium (iron fly) on these days.':'Short or mixed gamma: ranges tend to be larger. Premium selling is skipped on these days.'}</p>`;
+  $('now').innerHTML=row('SPY',p.toFixed(2))+row('King',king?`${king.k} (${king.g>0?'+':'−'}) · ${(p-king.k>=0?'+':'')+(p-king.k).toFixed(2)}`:'—')+row('Node above',above?`${above.k} · gap ${((above.k/p-1)*100).toFixed(2)}%`:'none within 3%')+row('Node below',below?`${below.k} · gap ${((1-below.k/p)*100).toFixed(2)}%`:'none within 3%')+row('vs prior close',z!=null?`${z>=0?'+':''}${z.toFixed(2)}σ`:'—')+row('In king pin zone',king?(nearNow?'yes · expect to stay':'no'):'—')+row('Pin checks today',pins.length?`${held} of ${pins.length} held 30 min`:'none yet');
   const el=$('sigs');if(!vis.length){el.innerHTML='<p class="empty">No signal yet at this time.</p>';return;}
-  el.innerHTML=vis.map(x=>{const done=x.exitM-570<=cur;return `<div class="sig" data-m="${x.m}"><span>${hm(x.m)}</span><span class="what">${x.rule==='air'?'Air pocket':'Ladder + GEX'} ${x.dir>0?'long':'short'}</span><span class="r ${done?(x.R>=0?'w':'l'):'o'}">${done?fR(x.R):'open'}</span><small>through ${x.level.toFixed(2)} → target ${x.target.toFixed(2)}, stop ${x.stop.toFixed(2)}${done?', '+x.how+' '+hm(x.exitM):''}</small></div>`;}).join('');
+  el.innerHTML=vis.map(x=>{const done=x.exitM-570<=cur,o=x.opt,pct=o&&o.pct!=null?o.pct:null;const res=done?(pct!=null?`${pct>=0?'+':''}${pct}%`:fR(x.R)):'open';
+    return `<div class="sig" data-m="${x.m}"><span>${hm(x.m)}</span><span class="what">${o?`Bought ${o.contract.replace(' 0DTE','')} ${o.type}`:(x.dir>0?'Long':'Short')}</span><span class="r ${done?((pct??x.R)>=0?'w':'l'):'o'}">${res}</span><small>${o?`@ $${o.entryPx}${done&&o.exitPx!=null?` → $${o.exitPx}`:''} · `:''}${x.rule==='air'?'air pocket':'ladder + GEX'} ${x.dir>0?'up':'down'} through ${x.level.toFixed(2)} · target ${x.target.toFixed(2)}, stop ${x.stop.toFixed(2)}${done?' · '+x.how+' '+hm(x.exitM)+' ('+fR(x.R)+')':''}</small></div>`;}).join('');
+  const dn=vis.filter(x=>x.exitM-570<=cur&&x.opt&&x.opt.pct!=null);if(dn.length){const t=dn.reduce((a,x)=>a+x.opt.pct,0);el.innerHTML+=`<p class="empty">Closed so far: ${dn.filter(x=>x.opt.pct>0).length} of ${dn.length} winners · total ${t>=0?'+':''}${t.toFixed(0)}% (sum of each trade's %, equal size)</p>`;}
   el.querySelectorAll('.sig').forEach(d=>d.onclick=()=>{cur=Math.min(389,+d.dataset.m-570+15);draw();});}
 function hexA(h,a){const n=h.replace('#','');const v=parseInt(n.length===3?n.split('').map(c=>c+c).join(''):n,16);return `rgba(${v>>16&255},${v>>8&255},${v&255},${a})`;}
 function tick(){cur=Math.min(389,cur+1);draw();if(cur>=389)stop();}
