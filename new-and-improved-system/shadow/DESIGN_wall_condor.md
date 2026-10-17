@@ -49,3 +49,17 @@
 
 - An independent audit of the code and costs.
 - Then a forward paper ledger before anything is called working.
+
+## Result (2026-10-17): FAIL. The formal pass (C4) is degenerate.
+
+- **C4 (1.645σ, both filters):** 3 build trades and 8 holdout trades.
+  - The credit is about 1% of the width after costs; at the 90% walls the premium left after slippage is about nothing.
+  - 806 condor-days were skipped for credit ≤ 0.
+  - The huge t comes from near-zero variance, not from an edge.
+- **C1–C4:** none is tradeable.
+- **1σ walls:** unfiltered (C5) −2.1%; gamma filter (C7) −5.6%.
+- **IV > HV (C6 / C8):** build −12.3% / −16.0%, holdout +6.6% / +12.1%. The sign flips between periods, so it is not
+  consistent.
+- **Verdict:**
+  - selling the day's implied range at the walls does not pay after costs;
+  - neither filter makes it consistent.
