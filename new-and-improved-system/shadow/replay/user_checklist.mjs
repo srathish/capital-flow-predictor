@@ -17,8 +17,10 @@ async function optRows(T, d, K, cp) {
   const rows = ((await r.json()).data ?? []).map((q) => ({ m: et(q.start_time), c: +q.close, h: +q.high, l: +q.low })).filter((q) => q.c > 0).sort((a, b) => a.m - b.m);
   fs.writeFileSync(f, JSON.stringify(rows)); return rows;
 }
+const TK = JSON.parse(fs.readFileSync(new URL(`./trinity_kings_${MONTH}.json`, import.meta.url), 'utf8'));
+const lean = (d, T, m) => { const r = TK[d]?.[T]?.find((x) => x[0] === m); if (!r) return 0; return r[2] > r[1] * 1.0005 ? 1 : r[2] < r[1] * 0.9995 ? -1 : 0; };
 const hm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
-async function run(s, from) {
+async function run(s, from, tri = false) {
   const B = new Map(s.bars.map((b) => [b[0], b])), M = s.maps, out = [];
   const px = (m) => B.get(m - 1)?.[4] ?? null;
   let i = 0, busyUntil = -1;
@@ -30,7 +32,9 @@ async function run(s, from) {
     const kn = nodes.find((n) => n[0] === K), d15 = kn ? kn[2] : null, p = px(m);
     if (ten < 20 || flips > 3 || d15 == null || d15 < 0 || p == null) continue;
     const dist = (K - p) / p; if (Math.abs(dist) < 0.0025 || Math.abs(dist) > 0.015) continue;
-    const dir = K > p ? 1 : -1, cp = dir > 0 ? 'C' : 'P', strike = Math.round(p);
+    const dir = K > p ? 1 : -1;
+    if (tri && !['SPXW', 'SPY', 'QQQ'].every((T) => lean(s.d, T, m) === dir)) continue;
+    const cp = dir > 0 ? 'C' : 'P', strike = Math.round(p);
     const rows = await optRows(s.T, s.d, strike, cp); if (!rows) continue;
     const en = rows.find((q) => q.m >= m); if (!en || en.m > m + 2) continue;
     const R = new Map(rows.map((q) => [q.m, q])), optAt = (bm) => rows.filter((q) => q.m <= bm).at(-1);
@@ -59,10 +63,10 @@ async function run(s, from) {
 const lines = [];
 for (const s of D.sessions) {
   if (!s.d.startsWith(MONTH)) continue;
-  s.rules = await run(s, 600); s.rulesLate = await run(s, 720);
-  for (const [lab, arr] of [['CORE', s.rules], ['LATE', s.rulesLate]]) for (const x of arr) lines.push([s.d, s.T, lab, hm(x.m), x.opt.contract, x.opt.entryPx, x.opt.exitPx, x.opt.pct, hm(x.exitM), x.how, x.opt.peakHeld?.pct ?? '', x.why].join('\t'));
+  s.rules = await run(s, 600); s.rulesLate = await run(s, 720); s.rulesTri = await run(s, 600, true);
+  for (const [lab, arr] of [['CORE', s.rules], ['LATE', s.rulesLate], ['TRI', s.rulesTri]]) for (const x of arr) lines.push([s.d, s.T, lab, hm(x.m), x.opt.contract, x.opt.entryPx, x.opt.exitPx, x.opt.pct, hm(x.exitM), x.how, x.opt.peakHeld?.pct ?? '', x.why].join('\t'));
 }
-D.rulesMeta = { month: MONTH, design: 'DESIGN_user_checklist.md v1', built: new Date().toISOString() };
+D.rulesMeta = { month: MONTH, design: 'DESIGN_user_checklist.md v1 + amendment 1 (trinity)', built: new Date().toISOString() };
 fs.writeFileSync(F, JSON.stringify(D));
 fs.writeFileSync(new URL('./user_checklist_trades.tsv', import.meta.url), ['day\tT\tvariant\tentry\tcontract\tin\tout\tpct\texit\thow\tpeakHeld%\twhy', ...lines].join('\n') + '\n');
 console.log(lines.length, 'trades written');

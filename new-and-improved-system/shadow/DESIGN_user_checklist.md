@@ -61,3 +61,37 @@ fill convention as the engine.
 - **Stopped trades:** 11 of the 27 were up at least 25% at some point before they hit the −50% stop.
 - **Verdict:** the checklist loses even on the month it came from. Late entry is worse, not better. Do not test it on
   Dec–Feb as written. All trades are in replay/user_checklist_trades.tsv and on the replay page under "Your checklist".
+
+## Amendment 1: trinity confluence (user request 2026-10-17, locked before the run)
+
+"When we enter something bullish or bearish, are all three leaning bullish or all three leaning bearish?"
+
+- **Lean of one board at frame m.** The board's own king K and spot s come from the Skylit replay frame. SPX uses the
+  SPXW board; the king is defined the same way as above. Extracted by replay/trinity_kings.py.
+  - Bullish if K > s × 1.0005.
+  - Bearish if K < s × 0.9995.
+  - Neutral otherwise (price is at the king).
+- **TRI variant:** the CORE checklist (10:00–14:30) plus one more entry condition: SPX, SPY and QQQ all lean in the
+  trade's direction at frame m. Everything else is unchanged. Written to s.rulesTri.
+- **Also reported (diagnostic):** the engine's March trades split by whether all three boards leaned the trade's way at
+  entry.
+- **Same caveat:** March is in-sample. Dec–Feb stays sealed until the user has reviewed this.
+
+### Amendment 1 result (March, in-sample)
+
+| | Trades | Avg per trade | After slippage | Win rate |
+|---|---|---|---|---|
+| CORE | 46 | −8.2% | −10.4% | 35% |
+| **TRI (all three agree at entry)** | 23 | **−9.8%** | −11.9% | 35% |
+| CORE trades that happened to have agreement | 16 | −0.2% | −2.5% | 38% |
+| CORE trades without agreement | 30 | −12.5% | −14.6% | 33% |
+| Engine, all three agree | 7 | +29.7% | +27.3% | 43% |
+| Engine, 2 of 3 agree | 16 | −19.9% | | 13% |
+| Engine, 1 of 3 agree | 22 | +14.4% | | 41% |
+| Engine, 0 of 3 agree | 7 | +20.1% | | 29% |
+
+- **No consistent confluence effect.**
+  - Required at entry, confluence made the checklist slightly worse.
+  - The engine's results don't step up with more agreement: 0 of 3 beats 2 of 3.
+  - Groups of 7–16 trades are noise-sized.
+- **Verdict:** not confirmed in March. Do not spend Dec–Feb on it alone.
