@@ -130,3 +130,12 @@
 | 2026-03-19 | SPY | ok | 0.3 / 1.37 (frame = candle +1 min) | 94% | 0 / 0 | 0.2% | 0 | — |
 | 2026-03-20 | QQQ | ok | 0.34 / 3.45 (frame = candle +1 min) | 89% | 0 / 0 | 0.64% | 1 | — |
 | 2026-03-20 | SPY | ok | 0.31 / 4.64 (frame = candle +1 min) | 87% | 0 / 0 | 0.15% | 1 | — |
+
+## Spot-check against Skylit's live API (2026-10-17, 10 credits)
+
+| Board | Spot API / replay | Gamma-by-strike correlation | Top-5 nodes in common |
+|---|---|---|---|
+| SPY 2026-03-04 | 686.80 / 686.77 | 0.998 | 4 of 5 |
+| QQQ 2026-03-17 15:00Z | 604.96 / 604.96 | 1.000 | 5 of 5 |
+
+The replay archive matches Skylit's API.
