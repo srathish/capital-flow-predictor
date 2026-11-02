@@ -7,8 +7,8 @@
    "u": 0.000046493129529533255,
    "px": 1074.89,
    "d0": "2026-10-02",
-   "last": 1074.89,
-   "lastRun": "2026-10-02",
+   "last": 884.74,
+   "lastRun": "2026-10-30",
    "why": "revenue 346% YoY, growth 149 pts, gross margin +47 pts vs a year ago, price/sales 13.4"
   },
   {
@@ -16,8 +16,8 @@
    "u": 0.000029055401484892358,
    "px": 1719.99,
    "d0": "2026-10-02",
-   "last": 1719.99,
-   "lastRun": "2026-10-02",
+   "last": 1150.89,
+   "lastRun": "2026-10-30",
    "why": "revenue 372% YoY, growth 121 pts, gross margin +58 pts vs a year ago, price/sales 12.4"
   },
   {
@@ -25,8 +25,8 @@
    "u": 0.0014181328036322362,
    "px": 35.24,
    "d0": "2026-10-02",
-   "last": 35.24,
-   "lastRun": "2026-10-02",
+   "last": 40.38,
+   "lastRun": "2026-10-30",
    "why": "revenue 215% YoY, growth 140 pts, gross margin +6 pts vs a year ago, price/sales 1.5"
   },
   {
@@ -34,8 +34,8 @@
    "u": 0.0005949404761904762,
    "px": 84,
    "d0": "2026-10-02",
-   "last": 84,
-   "lastRun": "2026-10-02",
+   "last": 76.24,
+   "lastRun": "2026-10-30",
    "why": "revenue 57% YoY, growth 52 pts, gross margin +13 pts vs a year ago, price/sales 0.5"
   },
   {
@@ -43,8 +43,8 @@
    "u": 0.0012071256038647346,
    "px": 41.4,
    "d0": "2026-10-02",
-   "last": 41.4,
-   "lastRun": "2026-10-02",
+   "last": 32.72,
+   "lastRun": "2026-10-30",
    "why": "revenue 199% YoY, growth 48 pts, gross margin +6 pts vs a year ago, price/sales 10.7"
   },
   {
@@ -52,26 +52,17 @@
    "u": 0.0009027276011560695,
    "px": 55.36,
    "d0": "2026-10-02",
-   "last": 55.36,
-   "lastRun": "2026-10-02",
+   "last": 52.18,
+   "lastRun": "2026-10-30",
    "why": "revenue 99% YoY, growth 58 pts, gross margin +5 pts vs a year ago, price/sales 14.8"
-  },
-  {
-   "t": "VLO",
-   "u": 0.00012300024612355403,
-   "px": 406.3,
-   "d0": "2026-10-02",
-   "last": 406.3,
-   "lastRun": "2026-10-02",
-   "why": "revenue 49% YoY, growth 42 pts, gross margin +8 pts vs a year ago, price/sales 0.8"
   },
   {
    "t": "DK",
    "u": 0.000673608303005796,
    "px": 74.19,
    "d0": "2026-10-02",
-   "last": 74.19,
-   "lastRun": "2026-10-02",
+   "last": 73.57,
+   "lastRun": "2026-10-30",
    "why": "revenue 48% YoY, growth 47 pts, gross margin +7 pts vs a year ago, price/sales 0.4"
   },
   {
@@ -79,8 +70,8 @@
    "u": 0.00011833163639807735,
    "px": 422.33,
    "d0": "2026-10-02",
-   "last": 422.33,
-   "lastRun": "2026-10-02",
+   "last": 444.73,
+   "lastRun": "2026-10-30",
    "why": "revenue 54% YoY, growth 45 pts, gross margin +6 pts vs a year ago, price/sales 0.8"
   },
   {
@@ -88,35 +79,17 @@
    "u": 0.0002417872175722096,
    "px": 206.69,
    "d0": "2026-10-02",
-   "last": 206.69,
-   "lastRun": "2026-10-02",
+   "last": 235.52,
+   "lastRun": "2026-10-30",
    "why": "revenue 51% YoY, growth 48 pts, gross margin +6 pts vs a year ago, price/sales 2.0"
-  },
-  {
-   "t": "DINO",
-   "u": 0.0004408521524347213,
-   "px": 113.36,
-   "d0": "2026-10-02",
-   "last": 113.36,
-   "lastRun": "2026-10-02",
-   "why": "revenue 53% YoY, growth 41 pts, gross margin +6 pts vs a year ago, price/sales 0.6"
-  },
-  {
-   "t": "BFLY",
-   "u": 0.005583798882681565,
-   "px": 8.95,
-   "d0": "2026-10-02",
-   "last": 8.95,
-   "lastRun": "2026-10-02",
-   "why": "revenue 39% YoY, growth 14 pts, gross margin +8 pts vs a year ago"
   },
   {
    "t": "ONTO",
    "u": 0.00015246971962046559,
    "px": 327.77,
    "d0": "2026-10-02",
-   "last": 327.77,
-   "lastRun": "2026-10-02",
+   "last": 201.57,
+   "lastRun": "2026-10-30",
    "why": "revenue 35% YoY, growth 26 pts, gross margin +5 pts vs a year ago, price/sales 14.3"
   },
   {
@@ -124,44 +97,26 @@
    "u": 0.0005116719565885124,
    "px": 97.67,
    "d0": "2026-10-02",
-   "last": 97.67,
-   "lastRun": "2026-10-02",
+   "last": 114.32,
+   "lastRun": "2026-10-30",
    "why": "revenue 53% YoY, growth 6 pts, gross margin +16 pts vs a year ago"
-  },
-  {
-   "t": "INTC",
-   "u": 0.00041879661443057075,
-   "px": 119.33,
-   "d0": "2026-10-02",
-   "last": 119.33,
-   "lastRun": "2026-10-02",
-   "why": "revenue 25% YoY, growth 18 pts, gross margin +13 pts vs a year ago, price/sales 10.6"
   },
   {
    "t": "COP",
    "u": 0.00039428007889546357,
    "px": 126.75,
    "d0": "2026-10-02",
-   "last": 126.75,
-   "lastRun": "2026-10-02",
+   "last": 154.03,
+   "lastRun": "2026-10-30",
    "why": "revenue 43% YoY, growth 50 pts, gross margin +3 pts vs a year ago, price/sales 2.7"
-  },
-  {
-   "t": "KALU",
-   "u": 0.00032872882749547777,
-   "px": 152.025,
-   "d0": "2026-10-02",
-   "last": 152.025,
-   "lastRun": "2026-10-02",
-   "why": "revenue 53% YoY, growth 10 pts, gross margin +4 pts vs a year ago, price/sales 0.6"
   },
   {
    "t": "KLIC",
    "u": 0.0004959313287684827,
    "px": 100.77,
    "d0": "2026-10-02",
-   "last": 100.77,
-   "lastRun": "2026-10-02",
+   "last": 74.21,
+   "lastRun": "2026-10-30",
    "why": "revenue 123% YoY, growth 73 pts, gross margin +1 pts vs a year ago, price/sales 5.5"
   },
   {
@@ -169,18 +124,63 @@
    "u": 0.0011258166253660736,
    "px": 44.39,
    "d0": "2026-10-02",
-   "last": 44.39,
-   "lastRun": "2026-10-02",
+   "last": 29.74,
+   "lastRun": "2026-10-30",
    "why": "revenue 56% YoY, growth 7 pts, gross margin +4 pts vs a year ago, price/sales 14.8"
   },
   {
-   "t": "PSX",
-   "u": 0.00018888426940811735,
-   "px": 264.58,
-   "d0": "2026-10-02",
-   "last": 264.58,
-   "lastRun": "2026-10-02",
-   "why": "revenue 53% YoY, growth 46 pts, gross margin +2 pts vs a year ago, price/sales 0.7"
+   "t": "VIR",
+   "u": 0.003970430652696345,
+   "px": 11.3,
+   "d0": "2026-10-30",
+   "last": 11.3,
+   "lastRun": "2026-10-30",
+   "why": "revenue 19583% YoY, growth 19683 pts, gross margin +1 pts vs a year ago, price/sales 6.3"
+  },
+  {
+   "t": "MXL",
+   "u": 0.0006649750463238285,
+   "px": 67.47,
+   "d0": "2026-10-30",
+   "last": 67.47,
+   "lastRun": "2026-10-30",
+   "why": "revenue 72% YoY, growth 17 pts, gross margin +2 pts vs a year ago, price/sales 9.3"
+  },
+  {
+   "t": "PBF",
+   "u": 0.0005752034150701117,
+   "px": 78,
+   "d0": "2026-10-30",
+   "last": 78,
+   "lastRun": "2026-10-30",
+   "why": "revenue 59% YoY, growth 2 pts, gross margin +17 pts vs a year ago"
+  },
+  {
+   "t": "ENTG",
+   "u": 0.0002906008574096037,
+   "px": 154.39,
+   "d0": "2026-10-30",
+   "last": 154.39,
+   "lastRun": "2026-10-30",
+   "why": "revenue 25% YoY, growth 13 pts, gross margin +6 pts vs a year ago, price/sales 6.7"
+  },
+  {
+   "t": "U",
+   "u": 0.0011900760311795414,
+   "px": 37.7,
+   "d0": "2026-10-30",
+   "last": 37.7,
+   "lastRun": "2026-10-30",
+   "why": "revenue 24% YoY, growth 7 pts, gross margin +5 pts vs a year ago, price/sales 8.2"
+  },
+  {
+   "t": "APH",
+   "u": 0.000380069991933633,
+   "px": 79.3,
+   "d0": "2026-10-30",
+   "last": 79.3,
+   "lastRun": "2026-10-30",
+   "why": "revenue 65% YoY, growth 10 pts, gross margin +1 pts vs a year ago, price/sales 5.9"
   }
  ],
  "trades": [
@@ -303,6 +303,102 @@
    "t": "PSX",
    "d": "2026-10-02",
    "px": 264.58
+  },
+  {
+   "side": "sell",
+   "t": "VLO",
+   "d": "2026-10-30",
+   "px": 399.66,
+   "entry": 406.3,
+   "d0": "2026-10-02",
+   "r": -0.016342603987201554,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "sell",
+   "t": "DINO",
+   "d": "2026-10-30",
+   "px": 115,
+   "entry": 113.36,
+   "d0": "2026-10-02",
+   "r": 0.014467184191954807,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "sell",
+   "t": "BFLY",
+   "d": "2026-10-30",
+   "px": 6.39,
+   "entry": 8.95,
+   "d0": "2026-10-02",
+   "r": -0.28603351955307266,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "sell",
+   "t": "INTC",
+   "d": "2026-10-30",
+   "px": 65.76,
+   "entry": 119.33,
+   "d0": "2026-10-02",
+   "r": -0.4489231542780524,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "sell",
+   "t": "KALU",
+   "d": "2026-10-30",
+   "px": 116.28,
+   "entry": 152.025,
+   "d0": "2026-10-02",
+   "r": -0.23512580167735575,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "sell",
+   "t": "PSX",
+   "d": "2026-10-30",
+   "px": 282.83,
+   "entry": 264.58,
+   "d0": "2026-10-02",
+   "r": 0.0689772469574419,
+   "why": "dropped out of the top 60"
+  },
+  {
+   "side": "buy",
+   "t": "VIR",
+   "d": "2026-10-30",
+   "px": 11.3
+  },
+  {
+   "side": "buy",
+   "t": "MXL",
+   "d": "2026-10-30",
+   "px": 67.47
+  },
+  {
+   "side": "buy",
+   "t": "PBF",
+   "d": "2026-10-30",
+   "px": 78
+  },
+  {
+   "side": "buy",
+   "t": "ENTG",
+   "d": "2026-10-30",
+   "px": 154.39
+  },
+  {
+   "side": "buy",
+   "t": "U",
+   "d": "2026-10-30",
+   "px": 37.7
+  },
+  {
+   "side": "buy",
+   "t": "APH",
+   "d": "2026-10-30",
+   "px": 79.3
   }
  ],
  "marks": [
@@ -310,6 +406,11 @@
    "d": "2026-10-02",
    "eq": 0.9994999999999996,
    "spy": 1
+  },
+  {
+   "d": "2026-10-30",
+   "eq": 0.8976389125245178,
+   "spy": 0.981913621953121
   }
  ],
  "spy0": 769.64
