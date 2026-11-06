@@ -198,7 +198,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     from .runlog import Run
-    with Run("hypotheses", inputs=[os.path.join(REPORTS, "manifest.json")], params={"pinned_sha": PINNED_SHA}) as run:
+    with Run("hypotheses", inputs=[os.path.join(REPORTS, "manifest.json")], params={"pinned_sha": PINNED_SHA}) as ledger:
         rc = main()
-        run.output(os.path.join(REPORTS, "hypotheses.json")); run.output(os.path.join(REPORTS, "HYPOTHESES.md"))
+        ledger.output(os.path.join(REPORTS, "hypotheses.json")); ledger.output(os.path.join(REPORTS, "HYPOTHESES.md"))
     raise SystemExit(rc)

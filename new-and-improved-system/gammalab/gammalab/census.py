@@ -134,7 +134,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     from .runlog import Run
-    with Run("census", params={"pinned_sha": PINNED_SHA}) as run:
+    with Run("census", params={"pinned_sha": PINNED_SHA}) as ledger:
         rc = main()
-        run.output(os.path.join(REPORTS, "manifest.json")); run.output(os.path.join(REPORTS, "manifest.csv"))
+        ledger.output(os.path.join(REPORTS, "manifest.json")); ledger.output(os.path.join(REPORTS, "manifest.csv"))
     raise SystemExit(rc)
