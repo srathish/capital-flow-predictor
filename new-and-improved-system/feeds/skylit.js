@@ -107,6 +107,11 @@ export async function heatmapAt(symbols, atIso, { metric = 'gamma', expirations 
   return j.data.symbols; // [{symbol, spot, strikes:[{strike,value,nodeType}]}]
 }
 
+/** Raw /v1/historical response for arbitrary documented params (layout, includeEmpty, maxExpirations…). 5 credits per call. */
+export async function historicalRaw(params) {
+  return rest('api', `/v1/historical?${new URLSearchParams(params)}`);
+}
+
 /** Classified levels + summary (flip, walls, netExposure). 1 credit. Live only. */
 export async function levelsLive(symbols) {
   const out = await mcp('heat_levels', { symbols: [].concat(symbols).join(',') });
