@@ -8,7 +8,7 @@ ET = ZoneInfo('America/New_York'); C = os.path.join(os.path.dirname(os.path.absp
 import sys
 REPL = '--replicate' in sys.argv
 TICKERS = (['IWM', 'DIA'] + ['ALGN', 'BROS', 'CCJ', 'CMCSA', 'CVX', 'GE', 'RH', 'STX', 'UAMY', 'ZS']) if REPL else ['SPY', 'QQQ']
-TH = {'SPY': -0.328, 'QQQ': -0.541}; START, END = ('2023-11-16', '2026-10-02') if REPL else ('2023-11-09', '2025-10-31')
+TH = {'SPY': -0.328, 'QQQ': -0.541}; START, END = ('2023-11-16', '2026-10-02') if REPL else (('2025-11-01', '2026-10-16') if '--recent' in sys.argv else ('2023-11-09', '2025-10-31')) if True else None
 def emin(t): d = datetime.fromtimestamp(t, tz=ZoneInfo('UTC')).astimezone(ET); return d.hour * 60 + d.minute
 rows = []
 for T in TICKERS:
@@ -82,7 +82,7 @@ for lab, f in (('O1-low  (primary, low-B days)', lambda x: x['low']), ('O1-all  
     v = [x for x in rows if f(x)]
     print(f"  {lab:32s} {stats(v)}")
     print(f"  {'   … after −0.02R costs':32s} {stats(v, 0.02)}")
-    for y in ('2023', '2024', '2025'):
+    for y in ('2023', '2024', '2025', '2026'):
         vy = [x for x in v if x['d'].startswith(y)]
         if len(vy) >= 3: print(f"      {y}: {stats(vy)}")
-json.dump(rows, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_orb_lowgamma.json'), 'w'))
+json.dump(rows, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_orb_lowgamma_recent.json' if '--recent' in sys.argv else 'results_orb_lowgamma.json'), 'w'))

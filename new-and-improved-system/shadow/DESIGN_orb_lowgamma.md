@@ -78,3 +78,11 @@ The rule O1 is unchanged.
 **Verdict:**
 - The small SPY/QQQ low-B advantage was not a general effect.
 - On fresh indices and stocks, low-gamma days with breakout + trailing exits did not make winners outweigh losers.
+
+## Amendment 2 (2026-11-05): scope is SPX/SPY/QQQ only (user)
+
+- **Run:** O1 on SPY/QQQ for 2025-11-01 → 2026-10-16, with the frozen thresholds (SPY −0.328, QQQ −0.541).
+- **Caveat:** these days were seen in DESIGN_flux_runners, but with different entries (coin and Flux crosses), not ORB.
+- **Pass:** low-B mean > 0 with t ≥ 2, PF > 1.2, and low > high.
+- **Also reported:** the pooled SPY/QQQ estimate over 2023-11 → 2026-10.
+- SPX is proxied by SPY (the same index; SPX minute bars are not cached).
