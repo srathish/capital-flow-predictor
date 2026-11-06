@@ -53,3 +53,17 @@ Exits are close-based. R is in underlying terms.
 - **C-coin:** the same timestamps with a random direction (seed 20261105, 20 draws averaged). This asks whether
   Flux's direction matters at all.
 - **C-highB:** the same rule on high-B days. The prediction is that it does worse.
+
+## Results (2026-11-05)
+
+| Test | Build | Holdout | Coin-direction control (build → holdout) |
+|---|---|---|---|
+| P1, E3 + X1 + low-B | +0.31R, PF 2.04 | **+0.30R, t 1.41, PF 1.53**, average win 1.44R vs average loss 0.78R, n 64 | +0.16R → +0.24R |
+| P2, E4 + X1 + low-B | −0.20R | −0.10R | |
+
+**P1 is not significant (fail by protocol), but positive in both periods.**
+
+**Key observation:** on low-B days, the coin-direction control is positive in both periods. Trailing exits on
+big-range days have positive expectancy without any direction skill, because winners run and losers are cut at 1R.
+The Flux level adds only about +0.06R. This motivates DESIGN_orb_lowgamma.md, tested on untouched 2023-11 → 2025-10
+data.
