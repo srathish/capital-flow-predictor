@@ -36,3 +36,21 @@ on low-B days, trend-following exits win without direction prediction.
 - average win ÷ average loss;
 - yearly split (2024 and 2025 separately);
 - costs: a −0.02R per-trade haircut for SPY/QQQ slippage, reported too.
+
+## Result (2026-11-05, untouched 2023-11 → 2025-10): FAIL (not significant), direction of effect as predicted
+
+| Test | Result |
+|---|---|
+| O1-low (primary) | 218 trades, **+0.066R, t 0.61, PF 1.30**, win 44%, average win 1.22R vs average loss 0.73R. After −0.02R costs, +0.046R. |
+| O1-low by year | 2024 +0.065R, 2025 +0.067R |
+| O1-all | +0.031R, PF 1.07 |
+| O1-high | −0.007R, PF 1.01 |
+
+- **Ordering:** low-B > all > high-B, as predicted. Positive in both years.
+- **Size:** about +0.05R per trade after costs, far too small to confirm (t 0.6), and thin for 0DTE options after theta.
+- **Across three independent periods**, the low-B + trailing-exit effect was positive each time:
+  - coin-direction +0.16R (Nov 2025 → Jun 2026);
+  - coin-direction +0.24R (Jul → Nov 2026);
+  - ORB +0.07R (Nov 2023 → Oct 2025).
+
+  It is small and unproven, not tradeable as is.
