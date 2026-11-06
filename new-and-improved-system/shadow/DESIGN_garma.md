@@ -104,3 +104,22 @@ At t = 10:00, 10:15, …, 14:30, take every t with GMD ≠ 0.
   build sign (+) already agrees.
 - Its build evidence is weak (t 1.25), and it was chosen after seeing the build, so a March pass would still need an
   audit and forward testing.
+
+## March holdout (run once, 2026-11-05): FAIL, 0 of 3
+
+16 days. 2-of-3 front-board agreement existed at 76% of checks.
+
+| Test | March result |
+|---|---|
+| H1, front GMD | 201 calls, −1.0 bps, t −0.66, 46.8% right |
+| H1, 5-expiration GMD | −1.2 bps |
+| H1, SPY alone | −1.2 bps |
+| H2, gated by front GMD | 5 trades, all stopped, −18.6% |
+| H2, gated by 5-expiration GMD | 6 trades, all stopped, −23.4% |
+| H3, ungated IB golden zone | 12 trades, −0.8% per trade, t −0.05, +0.03R underlying |
+
+**Verdict:**
+- Garma's map-change direction read is a coin flip on both front and 5-expiration boards.
+- Gating with it makes his IB trade worse.
+- The IB golden-zone setup itself was ≈ 0 out of sample.
+- Front-expiration maps changed nothing vs the 5-expiration blend.
