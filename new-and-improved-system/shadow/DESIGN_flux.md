@@ -91,3 +91,14 @@ F1–F4.
 - The promo pattern is not an edge.
 - In the holdout it lost significantly.
 - Skylit's level was no better than fake levels or a plain average.
+
+## Amendment 2 (2026-11-05): "one play a day" selection on F4, locked before computing
+
+Rules use only information available at entry. The best play of the day is hindsight and is not tested.
+
+- **S1:** the first F4 trade per ticker-day.
+- **S2:** the first F4 trade per calendar day across SPY and QQQ, taking the earliest signal minute; ties go to SPY.
+- **S3:** F4 entries only when price was on one side of the level for ≥ 90 consecutive minutes (instead of 30);
+  the first such trade per ticker-day.
+- **Controls:** S1 and S2 on the plain running-mean line.
+- **Pass:** holdout mean R > 0 with t ≥ 2, build agrees in sign, and beats its plain-line control.
