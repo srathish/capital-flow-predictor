@@ -102,3 +102,14 @@ Rules use only information available at entry. The best play of the day is hinds
   the first such trade per ticker-day.
 - **Controls:** S1 and S2 on the plain running-mean line.
 - **Pass:** holdout mean R > 0 with t ≥ 2, build agrees in sign, and beats its plain-line control.
+
+### Amendment 2 result: FAIL
+
+| Selection | Build | Holdout |
+|---|---|---|
+| S1, first trade per ticker | +0.08R, t 0.77 | **−0.33R, t −2.70**, 29% wins |
+| S2, first trade of the day | +0.06R | **−0.48R, t −3.35**, 25% wins |
+| S3, 90-minute trend only | +0.02R | −0.22R, t −1.66 |
+
+- The plain-line controls were the same or better.
+- Taking one play a day doesn't rescue F4; the first signal of the day was the worst version.
