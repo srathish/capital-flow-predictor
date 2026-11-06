@@ -86,3 +86,14 @@ The rule O1 is unchanged.
 - **Pass:** low-B mean > 0 with t ≥ 2, PF > 1.2, and low > high.
 - **Also reported:** the pooled SPY/QQQ estimate over 2023-11 → 2026-10.
 - SPX is proxied by SPY (the same index; SPX minute bars are not cached).
+
+### Amendment 2 result: FAIL
+
+| Run | Low-B | High-B |
+|---|---|---|
+| SPY/QQQ 2025-11 → 2026-10 | 157 trades, **−0.018R**, t −0.16, PF 0.87 | +0.039R |
+| Pooled SPY+QQQ, 3 years (Nov 2023 → Oct 2026) | 375 trades, **+0.029R, t 0.37, PF 1.11** | +0.007R |
+
+- The low-gamma advantage disappears in the most recent year.
+- Over three years it is statistically indistinguishable from zero.
+- Final verdict: breakout + trailing exits on low-gamma days do not reliably make winners outweigh losers on SPY/QQQ.
