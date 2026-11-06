@@ -67,3 +67,14 @@ The rule O1 is unchanged.
 
 - **Low-B:** each ticker's own lowest third of prior-day B over its full sample. This is a fixed rule, not tuned.
 - **R1 pass:** low-B mean R > 0, day-clustered t ≥ 2, profit factor > 1.2, and low-B > high-B.
+
+### Replication result (2026-11-05): FAIL. The tilt does not replicate.
+
+| Universe | Low-B | High-B | Note |
+|---|---|---|---|
+| R1, IWM + DIA (fresh) | 456 trades, **−0.028R**, t −0.45, PF 0.94 | **+0.066R** | reverses the predicted order |
+| R2, 10 stocks | 1,300 trades, −0.056R, t −1.73 (−0.076R, t −2.36 after costs) | +0.020R | |
+
+**Verdict:**
+- The small SPY/QQQ low-B advantage was not a general effect.
+- On fresh indices and stocks, low-gamma days with breakout + trailing exits did not make winners outweigh losers.
