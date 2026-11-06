@@ -77,7 +77,36 @@ def clustered(rows):
     mu = sum(dm) / n; sd = math.sqrt(sum((x - mu) ** 2 for x in dm) / (n - 1))
     return n, mu, mu / sd * math.sqrt(n) if sd else float('nan')
 
-res = {k: [] for k in ['F1', 'F1_x0.75', 'F1_x1.25', 'F2', 'F2_x0.75', 'F2_x1.25', 'F3', 'F3_plain']}
+def pullback(P, ms, mode):
+    out = []; cum = 0.0; lvl = {}
+    for i, m in enumerate(ms):
+        cum += P[m]['price']; p = P[m]; half = p['inner']['upper'] - p['level']
+        lvl[m] = cum / (i + 1) if mode == 'plain' else p['level'] + (0.5 * half if mode == 'up' else -0.5 * half if mode == 'dn' else 0)
+    i = 30; n = 0
+    while i < len(ms) - 1 and n < 3:
+        m = ms[i]
+        if m < 615 or m > 900: i += 1; continue
+        p = P[m]; c, L = p['price'], lvl[m]
+        if p['inner']['upper'] == p['inner']['lower']: i += 1; continue
+        prior = [P[ms[j]]['price'] - lvl[ms[j]] for j in range(i - 30, i)]
+        side = 1 if all(x > 0 for x in prior) else -1 if all(x < 0 for x in prior) else 0
+        if side and abs(c / L - 1) <= 0.0003:
+            e = P[ms[i + 1]]['price']; half_in = p['inner']['upper'] - p['level']; half_out = p['outer']['upper'] - p['level']
+            stop = L - side * half_in; tgt = L + side * half_out
+            r = walk(P, ms, i + 1, side, e, stop, tgt)
+            if r is not None:
+                out.append(r); n += 1
+                # skip to after the exit (approx: advance until stop/target/close reached)
+                j = i + 1
+                while j < len(ms):
+                    cc = P[ms[j]]['price']
+                    if ms[j] >= 955 or ((cc <= stop or cc >= tgt) if side > 0 else (cc >= stop or cc <= tgt)): break
+                    j += 1
+                i = j + 1; continue
+        i += 1
+    return out
+
+res = {k: [] for k in ['F1', 'F1_x0.75', 'F1_x1.25', 'F2', 'F2_x0.75', 'F2_x1.25', 'F3', 'F3_plain', 'F4', 'F4_plain', 'F4_shift']}
 ndays = 0
 for T in ['SPY', 'QQQ']:
     S = sessions(T)
@@ -89,6 +118,10 @@ for T in ['SPY', 'QQQ']:
             for r in fade(P, ms, 'extreme', 'extreme', s, True): res['F2' + tag].append((d, r))
         for r in reclaim(P, ms, False): res['F3'].append((d, r))
         for r in reclaim(P, ms, True): res['F3_plain'].append((d, r))
+        for r in pullback(P, ms, 'flux'): res['F4'].append((d, r))
+        for r in pullback(P, ms, 'plain'): res['F4_plain'].append((d, r))
+        for md in ('up', 'dn'):
+            for r in pullback(P, ms, md): res['F4_shift'].append((d, r))
 print(f"{'HOLDOUT Jul 1 – Nov 5 2026' if HOLD else 'BUILD Nov 7 2025 – Jun 30 2026'}: {ndays} ticker-days (SPY+QQQ); R per trade, close-basis exits\n")
 for k, v in res.items():
     n, mu, t = clustered(v); win = sum(1 for _, r in v if r > 0) / max(1, len(v))

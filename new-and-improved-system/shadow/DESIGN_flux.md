@@ -54,3 +54,28 @@
 - **Verdict:** none of Skylit's Flux Field reading notes gives an edge.
   - Outer-band tags are not reliable mean-reversion spots.
   - Level reclaim works no better than a plain average line.
+
+## Amendment 1 (2026-11-05): F4, the trend pullback to the level (from tirth.flow/skylitai promo clips)
+
+**The clips:**
+- QQQ Oct 22: "rallied into Flow VWAP → rejected".
+- SPY Nov 3: repeated centre taps holding.
+
+Both days are in our holdout. This is a new rule, distinct from F3 (which trades crosses). It is locked before
+computing on any day.
+
+**F4:**
+- **Setup:** from 10:15 to 15:00, price has closed on one side of the level for ≥ 30 consecutive minutes.
+- **Signal:** a close within ±0.03% of the level, or across it by ≤ 0.03% (a "tap").
+- **Entry:** at the next minute's price, in the trend direction (the side it was on).
+- **Stop:** the inner band on the far side of the level, at the signal.
+- **Target:** the outer band on the trend side, at the signal.
+- **Exit:** close basis, by 15:55.
+- **Limits:** up to 3 sequential (non-overlapping) trades per ticker-day.
+
+**Controls:**
+- **F4_plain:** the same rule on the session's running mean of closes.
+- **F4_shift:** the same rule on fake levels = level ± 0.5 × inner half-width. Both offsets are run and pooled.
+
+**Pass:** the same as F1–F3 (holdout mean R > 0, t ≥ 2, build agrees, beats both controls), with BH now across
+F1–F4.
