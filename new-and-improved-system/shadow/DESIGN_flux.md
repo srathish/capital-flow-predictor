@@ -40,3 +40,17 @@
   - build agrees in sign;
   - beats its controls in both periods.
 - **Real money:** only a passing rule gets priced in 0DTE options, then an audit, then a forward ledger.
+
+## Results (2026-11-05): FAIL, 0 of 3
+
+| Rule | Build | Holdout | Holdout median | Holdout win rate | Control |
+|---|---|---|---|---|---|
+| F1, outer-band fade | +0.35R, t 0.30 | 213 trades, **−0.45R**, t −1.79 | −1.14R | 18% | twins no different |
+| F2, extreme fade | −2.76R | −7.00R, t −1.00 | | | |
+| F3, level reclaim trend | −0.03R | +0.08R, t 0.80 | | | plain running mean +0.05R, i.e. the same |
+
+- **Design weakness:** early-session bands are near-zero width, so stops are tiny and R values are heavy-tailed.
+  Means are unstable; medians are about −1R for F1 and F3.
+- **Verdict:** none of Skylit's Flux Field reading notes gives an edge.
+  - Outer-band tags are not reliable mean-reversion spots.
+  - Level reclaim works no better than a plain average line.
