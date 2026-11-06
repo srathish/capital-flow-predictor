@@ -1,0 +1,12 @@
+
+=== Using the SPX board ===
+  09:35 no trade: spx king 7650 only 0.07% away
+  10:00 spx king 7500 → bought SPY 754P @ $2.59 → sold 10:21 @ $6.38 (reached the spx king 7500) = +146% (peak while held +158%)
+  10:30 no trade: spx king 7500 only 0.06% away
+  11:00 spx king 7360 → bought SPY 742P @ $5.12 → sold 14:06 @ $8.1 (reached the spx king 7360) = +58% (peak while held +64%)
+  14:30 no trade: spx king 7360 only -0.24% away
+
+=== Using the SPY board ===
+  09:35 spy king 767 → bought SPY 762C @ $2.32 → sold 15:50 @ $0.01 (15:50) = -100% (peak while held +2%)
+
+Reference: SPY 762P bought 09:35 @ $1.71, held to 15:55 @ $26.99 = +1478%
