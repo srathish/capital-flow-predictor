@@ -1,0 +1,682 @@
+{
+ "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc",
+ "hypotheses": [
+  {
+   "id": "S01",
+   "name": "Gamma-node sweep + 3-minute reclaim",
+   "rule_as_stated": "Price sweeps a node (>=50% of King), then a 3-minute candle closes back across it within 15 minutes; stop beyond the sweep +1 pt.",
+   "sources": [
+    {
+     "path": "members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md",
+     "status": "OK",
+     "line": 9,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md#L9",
+     "anchor": "Entry B (sweep + 3-min reclaim) is the edge"
+    },
+    {
+     "path": "members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md",
+     "status": "OK",
+     "line": 52,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md#L52",
+     "anchor": "RECLAIM_WINDOW_MIN"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "92 trades, 47% win, +1.34R (MNQ, Jul 13 - Sep 30 2026); filters R1-R4 chosen with September in view.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "research: Timmy hunt test 2026-10-09 (SPY/QQQ nodes)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S02",
+   "name": "Direct node tap / limit at the node",
+   "rule_as_stated": "Limit order at the node, one position at a time.",
+   "sources": [
+    {
+     "path": "members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md",
+     "status": "OK",
+     "line": 58,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/raked/mnq-gamma-node/SKYLIT_STRATEGY_JOURNAL.md#L58",
+     "anchor": "Entry A:** limit at the node"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "438 trades, 13% win, -0.24R (source's own negative result).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S03",
+   "name": "Positive-gamma floor bounce (fade at fresh node)",
+   "rule_as_stated": "On the Current expiry, fade a fresh or once-tapped node at chart structure; enter on the tap for + nodes.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/setup_catalog_fade_gatekeeper_and_vex_swing.md",
+     "status": "OK",
+     "line": 15,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/setup_catalog_fade_gatekeeper_and_vex_swing.md#L15",
+     "anchor": "Precise version:"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "No measured results in source.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "research: node reaction test 2026-10-09"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S04",
+   "name": "Negative-gamma node: wait for overshoot then fade",
+   "rule_as_stated": "On - (purple) nodes, wait for overshoot, stall and rejection before fading.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/setup_catalog_fade_gatekeeper_and_vex_swing.md",
+     "status": "OK",
+     "line": 34,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/setup_catalog_fade_gatekeeper_and_vex_swing.md#L34",
+     "anchor": "If $\\text{GEX}(K_{\\text{extreme}}) < 0$"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "No measured results in source.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S05",
+   "name": "Gatekeeper fade",
+   "rule_as_stated": "A node between price and the King of at least 1/4-1/3 of the King's size; fade the first tap.",
+   "sources": [
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_105_Trump_Dump.md",
+     "status": "OK",
+     "line": 18,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_105_Trump_Dump.md#L18",
+     "anchor": "The \"Gatekeeper\" Scalp"
+    },
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md",
+     "status": "OK",
+     "line": 39,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md#L39",
+     "anchor": "20% to 30%"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved.",
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "No measured results; size thresholds disagree (1/4-1/3 vs 20-30%).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [
+    "Gatekeeper size: 25-33% (Owls 105) vs 20-30% (Garma playbook p.6)"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S06",
+   "name": "Rug / reverse rug",
+   "rule_as_stated": "Reverse rug: negative node above a positive floor with price on the floor -> long on the direct tap; never short it.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_reverse_rug_10172026.md",
+     "status": "OK",
+     "line": 1,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_reverse_rug_10172026.md#L1",
+     "anchor": "# Reverse Rug Setup (Bullish)"
+    },
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md",
+     "status": "OK",
+     "line": 52,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md#L52",
+     "anchor": "Rule 9 \u2014 Never short a reverse rug"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "No measured results in source.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S07",
+   "name": "Rolling ceilings / floors",
+   "rule_as_stated": "A ceiling losing value and moving to a lower strike is bearish confirmation (mirror for floors).",
+   "sources": [
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/docs/HEATSEEKER_AGENT_REFERENCE.md",
+     "status": "OK",
+     "line": 974,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/docs/HEATSEEKER_AGENT_REFERENCE.md#L974",
+     "anchor": "| **Rolling of ceilings** |"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Doctrine; no measured results.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_garma.md (H1 direction)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S08",
+   "name": "King moves with price (magnet vs follower)",
+   "rule_as_stated": "Measured: the King follows spot; same strike next day only 33-60%.",
+   "sources": [
+    {
+     "path": "members/Anubis/SirFartalot-Backtest-Study.md",
+     "status": "OK",
+     "line": 201,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/SirFartalot-Backtest-Study.md#L201",
+     "anchor": "| J7 | The King moves with price |"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "70-84% of King moves follow spot (source study).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "research: king-as-destination tests"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S09",
+   "name": "IB sweep reversal (IBSniper)",
+   "rule_as_stated": "After 10:00 ET, PDH/PDL or IB sweep, IB golden zone (50-61.8%), 2-of-3 Kings, entry on re-entry into the node zone.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md",
+     "status": "OK",
+     "line": 83,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md#L83",
+     "anchor": "Liquidity Sweep of PDH"
+    },
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md",
+     "status": "OK",
+     "line": 85,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md#L85",
+     "anchor": "Golden Zone + 2/3 Node Confluence"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "One narrated trade (~+900%, 2026-10-16); agent backtest 97% win at 1:3 on 1-minute bars, ~80% live (no ledger).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_garma.md (H2, H3)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S10",
+   "name": "IB break / hold (IBSniper Break Long)",
+   "rule_as_stated": "1-minute close over the IB high after the golden zone held a node; target 0.5x IB extension, stop under the node.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md",
+     "status": "OK",
+     "line": 98,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md#L98",
+     "anchor": "IBSniper Break Long"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "One screenshot alert (~3.5R planned); no results.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S11",
+   "name": "Two-of-three index confluence",
+   "rule_as_stated": "At least two of SPX, SPY, QQQ must tell the same story before conviction.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md",
+     "status": "OK",
+     "line": 46,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md#L46",
+     "anchor": "Rule 3 \u2014 Get 2 of 3"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "Recollected 'Holy Trinity' ~95% deflection (no measurement).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_garma.md (H1)"
+   ],
+   "conflicts": [
+    "SirFartalot reports 3/3 confluence no better than ordinary setups"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S12",
+   "name": "Duke five-pillar trend lock",
+   "rule_as_stated": "Every 3 min 10:00-14:45: VWAP, gamma fuel, stair-step, opening range, dark pool; >=3 pillars blocks counter-trend fades.",
+   "sources": [
+    {
+     "path": "members/Anubis/DUKE_TREND_DAY_TRAP_LOGIC.md",
+     "status": "OK",
+     "line": 41,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/DUKE_TREND_DAY_TRAP_LOGIC.md#L41",
+     "anchor": "**Pillar 1: Dual VWAP & Intraday Extension**"
+    },
+    {
+     "path": "members/Anubis/DUKE_TREND_DAY_TRAP_LOGIC.md",
+     "status": "OK",
+     "line": 42,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/DUKE_TREND_DAY_TRAP_LOGIC.md#L42",
+     "anchor": "**Pillar 2: Net Gamma Fuel"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "40 hand-picked trap moments; no holdout or control; code (duke_strategy.js) not in repo.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [
+    "S13: SirFartalot A17 trend-follow in -gamma 42% vs fade 49%"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S13",
+   "name": "Negative-gamma regime router (trend vs fade)",
+   "rule_as_stated": "Fade in +gamma books, follow the trend in -gamma books.",
+   "sources": [
+    {
+     "path": "members/Anubis/SirFartalot-Backtest-Study.md",
+     "status": "OK",
+     "line": 67,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/SirFartalot-Backtest-Study.md#L67",
+     "anchor": "| A17 | Regime router (trend-follow in \u2212\u03b3) |"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Direction 42% (follow) vs 49% (fade) vs 54% (always long); marked failed by source.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [
+    "S12"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S13b",
+   "name": "Index-gamma sleeve tilt (sizing)",
+   "rule_as_stated": "Size shorts full and longs half when index net gamma is negative.",
+   "sources": [
+    {
+     "path": "members/Anubis/SirFartalot-Backtest-Study.md",
+     "status": "OK",
+     "line": 69,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/SirFartalot-Backtest-Study.md#L69",
+     "anchor": "| A19 | Index-gamma sleeve tilt |"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Right sleeve 18 of 23 weeks (78%), forward test owed.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S14",
+   "name": "VEX stair-step",
+   "rule_as_stated": "Dominant vanna node per major expiry (2-120 DTE); UP if Spearman >= +0.6 and last step >= 3% above the first.",
+   "sources": [
+    {
+     "path": "members/Anubis/Vex_Stairup-down/vex_stair_openai.py",
+     "status": "OK",
+     "line": 33,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/Vex_Stairup-down/vex_stair_openai.py#L33",
+     "anchor": "RULE = {\"window\": 0.50"
+    },
+    {
+     "path": "members/Anubis/Vex_Stairup-down/vex_stair_grok.py",
+     "status": "OK",
+     "line": 26,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/Vex_Stairup-down/vex_stair_grok.py#L26",
+     "anchor": "UP   = Spearman rank correlation"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Source's own test: 49.3% direction at 5 sessions, 48.0% at 10 (display only).",
+   "evidence_status": "Code-inspected",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S16",
+   "name": "Gamma / IV range forecasting",
+   "rule_as_stated": "Volatility (range) is forecastable; direction is not.",
+   "sources": [
+    {
+     "path": "members/Anubis/SirFartalot-Backtest-Study.md",
+     "status": "OK",
+     "line": 42,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/SirFartalot-Backtest-Study.md#L42",
+     "anchor": "**Volatility is forecastable; direction is not.**"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Source study finding.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_gamma_range.md (local: validated range forecast, live scorecard)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S17",
+   "name": "ESB_q 15-minute swing-leg retest (ES)",
+   "rule_as_stated": "Swing legs >= ATR14 and 5 pts with 5 bars each side; re-touch of the leg origin with EMA50 filter; stop at leg end.",
+   "sources": [
+    {
+     "path": "members/mtmtempo/README.md",
+     "status": "FILE_ONLY",
+     "line": null,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/mtmtempo/README.md"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "37 trades, 59.5% win, PF 2.23 (Aug 31 - Oct 9, old policy); rules are in a PDF/DOCX (line refs not applicable).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_community_batch.md (ESB_q ~0)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S18",
+   "name": "Tape sweep confirmation (futures)",
+   "rule_as_stated": "Stitch same-aggressor prints within join_ms; close on side flip, gap or quiet_ms; publish above size threshold.",
+   "sources": [
+    {
+     "path": "members/v01/bigtrades-indicator/README.md",
+     "status": "OK",
+     "line": 66,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/v01/bigtrades-indicator/README.md#L66",
+     "anchor": "**Sweep aggregation**"
+    }
+   ],
+   "license": [
+    "Copyright (C) 2026 v01"
+   ],
+   "source_claim": "No edge claim (tool). License AGPL-3.0: do not copy code.",
+   "evidence_status": "Code-inspected",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S19",
+   "name": "Session-level liquidity sweep (PDH/PDL, Asia, London, ONH/ONL)",
+   "rule_as_stated": "Sweep of session levels as the setup; 'the sweep isn't the trade' \u2014 wait for failure to continue.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md",
+     "status": "OK",
+     "line": 40,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_transcript_10172026.md#L40",
+     "anchor": "So, for example, like Session Levels"
+    },
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md",
+     "status": "OK",
+     "line": 45,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/GarmaAgentVideo_10172026/garma_agent_video_comparative_analysis_10172026.md#L45",
+     "anchor": "Rule 2 \u2014 The sweep isn't the trade"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "No measured results.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "research: Timmy hunt test (classic levels -0.095R)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S20",
+   "name": "Node velocity / freshness",
+   "rule_as_stated": "A node growing ~50% while price is flat becomes the magnet; 10-minute growth of ~20% preceded a crash.",
+   "sources": [
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_101.md",
+     "status": "OK",
+     "line": 41,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_101.md#L41",
+     "anchor": "### Node \"Rate of Change\" (Velocity)"
+    },
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_SPX_3000_Percent_Crash_Case_Study.md",
+     "status": "OK",
+     "line": 49,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_SPX_3000_Percent_Crash_Case_Study.md#L49",
+     "anchor": "Rate of Increase (Velocity)"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Anecdotes (Tier C AI-generated session notes per the KB's own reference).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [
+    "Growth during a break = fake (Owls 101 L-ref) vs = real (pattern-cards/RUG.json, SKILL.md)"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S20c",
+   "name": "CONFLICT: node growth during a break",
+   "rule_as_stated": "Two sources disagree whether a node growing during a break signals a fakeout or a real break.",
+   "sources": [
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_101.md",
+     "status": "OK",
+     "line": 86,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/docs/2026-02-04_Skylit_x_Owls_Heatseeker_101.md#L86",
+     "anchor": "the breakout is fake"
+    },
+    {
+     "path": "members/alantiix/skylit-knowledgebase/pattern-cards/RUG.json",
+     "status": "OK",
+     "line": 13,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/pattern-cards/RUG.json#L13",
+     "anchor": "Node growth during break = real breakdown"
+    },
+    {
+     "path": "members/alantiix/skylit-academy-playbook-skill/SKILL.md",
+     "status": "OK",
+     "line": 95,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-academy-playbook-skill/SKILL.md#L95",
+     "anchor": "If purple grows on the b"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Unresolved in sources.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [
+    "self-contradictory doctrine"
+   ],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S21",
+   "name": "Expiry scope: Current (front) expiry for 0DTE vs aggregate",
+   "rule_as_stated": "0DTE uses the Current expiry only (top 3-5 nodes); swings use Current + next N.",
+   "sources": [
+    {
+     "path": "members/dashingbixby/argon-knowledgebase/gex_vs_vex_and_expirations.md",
+     "status": "OK",
+     "line": 3,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/dashingbixby/argon-knowledgebase/gex_vs_vex_and_expirations.md#L3",
+     "anchor": "GEX vs. VEX Mechanics & Expiration Scoping"
+    }
+   ],
+   "license": [
+    "Copyright (c) 2026 dashingbixby. All rights reserved."
+   ],
+   "source_claim": "Doctrine; no measured results.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_garma.md (front vs 5-expiration boards)"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S23",
+   "name": "Late-session 0DTE entry cutoff (13:00)",
+   "rule_as_stated": "No new 0DTE entries after 13:00.",
+   "sources": [
+    {
+     "path": "members/Anubis/SirFartalot-Backtest-Study.md",
+     "status": "OK",
+     "line": 147,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/SirFartalot-Backtest-Study.md#L147",
+     "anchor": "| E6 | Late-session 0DTE cutoff |"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Modeled option P&L -14.9 -> +8.1 (model only).",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "S25",
+   "name": "Trend day: far King with small counter-side skew",
+   "rule_as_stated": "Price fixates on a King far from spot with small counter-directional skew; do not mean-revert on trending days.",
+   "sources": [
+    {
+     "path": "members/alantiix/skylit-knowledgebase/skylit-bible/patterns/pattern-trend.md",
+     "status": "OK",
+     "line": 5,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/skylit-knowledgebase/skylit-bible/patterns/pattern-trend.md#L5",
+     "anchor": "Price fixates on a king node far away from spot"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Doctrine; no measured results.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "X01",
+   "name": "Fixed premium exits vs holding (Nexus auto-trader)",
+   "rule_as_stated": "Source's desk notes that every fixed premium exit rule lost money compared with holding.",
+   "sources": [
+    {
+     "path": "members/Anubis/NEXUS-LLM-HOOKUP.md",
+     "status": "OK",
+     "line": 284,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/Anubis/NEXUS-LLM-HOOKUP.md#L284",
+     "anchor": "every fixed premium exit rule lost money"
+    }
+   ],
+   "license": [
+    "no project LICENSE (root CC0 covers hub materials only)"
+   ],
+   "source_claim": "Source-reported study note; no ledger.",
+   "evidence_status": "Source-reported",
+   "local_test_pointers": [
+    "shadow/DESIGN_flux_runners.md, shadow/DESIGN_orb_lowgamma.md"
+   ],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  {
+   "id": "X02",
+   "name": "fse engine status (no published results)",
+   "rule_as_stated": "Engine built and tested against mocked services only; strategies TS4/Matrix/Range/sfmax encrypted in history.",
+   "sources": [
+    {
+     "path": "members/alantiix/fse/README.md",
+     "status": "OK",
+     "line": 6,
+     "url": "https://github.com/chriskrajewski/Skylit.API.Community.Collab/blob/d435683365450f2108e7fdf4b63f8d3437d730cc/members/alantiix/fse/README.md#L6",
+     "anchor": "No backtest result on real Skylit history is published here"
+    }
+   ],
+   "license": [
+    "Creative Commons Legal Code"
+   ],
+   "source_claim": "No results (stated by source). License CC0 1.0 (reusable).",
+   "evidence_status": "Code-inspected",
+   "local_test_pointers": [],
+   "conflicts": [],
+   "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  }
+ ],
+ "unresolved": []
+}

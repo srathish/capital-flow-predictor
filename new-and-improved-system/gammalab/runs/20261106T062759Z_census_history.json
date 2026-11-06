@@ -1,0 +1,19 @@
+{
+  "name": "census_history",
+  "started": "2026-11-06T06:27:59.824425+00:00",
+  "finished": "2026-11-06T06:28:38.185143+00:00",
+  "status": "ok",
+  "code_sha": "7a1747042aaee44b0b750458e6963a8804f1cde7",
+  "dirty": false,
+  "command": [
+    "/Users/saiyeeshrathish/the final plan/new-and-improved-system/gammalab/../../.venv/bin/python",
+    "/Users/saiyeeshrathish/the final plan/new-and-improved-system/gammalab/gammalab/census_history.py"
+  ],
+  "params": {
+    "pinned_sha": "d435683365450f2108e7fdf4b63f8d3437d730cc"
+  },
+  "inputs": {},
+  "outputs": {
+    "/Users/saiyeeshrathish/the final plan/new-and-improved-system/gammalab/reports/history_manifest.json": "0e9e03b9405ae2fa877a5f19d702eccfe6fbb2bbeaf15ea715d35d814f4e0fbd"
+  }
+}
