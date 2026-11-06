@@ -54,3 +54,16 @@ on low-B days, trend-following exits win without direction prediction.
   - ORB +0.07R (Nov 2023 → Oct 2025).
 
   It is small and unproven, not tradeable as is.
+
+## Amendment 1 (2026-11-05): replication on fresh indices, locked before computing
+
+The rule O1 is unchanged.
+
+| Universe | Tickers | Period | Status |
+|---|---|---|---|
+| **R1 (confirmatory)** | IWM and DIA | 2023-11-16 → 2026-10-02 | never used for this hypothesis |
+| R2 (secondary) | the 10 stocks with both data sets (ALGN BROS CCJ CMCSA CVX GE RH STX UAMY ZS) | same | |
+| R3 (summary only) | SPY, QQQ, IWM, DIA pooled | | partly seen; not a test |
+
+- **Low-B:** each ticker's own lowest third of prior-day B over its full sample. This is a fixed rule, not tuned.
+- **R1 pass:** low-B mean R > 0, day-clustered t ≥ 2, profit factor > 1.2, and low-B > high-B.

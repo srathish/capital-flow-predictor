@@ -5,10 +5,13 @@ import json, os, math
 from datetime import datetime
 from zoneinfo import ZoneInfo
 ET = ZoneInfo('America/New_York'); C = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '.cache')
-TH = {'SPY': -0.328, 'QQQ': -0.541}; START, END = '2023-11-09', '2025-10-31'
+import sys
+REPL = '--replicate' in sys.argv
+TICKERS = (['IWM', 'DIA'] + ['ALGN', 'BROS', 'CCJ', 'CMCSA', 'CVX', 'GE', 'RH', 'STX', 'UAMY', 'ZS']) if REPL else ['SPY', 'QQQ']
+TH = {'SPY': -0.328, 'QQQ': -0.541}; START, END = ('2023-11-16', '2026-10-02') if REPL else ('2023-11-09', '2025-10-31')
 def emin(t): d = datetime.fromtimestamp(t, tz=ZoneInfo('UTC')).astimezone(ET); return d.hour * 60 + d.minute
 rows = []
-for T in ('SPY', 'QQQ'):
+for T in TICKERS:
     G = {}
     for l in open(os.path.join(C, 'uwgreeks', f'{T}.jsonl')):
         if l.strip(): j = json.loads(l); G[j['d']] = j['s']
@@ -45,7 +48,7 @@ for T in ('SPY', 'QQQ'):
                 best = max(best, cc) if side > 0 else min(best, cc)
                 stop = max(stop, best - R) if side > 0 else min(stop, best + R)
             if r is None: r = side * (bars[ms[-1]]['c'] - e) / R
-            rows.append({'T': T, 'd': d, 'B': B, 'low': B < TH[T], 'r': r}); break
+            rows.append({'T': T, 'd': d, 'B': B, 'low': B < TH[T] if T in TH else None, 'r': r}); break
 def stats(v, cost=0.0):
     if len(v) < 3: return f'n {len(v)}'
     by = {}
@@ -53,7 +56,28 @@ def stats(v, cost=0.0):
     dm = [sum(a) / len(a) for a in by.values()]; k = len(dm); mu = sum(dm) / k; sd = math.sqrt(sum((y - mu) ** 2 for y in dm) / (k - 1))
     W = [x['r'] - cost for x in v if x['r'] - cost > 0]; Lo = [cost - x['r'] for x in v if x['r'] - cost <= 0]
     return f"n {len(v):4d} | mean {mu:+.3f}R t {mu / sd * math.sqrt(k):5.2f} | win {len(W) / len(v) * 100:3.0f}% | avg win {sum(W) / len(W):.2f}R / avg loss {sum(Lo) / len(Lo):.2f}R | PF {sum(W) / sum(Lo):.2f}"
-print(f"Untouched period {START} → {END}; frozen low-B thresholds {TH}")
+if REPL:
+    for T in TICKERS:
+        bs = sorted(x['B'] for x in rows if x['T'] == T)
+        if bs:
+            th = bs[len(bs) // 3]
+            for x in rows:
+                if x['T'] == T: x['low'] = x['B'] < th
+print(f"{'REPLICATION' if REPL else 'Untouched period'} {START} → {END}")
+if REPL:
+    groups = (('R1 IWM+DIA', ('IWM', 'DIA')), ('R2 10 stocks', tuple(TICKERS[2:])))
+    for gname, tk in groups:
+        sub = [x for x in rows if x['T'] in tk]
+        print(f"\n{gname}")
+        for lab, f in (('low-B', lambda x: x['low']), ('all', lambda x: True), ('high (not low)', lambda x: not x['low'])):
+            v = [x for x in sub if f(x)]; print(f"  {lab:16s} {stats(v)}")
+            if lab == 'low-B':
+                print(f"  {'  after -0.02R':16s} {stats(v, 0.02)}")
+                for T in tk:
+                    vt = [x for x in v if x['T'] == T]
+                    if len(vt) >= 3: print(f"      {T:5s} {stats(vt)}")
+    json.dump(rows, open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_orb_lowgamma_replication.json'), 'w'))
+    raise SystemExit
 for lab, f in (('O1-low  (primary, low-B days)', lambda x: x['low']), ('O1-all  (all days)', lambda x: True), ('O1-high (not low-B)', lambda x: not x['low'])):
     v = [x for x in rows if f(x)]
     print(f"  {lab:32s} {stats(v)}")
