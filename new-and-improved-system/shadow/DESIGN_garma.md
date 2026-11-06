@@ -83,3 +83,24 @@ At t = 10:00, 10:15, …, 14:30, take every t with GMD ≠ 0.
   - GMD frequency (how often 2-of-3 agreement exists);
   - per-month results.
 - **If anything passes:** an independent audit before believing it.
+
+## Amendment 1 (2026-11-05, after build results and BEFORE March was touched)
+
+**Build results:**
+
+| Test | Build result |
+|---|---|
+| H1, front GMD | 667 calls, −0.2 bps, t −0.20, 48.3% right |
+| H1, 5-expiration GMD | −0.1 bps |
+| H1, SPY alone | −0.2 bps |
+| H2, gated by front GMD | 19 trades, −8.4%, t −0.62 |
+| H2, gated by 5-expiration GMD | 19 trades, −5.0% |
+| Ungated control | 27 trades, +22.6%, t 1.25, +1.21R underlying |
+
+- H1 and H2 fail the build-agreement requirement; the March run will be reported for completeness.
+- **Added H3:** the ungated IB golden-zone trade exactly as coded (the front-board SPY P20 node near the zone still
+  required, no GMD gate).
+- **H3 pass:** March mean option return > 0 with one-sided day-clustered t passing BH q = 0.10 across H1, H2, H3. The
+  build sign (+) already agrees.
+- Its build evidence is weak (t 1.25), and it was chosen after seeing the build, so a March pass would still need an
+  audit and forward testing.
