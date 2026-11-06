@@ -79,3 +79,15 @@ computing on any day.
 
 **Pass:** the same as F1–F3 (holdout mean R > 0, t ≥ 2, build agrees, beats both controls), with BH now across
 F1–F4.
+
+### F4 result: FAIL
+
+| | Build | Holdout |
+|---|---|---|
+| F4 | +0.10R, t 1.08, 372 trades | **−0.28R, t −2.71**, 220 trades, 33% wins, median −1.03R |
+| Plain running mean | +0.06R | −0.23R |
+| Fake shifted levels | +0.20R (t 2.72, better than the real level) | −0.25R |
+
+- The promo pattern is not an edge.
+- In the holdout it lost significantly.
+- Skylit's level was no better than fake levels or a plain average.
