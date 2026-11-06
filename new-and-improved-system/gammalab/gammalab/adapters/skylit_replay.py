@@ -2,7 +2,9 @@
 
 Provenance: the files were pulled after the fact (metadata.scrapedAt) through Skylit's historical `timestamp` parameter, so
 they are vendor-archived snapshots, not our own live capture. Their real-time publication lag is unknown; `lag` is added to
-the frame timestamp to get available_at (default 60 s, conservative). A sample was compared with the live API earlier in
+the frame timestamp to get available_at (default 60 s, conservative). The 2026-03-13 scrape (files 2025-12-15 to
+2026-03-12) does NOT match today's /v1/historical for the same instants (reports/REPLAY_VS_API.md:
+MATCH, 1 of 81 sampled cells); the later scrapes matched on the one day sampled. A sample was compared with the live API earlier in
 the project; that comparison is not in the ledger, so the label stays ARCHIVED_SNAPSHOT, not LIVE_CAPTURE.
 
 Frames whose timestamp is not strictly inside the regular session are dropped (the 09:30 frame carries the prior close
