@@ -133,4 +133,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from .runlog import Run
+    with Run("census", params={"pinned_sha": PINNED_SHA}) as run:
+        rc = main()
+        run.output(os.path.join(REPORTS, "manifest.json")); run.output(os.path.join(REPORTS, "manifest.csv"))
+    raise SystemExit(rc)

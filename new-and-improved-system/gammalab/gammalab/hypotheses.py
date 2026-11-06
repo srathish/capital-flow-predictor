@@ -197,4 +197,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from .runlog import Run
+    with Run("hypotheses", inputs=[os.path.join(REPORTS, "manifest.json")], params={"pinned_sha": PINNED_SHA}) as run:
+        rc = main()
+        run.output(os.path.join(REPORTS, "hypotheses.json")); run.output(os.path.join(REPORTS, "HYPOTHESES.md"))
+    raise SystemExit(rc)
