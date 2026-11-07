@@ -4,12 +4,13 @@ Backtest: Mar–May +104% per fly vs control +143 pts (p 0.02), but Dec–Feb �
 
 | sample | flies | mean per fly | win | king minus control |
 |---|---|---|---|---|
-| all signals | 3 | +41% | 33% | +109% |
+| all signals | 4 | +6% | 25% | +82% |
 | long-gamma days (registered filter) | 0 | — | — | — |
-| short-gamma days | 3 | +41% | 33% | +109% |
+| short-gamma days | 4 | +6% | 25% | +82% |
 
 | date | ticker | time | king | spot | close | gamma bal | king fly | control |
 |---|---|---|---|---|---|---|---|---|
+| 2026-11-06 | SPY | 11:29 | 740 | 739.745 | 735.54 | -1 | -100% | -100% |
 | 2026-11-03 | QQQ | 11:58 | 687 | 686.52 | 685.38 | -1 | -10% | -100% |
 | 2026-11-02 | QQQ | 13:19 | 692 | 691.69 | 681.14 | -1 | -100% | -100% |
 | 2026-10-19 | QQQ | 13:10 | 719 | 719.4449999999999 | 718.46 | -1 | +232% | -5% |
