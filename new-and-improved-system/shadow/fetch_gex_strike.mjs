@@ -24,7 +24,7 @@ const days = new Set();
 for (const T of ['SPY', 'QQQ']) {
   const out = {};
   for (let end = TO; end > FROM;) {
-    const rows = await uw(`/api/stock/${T}/ohlc/1d?end_date=${end}&limit=500`.replace('/api/api', '/api'));
+    const rows = await uw(`/stock/${T}/ohlc/1d?end_date=${end}&limit=500`);
     const reg = rows.filter((c) => c.market_time === 'r');
     if (!reg.length) break;
     for (const c of reg) out[c.date] = { o: +c.open, h: +c.high, l: +c.low, c: +c.close, v: +c.volume };
