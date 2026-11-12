@@ -51,3 +51,25 @@ Fail with N1 < F2: cutting at nodes destroys the convexity that holding keeps �
 ## Amendments
 
 (none)
+
+## Result — build (2025-05-01 → 2026-03-31): **FAIL** (run 2026-11-11; boards pulled 2026-11-11, 368 sessions, 1,840 credits)
+
+`python shadow/management_only.py build` → `results_management_only/build.json`. 432 coin trades (+432 mirror); skipped: 44 no
+P20 node within range, 6 no bars, 0 missing options.
+
+| sample | rule | n | mean $ | t | PF | win | worst | exits |
+|---|---|---|---|---|---|---|---|---|
+| coin | F1 fixed +30/−50 | 432 | −5.88 | −1.72 | 0.83 | 58% | −194 | tp30 252 · stop50 179 |
+| coin | F2 hold to 15:55 | 431 | −20.61 | −1.88 | 0.76 | 33% | −323 | — |
+| coin | **N1 node tgt + node stop** | 432 | **−8.94** | −2.37 | 0.77 | 42% | −174 | node_tgt 180 · stop50 155 · node_stop 88 |
+| coin | N2 node tgt only | 432 | −7.55 | −1.85 | 0.81 | 46% | −194 | stop50 222 · node_tgt 199 |
+| mirror | F1 / F2 / N1 / N2 | 432 | −6.78 / −18.19 / −6.03 / −7.37 | | | | | consistent |
+
+Paired: N1 − F1 = −$3.06 (t −0.92); N1 − F2 = +$11.71 (t 1.13). N1 mean −8.94 vs distance-matched placebo: median −5.72,
+95th −2.01, 97.5th −1.48 → N1 is **below the placebo median**. Fails all three criteria; holdout not opened.
+
+Reading: on coin-direction 0DTE ATM entries every exit rule loses (theta + spread), as it should. Cutting at nodes beats holding to
+the close only in the way any cut does (F1 beats F2 by more). Against random levels at the same distances, node levels are no
+better and slightly worse. The community's "the map tells you where to take profit and where you're wrong" does not survive this
+test: the information is in the distance, not in the node. Boards are today's API history (see provenance note above), so a
+pass would have carried a caveat; a fail does not need one.
