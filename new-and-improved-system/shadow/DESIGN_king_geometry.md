@@ -60,3 +60,23 @@ H1 (S25, far King → bigger range): t 0.29, retired as a range tool. H2 (domina
 range): passes all three build criteria; days in the top King-share tercile have 28% smaller rest-of-day ranges than the bottom
 tercile, after VIX, first-hour range, prior-day gamma balance and 20-day range. The effect is absent in the 5-expiration
 aggregate, consistent with a 0DTE pinning mechanism rather than a general vol proxy. Holdout not yet opened: independent audit first.
+
+## Amendment A1 — Stage B trade test for H2 (locked 2026-11-11, before the H2 holdout is opened)
+
+Only run if H2 passes the holdout. Uses prices already cached (`.cache/uwopt_intraday`, 10:31 ATM call and put per symbol-day
+fetched for DESIGN_management_only); no new data.
+
+**Trade:** sell the SPY/QQQ 0DTE ATM straddle (strike nearest the 10:30 close) at the 10:31 minute close − $0.02 per leg; buy back
+at the 15:55 minute close + $0.02 per leg; $0.65 commission per contract per side ($2.60 per straddle). One straddle per symbol-day.
+Variant (reported): same with a stop when the straddle's mark reaches 2× the premium received (checked each minute).
+
+**Samples:** top `kshare` tercile (front column, cut frozen from `results_king_geometry/terciles_front.json`) = primary; bottom
+tercile; all days. Control: 200 random-day draws of the primary's size.
+
+**Pass (build 2025-05-01 → 2026-03-31):** primary mean $ > 0 with t ≥ 2.0 and PF ≥ 1.3; primary minus all-days difference t ≥ 2.0;
+primary mean above the random control's 97.5th percentile. **Pass (holdout 2026-04-01 → 2026-10-16, one run):** mean > 0, t ≥ 1.65,
+above the control's 95th percentile. Hit rate reported, not a criterion. Worst trade reported; undefined-risk structure is noted
+and a defined-risk version would be a new design (see DESIGN_iron_fly for the existing one).
+
+**What a fail means:** the pin shows in realized range but the 10:31 straddle is already priced for it; the finding stays a
+forecast input (10:30 update to the range model) and not a trade.
