@@ -50,4 +50,10 @@ range forecast stays as it is and we do not extend it to close-to-close.
 
 ## Amendments
 
-(none)
+**A1 (2026-11-11, after the build result, before the holdout; from the independent audit).** Criteria unchanged. The holdout
+report must also print, as descriptive slices with no verdict weight: per-symbol fits (SPY, QQQ), the fit excluding the 10
+highest-VIX dates, and n in the low/high terciles. Reason: on build the effect is concentrated in April 2025 (ex-April t −2.47)
+and carried by QQQ (SPY alone t −1.72, QQQ −4.01). If the holdout passes pooled but SPY alone does not, the result is recorded
+as "QQQ-carried", not as a general finding. Audit also noted a lead-2 placebo at t −2.76 (B predicts the gap two nights ahead
+nearly as well), so this is a multi-day volatility-regime effect, not a one-night hedging mechanism; Stage B's structure choice
+must take that into account.

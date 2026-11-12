@@ -113,11 +113,20 @@ def main():
            "fits": [analyse(panel, tg, bv, terc) for tg in ("gap", "c2c") for bv in ("B", "Bloc")],
            "direction_control": {bv: direction_control(panel, bv) for bv in ("B", "Bloc")},
            "by_sym": {s: sum(r["sym"] == s for r in panel) for s in ("SPY", "QQQ")}}
+    # Amendment A1: descriptive slices, no verdict weight
+    top_vix = sorted({r["d"]: r["lnvix"] for r in panel}.items(), key=lambda kv: -kv[1])[:10]
+    ex = [r for r in panel if r["d"] not in {d for d, _ in top_vix}]
+    res["slices"] = {"SPY": analyse([r for r in panel if r["sym"] == "SPY"], "gap", "B", terc),
+                     "QQQ": analyse([r for r in panel if r["sym"] == "QQQ"], "gap", "B", terc),
+                     "ex_top10_vix": analyse(ex, "gap", "B", terc)}
     json.dump(res, open(os.path.join(OUT, f"{period}.json"), "w"), indent=1)
     print(f"{period} {lo}→{hi}: n={len(panel)} symbol-days {res['by_sym']}; terciles {terc}\n")
     print(f"{'target':5s} {'var':5s} {'coef':>8s} {'t(clust)':>9s} {'ΔR²':>7s} {'R²base':>7s} {'spearman':>9s} {'terc ratio':>10s} {'lowB mean':>10s} {'highB mean':>10s}")
     for f in res["fits"]:
         print(f"{f['target']:5s} {f['bvar']:5s} {f['coef_B']:+8.3f} {f['t_B']:9.2f} {f['dr2']:7.4f} {f['r2_base']:7.3f} {f['spearman']:+9.3f} {f['tercile_ratio']:10.3f} {f['mean_abs_lowB']*100:9.3f}% {f['mean_abs_highB']*100:9.3f}%")
+    print("\nslices (A1, descriptive):")
+    for k, f in res["slices"].items():
+        print(f"  {k:12s} n={f['n']:4d} coef {f['coef_B']:+.3f} t {f['t_B']:+.2f} terc {f['tercile_ratio']:.2f} (n_lo {f['n_lo']}, n_hi {f['n_hi']})")
     print("\ndirection control (t of B on P(gap up)):", {k: round(v["t_B_on_gap_sign"], 2) for k, v in res["direction_control"].items()})
     p = next(f for f in res["fits"] if f["target"] == "gap" and f["bvar"] == "B")
     if period == "build":
