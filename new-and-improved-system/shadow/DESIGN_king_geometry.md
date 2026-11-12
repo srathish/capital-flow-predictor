@@ -80,3 +80,23 @@ and a defined-risk version would be a new design (see DESIGN_iron_fly for the ex
 
 **What a fail means:** the pin shows in realized range but the 10:31 straddle is already priced for it; the finding stays a
 forecast input (10:30 update to the range model) and not a trade.
+
+## Result — holdout (2026-04-01 → 2026-10-16, one run after audit): **H1 FAIL, H2 FAIL** (run 2026-11-11)
+
+`python shadow/king_geometry.py holdout` → `results_king_geometry/holdout.json`. n = 276 symbol-days.
+
+| column | target | kdist (H1) coef / t / terc hi÷lo | kshare (H2) coef / t / ΔR² / terc hi÷lo | direction t |
+|---|---|---|---|---|
+| front | rod | +16.5 / +1.42 / 1.34 | −0.48 / **−1.22** / 0.006 / **0.70** | −1.65 |
+| front | cls | +33.9 / +1.43 / 1.48 | −0.30 / −0.45 / 0.003 / 0.67 | |
+| agg | rod | +3.1 / +0.68 / 1.24 | −0.53 / −1.21 / 0.009 / 0.71 | +0.07 |
+
+H2: sign and tercile ratio persisted (0.70 vs 0.72 on build) but the clustered t is −1.22, below the 2.0 bar. By the locked
+criteria this is a FAIL; Stage B (A1) was not run. H1 remains a fail (t 1.42, and the coefficient is unstable: +1.7 → +16.5).
+
+Audit caveats recorded with the result: (A) on build, breadth — the number of strikes carrying ≥ 1% of the King's gamma — predicted
+rest-of-day range more strongly (t +6.0) and absorbed King share entirely (kshare t −0.12 with breadth in the model); "dominant
+King" was the weak parameterization of a concentration effect. (B) `terciles_front.json` is the build file; `build` must not be
+rerun after this holdout. (C) This holdout window (2026-04 → 2026-10) has now been used by this design and by the management-only
+design (closed without opening); any follow-up on breadth → range needs a fresh board window, e.g. 2024-01 → 2025-04 (~1,650
+Skylit credits), not this one.
