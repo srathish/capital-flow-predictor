@@ -75,3 +75,26 @@ roughly the same tercile spread as the intraday-range finding. It says nothing a
 Per the audit's lead-2 placebo, this is a multi-day volatility regime, not a one-night mechanism.
 
 Stage B (1DTE straddle, real prices) is now unlocked; its exact spec goes in amendment A2 before any option data is fetched.
+
+## Amendment A2 — Stage B specification (locked 2026-11-11, before any option data is fetched)
+
+**Signal (available for certain at 15:55 on day d):** `B_{d−1}` from the previous session's UW file, frozen build cut
+B ≤ −0.2915 → "low-gamma day". The audit showed corr(B_d, B_{d−1}) = 0.75 and B_{d−1} alone predicts gap(d→d+1) at t −2.24, so the
+one-day lag keeps the test honest without relying on intraday UW availability. Secondary (reported only if the 15:55 intraday
+availability check passes on a live day): `B_d` from the live endpoint.
+
+**Trade:** SPY and QQQ, straddle expiring d+1 (1DTE), strike nearest the 15:55 close of day d. Buy both legs at the 15:55 minute
+close + $0.02/leg; sell at the 09:35 minute close on d+1 − $0.02/leg; commission $0.65 per contract per side ($2.60 per
+straddle round trip). One straddle per symbol-day. Prices: UW `option-contract/{id}/intraday` for dates d and d+1, cached under
+`.cache/uwopt_intraday/`; missing minute → skip the trade and count it.
+
+**Samples:** low-gamma days (primary), highest-tercile days, all days. Control: 200 draws of the same number of random days.
+
+**Split:** build 2025-05-01 → 2026-03-31; holdout 2026-04-01 → 2026-10-16, one run.
+
+**Pass (build):** low-gamma mean P&L per straddle > 0 with t ≥ 2.0 and profit factor ≥ 1.3 after costs; low-gamma minus all-days
+difference t ≥ 2.0; mean above the 97.5th percentile of the random-day control. **Pass (holdout):** mean > 0 with t ≥ 1.65 and
+above the control's 95th percentile. Hit rate reported, not a criterion.
+
+**What a fail means:** the overnight gap is bigger on low-gamma nights but the 1DTE straddle already prices it (or the spread eats
+it). We do not search for a better strike, structure or exit; a 2-day structure would be a new design.
