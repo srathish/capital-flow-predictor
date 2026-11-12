@@ -57,3 +57,21 @@ and carried by QQQ (SPY alone t −1.72, QQQ −4.01). If the holdout passes poo
 as "QQQ-carried", not as a general finding. Audit also noted a lead-2 placebo at t −2.76 (B predicts the gap two nights ahead
 nearly as well), so this is a multi-day volatility-regime effect, not a one-night hedging mechanism; Stage B's structure choice
 must take that into account.
+
+## Result — Stage A: **PASS on build and on the sealed holdout** (run 2026-11-11, code 3d477e86)
+
+| period | n | coef B | clustered t | ΔR² | Spearman | tercile ratio | low-B mean gap | high-B mean gap | direction t |
+|---|---|---|---|---|---|---|---|---|---|
+| build 2023-12-13 → 2025-04-30 | 690 | −0.534 | −3.09 | 0.019 | −0.28 | 2.13 | 0.74% | 0.35% | −0.77 |
+| **holdout 2025-05-01 → 2026-10-16** | 734 | −0.388 | **−2.53** | 0.012 | −0.23 | **1.70** | 0.64% | 0.38% | −0.13 |
+
+Holdout slices (A1): SPY t −1.92 (terc 1.92), QQQ t −2.14 (terc 1.65), ex-top-10-VIX t −2.29 (terc 1.65). Not QQQ-carried out of
+sample. `Bloc` (±2%) was stronger than `B` in both periods (holdout t −4.12, terc 1.88). Close-to-close |move| also passes
+(holdout t −2.51, terc 1.63). The audit found no look-ahead: UW's date-d file is unchanged when re-pulled months later (504/504
+identical) and exists the same evening.
+
+Reading: prior-day dealer gamma balance predicts the size of the next overnight gap, out of sample, with the same sign and
+roughly the same tercile spread as the intraday-range finding. It says nothing about direction (controls clean both periods).
+Per the audit's lead-2 placebo, this is a multi-day volatility regime, not a one-night mechanism.
+
+Stage B (1DTE straddle, real prices) is now unlocked; its exact spec goes in amendment A2 before any option data is fetched.
