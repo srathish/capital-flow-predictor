@@ -45,3 +45,18 @@ size tool only and would be folded into the range forecast as a 10:30 update, ne
 ## Amendments
 
 (none)
+
+## Result — build (2025-05-01 → 2026-03-31): **H1 FAIL, H2 PASS** (run 2026-11-11, before audit and holdout)
+
+`python shadow/king_geometry.py build` → `results_king_geometry/build.json`. n = 454 symbol-days (SPY, QQQ).
+
+| column | target | kdist (H1) coef / t / ΔR² / terc hi÷lo | kshare (H2) coef / t / ΔR² / terc hi÷lo | oppshare coef / t | direction t (side) |
+|---|---|---|---|---|---|
+| **front** | rod | +1.67 / +0.29 / 0.0009 / 1.16 | **−1.03 / −3.96 / 0.0142 / 0.72** | −0.58 / −2.89 | −1.27 |
+| front | cls | −1.33 / −0.11 / 0.0000 / 1.03 | −0.78 / −1.63 / 0.0025 / 0.74 | −0.54 / −1.37 | |
+| agg | rod | +0.43 / +0.10 / 0.0001 / 1.20 | −0.33 / −1.12 / 0.0003 / 0.82 | −0.46 / −2.08 | +0.08 |
+
+H1 (S25, far King → bigger range): t 0.29, retired as a range tool. H2 (dominant front-expiration King → smaller rest-of-day
+range): passes all three build criteria; days in the top King-share tercile have 28% smaller rest-of-day ranges than the bottom
+tercile, after VIX, first-hour range, prior-day gamma balance and 20-day range. The effect is absent in the 5-expiration
+aggregate, consistent with a 0DTE pinning mechanism rather than a general vol proxy. Holdout not yet opened: independent audit first.

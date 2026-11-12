@@ -45,3 +45,18 @@ costs money.
 ## Amendments
 
 (none)
+
+## Result — build (2023-12-13 → 2025-04-30): **FAIL** (run 2026-11-11)
+
+`python shadow/overnight_hedge.py build` → `results_overnight_hedge/build.json`.
+
+| sym | nights | skipped | Sharpe A | Sharpe S | Sharpe V (VIX rule) | random-skip 50 / 95 / 97.5 | vol A → S | mean bp A → S | maxDD A → S | skipped vs kept bp (t) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SPY | 345 | 124 | 0.86 | 0.87 | 0.88 | 0.48 / 1.38 / 1.58 | 11.0% → 5.7% | 3.75 → 1.95 | −16.2% → −5.5% | +3.0 vs +4.2 (−0.12) |
+| QQQ | 345 | 106 | 1.14 | 1.11 | 1.87 | 0.82 / 1.72 / 1.93 | 14.0% → 8.7% | 6.35 → 3.85 | −17.7% → −6.3% | +6.1 vs +6.4 (−0.03) |
+
+Fails S ≥ V and S > random 97.5th on both symbols; S > A only on SPY by 0.01. Holdout not opened.
+
+Reading: low-gamma nights are more volatile (Stage A of the gap design) but earn the same mean return as other nights, so skipping
+them lowers variance and return in proportion — Sharpe unchanged. The drawdown reduction is real but is what any 1/3 reduction in
+exposure buys. A VIX-based skip does as well. The gamma regime has no portfolio-level overnight use for a holder.
