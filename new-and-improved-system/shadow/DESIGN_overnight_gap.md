@@ -98,3 +98,21 @@ above the control's 95th percentile. Hit rate reported, not a criterion.
 
 **What a fail means:** the overnight gap is bigger on low-gamma nights but the 1DTE straddle already prices it (or the spread eats
 it). We do not search for a better strike, structure or exit; a 2-day structure would be a new design.
+
+## Result — Stage B, build (2025-05-01 → 2026-03-31): **FAIL** (run 2026-11-11)
+
+`python shadow/overnight_straddle.py build` → `results_overnight_gap/stageB_build.json`. 454 straddles, 0 skipped.
+
+| sample | n | mean $ / straddle | t | PF | win | mean % of premium | worst |
+|---|---|---|---|---|---|---|---|
+| **low-B (primary)** | 121 | **−39.34** | −2.59 | 0.50 | 30% | −6.0% | −466.60 |
+| high-B | 174 | −14.13 | −1.29 | 0.74 | 25% | −4.2% | −228.60 |
+| all | 454 | −22.40 | −3.30 | 0.63 | 30% | −4.8% | −466.60 |
+
+Low-B minus other: t −1.37 (worse, not better). Fails all four criteria. The holdout was not opened.
+
+Reading: the overnight gap is bigger on low-gamma nights (Stage A), and the 1DTE straddle is priced for it and more. Buyers lose
+~5% of premium per night on average and ~6% on low-gamma nights, because premium is larger on exactly those nights. The gamma
+regime is a size forecast the market already makes. This matches the project's earlier finding that long options on predicted
+movers lose (ideas200, 0/60). Selling the overnight straddle would be the generic variance premium, not a gamma edge, and is not
+part of this design.
