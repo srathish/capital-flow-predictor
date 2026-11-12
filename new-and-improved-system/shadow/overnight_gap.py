@@ -79,7 +79,8 @@ def spearman(a, b):
 
 
 def analyse(panel, target, bvar, terc):
-    X0 = [[1, r["sym"] == "QQQ", r["lnvix"], r["prev"], r["m20"], r["absret"]] for r in panel]
+    multi = len({r["sym"] for r in panel}) > 1   # drop the symbol dummy on single-symbol slices (A1)
+    X0 = [[1] + ([r["sym"] == "QQQ"] if multi else []) + [r["lnvix"], r["prev"], r["m20"], r["absret"]] for r in panel]
     X1 = [row + [r[bvar]] for row, r in zip(X0, panel)]
     y = [r[target] for r in panel]; g = [r["d"] for r in panel]
     b0, t0, r20 = ols_cluster(X0, y, g); b1, t1, r21 = ols_cluster(X1, y, g)
