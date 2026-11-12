@@ -67,3 +67,25 @@ better exit. Any change after this point is a new design.
 ## Amendments
 
 (none)
+
+## Result — Stage A, build (2023-01-03 → 2025-04-30), run 2026-11-11: **FAIL**
+
+`python shadow/trend_day.py build` → `shadow/results_trend_day/build.json`. 1,156 symbol-days.
+
+| signal | n | P(c>0) | binom p | mean c | t | shuffled-null 97.5% | base rate (untriggered) |
+|---|---|---|---|---|---|---|---|
+| **10:30, θ=1.0% (primary)** | **38** | 60.5% | 0.128 | +0.56% | 1.42 | +0.69% | 56.2% |
+| 10:30, θ=0.75% | 103 | 62.1% | 0.009 | +0.32% | 2.10 | +0.30% | 55.7% |
+| 10:30, θ=1.5% | 8 | 50.0% | 0.64 | −0.02% | −0.06 | — | 56.3% |
+| 11:30, θ=1.0% | 95 | 50.5% | 0.50 | +0.05% | 0.52 | +0.18% | 53.4% |
+| 12:30, θ=1.0% | 129 | 51.9% | 0.36 | +0.12% | 0.90 | +0.25% | 52.2% |
+
+Primary fails 4 of 5 criteria: n = 38 (< 40), binomial p 0.13, t 1.42, and the mean sits below the shuffled-direction null's
+97.5th percentile. The θ = 0.75% sensitivity row looks better (p 0.009, t 2.10) but its mean (+0.32%) is only 0.02% above its
+own null, and the design forbids choosing it after the fact. The 11:30 and 12:30 controls show nothing, so whatever lean exists
+is a first-hour effect. The base rate says a first-hour move continues on ~56% of *all* days, so the threshold adds little.
+
+Key fact for the question that started this: days with a ≥ 1.5% first-hour move happened 8 times in 28 months across both
+symbols, i.e. roughly three a year. Days like 2026-11-05 are too rare to validate a rule on, let alone trade one.
+
+Per the design: stop here. The holdout (2025-05-01 → 2026-10-16) was **not** opened and stays sealed. Stage B was not run.
