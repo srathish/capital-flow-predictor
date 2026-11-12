@@ -23,8 +23,11 @@ const beta = solve(XtX, Xty), resid = rows.map((r, i) => r.y - X[i].reduce((s, v
 
 // ---- latest data ----
 const VF = path.join(NIS, '.cache', 'vix_fred.json');
-{ const r = await fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&observation_start=2025-01-01&file_type=json&api_key=${process.env.FRED_API_KEY}`);
+// FRED refresh is best-effort: a DNS/network failure here killed the 2026-11-06 run (no forecast for 11-09). Fall back to the
+// cached file; the Cboe lookup below covers any missing close.
+try { const r = await fetch(`https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&observation_start=2025-01-01&file_type=json&api_key=${process.env.FRED_API_KEY}`);
   const j = await r.json(); if (j.observations) fs.writeFileSync(VF, JSON.stringify(Object.fromEntries(j.observations.filter((o) => o.value !== '.').map((o) => [o.date, +o.value])))); }
+catch (e) { console.error(`FRED refresh failed (${e.code ?? e.message}); using cached ${path.basename(VF)}`); }
 const VIXF = JSON.parse(fs.readFileSync(VF, 'utf8'));
 const FD = path.join(SH, 'results_gamma_range', 'forecasts'); fs.mkdirSync(FD, { recursive: true });
 const L = [], BARS = {};
