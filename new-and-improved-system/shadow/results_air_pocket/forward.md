@@ -4,9 +4,9 @@ Backtest holdout reference: base +0.044R/trade (8% reach next node); AIR beat CR
 
 | rule | trades | mean | win | total |
 |---|---|---|---|---|
-| base (stop 0.05% behind node, target next node) | 97 | +0.218R | 20% | 21.17R |
-| R1 longs only | 42 | -0.508R | 12% | -21.34R |
-| R2 stop 0.15% behind node | 96 | +0.084R | 28% | 8.10R |
-| R3 half off at pocket midpoint, then breakeven stop | 97 | +0.158R | 26% | 15.35R |
+| base (stop 0.05% behind node, target next node) | 111 | +0.098R | 18% | 10.92R |
+| R1 longs only | 50 | -0.595R | 10% | -29.74R |
+| R2 stop 0.15% behind node | 110 | +0.094R | 27% | 10.29R |
+| R3 half off at pocket midpoint, then breakeven stop | 111 | +0.077R | 25% | 8.54R |
 
-Days logged: 17
+Days logged: 18
