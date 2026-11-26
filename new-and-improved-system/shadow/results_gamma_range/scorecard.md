@@ -1,15 +1,17 @@
 # Range forecast scorecard (gamma-regime model, live since 2026-10-09)
 
-Updated 2026-11-21T02:33Z · 28 graded symbol-days. Error = |ln(actual ÷ forecast)|; lower is better. "Naive" = the 20-day average range.
+Updated 2026-11-26T02:30Z · 30 graded symbol-days. Error = |ln(actual ÷ forecast)|; lower is better. "Naive" = the 20-day average range.
 
 | | graded | inside the ~68% band | model error | naive error | model better on |
 |---|---|---|---|---|---|
-| all | 28 | 43% | 0.545 | 0.574 | 61% of days |
-| SPY | 14 | 50% | 0.553 | 0.581 | 64% of days |
-| QQQ | 14 | 36% | 0.537 | 0.566 | 57% of days |
+| all | 30 | 47% | 0.521 | 0.547 | 60% of days |
+| SPY | 15 | 53% | 0.525 | 0.560 | 67% of days |
+| QQQ | 15 | 40% | 0.517 | 0.534 | 53% of days |
 
 | session | symbol | forecast | band | actual | in band | gamma B (pct) |
 |---|---|---|---|---|---|---|
+| 2026-11-23 | QQQ | 3.26% | 2.18%–4.87% | **2.56%** | yes | -0.628 (5th) |
+| 2026-11-23 | SPY | 2.38% | 1.59%–3.56% | **2.09%** | yes | -0.789 (2th) |
 | 2026-11-20 | QQQ | 2.34% | 1.56%–3.50% | **5.74%** | no | -0.175 (41th) |
 | 2026-11-20 | SPY | 1.77% | 1.18%–2.64% | **4.41%** | no | -0.545 (13th) |
 | 2026-11-18 | QQQ | 2.11% | 1.41%–3.15% | **1.48%** | yes | -0.494 (13th) |
