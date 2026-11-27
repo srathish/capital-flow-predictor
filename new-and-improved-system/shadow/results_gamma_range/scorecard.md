@@ -1,6 +1,6 @@
 # Range forecast scorecard (gamma-regime model, live since 2026-10-09)
 
-Updated 2026-11-26T02:30Z · 30 graded symbol-days. Error = |ln(actual ÷ forecast)|; lower is better. "Naive" = the 20-day average range.
+Updated 2026-11-27T02:32Z · 30 graded symbol-days. Error = |ln(actual ÷ forecast)|; lower is better. "Naive" = the 20-day average range.
 
 | | graded | inside the ~68% band | model error | naive error | model better on |
 |---|---|---|---|---|---|
